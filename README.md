@@ -12,7 +12,9 @@ ducking-octo-happiness, laughing-archer
 * Create an Opportunity Record Type (Setup | Customize | Opportunity | Record Type)
 * Fork this repository 'dev' branch
 * Clone your fork to your local machine
-    $ git clone https://github.com/_username_/Cumulus.git
+```
+$ git clone https://github.com/_username_/Cumulus.git
+```
 * In your IDE of your choice, create a new project based on your cloned report. Associate the project with the force.com nature, but *do not refresh from server*.
 * Select the labels and objects folders, and select 'Save to Server', not deploy
 * Select remaining folders and 'Save to Server'
