@@ -12,10 +12,10 @@ ducking-octo-happiness, laughing-archer
 * Create an Opportunity Record Type (Setup | Customize | Opportunity | Record Type)
 * Install the 4 required Nonprofit Starter Pack Packages  
   
-[Contacts and Organizations](http://foundation.force.com/packages/contactsandorganizations)  
-[Recurring Donations](http://foundation.force.com/packages/recurringdonations)  
-[Relationships](http://foundation.force.com/packages/relationships)  
-[Affiliations](http://foundation.force.com/packages/affiliations)[  
+<a href="http://foundation.force.com/packages/contactsandorganizations" target="_blank">Contacts and Organizations</a>  
+<a href="http://foundation.force.com/packages/recurringdonations" target="_blank">Recurring Donations</a>  
+<a href="http://foundation.force.com/packages/relationships" target="_blank">Relationships</a>  
+<a href="http://foundation.force.com/packages/affiliations" target="_blank">Affiliations</a>  
   
 * Fork this repository 'dev' branch
 * Clone your fork to your local machine
