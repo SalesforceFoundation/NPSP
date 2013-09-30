@@ -10,8 +10,13 @@ ducking-octo-happiness, laughing-archer
 * Login to your DE Org. 
 * Create an Opportunity Sales Process (Setup | Customize | Opportunity | Sales Process)
 * Create an Opportunity Record Type (Setup | Customize | Opportunity | Record Type)
-* Install the 4 required Nonprofit Starter Pack Packages
-// ADD INSTALL LINKS
+* Install the 4 required Nonprofit Starter Pack Packages  
+  
+[Contacts and Organizations](http://foundation.force.com/packages/contactsandorganizations)  
+[Recurring Donations](http://foundation.force.com/packages/recurringdonations)  
+[Relationships](http://foundation.force.com/packages/relationships)  
+[Affiliations](http://foundation.force.com/packages/affiliations)[  
+  
 * Fork this repository 'dev' branch
 * Clone your fork to your local machine
 ```
