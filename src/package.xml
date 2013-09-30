@@ -16,5 +16,9 @@
         <members>Affiliations</members>
         <name>ApexTrigger</name>
     </types>
+    <types>
+        <members>npe5__Affiliation__c-Affiliation Layout</members>
+        <name>Layout</name>
+    </types>
     <version>28.0</version>
 </Package>
