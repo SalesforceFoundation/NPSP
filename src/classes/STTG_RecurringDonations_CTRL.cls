@@ -514,8 +514,10 @@ public with sharing class STTG_RecurringDonations_CTRL {
         string page_message = '';
         Savepoint sp = Database.setSavepoint();
             
+        Account acc = new Account(name='test account');
+        insert acc;
         Opportunity testOpp = new Opportunity();
-        testOpp.AccountID = [select id from Account limit 1].id;
+        testOpp.AccountID = acc.id;
         testOpp.Amount = 100;
         testOpp.CloseDate = system.today();
         testOpp.Name = 'TestOpp';

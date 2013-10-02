@@ -16,5 +16,20 @@
         <members>STTG_RecurringDonations_CTRL</members>
         <name>ApexClass</name>
     </types>
+    <types>
+        <members>RD_JobProgress</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>RD_AddDonationsBTN</members>
+        <members>STTG_RecurringDonations</members>
+        <members>STTG_affiliationsSettings</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>RD_Donations</members>
+        <members>RD_RecurringDonations</members>
+        <name>ApexTrigger</name>
+    </types>
     <version>28.0</version>
 </Package>
