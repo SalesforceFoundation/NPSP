@@ -122,7 +122,7 @@ public class AFFL_Affiliations {
                 npe5__Affiliation__c a = new npe5__Affiliation__c();
                 a.npe5__Contact__c = c.Id;
                 a.npe5__Organization__c = c.AccountId;
-                a.npe5__Status__c = 'Current'; //DJH:UNDONE system.label.npe5__DefaultCurrentStatus;
+                a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                 a.npe5__StartDate__c = System.Today();
                 //user title as Role
                 if (c.Title != null)
@@ -179,7 +179,7 @@ public class AFFL_Affiliations {
             {
                 //flag it as former ending today
                 npe5__Affiliation__c a = new npe5__Affiliation__c(Id=conAccMap.get(u));
-                a.npe5__Status__c = 'Former'; //DJH:UNDONE system.label.npe5__DefaultFormerStatus;
+                a.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
                 a.npe5__EndDate__c = System.Today();
                 affiliationUpdates.add(a);
             }
