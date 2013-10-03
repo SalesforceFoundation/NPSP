@@ -52,7 +52,7 @@ public class AFFL_Affiliations_TEST {
         
         firstAffiliationId = createdAffiliations[0].Id;
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__StartDate__c);
         
@@ -64,13 +64,13 @@ public class AFFL_Affiliations_TEST {
         
         npe5__Affiliation__c[] createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations2[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations2[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].npe5__StartDate__c);
         
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where id=:firstAffiliationId];
         
-        system.assertEquals('Former' /* system.label.DefaultFormerStatus */, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__EndDate__c);        
     }
     
@@ -162,8 +162,8 @@ public class AFFL_Affiliations_TEST {
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc.id];
         createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations3[0].npe5__Status__c);
-        system.assertEquals('Former' /* system.label.DefaultFormerStatus */, createdAffiliations[0].npe5__Status__c);
-        system.assertEquals('Former' /* system.label.DefaultFormerStatus */, createdAffiliations2[0].npe5__Status__c);        
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations3[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);        
     }
 }

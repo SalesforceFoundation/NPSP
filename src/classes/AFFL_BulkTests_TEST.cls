@@ -52,7 +52,7 @@ public with sharing class AFFL_BulkTests_TEST {
         
         system.assertEquals(conCount,createdAffiliations.size());
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(newContactTitle, createdAffiliations[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__StartDate__c);
         
@@ -68,7 +68,7 @@ public with sharing class AFFL_BulkTests_TEST {
         
         system.assertEquals(conCount,createdAffiliations2.size());
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations2[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
         system.assertEquals(newContactTitle, createdAffiliations2[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].npe5__StartDate__c);
         
@@ -162,9 +162,9 @@ public with sharing class AFFL_BulkTests_TEST {
         
         system.assertEquals(conCount,createdAffiliations3.size());
         
-        system.assertEquals('Current' /* system.label.DefaultCurrentStatus */, createdAffiliations3[0].npe5__Status__c);
-        system.assertEquals('Former' /* system.label.DefaultFormerStatus */, createdAffiliations[0].npe5__Status__c);
-        system.assertEquals('Former' /* system.label.DefaultFormerStatus */, createdAffiliations2[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations3[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);
         
     }
 }

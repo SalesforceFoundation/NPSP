@@ -10,7 +10,7 @@
         <apex:pageBlock id="affiliationssettings" title="Affiliations Settings">         
             
             <apex:pageBlockSection id="autoaffiliationsection" title="Automatic Affiliations for Contacts" columns="1">
-                <apex:outputPanel ><!-- DJH:UNDONE {!$Label.npe5__Automatic_Affiliation_Help_Text} --></apex:outputPanel>
+                <apex:outputPanel >{!$Label.npe5__Automatic_Affiliation_Help_Text}</apex:outputPanel>
                 
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="Automatic Affiliations Turned On"/>
