@@ -29,4 +29,4 @@ $ git clone https://github.com/*username*/Cumulus.git
 THIS SHOULD NEVER BE MERGED!!!
 ------------------------------
 Test Edit of README.md to trigger webhooks:
-1, 2, 3
+1, 2, 3, 4
