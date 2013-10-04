@@ -1,5 +1,5 @@
 @isTest
-public with sharing class STTG_AffilationsSetttings_TEST {
+public with sharing class STTG_AffiliationsSettings_TEST {
      
      public static testMethod void TEST_affiliationsSettings() {
         
