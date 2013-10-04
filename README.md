@@ -16,6 +16,11 @@ ducking-octo-happiness, laughing-archer
 <a href="http://foundation.force.com/packages/recurringdonations" target="_blank">Recurring Donations</a>  
 <a href="http://foundation.force.com/packages/relationships" target="_blank">Relationships</a>  
 <a href="http://foundation.force.com/packages/affiliations" target="_blank">Affiliations</a>  
+
+NOTE: For now, you will need to use the following links to install the unreleased NPSP packages with classes and triggers removed:
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cZtq">Affiliations (2.9)</a>
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pXSe">Recurring Donations (2.9)</a>
+<a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pY9P">Relationships (2.9)</a>
   
 * Fork this repository 'dev' branch
 * Clone your fork to your local machine
