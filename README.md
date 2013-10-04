@@ -3,6 +3,7 @@ Cumulus
 
 ducking-octo-happiness, laughing-archer
 
+[![Build Status](http://ec2-23-20-64-21.compute-1.amazonaws.com/buildStatus/icon?job=Cumulus_feature)](http://ec2-23-20-64-21.compute-1.amazonaws.com/job/Cumulus_feature/)
 
 **Contributor Install Instructions**
 
