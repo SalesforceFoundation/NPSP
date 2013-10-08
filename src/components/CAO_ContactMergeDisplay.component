@@ -1,0 +1,26 @@
+<apex:component >
+ 
+    <apex:attribute name="thisContact" description="Contact to display." type="Contact" required="required"/>
+    
+            <apex:pageBlockSection title="{!thisContact.Name}" columns="1" collapsible="false">     
+                <apex:outputField value="{!thisContact.AccountId}"/>        
+                <apex:outputField value="{!thisContact.Email}"/> 
+                <apex:outputField value="{!thisContact.npe01__Preferred_Email__c}"/> 
+                <apex:outputField value="{!thisContact.Phone}"/> 
+                <apex:outputField value="{!thisContact.npe01__PreferredPhone__c}"/>
+                <apex:outputField value="{!thisContact.Phone}"/> 
+                <apex:outputField value="{!thisContact.npe01__Primary_Address_Type__c}"/>              
+                <apex:outputField value="{!thisContact.MailingStreet}"/>
+                <apex:outputField value="{!thisContact.MailingCity}"/>
+                <apex:outputField value="{!thisContact.MailingState}"/>
+                <apex:outputField value="{!thisContact.MailingPostalCode}"/>
+                <apex:outputField value="{!thisContact.MailingCountry}"/>   
+                <apex:outputField value="{!thisContact.npe01__Secondary_Address_Type__c}"/>                
+                <apex:outputField value="{!thisContact.OtherStreet}"/>
+                <apex:outputField value="{!thisContact.OtherCity}"/>
+                <apex:outputField value="{!thisContact.OtherState}"/>
+                <apex:outputField value="{!thisContact.OtherPostalCode}"/>
+                <apex:outputField value="{!thisContact.OtherCountry}"/>         
+            </apex:pageBlockSection>
+
+</apex:component>
