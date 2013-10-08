@@ -329,7 +329,7 @@ private class CAO_OpportunityContactRoles_TEST {
             //shouldn't be an account
             system.assertEquals(null, oppResult[0].AccountId);
         } catch (exception e) {
-            system.assert(e.getMessage().contains('undone' /* Label.Opportunity_Contact_Role_Error_Bad_Contact_Id */));
+            system.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
         }
         Test.stopTest();
     }    

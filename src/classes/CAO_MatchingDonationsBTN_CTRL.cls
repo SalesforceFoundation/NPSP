@@ -69,7 +69,7 @@ public with sharing class CAO_MatchingDonationsBTN_CTRL {
         } 
         else
         {
-            List <RecordType> rts = [select Id from RecordType where SobjectType = 'Opportunity' and Name = :'undone' /* system.label.npe01.Matching_Donation_Record_Type */ limit 1];
+            List <RecordType> rts = [select Id from RecordType where SobjectType = 'Opportunity' and Name = :system.label.npe01.Matching_Donation_Record_Type limit 1];
             if (rts.size() > 0)
                 params.put('RecordType', rts[0].Id);
         }
@@ -85,7 +85,7 @@ public with sharing class CAO_MatchingDonationsBTN_CTRL {
 
         //put in important fields
         params.put('accid',oppty.AccountId);
-        params.put('opp3',string.format('undone' /* system.label.npe01.Matching_Donation_Record_Suffix */, new string[] {oppty.Name,oppty.Account.Name,oppty.CloseDate.format(),system.today().format()}));
+        params.put('opp3',string.format(system.label.npe01.Matching_Donation_Record_Suffix, new string[] {oppty.Name,oppty.Account.Name,oppty.CloseDate.format(),system.today().format()}));
         params.put('opp7',oppty.Amount.format());
         params.put('opp9',oppty.CloseDate.format());
         

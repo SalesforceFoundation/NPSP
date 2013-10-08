@@ -500,7 +500,7 @@ global with sharing class CAO_IndividualAccounts{
             sum += o.Opportunity.Amount;
         }
         
-        String totalString = 'undone' /* system.label.npe01.DefaultContactTransactionCurrency */;
+        String totalString = system.label.npe01.DefaultContactTransactionCurrency;
         
         totalString += String.valueOf(sum);
         if(!totalString.contains('.')){

@@ -26,12 +26,10 @@
     <apex:sectionHeader title="Contact Merge" subTitle="Merge Duplicate Contact Records">
         <description>
             <ol>
-                <!-- DJH:UNDONE
-                <li>{    $Label.npe01__Contact_Merge_Step1}</li>
-                <li>{    $Label.npe01__Contact_Merge_Step2}</li>
-                <li>{    $Label.npe01__Contact_Merge_Step3}</li>
-                <li>{    $Label.npe01__Contact_Merge_Step4}</li>
-                 -->
+                <li>{$Label.npe01__Contact_Merge_Step1}</li>
+                <li>{$Label.npe01__Contact_Merge_Step2}</li>
+                <li>{$Label.npe01__Contact_Merge_Step3}</li>
+                <li>{$Label.npe01__Contact_Merge_Step4}</li>
             </ol>
         </description>
     </apex:sectionHeader>
@@ -66,7 +64,7 @@
         <apex:pageMessages /> 
         <apex:outputPanel id="searchresults" layout="block">
             <apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''}">
-            {!'undone' } /* $Label.npe01__Contact_Merge_Error_Confirm_Message_Nothing_Found */
+            {!$Label.npe01__Contact_Merge_Error_Confirm_Message_Nothing_Found}
             </apex:outputPanel>
             <apex:form >
                 <apex:pageBlock title="Found Contacts" rendered="{!displaySearchResults}"> 
@@ -136,7 +134,7 @@
                         </table>
                     </apex:outputPanel>
                     <apex:pageBlockButtons id="mergebutton">
-                        <apex:commandButton onClick="return confirm('UNDONE ' /* {   $Label.npe01__Contact_Merge_Error_Confirm_Message} */);" action="{!mergeContacts}" value="Merge"/> 
+                        <apex:commandButton onClick="return confirm({!$Label.npe01__Contact_Merge_Error_Confirm_Message});" action="{!mergeContacts}" value="Merge"/> 
                     </apex:pageBlockButtons>
                 </apex:pageBlock> 
             </apex:form>

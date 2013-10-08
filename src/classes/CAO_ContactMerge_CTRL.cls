@@ -143,12 +143,12 @@ public with sharing class CAO_ContactMerge_CTRL {
         
         // Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error. 
         if (this.selectedRecordsCount <=1) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Too_Few_Contacts */));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Too_Few_Contacts));
             return;
         }
         
         if (this.selectedRecordsCount >3 ) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Too_Many_Contacts */));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Too_Many_Contacts));
             return;
         }
         
@@ -190,11 +190,11 @@ public with sharing class CAO_ContactMerge_CTRL {
             contacts = Database.query(query); // Query the records
             // Ensure we got back the same number of records as expected. In case any record got deleted/moved since last search.
             if (contacts == null || contacts.size() != this.selectedRecordsCount) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Query_Failed */ + ' ' + 'undone' /* label.npe01.Contact_Merge_Error_please_retry*/));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry));
                 return;
             }
         } catch (Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Contact_not_found */ + ' Error: ' + e));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Contact_not_found  + ' Error: ' + e));
             return;
         }
         
@@ -454,7 +454,7 @@ public with sharing class CAO_ContactMerge_CTRL {
             List<Contact> lock = [Select id from Contact where id IN :allContacts for update];
             
             if (lock == null || lock.size() != allContacts.size()) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Lock_failed */ + ' ' + 'undone' /* label.npe01.Contact_Merge_Error_please_retry*/) );
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Lock_failed  + ' ' + label.npe01.Contact_Merge_Error_please_retry) );
                 return null;
             }
             
@@ -466,14 +466,14 @@ public with sharing class CAO_ContactMerge_CTRL {
                     return new PageReference('/' + master.id);
                 } else {
                     Database.rollback(sp);
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Merge_Failed */ + ' ' + 'undone' /* label.npe01.Contact_Merge_Error_please_retry */));
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry));
                 }
             } catch (Exception e) {
                 Database.rollback(sp);
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_Merge_Failed */ + ' Error: ' + e));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
             }
         } else {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'undone' /* label.npe01.Contact_Merge_Error_No_Master */));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_No_Master));
         }
         
         return null;

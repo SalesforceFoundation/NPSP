@@ -119,7 +119,7 @@ private class CAO_ContactMerge_TEST {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('undone' /* label.npe01.Contact_Merge_Error_Too_Few_Contacts */, m.getDetail());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
         System.assertEquals(1, controller.step); // We should still be on step 1
         
         controller.search();
@@ -227,7 +227,7 @@ private class CAO_ContactMerge_TEST {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('undone' /* label.npe01.Contact_Merge_Error_Query_Failed */ + ' ' + 'undone' /* label.npe01.Contact_Merge_Error_please_retry */, m.getDetail());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
         System.assertEquals(1, controller.step); // We should still be on step 1
         
         Test.stopTest();
@@ -300,7 +300,7 @@ private class CAO_ContactMerge_TEST {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('undone' /* label.npe01.Contact_Merge_Error_Lock_failed */ + ' ' + 'undone' /* label.npe01.Contact_Merge_Error_please_retry */, m.getDetail());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Lock_failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
         
         Test.stopTest();
         
@@ -343,7 +343,7 @@ private class CAO_ContactMerge_TEST {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('undone' /* label.npe01.Contact_Merge_Error_Too_Few_Contacts */, m.getDetail());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
     }
     
     
@@ -429,7 +429,7 @@ private class CAO_ContactMerge_TEST {
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals('undone' /* label.npe01.Contact_Merge_Error_Too_Many_Contacts */, m.getDetail());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
     }
     
     private static void selectMasterRecord(CAO_ContactMerge_CTRL cont, Id masterId) {

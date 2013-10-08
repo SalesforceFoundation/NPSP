@@ -102,7 +102,7 @@ public without sharing class CAO_OpportunityContactRoles {
                 try {
                     CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_ID_for_Role__c, Role = CAO_OpportunityContactRoles.getDefaultRole(), IsPrimary = true));
                 } catch (exception e) {
-                    o.addError('undone' /* Label.Opportunity_Contact_Role_Error_Bad_Contact_Id */);
+                    o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                 }
             }
         }
@@ -167,7 +167,7 @@ public without sharing class CAO_OpportunityContactRoles {
                         o.AccountId = accountForContact.Id;
                     }
                 } else {
-                    o.addError('undone' /* Label.Opportunity_Contact_Role_Error_Bad_Contact_Id */);
+                    o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                 }            
             }
         }       
