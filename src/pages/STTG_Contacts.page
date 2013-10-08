@@ -1,6 +1,78 @@
-<apex:page >
-<!-- Begin Default Content REMOVE THIS -->
-<h1>Congratulations</h1>
-This is your new Page
-<!-- End Default Content REMOVE THIS -->
+<apex:page id="NPSPContactsSettings" controller="STTG_Contacts_CTRL" action="{!onPageLoad}">
+    <apex:form id="form">   
+        <apex:sectionHeader title="Contacts and Organizations Settings" subtitle="Configure Settings">
+            <description>
+                Settings that control the behavior of the Contacts and Organizations package. Changing these will change how your Nonprofit Starter Pack behaves.
+            </description>  
+        </apex:sectionHeader>
+        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock id="contactssettings" title="Contacts Settings">         
+            <apex:pageBlockSection id="contactsettingssection" title="Account Model" columns="1">
+                <apex:outputPanel >{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</apex:outputPanel>
+                <apex:pageBlockSectionItem helpText="Select the Account Model. Only change this setting if you understand the ramifications.">
+                    <apex:outputLabel value="Account Processor"/>
+                    <apex:selectList value="{!settings.npe01__Account_Processor__c}" multiselect="false" size="1">
+                        <apex:selectOptions value="{!accountmodels}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="contactrolesection" title="Automatic Contact Roles" columns="1">
+            <apex:outputPanel >{!$Label.npe01__Contacts_Settings_Contact_Roles_Help_Text}</apex:outputPanel>
+                <apex:inputfield value="{!settings.npe01__Enable_Opportunity_Contact_Role_Trigger__c}"/>
+                
+                <apex:pageBlockSectionItem helpText="Select the Default Contact Role">
+                    <apex:outputLabel value="Default Role"/>
+                    <apex:selectList value="{!settings.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1">
+                        <apex:selectOptions value="{!contactRoles}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="paymentssection" title="Payment Configuration" columns="2">
+                <apex:pageBlockSectionItem helpText="Enables the automatic creation of Payments for Donations (Opportunities) and enables the Payments Wizard.">
+                    <apex:outputLabel value="Enable Payments"/>
+                    <apex:inputCheckBox value="{!settings.npe01__Payments_Enabled__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="leadssection" title="Lead Conversion Configuration" columns="2">
+                <apex:pageBlockSectionItem helpText="Sets the default option to create an Opportunity when converting a lead.  Behavior can be overriden on a case-by-case basis in the conversion wizard.">
+                    <apex:outputLabel value="Create Default Opportunity On Convert"/>
+                    <apex:inputCheckBox value="{!settings.npe01__Default_Opp_on_Convert__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection> 
+            
+            <apex:pageBlockSection id="pkgupdatesection" title="Package Update Information & Configuration" columns="2">
+                <apex:outputPanel layout="inline">
+                <apex:outputLabel style="font-weight: bold;" value="Current Package Status: " for="statusvalue"/>
+                <apex:outputText id="statusvalue" value="{!pkgupdatestatus}" style="font-weight: bold; {!IF(pkgupdatestatus == 'New Update Available', 'color: red', IF(pkgupdatestatus == 'No New Updates Available', 'color: green', 'color: GoldenRod'))}" />                
+
+                
+                <br/><br/>
+                <apex:outputText value="My Contacts & Organizations version: {0}">
+                    <apex:param value="{!myversion}"/>
+                </apex:outputText>
+                <br/><br/>
+                <apex:outputText value="The latest Contacts & Organizations version: {0}">
+                    <apex:param value="{!maxversion}"/>
+                </apex:outputText>
+                <br/><br/>
+                <apex:outputText style="font-style: italic;" value="Last update check: {0}">
+                   <apex:param value="{!lastupdate}"/>
+                </apex:outputText>
+
+                </apex:outputPanel>   
+                
+                <apex:pageBlockSection columns="1">
+                <apex:inputfield value="{!settings.npe01__Enable_Update_Check__c}"/>
+                <apex:inputfield value="{!settings.npe01__Update_Check_Interval__c}"/>
+                <apex:commandButton value="Check for New Updates" title="Manually calls out to check for new updates for this package" action="{!checkForUpdates}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons id="contactssettingsbuttons">
+                <apex:commandButton id="updatesettingsbutton" action="{!updateSettings}" value="Update the Contacts and Organizations Settings" />
+            </apex:pageBlockButtons> 
+        </apex:pageBlock>
+    </apex:form>    
 </apex:page>
