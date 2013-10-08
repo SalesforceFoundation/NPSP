@@ -16,7 +16,7 @@
         <members>REL_ProcessControl</members>
         <members>REL_Relationships_TEST</members>
         <members>REL_Relationships</members>
-        <members>RelationshipsViewer_CTRL</members>
+        <members>REL_RelationshipsViewer_CTRL</members>
         <members>REL_Utils</members>
         <members>STTG_AffiliationsSettings_CTRL</members>
         <members>STTG_AffiliationsSettings_TEST</members>
