@@ -31,7 +31,7 @@ trigger CAO_OpportunityPayments on Opportunity (after insert, after update) {
     
     npe01__Contacts_and_Orgs_Settings__c cos = CAO_Constants.getContactsSettings();
     
-    if (true /* DJH:UNDONE !cos.npe01__DISABLE_OpportunityPayments_trigger__c */){
+    if (!cos.npe01__DISABLE_OpportunityPayments_trigger__c){
         if (trigger.isAfter && trigger.isInsert){
             CAO_PaymentCreator pc = new CAO_PaymentCreator(Trigger.newMap, Trigger.oldMap, CAO_Constants.triggerAction.afterInsert);        
         }

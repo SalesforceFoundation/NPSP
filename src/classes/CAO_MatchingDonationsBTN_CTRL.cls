@@ -63,7 +63,7 @@ public with sharing class CAO_MatchingDonationsBTN_CTRL {
         Map<string,string> params = pageRef.getParameters();
 
         //set record type based on source donation (label.npe01.= "$Source"), or other type
-        if('undone' /* /* system.label.npe01.Matching_Donation_Record_Type */ == '$Source')
+        if(system.label.npe01.Matching_Donation_Record_Type == '$Source')
         {
             params.put('RecordType',oppty.RecordTypeId);
         } 

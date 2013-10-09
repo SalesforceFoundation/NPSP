@@ -32,7 +32,7 @@ trigger CAO_OpportunityAccount on Opportunity (before insert) {
     npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
     
      //Create contact roles as needed for new opps.
-    if(Trigger.isBefore && Trigger.isInsert /* DJH:UNDONE && !ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c */ && ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c)
+    if(Trigger.isBefore && Trigger.isInsert && !ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c && ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c)
     {
         CAO_OpportunityContactRoles.opportunityAccounts(Trigger.new); 
     }

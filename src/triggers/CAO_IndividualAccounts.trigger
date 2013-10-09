@@ -31,7 +31,7 @@ trigger CAO_IndividualAccounts on Contact (before insert, before update, after i
 
     npe01__Contacts_and_Orgs_Settings__c cos = CAO_Constants.getContactsSettings();
     
-    if (true /* DJH:UNDONE !cos.npe01__DISABLE_IndividualAccounts_trigger__c */){
+    if (!cos.npe01__DISABLE_IndividualAccounts_trigger__c){
         if(Trigger.isInsert && Trigger.isBefore){
             CAO_IndividualAccounts process = new CAO_IndividualAccounts(Trigger.new, Trigger.old, CAO_Constants.triggerAction.beforeInsert);
         }

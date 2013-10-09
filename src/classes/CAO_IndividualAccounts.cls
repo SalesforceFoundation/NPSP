@@ -58,7 +58,7 @@ global with sharing class CAO_IndividualAccounts{
     {
             ContactsSettings = CAO_Constants.getContactsSettings();
             
-            if(true /* DJH:UNDONE !ContactsSettings.npe01__Disable_Account_Model_Trigger__c */){
+            if(!ContactsSettings.npe01__Disable_Account_Model_Trigger__c){
             List<Contact> individualInserts = new List<Contact>();
             List<Contact> individualUpdates = new List<Contact>();
             List<Contact> contactDeletes = new List<Contact>();

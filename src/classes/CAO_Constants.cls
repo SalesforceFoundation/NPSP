@@ -85,15 +85,6 @@ global with sharing class CAO_Constants {
 
                 //ContactsSettings = new npe01__Contacts_and_Orgs_Settings__c();
 
-                // DJH:UNDONE: force triggers off until we can install a new npe01 package
-                ContactsSettings.npe01__Disable_Account_Model_Trigger__c = true;
-                ContactsSettings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityContactRoles_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityPayments_trigger__c = true;
-                
-                
-                
                 //set them up with their old setting in the new settings object
                 if(usedToBeOneToOne){
                     ContactsSettings.npe01__Account_Processor__c = ONE_TO_ONE_PROCESSOR;
@@ -109,8 +100,6 @@ global with sharing class CAO_Constants {
                 insert ContactsSettings;
             }
         }
-        system.debug('DJH:getContactsSettings');
-        system.debug(ContactsSettings);           
         return ContactsSettings;
     }
     
@@ -128,15 +117,7 @@ global with sharing class CAO_Constants {
             npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c,
             npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c
             );
-                // DJH:UNDONE: force triggers off until we can install a new npe01 package
-                ContactsSettings.npe01__Disable_Account_Model_Trigger__c = true;
-                ContactsSettings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityContactRoles_trigger__c = true;
-                ContactsSettings.npe01__DISABLE_OpportunityPayments_trigger__c = true;
         insert ContactsSettings;
-        system.debug('DJH:getContactsSettingsForTests');
-        system.debug(ContactsSettings);           
         return ContactsSettings;
     }
 
