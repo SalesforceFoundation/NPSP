@@ -103,7 +103,7 @@ public with sharing class STTG_Contacts_CTRL {
     }
     
     public void checkForUpdates(){
-        CAO_NPSPPkgVersionCheck npvc = new CAO_NPSPPkgVersionCheck('npe01');        
+        VER_PkgVersionCheck npvc = new VER_PkgVersionCheck('npe01');        
         npvc.NPSPCheckVersion(true);
     }
     
