@@ -1,0 +1,1216 @@
+/*
+    Copyright (c) 2009, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2011 (2.x)
+* @description Tests for CON_ContactMerge_CTRL 
+*/
+@isTest
+private class CON_ContactMerge_TEST {
+
+    npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+    
+    //exercise the many UI variables
+    static testMethod void exerciseUI() {
+        
+        //set up 3 contacts for the merge interface to work with
+        
+        String newContactMailingStreet = '123 Elm St';
+        String workphone = '5554567890';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = workphone,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        String homephone = '1234567890';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            HomePhone = homephone,
+            npe01__PreferredPhone__c = 'Home',
+            MailingStreet = secondContactMailingStreet
+        );
+        
+        String thirdContactfirstName = 'test';
+        String thirdContactLastName = '3Contact_forTests_Merge';
+        String thirdContactMailingStreet = '123 Elm St';
+        Contact con3 = new Contact(
+            FirstName=thirdContactfirstName,
+            LastName=thirdContactLastName,
+            MailingStreet = thirdContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2, con3};
+        
+        Test.startTest();
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+
+        controller.searchText = 'test';
+        
+        controller.search();
+        
+        //Since we didn't index the results yet, search results should be empty and should not be displayed
+        system.assert(!controller.displaySearchResults);
+
+        Id[] fixedSearchResults=new Id[3]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        fixedSearchResults[2]=con3.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        //call the search method, which will return the bogus SOSL results
+        
+        controller.search();
+        
+        //search results should be displayed
+        system.assert(controller.displaySearchResults);
+        
+        //there should be 3 Contacts returned
+        system.assertEquals(3,controller.searchResults.size());
+        
+        controller.searchResults[0].selected = true;
+        
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
+        System.assertEquals(1, controller.step); // We should still be on step 1
+        
+        controller.search();
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true; // Select second contact
+        String record1Id = controller.searchResults[1].con.id;
+        
+        controller.nextStep();
+        
+        System.assertEquals(2, controller.step); // We are on to next step now
+        
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
+        
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.fieldName.equals('Master')) {
+                System.assert(row.showRadio);
+                System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
+            }
+            
+            if (row.fieldName.equalsIgnoreCase('MailingStreet')) {
+                System.assert(!row.showRadio); // Since both records have the same value, we dont need to show the radio
+            }
+            
+            if (row.fieldName.equalsIgnoreCase('homephone')) {
+                System.assert(row.showRadio); 
+                System.assertEquals(con2.id, row.selectedValue); // Since contact 1 has a null homephone while contact 2 has a non-null homephone, the contact 2 should be selected here.
+            }
+        }
+        
+        // Test select all for a record
+        ApexPages.currentPage().getParameters().put('recordId', record1Id);
+        controller.selectDefaultRecord();
+        
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.showRadio) {
+                System.assertEquals(record1Id, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
+            }
+        }
+        
+        Test.stopTest();
+        
+    }
+    
+    // Try selecting a deleted record for merge
+    static testMethod void failNextStepWithDeletedRecordSelected() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        //set up 3 contacts for the merge interface to work with
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        insert new Contact[]{con, con2};
+        
+        Test.startTest();
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+
+        controller.searchText = 'test';
+        
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        //call the search method, which will return the bogus SOSL results
+        
+        controller.search();
+        
+        //there should be 2 Contacts returned
+        system.assertEquals(2,controller.searchResults.size());
+        
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        // delete 1 contact
+        delete con;
+        
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
+        System.assertEquals(1, controller.step); // We should still be on step 1
+        
+        Test.stopTest();
+        
+    }
+    
+        // Try selecting a deleted record for merge
+    static testMethod void failMergeWithDeletedRecordSelected() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        //set up 3 contacts for the merge interface to work with
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        insert new Contact[]{con, con2};
+        
+        Test.startTest();
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+
+        controller.searchText = 'test';
+        
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        //call the search method, which will return the bogus SOSL results
+        
+        controller.search();
+        
+        //there should be 2 Contacts returned
+        system.assertEquals(2,controller.searchResults.size());
+        
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+                
+        controller.nextStep();
+        
+        // delete 1 contact
+        delete con;
+        
+        controller.mergeContacts();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Lock_failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
+        
+        Test.stopTest();
+        
+    }
+   
+    static testMethod void tooFewContactsSelected() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        //set up 3 contacts for the merge interface to work with
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value      
+        Id[] fixedSearchResults=new Id[1]; 
+        fixedSearchResults[0]=con.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //call the search method, which will return the bogus SOSL results
+        controller.search();
+        
+        controller.searchResults[0].selected = true;
+              
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
+    }
+    
+    
+    static testMethod void tooManyContactsSelected() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        //set up 3 contacts for the merge interface to work with
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String thirdContactfirstName = 'test';
+        String thirdContactLastName = '3Contact_forTests_Merge';
+        String thirdContactMailingStreet = '123 Elm St';
+        Contact con3 = new Contact(
+            FirstName=thirdContactfirstName,
+            LastName=thirdContactLastName,
+            MailingStreet = thirdContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String fourthContactfirstName = 'test';
+        String fourthContactLastName = '4Contact_forTests_Merge';
+        String fourthContactMailingStreet = '123 Elm St';
+        Contact con4 = new Contact(
+            FirstName=fourthContactfirstName,
+            LastName=fourthContactLastName,
+            MailingStreet = fourthContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2, con3, con4};
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        
+        Id[] fixedSearchResults=new Id[4]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        fixedSearchResults[2]=con3.Id; 
+        fixedSearchResults[3]=con4.Id;
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //call the search method, which will return the bogus SOSL results
+        controller.search();
+        
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.searchResults[2].selected = true;
+        controller.searchResults[3].selected = true;
+        
+        controller.nextStep();
+        
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message m = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
+        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
+    }
+    
+    private static void selectMasterRecord(CON_ContactMerge_CTRL cont, Id masterId) {
+        for (CON_ContactMerge_CTRL.FieldRow row : cont.fieldRows) {
+            if (row.showRadio) {
+                row.selectedValue = String.valueOf(masterId);
+            }
+        }   
+    }
+    
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org should be deleted
+    static testMethod void merge2OneToOne() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con2.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //first contact should be deleted
+        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con.id]);
+        //first contact's account should be deleted
+        system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+        //Second contact's account id should not have changed
+        system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
+    }
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org shouldn't be deleted because it has open opportunities
+    static testMethod void merge2OneToOneOpps() {
+        
+        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
+        insert o;
+        
+        //select the first as winner
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con2.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //first contact should be deleted
+        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con.id]);
+        //first contact's account should be deleted
+        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+        
+        // check opps
+        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+        
+        //Second contact's account id should not have changed
+        system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
+    }
+    
+    //merge a one-to-one contact with one in a normal organzation
+    //the organization shouldn't be deleted
+    static testMethod void merge2Organizations() {
+        
+        Account acc = new Account(
+            Name = 'Test Account 1'
+        );
+        
+        Account acc2 = new Account(
+            Name = 'Test Account 2'
+        );
+        insert new Account[]{acc, acc2};
+
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            AccountId = acc.id,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            AccountId = acc2.id,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account should not be deleted
+        system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    
+    //merge two private contacts
+    //the organization shouldn't be deleted
+    static testMethod void merge2PrivateContacts() {
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__Private__c = true,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__Private__c = true,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //First contact's account id should not have changed
+        system.assertEquals(null,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    
+    //merge two contacts in the Individual Account
+    //the organization shouldn't be deleted
+    static testMethod void merge2Individuals() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account should not be deleted
+        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    /*
+    //merge one contacts in the Individual Account, one in one-to-one model
+    //the individual organization shouldn't be deleted
+    static testMethod void merge1Individual1OneToOne() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests2_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account should not be deleted
+        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.Id].AccountId);
+    }
+    
+    //merge one contacts in the Individual Account, one in one-to-one model
+    //the individual organization shouldn't be deleted
+    static testMethod void merge1OneToOne1Individual() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests2_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            
+            npe01__SystemAccountProcessor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account should be deleted
+        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.accountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    */
+    //merge one contacts in the Individual Account, one in one-to-one model
+    //the individual organization shouldn't be deleted
+    static testMethod void merge1Org1OneToOne() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Account acc = new Account(
+            Name = 'Test Account 1'
+        );
+        insert acc;
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            AccountId = acc.id,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account should be deleted
+        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.accountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    
+    static testMethod void merge3OneToOne() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        
+        String thirdContactfirstName = 'test';
+        String thirdContactLastName = '3Contact_forTests_Merge';
+        String thirdContactMailingStreet = '123 Elm St';
+        Contact con3 = new Contact(
+            FirstName=thirdContactfirstName,
+            LastName=thirdContactLastName,
+            MailingStreet = thirdContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert new Contact[]{con, con2, con3};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        con3 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con3.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[3]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        fixedSearchResults[2]=con3.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        controller.search();
+        
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        controller.searchResults[2].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con3.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //first and second contact should be deleted
+        system.assertEquals(1,[select count() from Contact where id=:con3.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con.id]);
+        //first and second contact's account should be deleted
+        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
+        //Third contact's account id should not have changed
+        system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
+    }
+    
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org should be deleted
+    static testMethod void merge2OneToOneInSameAccount() {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+
+        String newContactMailingStreet = '123 Elm St';
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+        
+        Id conAccountId = [select accountId from Contact where id=:con.id].accountId;
+        
+        String secondContactfirstName = 'test';
+        String secondContactLastName = '2Contact_forTests_Merge';
+        String secondContactMailingStreet = '123 Elm St';
+        Contact con2 = new Contact(
+            FirstName=secondContactfirstName,
+            LastName=secondContactLastName,
+            MailingStreet = secondContactMailingStreet,
+            AccountId = conAccountId,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con2;
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //second contact should be deleted
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        //second contact's account shouldn't be deleted
+        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        //First contact's account id should not have changed
+        system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
+    }
+    
+    
+    static testMethod void ghIssue6(){
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        String newContactMailingStreet = '123 Elm St';
+
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName='O\'Sullivan',
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );        
+        Contact con2 = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName='O\'Sullivan',
+            MailingStreet = newContactMailingStreet,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );        
+        insert new Contact[]{con, con2};
+        
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        system.assertEquals(con.LastName, 'O\'Sullivan');
+                
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'O\'Sullivan';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        List<Id> fixedSearchResults=new List<Id>(); 
+        fixedSearchResults.add(con.Id);
+        fixedSearchResults.add(con2.Id);  
+        Test.setFixedSearchResults(fixedSearchResults); 
+        controller.search();
+        
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;        
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con2.id);
+        
+        //merge them
+        controller.mergeContacts();
+    /*    
+        //first and second contact should be deleted
+        system.assertEquals(1,[select count() from Contact where id=:con3.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
+        system.assertEquals(0,[select count() from Contact where id=:con.id]);
+        //first and second contact's account should be deleted
+        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
+        //Third contact's account id should not have changed
+        system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);*/
+        
+        
+    }
+  
+}

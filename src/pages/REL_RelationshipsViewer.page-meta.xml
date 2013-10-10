@@ -4,22 +4,7 @@
     <label>REL_RelationshipsViewer</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>1</minorNumber>
-        <namespace>npe01</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>91</minorNumber>
-        <namespace>npe03</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>0</minorNumber>
+        <minorNumber>9</minorNumber>
         <namespace>npe4</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>90</minorNumber>
-        <namespace>npe5</namespace>
     </packageVersions>
 </ApexPage>

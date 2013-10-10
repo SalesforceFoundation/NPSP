@@ -1,50 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AFFL_Affiliations</members>
-        <members>AFFL_Affiliations_TEST</members>
-        <members>AFFL_BulkTests_TEST</members>
-        <members>RD_AddDonationsBTN_CTRL</members>
-        <members>RD_BulkTests_TEST</members>
-        <members>RD_ErrorHandling</members>
-        <members>RD_JobProgress_CTRL</members>
-        <members>RD_ProcessControl</members>
-        <members>RD_RecurringDonations</members>
-        <members>RD_RecurringDonations_BATCH</members>
-        <members>RD_RecurringDonations_SCHED</members>
-        <members>RD_RecurringDonations_TEST</members>
-        <members>REL_ProcessControl</members>
-        <members>REL_Relationships_TEST</members>
-        <members>REL_Relationships</members>
-        <members>REL_RelationshipsViewer_CTRL</members>
-        <members>REL_Utils</members>
-        <members>STTG_AffiliationsSettings_CTRL</members>
-        <members>STTG_AffiliationsSettings_TEST</members>
-        <members>STTG_RecurringDonations_CTRL</members>
-        <members>STTG_Relationships_CTRL</members>
+        <members>*</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>RD_JobProgress</members>
+        <members>*</members>
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>RD_AddDonationsBTN</members>
-        <members>STTG_RecurringDonations</members>
-        <members>STTG_affiliationsSettings</members>
-        <members>REL_RelationshipsViewer</members>
-        <members>STTG_Relationships</members>
+        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
         <members>*</members>
-        <members>Affiliations</members>
         <members>RD_Donations</members>
         <members>RD_RecurringDonations</members>
         <members>REL_RelationshipCampaignMembers</members>
         <members>REL_RelationshipContacts</members>
         <members>REL_Relationships</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomApplication</name>
     </types>
     <types>
         <members>*</members>

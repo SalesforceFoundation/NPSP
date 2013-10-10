@@ -3,23 +3,8 @@
     <apiVersion>28.0</apiVersion>
     <label>STTG_affiliationsSettings</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>1</minorNumber>
-        <namespace>npe01</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>0</minorNumber>
-        <namespace>npe03</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>0</minorNumber>
-        <namespace>npe4</namespace>
-    </packageVersions>
-    <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>55</minorNumber>
+        <minorNumber>90</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
 </ApexPage>
