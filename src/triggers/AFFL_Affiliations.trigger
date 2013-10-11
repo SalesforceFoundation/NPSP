@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger Affiliations on Contact (before insert, before update, before delete, 
+trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
 after insert, after update, after delete, after undelete) {
 
     if( Trigger.isAfter && Trigger.isInsert ){
