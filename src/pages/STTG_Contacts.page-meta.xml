@@ -4,7 +4,7 @@
     <label>STTG_Contacts</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>90</minorNumber>
+        <minorNumber>91</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
 </ApexPage>
