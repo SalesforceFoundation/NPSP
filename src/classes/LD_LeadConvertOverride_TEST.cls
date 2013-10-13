@@ -41,7 +41,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
  
         String companyName = 'Individual';
         
@@ -60,7 +60,7 @@ private class LD_LeadConvertOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         
         //this should NOT convert the lead - because it is one to one
         PageReference landingPage = ext.convertLead();
@@ -99,7 +99,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
  
         String companyName = 'Individual';
 
@@ -124,7 +124,7 @@ private class LD_LeadConvertOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         
         //this should NOT convert the lead - because it is one to one
         PageReference landingPage = ext.convertLead();
@@ -162,7 +162,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         
         String companyName = 'Individual';
         
@@ -181,7 +181,7 @@ private class LD_LeadConvertOverride_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         PageReference landingPage = ext.convertLead();
         system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
     }
@@ -192,7 +192,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride')); 
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride')); 
         
         String companyName = 'Individual';
         
@@ -210,7 +210,7 @@ private class LD_LeadConvertOverride_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         PageReference landingPage = ext.convertLead();
         system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
     }
@@ -221,7 +221,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         
         String companyName = 'Individual';
         
@@ -238,7 +238,7 @@ private class LD_LeadConvertOverride_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         PageReference landingPage = ext.convertLead();
         
     }
@@ -248,7 +248,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         
         String companyName = 'FunkyTown USA';
         
@@ -265,7 +265,7 @@ private class LD_LeadConvertOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         //set the toggle
         ext.con = 'NEW_CONTACT';
         
@@ -285,7 +285,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Test.setCurrentPageReference(new PageReference('Page.CAO_LeadConvertOverride'));
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         
         String companyName = 'self';
         
@@ -302,7 +302,7 @@ private class LD_LeadConvertOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         
         //pass the controller into the extension
-        CAO_LeadConvertOverride_CTRL ext = new CAO_LeadConvertOverride_CTRL(sc); 
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc); 
         //set the toggle
         ext.con = 'NEW_CONTACT';
         
