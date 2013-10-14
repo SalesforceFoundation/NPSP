@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
+ 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,14 +27,9 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger Affiliations on Contact (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
-
-    if( Trigger.isAfter && Trigger.isInsert ){
-        AFFL_Affiliations process = new AFFL_Affiliations(Trigger.new, Trigger.old, AFFL_Affiliations.triggerAction.afterInsert);
-    }
-    if( Trigger.isAfter && Trigger.isUpdate ){
-        AFFL_Affiliations process = new AFFL_Affiliations(Trigger.new, Trigger.old, AFFL_Affiliations.triggerAction.afterUpdate);
-    }
-
-}
+/**
+* @author Salesforce.com Foundation
+* @date 2012 (2.0)
+* @description Semaphore for recursion prevention 
+*/
+public with sharing class RD_ProcessControl {public static boolean hasRun = false;public static boolean batchButton = false;}

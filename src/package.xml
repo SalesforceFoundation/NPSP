@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AFFL_Affiliations</members>
-        <members>AFFL_Affiliations_TEST</members>
-        <members>AFFL_BulkTests_TEST</members>
-        <members>STTG_AffilationsSetttings_TEST</members>
-        <members>STTG_AffiliationsSettings_CTRL</members>
+        <members>*</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>STTG_affiliationsSettings</members>
+        <members>*</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>Affiliations</members>
+        <members>*</members>
+        <members>RD_Donations</members>
+        <members>RD_RecurringDonations</members>
+        <members>REL_RelationshipCampaignMembers</members>
+        <members>REL_RelationshipContacts</members>
+        <members>REL_Relationships</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomObject</name>
     </types>
     <version>28.0</version>
 </Package>
