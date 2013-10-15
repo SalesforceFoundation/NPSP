@@ -1,20 +1,26 @@
 #!/usr/bin/python
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
+import os
 import time
 import ConfigParser
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains
 from getpass import getpass
 
 npsp_user = None
 npsp_pass = None
 
-config = ConfigParser().readfp(open('cumulus.cfg'))
 
 def main():
     global npsp_user
     npsp_user = raw_input('Dev Org Username: ')
     global npsp_pass
     npsp_pass = getpass('Dev Org Password: ')
+
+    config_file = os.path.dirname(os.path.abspath(__file__)) + '/cumulus.cfg'
+
+    global config
+    config = ConfigParser.ConfigParser()
+    config.readfp(open(config_file))
 
     # Setup selenium session
     wd = WebDriver()
@@ -77,7 +83,7 @@ def create_opp_record_type(wd):
     wd.find_element_by_name("save").click()
 
 def install_pkg_contactsandorganizations(wd):
-    wd.get(config.get('Contacts_and_Organizations','install_url'))
+    wd.get(config.get('npe01','install_url'))
     #login(wd)
     wd.find_element_by_id("InstallPackagePage:InstallPackageForm:InstallBtn").click()
     wd.find_element_by_css_selector("label").click()
@@ -91,7 +97,7 @@ def install_pkg_contactsandorganizations(wd):
     wd.find_element_by_name("save").click()
 
 def install_pkg_households(wd):
-    wd.get(config.get('Households','install_url'))
+    wd.get(config.get('npo2','install_url'))
     #login(wd)
     wd.find_element_by_id("InstallPackagePage:InstallPackageForm:InstallBtn").click()
     wd.find_element_by_xpath("//div[@id='simpleDialog0Content']/table/tbody/tr/td[2]/div").click()
@@ -105,7 +111,7 @@ def install_pkg_households(wd):
     wd.find_element_by_name("save").click()
 
 def install_pkg_relationships(wd):
-    wd.get(config.get('Relationships','install_url'))
+    wd.get(config.get('npe4','install_url'))
     #login(wd)
     wd.find_element_by_id("InstallPackagePage:InstallPackageForm:InstallBtn").click()
     wd.find_element_by_name("goNext").click()
@@ -115,7 +121,7 @@ def install_pkg_relationships(wd):
     wd.find_element_by_name("save").click()
 
 def install_pkg_affiliations(wd):
-    wd.get(config.get('Affiliations','install_url'))
+    wd.get(config.get('npe5','install_url'))
     #login(wd)
     wd.find_element_by_id("InstallPackagePage:InstallPackageForm:InstallBtn").click()
     wd.find_element_by_name("goNext").click()
@@ -125,7 +131,7 @@ def install_pkg_affiliations(wd):
     wd.find_element_by_name("save").click()
 
 def install_pkg_recurringdonations(wd):
-    wd.get(config.get('Recurring_Donations','install_url'))
+    wd.get(config.get('npe03','install_url'))
     #login(wd)
     wd.find_element_by_id("InstallPackagePage:InstallPackageForm:InstallBtn").click()
     #wd.find_element_by_css_selector("label").click()

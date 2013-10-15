@@ -9,6 +9,7 @@ patterns = {
     'minor': r'<minorNumber>(\d+)</minorNumber>',
 }
 
+config_file = os.path.dirname(os.path.abspath(__file__)) + '/cumulus.cfg'
 src_dir = os.path.abspath(os.path.join(os.path.abspath(__file__),os.path.pardir,os.path.pardir,'src'))
 
 def get_meta_files():
@@ -94,7 +95,6 @@ def update_meta_files(files):
 def main():
     # Parse the config file
     global config;
-    config_file = os.path.dirname(os.path.abspath(__file__)) + '/cumulus.cfg'
     config = ConfigParser.ConfigParser()
     config.readfp(open(config_file))
 
