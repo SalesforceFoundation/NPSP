@@ -14,7 +14,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>BDE_BatchEntry</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>List</actionName>
@@ -22,7 +24,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>BDE_BatchEntry</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Tab</actionName>
@@ -30,7 +34,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <type>Default</type>
+        <content>BDE_BatchEntry</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>The holding object for batch entry. Interaction with this object should occur only through the Batch Data Entry tab.</description>
@@ -43,6 +49,11 @@
         <description>The batch information fields to be displayed above the data entry panel.</description>
         <displayedFields>
             <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>LastModifiedDate</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
@@ -108,12 +119,59 @@
         <unique>false</unique>
     </fields>
     <label>Batch</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Batch_Status__c</columns>
+        <columns>Object_Name__c</columns>
+        <columns>Number_of_Items__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Completed_Batches</fullName>
+        <columns>NAME</columns>
+        <columns>Batch_Status__c</columns>
+        <columns>Object_Name__c</columns>
+        <columns>Number_of_Items__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Batch_Status__c</field>
+            <operation>equals</operation>
+            <value>Complete</value>
+        </filters>
+        <label>Completed Batches</label>
+    </listViews>
+    <listViews>
+        <fullName>Open_Batches</fullName>
+        <columns>NAME</columns>
+        <columns>Batch_Status__c</columns>
+        <columns>Object_Name__c</columns>
+        <columns>Number_of_Items__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>Description__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Batch_Status__c</field>
+            <operation>notEqual</operation>
+            <value>Complete</value>
+        </filters>
+        <label>Open Batches</label>
+    </listViews>
     <nameField>
         <label>Batch Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
     <pluralLabel>Batches</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

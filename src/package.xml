@@ -14,11 +14,6 @@
     </types>
     <types>
         <members>*</members>
-        <members>RD_Donations</members>
-        <members>RD_RecurringDonations</members>
-        <members>REL_RelationshipCampaignMembers</members>
-        <members>REL_RelationshipContacts</members>
-        <members>REL_Relationships</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -27,7 +22,37 @@
     </types>
     <types>
         <members>*</members>
+        <members>Account</members>
+        <members>AccountContactRole</members>
+        <members>Activity</members>
+        <members>Asset</members>
+        <members>Campaign</members>
+        <members>CampaignMember</members>
+        <members>Case</members>
+        <members>CaseContactRole</members>
+        <members>Contact</members>
+        <members>ContentVersion</members>
+        <members>Contract</members>
+        <members>ContractContactRole</members>
+        <members>Event</members>
+        <members>Idea</members>
+        <members>Lead</members>
+        <members>Opportunity</members>
+        <members>OpportunityCompetitor</members>
+        <members>OpportunityContactRole</members>
+        <members>OpportunityLineItem</members>
+        <members>PartnerRole</members>
+        <members>Pricebook2</members>
+        <members>Product2</members>
+        <members>SocialPersona</members>
+        <members>Solution</members>
+        <members>Task</members>
+        <members>User</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
     </types>
     <version>28.0</version>
 </Package>
