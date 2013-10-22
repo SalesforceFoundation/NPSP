@@ -1602,13 +1602,7 @@ public class RD_RecurringDonations_TEST {
         list<SelectOption> mylist = controller.validInstallments;
         list<SelectOption> rdfield = controller.availableRDFields;
         list<SelectOption> oppfield = controller.availableOpportunityFields;
-        string myversion = controller.getMyVersion();
-        string maxversion = controller.getMaxVersion();
-        string uurl = controller.getUpdateURL();
-        string lupdte = controller.getLastUpdate();         
-        string getpkgupdatestatus = controller.getpkgupdatestatus();
         controller.trimOpportunities();
-        controller.checkForUpdates();
         controller.clearErrorQueue();
     }   
     //covering everything else 
@@ -1628,8 +1622,6 @@ public class RD_RecurringDonations_TEST {
         STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL(); 
         controller.getSettingsFirstTime();
         list<SelectOption> eeolist = controller.ErrorEmailOptions;
-        string updatestatus = controller.getpkgupdatestatus();
-        string lupdte = controller.getLastUpdate();
         controller.RDField = 'garbage';
         controller.OppField = 'garbage';
         controller.saveFieldMapping();

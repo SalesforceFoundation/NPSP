@@ -43,33 +43,6 @@
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection> 
             
-            <apex:pageBlockSection id="pkgupdatesection" title="Package Update Information & Configuration" columns="2">
-                <apex:outputPanel layout="inline">
-                <apex:outputLabel style="font-weight: bold;" value="Current Package Status: " for="statusvalue"/>
-                <apex:outputText id="statusvalue" value="{!pkgupdatestatus}" style="font-weight: bold; {!IF(pkgupdatestatus == 'New Update Available', 'color: red', IF(pkgupdatestatus == 'No New Updates Available', 'color: green', 'color: GoldenRod'))}" />                
-
-                
-                <br/><br/>
-                <apex:outputText value="My Contacts & Organizations version: {0}">
-                    <apex:param value="{!myversion}"/>
-                </apex:outputText>
-                <br/><br/>
-                <apex:outputText value="The latest Contacts & Organizations version: {0}">
-                    <apex:param value="{!maxversion}"/>
-                </apex:outputText>
-                <br/><br/>
-                <apex:outputText style="font-style: italic;" value="Last update check: {0}">
-                   <apex:param value="{!lastupdate}"/>
-                </apex:outputText>
-
-                </apex:outputPanel>   
-                
-                <apex:pageBlockSection columns="1">
-                <apex:inputfield value="{!settings.npe01__Enable_Update_Check__c}"/>
-                <apex:inputfield value="{!settings.npe01__Update_Check_Interval__c}"/>
-                <apex:commandButton value="Check for New Updates" title="Manually calls out to check for new updates for this package" action="{!checkForUpdates}"/>
-                </apex:pageBlockSection>
-            </apex:pageBlockSection>
             <apex:pageBlockButtons id="contactssettingsbuttons">
                 <apex:commandButton id="updatesettingsbutton" action="{!updateSettings}" value="Update the Contacts and Organizations Settings" />
             </apex:pageBlockButtons> 
