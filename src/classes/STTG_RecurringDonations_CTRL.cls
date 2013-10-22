@@ -174,31 +174,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
         }            
     }
     public string OppField{get;set;}
-    
-    /***  Vars for PKG Update Info ***/
-    public string getMyVersion(){return 'DJH:UNDONE';} //string.valueof(Package.Version.Request);}
-    public string getMaxVersion(){return rds.npe03__Max_Package_Version__c;}
-    public string getUpdateURL(){return rds.npe03__Package_Update_URL__c;}
-    public string getLastUpdate(){      
-        DateTime d = rds.npe03__Last_Update_Check__c;
-        string datestring = '';
-        if (d != null)
-            datestring = d.format('MMMMM dd, yyyy hh:mm:ss a');
-        return datestring;
-    }
-    public string getpkgupdatestatus(){
-        string status = rds.npe03__Has_Package_Update__c;
-        if (status == 'true')
-           status = 'New Update Available';
-        else if (status == 'false')
-           status = 'No New Updates Available';
-        else
-           status = status;
-           
-        return status;
-    }
-    /************************************/
-            
+                
     //called from action method for page 
     public PageReference getSettingsFirstTime() {
         rds = RD_RecurringDonations.getRecurringDonationsSettings();     
@@ -219,12 +195,6 @@ public with sharing class STTG_RecurringDonations_CTRL {
         if (pr == null){
             if (rds.npe03__Last_Update_Check__c == null){
                 skipIntegrityCheck = true;
-                checkforupdates();
-            }
-        
-            else{
-                // DJH:UNDONE RecurringDonationsPkgVersionCheck npvc = new RecurringDonationsPkgVersionCheck('npe03');        
-                // DJH:UNDONE npvc.RecurringDonationsCheckVersion(false);
             }
         }
         
@@ -390,11 +360,6 @@ public with sharing class STTG_RecurringDonations_CTRL {
         }               
         return null;
     }    
-    
-    public void checkForUpdates(){
-        //DJH:UNDONE RecurringDonationsPkgVersionCheck npvc = new RecurringDonationsPkgVersionCheck('npe03');        
-        //DJH:UNDONE npvc.RecurringDonationsCheckVersion(true);
-    }
     
     public pageReference clearErrorQueue(){
         delete [select id from npe03__Recurring_Donations_Error_Queue__c];

@@ -35,31 +35,7 @@
 public with sharing class STTG_Contacts_CTRL {
     
     public npe01__Contacts_and_Orgs_Settings__c settingsToUpdate;
-    public npe01__Contacts_and_Orgs_Settings__c pageSettings = new npe01__Contacts_and_Orgs_Settings__c();
-    
-    /********Vars for PKG Update Info *************/
-    public string getMyVersion(){return 'DJH:UNDONE' /* string.valueof(Package.Version.Request) */ ;}
-    public string getMaxVersion(){return pageSettings.npe01__Max_Package_Version__c;}
-    public string getLastUpdate(){      
-        DateTime d = pageSettings.npe01__Last_Update_Check__c;
-        string datestring = '';
-        if (d != null)
-            datestring = d.format('MMMMM dd, yyyy hh:mm:ss a');
-        return datestring;
-    }
-    public string getpkgupdatestatus(){
-        string status = pageSettings.npe01__Has_Package_Update__c;
-        if (status == 'true')
-           status = 'New Update Available';
-        else if (status == 'false')
-           status = 'No New Updates Available';
-        else
-           status = status;
-           
-        return status;
-    }
-    /*********************************************/
-    
+    public npe01__Contacts_and_Orgs_Settings__c pageSettings = new npe01__Contacts_and_Orgs_Settings__c();    
     
     public STTG_Contacts_CTRL(){
         
@@ -101,12 +77,6 @@ public with sharing class STTG_Contacts_CTRL {
         }
         return accountmodels;
     }
-    
-    public void checkForUpdates(){
-        VER_PkgVersionCheck npvc = new VER_PkgVersionCheck('npe01');        
-        npvc.NPSPCheckVersion(true);
-    }
-    
     
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);

@@ -35,31 +35,6 @@
                                     <apex:outputField id="errordisplayname" value="{!EmailErrorDisplayName.Name}" rendered="{!NOT(canEditRDSettings)}" label="Error Email Notifications" />
                                 </apex:PageBlockSectionItem>
                         </apex:PageBlockSection>
-                        <apex:pageBlockSection id="pkgVerCheck" title="Package Update Information & Configuration" columns="2" collapsible="false">
-                            <apex:outputPanel id="pkgverinfo">
-                                <apex:outputLabel style="font-weight: bold;" value="Current Package Status: " for="statusvalue" styleClass="labelCol first "/>
-                                <apex:outputText id="statusvalue" value="{!pkgupdatestatus}" style="font-weight: bold; {!IF(pkgupdatestatus == 'New Update Available', 'color: red', IF(pkgupdatestatus == 'No New Updates Available', 'color: green', 'color: GoldenRod'))}" />
-                                <br/><br/>
-                                <apex:outputText value="My Recurring Donations version: {0}" styleClass="labelCol first ">
-                                    <apex:param value="{!myversion}"/>
-                                </apex:outputText>
-                                <br/>
-                                <apex:outputText value="The latest Recurring Donations version: {0}" styleClass="labelCol first ">
-                                    <apex:param value="{!maxversion}"/>
-                                </apex:outputText>
-                                <br/><br/>
-                                <apex:outputText style="font-style: italic;" value="Last update check: {0}" styleClass="labelCol first ">
-                                    <apex:param value="{!lastupdate}"/>
-                                </apex:outputText>
-                            </apex:outputPanel>   
-                            <apex:pageBlockSection columns="1">
-                                <apex:inputfield value="{!rds.npe03__Enable_Update_Check__c}" rendered="{!canEditRDSettings}"/>
-                                <apex:outputfield value="{!rds.npe03__Enable_Update_Check__c}" rendered="{!NOT(canEditRDSettings)}"/>
-                                <apex:inputfield value="{!rds.npe03__Update_Check_Interval__c}" rendered="{!canEditRDSettings}"/>
-                                <apex:outputfield value="{!rds.npe03__Update_Check_Interval__c}" rendered="{!NOT(canEditRDSettings)}"/>
-                                <apex:commandButton value="Check for New Updates" title="Manually calls out to check for new updates for this package" action="{!checkForUpdates}" rerender="pkgverinfo,pkgVerCheck"/>
-                            </apex:pageBlockSection>
-                        </apex:pageBlockSection>                        
                         <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
                             <apex:commandButton value="Save" rendered="{!canEditRDSettings}" action="{!saveRDSettings}"/>  
                             <apex:commandButton value="Cancel" rendered="{!canEditRDSettings}" action="{!cancel}"/>
