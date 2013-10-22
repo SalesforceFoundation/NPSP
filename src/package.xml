@@ -14,17 +14,15 @@
     </types>
     <types>
         <members>*</members>
-        <members>RD_Donations</members>
-        <members>RD_RecurringDonations</members>
-        <members>REL_RelationshipCampaignMembers</members>
-        <members>REL_RelationshipContacts</members>
-        <members>REL_Relationships</members>
         <name>ApexTrigger</name>
     </types>
-    <types>
+    <types> 
         <members>*</members>
         <name>CustomApplication</name>
     </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
     <types>
         <members>*</members>
         <name>CustomObject</name>
@@ -32,6 +30,10 @@
     <types>
         <members>*</members>
         <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
     </types>
     <version>28.0</version>
 </Package>
