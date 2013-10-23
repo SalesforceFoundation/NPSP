@@ -16,13 +16,14 @@
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
-    <types> 
+    <types>
         <members>*</members>
         <name>CustomApplication</name>
     </types>
     <types>
         <members>*</members>
         <name>StaticResource</name>
+    </types>
     <types>
         <members>*</members>
         <name>CustomObject</name>
