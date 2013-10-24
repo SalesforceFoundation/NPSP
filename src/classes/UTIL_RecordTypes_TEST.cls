@@ -10,23 +10,23 @@ private class UTIL_RecordTypes_TEST {
     // TEST
     static testmethod void testRecTypes() {
         // try bogus values
-        Id reallyBogus = GetRecordTypeId('Bogus', 'Bogus');
-        Id bogus = GetRecordTypeId('Opportunity', 'Bogus');
-        bogus = GetRecordTypeId('Contact', 'Bogus');
-        bogus = GetRecordTypeId('Campaign', 'Bogus');
+        Id reallyBogus = UTIL_RecordTypes.GetRecordTypeId('Bogus', 'Bogus');
+        Id bogus = UTIL_RecordTypes.GetRecordTypeId('Opportunity', 'Bogus');
+        bogus = UTIL_RecordTypes.GetRecordTypeId('Contact', 'Bogus');
+        bogus = UTIL_RecordTypes.GetRecordTypeId('Campaign', 'Bogus');
         
         // try all the functions
-        set<Id> oppRtSet = GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
-        Map<String, Id> oppTypeMap = GetRecordTypeIdMap('Opportunity');
-        List<SelectOption> rtOptions = getRecordTypesForSelectList('Opportunity');
-        system.assertEquals('TestName',GetOppNamingSuffix('TestName'));
+        set<Id> oppRtSet = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
+        Map<String, Id> oppTypeMap = UTIL_RecordTypes.GetRecordTypeIdMap('Opportunity');
+        List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
+        system.assertEquals('TestName',UTIL_RecordTypes.GetOppNamingSuffix('TestName'));
         
         // check against queried rectypes
         list<recordtype> ort = [select id, name from recordtype where isactive=true and sobjecttype='Opportunity' limit 1];
         if (!ort.isEmpty()) {
-            Id rtId = GetRecordTypeId('Opportunity', ort[0].name);
+            Id rtId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', ort[0].name);
             system.assertEquals(ort[0].id, rtId); 
-            String rtName = GetRecordTypeName('Opportunity', ort[0].id);
+            String rtName = UTIL_RecordTypes.GetRecordTypeName('Opportunity', ort[0].id);
             system.assertEquals(ort[0].name, rtName); 
 
             // the sets above should contain something too
@@ -38,22 +38,22 @@ private class UTIL_RecordTypes_TEST {
     
     static testMethod void TestRecordTypes() {
 
-        ID idGift = RecordTypes.GetRecordTypeId('Opportunity', getRecordTypeNameForGiftsTests('Opportunity'));
+        ID idGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
         
-        Set<String> setStr = new Set<String>{getRecordTypeNameForGiftsTests('Opportunity')};
-        Set<Id> setId = RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
+        Set<String> setStr = new Set<String>{UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')};
+        Set<Id> setId = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', setStr);
         if(idGift!=null){
             system.Assert(setId.contains(idGift));
         
-            Map<String, Id> mapRCId = RecordTypes.GetRecordTypeIdMap('Opportunity');
+            Map<String, Id> mapRCId = UTIL_RecordTypes.GetRecordTypeIdMap('Opportunity');
         
-            system.AssertEquals(idGift, mapRCId.get(getRecordTypeNameForGiftsTests('Opportunity')));       
+            system.AssertEquals(idGift, mapRCId.get(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));       
             
-            system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetRecordTypeName('Opportunity', idGift));        
+            system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetRecordTypeName('Opportunity', idGift));        
             
-            system.AssertEquals(getRecordTypeNameForGiftsTests('Opportunity'), RecordTypes.GetOppNamingSuffix(getRecordTypeNameForGiftsTests('Opportunity')));        
+            system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetOppNamingSuffix(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));        
     
-            List<SelectOption> listSO = RecordTypes.getRecordTypesForSelectList('Opportunity');
+            List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
             system.Assert(listSO.IsEmpty() == false);       
         }
     }       

@@ -36,7 +36,7 @@
 private class HH_OppContactRoles_TEST {
     
     static testMethod void HouseholdOpportunity() {
-        HouseholdOpportunity testHouseholdOpportunity = new HouseholdOpportunity();
+        HH_OppContactRoles testHouseholdOpportunity = new HH_OppContactRoles();
     }
     //test for individual account model
     
@@ -44,7 +44,7 @@ private class HH_OppContactRoles_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true,Household_Member_Contact_Role__c='Household Credit'));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Household_Contact_Roles_On__c = true,npo02__Household_Member_Contact_Role__c='Household Credit'));
                 
         //create contact
 
@@ -57,9 +57,9 @@ private class HH_OppContactRoles_TEST {
             npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
-        Contact[] createdContacts = [select AccountId,Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
-        Id householdId = createdContacts[0].Household__c;
+        Id householdId = createdContacts[0].npo02__household__c;
         //create household member
         Contact con2 = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -68,14 +68,14 @@ private class HH_OppContactRoles_TEST {
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            household__c = householdId
+            npo02__Household__c = householdId
         );
         insert con2;
         //create opportunity
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName=UnitTestData.getClosedWonStage(),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -101,22 +101,22 @@ private class HH_OppContactRoles_TEST {
             npe01__SystemAccountProcessor__c = 'Individual'
         );
         insert con;
-        Contact[] createdContacts = [select AccountId,Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
-        Id householdId = createdContacts[0].Household__c;
+        Id householdId = createdContacts[0].npo02__household__c;
         //create household member
         Contact con2 = new Contact(
             FirstName=newContactfirstName,
             LastName=newContactLastName,
             SystemHouseholdProcessor__c = 'All New or Edited Contacts',
-            household__c = householdId
+            npo02__Household__c = householdId
         );
         insert con2;
         //create opportunity
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName=UnitTestData.getClosedWonStage(),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount=100,
             AccountId=accountId,
             systemHouseholdContactRoleProcessor__c = householdContactRolesOn
@@ -135,7 +135,7 @@ private class HH_OppContactRoles_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = false));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Household_Contact_Roles_On__c = false));
         
         //create contact
 
@@ -148,9 +148,9 @@ private class HH_OppContactRoles_TEST {
             npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
-        Contact[] createdContacts = [select AccountId,Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
-        Id householdId = createdContacts[0].Household__c;
+        Id householdId = createdContacts[0].npo02__household__c;
         //create household member
         Contact con2 = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -159,14 +159,14 @@ private class HH_OppContactRoles_TEST {
             npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-            household__c = householdId
+            npo02__Household__c = householdId
         );
         insert con2;
         //create opportunity
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName=UnitTestData.getClosedWonStage(),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -179,7 +179,7 @@ private class HH_OppContactRoles_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
                 
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR, Household_Contact_Roles_On__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02__Household_Contact_Roles_On__c = true));
         
         //create contact
 
@@ -192,9 +192,9 @@ private class HH_OppContactRoles_TEST {
             npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
-        Contact[] createdContacts = [select AccountId,Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
-        Id householdId = createdContacts[0].Household__c;
+        Id householdId = createdContacts[0].npo02__household__c;
         //create household member
         Contact con2 = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -209,7 +209,7 @@ private class HH_OppContactRoles_TEST {
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName=UnitTestData.getClosedWonStage(),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -220,7 +220,7 @@ private class HH_OppContactRoles_TEST {
     }
     static testMethod void opportunityRegularAccount() {
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_PROCESSOR, Household_Contact_Roles_On__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Household_Contact_Roles_On__c = true));
         
         //create contact
         Account acct = new Account(
@@ -239,15 +239,15 @@ private class HH_OppContactRoles_TEST {
             accountId = accountId
         );
         insert con;
-        Contact[] createdContacts = [select AccountId,Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         
-        Id householdId = createdContacts[0].Household__c;
+        Id householdId = createdContacts[0].npo02__household__c;
         
         //create opportunity
         Opportunity o = new Opportunity(
             Name='test oppty',
             CloseDate=date.newInstance(2001,12,12),
-            StageName=UnitTestData.getClosedWonStage(),
+            StageName=UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount=100,
             AccountId=accountId
         );
@@ -259,7 +259,7 @@ private class HH_OppContactRoles_TEST {
     
     static testmethod void ghIssue25() {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',npe01__Account_Processor__c = 'One-to-One'));
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c ( npo02__Household_Contact_Roles_On__c = true,npo02__Household_Member_Contact_Role__c = 'Household Member'));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c ( npo02__Household_Contact_Roles_On__c = true,npo02__Household_Member_Contact_Role__c = 'Household Member'));
        
         npo02__Household__c hh = new npo02__Household__c(Name ='hh');
         insert hh;
@@ -270,13 +270,13 @@ private class HH_OppContactRoles_TEST {
 
         Opportunity o1 = new Opportunity(
             Name = 'o1',
-            StageName = UnitTestData.getClosedWonStage(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
             npe01__Contact_Id_for_Role__c = (string)con1.id);
         insert o1;
         Opportunity o2 = new Opportunity(
             Name = 'o2',
-            StageName = UnitTestData.getClosedWonStage(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
             npe01__Contact_Id_for_Role__c = (string)con2.id);
         insert o2;        

@@ -42,7 +42,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static set<string> oppTypesToExcludeAccts = new set<string>();
     public static set<string> oppTypesToExcludeCons = new set<string>();  
     public static set<string> softCreditRoles = new set<string>();
-    public static Households_Settings__c hh_settings;
+    public static npo02__Households_Settings__c hh_settings;
     public static integer BATCH_SIZE = 200;
     private static boolean recordTypesOnOpps;
     private static boolean useSoftCredits;
@@ -63,7 +63,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*** User Rollups ***/
     //map of object and rollup field 
     public static map<string, string> objectRollUpFieldMap;
-    public static map<string, User_Rollup_Field_Settings__c> urfsMap = new map<string, User_Rollup_Field_Settings__c>();
+    public static map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = new map<string, npo02__User_Rollup_Field_Settings__c>();
     
     /*** Query Strings ***/
     private static string AccountQuery;
@@ -82,15 +82,15 @@ public without sharing class RLLP_OppRollup_UTIL {
     private static string SoftCreditQuery;
          
     /*** Field Lists ***/
-    private static set<string> AccountFields = new set<string>{'TotalOppAmount__c', 'OppAmountThisYear__c',
-                                                                       'OppAmountLastYear__c', 'OppAmountLastNDays__c',
-                                                                       'OppAmount2YearsAgo__c', 'OppsClosedThisYear__c',
-                                                                       'LastCloseDate__c', 'NumberOfClosedOpps__c', 
-                                                                       'TotalMembershipOppAmount__c', 'OppsClosedLastYear__c',
-                                                                       'OppsClosedLastNDays__c', 'OppsClosed2YearsAgo__c',
-                                                                       'LastMembershipLevel__c', 'Best_Gift_Year__c',
-                                                                       'MembershipJoinDate__c', 'MembershipEndDate__c',
-                                                                       'Best_Gift_Year_Total__c'};
+    private static set<string> AccountFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppAmountThisYear__c',
+                                                                       'npo02__OppAmountLastYear__c', 'npo02__OppAmountLastNDays__c',
+                                                                       'npo02__OppAmount2YearsAgo__c', 'npo02__OppsClosedThisYear__c',
+                                                                       'npo02__LastCloseDate__c', 'npo02__NumberOfClosedOpps__c', 
+                                                                       'npo02__TotalMembershipOppAmount__c', 'npo02__OppsClosedLastYear__c',
+                                                                       'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c',
+                                                                       'npo02__LastMembershipLevel__c', 'npo02__Best_Gift_Year__c',
+                                                                       'npo02__MembershipJoinDate__c', 'npo02__MembershipEndDate__c',
+                                                                       'npo02__Best_Gift_Year_Total__c'};
     
     private static set<string> OpportunityContactRoleFields = new set<string>{'ContactId', 'Contact.npo02__household__c',
                                                         'Contact.npo02__TotalOppAmount__c', 'Contact.npo02__OppAmountThisYear__c',
@@ -132,32 +132,32 @@ public without sharing class RLLP_OppRollup_UTIL {
 
     /*** Settings Methods ***/ 
     //configures and sets up static vars for OppRollups
-    public static void setupRollupVars(Households_Settings__c household_settings){
+    public static void setupRollupVars(npo02__Households_Settings__c household_settings){
         
-        if (household_settings.Excluded_Contact_Opp_Rectypes__c != null) {
-            set<string> rtNamesToExclude = new set<string>(household_settings.Excluded_Contact_Opp_Rectypes__c.split(';'));
-            recordTypesToExcludeCons = RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
+        if (household_settings.npo02__Excluded_Contact_Opp_Rectypes__c != null) {
+            set<string> rtNamesToExclude = new set<string>(household_settings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';'));
+            recordTypesToExcludeCons = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
         }
-        if (household_settings.Excluded_Account_Opp_Rectypes__c != null) {
-            set<string> rtNamesToExclude = new set<string>(household_settings.Excluded_Account_Opp_Rectypes__c.split(';'));
-            recordTypesToExcludeAccts = RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
+        if (household_settings.npo02__Excluded_Account_Opp_Rectypes__c != null) {
+            set<string> rtNamesToExclude = new set<string>(household_settings.npo02__Excluded_Account_Opp_Rectypes__c.split(';'));
+            recordTypesToExcludeAccts = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', rtNamesToExclude);
         }
-        if (household_settings.Excluded_Contact_Opp_Types__c != null) {
-            oppTypesToExcludeCons = new set<string>(household_settings.Excluded_Contact_Opp_Types__c.split(';'));
+        if (household_settings.npo02__Excluded_Contact_Opp_Types__c != null) {
+            oppTypesToExcludeCons = new set<string>(household_settings.npo02__Excluded_Contact_Opp_Types__c.split(';'));
         }
-        if (household_settings.Excluded_Account_Opp_Types__c != null) {
-            oppTypesToExcludeAccts = new set<string>(household_settings.Excluded_Account_Opp_Types__c.split(';'));
+        if (household_settings.npo02__Excluded_Account_Opp_Types__c != null) {
+            oppTypesToExcludeAccts = new set<string>(household_settings.npo02__Excluded_Account_Opp_Types__c.split(';'));
         }    
-        if (household_settings.Membership_Record_Types__c != null) {
-            set<string> mbrRecordTypeNames = new set<string>(household_settings.Membership_Record_Types__c.split(';'));
-            mbrRecordTypes = RecordTypes.GetRecordTypeIdSet('Opportunity', mbrRecordTypeNames);
+        if (household_settings.npo02__Membership_Record_Types__c != null) {
+            set<string> mbrRecordTypeNames = new set<string>(household_settings.npo02__Membership_Record_Types__c.split(';'));
+            mbrRecordTypes = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', mbrRecordTypeNames);
         }  
-        if (household_settings.Soft_Credit_Roles__c != null){
-            softCreditRoles = new set<string>(household_Settings.Soft_Credit_Roles__c.split(';'));
+        if (household_settings.npo02__Soft_Credit_Roles__c != null){
+            softCreditRoles = new set<string>(household_Settings.npo02__Soft_Credit_Roles__c.split(';'));
         }
         
-        if (household_settings.Rollup_N_Day_Value__c == null){
-            household_settings.Rollup_N_Day_Value__c = 365;
+        if (household_settings.npo02__Rollup_N_Day_Value__c == null){
+            household_settings.npo02__Rollup_N_Day_Value__c = 365;
         }
         //check the settings, if they have the fiscal year set
         //we still need to query to make sure its not a custom fiscal year
@@ -169,14 +169,14 @@ public without sharing class RLLP_OppRollup_UTIL {
             integer hasCustomFYRecord = fySettings.size();
                 
             //if org has customFY records, disable FY settings
-            if (hasCustomFYRecord > 0 && !household_settings.Force_Fiscal_Year__c)
+            if (hasCustomFYRecord > 0 && !household_settings.npo02__Force_Fiscal_Year__c)
                 useFiscalYear = false;
             else
                 useFiscalYear = true;
         }        
         
-        if (household_settings.Batch_Size__c != null)
-            BATCH_SIZE = household_settings.Batch_Size__c.intValue();
+        if (household_settings.npo02__Batch_Size__c != null)
+            BATCH_SIZE = household_settings.npo02__Batch_Size__c.intValue();
         
         //set the static var
         hh_settings = household_settings;
@@ -184,32 +184,32 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     public static void setupUserRollupVars(){
         if (objectRollupFieldMap == null){
-            urfsMap = User_Rollup_Field_Settings__c.getAll().clone();
+            urfsMap = npo02__User_Rollup_Field_Settings__c.getAll().clone();
             objectRollupFieldMap = new map<string, string>();
         
             //build the object delineated query string for use later
             for (string s : urfsMap.keySet()){
-               User_Rollup_Field_Settings__c urfs = urfsMap.get(s);
+               npo02__User_Rollup_Field_Settings__c urfs = urfsMap.get(s);
             
-               if (objectRollUpFieldMap.containsKey(urfs.Object_Name__c)){
-                  String qString = objectRollupFieldMap.get(urfs.Object_Name__c);
-                  qString += urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ';
-                  objectRollupFieldMap.put(urfs.Object_Name__c, qString);
+               if (objectRollUpFieldMap.containsKey(urfs.npo02__Object_Name__c)){
+                  String qString = objectRollupFieldMap.get(urfs.npo02__Object_Name__c);
+                  qString += urfs.npo02__Field_Action__c + '(Opportunity.' + urfs.npo02__Source_Field__c + ') ' + urfs.Name + ', ';
+                  objectRollupFieldMap.put(urfs.npo02__Object_Name__c, qString);
                }
                else{
-                  objectRollupFieldMap.put(urfs.Object_Name__c, urfs.Field_Action__c + '(Opportunity.' + urfs.Source_Field__c + ') ' + urfs.Name + ', ');
+                  objectRollupFieldMap.put(urfs.npo02__Object_Name__c, urfs.npo02__Field_Action__c + '(Opportunity.' + urfs.npo02__Source_Field__c + ') ' + urfs.Name + ', ');
                }
                
-               if (urfs.Object_Name__c == npo02__Household__c.getSObjectType().getDescribe().getName()){
-                   RLLP_OppRollup_UTIL.HouseholdFields.add(urfs.Target_Field__c);              
-                   RLLP_OppRollup_UTIL.OpportunityContactRoleFields.add('Contact.npo02__household__r.' + urfs.Target_Field__c);   
+               if (urfs.npo02__Object_Name__c == npo02__Household__c.getSObjectType().getDescribe().getName()){
+                   RLLP_OppRollup_UTIL.HouseholdFields.add(urfs.npo02__Target_Field__c);              
+                   RLLP_OppRollup_UTIL.OpportunityContactRoleFields.add('Contact.npo02__household__r.' + urfs.npo02__Target_Field__c);   
                }
-               else if (urfs.Object_Name__c == Contact.getSObjectType().getDescribe().getName()){
-                   RLLP_OppRollup_UTIL.ContactFields.add(urfs.Target_Field__c);            
-                   RLLP_OppRollup_UTIL.OpportunityContactRoleFields.add('Contact.' + urfs.Target_Field__c);
+               else if (urfs.npo02__Object_Name__c == Contact.getSObjectType().getDescribe().getName()){
+                   RLLP_OppRollup_UTIL.ContactFields.add(urfs.npo02__Target_Field__c);            
+                   RLLP_OppRollup_UTIL.OpportunityContactRoleFields.add('Contact.' + urfs.npo02__Target_Field__c);
                }
-               else if (urfs.Object_Name__c == Account.getSObjectType().getDescribe().getName()){
-                   RLLP_OppRollup_UTIL.AccountFields.add(urfs.Target_Field__c);             
+               else if (urfs.npo02__Object_Name__c == Account.getSObjectType().getDescribe().getName()){
+                   RLLP_OppRollup_UTIL.AccountFields.add(urfs.npo02__Target_Field__c);             
                }               
             }
         }
@@ -218,7 +218,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     //determines if record types are enabled on opportunities 
     public static boolean areRecordTypesOnOpps(){
         if (recordTypesOnOpps==null){
-            String giftRt = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+            String giftRt = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
             if (giftRt!=null&&giftRt!=''){
                 recordTypesOnOpps = true;
             } 
@@ -231,7 +231,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     public static boolean useSoftCredits(){
         if (useSoftCredits == null){
-            if(!softCreditRoles.isEmpty() && hh_settings.Enable_Soft_Credit_Rollups__c)
+            if(!softCreditRoles.isEmpty() && hh_settings.npo02__Enable_Soft_Credit_Rollups__c)
                 useSoftCredits = true;
             else
                 useSoftCredits = false;
@@ -343,7 +343,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         //if its from an individual account or has a null account ID OR alwaysRollupToPrimary is set AND
         //its the membership rectype or the rectype isn't exclused AND
         //the opp type isn't excluded        
-        if (((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) || hh_settings.Always_Rollup_to_Primary_Contact__c) &&
+        if (((o.npe01__Is_Opp_From_Individual__c == 'true' || o.accountid == null) || hh_settings.npo02__Always_Rollup_to_Primary_Contact__c) &&
                 (mbrRecordTypes.contains((id)o.get('recordTypeId')) || !recordTypesToExcludeCons.contains((id)o.get('recordTypeId'))) &&
                 (!oppTypesToExcludeCons.contains(o.type))){
             needsRollup = true;
@@ -428,7 +428,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                 HouseholdQuery += ', ' + s;               
             }   
             HouseholdQuery += (isMultiCurrency() ? ', CurrencyIsoCode ' : '');  
-            HouseholdQuery += ' from Household__c ';           
+            HouseholdQuery += ' from npo02__Household__c ';           
         }
         return HouseholdQuery;    
     }
@@ -493,7 +493,7 @@ public without sharing class RLLP_OppRollup_UTIL {
             }
             AccountNDayQuery += 'AND Type NOT IN :typeset '; 
             AccountNDayQuery += 'AND AccountId IN :aset '; 
-            AccountNDayQuery += 'AND closeDate >= LAST_N_DAYS:' + hh_settings.Rollup_N_Day_Value__c.intValue() + ' '; 
+            AccountNDayQuery += 'AND closeDate >= LAST_N_DAYS:' + hh_settings.npo02__Rollup_N_Day_Value__c.intValue() + ' '; 
             AccountNDayQuery += 'GROUP BY AccountId '; 
             AccountNDayQuery += 'HAVING AccountId != null ';
         }       
@@ -553,7 +553,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                 ContactRollupQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             ContactRollupQuery += 'AND Opportunity.Type NOT IN :typeset '; 
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                  ContactRollupQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }                    
             ContactRollupQuery += 'AND ContactId IN :cset ';            
@@ -576,11 +576,11 @@ public without sharing class RLLP_OppRollup_UTIL {
                 ContactNDayQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             ContactNDayQuery += 'AND Opportunity.Type NOT IN :typeset ';
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 ContactNDayQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }  
             ContactNDayQuery += 'AND ContactId IN :cset ';
-            ContactNDayQuery += 'AND Opportunity.CloseDate >= LAST_N_DAYS:' + hh_settings.Rollup_N_Day_Value__c.intValue() + ' ';
+            ContactNDayQuery += 'AND Opportunity.CloseDate >= LAST_N_DAYS:' + hh_settings.npo02__Rollup_N_Day_Value__c.intValue() + ' ';
             ContactNDayQuery += 'GROUP BY ROLLUP(ContactId) ';
         }       
         return ContactNDayQuery;
@@ -602,7 +602,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                 ContactMembershipQuery += 'AND Opportunity.RecordTypeId IN :memberset ';
             }
             ContactMembershipQuery += 'AND Opportunity.Type NOT IN :typeset ';
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 ContactMembershipQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }
             ContactMembershipQuery += 'AND Contactid IN :cset ';
@@ -632,7 +632,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                 HouseholdRollupQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             HouseholdRollupQuery += 'AND Opportunity.Type NOT IN :typeset '; 
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                  HouseholdRollupQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }                    
             HouseholdRollupQuery += 'AND Contact.npo02__Household__c IN :hhset ';
@@ -655,11 +655,11 @@ public without sharing class RLLP_OppRollup_UTIL {
                 HouseholdNDayQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             HouseholdNDayQuery += 'AND Opportunity.Type NOT IN :typeset ';
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 HouseholdNDayQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }  
             HouseholdNDayQuery += 'AND Contact.npo02__Household__c IN :hhset ';
-            HouseholdNDayQuery += 'AND Opportunity.CloseDate >= LAST_N_DAYS:' + hh_settings.Rollup_N_Day_Value__c.intValue() + ' ';
+            HouseholdNDayQuery += 'AND Opportunity.CloseDate >= LAST_N_DAYS:' + hh_settings.npo02__Rollup_N_Day_Value__c.intValue() + ' ';
             HouseholdNDayQuery += 'GROUP BY ROLLUP(Contact.npo02__Household__c) ';          
         }
         return HouseholdNDayQuery;      
@@ -681,7 +681,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                 HouseholdMembershipQuery += 'AND Opportunity.RecordTypeId IN :memberset ';
             }
             HouseholdMembershipQuery += 'AND Opportunity.Type NOT IN :typeset ';
-            if (!hh_settings.Always_Rollup_to_Primary_Contact__c){
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 HouseholdMembershipQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }
             HouseholdMembershipQuery += 'AND Contact.npo02__Household__c IN :hhset ';
@@ -745,35 +745,35 @@ public without sharing class RLLP_OppRollup_UTIL {
     /****************************************/
     
     /*** Error Generation ***/    
-    public static Opportunity_Rollup_Error__c createError(Database.SaveResult s, string objecttype, id objid){
+    public static npo02__Opportunity_Rollup_Error__c createError(Database.SaveResult s, string objecttype, id objid){
         datetime thisDay = system.now();
-        Opportunity_Rollup_Error__c ore = new Opportunity_Rollup_Error__c();
+        npo02__Opportunity_Rollup_Error__c ore = new npo02__Opportunity_Rollup_Error__c();
         
         ore.Name = objid + '-' +  thisDay.month() + thisDay.day() + thisDay.hour() + thisDay.minute() + thisDay.second();
-        ore.Error_Datetime__c = thisDay;
-        ore.Error_Object_Type__c = objecttype;
+        ore.npo02__Error_Datetime__c = thisDay;
+        ore.npo02__Error_Object_Type__c = objecttype;
       
         string recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + objid;
         if (recordURL.startsWith('http:')){
             recordURL = recordURL.replaceFirst('http:', 'https:');
         }            
-        ore.Error_Record_Link__c = recordURL; 
+        ore.npo02__Error_Record_Link__c = recordURL; 
          
         if (s.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING){
-            ore.Error_Type__c = 'Required Field Missing';   
+            ore.npo02__Error_Type__c = 'Required Field Missing';   
         }
         else if (s.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION){
-            ore.Error_Type__c = 'Custom Validation Rule Failed';
+            ore.npo02__Error_Type__c = 'Custom Validation Rule Failed';
         }
         else{
-            ore.Error_Type__c = 'Other';
+            ore.npo02__Error_Type__c = 'Other';
         }
                  
         //trim error message
         if (s.getErrors()[0].getMessage().length() > 255)
-            ore.Error_Message__c = s.getErrors()[0].getMessage().substring(0, 254);
+            ore.npo02__Error_Message__c = s.getErrors()[0].getMessage().substring(0, 254);
         else
-            ore.Error_Message__c = s.getErrors()[0].getMessage();                              
+            ore.npo02__Error_Message__c = s.getErrors()[0].getMessage();                              
         return ore;
     }
 }

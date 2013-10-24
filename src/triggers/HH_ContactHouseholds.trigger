@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,15 +27,20 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.com Foundation
-* @date 2011 (2.0)
-* @description Supports the automatic scheduling of opportunity rollups  
-*/
-global class RLLP_OppRollup_SCHED implements Schedulable {
+trigger HH_ContactHouseholds on Contact (after insert, after update, after delete) {
 
-    global void execute(SchedulableContext SC) { 
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();    
-    }  
+    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+    
+    if (!hs.npo02__DISABLE_Households_trigger__c){
+        if( Trigger.isAfter && Trigger.isInsert ){
+            HH_Households process = new HH_Households(Trigger.new, Trigger.old, HH_Households.triggerAction.afterInsert);
+        }
+        if( Trigger.isAfter && Trigger.isUpdate ){ 
+            //after update is going to call the version that takes a map as well
+            HH_Households process = new HH_Households(Trigger.new, Trigger.old, HH_Households.triggerAction.afterUpdate, trigger.newMap, trigger.oldMap);
+        }
+        if( Trigger.isAfter && Trigger.isDelete ){
+            HH_Households process = new HH_Households(Trigger.old, null, HH_Households.triggerAction.afterDelete);
+        }
+    }
 }

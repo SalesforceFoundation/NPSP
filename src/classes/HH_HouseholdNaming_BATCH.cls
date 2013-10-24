@@ -53,9 +53,9 @@ global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         return Database.getQueryLocator(query);      
     }
     /** @description The execution logic for the batch. Includes seperate paths for initial activations */
-    global public void execute(Database.BatchableContext bc, Sobject[] result) {
+    global void execute(Database.BatchableContext bc, Sobject[] result) {
         // run rollups for this batch  
-        HouseholdProcessControl.inFutureContext = true;     
+        HH_ProcessControl.inFutureContext = true;     
         
         //first, if this is coming from the VF settings interface, we need to markup
         //all of the houesholds that have existing names        
@@ -108,7 +108,7 @@ global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
                 
                 boolean hasnamematch = false;
                 for (string s : hhlastnames){
-                    if (h.Name == s + ' ' + system.label.DefaultHouseholdName)
+                    if (h.Name == s + ' ' + system.label.npo02.DefaultHouseholdName)
                        hasnamematch = true;                 
                 }
                 
@@ -130,7 +130,7 @@ global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         }
 
         //now run the regular process for completing the batch run                
-        HouseholdNaming hn = new HouseholdNaming();
+        HH_HouseholdNaming hn = new HH_HouseholdNaming();
         set<id> hhids = new set<id>();
         for (sobject s : result){
             Contact c = (Contact)s;        

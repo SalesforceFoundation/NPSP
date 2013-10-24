@@ -38,8 +38,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     
     private Campaign campaign;
     private string CampaignMailingListReportId;
-    private boolean haveReportID;   
-    private Households_Settings__c hs;
+    private boolean haveReportID;  
+    private npo02__Households_Settings__c hs;
     public string returnURL{get; private set;}
     final private string DUPETEXT = ' - Household Duplicate';
     
@@ -50,8 +50,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
   
     public HH_CampaignDedupeBTN_CTRL(ApexPages.StandardController controller){   
         
-        hs = Households.getHouseholdsSettings();
-        CampaignMailingListReportId = hs.Household_Mailing_List_ID__c; 
+        hs = HH_Households.getHouseholdsSettings();
+        CampaignMailingListReportId = hs.npo02__Household_Mailing_List_ID__c; 
         haveReportID = true; 
       
         campaign = (Campaign)controller.getRecord();
@@ -88,7 +88,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         
         //this dml need to be done by the action method        
         if (updateSettingsWithID){
-            hs.Household_Mailing_List_ID__c = CampaignMailingListReportId;
+            hs.npo02__Household_Mailing_List_ID__c = CampaignMailingListReportId;
             update hs;
         }
         
@@ -132,7 +132,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
           
         set<id> HouseholdIDSet = new set<id>();        
     
-        for (CampaignMember m : [Select Id, ContactId, Contact.Name, Contact.Household__c, Status From CampaignMember where CampaignId=:campaign.Id and ContactId != null and Contact.Household__c != null order by Contact.TotalOppAmount__c desc]) {
+        for (CampaignMember m : [Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Status From CampaignMember where CampaignId=:campaign.Id and ContactId != null and Contact.npo02__household__c != null order by Contact.npo02__TotalOppAmount__c desc]) {
             
             //do not want null status
             if (m.Status==null) m.Status = statuses[0].label;
@@ -141,7 +141,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
       /*
             //if this contact's household is already in the set, its a dupe from this household
             //also filter any we've already marked 
-            if (HouseholdIDSet.contains(m.Contact.Household__c) && !m.Status.endsWith(DupeText)) {
+            if (HouseholdIDSet.contains(m.Contact.npo02__household__c) && !m.Status.endsWith(DupeText)) {
                     string newStatus =  m.Status + DupeText;                
                     dupeMembers.add(new CampaignMember(Id = m.Id, Status = newStatus));                
                     if (!StatusLabels.containsKey(newStatus)) {
@@ -151,7 +151,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
                     }
             }
             else{
-                HouseholdIDSet.add(m.Contact.Household__c);
+                HouseholdIDSet.add(m.Contact.npo02__household__c);
             }      
         */
             /*PATCH SUBMITTED PER ISSUE 256 */
@@ -159,14 +159,14 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             //mark it as a duplicate if not already marked
             //if the HH id is not in the set, it's not a duplicate.  If it's marked as such,
             //(e.g. from a previous time the report was run), unmark it.            
-            if(HouseholdIDSet.contains(m.Contact.Household__c)){
+            if(HouseholdIDSet.contains(m.Contact.npo02__household__c)){
                 if (!m.Status.endsWith(DupeText)) {
                     newStatus =  m.Status + DupeText;
                 }
             }
              
             else{
-                HouseholdIDSet.add(m.Contact.Household__c);
+                HouseholdIDSet.add(m.Contact.npo02__household__c);
                 
                 if (m.Status.endsWith(DupeText)) {
                     newStatus =  m.Status.substring(0, m.status.length()-DupeText.length());                

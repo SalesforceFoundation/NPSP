@@ -34,38 +34,15 @@
 */
 public with sharing class STTG_HouseholdsSettings_CTRL {  
     
-    public Households_Settings__c pageSettings;
-    public Households_Settings__c getSettings(){return pageSettings;}
+    public npo02__Households_Settings__c pageSettings;
+    public npo02__Households_Settings__c getSettings(){return pageSettings;}
     public boolean runningBatch {get; set;}
     public string activeTab {get; set;}
     public boolean editRollupSettingsTab{get; set;}
     public boolean editHouseholdSettingsTab{get; set;}
     public boolean hasErrors{get; set;}
-    public List<Opportunity_Rollup_Error__c> errorList{get; set;}
+    public List<npo02__Opportunity_Rollup_Error__c> errorList{get; set;}
      
-     /********Vars for PKG Update Info *************/
-    public string getMyVersion(){return string.valueof(Package.Version.Request);}
-    public string getMaxVersion(){return pageSettings.Max_Package_Version__c;}
-    public string getUpdateURL(){return pageSettings.Package_Update_URL__c;}
-    public string getLastUpdate(){      
-        DateTime d = pageSettings.Last_Update_Check__c;
-        string datestring = '';
-        if (d != null)
-            datestring = d.format('MMMMM dd, yyyy hh:mm:ss a');
-        return datestring;
-    }
-    public string getpkgupdatestatus(){
-        string status = pageSettings.Has_Package_Update__c;
-        if (status == 'true')
-           status = 'New Update Available';
-        else if (status == 'false')
-           status = 'No New Updates Available';
-        else
-           status = status;
-           
-        return status;
-    }
-    /*********************************************/
     
     public STTG_HouseholdsSettings_CTRL(){
         acctRTs = new List<string>();
@@ -85,11 +62,11 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         //retrieve errors, if any        
         errorList = [select npo02__Error_Type__c, npo02__Error_Record_Link__c, 
                             npo02__Error_Object_Type__c, npo02__Error_Message__c, 
-                            npo02__Error_Datetime__c, Name, Id from Opportunity_Rollup_Error__c limit 999];
+                            npo02__Error_Datetime__c, Name, Id from npo02__Opportunity_Rollup_Error__c limit 999];
                 
         if (!errorList.isEmpty()){
             hasErrors = true;            
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.RollupErrorMessage);
+            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npo02.RollupErrorMessage);
             ApexPages.addMessage(myMsg);            
         }   
         else{
@@ -104,10 +81,10 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         PageReference pr = null;                
         
         //if we don't have default settings
-        pageSettings= Households_Settings__c.getOrgDefaults(); 
+        pageSettings= npo02__Households_Settings__c.getOrgDefaults(); 
         
         if (pageSettings == null){
-           pageSettings = Households.getHouseholdsSettings();
+           pageSettings = HH_Households.getHouseholdsSettings();
            
            //no point in scheduling a rollup, since the default
            //has it disabled, just call a page refresh to get to the 
@@ -117,15 +94,8 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         
         //we can safely call out to 
         else{
-           pageSettings = Households.getHouseholdsSettings();
+           pageSettings = HH_Households.getHouseholdsSettings();
            pr = scheduleRollups();
-           if (pr == null){
-               //else if we don't need to update anything, we 
-                //can go ahead and callout for update checks
-                if (pageSettings.Last_Update_Check__c == null){
-                    checkforupdates();
-                }
-            }
         }          
                 
         //set the multi-select fields
@@ -149,12 +119,12 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
             scContactRoles = pageSettings.npo02__Soft_Credit_Roles__c.split(';',0);
         }        
         
-        if (pageSettings.Household_OCR_Excluded_Recordtypes__c != null){
-            OCRContactRTExclusions = pageSettings.Household_OCR_Excluded_Recordtypes__c.split(';',0);   
+        if (pageSettings.npo02__Household_OCR_Excluded_Recordtypes__c != null){
+            OCRContactRTExclusions = pageSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';',0);   
         }        
           
-        if (pageSettings.Household_Creation_Excluded_Recordtypes__c != null){
-            hhContactRTExclusions = pageSettings.Household_Creation_Excluded_Recordtypes__c.split(';',0);           
+        if (pageSettings.npo02__Household_Creation_Excluded_Recordtypes__c != null){
+            hhContactRTExclusions = pageSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';',0);           
         }
         
         
@@ -196,11 +166,11 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
     public PageReference scheduleRollups(){
         PageReference pr = null;
         
-        if(pageSettings.Enable_Opp_Rollup_Triggers__c){
+        if(pageSettings.npo02__Enable_Opp_Rollup_Triggers__c){
             
             Integer scheduledJobLimit;
-            if (pageSettings.Schedule_Job_Limit__c != null)
-                scheduledJobLimit = (integer)pageSettings.Schedule_Job_Limit__c;
+            if (pageSettings.npo02__Schedule_Job_Limit__c != null)
+                scheduledJobLimit = (integer)pageSettings.npo02__Schedule_Job_Limit__c;
             else
                 scheduledJobLimit = 25;
             
@@ -209,9 +179,9 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
             //added NextFireTime check to make sure the job is still actively scheduled before checking it against the limit
             scheduledRollups = [SELECT Id FROM cronTrigger where NextFireTime != null limit :scheduledJobLimit];
             
-            if(pageSettings.Opp_Rollup_Scheduled_Job_Id__c != null){
+            if(pageSettings.npo02__Opp_Rollup_Scheduled_Job_Id__c != null){
                 for(cronTrigger thisScheduledJob : scheduledRollups){ 
-                    if(thisScheduledJob.id == pageSettings.Opp_Rollup_Scheduled_Job_Id__c){
+                    if(thisScheduledJob.id == pageSettings.npo02__Opp_Rollup_Scheduled_Job_Id__c){
                         alreadyScheduled = true;
                         break;
                     }
@@ -221,7 +191,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
             if(!alreadyScheduled){
                 if(scheduledRollups.size()<scheduledJobLimit){     
                     
-                    SCHED_OppRollup rollUp = new SCHED_OppRollup(); 
+                    RLLP_OppRollup_SCHED rollUp = new RLLP_OppRollup_SCHED(); 
                     //need to check for already scheduled job
                     String sch='17 11 2 * * ?'; 
                     scheduledRollups.clear();
@@ -230,17 +200,17 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
                                         
                     if (scheduledRollups.size()==0){
                         String jobId = system.schedule('Nightly Opportunity Roll Up', sch ,rollUp);
-                        pageSettings.Opp_Rollup_Scheduled_Job_Id__c = jobId;
+                        pageSettings.npo02__Opp_Rollup_Scheduled_Job_Id__c = jobId;
                         
                     } else {
-                        pageSettings.Opp_Rollup_Scheduled_Job_Id__c = scheduledRollups[0].Id;
+                        pageSettings.npo02__Opp_Rollup_Scheduled_Job_Id__c = scheduledRollups[0].Id;
                     }
                     //if we update page settings, we need to call a redirect
                     update pageSettings;
                     pr = ApexPages.currentPage();
                     
                 } else {
-                    showMsg(Label.Opportunity_Rollup_Scheduling_Error_Text, ApexPages.Severity.FATAL);
+                    showMsg(label.npo02.Opportunity_Rollup_Scheduling_Error_Text, ApexPages.Severity.FATAL);
                 }
             }    
         }
@@ -250,9 +220,9 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
     public List<SelectOption> gethouseholdrules() {
         if(householdrules == null){
             householdrules = new List<SelectOption>();
-            householdrules.add(new SelectOption(Households.ALL_PROCESSOR, Households.ALL_PROCESSOR));
-            householdrules.add(new SelectOption(Households.ALL_INDIVIDUALS_PROCESSOR, Households.ALL_INDIVIDUALS_PROCESSOR));
-            householdrules.add(new SelectOption(Households.NO_HOUSEHOLDS_PROCESSOR, Households.NO_HOUSEHOLDS_PROCESSOR));
+            householdrules.add(new SelectOption(HH_Households.ALL_PROCESSOR, HH_Households.ALL_PROCESSOR));
+            householdrules.add(new SelectOption(HH_Households.ALL_INDIVIDUALS_PROCESSOR, HH_Households.ALL_INDIVIDUALS_PROCESSOR));
+            householdrules.add(new SelectOption(HH_Households.NO_HOUSEHOLDS_PROCESSOR, HH_Households.NO_HOUSEHOLDS_PROCESSOR));
         }
         return householdrules;
     }
@@ -275,7 +245,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         if (ConRTypes == null){
             RTypes = new List<SelectOption>();
             RTypes.add(new SelectOption(' ', '- none -'));
-            RTypes.addAll(RecordTypes.getStringRecordTypesForSelectList('Contact'));            
+            RTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Contact'));            
         }       
         return RTypes;
     }    
@@ -284,7 +254,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         if(RTypes == null){
             RTypes = new List<SelectOption>();
             RTypes.add(new SelectOption(' ','- none -'));
-            RTypes.addAll(RecordTypes.getStringRecordTypesForSelectList('Opportunity'));
+            RTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Opportunity'));
         }
         return RTypes;
     }
@@ -316,14 +286,14 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
             s += ';' + rt;
         }
         system.debug('s: ' + s);
-        if (s != '') pageSettings.Excluded_Account_Opp_Rectypes__c = s.substring(1);
+        if (s != '') pageSettings.npo02__Excluded_Account_Opp_Rectypes__c = s.substring(1);
         
         s = '';
         for (String rt : contactRTs) {
             if (rt!=null&&rt!='')
             s += ';' + rt;
         }
-        if (s != '') pageSettings.Excluded_Contact_Opp_Rectypes__c = s.substring(1);
+        if (s != '') pageSettings.npo02__Excluded_Contact_Opp_Rectypes__c = s.substring(1);
         
         s='';
         for (String scocr : scContactRoles){
@@ -331,21 +301,21 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
                 s+= ';' + scocr;
             }           
         }
-        if (s!='')pageSettings.Soft_Credit_Roles__c = s.substring(1);
+        if (s!='')pageSettings.npo02__Soft_Credit_Roles__c = s.substring(1);
         
         s = '';
         for (String tp : acctTypes) {
             if (tp!=null&&tp!='')
             s += ';' + tp;
         }
-        if (s != '') pageSettings.Excluded_Account_Opp_Types__c = s.substring(1);
+        if (s != '') pageSettings.npo02__Excluded_Account_Opp_Types__c = s.substring(1);
         s = '';
 
         for (String tp : contactTypes) {
             if (tp!=null&&tp!='')
             s += ';' + tp;
         }
-        if (s != '') pageSettings.Excluded_Contact_Opp_Types__c = s.substring(1);
+        if (s != '') pageSettings.npo02__Excluded_Contact_Opp_Types__c = s.substring(1);
         s = '';
 
         for (String tp : OCRContactRTExclusions){
@@ -353,14 +323,14 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
             s+= ';' + tp;
             
         }
-        if (s!='')pageSettings.Household_OCR_Excluded_Recordtypes__c = s.substring(1);
+        if (s!='')pageSettings.npo02__Household_OCR_Excluded_Recordtypes__c = s.substring(1);
         s = '';
 
         for (String tp : hhContactRTExclusions){
             if (tp!=null&&tp!='')
             s+= ';' + tp;            
         }
-        if (s!='')pageSettings.Household_Creation_Excluded_Recordtypes__c = s.substring(1);        
+        if (s!='')pageSettings.npo02__Household_Creation_Excluded_Recordtypes__c = s.substring(1);        
 
         
         update pageSettings;
@@ -374,18 +344,14 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
     public void activateHouseholdNaming(){
         runningBatch = true; 
                 
-        pageSettings.Advanced_Household_Naming__c = true;
+        pageSettings.npo02__Advanced_Household_Naming__c = true;
         update pageSettings;
         
         //call advanced rolup batch process
-        HouseholdNaming hn = new Householdnaming();
+        HH_HouseholdNaming hn = new HH_Householdnaming();
         hn.ActivateAdvancedGreetings(false);
     }
     
-    public void checkForUpdates(){
-        NPSPPkgVersionCheck npvc = new NPSPPkgVersionCheck('npo02');        
-        npvc.NPSPCheckVersion(true);
-    }
     public pageReference cancel(){      
         editHouseholdSettingsTab = false;
         editRollupSettingsTab = false;
@@ -403,7 +369,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         return null;
     }    
     public pageReference deleteErrors(){
-        delete [select id from Opportunity_Rollup_Error__c];
+        delete [select id from npo02__Opportunity_Rollup_Error__c];
         hasErrors = false;
         return null;
     }    

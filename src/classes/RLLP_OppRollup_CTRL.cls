@@ -64,15 +64,15 @@ public class RLLP_OppRollup_CTRL {
         PageReference ref;
         if (oid != null){            
             // run the rollup for the specified object
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             if (objectId.startsWith('001')){
-                OpportunityRollups.RollupAccountsFuture(new set<id>{oid});
+                RLLP_OppRollup.RollupAccountsFuture(new set<id>{oid});
             }                
             else if (objectId.startsWith('003')){                
-                OpportunityRollups.RollupContactsFuture(new set<id>{oid});                
+                RLLP_OppRollup.RollupContactsFuture(new set<id>{oid});                
             }                
             else{
-                OpportunityRollups.RollupHouseholdsFuture(new set<id>{oid});                
+                RLLP_OppRollup.RollupHouseholdsFuture(new set<id>{oid});                
             }    
             ref = new PageReference('/' + oid);
             ref.setRedirect(true);
@@ -83,7 +83,7 @@ public class RLLP_OppRollup_CTRL {
     public PageReference rollup() {
         
         // run batch rollup
-        OpportunityRollups rg = new OpportunityRollups();
+        RLLP_OppRollup rg = new RLLP_OppRollup();
         rg.rollupAll();
         
         batchRunning = true;

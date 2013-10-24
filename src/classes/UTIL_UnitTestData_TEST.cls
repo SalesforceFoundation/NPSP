@@ -139,7 +139,7 @@ public class UTIL_UnitTestData_TEST {
         // TBD should allow specifying rectype (optional)
     
         list<Opportunity> OppsToAdd = new list<Opportunity> ();
-        id rtid = RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         system.debug('recordtypeintest: ' + rtid);
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
@@ -186,7 +186,7 @@ public class UTIL_UnitTestData_TEST {
         list<Opportunity> OppsToAdd = new list<Opportunity> ();
         
         // look up the id for the specified rectype
-        id rtid = RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         
         for ( Account thisAcct : Accts) {
             Opportunity newOpp = New Opportunity (

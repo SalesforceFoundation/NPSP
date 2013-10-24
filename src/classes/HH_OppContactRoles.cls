@@ -35,16 +35,16 @@
 public class HH_OppContactRoles {
     public HH_OppContactRoles(){}    
 
-    public HH_OppContactRoles(Opportunity[] opportunities, Opportunity[] oldOpportunities, Households.triggerAction ta)
+    public HH_OppContactRoles(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta)
     {
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01.Constants.getContactsSettings();
-        Households_Settings__c currentHouseholdsSettings = Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
         
         set<string> HouseholdOCRRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
-        if (currentHouseholdsSettings.Household_OCR_Excluded_Recordtypes__c != null) {
-            HouseholdOCRRecordTypeExclusions = new set<string>(currentHouseholdsSettings.Household_OCR_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = RecordTypes.GetRecordTypeIdSet('Contact', HouseholdOCRRecordTypeExclusions);            
+        if (currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c != null) {
+            HouseholdOCRRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c.split(';'));
+            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdOCRRecordTypeExclusions);            
         }
         
         boolean recordTypesOnCons = false;
@@ -52,7 +52,7 @@ public class HH_OppContactRoles {
             recordTypesOnCons = true;
         
         
-        if(currentHouseholdsSettings.Household_Contact_Roles_On__c){
+        if(currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c){
         
         
         //get all Opps in the trigger set that are for individual accounts 
@@ -104,28 +104,28 @@ public class HH_OppContactRoles {
             Map<Id,Id> contactIdToHouseholdId = new Map<Id,Id>();
             
             //query all contacts to get the Household Ids
-            individualContacts = [select id,Household__c from Contact where Id IN :contactIds];
+            individualContacts = [select id,npo02__Household__c from Contact where Id IN :contactIds];
             
             //create a map of contacts and thier Household Ids
             for(Contact myContact : individualContacts){  
-                if(myContact.Household__c!=null){
-                    contactIdToHouseholdId.put(myContact.Id,myContact.Household__c);        
+                if(myContact.npo02__household__c!=null){
+                    contactIdToHouseholdId.put(myContact.Id,myContact.npo02__household__c);        
                 }       
             }
             
             list<id> c2HId = contactIdToHouseholdId.values();
             //query all contacts in all the Households
             if (recordTypesOnCons)
-                householdContacts = database.query('select id,Household__c, RecordTypeId from Contact where Household__c IN :c2HId');
+                householdContacts = database.query('select id,npo02__Household__c, RecordTypeId from Contact where npo02__Household__c IN :c2HId');
             else
-                householdContacts = database.query('select id,Household__c from Contact where Household__c IN :c2HId');
+                householdContacts = database.query('select id,npo02__Household__c from Contact where npo02__Household__c IN :c2HId');
                                 
             //create a map of Household Id to list of member contacts
             for(Contact myContact : householdContacts){
-                if(householdIdToContact.get(myContact.Household__c)==null){
-                    householdIdToContact.put(myContact.Household__c,new List<Contact>());                   
+                if(householdIdToContact.get(myContact.npo02__household__c)==null){
+                    householdIdToContact.put(myContact.npo02__household__c,new List<Contact>());                   
                 }
-                householdIdToContact.get(myContact.Household__c).add(myContact);
+                householdIdToContact.get(myContact.npo02__household__c).add(myContact);
             }
             
             map <String,Id> contactOppToContactRole = new Map <String,Id> ();
@@ -177,7 +177,7 @@ public class HH_OppContactRoles {
                                     OpportunityContactRole thisRole = new OpportunityContactRole();
                                     thisRole.OpportunityId = thisOpp.Id;
                                     thisRole.ContactId = householdMember.Id;
-                                    thisRole.Role = currentHouseholdsSettings.Household_Member_Contact_Role__c;
+                                    thisRole.Role = currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c;
                                     contactRolesForCreation.add(thisRole);
                                 }
                             }

@@ -37,7 +37,7 @@ global virtual without sharing class HH_HouseholdNaming {
     @future  
     global static void FutureUpdateNames(list<id> hhids){       
         //set our process control to avoid recursive updating on household records
-        HouseholdProcessControl.inFutureContext = true;
+        HH_ProcessControl.inFutureContext = true;
         
         //create a new instance of the HH_HouseholdNaming class -
         //and pass in our param
@@ -49,42 +49,42 @@ global virtual without sharing class HH_HouseholdNaming {
     global virtual void UpdateNames(list<id> hhids){
         
         //we need this turned on to prevent recursive triggering on household creation        
-        HouseholdProcessControl.inFutureContext = true;    
+        HH_ProcessControl.inFutureContext = true;    
         
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
-        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, Household__r.id, Naming_Exclusions__c from Contact where Household__c IN :hhids and Household__c != null ORDER BY Household__c,Household_Naming_Order__c ASC NULLS LAST ];
-        list<Household__c> hhupdatelist = [select Name, SYSTEM_CUSTOM_NAMING__c from Household__c where id IN : hhids];
+        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, npo02__Household__r.id, npo02__Naming_Exclusions__c from Contact where npo02__Household__c IN :hhids and npo02__Household__c != null ORDER BY npo02__Household__c,npo02__Household_Naming_Order__c ASC NULLS LAST ];
+        list<npo02__Household__c> hhupdatelist = [select Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
         
         map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
         
         //sort contacts by household
         for (Contact c : contactlist){          
-            if(!hhIDContactMap.containskey(c.Household__r.id)){
-                hhIDContactMap.put(c.Household__r.id, new list<Contact>{c});
+            if(!hhIDContactMap.containskey(c.npo02__household__r.id)){
+                hhIDContactMap.put(c.npo02__household__r.id, new list<Contact>{c});
             }
             else{
-                list<Contact> clist = hhIDContactMap.get(c.Household__r.id);
+                list<Contact> clist = hhIDContactMap.get(c.npo02__household__r.id);
                 clist.add(c);                
             }
         }
                 
         //loop through the households needing name changes, if necessary, make them.
-        for (Household__c h : hhupdatelist){    
+        for (npo02__Household__c h : hhupdatelist){    
         
             string customnameparam = '';
-            if (h.SYSTEM_CUSTOM_NAMING__c != null){
-                customnameparam = h.SYSTEM_CUSTOM_NAMING__c;
+            if (h.npo02__SYSTEM_CUSTOM_NAMING__c != null){
+                customnameparam = h.npo02__SYSTEM_CUSTOM_NAMING__c;
             }            
             
             if (!customnameparam.contains('Name'))
                 h.Name = getHHName(hhIDContactMap.get(h.id));   
             
             if (!customnameparam.contains('Formal_Greeting__c'))
-                h.Formal_Greeting__c = getFormalName(hhIDContactMap.get(h.id));
+                h.npo02__Formal_Greeting__c = getFormalName(hhIDContactMap.get(h.id));
 
             if (!customnameparam.contains('Informal_Greeting__c'))
-                h.Informal_Greeting__c = getInformalName(hhIDContactMap.get(h.id));             
+                h.npo02__Informal_Greeting__c = getInformalName(hhIDContactMap.get(h.id));             
         } 
         
         if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);
@@ -104,7 +104,7 @@ global virtual without sharing class HH_HouseholdNaming {
              
             for (Contact c : ContactList){
                 //add valid values to the contactnames and lastnames lists for processing if not already in the set
-                if((c.Naming_Exclusions__c == null || !c.Naming_Exclusions__c.contains('Household__c.Name')) 
+                if((c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.Name')) 
                     && !contactlastnamesSet.contains(c.LastName))
                 {
                     contactlastnames.add(c.LastName);
@@ -114,7 +114,7 @@ global virtual without sharing class HH_HouseholdNaming {
             
             //we lost our only contact - he/she's anonymous
             if (contactlastnames.isEmpty())
-                householdname = system.label.HouseholdAnonymousName + ' ' + system.label.DefaultHouseholdName;
+                householdname = system.label.npo02.HouseholdAnonymousName + ' ' + system.label.npo02.DefaultHouseholdName;
                     
             //standard hh naming
             else if (contactlastnames.size() > 0 && contactlastnames.size() < 10){          
@@ -126,9 +126,9 @@ global virtual without sharing class HH_HouseholdNaming {
                     if (x < contactlastnames.size() - 1)
                         householdname += ', ';
                     else if (x == contactlastnames.size() - 1)
-                        householdname += ' ' + system.label.HouseholdNameConnector + ' ';
+                        householdname += ' ' + system.label.npo02.HouseholdNameConnector + ' ';
                     else
-                        householdname += ' ' + system.label.DefaultHouseholdName;                                
+                        householdname += ' ' + system.label.npo02.DefaultHouseholdName;                                
                 }
             }
             
@@ -136,7 +136,7 @@ global virtual without sharing class HH_HouseholdNaming {
             //special case
             else{
                householdname = ContactList[0].LastName;
-               householdname += ' ' + system.label.HouseholdNameConnector + ' ' + system.label.HouseholdNameOverrun + ' ' + system.label.DefaultHouseholdname;
+               householdname += ' ' + system.label.npo02.HouseholdNameConnector + ' ' + system.label.npo02.HouseholdNameOverrun + ' ' + system.label.npo02.DefaultHouseholdname;
             }
         }
         return householdname;
@@ -154,7 +154,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         
         for (Contact c : ContactList){ 
-            if(c.FirstName != null && (c.Naming_Exclusions__c == null || !c.Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c')))
+            if(c.FirstName != null && (c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.npo02__Informal_Greeting__c')))
                 contactnames.add(c);
         }
         
@@ -163,13 +163,13 @@ global virtual without sharing class HH_HouseholdNaming {
             listsize = contactnames.size();
         
         if (listsize == 0)
-            informalname = system.label.HouseholdAnonymousGreeting;
+            informalname = system.label.npo02.HouseholdAnonymousGreeting;
         
         else if (listsize == 1)
             informalname = contactnames[0].FirstName;
         
         else if (listsize == 2)
-            informalname = contactnames[0].FirstName + ' ' + system.label.HouseholdNameConnector + ' ' + contactnames[1].FirstName;
+            informalname = contactnames[0].FirstName + ' ' + system.label.npo02.HouseholdNameConnector + ' ' + contactnames[1].FirstName;
         
         //more than 2
         else{
@@ -181,7 +181,7 @@ global virtual without sharing class HH_HouseholdNaming {
                     informalname += c.FirstName;
                 //if we're at the last name in the group
                 else if (counter == contactnames.size())
-                    informalname += ' ' + system.label.HouseholdNameConnector + ' ' + c.FirstName;
+                    informalname += ' ' + system.label.npo02.HouseholdNameConnector + ' ' + c.FirstName;
                 //we're somewhere in the middle of the group
                 else
                     informalname += ', ' + c.Firstname;
@@ -203,7 +203,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         //remove any excluded contacts
         for (Contact c : ContactList){ 
-            if(c.Naming_Exclusions__c == null || !c.Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c'))
+            if(c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.npo02__Formal_Greeting__c'))
                 contactnames.add(c);
         }
         
@@ -236,7 +236,7 @@ global virtual without sharing class HH_HouseholdNaming {
                 if(counter < (contactnames.size() - 1))
                     formalname += ', ';
                 else if (counter == (contactnames.size() - 1))
-                    formalname += ' ' + system.label.HouseholdNameConnector + ' ';                          
+                    formalname += ' ' + system.label.npo02.HouseholdNameConnector + ' ';                          
                 //add the family name     
                 else
                     formalname += ' ' + c.LastName;
@@ -253,7 +253,7 @@ global virtual without sharing class HH_HouseholdNaming {
             if (contactnames[0].FirstName != null)
                 formalname += contactnames[0].FirstName + ' ';                    
             
-            formalname += contactnames[0].LastName + ' ' + system.Label.HouseholdNameConnector + ' ' + system.label.HouseholdNameOverrun;
+            formalname += contactnames[0].LastName + ' ' + system.label.npo02.HouseholdNameConnector + ' ' + system.label.npo02.HouseholdNameOverrun;
         }
         }
         return formalname;  
@@ -267,7 +267,7 @@ global virtual without sharing class HH_HouseholdNaming {
         
         //start the activation batch process, used only once, on initial click
         //to enable batch rollups
-        BATCH_HouseholdNaming batch = new BATCH_HouseholdNaming('SELECT id, npo02__Household__r.id, ' + 
+        HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH('SELECT id, npo02__Household__r.id, ' + 
         'npo02__household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c, ' +
         'npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Naming_Exclusions__c,  Firstname, lastname, ' +
         'salutation ' +

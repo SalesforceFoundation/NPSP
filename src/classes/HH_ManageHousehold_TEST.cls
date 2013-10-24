@@ -404,7 +404,7 @@ public with sharing class HH_ManageHousehold_TEST {
         system.assertEquals(3, ext.activeContacts.size());
         
         // find viable addresses
-        list<viableAddress> adds = ext.getViableAddresses();
+        list<HH_ManageHousehold_EXT.viableAddress> adds = ext.getViableAddresses();
         
         //verify that we found two valid addresses even though the matches aren't exactly the same
         system.AssertEquals(2, ext.viableAddresses.size());

@@ -38,17 +38,17 @@ public class HH_HouseholdNaming_TEST {
     /** @description Test method for batch */
     public static testMethod void testBatch() {
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-            new Households_Settings__c (
-                Household_Rules__c = Households.ALL_PROCESSOR,
-                Always_Rollup_to_Primary_Contact__c = true,
-                Enable_Opp_Rollup_Triggers__c = true,
-                Excluded_Account_Opp_Rectypes__c = null,
-                Excluded_Account_Opp_Types__c = null,
-                Excluded_Contact_Opp_Rectypes__c = null,
-                Excluded_Contact_Opp_Types__c = null,
-                Membership_Record_Types__c = null,
-                Advanced_Household_Naming__c = true
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = true,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null,
+                npo02__Advanced_Household_Naming__c = true
             ));
             
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -71,11 +71,11 @@ public class HH_HouseholdNaming_TEST {
         insert TestCons;
             
         //get the household to be updated
-        id hhid = [select Household__r.id from Contact where id = :testcons[0].id].id;                        
+        id hhid = [select npo02__Household__r.id from Contact where id = :testcons[0].id].id;                        
         system.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
-        'select household__r.id from Contact where household__r.id = \'' + hhid + '\' limit 200', true
+        'select npo02__household__r.id from Contact where npo02__household__r.id = \'' + hhid + '\' limit 200', true
         );
             
         Test.StartTest(); 
@@ -85,15 +85,15 @@ public class HH_HouseholdNaming_TEST {
     
     static testMethod void HouseholdNamingTest(){
       //settings
-      Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null                    
+      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null                    
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -108,7 +108,7 @@ public class HH_HouseholdNaming_TEST {
         for (i = 0; i < 20; i++){
             Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
             if (i == 1){
-                c.Naming_Exclusions__c = 'Household Name';
+                c.npo02__Naming_Exclusions__c = 'Household Name';
             }
             
             insertlist.add(c);
@@ -117,11 +117,11 @@ public class HH_HouseholdNaming_TEST {
         insert insertlist;
         list<id> householdids = new list<id>();
         
-        list<Contact> clist = [select Naming_Exclusions__c, Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
+        list<Contact> clist = [select npo02__Naming_Exclusions__c, npo02__Household__r.id, npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
         
         for (Contact c : clist){
-            if (c.household__r.id != null)
-              householdids.add(c.Household__r.id);          
+            if (c.npo02__household__r.id != null)
+              householdids.add(c.npo02__household__r.id);          
         }
         system.assert(householdids.size() > 0);
         
@@ -130,10 +130,10 @@ public class HH_HouseholdNaming_TEST {
         HH_HouseholdNaming.FutureUpdateNames(householdids);
         test.stoptest();
         //test a single member household, lastname, firstname, householdname:
-        Contact con = [select Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
-        system.assertEquals('LastName0 ' +  system.label.DefaultHouseholdName, con.Household__r.Name);  
-        system.assertEquals('FirstName0',con.Household__r.Informal_Greeting__c);
-        system.assertEquals('Mr. FirstName0 LastName0', con.Household__r.Formal_Greeting__c);
+        Contact con = [select npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
+        system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);  
+        system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
+        system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
         
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         //test for coverage
@@ -143,16 +143,16 @@ public class HH_HouseholdNaming_TEST {
     
     static testMethod void HouseholdNamingUpdateTest(){
         //settings
-      Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,     
-                    Advanced_Household_Naming__c = true               
+      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,     
+                    npo02__Advanced_Household_Naming__c = true               
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -167,22 +167,22 @@ public class HH_HouseholdNaming_TEST {
         for (i = 0; i < 200; i++){
             Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
             if (i == 1){
-                c.Naming_Exclusions__c = 'Household Name';
+                c.npo02__Naming_Exclusions__c = 'Household Name';
             }
             
             insertlist.add(c);
         }  
         
         //turn off the before trigger via our processor:
-        HouseholdProcessControl.inFutureContext = true;        
+        HH_ProcessControl.inFutureContext = true;        
         insert insertlist;
         list<id> householdids = new list<id>();
         
-        list<Contact> clist = [select Naming_Exclusions__c, Household__r.id, Household__r.Name, Household__r.Informal_Greeting__c, Household__r.Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
+        list<Contact> clist = [select npo02__Naming_Exclusions__c, npo02__Household__r.id, npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where id IN :insertlist limit 2000];
         
         for (Contact c : clist){
-            if (c.household__r.id != null)
-              householdids.add(c.Household__r.id);          
+            if (c.npo02__household__r.id != null)
+              householdids.add(c.npo02__household__r.id);          
         }
         
         //update some contacts and note the changes
@@ -221,20 +221,20 @@ public class HH_HouseholdNaming_TEST {
         // i think something about how HHs are created, with the contact re-update is causing
         //an issue in testing
        /* 
-        map<id, Household__c> hhmap = new map<id, Household__c>([select SYSTEM_CUSTOM_NAMING__c, Name, Informal_greeting__c, Formal_greeting__c from Household__c where id IN :newhhids]);
+        map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>([select npo02__SYSTEM_CUSTOM_NAMING__c, Name, npo02__Informal_greeting__c, npo02__Formal_greeting__c from npo02__Household__c where id IN :newhhids]);
         
-        list<Contact> lc = new list<contact>([select household__r.id, 
-        household__r.name, household__r.Informal_Greeting__c, FirstName, Salutation, LastName, 
-        Naming_Exclusions__c, household__r.SYSTEM_CUSTOM_NAMING__c,
-        household__r.Formal_Greeting__c from Contact where household__r.id IN :newhhids]);
+        list<Contact> lc = new list<contact>([select npo02__household__r.id, 
+        npo02__household__r.name, npo02__household__r.npo02__Informal_Greeting__c, FirstName, Salutation, LastName, 
+        npo02__Naming_Exclusions__c, npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c,
+        npo02__household__r.npo02__Formal_Greeting__c from Contact where npo02__household__r.id IN :newhhids]);
         
         map<id,list <Contact>> hhidContactMap = new map<id, list <Contact>>();
         for (Contact c : lc){
-            if(!hhIDContactMap.containskey(c.Household__r.id)){
-                hhIDContactMap.put(c.Household__r.id, new list<Contact>{c});
+            if(!hhIDContactMap.containskey(c.npo02__household__r.id)){
+                hhIDContactMap.put(c.npo02__household__r.id, new list<Contact>{c});
             }
             else{
-                list<Contact> conlist = hhIDContactMap.get(c.Household__r.id);
+                list<Contact> conlist = hhIDContactMap.get(c.npo02__household__r.id);
                 conlist.add(c);                
             }
         }
@@ -243,14 +243,14 @@ public class HH_HouseholdNaming_TEST {
         //and compare it with the household values from teh first contact
         //record              
         for (id HHID : hhidContactMap.keySet()){
-            if (hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c != null){
-                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Name'));
-                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c'));
-                system.assert(!hhidcontactmap.get(hhid)[0].household__r.SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c'));
+            if (hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c != null){
+                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'));
+                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('npo02__Informal_Greeting__c'));
+                system.assert(!hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c.contains('npo02__Formal_Greeting__c'));
             } 
             system.assertEquals(hhMap.get(hhid).Name, hn.getHHName(hhidcontactmap.get(hhid)));
-            system.assertEquals(hhidcontactmap.get(hhid)[0].Household__r.Informal_Greeting__c, hn.getInformalName(hhidcontactmap.get(hhid)));
-            system.assertEquals(hhidcontactmap.get(hhid)[0].Household__r.Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
+            system.assertEquals(hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__Informal_Greeting__c, hn.getInformalName(hhidcontactmap.get(hhid)));
+            system.assertEquals(hhidcontactmap.get(hhid)[0].npo02__household__r.npo02__Formal_Greeting__c, hn.getFormalName(hhidcontactmap.get(hhid)));
         }       
         */
     test.stopTest();        
@@ -258,16 +258,16 @@ public class HH_HouseholdNaming_TEST {
     
     public static testMethod void testNamingOrder() {
         //settings
-      Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,     
-                    Advanced_Household_Naming__c = true               
+      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,     
+                    npo02__Advanced_Household_Naming__c = true               
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -276,7 +276,7 @@ public class HH_HouseholdNaming_TEST {
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
             
-        Household__c hh = new Household__c (
+        npo02__Household__c hh = new npo02__Household__c (
             Name = 'Household'
             );
         insert hh;
@@ -290,14 +290,14 @@ public class HH_HouseholdNaming_TEST {
         Contact con1 = new Contact(
             FirstName = 'Joe',
             LastName = 'Test',
-            Household__c = hh.id
+            npo02__Household__c = hh.id
             );
         insert con1;
         
         Contact con2 = new Contact(
             FirstName = 'Jim',
             LastName = 'Test',
-            Household__c = hh.id
+            npo02__Household__c = hh.id
             );
         insert con2;
 
@@ -309,57 +309,57 @@ public class HH_HouseholdNaming_TEST {
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, Formal_greeting__c, Informal_greeting__c from Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
-        system.assertequals('Test ' + system.label.DefaultHouseholdName, hh.Name);
-        system.assert(hh.Formal_greeting__c.contains('Joe'));
-        system.assert(hh.Formal_greeting__c.contains('Jim'));
-        system.assert(hh.Formal_greeting__c.endswith('Test'));
-        system.assert(hh.Informal_greeting__c.contains('Joe'));
-        system.assert(hh.Informal_greeting__c.contains('Jim'));
+        system.assertequals('Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assert(hh.npo02__Formal_greeting__c.contains('Joe'));
+        system.assert(hh.npo02__Formal_greeting__c.contains('Jim'));
+        system.assert(hh.npo02__Formal_greeting__c.endswith('Test'));
+        system.assert(hh.npo02__Informal_greeting__c.contains('Joe'));
+        system.assert(hh.npo02__Informal_greeting__c.contains('Jim'));
 
-        con1.Household_Naming_Order__c = 0;
-        con2.Household_Naming_Order__c = 1;
+        con1.npo02__Household_Naming_Order__c = 0;
+        con2.npo02__Household_Naming_Order__c = 1;
         
         update con1;
         update con2;
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, Formal_greeting__c, Informal_greeting__c from Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
-        system.assertequals('Test ' + system.label.DefaultHouseholdName, hh.Name);
-        system.assertequals('Joe ' + system.label.HouseholdNameConnector + ' Jim Test', hh.Formal_greeting__c);
-        system.assertequals('Joe ' + system.label.HouseholdNameConnector + ' Jim', hh.Informal_greeting__c);
+        system.assertequals('Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertequals('Joe ' + system.label.npo02.HouseholdNameConnector + ' Jim Test', hh.npo02__Formal_greeting__c);
+        system.assertequals('Joe ' + system.label.npo02.HouseholdNameConnector + ' Jim', hh.npo02__Informal_greeting__c);
         
-        con0.Household__c = hh.id;
-        con0.Household_Naming_Order__c = 0;
-        con1.Household_Naming_Order__c = null;
-        
-        update con0;
-        update con1;
-        
-        hn.UpdateNames(new list<Id>{hh.id});
-        
-        hh = [select Id, Name, Formal_greeting__c, Informal_greeting__c from Household__c where id = :hh.id LIMIT 1][0];
-        
-        system.assertequals('Jones ' + system.label.HouseholdNameConnector + ' Test ' + system.label.DefaultHouseholdName, hh.Name);
-        system.assertequals('John Jones, Jim Test ' + system.label.HouseholdNameConnector + ' Joe Test', hh.Formal_greeting__c);
-        system.assertequals('John, Jim ' + system.label.HouseholdNameConnector + ' Joe', hh.Informal_greeting__c);
-        
-        con0.Household_Naming_Order__c = null;
-        con1.Household_Naming_Order__c = 2;
+        con0.npo02__household__c = hh.id;
+        con0.npo02__Household_Naming_Order__c = 0;
+        con1.npo02__Household_Naming_Order__c = null;
         
         update con0;
         update con1;
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, Formal_greeting__c, Informal_greeting__c from Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
-        system.assertequals('Test ' + system.label.HouseholdNameConnector + ' Jones ' + system.label.DefaultHouseholdName, hh.Name);
-        system.assertequals('Jim Test, Joe Test ' + system.label.HouseholdNameConnector + ' John Jones', hh.Formal_greeting__c);
-        system.assertequals('Jim, Joe ' + system.label.HouseholdNameConnector + ' John', hh.Informal_greeting__c);
+        system.assertequals('Jones ' + system.label.npo02.HouseholdNameConnector + ' Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertequals('John Jones, Jim Test ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
+        system.assertequals('John, Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe', hh.npo02__Informal_greeting__c);
+        
+        con0.npo02__Household_Naming_Order__c = null;
+        con1.npo02__Household_Naming_Order__c = 2;
+        
+        update con0;
+        update con1;
+        
+        hn.UpdateNames(new list<Id>{hh.id});
+        
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
+        
+        system.assertequals('Test ' + system.label.npo02.HouseholdNameConnector + ' Jones ' + system.label.npo02.DefaultHouseholdName, hh.Name);
+        system.assertequals('Jim Test, Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
+        system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
         Test.stopTest();
         

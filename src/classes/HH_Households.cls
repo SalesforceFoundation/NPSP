@@ -39,7 +39,7 @@ global without sharing class HH_Households {
     public static String ALL_INDIVIDUALS_PROCESSOR = 'All Individual Contacts';
     public static String NO_HOUSEHOLDS_PROCESSOR = 'No Contacts';
     
-    public static Households_Settings__c householdsSettings;
+    public static npo02__Households_Settings__c householdsSettings;
 
     /// <name> HH_Households </name>
     /// <summary> Default Constructor </summary>
@@ -63,7 +63,7 @@ global without sharing class HH_Households {
     /// <param name="ta"> Trigger action that is occuring </param>
     public HH_Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta, map<id, Contact> newcmap, map<id, Contact> oldcmap)
     {        
-        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -84,14 +84,14 @@ global without sharing class HH_Households {
             
             for (Contact c : Contacts){
                 
-                if (oldcmap.get(c.id).Household__c != null){
-                    oldHouseholds.add(oldcmap.get(c.id).Household__c);
-                    system.debug('ID ADDED================' + oldcmap.get(c.id).Household__c);
+                if (oldcmap.get(c.id).npo02__household__c != null){
+                    oldHouseholds.add(oldcmap.get(c.id).npo02__household__c);
+                    system.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
                 }
                 
             }            
             
-            AggregateResult[] ar = [select Household__c oldhh, count(id) membercount from Contact where Household__c IN :oldHouseholds group by Household__c];
+            AggregateResult[] ar = [select npo02__Household__c oldhh, count(id) membercount from Contact where npo02__Household__c IN :oldHouseholds group by npo02__Household__c];
             
             //create a map from the old household id and its size
             for (AggregateResult a : ar){
@@ -116,14 +116,14 @@ global without sharing class HH_Households {
             {
                 //If the user has chosen for all Contacts to have households, add them all to the list
                 //for Household creation
-                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
+                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_PROCESSOR)
                     householdInserts.add(c);
                 //If the user has chosen for only Contacts connected to Individual Accounts to have Households
                 //add them all to a list for evaluation
-                else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
+                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
-                else if  (c.Household__c != null)
-                    householdnameupdates.add(c.Household__c);
+                else if  (c.npo02__household__c != null)
+                    householdnameupdates.add(c.npo02__household__c);
             }
 
             //AFTER UPDATE
@@ -133,36 +133,36 @@ global without sharing class HH_Households {
                 //and send it to our naming code for action
                 //first contact's names to their old names, and see if anything changed
                 //salutation
-                if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_PROCESSOR)
+                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_PROCESSOR)
                     householdInserts.add(c);
-                else if (c.Household__c == null && currentHouseholdsSettings.Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
+                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
                 
                 if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
-                    householdnameupdates.add(c.Household__c);
+                    householdnameupdates.add(c.npo02__household__c);
                 else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
-                    householdnameupdates.add(c.Household__c);
+                    householdnameupdates.add(c.npo02__household__c);
                 else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
-                    householdnameupdates.add(c.Household__c);    
+                    householdnameupdates.add(c.npo02__household__c);    
                 
                 //if they've changed households, we need to query the old
                 //household to see if anybody is left, if so, send it for renaming
                 //if not, delete it.
-                else if (newcmap.get(c.id).Household__c != oldcmap.get(c.id).Household__c){
-                    householdnameupdates.add(c.Household__c);
-                    if (oldHouseholdSize.get(oldcmap.get(c.id).Household__c) > 0){
-                        householdnameupdates.add(oldcmap.get(c.id).Household__c);
+                else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
+                    householdnameupdates.add(c.npo02__household__c);
+                    if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
+                        householdnameupdates.add(oldcmap.get(c.id).npo02__household__c);
                     }
-                    else if(oldHouseholdSize.get(oldcmap.get(c.id).Household__c) == 0){
-                        blankHHDeletes.add(oldcmap.get(c.id).Household__c);
+                    else if(oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0){
+                        blankHHDeletes.add(oldcmap.get(c.id).npo02__household__c);
                     }       
                 }                    
-                else if (newcmap.get(c.id).Naming_Exclusions__c != oldcmap.get(c.id).Naming_Exclusions__c)
-                    householdnameupdates.add(c.Household__c);
+                else if (newcmap.get(c.id).npo02__Naming_Exclusions__c != oldcmap.get(c.id).npo02__Naming_Exclusions__c)
+                    householdnameupdates.add(c.npo02__household__c);
             }
             
             if ( ta==triggerAction.afterDelete ){
-                if (c.Household__c != null )
+                if (c.npo02__household__c != null )
                     householdDeletes.add(c);
             
                 //check if this Contact is the loser in a merge
@@ -191,12 +191,12 @@ global without sharing class HH_Households {
         if (householdDeletes.size() > 0)        
             deleteHousehold(householdDeletes);
         
-        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
+        if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
                           
-            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
-                HouseholdNaming.FutureUpdateNames(householdnameupdates);
+            if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
             else{
-                HouseholdNaming hn = new HouseholdNaming(); 
+                HH_HouseholdNaming hn = new HH_HouseholdNaming(); 
                 hn.UpdateNames(householdnameupdates);
             }                   
         }
@@ -211,7 +211,8 @@ global without sharing class HH_Households {
             oppIds.add(ocr.OpportunityId);
                 
         if(!oppIDs.isEmpty())
-            OpportunityRollups.rollupContactsandHouseholdsForTrigger(oppIds);
+            RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds); 
+            
     }
     
     /// <name> insertHousehold </name>
@@ -219,15 +220,15 @@ global without sharing class HH_Households {
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
     public static void insertHousehold(Contact[] contacts, boolean isInsertTrigger)
     {
-        List<Household__c> householdInserts = new List<Household__c>();
+        List<npo02__household__c> householdInserts = new List<npo02__household__c>();
         //reload to evaluate insert criteria
-        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
                 
         set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
-        if (currentHouseholdsSettings.Household_Creation_Excluded_Recordtypes__c != null) {
-            HouseholdRecordTypeExclusions = new set<string>(currentHouseholdsSettings.Household_Creation_Excluded_Recordtypes__c.split(';'));
-            conRecordTypesToExclude = RecordTypes.GetRecordTypeIdSet('Contact', HouseholdRecordTypeExclusions);            
+        if (currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c != null) {
+            HouseholdRecordTypeExclusions = new set<string>(currentHouseholdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c.split(';'));
+            conRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Contact', HouseholdRecordTypeExclusions);            
         }
         
         boolean recordTypesOnCons = false;
@@ -237,18 +238,18 @@ global without sharing class HH_Households {
         for(Contact c : contacts)
         {
             if (!recordTypesOnCons || !conRecordTypesToExclude.contains((id)c.get('RecordTypeId'))){            
-                Household__c h = new Household__c(); 
+                npo02__household__c h = new npo02__household__c(); 
                 String hName = c.LastName;
-                hName += ' ' + system.label.DefaultHouseholdName;
+                hName += ' ' + system.label.npo02.DefaultHouseholdName;
                 h.Name = hName;
                 //sync the primary address block
-                h.MailingStreet__c = c.MailingStreet;
-                h.MailingCity__c = c.MailingCity;
-                h.MailingState__c = c.MailingState;
-                h.MailingPostalCode__c  = c.MailingPostalCode;
-                h.MailingCountry__c = c.MailingCountry;
-                h.HouseholdPhone__c = c.HomePhone;
-                h.HouseholdEmail__c = c.Email;
+                h.npo02__MailingStreet__c = c.MailingStreet;
+                h.npo02__MailingCity__c = c.MailingCity;
+                h.npo02__MailingState__c = c.MailingState;
+                h.npo02__MailingPostalCode__c  = c.MailingPostalCode;
+                h.npo02__MailingCountry__c = c.MailingCountry;
+                h.npo02__HouseholdPhone__c = c.HomePhone;
+                h.npo02__HouseholdEmail__c = c.Email;
                 householdInserts.add(h);
             }                
         }
@@ -269,7 +270,7 @@ global without sharing class HH_Households {
                 {
                     //write the new Household Ids to the Contacts
                     Contact clone = c.Clone(true,false);
-                    clone.Household__c = lsr[i].getId();
+                    clone.npo02__household__c = lsr[i].getId();
                     contactUpdates.add(clone);
                 }
                 else{
@@ -283,7 +284,7 @@ global without sharing class HH_Households {
                 Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
         
             //SETTING CHECK HERE!!!
-            if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && isInsertTrigger){
+            if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && isInsertTrigger){
                 list<id> hhidsfornaming = new list<id>();
                 
                 for (Database.SaveResult sr : lsr){
@@ -294,10 +295,10 @@ global without sharing class HH_Households {
                 //send it all out for (re)naming
                 //secret setting for async processing... ooooooooh....
                 
-                if (currentHouseholdsSettings.Async_Household_Naming__c == true)
-                    HouseholdNaming.FutureUpdateNames(hhidsfornaming);
+                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                    HH_HouseholdNaming.FutureUpdateNames(hhidsfornaming);
                 else{
-                    HouseholdNaming hn = new HouseholdNaming();
+                    HH_HouseholdNaming hn = new HH_HouseholdNaming();
                     hn.UpdateNames(hhidsfornaming);
                 }
                     
@@ -352,40 +353,40 @@ global without sharing class HH_Households {
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
         //reload to evaluate delete criteria
-        Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
 
         //Generate a list of Household Ids
         for(Contact c : contacts){
-            if (c.Household__c != null)
-                householdCountMap.put(c.Household__c,0);
+            if (c.npo02__household__c != null)
+                householdCountMap.put(c.npo02__household__c,0);
         }
 
         //Loop through all Contacts at one of the Household Ids
-        for (Contact c : [Select Id, Household__c from Contact where Household__c in :householdCountMap.keyset()])
+        for (Contact c : [Select Id, npo02__Household__c from Contact where npo02__Household__c in :householdCountMap.keyset()])
         {
-            Integer lastCount = householdCountMap.get(c.Household__c);
+            Integer lastCount = householdCountMap.get(c.npo02__household__c);
             lastCount += 1;
-            householdCountMap.put(c.Household__c,lastCount);
+            householdCountMap.put(c.npo02__household__c,lastCount);
         }
 
         //Loop through all the contacts to determine if they can be deleted
         for (Contact c : contacts){
             //If there are no other Contacts on the Account
-            if (householdCountMap.get(c.Household__c) < 1 )
-                householdDeletes.add(c.Household__c);
+            if (householdCountMap.get(c.npo02__household__c) < 1 )
+                householdDeletes.add(c.npo02__household__c);
             //otherwise, we need to update the household
             else     
-                householdrenames.add(c.Household__c);        
+                householdrenames.add(c.npo02__household__c);        
         }
 
         if (householdDeletes.size() > 0)
             Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);           
         
-        if (currentHouseholdsSettings.Advanced_Household_Naming__c == true && householdrenames.size() > 0){
-            if (currentHouseholdsSettings.Async_Household_Naming__c == true)
-                HouseholdNaming.FutureUpdateNames(householdrenames);
+        if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdrenames.size() > 0){
+            if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                HH_HouseholdNaming.FutureUpdateNames(householdrenames);
             else{
-                HouseholdNaming hn = new HouseholdNaming();
+                HH_HouseholdNaming hn = new HH_HouseholdNaming();
                 hn.UpdateNames(householdrenames);
             }
         }
@@ -397,7 +398,7 @@ global without sharing class HH_Households {
     webservice static String getHouseholdLastTransaction(Id householdId)
     {
         List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
         for (contact c : contacts)
         {
             contactIds.add(c.Id);
@@ -418,7 +419,7 @@ global without sharing class HH_Households {
     webservice static String getHouseholdTransactionTotal(Id householdId)
     {
         List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
         for (contact c : contacts)
         {
             contactIds.add(c.Id);
@@ -438,7 +439,7 @@ global without sharing class HH_Households {
         {
             total += wonOpps.Amount;
         }
-        String totalString = system.label.DefaultHouseholdTransactionCurrency;
+        String totalString = system.label.npo02.DefaultHouseholdTransactionCurrency;
         Decimal totalFormat = Decimal.valueOf(total).setScale(2);
         totalString += totalFormat;
         return String.valueOf(totalString);
@@ -449,7 +450,7 @@ global without sharing class HH_Households {
     public static String getHouseholdLastTransactionDate(Id householdId)
     {
         List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
         for (contact c : contacts)
         {
             contactIds.add(c.Id);
@@ -468,7 +469,7 @@ global without sharing class HH_Households {
     public static String getHouseholdTransactionAmount(Id householdId)
     {
         List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where Household__c = :householdId];
+        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
         for (contact c : contacts)
         {
             contactIds.add(c.Id);
@@ -488,24 +489,24 @@ global without sharing class HH_Households {
         {
             total += wonOpps.Amount;
         }
-        String totalString = system.label.DefaultHouseholdTransactionCurrency;
+        String totalString = system.label.npo02.DefaultHouseholdTransactionCurrency;
         Decimal totalFormat = Decimal.valueOf(total).setScale(2);
         totalString += totalFormat;
         return String.valueOf(totalString);
     }
     
      //get the settings. handles the case where the managed value doesn't exist yet
-    public static Households_Settings__c getHouseholdsSettings() {
+    public static npo02__Households_Settings__c getHouseholdsSettings() {
         String oldProcessor = '';
         //if no settings exist, create defaults
         if (householdsSettings == null) {
             //first see if we already have settings
-            householdsSettings = Households_Settings__c.getOrgDefaults();
+            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
             
             //modified to check again the Id instead of the object
             if (householdsSettings.Id == null) { 
                 //get the model they used to be in 
-                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.SystemHouseholdProcessor__c; 
+                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
                 for(Schema.PicklistEntry pe : P){
@@ -521,34 +522,34 @@ global without sharing class HH_Households {
                         break;
                     }
                 }
-                householdsSettings = new Households_Settings__c();
+                householdsSettings = new npo02__Households_Settings__c();
                 //set them up with their old setting in the new settings object
                 if(oldProcessor==ALL_PROCESSOR){
-                    householdsSettings.Household_Rules__c = ALL_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = ALL_PROCESSOR;
                 } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
-                    householdsSettings.Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
                 } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
-                    householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 } else {
-                    householdsSettings.Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
                 }
  
-                householdsSettings.Household_Member_Contact_Role__c = label.Household_Member_Contact_Role;
-                householdsSettings.Always_Rollup_to_Primary_Contact__c = false;
-                householdsSettings.Enable_Opp_Rollup_Triggers__c = false;
-                householdsSettings.Excluded_Account_Opp_Rectypes__c = null;
-                householdsSettings.Excluded_Account_Opp_Types__c = null;
-                householdsSettings.Excluded_Contact_Opp_Rectypes__c = null;
-                householdsSettings.Excluded_Contact_Opp_Types__c = null;
-                householdsSettings.Membership_Record_Types__c = null;
-                householdsSettings.Rollup_N_Day_Value__c = 365;
-                householdsSettings.Membership_Grace_Period__c = 30;
-                householdsSettings.Advanced_Household_Naming__c = false;
-                householdsSettings.Async_Household_Naming__c = false;
+                householdsSettings.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+                householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c = false;
+                householdsSettings.npo02__Enable_Opp_Rollup_Triggers__c = false;
+                householdsSettings.npo02__Excluded_Account_Opp_Rectypes__c = null;
+                householdsSettings.npo02__Excluded_Account_Opp_Types__c = null;
+                householdsSettings.npo02__Excluded_Contact_Opp_Rectypes__c = null;
+                householdsSettings.npo02__Excluded_Contact_Opp_Types__c = null;
+                householdsSettings.npo02__Membership_Record_Types__c = null;
+                householdsSettings.npo02__Rollup_N_Day_Value__c = 365;
+                householdsSettings.npo02__Membership_Grace_Period__c = 30;
+                householdsSettings.npo02__Advanced_Household_Naming__c = false;
+                householdsSettings.npo02__Async_Household_Naming__c = false;
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                householdsSettings.Schedule_Job_Limit__c = 25;
-                householdsSettings.Household_OCR_Excluded_Recordtypes__c = null;
-                householdsSettings.Household_Creation_Excluded_Recordtypes__c = null;
+                householdsSettings.npo02__Schedule_Job_Limit__c = 25;
+                householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
+                householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
                 insert householdsSettings;
             }
         }
@@ -556,31 +557,31 @@ global without sharing class HH_Households {
         return householdsSettings;
     }
     
-    public static Households_Settings__c getHouseholdsSettingsForTests(Households_Settings__c mySettings) {
+    public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
         
         //clear out whatever settings exist
         delete [select id from npo02__Households_Settings__c]; 
          
         //create our own based on what's passed in from the test
-        householdsSettings = new Households_Settings__c (
-            Household_Rules__c = mySettings.Household_Rules__c,
-            Household_Contact_Roles_On__c = mySettings.Household_Contact_Roles_On__c,
-            Household_Member_Contact_Role__c = mySettings.Household_Member_Contact_Role__c,
-            Always_Rollup_to_Primary_Contact__c = mySettings.Always_Rollup_to_Primary_Contact__c,
-            Enable_Opp_Rollup_Triggers__c = mySettings.Enable_Opp_Rollup_Triggers__c,
-            Excluded_Account_Opp_Rectypes__c = mySettings.Excluded_Account_Opp_Rectypes__c,
-            Excluded_Account_Opp_Types__c = mySettings.Excluded_Account_Opp_Types__c,
-            Excluded_Contact_Opp_Rectypes__c = mySettings.Excluded_Contact_Opp_Rectypes__c,
-            Excluded_Contact_Opp_Types__c = mySettings.Excluded_Contact_Opp_Types__c,
-            Membership_Grace_Period__c = mySettings.Membership_Grace_Period__c,
-            Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c, 
-            Membership_Record_Types__c = mySettings.Membership_Record_Types__c,
-            Advanced_Household_Naming__c = mySettings.Advanced_Household_Naming__c,
-            Enable_Soft_Credit_Rollups__c = mySettings.Enable_Soft_Credit_Rollups__c,
-            Soft_Credit_Roles__c = mySettings.Soft_Credit_Roles__c,        
-            Household_OCR_Excluded_Recordtypes__c = mySettings.Household_OCR_Excluded_Recordtypes__c, 
-            Household_Creation_Excluded_Recordtypes__c = mySettings.Household_Creation_Excluded_Recordtypes__c,
-            Schedule_Job_Limit__c = 25
+        householdsSettings = new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c,
+            npo02__Household_Contact_Roles_On__c = mySettings.npo02__Household_Contact_Roles_On__c,
+            npo02__Household_Member_Contact_Role__c = mySettings.npo02__Household_Member_Contact_Role__c,
+            npo02__Always_Rollup_to_Primary_Contact__c = mySettings.npo02__Always_Rollup_to_Primary_Contact__c,
+            npo02__Enable_Opp_Rollup_Triggers__c = mySettings.npo02__Enable_Opp_Rollup_Triggers__c,
+            npo02__Excluded_Account_Opp_Rectypes__c = mySettings.npo02__Excluded_Account_Opp_Rectypes__c,
+            npo02__Excluded_Account_Opp_Types__c = mySettings.npo02__Excluded_Account_Opp_Types__c,
+            npo02__Excluded_Contact_Opp_Rectypes__c = mySettings.npo02__Excluded_Contact_Opp_Rectypes__c,
+            npo02__Excluded_Contact_Opp_Types__c = mySettings.npo02__Excluded_Contact_Opp_Types__c,
+            npo02__Membership_Grace_Period__c = mySettings.npo02__Membership_Grace_Period__c,
+            npo02__Rollup_N_Day_Value__c = mySettings.npo02__Rollup_N_Day_Value__c, 
+            npo02__Membership_Record_Types__c = mySettings.npo02__Membership_Record_Types__c,
+            npo02__Advanced_Household_Naming__c = mySettings.npo02__Advanced_Household_Naming__c,
+            npo02__Enable_Soft_Credit_Rollups__c = mySettings.npo02__Enable_Soft_Credit_Rollups__c,
+            npo02__Soft_Credit_Roles__c = mySettings.npo02__Soft_Credit_Roles__c,        
+            npo02__Household_OCR_Excluded_Recordtypes__c = mySettings.npo02__Household_OCR_Excluded_Recordtypes__c, 
+            npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c,
+            npo02__Schedule_Job_Limit__c = 25
             );
         insert householdsSettings;
             

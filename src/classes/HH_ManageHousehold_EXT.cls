@@ -138,10 +138,10 @@ global with sharing class HH_ManageHousehold_EXT {
     // see function getViableAddresses for how the map is populated
     public map<String, viableAddress> viableAddresses;
     
-    public static Households_Settings__c hhsettings{
+    public static npo02__Households_Settings__c hhsettings{
         get{
             if(hhsettings == null){
-                hhsettings = Households_Settings__c.getInstance();
+                hhsettings = npo02__Households_Settings__c.getInstance();
             }   
             return hhsettings;
         }
@@ -236,7 +236,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * @param String state - A serialized copy of the page controller state.
     * @return HH_ManageHousehold_EXT
     ********************************************************************************************************/
-    private static HH_ManageHousehold_EXT unpackState(String state) {
+    public static HH_ManageHousehold_EXT unpackState(String state) {
         // There is a "bug" where not all of the classes have been loaded by apex when it attempts
         // to JSON.deserialize. The method below makes sure that the type is properly loaded when it attempts to
         // instantiate the object.
@@ -252,7 +252,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * @param HH_ManageHousehold_EXT state - A copy of the page controller state.
     * @return String
     ********************************************************************************************************/
-    private static string packState(HH_ManageHousehold_EXT state) {
+    public static string packState(HH_ManageHousehold_EXT state) {
         return JSON.serialize(state);
     }
     
@@ -584,7 +584,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * for passing to the Household Naming logic
     * @return list<Contact> A sort list of contacts.
     ********************************************************************************************************/
-    private list<Contact> sortingList() {
+    public list<Contact> sortingList() {
         list<Contact> cons = new list<contact>();
         list<Integer> sortOrder = new list<Integer>();
         map<Integer,Contact> consToSort = new map<Integer,Contact>();
@@ -709,12 +709,12 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return PageReference.
     ********************************************************************************************************/
     public PageReference save() {
-        HouseholdProcessControl.inFutureContext = true;
+        HH_ProcessControl.inFutureContext = true;
         ApexPages.StandardController sc = new ApexPages.standardController(hh);
         PageReference sv = sc.save();
         
         //Rollup household - uncomment this in NPSP - the constructor is not global so cannot be called outside the managed package
-        npo02.OpportunityRollups rg = new npo02.OpportunityRollups();
+        RLLP_OppRollup rg = new RLLP_OppRollup();
         rg.rollupHouseholds(new map<id, npo02__Household__c>(new list<npo02__Household__c>{hh}));
                 
         return sv;

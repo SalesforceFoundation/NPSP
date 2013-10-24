@@ -112,7 +112,7 @@ private class STTG_UserRollupSettings_TEST {
         STTG_UserRollupSettings_CTRL.UDR u = new STTG_UserRollupSettings_CTRL.UDR('', '', '', '', controller);
                 
         //insert invalid rollup to test error handling methods
-        User_Rollup_Field_Settings__c badurfs = new User_Rollup_Field_Settings__c(
+        npo02__User_Rollup_Field_Settings__c badurfs = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Invalid Test Rollup',
         npo02__Target_Field__c = 'InvalidTargetField__test',
         npo02__Source_Field__c = 'InvalidSourceField__test',
@@ -127,7 +127,7 @@ private class STTG_UserRollupSettings_TEST {
         PageReference pr = controller.checkSettings();        
         
         //exercise household code
-        User_Rollup_Field_Settings__c HHurfs = new User_Rollup_Field_Settings__c(
+        npo02__User_Rollup_Field_Settings__c HHurfs = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Household Test Rollup',
         npo02__Target_Field__c = 'lastoppamount__c',
         npo02__Source_Field__c = 'Amount',
@@ -140,7 +140,7 @@ private class STTG_UserRollupSettings_TEST {
         isValid = controller.userRollupsValid();
         system.assertEquals(false, isValid);
             
-        User_Rollup_Field_Settings__c badobject = new User_Rollup_Field_Settings__c(
+        npo02__User_Rollup_Field_Settings__c badobject = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Invalid Object Rollup',
         npo02__Target_Field__c = 'InvalidTargetField__test',
         npo02__Source_Field__c = 'InvalidSourceField__test',

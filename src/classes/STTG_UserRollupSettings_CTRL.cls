@@ -52,9 +52,9 @@ public with sharing class STTG_UserRollupSettings_CTRL{
     
     public list<UDR> udrList;
     public list<UDR> getudrList(){
-        list<User_Rollup_Field_Settings__c> thisList = User_Rollup_Field_Settings__c.getAll().values(); 
+        list<npo02__User_Rollup_Field_Settings__c> thisList = npo02__User_Rollup_Field_Settings__c.getAll().values(); 
         udrlist = new list<UDR>();
-        for (User_Rollup_Field_Settings__c udr : thisList){
+        for (npo02__User_Rollup_Field_Settings__c udr : thisList){
             udrList.add(new UDR(udr, this));
         }
         udrlistsize = udrList.size();
@@ -131,11 +131,11 @@ public with sharing class STTG_UserRollupSettings_CTRL{
         map<string, Schema.Sobjectfield> targetTokenMap = new map<string, Schema.Sobjectfield>();        
         //need to load current settings to not allow the user to point to the same target field
         //twice
-        map<string, User_Rollup_Field_Settings__c> currentURFSMap = User_Rollup_Field_Settings__c.getAll();
+        map<string, npo02__User_Rollup_Field_Settings__c> currentURFSMap = npo02__User_Rollup_Field_Settings__c.getAll();
         set<string> currentTargetFieldSet = new set<string>();
         for (string s : currentURFSMap.keySet()){
-            if (currentURFSMap.get(s).Object_Name__c == activeUDR.TargetObject && currentURFSMap.get(s).Target_Field__c != activeUDR.TargetField){
-               string fieldname = (currentURFSMap.get(s).Target_Field__c).toLowerCase();
+            if (currentURFSMap.get(s).npo02__Object_Name__c == activeUDR.TargetObject && currentURFSMap.get(s).npo02__Target_Field__c != activeUDR.TargetField){
+               string fieldname = (currentURFSMap.get(s).npo02__Target_Field__c).toLowerCase();
                //we need to strip out the namespace
                if (fieldname.contains('npo02')){
                    fieldname = fieldname.replace('npo02__', '');
@@ -151,56 +151,56 @@ public with sharing class STTG_UserRollupSettings_CTRL{
         if (activeUDR.TargetObject == 'Contact'){
             targetTokenMap = Schema.SObjectType.Contact.fields.getMap().clone();
             knownfields = new set<string>{
-                'averageamount__c', 'donor__c', 'donor_this_year__c',                
-                'firstclosedate__c', 'household__c', 'formula_householdmailingaddress__c',
-                'formula_householdphone__c', 'languages__c', 'largestamount__c', 
-                'lastoppamount__c', 'lastclosedate__c', 'lastclosedatehh__c',
-                'lastmembershipdate__c', 'lastmembershiplevel__c', 'lastmembershipamount__c',
-                'lastmembershiporigin__c', 'last_donation_date__c', 'level__c',
-                'membershipenddate__c', 'membershipjoindate__c', 'membership_span__c',
-                'membership_status__c', 'new_donor_this_year__c', 'oppsclosedlastndays__c',
-                'oppsclosedlastyear__c', 'oppsclosedthisyear__c', 'oppsclosed2yearsago__c',
-                'numberofmembershipopps__c', 'smallestamount__c', 'totaloppamount__c',
-                'oppamountlastndays__c', 'oppamountlastyear__c', 'oppamountthisyear__c',
-                'oppamount2yearsago__c', 'total_household_gifts__c', 'oppamountlastndayshh__c',
-                'oppamountlastyearhh__c', 'oppamountthisyearhh__c', 'totalmembershipoppamount__c',
-                'numberofclosedopps__c', 'systemhouseholdprocessor__c', 'naming_exclusions__c',
-                'best_gift_year__c', 'best_gift_year_total__c', 'household_naming_order__c',
-                'soft_credit_last_year__c', 'soft_credit_this_year__c', 'soft_credit_total__c',
-                'soft_credit_two_years_ago__c'
+                'npo02__averageamount__c', 'npo02__donor__c', 'npo02__donor_this_year__c',                
+                'npo02__firstclosedate__c', 'npo02__household__c', 'npo02__formula_householdmailingaddress__c',
+                'npo02__formula_householdphone__c', 'npo02__languages__c', 'npo02__largestamount__c', 
+                'npo02__lastoppamount__c', 'npo02__lastclosedate__c', 'npo02__lastclosedatehh__c',
+                'npo02__lastmembershipdate__c', 'npo02__lastmembershiplevel__c', 'npo02__lastmembershipamount__c',
+                'npo02__lastmembershiporigin__c', 'npo02__last_donation_date__c', 'npo02__level__c',
+                'npo02__membershipenddate__c', 'npo02__membershipjoindate__c', 'npo02__membership_span__c',
+                'npo02__membership_status__c', 'npo02__new_donor_this_year__c', 'npo02__oppsclosedlastndays__c',
+                'npo02__oppsclosedlastyear__c', 'npo02__oppsclosedthisyear__c', 'npo02__oppsclosed2yearsago__c',
+                'npo02__numberofmembershipopps__c', 'npo02__smallestamount__c', 'npo02__totaloppamount__c',
+                'npo02__oppamountlastndays__c', 'npo02__oppamountlastyear__c', 'npo02__oppamountthisyear__c',
+                'npo02__oppamount2yearsago__c', 'npo02__total_household_gifts__c', 'npo02__oppamountlastndayshh__c',
+                'npo02__oppamountlastyearhh__c', 'npo02__oppamountthisyearhh__c', 'npo02__totalmembershipoppamount__c',
+                'npo02__numberofclosedopps__c', 'npo02__systemhouseholdprocessor__c', 'npo02__naming_exclusions__c',
+                'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c', 'npo02__household_naming_order__c',
+                'npo02__soft_credit_last_year__c', 'npo02__soft_credit_this_year__c', 'npo02__soft_credit_total__c',
+                'npo02__soft_credit_two_years_ago__c'
                 };
         }
         else if(activeUDR.TargetObject == 'Account'){
             targetTokenMap = Schema.SobjectType.Account.fields.getMap().clone();
             knownfields = new set<string>{
-                'active__c', 'averageamount__c', 'customer_priority__c', 'customerpriority__c',
-                'upsellopportunity__c', 'firstclosedate__c', 'largestamount__c', 'lastoppamount__c',
-                'lastclosedate__c', 'lastmembershipdate__c', 'lastmembershipamount__c',
-                'lastmembershiplevel__c', 'lastmembershiporigin__c', 'membershipenddate__c',
-                'membershipjoindate__c', 'membership_span__c', 'membership_status__c',
-                'oppsclosedlastndays__c', 'oppsclosedlastyear__c', 'oppsclosedthisyear__c',
-                'oppsclosed2yearsago__c', 'numberoflocations__c', 'numberofmembershipopps__c',
-                'sla__c', 'slaexpirationdate__c', 'slaserialnumber__c', 'smallestamount__c',
-                'totaloppamount__c', 'oppamountlastndays__c', 'oppamountlastyear__c', 'oppamountthisyear__c',
-                'oppamount2yearsago__c', 'totalmembershipoppamount__c', 'numberofclosedopps__c',
-                'best_gift_year__c', 'best_gift_year_total__c'
+                'npo02__active__c', 'npo02__averageamount__c', 'npo02__customer_priority__c', 'npo02__customerpriority__c',
+                'npo02__upsellopportunity__c', 'npo02__firstclosedate__c', 'npo02__largestamount__c', 'npo02__lastoppamount__c',
+                'npo02__lastclosedate__c', 'npo02__lastmembershipdate__c', 'npo02__lastmembershipamount__c',
+                'npo02__lastmembershiplevel__c', 'npo02__lastmembershiporigin__c', 'npo02__membershipenddate__c',
+                'npo02__membershipjoindate__c', 'npo02__membership_span__c', 'npo02__membership_status__c',
+                'npo02__oppsclosedlastndays__c', 'npo02__oppsclosedlastyear__c', 'npo02__oppsclosedthisyear__c',
+                'npo02__oppsclosed2yearsago__c', 'npo02__numberoflocations__c', 'npo02__numberofmembershipopps__c',
+                'npo02__sla__c', 'npo02__slaexpirationdate__c', 'npo02__slaserialnumber__c', 'npo02__smallestamount__c',
+                'npo02__totaloppamount__c', 'npo02__oppamountlastndays__c', 'npo02__oppamountlastyear__c', 'npo02__oppamountthisyear__c',
+                'npo02__oppamount2yearsago__c', 'npo02__totalmembershipoppamount__c', 'npo02__numberofclosedopps__c',
+                'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c'
            };
         }
-        else if(activeUDR.TargetObject == 'Household__c' || activeUDR.TargetObject == 'npo02__Household__c'){
-            targetTokenMap = Schema.SobjectType.Household__c.fields.getMap().clone();
+        else if(activeUDR.TargetObject == 'npo02__Household__c' || activeUDR.TargetObject == 'npo02__Household__c'){
+            targetTokenMap = Schema.SobjectType.npo02__household__c.fields.getMap().clone();
             knownfields = new set<string>{
-                'addressee__c', 'always_anonymous__c', 'averagemount__c', 'firstclosedate__c',   
-                'householdemail__c','household_id__c','householdphone__c','largestamount__c',
-                'lastoppamount__c','lastclosedate__c','lastmembershipamount__c','lastmembershipdate__c',       
-                'lastmembershiplevel__c','lastmembershiporigin__c','formula_mailingaddress__c',    
-                'mailingcity__c','mailingcountry__c','mailingstate__c','mailingstreet__c',     
-                'mailingpostalcode__c','membershipenddate__c','membershipjoindate__c','membership_span__c',      
-                'membership_status__c','oppsclosedlastndays__c','oppsclosedlastyear__c',       
-                'oppsclosedthisyear__c','oppsclosed2yearsago__c','numberOfmembershipopps__c',   
-                'smallestamount__c','totaloppamount__c','oppamountlastndays__c','oppamountlastyear__c',    
-                'oppamountthisyear__c','oppamount2yearsago__c','totalmembershipoppamount__c',    
-                'numberofclosedopps__c', 'formal_greeting__c', 'informal_greeting__c', 'averageamount__c',
-                'system_custom_naming__c', 'best_gift_year__c', 'best_gift_year_total__c'
+                'npo02__addressee__c', 'npo02__always_anonymous__c', 'npo02__averagemount__c', 'npo02__firstclosedate__c',   
+                'npo02__householdemail__c','npo02__household_id__c','npo02__householdphone__c','npo02__largestamount__c',
+                'npo02__lastoppamount__c','npo02__lastclosedate__c','npo02__lastmembershipamount__c','npo02__lastmembershipdate__c',       
+                'npo02__lastmembershiplevel__c','npo02__lastmembershiporigin__c','npo02__formula_mailingaddress__c',    
+                'npo02__mailingcity__c','npo02__mailingcountry__c','npo02__mailingstate__c','npo02__mailingstreet__c',     
+                'npo02__mailingpostalcode__c','npo02__membershipenddate__c','npo02__membershipjoindate__c','npo02__membership_span__c',      
+                'npo02__membership_status__c','npo02__oppsclosedlastndays__c','npo02__oppsclosedlastyear__c',       
+                'npo02__oppsclosedthisyear__c','npo02__oppsclosed2yearsago__c','npo02__numberOfmembershipopps__c',   
+                'npo02__smallestamount__c','npo02__totaloppamount__c','npo02__oppamountlastndays__c','npo02__oppamountlastyear__c',    
+                'npo02__oppamountthisyear__c','npo02__oppamount2yearsago__c','npo02__totalmembershipoppamount__c',    
+                'npo02__numberofclosedopps__c', 'npo02__formal_greeting__c', 'npo02__informal_greeting__c', 'npo02__averageamount__c',
+                'npo02__system_custom_naming__c', 'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c'
            };     
         }
         //set knownfield to an empty set
@@ -300,31 +300,31 @@ public with sharing class STTG_UserRollupSettings_CTRL{
 
     //utility to check that existing user defined rollups are valid - called onpageload
     //NOTE: Only checks that target/source fields exist, not operation validity
-    private boolean userRollupsValid(){
+    public boolean userRollupsValid(){
         boolean isValid = true;
         
-        map<string, User_Rollup_Field_Settings__c> userRollups = User_Rollup_Field_Settings__c.getAll(); 
+        map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 
     
         for (string s : userRollups.keySet()){
-            User_Rollup_Field_Settings__c urfs = userRollups.get(s);
+            npo02__User_Rollup_Field_Settings__c urfs = userRollups.get(s);
             SobjectField targetField;
             SobjectField sourceField;
             
             //check source field
-            sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.Source_Field__c);
+            sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
             if (sourceField == null) isValid = false;
                       
             //check target fields            
-            if (urfs.Object_Name__c == 'Contact'){
-                targetField = Schema.sObjectType.Contact.fields.getMap().get(urfs.Target_Field__c); 
+            if (urfs.npo02__Object_Name__c == 'Contact'){
+                targetField = Schema.sObjectType.Contact.fields.getMap().get(urfs.npo02__Target_Field__c); 
                 if (targetField == null) isValid = false;
             }
-            else if (urfs.Object_Name__c == 'Account'){
-                targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.Target_Field__c); 
+            else if (urfs.npo02__Object_Name__c == 'Account'){
+                targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.npo02__Target_Field__c); 
                 if (targetField == null) isValid = false;               
             }
-            else if (urfs.Object_Name__c == 'Household__c' || urfs.Object_Name__c == 'npo02__Household__c'){
-                targetField = Schema.sObjectType.Household__c.fields.getMap().get(urfs.Target_Field__c); 
+            else if (urfs.npo02__Object_Name__c == 'npo02__Household__c' || urfs.npo02__Object_Name__c == 'npo02__Household__c'){
+                targetField = Schema.sObjectType.npo02__household__c.fields.getMap().get(urfs.npo02__Target_Field__c); 
                 if (targetField == null) isValid = false;
             }
             else isValid = false;
@@ -369,7 +369,7 @@ public with sharing class STTG_UserRollupSettings_CTRL{
     
     public class UDR{
         
-        public User_Rollup_Field_Settings__c myUDR{get;set;}
+        public npo02__User_Rollup_Field_Settings__c myUDR{get;set;}
         public String SourceField{get;set;}
         public String TargetField{get;set;}
         public String TargetObject{get;set;}
@@ -379,13 +379,13 @@ public with sharing class STTG_UserRollupSettings_CTRL{
         
         public UDR(STTG_UserRollupSettings_CTRL parentclass){
             mydad = parentclass;  
-            myUDR = new User_Rollup_Field_Settings__c();        
+            myUDR = new npo02__User_Rollup_Field_Settings__c();        
         }
-        public UDR(User_Rollup_Field_Settings__c thisUDR, STTG_UserRollupSettings_CTRL parentclass){
-            this.SourceField = thisUDR.Source_Field__c;
-            this.TargetField = thisUDR.Target_Field__c;
-            this.TargetOBject = thisUDR.Object_Name__c;
-            this.Operation = thisUDR.Field_Action__c;
+        public UDR(npo02__User_Rollup_Field_Settings__c thisUDR, STTG_UserRollupSettings_CTRL parentclass){
+            this.SourceField = thisUDR.npo02__Source_Field__c;
+            this.TargetField = thisUDR.npo02__Target_Field__c;
+            this.TargetOBject = thisUDR.npo02__Object_Name__c;
+            this.Operation = thisUDR.npo02__Field_Action__c;
             myUDR = thisUDR;        
             mydad = parentclass;    
         }       
@@ -394,20 +394,20 @@ public with sharing class STTG_UserRollupSettings_CTRL{
             this.TargetField = TargetField;
             this.TargetObject = TargetObject;
             this.Operation = Operation;
-            myUDR = new User_Rollup_Field_Settings__c();
+            myUDR = new npo02__User_Rollup_Field_Settings__c();
             mydad = parentclass;
         }
         
         public void save(){
             
             if (myUDR.id == null){
-                map<string, User_Rollup_Field_Settings__c> userRollups = User_Rollup_Field_Settings__c.getAll();
+                map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll();
                 integer nameNumber = userRollups.size();             
                 myUDR.Name = 'CustomRollup' + nameNumber; 
-                myUDR.Object_Name__c = TargetObject;
-                myUDR.Target_Field__c = TargetField;
-                myUDR.Field_Action__c = Operation;
-                myUDR.Source_Field__c = SourceField;                
+                myUDR.npo02__Object_Name__c = TargetObject;
+                myUDR.npo02__Target_Field__c = TargetField;
+                myUDR.npo02__Field_Action__c = Operation;
+                myUDR.npo02__Source_Field__c = SourceField;                
             }
             
             try{

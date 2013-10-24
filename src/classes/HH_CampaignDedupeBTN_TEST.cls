@@ -36,19 +36,19 @@
 private class HH_CampaignDedupeBTN_TEST {  
   
   public static testMethod void testCampaignHHReport(){
-      Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,                    
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null,                     
-                    Use_Fiscal_Year_for_Rollups__c = true, 
-                    Rollup_N_Day_Value__c = 10,
-                    Household_Mailing_List_ID__c = null                    
+      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,                    
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null,                     
+                    npo02__Use_Fiscal_Year_for_Rollups__c = true, 
+                    npo02__Rollup_N_Day_Value__c = 10,
+                    npo02__Household_Mailing_List_ID__c = null                    
                 ));
                 
     // create test data
@@ -61,20 +61,20 @@ private class HH_CampaignDedupeBTN_TEST {
       FirstName='Kevin',
       LastName='Test',
       AccountId = acct.id,    
-      TotalOppAmount__c = 100
+      npo02__TotalOppAmount__c = 100
     );
     insert con;
-    id hhid = [select Household__r.id from Contact where id = :con.id].Household__r.id;
+    id hhid = [select npo02__Household__r.id from Contact where id = :con.id].npo02__household__r.id;
     system.debug('HHID IS===================' + hhid);
     Contact con2 = new Contact (
       FirstName = 'Amy',
       LastName = 'Test',
       AccountId = acct.id,            
-      household__c = hhid
+      npo02__household__c = hhid
     );
     system.debug('HHID IS NOW===================' + hhid);
     
-    system.assert(con2.Household__c != null);
+    system.assert(con2.npo02__household__c != null);
     insert con2;
     
     Campaign camp = new Campaign (

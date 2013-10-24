@@ -52,10 +52,10 @@ global class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
         return Database.getQueryLocator(query);      
     }
     
-    global public void execute(Database.BatchableContext bc, Sobject[] result) {
+    global void execute(Database.BatchableContext bc, Sobject[] result) {
         
         // run rollups for this batch       
-        OpportunityRollups rg = new OpportunityRollups();
+        RLLP_OppRollup rg = new RLLP_OppRollup();
         
         if (btype == BATCH_TYPE.ContactType){
             rg.rollupContacts(new map<id, Contact>((list<Contact>)result));             
@@ -66,7 +66,7 @@ global class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
         else if (btype == BATCH_TYPE.HouseholdType){
             rg.RollupHouseholds(new map<id, npo02__Household__c>((list<npo02__Household__c>)result));           
         }
-        else if (btype == BATCH_TYPE.SoftCreditType && OpportunityRollup_Utilities.useSoftCredits()){
+        else if (btype == BATCH_TYPE.SoftCreditType && RLLP_OppRollup_UTIL.useSoftCredits()){
             rg.RollupSoftCredits(new map<id, Contact>((list<Contact>)result));          
         }
         else{           

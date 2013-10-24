@@ -37,18 +37,18 @@ public with sharing class RLLP_OppRollup_TEST {
     
     static testMethod void testGivingRollup(){
                 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-            new Households_Settings__c (
-            Household_Rules__c = Households.ALL_PROCESSOR, 
-            Always_Rollup_to_Primary_Contact__c = false,
-            Enable_Opp_Rollup_Triggers__c = true,
-            Excluded_Account_Opp_Rectypes__c = null,
-            Excluded_Account_Opp_Types__c = null,
-            Excluded_Contact_Opp_Rectypes__c = null,
-            Excluded_Contact_Opp_Types__c = null,
-            Membership_Record_Types__c = null
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
+            npo02__Always_Rollup_to_Primary_Contact__c = false,
+            npo02__Enable_Opp_Rollup_Triggers__c = true,
+            npo02__Excluded_Account_Opp_Rectypes__c = null,
+            npo02__Excluded_Account_Opp_Types__c = null,
+            npo02__Excluded_Contact_Opp_Rectypes__c = null,
+            npo02__Excluded_Contact_Opp_Types__c = null,
+            npo02__Membership_Record_Types__c = null
         )); 
             
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
@@ -76,10 +76,10 @@ public with sharing class RLLP_OppRollup_TEST {
         Opportunity o = new Opportunity(
                     Name = 'Test Opp 45',
                     CloseDate = datClose,
-                    StageName = UnitTestData.getClosedWonStage(),
+                    StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                     npe01__Contact_Id_for_Role__c = c.id,
                     Amount = 100, 
-                    RecordTypeId = RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests)
+                    RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests)
                     );
         
         //insert the opp(s)
@@ -94,33 +94,33 @@ public with sharing class RLLP_OppRollup_TEST {
         //now test that a contact has received the proper member stats from the trigger
         Contact UpdatedCon = [SELECT id, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__TotalMembershipOppAmount__c,
                                     npo02__OppAmount2YearsAgo__c, npo02__OppAmountLastYear__c, npo02__household__c,
-                                    Best_Gift_Year__c, Best_Gift_Year_Total__c, Household__r.Best_Gift_Year__c, Household__r.Best_Gift_Year_Total__c,  
-                                    npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c, LastCloseDate__c 
+                                    npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__Household__r.npo02__Best_Gift_Year__c, npo02__Household__r.npo02__Best_Gift_Year_Total__c,  
+                                    npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c, npo02__LastCloseDate__c 
                                     FROM Contact WHERE Id = :c.id];
     
         system.AssertEquals(100, UpdatedCon.npo02__TotalOppAmount__c);
         system.AssertEquals(100, UpdatedCon.npo02__Household__r.npo02__TotalOppAmount__c);      
         system.AssertEquals(100, UpdatedCon.npo02__OppAmountThisYear__c);
         system.AssertEquals(0, UpdatedCon.npo02__OppAmountLastYear__c);
-        system.AssertEquals(100, UpdatedCon.Best_Gift_Year_Total__c);
-        system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.Best_Gift_Year__c);
-        system.AssertEquals(100, UpdatedCon.Household__r.Best_Gift_Year_Total__c);
-        system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.Household__r.Best_Gift_Year__c);        
+        system.AssertEquals(100, UpdatedCon.npo02__Best_Gift_Year_Total__c);
+        system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.npo02__Best_Gift_Year__c);
+        system.AssertEquals(100, UpdatedCon.npo02__household__r.npo02__Best_Gift_Year_Total__c);
+        system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.npo02__household__r.npo02__Best_Gift_Year__c);        
     }
     
     static testMethod void testGivingRollupIndividual () {
        
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -144,7 +144,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
     
             // insert the opp(s)
             Test.StartTest();
@@ -161,7 +161,7 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
     
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
          
             id hhid = UpdatedCon.npo02__household__r.id;
@@ -169,10 +169,10 @@ public with sharing class RLLP_OppRollup_TEST {
             'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__LastMembershipLevel__c, ' +
             'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, '+
             'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' +
-            (OpportunityRollup_Utilities.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
             'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
         
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
     
             //make sure the values are still right
@@ -189,18 +189,18 @@ public with sharing class RLLP_OppRollup_TEST {
     
     static testMethod void testGivingRollupExcludedRT () {
       
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = giftRecordTypeNameForTests,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = giftRecordTypeNameForTests,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = giftRecordTypeNameForTests,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = giftRecordTypeNameForTests,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -224,7 +224,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
     
             // insert the opp(s)
             Test.StartTest();
@@ -240,7 +240,7 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountThisYear__c);
     
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
         
             id hhid = UpdatedCon.npo02__household__r.id;
@@ -249,11 +249,11 @@ public with sharing class RLLP_OppRollup_TEST {
             'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, '+
             'npo02__LastMembershipLevel__c, ' +
             'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' +
-            (OpportunityRollup_Utilities.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
             'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
             
-            rg = new OpportunityRollups();
-            rg.rollupHouseholds(new map<id, Household__c>(hhs));
+            rg = new RLLP_OppRollup();
+            rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
     
             //make sure the values are still right
             UpdatedCon = [SELECT id, Account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__Household__c, npo02__Household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
@@ -268,17 +268,17 @@ public with sharing class RLLP_OppRollup_TEST {
     
    static testMethod void testGivingRollupAlwaysPrimary () {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = true,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = true,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -305,7 +305,7 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
     
             // insert the opp(s)
             Test.StartTest();
@@ -322,7 +322,7 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmountLastYear__c);
     
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
          
             id hhid = UpdatedCon.npo02__household__r.id;
@@ -330,11 +330,11 @@ public with sharing class RLLP_OppRollup_TEST {
             'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
             'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c, npo02__LastMembershipLevel__c, '+
             'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' + 
-            (OpportunityRollup_Utilities.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
+            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
             'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
             
-            rg = new OpportunityRollups();
-            rg.rollupHouseholds(new map<id, Household__c>(hhs));
+            rg = new RLLP_OppRollup();
+            rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
     
             //make sure the values are still right
             UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
@@ -348,19 +348,19 @@ public with sharing class RLLP_OppRollup_TEST {
     
  static testMethod void testMemberRollup () {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = membershipRecordTypeNameForTests
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -384,13 +384,13 @@ public with sharing class RLLP_OppRollup_TEST {
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList (
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList (
                 TestCons,
                 null,
-                UnitTestData.getClosedWonStage(),
+                UTIL_UnitTestData_TEST.getClosedWonStage(),
                 datClose,
                 100,
-                householdSettingsForTests.Membership_Record_Types__c,
+                householdSettingsForTests.npo02__Membership_Record_Types__c,
                 null
             );
             
@@ -414,19 +414,19 @@ public with sharing class RLLP_OppRollup_TEST {
     
     static testMethod void testGivingRollupAcct () {
  
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -444,11 +444,11 @@ public with sharing class RLLP_OppRollup_TEST {
                  new opportunity (
                     name = 'testopp',
                     accountid = testacct.id, 
-                    stagename=UnitTestData.getClosedWonStage(),
+                    stagename=UTIL_UnitTestData_TEST.getClosedWonStage(),
                     closedate=datClose, amount=33333
                  );
-            if(OpportunityRollup_Utilities.areRecordTypesOnOpps()){
-                newOpp.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+            if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
+                newOpp.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
             }
             // insert the opp(s)
             Test.StartTest();
@@ -456,20 +456,20 @@ public with sharing class RLLP_OppRollup_TEST {
             Test.StopTest();
             
             // test whether the trigger worked
-            Account updatedAcct = [select id, TotalOppAmount__c, OppAmountThisYear__c,
-                                    OppAmountLastYear__c, OppAmountLastNDays__c,
-                                    OppAmount2YearsAgo__c, OppsClosedThisYear__c,
-                                    LastCloseDate__c, NumberOfClosedOpps__c, 
-                                    TotalMembershipOppAmount__c, OppsClosedLastYear__c,
-                                    OppsClosedLastNDays__c, OppsClosed2YearsAgo__c,
-                                    LastMembershipLevel__c, Best_Gift_Year__c, Best_Gift_Year_Total__c, 
-                                    MembershipEndDate__c, MembershipJoinDate__c
+            Account updatedAcct = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,
+                                    npo02__OppAmountLastYear__c, npo02__OppAmountLastNDays__c,
+                                    npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
+                                    npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, 
+                                    npo02__TotalMembershipOppAmount__c, npo02__OppsClosedLastYear__c,
+                                    npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
+                                    npo02__LastMembershipLevel__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, 
+                                    npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c
                                     from Account where id =: testacct.id];
                                     
             System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );       
     
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
     
             updatedAcct = [select id, npo02__TotalOppAmount__c from account where id =: testacct.id];
@@ -478,19 +478,19 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void testGivingRollupAcctMembership () {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = membershipRecordTypeNameForTests
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -507,24 +507,24 @@ public with sharing class RLLP_OppRollup_TEST {
             opportunity newOpp =
                  new opportunity (name = 'testopp', accountid = testacct.id, 
                                     npe01__member_level__c = 'Gold', npe01__membership_origin__c = 'New',
-                                    stagename=UnitTestData.getClosedWonStage(), closedate=datClose, amount=33333);
-            newOpp.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.Membership_Record_Types__c));
+                                    stagename=UTIL_UnitTestData_TEST.getClosedWonStage(), closedate=datClose, amount=33333);
+            newOpp.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', householdSettingsForTests.npo02__Membership_Record_Types__c));
             // insert the opp(s)
             Test.StartTest();
             insert newOpp;
             Test.StopTest();
             
             // test whether the trigger worked      
-            account updatedAcct = [select id, TotalOppAmount__c, OppAmountThisYear__c,
-                                    OppAmountLastYear__c, OppAmountLastNDays__c,
-                                    OppAmount2YearsAgo__c, OppsClosedThisYear__c,
-                                    LastCloseDate__c, NumberOfClosedOpps__c, 
-                                    TotalMembershipOppAmount__c, OppsClosedLastYear__c,
-                                    OppsClosedLastNDays__c, OppsClosed2YearsAgo__c,
-                                    LastMembershipLevel__c, LastMembershipDate__c,
-                                    LastMembershipAmount__c, LastMembershipOrigin__c,
-                                    Best_Gift_Year__c, Best_Gift_Year_Total__c, MembershipEndDate__c,
-                                    MembershipJoinDate__c
+            account updatedAcct = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,
+                                    npo02__OppAmountLastYear__c, npo02__OppAmountLastNDays__c,
+                                    npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
+                                    npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, 
+                                    npo02__TotalMembershipOppAmount__c, npo02__OppsClosedLastYear__c,
+                                    npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
+                                    npo02__LastMembershipLevel__c, npo02__LastMembershipDate__c,
+                                    npo02__LastMembershipAmount__c, npo02__LastMembershipOrigin__c,
+                                    npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__MembershipEndDate__c,
+                                    npo02__MembershipJoinDate__c
                                     from Account where id =: testacct.id];
                                 
                       
@@ -535,7 +535,7 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 'New' , updatedAcct.npo02__LastMembershipOrigin__c );
             
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
     
             updatedAcct = [select id, npo02__TotalMembershipOppAmount__c from account where id =: testacct.id];
@@ -545,18 +545,18 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void testGivingRollupBatch () {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -568,18 +568,18 @@ public with sharing class RLLP_OppRollup_TEST {
             Date datClose = System.Today();
                 
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( 50 ) ;
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
     
             account testacct = new account(name='testacct');
             insert testacct;
     
             // test the batch rollup method
             Test.StartTest();
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
             Test.StopTest();
         
@@ -587,19 +587,19 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void OneContactMultipleOpps() {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = membershipRecordTypeNameForTests
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -615,15 +615,15 @@ public with sharing class RLLP_OppRollup_TEST {
             Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
                 
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
             insert TestCons;
             
             test.starttest();
             // create a new gift for this yr
-            Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 100 , householdSettingsForTests.Membership_Record_Types__c,null);
+            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
             insert testGift1 ;
             //create a 2nd gift for last yr
-            Opportunity[] testGift2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat1YearAgo, 60, householdSettingsForTests.Membership_Record_Types__c,null);
+            Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
             insert testGift2;
             test.stopTest();
             
@@ -643,7 +643,7 @@ public with sharing class RLLP_OppRollup_TEST {
             update TestGift2;
             
             // now roll up manually
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{UpdatedCon}));
     
             ThisConId = TestCons[0].id;
@@ -654,12 +654,12 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
             
             // now create a gift from 2 yrs ago
-            Opportunity[] testGift3 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);
+            Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);
     
             insert testGift3;
             
             // now roll up manually
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
     
             ThisConId = TestCons[0].id;
@@ -671,12 +671,12 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
     
             // add another from this year (to test adding)
-            Opportunity[] testGift4 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
+            Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
     
             insert testGift4;
             
             // now roll up manually
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
     
             UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
@@ -687,12 +687,12 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
     
             // TBD add a gift from longer ago
-            Opportunity[] testGift5 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
+            Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
     
             insert testGift5;
             
             // now roll up manually
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
             
             // totals should not have changed, except lifetime & best yr
@@ -704,12 +704,12 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );       
             
             // TBD add non-won gift
-            Opportunity[] testGift6 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
+            Opportunity[] testGift6 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
     
             insert testGift6;
             
             // now roll up manually
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
             
             // totals should not have changed at all
@@ -724,7 +724,7 @@ public with sharing class RLLP_OppRollup_TEST {
             delete testGift1;
             
             // now roll up manually
-            rg = new OpportunityRollups();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
             
             UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
@@ -738,18 +738,18 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void OneContactOneInkind() {
  
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = 'In Kind',
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = 'In Kind',
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = 'In Kind',
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = 'In Kind',
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -762,11 +762,11 @@ public with sharing class RLLP_OppRollup_TEST {
             Date datToday = System.Today();
             
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
             insert TestCons;
             
             // create a new gift for this yr
-            Opportunity[] testGift1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datToday, 100 , giftRecordTypeNameForTests,'In Kind');
+            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 100 , giftRecordTypeNameForTests,'In Kind');
             Test.StartTest();
             insert testGift1 ;
             Test.StopTest();
@@ -779,18 +779,18 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void testGivingRollupBulk () {
     
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -805,12 +805,12 @@ public with sharing class RLLP_OppRollup_TEST {
             Date datClose = System.Today();
                 
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( howMany ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
             insert TestCons;
             
             // create new opps
-            Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests,null);
-            Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-1), 50 , giftRecordTypeNameForTests,null);
+            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests,null);
+            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-1), 50 , giftRecordTypeNameForTests,null);
     
             // insert the opp(s)
             Test.StartTest();
@@ -832,18 +832,18 @@ public with sharing class RLLP_OppRollup_TEST {
 
     static testMethod void testGivingRollupTooManyOpps () {
   
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -856,7 +856,7 @@ public with sharing class RLLP_OppRollup_TEST {
             // and test mbr stats are created
         
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 1 ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( 1 ) ;
             insert TestCons;
             
             // create new opps
@@ -864,9 +864,9 @@ public with sharing class RLLP_OppRollup_TEST {
             for (integer n = 0; n < 450; n++) {
                 Opportunity newOpp1 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
                     name = 'test opp ' + n, 
-                    stagename = UnitTestData.getClosedWonStage(), closedate = system.today().adddays(-n), amount = 100);
-                if(OpportunityRollup_Utilities.areRecordTypesOnOpps()){
-                    newOpp1.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-n), amount = 100);
+                if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
+                    newOpp1.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
                 }
                 newOpps1.add( newOpp1);
             }
@@ -884,18 +884,18 @@ public with sharing class RLLP_OppRollup_TEST {
     
     static testMethod void testHouseholdStats () {
    
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -936,9 +936,9 @@ public with sharing class RLLP_OppRollup_TEST {
             Contact[] TestCons = new Contact[] {Con1}; 
         
             // create new opps
-            Opportunity[] newOpps1 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
-            Opportunity[] newOpps2 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-2), 200 , giftRecordTypeNameForTests ,null);
-            Opportunity[] newOpps3 = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose.addYears(-3), 75 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-2), 200 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addYears(-3), 75 , giftRecordTypeNameForTests ,null);
     
             Opportunity[] testOpps = new Opportunity[0];
             testOpps.addAll (newOpps1);
@@ -950,32 +950,32 @@ public with sharing class RLLP_OppRollup_TEST {
             insert testOpps;
             Test.StopTest();
             
-            Contact c = [SELECT Id,Total_Household_Gifts__c,OppAmountThisYearHH__c,OppAmountLastYearHH__c,
-                            LastCloseDateHH__c, Best_Gift_Year__c, Best_Gift_Year_Total__c, Household__r.Best_Gift_Year__c, Household__r.Best_Gift_Year_Total__c
+            Contact c = [SELECT Id,npo02__Total_Household_Gifts__c,npo02__OppAmountThisYearHH__c,npo02__OppAmountLastYearHH__c,
+                            npo02__LastCloseDateHH__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__Household__r.npo02__Best_Gift_Year__c, npo02__Household__r.npo02__Best_Gift_Year_Total__c
                 FROM Contact WHERE LastName=:npe01.Constants.CONTACT_LASTNAME_FOR_TESTS AND FirstName=:npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second' LIMIT 1];
-            System.assertEquals (375,c.Total_Household_Gifts__c);
-            System.assertEquals (100,c.OppAmountThisYearHH__c);
-            System.assertEquals (0,c.OppAmountLastYearHH__c);
-            System.assertEquals (datClose,c.LastCloseDateHH__c );
-            System.assertEquals (375,c.Total_Household_Gifts__c);       
-            System.assertEquals (null, c.Best_Gift_Year_Total__c); 
-            System.assertEquals (null, c.Best_Gift_Year__c);
-            System.assertEquals (string.valueof(datClose.addYears(-2).year()), c.Household__r.Best_Gift_Year__c);
-            System.assertEquals (200, c.Household__r.Best_Gift_Year_Total__c);                    
+            System.assertEquals (375,c.npo02__Total_Household_Gifts__c);
+            System.assertEquals (100,c.npo02__OppAmountThisYearHH__c);
+            System.assertEquals (0,c.npo02__OppAmountLastYearHH__c);
+            System.assertEquals (datClose,c.npo02__LastCloseDateHH__c );
+            System.assertEquals (375,c.npo02__Total_Household_Gifts__c);       
+            System.assertEquals (null, c.npo02__Best_Gift_Year_Total__c); 
+            System.assertEquals (null, c.npo02__Best_Gift_Year__c);
+            System.assertEquals (string.valueof(datClose.addYears(-2).year()), c.npo02__household__r.npo02__Best_Gift_Year__c);
+            System.assertEquals (200, c.npo02__household__r.npo02__Best_Gift_Year_Total__c);                    
     }    
         
     static testMethod void testUserDefinedRollup() {
 
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
          ));
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
@@ -985,11 +985,11 @@ public with sharing class RLLP_OppRollup_TEST {
     
         //need to clear out any existing user fields
         //otherwise we can't insert of stuff referenced by apex
-        delete [select id from User_Rollup_Field_Settings__c];
+        delete [select id from npo02__User_Rollup_Field_Settings__c];
         
-        list<User_Rollup_Field_Settings__c> testURFS = new list<User_Rollup_Field_Settings__c>();
+        list<npo02__User_Rollup_Field_Settings__c> testURFS = new list<npo02__User_Rollup_Field_Settings__c>();
                 
-        User_Rollup_Field_Settings__c testUserRollup1 = new User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c testUserRollup1 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup1.npo02__Target_Field__c = 'Birthdate'; 
         testUserRollup1.npo02__Source_Field__c = 'CloseDate';
         testUserRollup1.npo02__Object_Name__c = 'Contact'; 
@@ -997,7 +997,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testUserRollup1.Name = 'TestRollup8675309';
         testURFS.add(TestUserRollup1);
         
-        User_Rollup_Field_Settings__c TestUserRollup2 = new User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c TestUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees'; 
         testUserRollup2.npo02__Source_Field__c = 'FiscalYear';
         testUserRollup2.npo02__Object_Name__c = 'Account'; 
@@ -1005,7 +1005,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testUserRollup2.Name = 'TestRollup2';
         testURFS.add(TestUserRollup2);
         
-        User_Rollup_Field_Settings__c testUserRollup3 = new User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c testUserRollup3 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c'; 
         testUserRollup3.npo02__Source_Field__c = 'CloseDate';
         testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c'; 
@@ -1018,34 +1018,34 @@ public with sharing class RLLP_OppRollup_TEST {
         Contact c = new Contact(LastName = 'Lastname', BirthDate = system.today().addDays(-4));
         insert c;
         
-        id rtid = RecordTypes.GetRecordTypeId ('Opportunity',RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
                 Amount = 100,
                 CloseDate = system.today().adddays(-2),
-                StageName = UnitTestData.getClosedWonStage(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 npe01__Contact_Id_for_Role__c = c.Id                                
             );  
             if(rtid != null){
                 newOpp.put('RecordTypeId',rtid);
             }
             
-        map<string, User_Rollup_Field_Settings__c> urfsMap = User_Rollup_Field_Settings__c.getAll();
+        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = npo02__User_Rollup_Field_Settings__c.getAll();
         system.assertEquals(3, urfsMap.keySet().size());                    
          
         Test.StartTest();
         insert newOpp;
         Test.StopTest();     
     
-        Contact ct = [select Birthdate, OppAmountThisYearHH__c from Contact where id = :c.id];
-        system.assertEquals (100,ct.OppAmountThisYearHH__c);    
+        Contact ct = [select Birthdate, npo02__OppAmountThisYearHH__c from Contact where id = :c.id];
+        system.assertEquals (100,ct.npo02__OppAmountThisYearHH__c);    
         system.assertEquals(system.today().addDays(-2), ct.BirthDate);        
     }
     
     static testMethod void testMultiCurrencyMethods(){
         //exercise internal multicurrency helper methods, check currency conversion             
-        decimal d = OpportunityRollup_Utilities.ConvertFromCorporate('USD', 55.00);      
-        d = OpportunityRollup_Utilities.ConvertCurrency('USD', 'USD', 55.00);
+        decimal d = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 55.00);      
+        d = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 55.00);
 
         //create & insert second household member
         Contact Con = new contact(
@@ -1072,38 +1072,38 @@ public with sharing class RLLP_OppRollup_TEST {
         
         list<sobject> sobjectlist = new list<sobject>();
         
-        OpportunityRollups opproll = new OpportunityRollups();
-        map<Id, Opportunity> omap = OpportunityRollup_Utilities.rcfFindCurrency(sobjectList);
+        RLLP_OppRollup opproll = new RLLP_OppRollup();
+        map<Id, Opportunity> omap = RLLP_OppRollup_UTIL.rcfFindCurrency(sobjectList);
     }
     
     static testMethod void testRollupAlls(){
-        OpportunityRollups og = new OpportunityRollups();
+        RLLP_OppRollup og = new RLLP_OppRollup();
         
         test.startTest();
         og.rollupAllContacts();
         og.rollupAllAccounts();     
-        boolean x = OpportunityRollup_Utilities.isMultiCurrency();
-        decimal y = OpportunityRollup_Utilities.ConvertFromCorporate('USD', 500.00);
-        decimal z = OpportunityRollup_Utilities.ConvertCurrency('USD', 'USD', 6565.54);
+        boolean x = RLLP_OppRollup_UTIL.isMultiCurrency();
+        decimal y = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 500.00);
+        decimal z = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 6565.54);
         test.stopTest();
     }
     static testMethod void testFiscalYearandCustomNDay () {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null,                      
-                    Use_Fiscal_Year_for_Rollups__c = true, 
-                    Rollup_N_Day_Value__c = 10,
-                    Batch_Size__c = 200
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null,                      
+                    npo02__Use_Fiscal_Year_for_Rollups__c = true, 
+                    npo02__rollup_N_Day_Value__c = 10,
+                    npo02__Batch_Size__c = 200
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1116,7 +1116,7 @@ public with sharing class RLLP_OppRollup_TEST {
             // and test mbr stats are created
         
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 1 ) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( 1 ) ;
             insert TestCons;
             
             // create 2 new opps
@@ -1124,16 +1124,16 @@ public with sharing class RLLP_OppRollup_TEST {
             
             Opportunity newOpp1 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
                     name = 'test opp ', 
-                    stagename = UnitTestData.getClosedWonStage(), closedate = system.today(), amount = 100);
-               if(OpportunityRollup_Utilities.areRecordTypesOnOpps())
-                    newOpp1.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today(), amount = 100);
+               if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
+                    newOpp1.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
             newOpps1.add( newOpp1);
             
             Opportunity newOpp2 = new opportunity(npe01__Contact_Id_for_Role__c = TestCons[0].id,
                     name = 'test opp 2', 
-                    stagename = UnitTestData.getClosedWonStage(), closedate = system.today().adddays(-40), amount = 100);
-               if(OpportunityRollup_Utilities.areRecordTypesOnOpps())
-                    newOpp2.put('RecordTypeId',RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
+                    stagename = UTIL_UnitTestData_TEST.getClosedWonStage(), closedate = system.today().adddays(-40), amount = 100);
+               if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps())
+                    newOpp2.put('RecordTypeId',UTIL_RecordTypes.GetRecordTypeId('Opportunity', giftRecordTypeNameForTests));
             newOpps1.add(newOpp2);
            
             // insert the opp(s)
@@ -1141,26 +1141,26 @@ public with sharing class RLLP_OppRollup_TEST {
             insert newOpps1;
             Test.StopTest();
     
-            system.assertEquals(100, [select OppAmountLastNDays__c from Contact where id = :TestCons[0].id].OppAmountLastNDays__c);
+            system.assertEquals(100, [select npo02__OppAmountLastNDays__c from Contact where id = :TestCons[0].id].npo02__OppAmountLastNDays__c);
     }
     
    static testMethod void testSoftCredits() {
 
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.NO_HOUSEHOLDS_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = false,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null,
-                    Enable_Soft_Credit_Rollups__c = true,
-                    Soft_Credit_Roles__c = 'TestOCR',     
-                    Advanced_Household_Naming__c = false               
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = false,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null,
+                    npo02__Enable_Soft_Credit_Rollups__c = true,
+                    npo02__Soft_Credit_Roles__c = 'TestOCR',     
+                    npo02__Advanced_Household_Naming__c = false               
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1172,20 +1172,20 @@ public with sharing class RLLP_OppRollup_TEST {
             Date datClose = System.Today();
                 
             // create & insert contact(s)
-            Contact[] TestCons = UnitTestData.CreateMultipleTestContacts(10) ;
+            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10) ;
             insert TestCons;
     
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
             insert newOpps;
             
             account testacct = new account(name='testacct');
             insert testacct;
             
-            Opportunity[] lastYearOpps = UnitTestData.OppsForContactList(new list<Contact>{TestCons[5]}, null, UnitTestData.getClosedWonStage(), datClose.addyears(-1), 150 , giftRecordTypeNameForTests ,null);
+            Opportunity[] lastYearOpps = UTIL_UnitTestData_TEST.OppsForContactList(new list<Contact>{TestCons[5]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-1), 150 , giftRecordTypeNameForTests ,null);
             insert lastYearOpps;
             
-            Opportunity[] last2YearOpps = UnitTestData.OppsForContactList(new list<Contact>{TestCons[8]}, null, UnitTestData.getClosedWonStage(), datClose.addyears(-2), 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] last2YearOpps = UTIL_UnitTestData_TEST.OppsForContactList(new list<Contact>{TestCons[8]}, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose.addyears(-2), 100 , giftRecordTypeNameForTests ,null);
             insert last2YearOpps;
             
             //grab two random contacts and two random Opps and create an OCR for them
@@ -1203,39 +1203,39 @@ public with sharing class RLLP_OppRollup_TEST {
             
             // test the batch rollup method
             Test.StartTest();
-            OpportunityRollups rg = new OpportunityRollups();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
             Test.StopTest();    
             
-            Contact c1 = [select Soft_Credit_Two_Years_Ago__c, Soft_Credit_Total__c, 
-                                Soft_Credit_This_Year__c, Soft_Credit_Last_Year__c From Contact where id = :TCid1];
+            Contact c1 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
+                                npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact where id = :TCid1];
             
-            Contact c2 = [select Soft_Credit_Two_Years_Ago__c, Soft_Credit_Total__c, 
-                                Soft_Credit_This_Year__c, Soft_Credit_Last_Year__c From Contact where id = :TCid2];                
+            Contact c2 = [select npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
+                                npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact where id = :TCid2];                
     
-            system.assertEquals(1150, c1.Soft_Credit_Total__c);
-            system.assertEquals(1000, c1.Soft_Credit_This_Year__c);
-            system.assertEquals(150, c1.Soft_Credit_Last_Year__c);
-            system.assertEquals(1100, c2.Soft_Credit_Total__c);
-            system.assertEquals(100, c2.Soft_Credit_Two_Years_Ago__c);
+            system.assertEquals(1150, c1.npo02__Soft_Credit_Total__c);
+            system.assertEquals(1000, c1.npo02__Soft_Credit_This_Year__c);
+            system.assertEquals(150, c1.npo02__Soft_Credit_Last_Year__c);
+            system.assertEquals(1100, c2.npo02__Soft_Credit_Total__c);
+            system.assertEquals(100, c2.npo02__Soft_Credit_Two_Years_Ago__c);
     }  
     
     static testMethod void testFutureMethods(){
-         String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = false,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null,
-                    Enable_Soft_Credit_Rollups__c = true,
-                    Soft_Credit_Roles__c = 'TestOCR',     
-                    Advanced_Household_Naming__c = false               
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = false,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null,
+                    npo02__Enable_Soft_Credit_Rollups__c = true,
+                    npo02__Soft_Credit_Roles__c = 'TestOCR',     
+                    npo02__Advanced_Household_Naming__c = false               
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1247,44 +1247,44 @@ public with sharing class RLLP_OppRollup_TEST {
             Date datClose = System.Today();
                 
             // create & insert contact(s)
-        Contact[] TestCons = UnitTestData.CreateMultipleTestContacts(10) ;
+        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10) ;
         insert TestCons;
     
         // create new opps
-        Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
         insert newOpps;
             
-        TestCons = [select id, Household__c from Contact where ID IN :TestCons];
+        TestCons = [select id, npo02__Household__c from Contact where ID IN :TestCons];
         set<id> HHid = new set<id>();
         set<id> CID = new set<id>();
         
         for (Contact c : TestCons){
-            HHid.add(c.Household__c);
+            HHid.add(c.npo02__household__c);
             CID.add(c.id);
         }          
         
         Test.startTest();
-        OpportunityRollups.rollupContactsFuture(CID);
-        OpportunityRollups.rollupHouseholdsFuture(HHid);        
+        RLLP_OppRollup.rollupContactsFuture(CID);
+        RLLP_OppRollup.rollupHouseholdsFuture(HHid);        
         Test.stopTest();
     }    
     
     static testMethod void testOpportunityUtilityErrorHandling(){
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-            new Households_Settings__c (
-            Household_Rules__c = Households.ALL_PROCESSOR,
-            Always_Rollup_to_Primary_Contact__c = false,
-            Enable_Opp_Rollup_Triggers__c = false,
-            Excluded_Account_Opp_Rectypes__c = null,
-            Excluded_Account_Opp_Types__c = null,
-            Excluded_Contact_Opp_Rectypes__c = null,
-            Excluded_Contact_Opp_Types__c = null,
-            Membership_Record_Types__c = null,
-            Enable_Soft_Credit_Rollups__c = true,
-            Soft_Credit_Roles__c = 'TestOCR',     
-            Advanced_Household_Naming__c = false               
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+            npo02__Always_Rollup_to_Primary_Contact__c = false,
+            npo02__Enable_Opp_Rollup_Triggers__c = false,
+            npo02__Excluded_Account_Opp_Rectypes__c = null,
+            npo02__Excluded_Account_Opp_Types__c = null,
+            npo02__Excluded_Contact_Opp_Rectypes__c = null,
+            npo02__Excluded_Contact_Opp_Types__c = null,
+            npo02__Membership_Record_Types__c = null,
+            npo02__Enable_Soft_Credit_Rollups__c = true,
+            npo02__Soft_Credit_Roles__c = 'TestOCR',     
+            npo02__Advanced_Household_Naming__c = false               
         ));
                 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
@@ -1295,39 +1295,39 @@ public with sharing class RLLP_OppRollup_TEST {
         ));
                 
         // create & insert contact(s)
-        Contact[] TestCons = UnitTestData.CreateMultipleTestContacts(10) ;
+        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10) ;
         insert TestCons;
     
         //create new opp with a missing required field
-        Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
                 
         Database.Saveresult[] sr = Database.insert(newOpps, false);
         system.assert(sr != null);
         system.assert(TestCons[0].id != null);
-        Opportunity_Rollup_Error__c ore = OpportunityRollup_Utilities.createError(sr[0], 'Opportunity', TestCons[0].id);
+        npo02__Opportunity_Rollup_Error__c ore = RLLP_OppRollup_UTIL.createError(sr[0], 'Opportunity', TestCons[0].id);
         system.assert(ore != null);
-        system.assertEquals('Required Field Missing',ore.Error_Type__c);
+        system.assertEquals('Required Field Missing',ore.npo02__Error_Type__c);
         system.assert(ore.Name.startsWith(TestCons[0].id));
-        system.assertEquals('Opportunity',ore.Error_Object_Type__c);
+        system.assertEquals('Opportunity',ore.npo02__Error_Object_Type__c);
     }
     
     static testMethod void testFYUtility(){     
-        integer fy = OpportunityRollup_Utilities.getCurrentFY();
+        integer fy = RLLP_OppRollup_UTIL.getCurrentFY();
         system.assert(fy != null);      
     }
     
     //a change to a UDR value should trigger a rollup
     static testMethod void testUDRChangeBehavior(){
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = false,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
          ));
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
@@ -1337,11 +1337,11 @@ public with sharing class RLLP_OppRollup_TEST {
     
         //need to clear out any existing user fields
         //otherwise we can't insert of stuff referenced by apex
-        delete [select id from User_Rollup_Field_Settings__c];
+        delete [select id from npo02__User_Rollup_Field_Settings__c];
         
-        list<User_Rollup_Field_Settings__c> testURFS = new list<User_Rollup_Field_Settings__c>();
+        list<npo02__User_Rollup_Field_Settings__c> testURFS = new list<npo02__User_Rollup_Field_Settings__c>();
                 
-        User_Rollup_Field_Settings__c testUserRollup1 = new User_Rollup_Field_Settings__c();
+        npo02__User_Rollup_Field_Settings__c testUserRollup1 = new npo02__User_Rollup_Field_Settings__c();
         testUserRollup1.npo02__Target_Field__c = 'npo02__Household_ID__c'; 
         testUserRollup1.npo02__Source_Field__c = 'TotalOpportunityQuantity';
         testUserRollup1.npo02__Object_Name__c = 'npo02__Household__c'; 
@@ -1355,16 +1355,16 @@ public with sharing class RLLP_OppRollup_TEST {
         insert c;        
         
         //get all of the fields
-        String q = OpportunityRollup_Utilities.buildContactQuery() + ' where id = \'' + c.id + '\'';
+        String q = RLLP_OppRollup_UTIL.buildContactQuery() + ' where id = \'' + c.id + '\'';
         
         c = database.query(q);
         
-        id rtid = RecordTypes.GetRecordTypeId ('Opportunity',RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
                 Amount = 100,
                 CloseDate = system.today(),
-                StageName = UnitTestData.getClosedWonStage(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 npe01__Contact_Id_for_Role__c = c.id,                      
                 TotalOpportunityQuantity = 2                              
             );  
@@ -1372,14 +1372,14 @@ public with sharing class RLLP_OppRollup_TEST {
                 newOpp.put('RecordTypeId',rtid);
             }
             
-        map<string, User_Rollup_Field_Settings__c> urfsMap = User_Rollup_Field_Settings__c.getAll();
+        map<string, npo02__User_Rollup_Field_Settings__c> urfsMap = npo02__User_Rollup_Field_Settings__c.getAll();
         system.assertEquals(1, urfsMap.keySet().size());        
                 
         insert newOpp;
-        OpportunityRollups og = new OpportunityRollups();
+        RLLP_OppRollup og = new RLLP_OppRollup();
         Map<Id,Contact> cmap = new Map<Id,Contact>();
         Map<Id, npo02__Household__c> hmap = new Map<Id, npo02__Household__c>();
-        q = OpportunityRollup_Utilities.buildHouseholdQuery() + ' where id = \'' + c.npo02__Household__c + '\'';
+        q = RLLP_OppRollup_UTIL.buildHouseholdQuery() + ' where id = \'' + c.npo02__Household__c + '\'';
         
         npo02__Household__c h =database.query(q); 
         cmap.put(c.id, c);
@@ -1387,8 +1387,8 @@ public with sharing class RLLP_OppRollup_TEST {
         og.rollupContacts(cmap);
         og.rollupHouseholds(hmap);        
         
-        Contact ct = [select TotalOppAmount__c, npo02__Household__r.npo02__Household_ID__c from Contact where id = :c.id];
-        system.assertEquals (100,ct.TotalOppAmount__c);    
+        Contact ct = [select npo02__TotalOppAmount__c, npo02__Household__r.npo02__Household_ID__c from Contact where id = :c.id];
+        system.assertEquals (100,ct.npo02__TotalOppAmount__c);    
         system.assertEquals(2, ct.npo02__Household__r.npo02__Household_ID__c);        
         
         newOpp.TotalOpportunityQuantity = 4;                             
@@ -1398,24 +1398,24 @@ public with sharing class RLLP_OppRollup_TEST {
         update newOpp;
         Test.stopTest();     
         
-        ct = [select TotalOppAmount__c, npo02__Household__r.npo02__Household_ID__c from Contact where id = :c.id];
-        system.assertEquals (100,ct.TotalOppAmount__c);    
+        ct = [select npo02__TotalOppAmount__c, npo02__Household__r.npo02__Household_ID__c from Contact where id = :c.id];
+        system.assertEquals (100,ct.npo02__TotalOppAmount__c);    
         system.assertEquals(4, ct.npo02__Household__r.npo02__Household_ID__c);      
     }
 
     public static testMethod void testBatch() {
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
-            Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-                new Households_Settings__c (
-                    Household_Rules__c = Households.ALL_PROCESSOR,
-                    Always_Rollup_to_Primary_Contact__c = true,
-                    Enable_Opp_Rollup_Triggers__c = true,
-                    Excluded_Account_Opp_Rectypes__c = null,
-                    Excluded_Account_Opp_Types__c = null,
-                    Excluded_Contact_Opp_Rectypes__c = null,
-                    Excluded_Contact_Opp_Types__c = null,
-                    Membership_Record_Types__c = null
+            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = true,
+                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1441,7 +1441,7 @@ public with sharing class RLLP_OppRollup_TEST {
             Contact insertedContact = [select accountid from Contact where id IN :TestCons];
 
             // create new opps
-            Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
+            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
             String contactAccountId = insertedContact.accountid;
         
             RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(
@@ -1455,17 +1455,17 @@ public with sharing class RLLP_OppRollup_TEST {
     }
 
     public static testMethod void testRollupCtrl() {
-        String giftRecordTypeNameForTests = RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(
-            new Households_Settings__c (
-                Household_Rules__c = Households.ALL_PROCESSOR,
-                Always_Rollup_to_Primary_Contact__c = true,
-                Enable_Opp_Rollup_Triggers__c = true,
-                Excluded_Account_Opp_Rectypes__c = null,
-                Excluded_Account_Opp_Types__c = null,
-                Excluded_Contact_Opp_Rectypes__c = null,
-                Excluded_Contact_Opp_Types__c = null,
-                Membership_Record_Types__c = null
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = true,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null
             ));
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -1476,11 +1476,11 @@ public with sharing class RLLP_OppRollup_TEST {
         Date datClose = System.Today();
             
         // create & insert contact(s)
-        Contact[] TestCons = UnitTestData.CreateMultipleTestContacts ( 50 ) ;
+        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( 50 ) ;
         insert TestCons;
 
         // create new opps
-        Opportunity[] newOpps = UnitTestData.OppsForContactList ( TestCons, null, UnitTestData.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
 
         account testacct = new account(name='testacct');
         insert testacct;
@@ -1488,7 +1488,7 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.startTest();
 
         // create the page 
-        PageReference pageRef=Page.OpportunityRollup; 
+        PageReference pageRef=Page.npo02__OpportunityRollup; //DJH:UNDONE replace w/ cumulus page 
         Test.setCurrentPage(pageRef); 
 
         // set the parameter for the contact

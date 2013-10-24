@@ -32,14 +32,14 @@
 * @date 2011 (2.0) 
 * @description Resposible for rollups of all opportunities to the requisite Account/Household/Contact 
 */
-global virtual without sharing class RLLP_OppRollups{
+global virtual without sharing class RLLP_OppRollup{
 
     /*** Constructor ***/
-    public RLLP_OppRollups(){
+    public RLLP_OppRollup(){
         // setup households settings
-        OpportunityRollup_Utilities.setupRollupVars(Households.getHouseholdsSettings());
+        RLLP_OppRollup_UTIL.setupRollupVars(HH_Households.getHouseholdsSettings());
         // setup user rollups
-        OpportunityRollup_Utilities.setupUserRollupVars();
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
     }
     /*************************************************************/  
     
@@ -50,16 +50,16 @@ global virtual without sharing class RLLP_OppRollups{
         //opp ids for Account querying
         set<id> accountRequerySet = new set<id>();        
         
-        if (OpportunityRollup_Utilities.hh_settings.Enable_Opp_Rollup_Triggers__c){
+        if (RLLP_OppRollup_UTIL.hh_settings.npo02__Enable_Opp_Rollup_Triggers__c){
             //delete or insert            
             if (newOpps == null || oldOpps == null){
                 for (id oid : (newOpps == null ? oldOpps.keySet() : newOpps.keySet())){
                     Opportunity o = (newOpps == null ? oldOpps.get(oid) : newOpps.get(oid));
-                    if (OpportunityRollup_Utilities.oppForRollup(o)){
-                        if (OpportunityRollup_Utilities.needsAccountRollup(o)){
+                    if (RLLP_OppRollup_UTIL.oppForRollup(o)){
+                        if (RLLP_OppRollup_UTIL.needsAccountRollup(o)){
                             accountRequerySet.add(o.AccountId);
                         }                       
-                        if (OpportunityRollup_Utilities.needsContactRollup(o)){
+                        if (RLLP_OppRollup_UTIL.needsContactRollup(o)){
                             contactRequerySet.add(oid);
                         }
                     }    
@@ -71,11 +71,11 @@ global virtual without sharing class RLLP_OppRollups{
                    Opportunity newo = newOpps.get(oid);
                    Opportunity oldo = oldOpps.get(oid);
                    //if the new one is valid and there are differences between the two opps
-                   if (OpportunityRollup_Utilities.oppForRollup(newo, oldo)){
-                        if (OpportunityRollup_Utilities.needsAccountRollup(newo)){
+                   if (RLLP_OppRollup_UTIL.oppForRollup(newo, oldo)){
+                        if (RLLP_OppRollup_UTIL.needsAccountRollup(newo)){
                             accountRequerySet.add(newo.AccountId);
                         }                       
-                        if (OpportunityRollup_Utilities.needsContactRollup(newo)){
+                        if (RLLP_OppRollup_UTIL.needsContactRollup(newo)){
                             contactRequerySet.add(oid);
                         }
                    }    
@@ -84,7 +84,7 @@ global virtual without sharing class RLLP_OppRollups{
         }            
             
         if (!accountRequerySet.isEmpty()){
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(OpportunityRollup_Utilities.buildAccountQuery() + 
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
                                                                         ' where id in :accountRequerySet'));            
             //if we only need to rollup a single Account, do sync
             if (amap.size() == 1){
@@ -98,7 +98,7 @@ global virtual without sharing class RLLP_OppRollups{
         
         //contacts needs to be done async to make sure the OCR is in place
         if (!contactRequerySet.isEmpty()){
-            RLLP_OppRollups.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
+            RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
         }            
     }       
     
@@ -111,7 +111,7 @@ global virtual without sharing class RLLP_OppRollups{
         map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>();
         
         // use the contact roles to find the contacts and households
-        for (OpportunityContactRole r : Database.query(OpportunityRollup_Utilities.buildOpportunityContactRoleQuery() +
+        for (OpportunityContactRole r : Database.query(RLLP_OppRollup_UTIL.buildOpportunityContactRoleQuery() +
                                             ' where Opportunity.Id IN :OppIds and isPrimary = true ALL ROWS ')){   
                     
             cmap.put(r.ContactId, r.Contact);
@@ -122,7 +122,7 @@ global virtual without sharing class RLLP_OppRollups{
         }       
             
         if (cmap.size() > 0){              
-            RLLP_OppRollups oppR = new RLLP_OppRollups();
+            RLLP_OppRollup oppR = new RLLP_OppRollup();
             oppR.rollupContacts(cmap);   
             if (hhmap.size() > 0){
                 oppR.rollupHouseholds(hhmap);    
@@ -133,8 +133,8 @@ global virtual without sharing class RLLP_OppRollups{
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
         if (acctIds != null && !acctIds.isEmpty()) { 
-            RLLP_OppRollups rg = new RLLP_OppRollups();
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(OpportunityRollup_Utilities.buildAccountQuery() + 
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
                                                            ' where id IN :acctIds')); 
             rg.rollupAccounts(amap);
         }
@@ -142,8 +142,8 @@ global virtual without sharing class RLLP_OppRollups{
     @future
     public static void rollupContactsFuture (set<id> conIDs){
         if (conIds != null && !conIDs.isEmpty()){
-            RLLP_OppRollups rg = new RLLP_OppRollups();           
-            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(OpportunityRollup_Utilities.buildContactQuery() +
+            RLLP_OppRollup rg = new RLLP_OppRollup();           
+            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
                                                           ' where id IN :conIds'));
             
             rg.rollupContacts(cmap);
@@ -152,8 +152,8 @@ global virtual without sharing class RLLP_OppRollups{
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
         if (hhIds != null && !hhIds.isEmpty()){
-            RLLP_OppRollups rg = new RLLP_OppRollups();
-            map<id, npo02__Household__c> hhmap = new map<id, Household__c>((list<npo02__Household__c>)Database.query(OpportunityRollup_Utilities.buildHouseholdQuery() +
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
                                                                             ' where id IN :hhIDs'));
             rg.rollupHouseholds(hhmap);                                                                         
         }        
@@ -171,17 +171,17 @@ global virtual without sharing class RLLP_OppRollups{
         //create mappings for UDRs if they exist
         Map<String, Object> UDRFieldMap = new Map<String, Object>();
         
-        if (OpportunityRollup_Utilities.urfsMap.size() > 0){
+        if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
             Map<String, Schema.SObjectField> M = Schema.SObjectType.Account.fields.getMap();                    
-                for (string s : OpportunityRollup_Utilities.urfsMap.keyset()){
-                    if (Account.getSObjectType().getDescribe().getName() == OpportunityRollup_Utilities.urfsMap.get(s).Object_Name__c){
-                        User_Rollup_Field_Settings__c urfs = OpportunityRollup_Utilities.urfsMap.get(s);
-                        if (M.get(urfs.Target_Field__c) != null){
-                            if (M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
-                                UDRFieldMap.put(urfs.Target_Field__c, 0);
+                for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
+                    if (Account.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
+                        npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
+                        if (M.get(urfs.npo02__Target_Field__c) != null){
+                            if (M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
+                                UDRFieldMap.put(urfs.npo02__Target_Field__c, 0);
                             }      
                         else{
-                            UDRFieldMap.put(urfs.Target_Field__c, null);                              
+                            UDRFieldMap.put(urfs.npo02__Target_Field__c, null);                              
                         }                                  
                     }
                 }
@@ -213,19 +213,19 @@ global virtual without sharing class RLLP_OppRollups{
             accountsToUpdate.put(aid, a);
             
             // map currency across if multicurrency
-            if(OpportunityRollup_Utilities.isMultiCurrency())
-                accountsToUpdate.get(aid).put(OpportunityRollup_Utilities.mcFieldValues.get('Account'),amap.get(aid).get(OpportunityRollup_Utilities.mcFieldValues.get('Account')));
+            if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                accountsToUpdate.get(aid).put(RLLP_OppRollup_UTIL.mcFieldValues.get('Account'),amap.get(aid).get(RLLP_OppRollup_UTIL.mcFieldValues.get('Account')));
         }
         
         //need local vars b/c dynamic soql is stupid
         set<id> aset = amap.keySet();
-        set<string> typeset = OpportunityRollup_Utilities.oppTypesToExcludeAccts;
-        set<id> rectypeset = OpportunityRollup_Utilities.recordTypesToExcludeAccts;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeAccts;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeAccts;
 
-        list<sobject> objectList = Database.query(OpportunityRollup_Utilities.buildAccountRollupQuery());
+        list<sobject> objectList = Database.query(RLLP_OppRollup_UTIL.buildAccountRollupQuery());
 
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
-        opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+        opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
         
         for (sobject r : objectList){            
             id aid = (id)(r.get('AccountId'));
@@ -236,15 +236,15 @@ global virtual without sharing class RLLP_OppRollups{
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
                 integer yr = (integer)r.get('CalendarYr');
                 Account a = accountsToUpdate.get(aid);
-                if ((yrAmt > a.Best_Gift_Year_Total__c || a.Best_Gift_Year_Total__c==null ) && yr !=null){
-                    a.Best_Gift_Year_Total__c = yrAmt;
-                    a.Best_Gift_Year__c = string.valueOf(yr);
+                if ((yrAmt > a.npo02__Best_Gift_Year_Total__c || a.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    a.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    a.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }          
             }   
         }       
         
         objectList.clear();
-        objectList = database.query(OpportunityRollup_Utilities.buildAccountNDayQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildAccountNDayQuery());
         
         for (sobject r : objectList){
             id aid = (id)(r.get('AccountId'));
@@ -252,12 +252,12 @@ global virtual without sharing class RLLP_OppRollups{
                 updateRollupFromResultLastNDays((sobject)(accountsToUpdate.get(aid)), r);
         }
 
-        if (!OpportunityRollup_Utilities.mbrRecordTypes.isEmpty()) {
-            set<id> memberset = OpportunityRollup_Utilities.mbrRecordTypes; 
+        if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()) {
+            set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes; 
             objectList.clear();
-            objectList = database.query(OpportunityRollup_Utilities.buildAccountMembershipQuery());        
+            objectList = database.query(RLLP_OppRollup_UTIL.buildAccountMembershipQuery());        
             
-            opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+            opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
             for (sobject r : objectList){                
                 id aid = (id)(r.get('AccountId'));
@@ -307,11 +307,11 @@ global virtual without sharing class RLLP_OppRollups{
         }         
         
         Database.SaveResult[] SR = database.update(accountsToUpdate.values(), false);                
-        List<Opportunity_Rollup_Error__c> elist = new List<Opportunity_Rollup_Error__c>();
+        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
         integer i = 0;
         for(Database.SaveResult s: SR){
             if (!s.isSuccess()){
-                elist.add(OpportunityRollup_Utilities.createError(s, 'Account', accountsToUpdate.values()[i].id));                              
+                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Account', accountsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -328,17 +328,17 @@ global virtual without sharing class RLLP_OppRollups{
         //create mappings for UDRs if they exist
         Map<String, Object> UDRFieldMap = new Map<String, Object>();
         
-        if (OpportunityRollup_Utilities.urfsMap.size() > 0){
+        if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
             Map<String, Schema.SObjectField> M = Schema.SObjectType.Contact.fields.getMap();                    
-                for (string s : OpportunityRollup_Utilities.urfsMap.keyset()){
-                    if (Contact.getSObjectType().getDescribe().getName() == OpportunityRollup_Utilities.urfsMap.get(s).Object_Name__c){
-                        User_Rollup_Field_Settings__c urfs = OpportunityRollup_Utilities.urfsMap.get(s);
-                        if (M.get(urfs.Target_Field__c) != null){
-                            if (M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
-                                UDRFieldMap.put(urfs.Target_Field__c, 0);
+                for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
+                    if (Contact.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
+                        npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
+                        if (M.get(urfs.npo02__Target_Field__c) != null){
+                            if (M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
+                                UDRFieldMap.put(urfs.npo02__Target_Field__c, 0);
                             }      
                         else{
-                            UDRFieldMap.put(urfs.Target_Field__c, null);                              
+                            UDRFieldMap.put(urfs.npo02__Target_Field__c, null);                              
                         }                                  
                     }
                 }
@@ -369,19 +369,19 @@ global virtual without sharing class RLLP_OppRollups{
             
             contactsToUpdate.put(cid, c);
             // map currency across if multicurrency
-            if(OpportunityRollup_Utilities.isMultiCurrency())
-                contactsToUpdate.get(cid).put(OpportunityRollup_Utilities.mcFieldValues.get('Contact'),cmap.get(cid).get(OpportunityRollup_Utilities.mcFieldValues.get('Contact')));            
+            if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                contactsToUpdate.get(cid).put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'),cmap.get(cid).get(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact')));            
         }
     
         list<sobject> objectList = new list<sobject>();   
         set<id> cset = cmap.keySet();
-        set<string> typeset = OpportunityRollup_Utilities.oppTypesToExcludeCons;
-        set<id> rectypeset = OpportunityRollup_Utilities.recordTypesToExcludeCons;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
-        objectList = database.query(OpportunityRollup_Utilities.buildContactRollupQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildContactRollupQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
-        opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+        opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
         for (sobject r : objectList) {
             id cid = (id)(r.get('ContactId'));
@@ -392,15 +392,15 @@ global virtual without sharing class RLLP_OppRollups{
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
                 integer yr = (integer)r.get('CalendarYr');
                 Contact c = contactsToUpdate.get(cid);
-                if ((yrAmt > c.Best_Gift_Year_Total__c || c.Best_Gift_Year_Total__c==null ) && yr !=null){
-                    c.Best_Gift_Year_Total__c = yrAmt;
-                    c.Best_Gift_Year__c = string.valueOf(yr);
+                if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    c.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    c.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }          
             }                
         }        
         
         objectList.clear();
-        objectList = database.query(OpportunityRollup_Utilities.buildContactNDayQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildContactNDayQuery());
         
         for (sobject r : objectList){
             id cid = (id)(r.get('ContactId'));
@@ -408,12 +408,12 @@ global virtual without sharing class RLLP_OppRollups{
                 updateRollupFromResultLastNDays((sobject)(contactsToUpdate.get(cid)), r);
         }
 
-        if (!OpportunityRollup_Utilities.mbrRecordTypes.isEmpty()){
-            set<id> memberset = OpportunityRollup_Utilities.mbrRecordTypes;
+        if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()){
+            set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes;
             objectList.clear();
-            objectList = database.query(OpportunityRollup_Utilities.buildContactMembershipQuery());        
+            objectList = database.query(RLLP_OppRollup_UTIL.buildContactMembershipQuery());        
             
-            opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+            opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
             for (sobject r : objectList){                
                 id cid = (id)(r.get('ContactId'));
@@ -458,12 +458,12 @@ global virtual without sharing class RLLP_OppRollups{
         }
         
         Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Opportunity_Rollup_Error__c> elist = new List<Opportunity_Rollup_Error__c>();
+        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
         //needed to match errors to update list index
         integer i = 0;
         for(Database.SaveResult s: SR){         
             if (!s.isSuccess()){
-                elist.add(OpportunityRollup_Utilities.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
+                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -479,17 +479,17 @@ global virtual without sharing class RLLP_OppRollups{
         //create mappings for UDRs if they exist
         Map<String, Object> UDRFieldMap = new Map<String, Object>();
         
-        if (OpportunityRollup_Utilities.urfsMap.size() > 0){
+        if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
             Map<String, Schema.SObjectField> M = Schema.SObjectType.npo02__Household__c.fields.getMap();                    
-                for (string s : OpportunityRollup_Utilities.urfsMap.keyset()){
-                    if (npo02__Household__c.getSObjectType().getDescribe().getName() == OpportunityRollup_Utilities.urfsMap.get(s).Object_Name__c){
-                        User_Rollup_Field_Settings__c urfs = OpportunityRollup_Utilities.urfsMap.get(s);
-                        if (M.get(urfs.Target_Field__c) != null){
-                            if (M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
-                                UDRFieldMap.put(urfs.Target_Field__c, 0);
+                for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
+                    if (npo02__Household__c.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
+                        npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
+                        if (M.get(urfs.npo02__Target_Field__c) != null){
+                            if (M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Integer || M.get(urfs.npo02__Target_Field__c).getDescribe().getSOAPType() == Schema.Soaptype.Double){
+                                UDRFieldMap.put(urfs.npo02__Target_Field__c, 0);
                             }      
                         else{
-                            UDRFieldMap.put(urfs.Target_Field__c, null);                              
+                            UDRFieldMap.put(urfs.npo02__Target_Field__c, null);                              
                         }                                  
                     }
                 }
@@ -521,19 +521,19 @@ global virtual without sharing class RLLP_OppRollups{
             householdsToUpdate.put(hhid, h);            
             
             // map currency across if multicurrency
-            if(OpportunityRollup_Utilities.isMultiCurrency())
-                householdsToUpdate.get(hhid).put(OpportunityRollup_Utilities.mcFieldValues.get('npo02__Household__c'),hhmap.get(hhid).get(OpportunityRollup_Utilities.mcFieldValues.get('npo02__Household__c')));
+            if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                householdsToUpdate.get(hhid).put(RLLP_OppRollup_UTIL.mcFieldValues.get('npo02__Household__c'),hhmap.get(hhid).get(RLLP_OppRollup_UTIL.mcFieldValues.get('npo02__Household__c')));
         }
     
         list<sobject> objectList = new list<sobject>();   
         set<id> hhset = hhmap.keySet();
-        set<string> typeset = OpportunityRollup_Utilities.oppTypesToExcludeCons;
-        set<id> rectypeset = OpportunityRollup_Utilities.recordTypesToExcludeCons;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
-        objectList = database.query(OpportunityRollup_Utilities.buildHouseholdRollupQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdRollupQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
-        opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+        opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
         for (sobject r : objectList) {
             id hhid = (id)(r.get('hhid'));
@@ -543,16 +543,16 @@ global virtual without sharing class RLLP_OppRollups{
                 //calculate best gift year
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
                 integer yr = (integer)r.get('CalendarYr');
-                Household__c hh = householdsToUpdate.get(hhid);
-                if ((yrAmt > hh.Best_Gift_Year_Total__c || hh.Best_Gift_Year_Total__c==null ) && yr !=null){
-                    hh.Best_Gift_Year_Total__c = yrAmt;
-                    hh.Best_Gift_Year__c = string.valueOf(yr);
+                npo02__Household__c hh = householdsToUpdate.get(hhid);
+                if ((yrAmt > hh.npo02__Best_Gift_Year_Total__c || hh.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    hh.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    hh.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }                
             }                
         }        
         
         objectList.clear();
-        objectList = database.query(OpportunityRollup_Utilities.buildHouseholdNDayQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdNDayQuery());
         
         for (sobject r : objectList){
             id hhid = (id)(r.get('hhid'));
@@ -560,12 +560,12 @@ global virtual without sharing class RLLP_OppRollups{
                 updateRollupFromResultLastNDays((sobject)(householdsToUpdate.get(hhid)), r);
         }
 
-        if (!OpportunityRollup_Utilities.mbrRecordTypes.isEmpty()){
-            set<id> memberset = OpportunityRollup_Utilities.mbrRecordTypes;
+        if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()){
+            set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes;
             objectList.clear();
-            objectList = database.query(OpportunityRollup_Utilities.buildHouseholdMembershipQuery());        
+            objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdMembershipQuery());        
             
-            opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+            opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
             for (sobject r : objectList){                
                 id hhid = (id)(r.get('hhid'));
@@ -610,11 +610,11 @@ global virtual without sharing class RLLP_OppRollups{
         }
         
         Database.SaveResult[] SR = database.update(householdsToUpdate.values(), false);
-        List<Opportunity_Rollup_Error__c> elist = new List<Opportunity_Rollup_Error__c>();
+        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
         integer i = 0;
         for(Database.SaveResult s: SR){
             if (!s.isSuccess()){
-                elist.add(OpportunityRollup_Utilities.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
+                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -635,18 +635,18 @@ global virtual without sharing class RLLP_OppRollups{
                 npo02__Soft_Credit_Two_Years_Ago__c = 0, npo02__Soft_Credit_Total__c = 0
             ));
             // map currency across if multicurrency
-            if(OpportunityRollup_Utilities.isMultiCurrency())
-                contactsToUpdate.get(cid).put(OpportunityRollup_Utilities.mcFieldValues.get('Contact'),cmap.get(cid).get(OpportunityRollup_Utilities.mcFieldValues.get('Contact')));            
+            if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                contactsToUpdate.get(cid).put(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact'),cmap.get(cid).get(RLLP_OppRollup_UTIL.mcFieldValues.get('Contact')));            
         }
     
         list<sobject> objectList = new list<sobject>();   
         set<id> cset = cmap.keySet();        
-        set<string> softCreditRoles = OpportunityRollup_Utilities.softCreditRoles;
+        set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
         
-        objectList = database.query(OpportunityRollup_Utilities.buildSoftCreditQuery());
+        objectList = database.query(RLLP_OppRollup_UTIL.buildSoftCreditQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
-        opptyCurrencies = (OpportunityRollup_Utilities.isMultiCurrency() ? OpportunityRollup_Utilities.rcfFindCurrency(objectList) : null);
+        opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
         for (sobject r : objectList) {
             id cid = (id)(r.get('ContactId'));
@@ -666,12 +666,12 @@ global virtual without sharing class RLLP_OppRollups{
         }
         
         Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Opportunity_Rollup_Error__c> elist = new List<Opportunity_Rollup_Error__c>();
+        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
         //needed to match errors to update list index
         integer i = 0;
         for(Database.SaveResult s: SR){         
             if (!s.isSuccess()){
-                elist.add(OpportunityRollup_Utilities.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
+                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -685,32 +685,32 @@ global virtual without sharing class RLLP_OppRollups{
     /*** Wrappers for Managing the batch process ***/
     public void rollupAll(){
         //clear the error queue from any previous runs
-        delete [select id from Opportunity_Rollup_Error__c];
+        delete [select id from npo02__Opportunity_Rollup_Error__c];
         
         rollupAllAccounts();
         rollupAllContacts(); 
         rollupAllHouseholds();        
         
-        system.debug(OpportunityRollup_Utilities.hh_settings.Enable_Soft_Credit_Rollups__c);
-        if (OpportunityRollup_Utilities.useSoftCredits()){ 
+        system.debug(RLLP_OppRollup_UTIL.hh_settings.npo02__Enable_Soft_Credit_Rollups__c);
+        if (RLLP_OppRollup_UTIL.useSoftCredits()){ 
             rollupAllSoftCredits();
         }            
     }
     public void rollupAllHouseholds(){
-        BATCH_OppRollup batch = new BATCH_OppRollup(OpportunityRollup_Utilities.buildHouseholdQuery(), BATCH_OppRollup.BATCH_TYPE.HouseholdType);
-        id batchProcessId = database.executeBatch(batch, OpportunityRollup_Utilities.BATCH_SIZE);
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildHouseholdQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.HouseholdType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     }
     public void rollupAllAccounts() {
-        BATCH_OppRollup batch = new BATCH_OppRollup(OpportunityRollup_Utilities.buildAccountQuery(), BATCH_OppRollup.BATCH_TYPE.AccountType);
-        id batchProcessId = database.executeBatch(batch, OpportunityRollup_Utilities.BATCH_SIZE);        
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
     }           
     public void rollupAllContacts() { 
-        BATCH_OppRollup batch = new BATCH_OppRollup(OpportunityRollup_Utilities.buildContactQuery(), BATCH_OppRollup.BATCH_TYPE.ContactType);
-        id batchProcessId = database.executeBatch(batch, OpportunityRollup_Utilities.BATCH_SIZE);        
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.ContactType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
     }
     public void rollupAllSoftCredits(){
-        BATCH_OppRollup batch = new BATCH_OppRollup(OpportunityRollup_Utilities.buildContactQuery(), BATCH_OppRollup.BATCH_TYPE.SoftCreditType);
-        id batchProcessId = database.executeBatch(batch, OpportunityRollup_Utilities.BATCH_SIZE);
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.SoftCreditType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     } 
     /*************************************************************/
     
@@ -726,10 +726,10 @@ global virtual without sharing class RLLP_OppRollups{
         decimal lastAmt = (rcf.size() > 1 && rcf[1] != '') ? decimal.valueOf(rcf[1]) : null;
         
         // calculate amounts into correct currency if needed
-        if(OpportunityRollup_Utilities.isMultiCurrency()){
-            amt = OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency()){
+            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
             if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-                lastAmt = OpportunityRollup_Utilities.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+                lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
         }
         
         // check if this is an annual total or account total
@@ -737,8 +737,8 @@ global virtual without sharing class RLLP_OppRollups{
 
             // put the fiscal year total in the right fields
             integer thisYear;
-            if (OpportunityRollup_Utilities.useFiscalYear)
-                thisYear = OpportunityRollup_Utilities.getCurrentFY();
+            if (RLLP_OppRollup_UTIL.useFiscalYear)
+                thisYear = RLLP_OppRollup_UTIL.getCurrentFY();
             else
                 thisYear = system.today().year();
             
@@ -765,10 +765,10 @@ global virtual without sharing class RLLP_OppRollups{
             obj.put('npo02__LastCloseDate__c', r.get('LastCloseDate')); //date
             
             // calculate amounts into correct currency if needed
-            if(OpportunityRollup_Utilities.isMultiCurrency()){
-               obj.put('npo02__AverageAmount__c', OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('AverageAmount'))); 
-               obj.put('npo02__SmallestAmount__c', OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('SmallestAmount'))); 
-               obj.put('npo02__LargestAmount__c', OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('LargestAmount'))); 
+            if(RLLP_OppRollup_UTIL.isMultiCurrency()){
+               obj.put('npo02__AverageAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('AverageAmount'))); 
+               obj.put('npo02__SmallestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('SmallestAmount'))); 
+               obj.put('npo02__LargestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)r.get('LargestAmount'))); 
             }
             else{
                obj.put('npo02__AverageAmount__c', (decimal)(r.get('AverageAmount'))); 
@@ -778,13 +778,13 @@ global virtual without sharing class RLLP_OppRollups{
         }
         
         //deal with user rollups
-        if (OpportunityRollup_Utilities.urfsMap.size() > 0){
-            for (string s : OpportunityRollup_Utilities.urfsMap.keyset()){
-                if (obj.getSObjectType().getDescribe().getName() == OpportunityRollup_Utilities.urfsMap.get(s).Object_Name__c){
-                    User_Rollup_Field_Settings__c urfs = OpportunityRollup_Utilities.urfsMap.get(s);
+        if (RLLP_OppRollup_UTIL.urfsMap.size() > 0){
+            for (string s : RLLP_OppRollup_UTIL.urfsMap.keyset()){
+                if (obj.getSObjectType().getDescribe().getName() == RLLP_OppRollup_UTIL.urfsMap.get(s).npo02__Object_Name__c){
+                    npo02__User_Rollup_Field_Settings__c urfs = RLLP_OppRollup_UTIL.urfsMap.get(s);
                     string x = urfs.Name;                   
                     if (r.get(x) != null)
-                       obj.put(urfs.Target_Field__c, r.get(x));
+                       obj.put(urfs.npo02__Target_Field__c, r.get(x));
                 }
             }
         } 
@@ -797,8 +797,8 @@ global virtual without sharing class RLLP_OppRollups{
         integer cnt = (integer)(r.get('NumberOfClosedOpps'));               
         
         // calculate amounts into correct currency if needed
-        if(OpportunityRollup_Utilities.isMultiCurrency())
-           amt = OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency())
+           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
         
         obj.put('npo02__OppAmountLastNDays__c', amt);               
         obj.put('npo02__OppsClosedLastNDays__c', cnt);
@@ -817,10 +817,10 @@ global virtual without sharing class RLLP_OppRollups{
         string lastMemberLevel = (rcf.size() > 2) ? rcf[2] : null;
         string lastMemberOrigin = (rcf.size() > 3) ? rcf[3] : null;
         // calculate amounts into correct currency if needed
-        if(OpportunityRollup_Utilities.isMultiCurrency()){
-           amt = OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency()){
+           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-               lastAmt = OpportunityRollup_Utilities.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+               lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
         }
 
         // fill in summary totals
@@ -840,16 +840,16 @@ global virtual without sharing class RLLP_OppRollups{
         decimal amt = (decimal)(r.get('TotalOppAmount'));                       
         
         // calculate amounts into correct currency if needed
-        if(OpportunityRollup_Utilities.isMultiCurrency())
-            amt = OpportunityRollup_Utilities.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency())
+            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
         
         // check if this is an annual total or account total
         if (fy != null){
 
             // put the fiscal year total in the right fields
             integer thisYear;
-            if (OpportunityRollup_Utilities.useFiscalYear)
-                thisYear = OpportunityRollup_Utilities.getCurrentFY();
+            if (RLLP_OppRollup_UTIL.useFiscalYear)
+                thisYear = RLLP_OppRollup_UTIL.getCurrentFY();
             else
                 thisYear = system.today().year();
             

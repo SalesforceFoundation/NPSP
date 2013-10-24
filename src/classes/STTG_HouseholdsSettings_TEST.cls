@@ -37,9 +37,9 @@ private class STTG_HouseholdsSettings_TEST {
 
      public static testMethod void TEST_householdsSettings() {
         
-        Test.setCurrentPageReference(new PageReference('Page.householdsSettings'));
+        Test.setCurrentPageReference(new PageReference('Page.STTG_HouseholdsSettings'));
         
-        Households_Settings__c householdSettingsForTests = Households.getHouseholdsSettingsForTests(new Households_Settings__c (Household_Rules__c = Households.ALL_INDIVIDUALS_PROCESSOR));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
         //pass the controller into the extension
         STTG_HouseholdsSettings_CTRL controller = new STTG_HouseholdsSettings_CTRL(); 
@@ -60,12 +60,12 @@ private class STTG_HouseholdsSettings_TEST {
         
         List<SelectOption> oppRTypes = controller.getRTypes();
         system.assertNotEquals(null,oppRTypes);
-        controller.acctRTs.add(RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
-        controller.contactRTs.add(RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        controller.acctRTs.add(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
+        controller.contactRTs.add(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'));
         
         controller.acctTypes.add('In-Kind');
         controller.contactTypes.add('In-Kind');
-        controller.pageSettings.Enable_Opp_Rollup_Triggers__c = true;
+        controller.pageSettings.npo02__Enable_Opp_Rollup_Triggers__c = true;
         controller.editHouseholdSettings();
         controller.editRollupSettings();
         controller.updateSettings();  
@@ -74,13 +74,6 @@ private class STTG_HouseholdsSettings_TEST {
         controller.activateHouseholdNaming();
         system.assertEquals(true, controller.runningBatch);        
         
-        //test package update calls
-        String myver = controller.getMyVersion();
-        system.assertEquals(String.valueOf(Package.Version.Request), myver);
-        String maxver = controller.getMaxVersion();
-        String uUrl = controller.getUpdateURL();
-        String lastUpdate = controller.getLastUpdate();
-        String pkupdates = controller.getpkgupdatestatus();              
     }    
 
 }
