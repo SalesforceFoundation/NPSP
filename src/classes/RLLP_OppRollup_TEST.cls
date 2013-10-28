@@ -1403,56 +1403,6 @@ public with sharing class RLLP_OppRollup_TEST {
         system.assertEquals(4, ct.npo02__Household__r.npo02__Household_ID__c);      
     }
 
-    public static testMethod void testBatch() {
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        if(giftRecordTypeNameForTests!=''){
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                    npo02__Always_Rollup_to_Primary_Contact__c = true,
-                    npo02__Enable_Opp_Rollup_Triggers__c = true,
-                    npo02__Excluded_Account_Opp_Rectypes__c = null,
-                    npo02__Excluded_Account_Opp_Types__c = null,
-                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                    npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = null
-                ));
-            
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
-                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-            ));
-            
-            Date datClose = System.Today();
-                
-            // create & insert contact(s)
-            Contact[] TestCons = new contact[]{ new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-                npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-            ) };
-            insert TestCons;
-            
-            Contact insertedContact = [select accountid from Contact where id IN :TestCons];
-
-            // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
-            String contactAccountId = insertedContact.accountid;
-        
-            RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(
-                'SELECT id FROM account where Id =\'' + contactAccountId + '\' limit 200'
-            );
-            
-            Test.StartTest(); 
-            id batchProcessId = database.executeBatch(batch);
-            Test.StopTest(); 
-        }
-    }
 
     public static testMethod void testRollupCtrl() {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
