@@ -32,7 +32,7 @@
 * @date 2012 (2.0)
 * @description The controller for the VF progress indicator component used in recurring donation update  
 */
-public with sharing class RD_JobProgress_CTRL {
+public with sharing class UTIL_JobProgress_CTRL {
  
     public List<BatchJob> batchJobs;
     public Integer numberOfJobs {get; set;}
