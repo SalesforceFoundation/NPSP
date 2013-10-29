@@ -16,9 +16,13 @@
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
-    <types>
+    <types> 
         <members>*</members>
         <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
     </types>
     <types>
         <members>*</members>
@@ -27,10 +31,6 @@
     <types>
         <members>*</members>
         <name>CustomTab</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>StaticResource</name>
     </types>
     <version>28.0</version>
 </Package>
