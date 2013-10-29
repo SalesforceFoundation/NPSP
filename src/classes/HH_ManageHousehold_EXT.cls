@@ -543,7 +543,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return String The name of the household based on the contacts used.
     ********************************************************************************************************/
     public string getHHName() {
-        npo02.HouseholdNaming hh = new npo02.HouseholdNaming();
+        HH_HouseholdNaming hh = new HH_HouseholdNaming();
         String name;
         if (!activeContacts.isEmpty()||!insertContacts.isEmpty()) {
             name = hh.getHHName(sortingList());
@@ -557,7 +557,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return String The name of the household based on the contacts used.
     ********************************************************************************************************/
     public string getHHFormalName() {
-        npo02.HouseholdNaming hh = new npo02.HouseholdNaming();
+        HH_HouseholdNaming hh = new HH_HouseholdNaming();
         String name;
         if (!activeContacts.isEmpty()||!insertContacts.isEmpty()) {
             name = hh.getFormalName(sortingList());
@@ -571,7 +571,7 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return String The name of the household based on the contacts used.
     ********************************************************************************************************/
     public string getHHInformalName() {
-        npo02.HouseholdNaming hh = new npo02.HouseholdNaming();
+        HH_HouseholdNaming hh = new HH_HouseholdNaming();
         String name;
         if (!activeContacts.isEmpty()||!insertContacts.isEmpty()) {
             name = hh.getInformalName(sortingList());

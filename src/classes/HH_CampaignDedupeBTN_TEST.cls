@@ -32,7 +32,7 @@
 * @date 2011 (2.3)
 * @description test class for the campaign dedupe button from the campaign record 
 */
-@isTest
+@isTest(SeeAllData=true)
 private class HH_CampaignDedupeBTN_TEST {  
   
   public static testMethod void testCampaignHHReport(){

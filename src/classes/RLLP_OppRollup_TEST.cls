@@ -585,7 +585,7 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }   
 
-    static testMethod void OneContactMultipleOpps() {
+    public static testMethod void OneContactMultipleOpps() {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
@@ -594,7 +594,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
-                    npo02__Enable_Opp_Rollup_Triggers__c = true,
+                    npo02__Enable_Opp_Rollup_Triggers__c = false, // DJH: not needed since calling opp rollups directly. true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,
                     npo02__Excluded_Account_Opp_Types__c = null,
                     npo02__Excluded_Contact_Opp_Rectypes__c = null,
@@ -627,6 +627,10 @@ public with sharing class RLLP_OppRollup_TEST {
             insert testGift2;
             test.stopTest();
             
+            // now roll up manually
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
+
             //now test that the contact has received the proper stats from the trigger
             id ThisConId = TestCons[0].id;
             Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c FROM Contact WHERE Id = :ThisConId];
@@ -643,7 +647,7 @@ public with sharing class RLLP_OppRollup_TEST {
             update TestGift2;
             
             // now roll up manually
-            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{UpdatedCon}));
     
             ThisConId = TestCons[0].id;
