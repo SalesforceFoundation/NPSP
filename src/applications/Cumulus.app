@@ -17,4 +17,6 @@
     <tab>Recurring_Donations_Settings</tab>
     <tab>Relationships_Settings</tab>
     <tab>Payment_Mapping</tab>
+    <tab>Household_Settings</tab>
+    <tab>Opportunity_Rollup</tab>
 </CustomApplication>
