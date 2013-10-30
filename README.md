@@ -9,8 +9,8 @@ ducking-octo-happiness, laughing-archer
 
 * Create a new DE org by going to developer.force.com
 * Login to your DE Org. 
-* Create an Opportunity Sales Process (Setup | Customize | Opportunity | Sales Process)
-* Create an Opportunity Record Type (Setup | Customize | Opportunity | Record Type)
+* Create an Opportunity Sales Process (Setup | Customize | Opportunities | Sales Process)
+* Create an Opportunity Record Type (Setup | Customize | Opportunities | Record Type)
 * Install the 4 required Nonprofit Starter Pack Packages  
   
 <a href="http://foundation.force.com/packages/contactsandorganizations" target="_blank">Contacts and Organizations</a>  
@@ -28,6 +28,8 @@ NOTE: For now, you will need to use the following links to install the unrelease
 ```
 $ git clone https://github.com/*username*/Cumulus.git
 ```
-* In your IDE of your choice, create a new project based on your cloned report. Associate the project with the force.com nature, but *do not refresh from server*.
-* Select the labels and objects folders, and select 'Save to Server', not deploy
+* In your IDE of your choice, create a new project based on your cloned report (If you checked out the clone in the Eclipse workspace you can just create a standard project with the same name)
+* Associate the project with the force.com nature
+* Enter your DE org credentials, but *do not refresh from server*
+* Select the objects folders, and select 'Save to Server', not deploy
 * Select remaining folders and 'Save to Server'
