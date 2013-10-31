@@ -9,8 +9,10 @@ patterns = {
     'minor': r'<minorNumber>(\d+)</minorNumber>',
 }
 
-config_file = os.path.dirname(os.path.abspath(__file__)) + '/cumulus.cfg'
-src_dir = os.path.abspath(os.path.join(os.path.abspath(__file__),os.path.pardir,os.path.pardir,'src'))
+config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),'cumulus.cfg')
+root_dir = os.path.abspath(os.path.join(os.path.abspath(__file__),os.path.pardir,os.path.pardir))
+src_dir = os.path.join(root_dir,'src')
+readme_file = os.path.join(root_dir,'README.md')
 
 def get_meta_files():
     matches = []
@@ -90,7 +92,14 @@ def update_meta_files(files):
             outfile = open(fname,'w')
             outfile.writelines(output)
             outfile.close()
-            
+  
+def update_readme_links():
+    readme = open(readme_file, 'r').read()
+    for section in config.sections():
+        search = r'\[(%s)\]\((.*)\)' % config.get(section, 'name')
+        replace = r'[\1](%s)' % config.get(section, 'install_url')
+        readme = re.sub(search, replace, readme)
+    open(readme_file, 'w').write(readme)    
     
 def main():
     # Parse the config file
@@ -100,6 +109,7 @@ def main():
 
     files = get_meta_files()
     update_meta_files(files)
+    update_readme_links()
 
 if __name__ == '__main__':
   main()
