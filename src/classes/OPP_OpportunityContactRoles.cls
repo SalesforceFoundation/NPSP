@@ -154,6 +154,7 @@ public without sharing class OPP_OpportunityContactRoles {
         //loop through opps again and then put the right accountid on the opp
         for(Opportunity o : oppList){
             //add the contact id from the Account. if it's not valid it won't error
+            // DJH:UNDONE HH Accounts don't set account.npe01__One2OneContact__c.  Is that a problem here?
             if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){ 
                 o.npe01__Contact_Id_for_role__c = primaryAccounts.get(o.AccountId).npe01__One2OneContact__c;
             }
@@ -163,7 +164,8 @@ public without sharing class OPP_OpportunityContactRoles {
                 if(contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c))!=null){
                     Account accountForContact = contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c));
                     //for one-to-one accounts, set the account id
-                    if(accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
+                    if(accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
+                        accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
                         o.AccountId = accountForContact.Id;
                     }
                 } else {
