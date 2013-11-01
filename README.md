@@ -15,7 +15,6 @@ ducking-octo-happiness, laughing-archer
  
 [Affiliations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cZtq)
 [Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cd2w)
-[Households](http)
 [Recurring_Donations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pZK6)
 [Relationships](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pY9P)
 
@@ -25,5 +24,5 @@ ducking-octo-happiness, laughing-archer
 $ git clone https://github.com/*username*/Cumulus.git
 ```
 * In your IDE of your choice, create a new project based on your cloned report. Associate the project with the force.com nature, but *do not refresh from server*.
-* Select the objects folders, and select 'Save to Server', not deploy
+* Select the object folder and select 'Save to Server', not deploy
 * Select remaining folders and 'Save to Server'

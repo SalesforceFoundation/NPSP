@@ -94,12 +94,16 @@ def update_meta_files(files):
             outfile.close()
   
 def update_readme_links():
+    print 'Checking install urls in README.md'
     readme = open(readme_file, 'r').read()
+    orig_readme = readme
     for section in config.sections():
         search = r'\[(%s)\]\((.*)\)' % config.get(section, 'name')
         replace = r'[\1](%s)' % config.get(section, 'install_url')
         readme = re.sub(search, replace, readme)
-    open(readme_file, 'w').write(readme)    
+    if orig_readme != readme:
+        print 'Updated install urls in README.md'
+        open(readme_file, 'w').write(readme)    
     
 def main():
     # Parse the config file
