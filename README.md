@@ -23,6 +23,8 @@ ducking-octo-happiness, laughing-archer
 ```
 $ git clone https://github.com/*username*/Cumulus.git
 ```
-* In your IDE of your choice, create a new project based on your cloned report. Associate the project with the force.com nature, but *do not refresh from server*.
-* Select the object folder and select 'Save to Server', not deploy
+* In your IDE of your choice, create a new project based on your cloned report (If you checked out the clone in the Eclipse workspace you can just create a standard project with the same name)
+* Associate the project with the force.com nature
+* Enter your DE org credentials, but *do not refresh from server*
+* Select the objects folders, and select 'Save to Server', not deploy
 * Select remaining folders and 'Save to Server'
