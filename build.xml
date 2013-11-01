@@ -1,0 +1,15 @@
+<project name="Cumulus" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <target name="test">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="100" />
+    </target>
+
+    <target name="deploy">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="100" />
+    </target>
+
+    <target name="deployWithoutTest">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="100" />
+    </target>
+
+</project>
