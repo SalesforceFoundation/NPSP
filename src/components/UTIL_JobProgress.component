@@ -1,4 +1,4 @@
-<apex:component controller="RD_JobProgress_CTRL" selfClosing="true">
+<apex:component controller="UTIL_JobProgress_CTRL" selfClosing="true">
 <!-- 
 * Written by Jason Venable, http://www.tehnrd.com/batch-apex-status-bar/  
 * This program is released under the GNU General Public License. http://www.gnu.org/licenses/

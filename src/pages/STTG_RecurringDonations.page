@@ -135,7 +135,7 @@
                     <apex:outputfield value="{!rds.npe03__Number_of_Failures__c}"/>
                     <apex:outputfield value="{!rds.npe03__Number_of_Successes__c}"/>
                     <apex:outputPanel rendered="{!runningbatch}">
-                        <c:RD_JobProgress strBatchComponentLabel="Updating Recurring Donation Opportunities"
+                        <c:UTIL_JobProgress strBatchComponentLabel="Updating Recurring Donation Opportunities"
                         cNumberOfJobs="1" bRerenderOnComplete="true" />
                     </apex:outputPanel>
                     <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">

@@ -16,7 +16,7 @@
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
-    <types>
+    <types> 
         <members>*</members>
         <name>CustomApplication</name>
     </types>
