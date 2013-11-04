@@ -42,10 +42,10 @@ public without sharing class OPP_OpportunityContactRoles {
     /// <summary> Overloads the ContactRoles object constructor to handle ContactRoles processing </summary>
     public OPP_OpportunityContactRoles(Map<Id, Opportunity> oppList){
         List<Opportunity> triggerOpps = oppList.values();
- //       Set<Id> triggerOppIDs = oppList.keySet();
-       // Boolean haveCheckedOpportunityRoles = false;
+        // Set<Id> triggerOppIDs = oppList.keySet();
+        // Boolean haveCheckedOpportunityRoles = false;
                 
-//        List<Opportunity> oppsToProcess = new List<Opportunity>();
+        // List<Opportunity> oppsToProcess = new List<Opportunity>();
         List<OpportunityContactRole> CRUpdates = new List<OpportunityContactRole>();
 
         Map<Id, Opportunity> oppsInsertCR = oppList.clone();
@@ -128,7 +128,7 @@ public without sharing class OPP_OpportunityContactRoles {
         }           
         return idForShortening;
     }
-    //fill one-to-one accounts for Opportunities where a Contact id is supplied
+    //fill one-to-one and HH Accounts for Opportunities where a Contact id is supplied
     public static void opportunityAccounts(List<Opportunity> oppList){
         
         Map<String,Account> contactsAndOneToOneAccounts = new Map<String,Account>();
@@ -144,7 +144,7 @@ public without sharing class OPP_OpportunityContactRoles {
                 primaryContactIds.add(o.npe01__Contact_Id_for_role__c);                
             }
         }
-        Map<Id,Account> primaryAccounts = new Map<Id,Account>([select id, npe01__One2OneContact__c from Account where id IN :oppAccounts]);
+        Map<Id,Account> primaryAccounts = new Map<Id,Account>([select id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where id IN :oppAccounts]);
          
         List<Contact> primaryContacts = new List<Contact>();
         primaryContacts = [select AccountId,Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :primaryContactIds];
@@ -154,7 +154,7 @@ public without sharing class OPP_OpportunityContactRoles {
         //loop through opps again and then put the right accountid on the opp
         for(Opportunity o : oppList){
             //add the contact id from the Account. if it's not valid it won't error
-            // DJH:UNDONE HH Accounts don't set account.npe01__One2OneContact__c.  Is that a problem here?
+            // DJH:UNDONE HH Accounts don't set account.npe01__One2OneContact__c.  Since no explicit primary contact, ok to not create a cr?
             if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){ 
                 o.npe01__Contact_Id_for_role__c = primaryAccounts.get(o.AccountId).npe01__One2OneContact__c;
             }
@@ -163,7 +163,7 @@ public without sharing class OPP_OpportunityContactRoles {
                 
                 if(contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c))!=null){
                     Account accountForContact = contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c));
-                    //for one-to-one accounts, set the account id
+                    //for one-to-one accounts and HH Accounts, set the account id
                     if(accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
                         accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
                         o.AccountId = accountForContact.Id;
