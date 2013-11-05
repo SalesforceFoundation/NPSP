@@ -1,8 +1,8 @@
-public with sharing class SUBSYS_Helper implements TDTM_iTableDataGateway {
+public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
 
     private static Map<String, SObject> classesToCallOnTriggers;
     
-    public static Map<String, SObject> getClassesToCallOnTriggers() {	
+    public static Map<String, SObject> getClassesToCallOnTriggers() {   
         if (classesToCallOnTriggers == null){
             classesToCallOnTriggers = new Map<String, SubsystemModule__c>();
             List<SubsystemModule__c> classesToCallOnTriggersList = [select Asynchronous__c, Class__c, Load_Order__c, Object__c, 

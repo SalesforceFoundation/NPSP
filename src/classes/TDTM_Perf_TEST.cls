@@ -1,5 +1,5 @@
 @isTest
-public with sharing class SUBSYS_CustomObject_TEST {
+public with sharing class TDTM_Perf_TEST {
 
     public static testmethod void integrationTest() {
         //Define which classes (and in which order) should run when a change is made to

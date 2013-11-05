@@ -1,5 +1,5 @@
-//This class just performs a small database change to check the SUBSYS design.
-public with sharing class SUBSYS_SampleClass implements SUBSYS_iModule {
+//This class just performs a small database change to check the TDTM design
+public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
     @future
     public static void runFuture(Set<Id> n, Set<Id> o, String ta, String obj) {
@@ -15,12 +15,12 @@ public with sharing class SUBSYS_SampleClass implements SUBSYS_iModule {
             }
         }
 
-        SUBSYS_TriggerAction t = SUBSYS_TriggerActionHelper.getTriggerActionFromName(ta);
-        SUBSYS_SampleClass instance = new SUBSYS_SampleClass();
-        instance.run(newlist, oldlist, t, objResult);
+        TDTM_TriggerActionHelper.Action t = TDTM_TriggerActionHelper.getTriggerActionFromName(ta);
+        TDTM_Runnable sampleImpl = new TDTM_Runnable_Impl();
+        sampleImpl.run(newlist, oldlist, t, objResult);
     }
 
-    public void run(List<Sobject> newlist, List<Sobject> oldlist, SUBSYS_TriggerAction ta, 
+    public void run(List<Sobject> newlist, List<Sobject> oldlist, TDTM_TriggerActionHelper.Action ta, 
     Schema.Describesobjectresult obj) {
         insert new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                             LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);

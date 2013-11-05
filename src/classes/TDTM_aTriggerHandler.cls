@@ -1,8 +1,8 @@
-public virtual with sharing class SUBSYS_aTriggerHandler {
+public with sharing abstract class TDTM_aTriggerHandler {
 
     protected List<Sobject> newlist;
     protected List<Sobject> oldlist; 
-    protected SUBSYS_triggerAction thisAction;
+    protected TDTM_TriggerActionHelper.Action thisAction;
     protected Schema.DescribeSobjectResult obj;
     
     public void initializeHandler(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
@@ -12,7 +12,7 @@ public virtual with sharing class SUBSYS_aTriggerHandler {
         newlist = newlistfromtrigger;
         oldlist = oldlistfromtrigger;
 
-        thisAction = SUBSYS_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
+        thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
 
         obj = describeobj;
