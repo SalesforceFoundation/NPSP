@@ -1,10 +1,11 @@
 global enum SUBSYS_TriggerAction {
 
-	BeforeInsert, 
-	BeforeUpdate, 
-	BeforeDelete, 
-	AfterUndelete, 
-	AfterInsert, 
-	AfterUpdate, 
-	AfterDelete
+    //@TODO: Put it inside the interface -> not possible in Apex
+    BeforeInsert, 
+    BeforeUpdate, 
+    BeforeDelete, 
+    AfterUndelete, 
+    AfterInsert, 
+    AfterUpdate, 
+    AfterDelete
 }

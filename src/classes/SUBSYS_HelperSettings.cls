@@ -1,12 +1,11 @@
-public with sharing class SUBSYS_HelperSettings {
+public with sharing class SUBSYS_HelperSettings implements TDTM_iTableDataGateway {
 
-	private static Map<String, SubsystemModule_Settings__c> SubsystemModuleSettings;
+    private static Map<String, SObject> classesToCallOnTriggers;
     
-	public static Map<String, SubsystemModule_Settings__c> getSubsystemModuleSettings(){    	
-    	if (SubsystemModuleSettings == null){
-    	   SubsystemModuleSettings = new Map<String, SubsystemModule_Settings__c>();
-    	   SubsystemModuleSettings = SubsystemModule_Settings__c.getAll();
-    	}
-    	return SubsystemModuleSettings;
+    public static Map<String, SObject> getClassesToCallOnTriggers() {
+        if (classesToCallOnTriggers == null){
+           classesToCallOnTriggers = SubsystemModule_Settings__c.getAll();
+        }
+        return classesToCallOnTriggers;
     }
 }

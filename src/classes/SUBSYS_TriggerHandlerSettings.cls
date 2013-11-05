@@ -1,23 +1,5 @@
 global with sharing class SUBSYS_TriggerHandlerSettings {
 
-    private List<Sobject> newlist;
-    private List<Sobject> oldlist; 
-    private SUBSYS_triggerAction thisAction;
-    private Schema.DescribeSobjectResult obj;
-    
-    public void initializeHandler(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
-    Boolean isDelete, Boolean isUnDelete, List<Sobject> newlistfromtrigger, List<Sobject>oldlistFromTrigger, 
-    Schema.DescribeSobjectResult describeobj) {
-        
-        newlist = newlistfromtrigger;
-        oldlist = oldlistfromtrigger;
-
-        thisAction = SUBSYS_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
-                                                                        isDelete, isUnDelete);
-
-        obj = describeobj;
-    }
-
     public void runModules() {
         List<SubmoduleWrapper> submoduleRunList = new List<SubmoduleWrapper>();
         //only add valid modules to the runlist
@@ -57,7 +39,7 @@ global with sharing class SUBSYS_TriggerHandlerSettings {
     }
     
     
-    public class SubmoduleWrapper implements Comparable {
+    /*public class SubmoduleWrapper implements Comparable {
 
         public SubsystemModule_Settings__c ssm;
         public SubmoduleWrapper(SubsystemModule_Settings__c s){ ssm = s; }
@@ -71,5 +53,5 @@ global with sharing class SUBSYS_TriggerHandlerSettings {
             else if (ssm.Load_Order__c < compareToSSM.ssm.Load_Order__c) return 1;
             return 0;       
         }
-    }
+    }*/
 }
