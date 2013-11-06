@@ -71,7 +71,11 @@ global with sharing class ACCT_IndividualAccounts{
                 }
             }
             
-            Map<Id,Account> existingAccounts = new Map<Id,Account>([select Id,npe01__One2OneContact__c from Account where Id IN :contactAccountIds]);
+            // DJH:CONSIDER to reduce number of soql calls, we could have a formula field on Contact to get at the Account's 1:1 contactId.
+            Map<Id,Account> existingAccounts = null;
+            if (ta==CAO_Constants.triggerAction.beforeInsert) {
+                existingAccounts = new Map<Id,Account>([select Id,npe01__One2OneContact__c from Account where Id IN :contactAccountIds]);
+            }
             
             Integer i = 0;
             //if this is after a delete
@@ -92,7 +96,7 @@ global with sharing class ACCT_IndividualAccounts{
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c!=null) || c.AccountId == null) && c.npe01__Private__c != true && CAO_Constants.isOneToOne())
+                        if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c !=null) || c.AccountId == null) && c.npe01__Private__c != true && CAO_Constants.isOneToOne())
                         {
                             if(c.AccountId != null && c.Account.npe01__One2OneContact__c != null){
                                 c.AccountId = null;

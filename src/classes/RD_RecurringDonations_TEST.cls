@@ -1489,7 +1489,7 @@ public class RD_RecurringDonations_TEST {
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------
     static testMethod void batchStatusBarTest(){
-        RD_JobProgress_CTRL controller = new RD_JobProgress_CTRL();
+        UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
         controller.getBatchJobs(); 
     }
 
