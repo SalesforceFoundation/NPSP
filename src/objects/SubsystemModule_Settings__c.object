@@ -11,7 +11,6 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates that this module is active</inlineHelpText>
         <label>Active</label>
-        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -21,7 +20,6 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates that this module should be run asynchronously in this transaction</inlineHelpText>
         <label>Asynchronous</label>
-        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -32,7 +30,6 @@
         <label>Class</label>
         <length>255</length>
         <required>false</required>
-        <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
@@ -45,7 +42,6 @@
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
-        <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
     </fields>
@@ -57,7 +53,6 @@
         <label>Object</label>
         <length>255</length>
         <required>false</required>
-        <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
@@ -68,7 +63,6 @@
         <inlineHelpText>Trigger Actions in which this module should fire (beforeinsert, etc.)</inlineHelpText>
         <label>Trigger Actions</label>
         <required>false</required>
-        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <label>Subsystem Module Settings</label>
