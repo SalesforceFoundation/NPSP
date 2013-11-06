@@ -7,20 +7,22 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         
         if(classesToCallOnTriggers != null) {
             //Find the classes to call
-            List<SubmoduleWrapper> classesToCallNow = getClassesToCall(classesToCallOnTriggers);
+            List<ClassToCallWrapper> classesToCallNow = getClassesToCall(classesToCallOnTriggers);
+            System.debug('****Classes to call: ' + classesToCallNow);
             
             //Sort the list of classes to call by fire-order
             classesToCallNow.sort();
+            System.debug('****Classes to call sorted: ' + classesToCallNow);
             
             //Run the relevant classes
-            for (SubmoduleWrapper wrapper : classesToCallNow) {
+            for (ClassToCallWrapper wrapper : classesToCallNow) {
                runClass(wrapper);            
             }    
         }     
     }
     
-    private List<SubmoduleWrapper> getClassesToCall(Map<String, SObject> modules) {
-        List<SubmoduleWrapper> submoduleRunList = new List<SubmoduleWrapper>();
+    private List<ClassToCallWrapper> getClassesToCall(Map<String, SObject> modules) {
+        List<ClassToCallWrapper> submoduleRunList = new List<ClassToCallWrapper>();
         
         for (String s : modules.keySet()){
             SObject classToCall = modules.get(s);
@@ -36,38 +38,45 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             if (classToCall != null && isActive == true 
             && obj != null && targetObject.equalsIgnoreCase(obj.getName())
             && action != null && thisAction != null 
-            && action.containsIgnoreCase(thisAction.name())){
-                submoduleRunList.add(new SubmoduleWrapper(classToCall));
+            && action.containsIgnoreCase(thisAction.name())) {
+            	System.debug('****Class ' + classToCall.get('Class__c') + ' will be called');
+                submoduleRunList.add(new ClassToCallWrapper(classToCall));
+            } else {
+            	System.debug('****Class ' + classToCall.get('Class__c') + ' will NOT be called');
             }
         }
         return submoduleRunList;    
     }
     
-    private void runClass(SubmoduleWrapper wrapper) {
+    private void runClass(ClassToCallWrapper wrapper) {
         //ceiroa: these two lines are important - here is where we read from the object and 
         //we instantiate the objects to be called (from data stored in the object)
         SObject classToCall = wrapper.classToCall;
-        System.debug('****Class to call: ' + classToCall);
+        System.debug('****About to run class ' + classToCall);
         if(classToCall != null) {
 	        String className =  String.valueOf(wrapper.classToCall.get('Class__c'));
+	        System.debug('****Name of class we are going to run: ' + className);
 	        Type classType = Type.forName(className);
-	        TDTM_Runnable ism = (TDTM_Runnable)classType.newInstance();
-	    
-	        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
-	        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
-	        if(!async) {
-	           system.debug('****Running Sync: ' + className);
-	           //ceiroa: the objects we create dynamically need to implement the iSubsystemModule
-	           //interface - @TODO: check that they actually do 
-	           ism.run(newlist, oldlist, thisAction, obj);
-	        } else if(async && action != 'BeforeInsert') {
-	           system.debug('****Running Async: ' + className);
-	           //@TODO: it can only run asynchronously (calling a future) if we have the ids of the
-	           //records we want to affect. This means we can only run it for after in insert
-	           //(either before or after is fine for update and delete)
-	           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
-	           Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
-	           ism.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
+	        System.debug('****Type of class we are going to run: ' + classType);
+	        if(classType != null) {
+		        TDTM_Runnable ism = (TDTM_Runnable)classType.newInstance();
+		    
+		        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
+		        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
+		        if(!async) {
+		           system.debug('****Running Sync: ' + className);
+		           //ceiroa: the objects we create dynamically need to implement the iSubsystemModule
+		           //interface - @TODO: check that they actually do 
+		           ism.run(newlist, oldlist, thisAction, obj);
+		        } else if(async && action != 'BeforeInsert') {
+		           system.debug('****Running Async: ' + className);
+		           //@TODO: it can only run asynchronously (calling a future) if we have the ids of the
+		           //records we want to affect. This means we can only run it for after in insert
+		           //(either before or after is fine for update and delete)
+		           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+		           Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
+		           ism.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
+		        }
 	        }
         } 
     }

@@ -3,11 +3,14 @@ after update, before delete, before insert, before update) {
 
     //@TODO: Right now we don't have anything for globally enabling or disabling triggers. Confirm!
     
-    //Use object
-    run(new TDTM_ObjectDataGateway());
-
-    //Use custom settings
-    run(new TDTM_SettingsDataGateway());
+    
+    if(Trigger.new[0].Name == 'ObjectTest') { //Use object
+        System.debug('****Using object');
+        run(new TDTM_ObjectDataGateway());
+    } else if(Trigger.new[0].Name == 'CustomSettingTest') { //Use custom settings
+        System.debug('****Using custom settings');
+        run(new TDTM_SettingsDataGateway());
+    }
     
     private void run(TDTM_iTableDataGateway dao) {
     	TDTM_TriggerHandler thSettings = new TDTM_TriggerHandler();

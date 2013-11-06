@@ -18,14 +18,17 @@ public with sharing abstract class TDTM_aTriggerHandler {
         obj = describeobj;
     }
     
-    public class SubmoduleWrapper implements Comparable {
+    public class ClassToCallWrapper implements Comparable {
 
         public final SObject classToCall;
-        public SubmoduleWrapper(SObject classToCall){ classToCall = classToCall; }
+        public ClassToCallWrapper(SObject classToCall){ 
+        	System.debug('****Class to call in wrapper constructor: ' + classToCall);
+        	this.classToCall = classToCall; 
+        }
     
         public Integer compareTo(Object compareTo) {
             // Cast argument to OpportunityWrapper
-            SubmoduleWrapper compareToSSM = (SubmoduleWrapper)compareTo;
+            ClassToCallWrapper compareToSSM = (ClassToCallWrapper)compareTo;
             
             Integer LoadOrderThis = Integer.valueOf(classToCall.get('Load_Order__c'));
             Integer LoadOrderThat = Integer.valueOf(compareToSSM.classToCall.get('Load_Order__c'));
@@ -33,7 +36,7 @@ public with sharing abstract class TDTM_aTriggerHandler {
             // The return value of 0 indicates that both elements are equal
             if (LoadOrderThis > LoadOrderThat) return -1;
             else if (LoadOrderThis < LoadOrderThat) return 1;
-            return 0;       
+            return 0;
         }
     }
 }
