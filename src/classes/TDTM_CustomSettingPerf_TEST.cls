@@ -4,15 +4,15 @@ public with sharing class TDTM_CustomSettingPerf_TEST {
     public static testmethod void beforeInsert() {
         //Define which classes (and in which order) should run when a change is made to
         //a record our test trigger is pointing to
-        List<SubsystemModule_Settings__c> ssms = new List<SubsystemModule_Settings__c>();
+        List<Trigger_Handler_Setting__c> ssms = new List<Trigger_Handler_Setting__c>();
         
         //This one is synchronous
-        ssms.add(new SubsystemModule_Settings__c(Name = 'Test1', Active__c = true, Asynchronous__c = false, 
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test1', Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
         
         //This one is asynchronous
-        ssms.add(new SubsystemModule_Settings__c(Name = 'Test2', Active__c = true, Asynchronous__c = true, 
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test2', Active__c = true, Asynchronous__c = true, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
 
@@ -33,15 +33,15 @@ public with sharing class TDTM_CustomSettingPerf_TEST {
     public static testmethod void beforeInsertEdgeCases() {
         //Define which classes (and in which order) should run when a change is made to
         //a record our test trigger is pointing to
-        List<SubsystemModule_Settings__c> ssms = new List<SubsystemModule_Settings__c>();
+        List<Trigger_Handler_Setting__c> ssms = new List<Trigger_Handler_Setting__c>();
               
         //This one points to a class that doesn't exist
-        ssms.add(new SubsystemModule_Settings__c(Name = 'Test3', Active__c = true, Asynchronous__c = false, 
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test3', Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_FakeRunnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
               
         //This one points to an object that doesn't exist
-        ssms.add(new SubsystemModule_Settings__c(Name = 'Test4', Active__c = true, Asynchronous__c = false, 
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test4', Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'FakeCampaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
         
