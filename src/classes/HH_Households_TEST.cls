@@ -403,6 +403,7 @@ public with sharing class HH_Households_TEST {
         system.assert(remainingHousehold.size()==1);
     }
 
+/************************************ Not Used ***************************************
     /// <name> getHouseholdTransactionTotal </name>
     /// <summary>  </summary>
     static testMethod void getHouseholdTransactionTotal_test()
@@ -451,6 +452,7 @@ public with sharing class HH_Households_TEST {
         insert ocr;
         system.assertEquals(String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(day),HH_Households.getHouseholdLastTransaction(h.id));
     }
+*****************************************/
     
 /**** deprecated in Cumulus
      /// visualforce and apex methods for totals

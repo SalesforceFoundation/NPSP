@@ -3,6 +3,11 @@
     <apiVersion>28.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
+        <minorNumber>91</minorNumber>
+        <namespace>npe01</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
         <minorNumber>93</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>

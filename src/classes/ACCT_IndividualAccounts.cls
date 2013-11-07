@@ -470,7 +470,8 @@ global with sharing class ACCT_IndividualAccounts {
             delete accountsForDeletion;
         }        
     }
-    
+
+/************************* DEPRECATE IN CUMULUS ***********************************    
     /// <name> getContactDonationHistory </name>
     /// <summary> Called by sControl to display total giving amount </summary>
     webservice static decimal getContactDonationHistory(Id contactId){
@@ -526,5 +527,7 @@ global with sharing class ACCT_IndividualAccounts {
             return '';
         }
     }
+************************* DEPRECATE IN CUMULUS ***********************************/
+    
 
 }

@@ -1021,6 +1021,7 @@ private class ACCT_IndividualAccounts_TEST {
     }
 */
 /* TESTING DONATION HISTORY WEBSERVICES ------------------------------------------------*/
+/************************* DEPRECATE IN CUMULUS ***********************************    
 
     /// <name> getContactDonationHistory </name>
     /// <summary> Test Method for getContactDonationHistory</summary>
@@ -1155,6 +1156,7 @@ private class ACCT_IndividualAccounts_TEST {
 
         //DJH:UNDONE system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getContactLastDonation());        
     }   
+************************* DEPRECATE IN CUMULUS ***********************************/    
      
     static testMethod void ghIssue16(){
         /* Set value of Account name to blank when first name is blank, not null */ 
