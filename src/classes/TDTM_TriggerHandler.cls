@@ -31,10 +31,11 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             String targetObject = String.valueOf(classToCall.get('Object__c'));
             
             System.debug('****Class active: ' + isActive);
+            System.debug('****Sync: ' + Boolean.valueOf(classToCall.get('Asynchronous__c')));
+            System.debug('****Target object: ' + obj.getName());
             System.debug('****Class trigger action: ' + action);
-            System.debug('****Object type name: ' + obj.getName());
-            System.debug('****Action: ' + thisAction.name());
-            
+            System.debug('****This Action: ' + thisAction.name());
+ 
             if (classToCall != null && isActive == true 
             && obj != null && targetObject.equalsIgnoreCase(obj.getName())
             && action != null && thisAction != null 
@@ -63,19 +64,23 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 		    
 		        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
 		        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
+		        //ceiroa: the objects we create dynamically need to implement the iSubsystemModule
+                //interface - @TODO: check that they actually do 
 		        if(!async) {
-		           system.debug('****Running Sync: ' + className);
-		           //ceiroa: the objects we create dynamically need to implement the iSubsystemModule
-		           //interface - @TODO: check that they actually do 
+		           System.debug('****Running Sync: ' + className);
 		           ism.run(newlist, oldlist, thisAction, obj);
 		        } else if(async && action != 'BeforeInsert') {
-		           system.debug('****Running Async: ' + className);
+		           System.debug('****Running Async: ' + className);
 		           //@TODO: it can only run asynchronously (calling a future) if we have the ids of the
 		           //records we want to affect. This means we can only run it for after in insert
 		           //(either before or after is fine for update and delete)
 		           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
 		           Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
 		           ism.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
+		        } else if(async && action == 'BeforeInsert') {
+		        	System.debug('****You cannot run the class aynchronously on beforeinsert');
+		        	System.debug('****Therefore we will run synchronously the following class: ' + className);
+		        	ism.run(newlist, oldlist, thisAction, obj);
 		        }
 	        }
         } 
