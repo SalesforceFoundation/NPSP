@@ -1,6 +1,8 @@
 public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 
-    public void runModules(TDTM_iTableDataGateway dao) {
+    public void runClasses(TDTM_iTableDataGateway dao) {
+        
+        TDTM_aTriggerHandler.DmlWrapper dmlWrapper = new TDTM_aTriggerHandler.DmlWrapper();
         
         //Get the classes to run from memory
         Map<String, SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers();
@@ -15,10 +17,22 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             System.debug('****Classes to call sorted: ' + classesToCallNow);
             
             //Run the relevant classes
-            for (ClassToCallWrapper wrapper : classesToCallNow) {
-               runClass(wrapper);            
+            for (ClassToCallWrapper classWrapper : classesToCallNow) {
+                TDTM_aTriggerHandler.DmlWrapper dmlWrapperLocal = runClass(classWrapper);
+                if(dmlWrapperLocal != null) {
+                	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
+                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
+                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
+                        dmlWrapper.objectsToUpdate.putAll(dmlWrapperLocal.objectsToUpdate);
+                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
+                        dmlWrapper.objectsToDelete.putAll(dmlWrapperLocal.objectsToDelete);
+                }          
             }    
-        }     
+        }  
+        
+        insert dmlWrapper.objectsToInsert;
+        update dmlWrapper.objectsToUpdate.values();
+        delete dmlWrapper.objectsToDelete.values();
     }
     
     private List<ClassToCallWrapper> getClassesToCall(Map<String, SObject> classesToCall) {
@@ -41,10 +55,13 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         return submoduleRunList;    
     }
     
-    private void runClass(ClassToCallWrapper wrapper) {
-        SObject classToCall = wrapper.classToCall;
+    private TDTM_aTriggerHandler.DmlWrapper runClass(ClassToCallWrapper classWrapper) {
+    	
+    	TDTM_aTriggerHandler.DmlWrapper dmlWrapper = new TDTM_aTriggerHandler.DmlWrapper();
+        SObject classToCall = classWrapper.classToCall;
+        
         if(classToCall != null) {
-	        String className =  String.valueOf(wrapper.classToCall.get('Class__c'));
+	        String className =  String.valueOf(classWrapper.classToCall.get('Class__c'));
 	        System.debug('****Name of class to run: ' + className);
 	        Type classType = Type.forName(className);
 	        
@@ -53,11 +70,11 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 	        	//The objects we create dynamically need to implement the TDTM_Runnable interface
 	        	if(classInstance instanceof TDTM_Runnable) {
 			        TDTM_Runnable ism = (TDTM_Runnable)classInstance;
-			        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
-			        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
+			        Boolean async = Boolean.valueOf(classWrapper.classToCall.get('Asynchronous__c'));
+			        String action = String.valueOf(classWrapper.classToCall.get('Trigger_Actions__c'));
 			        if(!async) {
 			           System.debug('****Running Sync: ' + className);
-			           ism.run(newlist, oldlist, thisAction, obj);
+			           return ism.run(newlist, oldlist, thisAction, obj);
 			        } else if(async && action != 'BeforeInsert') {
 			           System.debug('****Running Async: ' + className);       
 			           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
@@ -68,7 +85,7 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 			        } else if(async && action == 'BeforeInsert') {
 			        	System.debug('****You cannot run the class aynchronously on beforeinsert.');
 			        	System.debug('****We will run the following class synchronously: ' + className);
-			        	ism.run(newlist, oldlist, thisAction, obj);
+			        	return ism.run(newlist, oldlist, thisAction, obj);
 			        }
 	        	} else {
 	        		System.debug('****The class does not implement the required interface.');
@@ -79,5 +96,6 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         } else {
         	System.debug('****ClassToCall was null');
         }
+        return null;
     }
 }

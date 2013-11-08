@@ -1,8 +1,7 @@
 trigger CMP_Campaigns on Campaign (after delete, after insert, after undelete, 
 after update, before delete, before insert, before update) {
 
-    //@TODO: Right now we don't have anything for globally enabling or disabling triggers. Confirm!
-    
+    //@TODO: check if we have anything for globally enabling or disabling triggers.
     
     if(Trigger.new[0].Name == 'ObjectTest') { //Use object
         System.debug('****Using object');
@@ -17,6 +16,6 @@ after update, before delete, before insert, before update) {
 	    thSettings.initializeHandler(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate,
 	                                Trigger.isDelete, Trigger.isUnDelete, Trigger.new, Trigger.old, 
 	                                Schema.Sobjecttype.Campaign);
-	    thSettings.runModules(dao);
+	    thSettings.runClasses(dao);
     }
 }

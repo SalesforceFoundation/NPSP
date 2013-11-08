@@ -39,4 +39,10 @@ public with sharing abstract class TDTM_aTriggerHandler {
             return 0;
         }
     }
+    
+    public class DmlWrapper {
+        public List<SObject> objectsToInsert = new List<SObject>(); 
+        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
+        public Map<Id, SObject> objectsToDelete = new Map<Id, SObject>();
+    }
 }
