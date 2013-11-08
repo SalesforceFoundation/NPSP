@@ -1,10 +1,13 @@
 //This class just performs a small database change to check the TDTM design
+@isTest
 public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
     @future
     public static void runFuture(Set<Id> n, Set<Id> o, String ta, String obj) {
         String qn = 'select id from ' + obj + ' where id IN ';
         
+        //We are not really doing anything will all this. It's just a sample implementation
+        //of how the class to run can have access to the records afected by the trigger.
         List<sobject> newlist = Database.query(qn + ':n');
         List<sobject> oldlist = Database.query(qn + ':o'); 
         Schema.DescribeSObjectResult objResult;

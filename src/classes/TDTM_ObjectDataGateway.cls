@@ -11,7 +11,6 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
             System.debug('****Number of Trigger_Handler__c records found: ' + classesToCallOnTriggersList.size());
             Integer i = 0; //So that the map keys are different and they don't override each other
             for(Trigger_Handler__c subsys : classesToCallOnTriggersList) {
-                //@TODO: verify which key we should be using here 
                 classesToCallOnTriggers.put(subsys.Class__c + i, subsys);
                 i++;
             }

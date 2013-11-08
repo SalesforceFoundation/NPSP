@@ -29,12 +29,6 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             Boolean isActive = Boolean.valueOf(classToCall.get('Active__c'));
             String action = String.valueOf(classToCall.get('Trigger_Actions__c'));
             String targetObject = String.valueOf(classToCall.get('Object__c'));
-            
-            System.debug('****Class active: ' + isActive);
-            System.debug('****Sync: ' + Boolean.valueOf(classToCall.get('Asynchronous__c')));
-            System.debug('****Target object: ' + obj.getName());
-            System.debug('****Class trigger action: ' + action);
-            System.debug('****This Action: ' + thisAction.name());
  
             if (classToCall != null && isActive == true && obj != null && targetObject.equalsIgnoreCase(obj.getName())
             && action != null && thisAction != null && action.containsIgnoreCase(thisAction.name())) {
@@ -48,15 +42,12 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
     }
     
     private void runClass(ClassToCallWrapper wrapper) {
-        //ceiroa: these two lines are important - here is where we read from the object and 
-        //we instantiate the objects to be called (from data stored in the object)
         SObject classToCall = wrapper.classToCall;
-        System.debug('****About to run class ' + classToCall);
         if(classToCall != null) {
 	        String className =  String.valueOf(wrapper.classToCall.get('Class__c'));
-	        System.debug('****Name of class we are going to run: ' + className);
+	        System.debug('****Name of class to run: ' + className);
 	        Type classType = Type.forName(className);
-	        System.debug('****Type of class we are going to run: ' + classType);
+	        
 	        if(classType != null) {
 	        	Object classInstance = classType.newInstance();
 	        	//The objects we create dynamically need to implement the TDTM_Runnable interface
@@ -82,7 +73,11 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 	        	} else {
 	        		System.debug('****The class does not implement the required interface.');
 	        	}
+	        } else {
+	        	System.debug('****ClassType was null.');
 	        }
-        } 
+        } else {
+        	System.debug('****ClassToCall was null');
+        }
     }
 }

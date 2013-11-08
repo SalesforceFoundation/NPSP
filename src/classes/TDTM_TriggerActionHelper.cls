@@ -24,7 +24,6 @@ public with sharing class TDTM_TriggerActionHelper {
         }
     }
     
-    /** Static methods for triggers to invoke settings **/
     public static Action getTriggerActionFromName(String name){
         Action ta;
     
