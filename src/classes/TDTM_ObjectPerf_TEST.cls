@@ -39,7 +39,12 @@ public with sharing class TDTM_ObjectPerf_TEST {
         ssms.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_FakeRunnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
-              
+        
+        //This one points to a class that exists but does not implement the right interface
+        ssms.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'TDTM_ObjectDataGateway', Load_Order__c = 1, Object__c = 'Campaign', 
+              Trigger_Actions__c = 'BeforeInsert')); 
+                    
         //This one points to an object that doesn't exist
         ssms.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'FakeCampaign', 

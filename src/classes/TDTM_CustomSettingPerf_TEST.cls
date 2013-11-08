@@ -39,9 +39,14 @@ public with sharing class TDTM_CustomSettingPerf_TEST {
         ssms.add(new Trigger_Handler_Setting__c(Name = 'Test3', Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_FakeRunnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
+        
+        //This one points to a class that exists but does not implement the right interface
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test4', Active__c = true, Asynchronous__c = false, 
+              Class__c = 'TDTM_ObjectDataGateway', Load_Order__c = 1, Object__c = 'Campaign', 
+              Trigger_Actions__c = 'BeforeInsert')); 
               
         //This one points to an object that doesn't exist
-        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test4', Active__c = true, Asynchronous__c = false, 
+        ssms.add(new Trigger_Handler_Setting__c(Name = 'Test5', Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'FakeCampaign', 
               Trigger_Actions__c = 'BeforeInsert')); 
         

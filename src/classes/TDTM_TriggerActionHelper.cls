@@ -1,14 +1,13 @@
 public with sharing class TDTM_TriggerActionHelper {
 
-    public enum Action {
-        
+    public enum Action {   
         BeforeInsert, 
         BeforeUpdate, 
         BeforeDelete, 
-        AfterUndelete, 
         AfterInsert, 
         AfterUpdate, 
-        AfterDelete
+        AfterDelete,
+        AfterUndelete
     }
     
     public static Action determineTriggerAction(Boolean isBefore, Boolean isAfter, Boolean isInsert,

@@ -21,11 +21,11 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         }     
     }
     
-    private List<ClassToCallWrapper> getClassesToCall(Map<String, SObject> modules) {
+    private List<ClassToCallWrapper> getClassesToCall(Map<String, SObject> classesToCall) {
         List<ClassToCallWrapper> submoduleRunList = new List<ClassToCallWrapper>();
         
-        for (String s : modules.keySet()){
-            SObject classToCall = modules.get(s);
+        for (String s : classesToCall.keySet()){
+            SObject classToCall = classesToCall.get(s);
             Boolean isActive = Boolean.valueOf(classToCall.get('Active__c'));
             String action = String.valueOf(classToCall.get('Trigger_Actions__c'));
             String targetObject = String.valueOf(classToCall.get('Object__c'));
@@ -36,10 +36,8 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             System.debug('****Class trigger action: ' + action);
             System.debug('****This Action: ' + thisAction.name());
  
-            if (classToCall != null && isActive == true 
-            && obj != null && targetObject.equalsIgnoreCase(obj.getName())
-            && action != null && thisAction != null 
-            && action.containsIgnoreCase(thisAction.name())) {
+            if (classToCall != null && isActive == true && obj != null && targetObject.equalsIgnoreCase(obj.getName())
+            && action != null && thisAction != null && action.containsIgnoreCase(thisAction.name())) {
             	System.debug('****Class ' + classToCall.get('Class__c') + ' will be called');
                 submoduleRunList.add(new ClassToCallWrapper(classToCall));
             } else {
@@ -60,28 +58,30 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
 	        Type classType = Type.forName(className);
 	        System.debug('****Type of class we are going to run: ' + classType);
 	        if(classType != null) {
-		        TDTM_Runnable ism = (TDTM_Runnable)classType.newInstance();
-		    
-		        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
-		        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
-		        //ceiroa: the objects we create dynamically need to implement the iSubsystemModule
-                //interface - @TODO: check that they actually do 
-		        if(!async) {
-		           System.debug('****Running Sync: ' + className);
-		           ism.run(newlist, oldlist, thisAction, obj);
-		        } else if(async && action != 'BeforeInsert') {
-		           System.debug('****Running Async: ' + className);
-		           //@TODO: it can only run asynchronously (calling a future) if we have the ids of the
-		           //records we want to affect. This means we can only run it for after in insert
-		           //(either before or after is fine for update and delete)
-		           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
-		           Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
-		           ism.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
-		        } else if(async && action == 'BeforeInsert') {
-		        	System.debug('****You cannot run the class aynchronously on beforeinsert');
-		        	System.debug('****Therefore we will run synchronously the following class: ' + className);
-		        	ism.run(newlist, oldlist, thisAction, obj);
-		        }
+	        	Object classInstance = classType.newInstance();
+	        	//The objects we create dynamically need to implement the TDTM_Runnable interface
+	        	if(classInstance instanceof TDTM_Runnable) {
+			        TDTM_Runnable ism = (TDTM_Runnable)classInstance;
+			        Boolean async = Boolean.valueOf(wrapper.classToCall.get('Asynchronous__c'));
+			        String action = String.valueOf(wrapper.classToCall.get('Trigger_Actions__c'));
+			        if(!async) {
+			           System.debug('****Running Sync: ' + className);
+			           ism.run(newlist, oldlist, thisAction, obj);
+			        } else if(async && action != 'BeforeInsert') {
+			           System.debug('****Running Async: ' + className);       
+			           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+			           Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
+			           ism.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
+			        //A class can only run asynchronously (calling a future) if we have the ids of the
+                    //records we want to affect. This means we can only run it for after in insert
+			        } else if(async && action == 'BeforeInsert') {
+			        	System.debug('****You cannot run the class aynchronously on beforeinsert.');
+			        	System.debug('****We will run the following class synchronously: ' + className);
+			        	ism.run(newlist, oldlist, thisAction, obj);
+			        }
+	        	} else {
+	        		System.debug('****The class does not implement the required interface.');
+	        	}
 	        }
         } 
     }
