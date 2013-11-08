@@ -1,8 +1,26 @@
-public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
+public with sharing class TDTM_TriggerHandler {
 
+    protected List<Sobject> newlist;
+    protected List<Sobject> oldlist; 
+    protected TDTM_TriggerActionHelper.Action thisAction;
+    protected Schema.DescribeSobjectResult obj;
+    
+    public void initializeHandler(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
+    Boolean isDelete, Boolean isUnDelete, List<Sobject> newlistfromtrigger, List<Sobject>oldlistFromTrigger, 
+    Schema.DescribeSobjectResult describeobj) {
+        
+        newlist = newlistfromtrigger;
+        oldlist = oldlistfromtrigger;
+
+        thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
+                                                                        isDelete, isUnDelete);
+
+        obj = describeobj;
+    }
+    
     public void runClasses(TDTM_iTableDataGateway dao) {
         
-        TDTM_aTriggerHandler.DmlWrapper dmlWrapper = new TDTM_aTriggerHandler.DmlWrapper();
+        DmlWrapper dmlWrapper = new DmlWrapper();
         
         //Get the classes to run from memory
         Map<String, SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers();
@@ -18,7 +36,7 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
             
             //Run the relevant classes
             for (ClassToCallWrapper classWrapper : classesToCallNow) {
-                TDTM_aTriggerHandler.DmlWrapper dmlWrapperLocal = runClass(classWrapper);
+                DmlWrapper dmlWrapperLocal = runClass(classWrapper);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -55,9 +73,9 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         return submoduleRunList;    
     }
     
-    private TDTM_aTriggerHandler.DmlWrapper runClass(ClassToCallWrapper classWrapper) {
+    private DmlWrapper runClass(ClassToCallWrapper classWrapper) {
     	
-    	TDTM_aTriggerHandler.DmlWrapper dmlWrapper = new TDTM_aTriggerHandler.DmlWrapper();
+    	DmlWrapper dmlWrapper = new DmlWrapper();
         SObject classToCall = classWrapper.classToCall;
         
         if(classToCall != null) {
@@ -97,5 +115,33 @@ public with sharing class TDTM_TriggerHandler extends TDTM_aTriggerHandler {
         	System.debug('****ClassToCall was null');
         }
         return null;
+    }
+    
+    public class ClassToCallWrapper implements Comparable {
+
+        public final SObject classToCall;
+        public ClassToCallWrapper(SObject classToCall){ 
+            System.debug('****Class to call in wrapper constructor: ' + classToCall);
+            this.classToCall = classToCall; 
+        }
+    
+        public Integer compareTo(Object compareTo) {
+            // Cast argument to OpportunityWrapper
+            ClassToCallWrapper compareToSSM = (ClassToCallWrapper)compareTo;
+            
+            Integer LoadOrderThis = Integer.valueOf(classToCall.get('Load_Order__c'));
+            Integer LoadOrderThat = Integer.valueOf(compareToSSM.classToCall.get('Load_Order__c'));
+                        
+            // The return value of 0 indicates that both elements are equal
+            if (LoadOrderThis > LoadOrderThat) return -1;
+            else if (LoadOrderThis < LoadOrderThat) return 1;
+            return 0;
+        }
+    }
+    
+    public class DmlWrapper {
+        public List<SObject> objectsToInsert = new List<SObject>(); 
+        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
+        public Map<Id, SObject> objectsToDelete = new Map<Id, SObject>();
     }
 }

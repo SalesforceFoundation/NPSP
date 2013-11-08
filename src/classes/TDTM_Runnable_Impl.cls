@@ -20,16 +20,16 @@ public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
         TDTM_TriggerActionHelper.Action t = TDTM_TriggerActionHelper.getTriggerActionFromName(ta);
         TDTM_Runnable sampleImpl = new TDTM_Runnable_Impl();
-        TDTM_aTriggerHandler.DmlWrapper dmlWrapper = sampleImpl.run(newlist, oldlist, t, objResult);
+        TDTM_TriggerHandler.DmlWrapper dmlWrapper = sampleImpl.run(newlist, oldlist, t, objResult);
         insert dmlWrapper.objectsToInsert;
         update dmlWrapper.objectsToUpdate.values();
         delete dmlWrapper.objectsToDelete.values();
     }
 
-    public TDTM_aTriggerHandler.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
+    public TDTM_TriggerHandler.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
     TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
         
-        TDTM_aTriggerHandler.DmlWrapper dmlWrapper = new TDTM_aTriggerHandler.DmlWrapper(); 
+        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper(); 
         dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
                             LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS));
         return dmlWrapper;
