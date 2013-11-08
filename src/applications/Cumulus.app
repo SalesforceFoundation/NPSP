@@ -19,4 +19,5 @@
     <tab>Payment_Mapping</tab>
     <tab>Household_Settings</tab>
     <tab>Opportunity_Rollup</tab>
+    <tab>Trigger_Handler__c</tab>
 </CustomApplication>
