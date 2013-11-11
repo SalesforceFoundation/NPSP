@@ -4,24 +4,21 @@ public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
     public TDTM_TriggerHandler.DmlWrapper runMain(List<Sobject> newlist, List<Sobject> oldlist, 
     TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
-        
-        return insertContact();
+        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper();
+        for(Integer i = 0; i < newlist.size(); i++) {
+        	dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+                                                        LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + i));
+        }
+        return dmlWrapper;
     }
     
     public TDTM_TriggerHandler.DmlWrapper runInProgress(List<Sobject> newlist, List<Sobject> oldlist, 
     TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
-
-        List<Contact> contacts = [select Id from Contact where FirstName = :CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS];
-    	if(contacts.size() > 0)
-    	   return null;
-    	else
-    	   return insertContact();
-    }
-    
-    private TDTM_TriggerHandler.DmlWrapper insertContact() {
-    	TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper(); 
-        dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS));
+        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper();
+        for(Integer i = 0; i < newlist.size(); i++) {
+            dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+                                                        LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + i));
+        }
         return dmlWrapper;
     }
     

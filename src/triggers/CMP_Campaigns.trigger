@@ -3,10 +3,10 @@ after update, before delete, before insert, before update) {
 
     //@TODO: check if we have anything for globally enabling or disabling triggers.
     
-    if(Trigger.new[0].Name == 'ObjectTest') { //Use object
+    if(Trigger.new[0].Name.startsWith('ObjectTest')) { //Use object
         System.debug('****Using object');
         run(new TDTM_ObjectDataGateway());
-    } else if(Trigger.new[0].Name == 'CustomSettingTest') { //Use custom settings
+    } else if(Trigger.new[0].Name.startsWith('CustomSettingTest')) { //Use custom settings
         System.debug('****Using custom settings');
         run(new TDTM_SettingsDataGateway());
     }
