@@ -40,13 +40,18 @@ trigger ACCT_IndividualAccounts on Contact (before insert, before update, after 
         }
         if( Trigger.isAfter && Trigger.isInsert ){
             //requery to get correct Account values
-            Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
+            Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
+                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
             
             ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(newContacts, Trigger.old, CAO_Constants.triggerAction.afterInsert);
         }
         if( Trigger.isAfter && Trigger.isUpdate ){
            //requery to get correct Account values
-           Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,npe01__Organization_Type__c,Account.Name,firstname, lastname,MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Phone, Fax from Contact where Id IN :trigger.New];
+           Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
+                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname,
+                Salutation, npo02__Naming_Exclusions__c,
+                MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
+                Phone, Fax from Contact where Id IN :trigger.New];
         
             ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(newContacts, Trigger.old, CAO_Constants.triggerAction.afterUpdate);
         }
