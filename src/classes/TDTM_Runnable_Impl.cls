@@ -2,6 +2,25 @@
 @isTest
 public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
+    public TDTM_TriggerHandler.DmlWrapper runMain(List<Sobject> newlist, List<Sobject> oldlist, 
+    TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
+        
+        return doSomething();
+    }
+    
+    public TDTM_TriggerHandler.DmlWrapper runInProgress(List<Sobject> newlist, List<Sobject> oldlist, 
+    TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
+
+    	return doSomething();
+    }
+    
+    private TDTM_TriggerHandler.DmlWrapper doSomething() {
+    	TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper(); 
+        dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS));
+        return dmlWrapper;
+    }
+    
     @future
     public static void runFuture(Set<Id> n, Set<Id> o, String ta, String obj) {
         String qn = 'select id from ' + obj + ' where id IN ';
@@ -20,18 +39,9 @@ public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
 
         TDTM_TriggerActionHelper.Action t = TDTM_TriggerActionHelper.getTriggerActionFromName(ta);
         TDTM_Runnable sampleImpl = new TDTM_Runnable_Impl();
-        TDTM_TriggerHandler.DmlWrapper dmlWrapper = sampleImpl.run(newlist, oldlist, t, objResult);
+        TDTM_TriggerHandler.DmlWrapper dmlWrapper = sampleImpl.runMain(newlist, oldlist, t, objResult);
         insert dmlWrapper.objectsToInsert;
         update dmlWrapper.objectsToUpdate.values();
         delete dmlWrapper.objectsToDelete.values();
-    }
-
-    public TDTM_TriggerHandler.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
-    TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
-        
-        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper(); 
-        dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS));
-        return dmlWrapper;
     }
 }
