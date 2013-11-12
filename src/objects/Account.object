@@ -514,6 +514,26 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>npo02__Formal_Greeting__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>For Household Accounts, uses fields of non-excluded, ordered related Contacts. Generated automatically.</inlineHelpText>
+        <label>Formal Greeting</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>npo02__Informal_Greeting__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>For Household Accounts, uses fields of non-excluded, ordered related Contacts. Generated automatically.</inlineHelpText>
+        <label>Informal Greeting</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>npo02__LargestAmount__c</fullName>
         <defaultValue>0</defaultValue>
         <deprecated>false</deprecated>
@@ -751,6 +771,31 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>npo02__SYSTEM_CUSTOM_NAMING__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>For Household Accounts, specifies which name related fields should not be automatically populated by the Householding code.</inlineHelpText>
+        <label>_SYSTEM: CUSTOM NAMING</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Formal_Greeting__c</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Informal_Greeting__c</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>npo02__SmallestAmount__c</fullName>
