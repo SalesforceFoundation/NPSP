@@ -46,7 +46,7 @@ private class LD_LeadConvertOverride_TEST {
         String companyName = 'Individual';
         
         companyName = 'Self';           
-        String leadFirstName = '';
+        String leadFirstName = 'Leady';
         String leadLastName = 'lead for tests_987';
         Lead l = new Lead();
         l.FirstName = leadFirstName;
@@ -78,12 +78,13 @@ private class LD_LeadConvertOverride_TEST {
         ext.convertOneToOne();
         
         if (CAO_Constants.isOneToOne()){                
-            Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c from Contact where lastname = :leadLastName];
+            Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
             //one contact should have been created
             system.assertEquals(1,convertedContacts.size());
             //the account for this contact should be an individual account, no matter the model
             system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
             String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+            system.assertEquals(accountName, convertedContacts[0].Account.Name);
             
             List<Account> createdAccount2 = [select id from Account where name = :accountName];
             system.assertEquals(1,createdAccount2.size());
