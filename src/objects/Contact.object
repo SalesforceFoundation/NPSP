@@ -174,7 +174,7 @@
     <fields>
         <fullName>HHId__c</fullName>
         <externalId>false</externalId>
-        <formula>if ( Account.npe01__SYSTEM_AccountType__c ==&apos;HH Account&apos;,  AccountId,  npo02__Household__c )</formula>
+        <formula>CASESAFEID(if ( Account.npe01__SYSTEM_AccountType__c ==&apos;HH Account&apos;,  AccountId,  npo02__Household__c ))</formula>
         <label>HHId</label>
         <required>false</required>
         <type>Text</type>
@@ -554,7 +554,13 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__Formula_HouseholdMailingAddress__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__Formula_MailingAddress__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;,
+
+Account.BillingStreet &amp; BR() &amp;
+Account.BillingCity &amp; IF(LEN(Account.BillingCity) &gt; 0, &quot;, &quot;, &quot;&quot;) &amp; Account.BillingState &amp; &quot; &quot; &amp; Account.BillingPostalCode 
+&amp; if (LEN(Account.BillingCountry)&gt;0,BR()&amp; Account.BillingCountry,&quot;&quot;) ,
+
+npo02__Household__r.npo02__Formula_MailingAddress__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Formula: Clone of the Household Mailing address (also a Formula)</inlineHelpText>
         <label>Household Mailing Address</label>
@@ -566,7 +572,9 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__Formula_HouseholdPhone__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__HouseholdPhone__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;, 
+Account.npo02__HouseholdPhone__c,
+npo02__Household__r.npo02__HouseholdPhone__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Formula: Simple formula of Household Phone field.</inlineHelpText>
         <label>Household Phone</label>
@@ -629,7 +637,9 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__LastCloseDateHH__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__LastCloseDate__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;, 
+Account.npo02__LastCloseDate__c,
+npo02__Household__r.npo02__LastCloseDate__c)</formula>
         <inlineHelpText>Formula: Last Close Date field of the related Household.</inlineHelpText>
         <label>Last Household Gift Date</label>
         <required>false</required>
@@ -832,7 +842,9 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__OppAmountLastYearHH__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__OppAmountLastYear__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;, 
+Account.npo02__OppAmountLastYear__c,
+npo02__Household__r.npo02__OppAmountLastYear__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Formula:  Total Gifts Last Year on related Household.</inlineHelpText>
         <label>Total Household Gifts Last Year</label>
@@ -858,7 +870,9 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__OppAmountThisYearHH__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__OppAmountThisYear__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;, 
+Account.npo02__OppAmountThisYear__c,
+npo02__Household__r.npo02__OppAmountThisYear__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Formula:  Total Gifts This Year on related Household.</inlineHelpText>
         <label>Total Household Gifts This Year</label>
@@ -1000,10 +1014,10 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
     <fields>
         <fullName>npo02__SystemHouseholdProcessor__c</fullName>
         <deprecated>false</deprecated>
-        <description>Used to set if Households should get created for all Contacts, or just those which are connected to an individual account</description>
+        <description>Used to set if Households should get created for all Contacts, or just those which are connected to an individual account.  Deprecated; replaced by HouseholdsSettings npo02__Household_Rules__c</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates if Household should be created and updated for this Contact (all Contacts or just Individual Account Contacts)</inlineHelpText>
-        <label>_SYSTEM: HOUSEHOLD PROCESSOR</label>
+        <label>_SYSTEM: HOUSEHOLD PROCESSOR-DEPRECATED</label>
         <picklist>
             <picklistValues>
                 <fullName>All Individual Contacts</fullName>
@@ -1052,7 +1066,9 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <fullName>npo02__Total_Household_Gifts__c</fullName>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <formula>npo02__Household__r.npo02__TotalOppAmount__c</formula>
+        <formula>IF(npe01__Organization_Type__c == &apos;HH Account&apos;, 
+Account.npo02__TotalOppAmount__c,
+npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <inlineHelpText>Formula:  Total Gifts on related Household.</inlineHelpText>
         <label>Total Household Gifts</label>
