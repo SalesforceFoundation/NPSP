@@ -544,12 +544,12 @@ global with sharing class ACCT_IndividualAccounts {
     }
 
     // the default name for a new HH Account
-    private static String strNameHHAccountForContact(Contact con) {
+    public static String strNameHHAccountForContact(Contact con) {
         return con.LastName + ' ' + system.label.npo02.DefaultHouseholdName;
     }
 
     // the default name for a new 1:1 Account
-    private static String strNameOne2OneAccountForContact(Contact con) {
+    public static String strNameOne2OneAccountForContact(Contact con) {
         String str = '';
         
         if (con.FirstName != null) {
