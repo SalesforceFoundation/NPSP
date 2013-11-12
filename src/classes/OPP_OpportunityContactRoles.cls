@@ -154,7 +154,6 @@ public without sharing class OPP_OpportunityContactRoles {
         //loop through opps again and then put the right accountid on the opp
         for(Opportunity o : oppList){
             //add the contact id from the Account. if it's not valid it won't error
-            // DJH:UNDONE HH Accounts don't set account.npe01__One2OneContact__c.  Since no explicit primary contact, ok to not create a cr?
             if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){ 
                 o.npe01__Contact_Id_for_role__c = primaryAccounts.get(o.AccountId).npe01__One2OneContact__c;
             }
