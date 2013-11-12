@@ -180,29 +180,30 @@ global with sharing class ACCT_IndividualAccounts {
                         /*if the contact is in the one-to-one model, changes to fields on the Contact
                         will require data changes on the Account to keep some fields in sync
                         */
-                        if (CAO_Constants.isOneToOne() && c.npe01__Organization_Type__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                            if (needsOne2OneAccountUpdate(c, oldContacts[i])) {
-                                individualUpdates.add(c);                            	
-                            }
-                            // DJH:UNDONE this code doesn't potentially deleting the old account if orphaned.
+                        if (c.npe01__Organization_Type__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && needsOne2OneAccountUpdate(c, oldContacts[i])) {
+                            individualUpdates.add(c);                            	
                         }
                         
                         // detect changes needed for HH Accounts
-                        if (CAO_Constants.isHHAccountModel()) {
-                        	
-                        	// if the account has changed
-                        	if (c.AccountId != oldContacts[i].AccountId) {
-                                // need to update any HH Accounts
-                                if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)
-                                    listAccountIdHHToUpdate.add(c.AccountId);
-                                if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)    
-                                    listAccountIdHHToUpdate.add(oldContacts[i].AccountId);
-                                                       		
-                        	} else if (needsHHAccountRename(c, oldContacts[i])) {
-                        	   listAccountIdHHToRename.add(c.AccountId);	
-                        	}
-                            
+                        
+                        // handle address changes
+                        if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountAddressUpdate(c, oldContacts[i])) {
+                            individualUpdates.add(c);                               
                         }
+                        
+                    	// if the account has changed
+                    	if (c.AccountId != oldContacts[i].AccountId) {
+                            // need to update any HH Accounts, both rollups and naming
+                            if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                                listAccountIdHHToUpdate.add(c.AccountId);
+                            if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)    
+                                listAccountIdHHToUpdate.add(oldContacts[i].AccountId);
+                                                   		
+                    	} else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
+                    	   listAccountIdHHToRename.add(c.AccountId);	
+                    	}
+                    	
+                    	// DJH:UNDONE none of this code deals with deleting orphaned accounts (1:1 and HH).
                     }
                     i += 1;
                 }
@@ -265,7 +266,7 @@ global with sharing class ACCT_IndividualAccounts {
                 con.Account.npe01__One2OneContact__c != con.Id) {
                     // the account needs its name updated
                     listAccountIdHHRename.add(con.AccountId);
-                }
+            }
         }
         
         renameHHAccountsFuture(listAccountIdHHRename);
@@ -274,9 +275,13 @@ global with sharing class ACCT_IndividualAccounts {
     /// <name> renameHHAccountsFuture </name>
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
-    @future
     static private void renameHHAccountsFuture(ID[] listAccountId) {
-        // DJH:UNDONE
+    	if (listAccountId.size() == 1) {
+    	    HH_HouseholdNaming hhName = new HH_HouseholdNaming();
+            hhName.UpdateNames(listAccountId);
+    	} else {
+            HH_HouseholdNaming.FutureUpdateNames(listAccountId);
+    	}
     }
 
     /// <name> attachToBucketAccount </name>
@@ -414,7 +419,7 @@ global with sharing class ACCT_IndividualAccounts {
             accConMap.put(c.AccountId, c);
         }
         //get the corresponding Accounts
-        List<Account> accts = [Select a.name,a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
+        List<Account> accts = [Select a.npe01__SYSTEM_AccountType__c, a.name, a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
 	        a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
 	        From Account a where a.Id IN :accConMap.keyset()];
         List<Account> accountUpdates = new List<Account>();
@@ -450,8 +455,10 @@ global with sharing class ACCT_IndividualAccounts {
                 a.ShippingCity = c.OtherCity;
                 a.ShippingState = c.OtherState;
                 a.ShippingPostalCode = c.OtherPostalCode;
-                a.ShippingCountry = c.OtherCountry;                
-                a.Name = strNameOne2OneAccountForContact(c);
+                a.ShippingCountry = c.OtherCountry;  
+                if (a.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)               
+                    a.Name = strNameOne2OneAccountForContact(c);
+                // HH Account naming updates handled seperately to deal with asyncronous naming
 
                 accountUpdates.add(a);
             }           
@@ -520,7 +527,21 @@ global with sharing class ACCT_IndividualAccounts {
                 conNew.Lastname != conOld.Lastname ||
                 conNew.Salutation != conOld.Salutation ||
                 conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c);
-    }    
+    }   
+    
+    // returns whether changes in the contact require an address change in the HH Account
+    private boolean needsHHAccountAddressUpdate(Contact conNew, Contact conOld) {
+       return ( conNew.MailingStreet != conOld.MailingStreet ||
+                conNew.MailingCity != conOld.MailingCity ||
+                conNew.MailingState != conOld.MailingState ||
+                conNew.MailingPostalCode != conOld.MailingPostalCode ||
+                conNew.MailingCountry != conOld.MailingCountry ||
+                conNew.OtherStreet != conOld.OtherStreet ||
+                conNew.OtherCity != conOld.OtherCity ||
+                conNew.OtherState != conOld.OtherState ||
+                conNew.OtherPostalCode != conOld.OtherPostalCode ||
+                conNew.OtherCountry != conOld.OtherCountry);
+    }
 
     // the default name for a new HH Account
     private static String strNameHHAccountForContact(Contact con) {
