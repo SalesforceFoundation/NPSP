@@ -1,4 +1,7 @@
 public interface TDTM_iTableDataGateway {
 
-    Map<String, SObject> getClassesToCallOnTriggers();
+    /**
+     * The list returned is already sorted by load order.
+     **/ 
+     List<SObject> getClassesToCallOnTriggers(String objectName, TDTM_TriggerActionHelper.Action action);
 }

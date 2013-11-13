@@ -27,7 +27,7 @@ public with sharing class TDTM_Runnable_Impl implements TDTM_Runnable {
         String qn = 'select id from ' + obj + ' where id IN ';
         
         //We are not really doing anything will all this. It's just a sample implementation
-        //of how the class to run can have access to the records afected by the trigger.
+        //of how the class to run can have access to the records affected by the trigger.
         List<sobject> newlist = Database.query(qn + ':n');
         List<sobject> oldlist = Database.query(qn + ':o'); 
         Schema.DescribeSObjectResult objResult;

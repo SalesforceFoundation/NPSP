@@ -91,11 +91,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Trigger_Actions__c</fullName>
-        <description>Trigger Actions in which this module should fire</description>
+        <fullName>Trigger_Action__c</fullName>
+        <description>Trigger Action in which this module should fire</description>
         <externalId>false</externalId>
-        <inlineHelpText>Trigger Actions in which this module should fire</inlineHelpText>
-        <label>Trigger Actions</label>
+        <inlineHelpText>Trigger Action in which this module should fire</inlineHelpText>
+        <label>Trigger Action</label>
         <picklist>
             <picklistValues>
                 <fullName>BeforeInsert</fullName>

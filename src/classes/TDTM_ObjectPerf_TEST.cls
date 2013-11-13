@@ -9,12 +9,12 @@ public with sharing class TDTM_ObjectPerf_TEST {
         //This one is synchronous
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
-              Trigger_Actions__c = 'BeforeInsert')); 
+              Trigger_Action__c = 'BeforeInsert')); 
         
         //This one is asynchronous
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = true, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
-              Trigger_Actions__c = 'BeforeInsert')); 
+              Trigger_Action__c = 'BeforeInsert')); 
         
         insert handlers;
         
@@ -38,17 +38,17 @@ public with sharing class TDTM_ObjectPerf_TEST {
         //This one points to a class that doesn't exist
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_FakeRunnable_Impl', Load_Order__c = 1, Object__c = 'Campaign', 
-              Trigger_Actions__c = 'BeforeInsert')); 
+              Trigger_Action__c = 'BeforeInsert')); 
         
         //This one points to a class that exists but does not implement the right interface
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_ObjectDataGateway', Load_Order__c = 1, Object__c = 'Campaign', 
-              Trigger_Actions__c = 'BeforeInsert')); 
+              Trigger_Action__c = 'BeforeInsert')); 
                     
         //This one points to an object that doesn't exist
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'TDTM_Runnable_Impl', Load_Order__c = 1, Object__c = 'FakeCampaign', 
-              Trigger_Actions__c = 'BeforeInsert')); 
+              Trigger_Action__c = 'BeforeInsert')); 
         
         insert handlers;
         
