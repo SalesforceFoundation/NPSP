@@ -17,7 +17,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Trigger_Actions__c</field>
+                <field>Trigger_Action__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
