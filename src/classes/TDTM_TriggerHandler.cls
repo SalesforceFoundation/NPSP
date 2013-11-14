@@ -66,7 +66,7 @@ public with sharing class TDTM_TriggerHandler {
 			        			        
 			        if(!async) {
                         System.debug('****Running Sync: ' + classToRunName); 
-                        return runSync(classToRun, classToRunName);
+                        return classToRun.run(newlist, oldlist, thisAction, obj);
 			             
 			        } else if(async && action != 'BeforeInsert') {
 			        	System.debug('****Running Async: ' + classToRunName);
@@ -77,7 +77,7 @@ public with sharing class TDTM_TriggerHandler {
 			        } else if(async && action == 'BeforeInsert') {
 			        	System.debug('****Cannot run the class aynchronously on beforeinsert.');
 			        	System.debug('********Running Sync: ' + classToRunName);
-			        	return runSync(classToRun, classToRunName);
+			        	return classToRun.run(newlist, oldlist, thisAction, obj);
 			        }
 	        	} else {
 	        		System.debug('****The class does not implement the required interface.');
@@ -89,18 +89,6 @@ public with sharing class TDTM_TriggerHandler {
         	System.debug('****ClassToCall was null');
         }
         return null;
-    }
-    
-    private static TDTM_TriggerHandler.DmlWrapper runSync(TDTM_Runnable classToRun, String classToRunName) {
-    	System.debug('****Class to run name: ' + classToRun);
-        if(classToRunName != activeClassName) {
-            System.debug('****Class ' + classToRun + ' was not running');
-            activeClassName = classToRunName;
-            return classToRun.runMain(newlist, oldlist, thisAction, obj);
-        } else {
-            System.debug('****Class ' + classToRun + ' already running');
-            return classToRun.runInProgress(newlist, oldlist, thisAction, obj);
-        }
     }
     
     private static void runAsync(TDTM_Runnable classToRun, String classToRunName) {       
