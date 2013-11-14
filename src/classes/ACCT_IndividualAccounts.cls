@@ -32,7 +32,7 @@
 * @date 2011 (1.x)
 * @description Implements one of three account models, 1x1 or bucket or HH - controls syncing within the model 
 */
-global with sharing class ACCT_IndividualAccounts {
+public with sharing class ACCT_IndividualAccounts {
     
     /// <name> IndividualAccounts </name>
     /// <summary> Default Constructor </summary>
@@ -59,36 +59,39 @@ global with sharing class ACCT_IndividualAccounts {
         ContactsSettings = CAO_Constants.getContactsSettings();
             
         if (!ContactsSettings.npe01__Disable_Account_Model_Trigger__c) {
-            List<Contact> individualInserts = new List<Contact>();
-            List<Contact> individualUpdates = new List<Contact>();
-            List<Contact> contactDeletes = new List<Contact>();
-            List<Contact> bucketContacts = new List<Contact>();
-            Set<Id> contactAccountIds = new Set<Id>();
-            Map<Id,Id> accountUpdates = new Map<Id,Id>();
+            List<Contact> listContactNeedAccount = new List<Contact>();
+            List<Contact> listContactNeedAccountUpdate = new List<Contact>();
+            List<Contact> listContactAccountDelete = new List<Contact>();
+            List<Contact> listContactNeedBucketAccount = new List<Contact>();
+            Map<Id,Id> mapAccountIdContactId = new Map<Id,Id>();
             list<Id> listAccountIdHHToUpdate = new list<Id>();
             list<Id> listAccountIdHHToRename = new list<Id>();
+            Map<Id,Account> mapContactIdAccount = null;
             
-            if (contacts != null) {
-                for (Contact mycontact : contacts) {
-                    contactAccountIds.add(mycontact.AccountId);
-                }
-            }
             
-            // DJH:CONSIDER to reduce number of soql calls, we could have a formula field on Contact to get at the Account's 1:1 contactId.
-            Map<Id,Account> existingAccounts = null;
-            if (ta == CAO_Constants.triggerAction.beforeInsert) {
-                existingAccounts = new Map<Id,Account>([select Id,npe01__One2OneContact__c from Account where Id IN :contactAccountIds]);
-            }
-            
-            Integer i = 0;
-            // if this is after a delete
-            if (ta == CAO_Constants.triggerAction.afterDelete) {                
-                for (Contact c : oldContacts) {
-                    contactDeletes.add(c);
-                }
-                deleteContactAccounts(contactDeletes);
-            } else {
+            if (ta == CAO_Constants.triggerAction.beforeInsert || ta == CAO_Constants.triggerAction.beforeUpdate) {                    
+                // need to query account fields we need to look at
+                Set<Id> setAccountId = new Set<Id>();
+                for (Contact c : contacts) 
+                    setAccountId.add(c.AccountId);
+                mapContactIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
+            } else if (ta == CAO_Constants.triggerAction.AfterInsert || ta == CAO_Constants.triggerAction.AfterUpdate) {
+	           // requery to get correct Account values (and all the other fields we will look at)
+	           contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
+	                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname,
+	                Salutation, npo02__Naming_Exclusions__c,
+	                MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
+	                Phone, Fax from Contact where Id IN :contacts];
+            }        
+                        
+            // AFTER DELETE
+            if (ta == CAO_Constants.triggerAction.afterDelete) {
+            	for (Contact c : oldContacts)
+                    listContactAccountDelete.add(c);                     
+            } else {               
+                Integer i = 0; // used to index into oldContacts when needed                	
                 for (Contact c : contacts) {
+                    
                     // BEFORE INSERT
                     if (ta == CAO_Constants.triggerAction.beforeInsert) {
                         /* HH Account should be created if:
@@ -97,31 +100,30 @@ global with sharing class ACCT_IndividualAccounts {
                             3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
                         */
                         if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
-                            individualInserts.add(c);
+                            listContactNeedAccount.add(c);
                         } 
-                        // DJH:UNDONE if HHAccountModel and contact is given a non HH Account, are we OK with that?
                                              
                         /*one-to-one account should be created if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
-                        */
-                        else if (((c.AccountId != null && existingAccounts.get(c.AccountId).npe01__One2OneContact__c != null) || c.AccountId == null) && c.npe01__Private__c != true && CAO_Constants.isOneToOne()) {
+                        */ 
+                        else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
+                            (c.AccountId == null || mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
-                            // DJH:UNDONE is this code trying to avoid creating a new contact with the 1:1 account of another contact?
-                            // won't c.Account.npe01__One2OneContact__c give an error because it wasn't part of the soql on contact (which is why we used existingAccounts above)?
-                            if (c.AccountId != null && c.Account.npe01__One2OneContact__c != null) {
+                            // Avoid creating a new contact with the 1:1 account of another contact  
+                            if (c.AccountId != null)
                                 c.AccountId = null;
-                            }
-                            individualInserts.add(c);
+                           
+                            listContactNeedAccount.add(c);
                         }                    
                         /*contact should be connected to the bucket account if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        else if (c.AccountId == null && c.npe01__Private__c != true && CAO_Constants.isBucketModel()) {        
-                            bucketContacts.add(c);
+                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
+                            listContactNeedBucketAccount.add(c);
                         }                                                
                     }
         
@@ -134,7 +136,7 @@ global with sharing class ACCT_IndividualAccounts {
                         */
                         if (c.AccountId != null && c.npe01__Private__c != true && !CAO_Constants.isBucketModel() && c.Account.npe01__SYSTEMIsIndividual__c) {
                             // contacts are connected to Accounts, make the connection in the other direction
-                            accountUpdates.put(c.AccountId, c.Id);
+                            mapAccountIdContactId.put(c.AccountId, c.Id);
                         }
                         // there is no after insert processing for the bucket account model.
                         // HHAccount renaming is called below after we update accounts.
@@ -147,30 +149,33 @@ global with sharing class ACCT_IndividualAccounts {
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        if (c.AccountId == null && c.npe01__Private__c != true && CAO_Constants.isHHAccountModel()) {
-                            individualInserts.add(c);
+                        if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
+                            listContactNeedAccount.add(c);
                         }          
                         /*one-to-one account should be created if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        else if (c.AccountId == null && c.npe01__Private__c != true && CAO_Constants.isOneToOne()) {
-                        	// DJH:UNDONE why does the insert case prevent assigning another 1:1 account to contact, but the update doesn't?
-                            individualInserts.add(c);
+                        else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
+                            (c.AccountId == null || mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            
+                            // Avoid creating a new contact with the 1:1 account of another contact  
+                            if (c.AccountId != null && mapContactIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
+                                c.AccountId = null;
+
+                            listContactNeedAccount.add(c);
                         }          
                         /*contact should be connected to the bucket account if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
                             3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
                         */ 
-                        else if (c.AccountId == null && c.npe01__Private__c != true && CAO_Constants.isBucketModel()) {        
-                            bucketContacts.add(c);
+                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
+                            listContactNeedBucketAccount.add(c);
                         }
-                        // for contacts marked private after they have been created, break the relationship to the one to one
-                        // DJH:UNDONE why dont' we also do this for Bucket contacts?  I assumed I should do it for HH Account.
-                        // DJH:UNDONE should we be adding logic to delete any orphaned account due to marking private?
-                        if (c.AccountId != null && c.npe01__Private__c == true && /* CAO_Constants.isOneToOne() */ !CAO_Constants.isBucketModel()) {
+                        // for contacts marked private after they have been created, break the relationship from their account (any model)
+                        if (c.AccountId != null && c.npe01__Private__c == true) {
                             c.AccountId = null;
                         } 
                     }
@@ -181,59 +186,69 @@ global with sharing class ACCT_IndividualAccounts {
                         will require data changes on the Account to keep some fields in sync
                         */
                         if (c.npe01__Organization_Type__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && needsOne2OneAccountUpdate(c, oldContacts[i])) {
-                            individualUpdates.add(c);                            	
+                            listContactNeedAccountUpdate.add(c);                            	
                         }
                         
-                        // detect changes needed for HH Accounts
-                        
-                        // handle address changes
+                        // handle address changes for HH Accounts
                         if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountAddressUpdate(c, oldContacts[i])) {
-                            individualUpdates.add(c);                               
+                            listContactNeedAccountUpdate.add(c);                               
                         }
                         
-                    	// if the account has changed
+                    	// if the account (any type) has changed
                     	if (c.AccountId != oldContacts[i].AccountId) {
+                    		
                             // need to update any HH Accounts, both rollups and naming
                             if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)
                                 listAccountIdHHToUpdate.add(c.AccountId);
+                            
+                            // old account should be checked for deletion (if it wasn't private)
+                            if (c.npe01__Private__c != true && oldContacts[i].npe01__Private__c != true)
+                                listContactAccountDelete.add(oldContacts[i]);
+                            
+                            // old HH Accounts that don't get deleted still need to have name and rollups redone
                             if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)    
                                 listAccountIdHHToUpdate.add(oldContacts[i].AccountId);
-                                                   		
-                    	} else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
+                                                   		                    	 
+                    	   // HH Account didn't change, but it still might need renaming
+                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
                     	   listAccountIdHHToRename.add(c.AccountId);	
-                    	}
-                    	
-                    	// DJH:UNDONE none of this code deals with deleting orphaned accounts (1:1 and HH).
+                    	}                    	
                     }
                     i += 1;
-                }
-               
-                if (individualInserts.size() > 0) {
-                    //add the newly created or updated Contacts that need a new individual account
-                    insertIndividualAccount(individualInserts);
-                }
-                if (bucketContacts.size() > 0) {
-                    //add the newly created or updated Contact to the bucket account
-                    attachToBucketAccount(bucketContacts);
-                }
-                if (individualUpdates.size() > 0) {
-                    //contacts in the one-to-one model that are changing for syncing with account
-                    updateIndividualAccount(individualUpdates);
-                }
-                if (accountUpdates.size() > 0) {
-                    //update Accounts that have newly created Contacts connected to them
-                    updateAccountPrimaryContact(accountUpdates);
-                    
-                    // update any HHAccount names
-                    updateExistingHHAccounts(contacts);                    
-                }
-                if (listAccountIdHHToUpdate.size() > 0) {
-                    RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
-                    renameHHAccountsFuture(listAccountIdHHToUpdate);    
-                }
-                if (listAccountIdHHToRename.size() > 0) {
-                    renameHHAccountsFuture(listAccountIdHHToRename);    
-                }
+                }               
+            }    
+
+            // now done going thru all contacts, do our DML logic based on our lists
+            
+            if (listContactNeedAccount.size() > 0) {
+                //add the newly created or updated Contacts that need a new individual account
+                insertContactAccount(listContactNeedAccount);
+            }
+            if (listContactNeedBucketAccount.size() > 0) {
+                //add the newly created or updated Contact to the bucket account
+                attachToBucketAccount(listContactNeedBucketAccount);
+            }
+            if (listContactNeedAccountUpdate.size() > 0) {
+                //contacts in the one-to-one model that are changing for syncing with account
+                updateContactAccount(listContactNeedAccountUpdate);
+            }
+            if (mapAccountIdContactId.size() > 0) {
+                //update Accounts that have newly created Contacts connected to them
+                updateAccountPrimaryContact(mapAccountIdContactId);
+                
+                // update any HHAccount names
+                updateExistingHHAccounts(contacts);                    
+            }
+            if (listAccountIdHHToUpdate.size() > 0) {
+                RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
+                renameHHAccountsFuture(listAccountIdHHToUpdate);    
+            }
+            if (listAccountIdHHToRename.size() > 0) {
+                renameHHAccountsFuture(listAccountIdHHToRename);    
+            }
+            if (listContactAccountDelete.size() > 0) {
+                // check all old accounts to delete is they are left hanging around
+                deleteContactAccountsIfEmpty(listContactAccountDelete);
             }
         }
     }
@@ -241,14 +256,14 @@ global with sharing class ACCT_IndividualAccounts {
     /// <name> updateAccountPrimaryContact </name>
     /// <summary> Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts. </summary>
     /// <param name="accounts"> Map of account Ids, contact Ids </param>
-    public static void updateAccountPrimaryContact(Map<Id, Id> accounts) {
-        List<Account> accountUpdates = new List<Account>(); 
-        for (Id i : accounts.keySet()) {
-            Account a = new Account(Id=i,npe01__One2OneContact__c=accounts.get(i));
-            accountUpdates.add(a);
+    private void updateAccountPrimaryContact(Map<Id, Id> mapAccountIdContactId) {
+        List<Account> listAccount = new List<Account>(); 
+        for (Id i : mapAccountIdContactId.keySet()) {
+            Account a = new Account(Id = i, npe01__One2OneContact__c = mapAccountIdContactId.get(i));
+            listAccount.add(a);
         }
-        if (accountUpdates.size() > 0) {
-            Database.SaveResult[] lsr = Database.update(accountUpdates, false);
+        if (listAccount.size() > 0) {
+            Database.SaveResult[] lsr = Database.update(listAccount, false);
         }      
     }
 
@@ -275,7 +290,7 @@ global with sharing class ACCT_IndividualAccounts {
     /// <name> renameHHAccountsFuture </name>
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
-    static private void renameHHAccountsFuture(ID[] listAccountId) {
+    private void renameHHAccountsFuture(ID[] listAccountId) {
     	if (listAccountId.size() == 1) {
     	    HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
@@ -287,7 +302,7 @@ global with sharing class ACCT_IndividualAccounts {
     /// <name> attachToBucketAccount </name>
     /// <summary> Updates Contacts to relate to a single Individual Account</summary>
     /// <param name="contacts"> Contacts meeting the trigger criteria</param>
-    private static void attachToBucketAccount(Contact[] contacts)
+    private void attachToBucketAccount(Contact[] contacts)
     {
         //grab the first Account that is named Individual
         List<Account> individuals = [Select Id from Account where name = :CAO_Constants.BUCKET_ACCOUNT_NAME ORDER BY CreatedDate Desc Limit 1];
@@ -321,10 +336,10 @@ global with sharing class ACCT_IndividualAccounts {
     }
 
 
-    /// <name> insertIndividualAccount </name>
+    /// <name> insertContactAccount </name>
     /// <summary> Inserts a new 1:1 or HH Account for an Individual Contact</summary>
     /// <param name="contacts"> Contacts meeting the trigger criteria</param>
-    private static void insertIndividualAccount(Contact[] contacts)
+    private void insertContactAccount(Contact[] contacts)
     {
         List<Id> contactIds = new List<Id>();
         Map<Id,Id> conAccMap = new Map<Id,Id>();       
@@ -345,8 +360,8 @@ global with sharing class ACCT_IndividualAccounts {
 
         Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
-        // DJH:UNDONE change code when we have new version of npe01 package to use npe01__HH_Account_RecordTypeID__c
-        // DJH:UNDONE why going thru describe when the setting gives us the recordtype?
+        // we go thru describe to validate that it is a valid recordType ID.
+            // DJH:UNDONE change code when we have new version of npe01 package to use npe01__HH_Account_RecordTypeID__c
         ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__One_to_One_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (rtId != null) {
             Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
@@ -381,8 +396,6 @@ global with sharing class ACCT_IndividualAccounts {
                 a.ShippingCity = c.OtherCity;
                 a.ShippingState = c.OtherState;
                 a.ShippingCountry = c.OtherCountry;
-                //flag the account as an individual account
-                //a.Type = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (rtById != null) {                
                     a.put('RecordTypeID', rtByID.getRecordTypeID());
@@ -409,10 +422,10 @@ global with sharing class ACCT_IndividualAccounts {
     }
 
 
-    /// <name> updateIndividualAccount </name>
+    /// <name> updateContactAccount </name>
     /// <summary> Updates an Individual Account for an Individual Contact</summary>
     /// <param name="contacts"> Contacts meeting the trigger criteria</param>
-    private void updateIndividualAccount(Contact[] contacts)
+    private void updateContactAccount(Contact[] contacts)
     {
         Map<Id,Contact> accConMap = new Map<Id,Contact>();
         for (Contact c : contacts) {
@@ -422,7 +435,7 @@ global with sharing class ACCT_IndividualAccounts {
         List<Account> accts = [Select a.npe01__SYSTEM_AccountType__c, a.name, a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
 	        a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
 	        From Account a where a.Id IN :accConMap.keyset()];
-        List<Account> accountUpdates = new List<Account>();
+        List<Account> listAccount = new List<Account>();
         
         for (Account a : accts) {         
             Contact c = accConMap.get(a.Id);
@@ -460,18 +473,18 @@ global with sharing class ACCT_IndividualAccounts {
                     a.Name = strNameOne2OneAccountForContact(c);
                 // HH Account naming updates handled seperately to deal with asyncronous naming
 
-                accountUpdates.add(a);
+                listAccount.add(a);
             }           
         }   
 
-        if (accountUpdates.size() > 0) {
-            Database.SaveResult[] lsr = Database.update(accountUpdates, false);
+        if (listAccount.size() > 0) {
+            Database.SaveResult[] lsr = Database.update(listAccount, false);
             // DJH:UNDONE should handle DML errors and log them.
         }
     }
     
-    //delete the accounts for contacts that have been deleted
-    public void deleteContactAccounts(Contact[] contacts) {
+    //delete the accounts for contacts that have been deleted if they are empty (no ops, no hh members)
+    public void deleteContactAccountsIfEmpty(Contact[] contacts) {
         List<Id> accountIds = new List<Id>();
         List<Account> accountsOnContacts = new List<Account>();
         List<Account> accountsForDeletion = new List<Account>();
@@ -563,64 +576,5 @@ global with sharing class ACCT_IndividualAccounts {
         
         return str;
     }
-
-/************************* DEPRECATE IN CUMULUS ***********************************    
-    /// <name> getContactDonationHistory </name>
-    /// <summary> Called by sControl to display total giving amount </summary>
-    webservice static decimal getContactDonationHistory(Id contactId){
-        Decimal sum = 0;
-        for (OpportunityContactRole o : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId]) 
-        {
-            sum += o.Opportunity.Amount;
-        }
-        return sum;
-    }
-
-
-    /// <name> getContactLastDonation </name>
-    /// <summary> Called by sControl to display last donation date </summary>
-        webservice static String getContactLastDonation(Id contactId){
-        Date lastDonation = null;
-        List<OpportunityContactRole> ocr = [Select Opportunity.CloseDate, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId ORDER BY Opportunity.CloseDate DESC Limit 100]; 
-        if ( ocr.size() > 0) {
-            return String.ValueOf(ocr[0].Opportunity.CloseDate);
-        } else {
-            return '';
-        }
-    }
-    
-    /// <name> getContactDonationHistory </name>
-    /// <summary> Called by sControl to display total giving amount </summary>
-    public static string getContactDonationHistoryAmount(Id contactId){
-        Decimal sum = 0;
-        for (OpportunityContactRole o : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId]) 
-        {
-            sum += o.Opportunity.Amount;
-        }
-        
-        String totalString = system.label.npe01.DefaultContactTransactionCurrency;
-        
-        totalString += String.valueOf(sum);
-        if(!totalString.contains('.')){
-            totalString += '.00';
-        }
-        return totalString;
-    }
-
-
-    /// <name> getContactLastDonation </name>
-    /// <summary> Called by sControl to display last donation date </summary>
-    public static String getContactLastDonationDate(Id contactId){
-        Date lastDonation = null;
-        List<OpportunityContactRole> ocr = [Select Opportunity.CloseDate, OpportunityId From OpportunityContactRole where Opportunity.IsWon = true and Opportunity.Amount != null and ContactId = :contactId ORDER BY Opportunity.CloseDate DESC Limit 100]; 
-        if ( ocr.size() > 0) {
-            //return String.ValueOf(ocr[0].Opportunity.CloseDate);
-            return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
-        } else {
-            return '';
-        }
-    }
-************************* DEPRECATE IN CUMULUS ***********************************/
-    
 
 }
