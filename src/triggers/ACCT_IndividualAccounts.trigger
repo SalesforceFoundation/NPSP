@@ -31,32 +31,19 @@ trigger ACCT_IndividualAccounts on Contact (before insert, before update, after 
 
     npe01__Contacts_and_Orgs_Settings__c cos = CAO_Constants.getContactsSettings();
     
-    if (!cos.npe01__DISABLE_IndividualAccounts_trigger__c){
-        if(Trigger.isInsert && Trigger.isBefore){
-            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, CAO_Constants.triggerAction.beforeInsert);
-        }
-        if(Trigger.isUpdate && Trigger.isBefore){
-            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, CAO_Constants.triggerAction.beforeUpdate);
-        }
-        if( Trigger.isAfter && Trigger.isInsert ){
-            //requery to get correct Account values
-            Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,Account.Name,firstname, lastname from Contact where Id IN :trigger.New];
-            
-            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(newContacts, Trigger.old, CAO_Constants.triggerAction.afterInsert);
-        }
-        if( Trigger.isAfter && Trigger.isUpdate ){
-           //requery to get correct Account values
-           Contact[] newContacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname,
-                Salutation, npo02__Naming_Exclusions__c,
-                MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
-                Phone, Fax from Contact where Id IN :trigger.New];
-        
-            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(newContacts, Trigger.old, CAO_Constants.triggerAction.afterUpdate);
-        }
-        if( Trigger.isAfter && Trigger.isDelete ){
-            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, CAO_Constants.triggerAction.afterDelete);
-        }
+    if (!cos.npe01__DISABLE_IndividualAccounts_trigger__c) {
+    	CAO_Constants.triggerAction ta;
+        if (Trigger.isInsert && Trigger.isBefore) 
+            ta = CAO_Constants.triggerAction.beforeInsert;
+        else if (Trigger.isUpdate && Trigger.isBefore) 
+            ta = CAO_Constants.triggerAction.beforeUpdate;
+        else if (Trigger.isAfter && Trigger.isInsert ) 
+            ta = CAO_Constants.triggerAction.afterInsert;
+        else if (Trigger.isAfter && Trigger.isUpdate ) 
+            ta = CAO_Constants.triggerAction.afterUpdate;
+        else if (Trigger.isAfter && Trigger.isDelete ) 
+            ta = CAO_Constants.triggerAction.afterDelete;
+
+        ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, ta);
     }        
 }
