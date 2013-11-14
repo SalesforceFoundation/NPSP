@@ -29,17 +29,11 @@
 */
 public class AFFL_Affiliations {
     
-    public static npe5__Affiliations_Settings__c affiliationsSettings;
-
-    /// <name> AFFL_Affiliations </name>
-    /// <summary> Default Constructor </summary>
-    public AFFL_Affiliations()
-    {
-    }
+    //public static npe5__Affiliations_Settings__c affiliationsSettings;
 
     /// <name> triggerAction </name>
     /// <summary> contains possible actions for a trigger </summary>
-    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
+    //public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
 
 
     /// <name> AFFL_Affiliations </name>
@@ -47,9 +41,9 @@ public class AFFL_Affiliations {
     /// <param name="contacts"> Contact objects that are being triggered </param>
     /// <param name="oldContacts"> Contact object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public AFFL_Affiliations(Contact[] contacts, Contact[] oldContacts, triggerAction ta)
-    {
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = getAffiliationsSettings();
+    /*public AFFL_Affiliations(Contact[] contacts, Contact[] oldContacts, TDTM_TriggerActionHelper.Action ta) {
+    	
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
         
         List<Contact> affiliationInserts = new List<Contact>();
         List<Contact> affiliationUpdates = new List<Contact>();
@@ -58,21 +52,17 @@ public class AFFL_Affiliations {
         if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
             for (Contact c : contacts) {
                 // AFTER INSERT
-                if ( ta==triggerAction.afterInsert )
-                {
+                if (ta == TDTM_TriggerActionHelper.Action.AfterInsert) {
                     //insert affiliations for contacts with an Account
-                    if ( c.AccountId != null )
-                    {
+                    if ( c.AccountId != null ) {
                         affiliationInserts.add(c);
                     }
                 }
                 
                 // AFTER UPDATE
-                if ( ta==triggerAction.afterUpdate )
-                {
-                    if (c.AccountId != oldContacts[i].AccountId )
-                    {
-                        if (oldContacts[i].AccountId != null){
+                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                    if (c.AccountId != oldContacts[i].AccountId ) {
+                        if (oldContacts[i].AccountId != null) {
                             affiliationUpdates.add(oldContacts[i]);
                         }
                         if (c.AccountId != null){
@@ -83,100 +73,87 @@ public class AFFL_Affiliations {
                 i += 1;
             }
     
-            if (affiliationInserts.size() > 0)
-            {
+            if (affiliationInserts.size() > 0) {
                 insertAffiliation(affiliationInserts);
             }
-            if (affiliationUpdates.size() > 0)
-            {
+            
+            if (affiliationUpdates.size() > 0) {
                 updateAffiliation(affiliationUpdates);
             }
         }
 
-    }
+    }*/
 
 
     /// <name> insertAffiliation </name>
     /// <summary> Creates a new Affiliation record when a Contact is related to a new non-Individual Account </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void insertAffiliation(Contact[] contacts)
-    {
+    /*public static void insertAffiliation(Contact[] contacts) {
+    	
         List<Id> accountIds = new List<Id>();
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts) {
             accountIds.add(c.AccountId);
         }
         //get all the accounts associated wth these contacts
         Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, Name from Account where Id in :accountIds]);
 
         List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts) {
             String cName = c.FirstName;
             cName += ' ';
             cName += c.LastName;
             //check to see if this account isn't an individual. Can't use the real systemisindividual field on account
             //because that would make this dependent on the Contacts and Organizations package
-            if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual' )
-            {
+            if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual') {
                 npe5__Affiliation__c a = new npe5__Affiliation__c();
                 a.npe5__Contact__c = c.Id;
                 a.npe5__Organization__c = c.AccountId;
                 a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                 a.npe5__StartDate__c = System.Today();
                 //user title as Role
-                if (c.Title != null)
-                {
+                if (c.Title != null) {
                     a.npe5__Role__c = c.Title;
                 }
                 affiliationInserts.add(a);
             }
         }
-        if (affiliationInserts.size() > 0)
-        {
+        if (affiliationInserts.size() > 0) {
             Database.SaveResult[] lsr = Database.insert(affiliationInserts, false);
         }
-    }
+    }*/
 
 
 
     /// <name> updateAffiliation </name>
     /// <summary> Updates an existing Affiliation record when a Contact's Account is changed </summary>
     /// <param name="Contact"> List of original contacts before update that met trigger criteria </param>
-    public static void updateAffiliation(Contact[] contacts)
-    {
+    /*public static void updateAffiliation(Contact[] contacts) {
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
         Map<String,Id> conAccMap = new Map<String,Id>();
 
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts) {
             contactIds.add(c.Id);
             accountIds.add(c.AccountId);
         }
 
         try {
             List<npe5__Affiliation__c> existingAffiliations = [Select Id, npe5__Contact__c, npe5__Organization__c from npe5__Affiliation__c where npe5__EndDate__c = null and npe5__Contact__c in :contactIds and npe5__Organization__c in :accountIds];
-            for(npe5__Affiliation__c a : existingAffiliations)
-            {
+            for(npe5__Affiliation__c a : existingAffiliations) {
                 //concatenate the contact and account id for a unique string we can access later
                 String unique = a.npe5__Contact__c;
                 unique += a.npe5__Organization__c;
                 conAccMap.put(unique,a.Id);
             }
-        } catch (exception e)
-        {
-        }
+        } catch (exception e) { }
         
         List<npe5__Affiliation__c> affiliationUpdates = new List<npe5__Affiliation__c>();
 
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts) {
             String u = c.Id;
             u += c.AccountId;
             //get the affiliation based on that unique string
-            if (conAccMap.containsKey(u))
-            {
+            if (conAccMap.containsKey(u)) {
                 //flag it as former ending today
                 npe5__Affiliation__c a = new npe5__Affiliation__c(Id=conAccMap.get(u));
                 a.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
@@ -185,14 +162,13 @@ public class AFFL_Affiliations {
             }
         }
         
-        if (affiliationUpdates.size() > 0)
-        {
+        if (affiliationUpdates.size() > 0) {
             Database.SaveResult[] lsr = Database.update(affiliationUpdates, false);
         }
-    }
+    }*/
     
-       //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
+    //get the settings. handles the case where the managed value doesn't exist yet
+    /*public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
         //if no settings exist, create defaults
         if (affiliationsSettings == null) {
             //first see if we already have settings
@@ -208,19 +184,5 @@ public class AFFL_Affiliations {
             }
         }
         return affiliationsSettings;
-    }
-    
-    public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
-        
-        //clear out whatever settings exist
-        delete [select id from npe5__Affiliations_Settings__c limit 100];
-        
-        //create our own based on what's passed in from the test
-        affiliationsSettings = new npe5__Affiliations_Settings__c (
-            npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c
-            );
-        insert affiliationsSettings;
-            
-        return affiliationsSettings;
-    }
+    }*/
 }

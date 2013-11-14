@@ -166,4 +166,18 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);        
     }
+    
+    private static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
+        
+        //clear out whatever settings exist
+        delete [select id from npe5__Affiliations_Settings__c limit 100];
+        
+        //create our own based on what's passed in from the test
+        npe5__Affiliations_Settings__c affiliationsSettings = new npe5__Affiliations_Settings__c (
+            npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c
+            );
+        insert affiliationsSettings;
+            
+        return affiliationsSettings;
+    }
 }
