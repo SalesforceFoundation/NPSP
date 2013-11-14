@@ -46,6 +46,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <summary> Test Method for inserting a Contact that should get no account </summary>
     static testMethod void insertPrivate() {
         insertPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
         insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }   
     static void insertPrivateProcessor(string strProcessor)
@@ -75,6 +76,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     static testMethod void insertOneToOneChangeToPrivate() {
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
+        insertOneToOneChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR); 
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     static void insertOneToOneChangeToPrivateProcessor(string strProcessor)
@@ -95,6 +97,7 @@ private class ACCT_IndividualAccounts_TEST {
         insert con;
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
+        ID accountId = insertedContacts[0].AccountId;
         
         insertedContacts[0].npe01__Private__c = true;
         update insertedContacts;
@@ -102,7 +105,10 @@ private class ACCT_IndividualAccounts_TEST {
         //contact should have no AccountId
         system.assertEquals(null,insertedContacts[0].AccountId);
         system.assert(insertedContacts[0].npe01__Private__c);
-    
+        
+        // account should NOT get deleted
+        Account[] acts = [Select Id from Account where Id = :accountId];
+        system.assertEquals(1, acts.size());
     }
     
     static testMethod void insertOneToOneTriggerOff() {
@@ -494,6 +500,46 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(accountId,insertedContact[0].AccountId);        
     }
     
+    static testMethod void contactUpdatedToExistingOneToOne() {
+        contactUpdatedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        contactUpdatedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+    }
+    static void contactUpdatedToExistingOneToOneProcessor(string strProcessor)
+    {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert con;
+        
+        Contact[] insertedContacts = [Select Account.Name,Account.npe01__SystemIsIndividual__c,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
+        
+        Id accountId = insertedContacts[0].AccountId;
+        
+        Contact con2 = new Contact(FirstName='John', LastName='Smith',AccountId=null);       
+        insert con2;
+        
+        // now update the contact to the existing account from contact 1
+        con2.AccountId = accountId;
+        update con2;
+        
+        Contact[] insertedContact = [Select Account.Name,AccountId,Account.npe01__SystemIsIndividual__c,npe01__Organization_Type__c from Contact where id=:con2.id];
+        
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
+            system.assertNotEquals(accountId,insertedContact[0].AccountId);  
+        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+            system.assertEquals(accountId,insertedContact[0].AccountId);        
+    }
+
     static testMethod void contactInNormalOrgNameChange() {
         contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
