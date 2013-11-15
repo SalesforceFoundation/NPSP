@@ -32,10 +32,12 @@ public with sharing class TDTM_CustomSettingPerf_Batch_TEST {
         Test.stopTest();
         
         //Verify that the class run - that is, that the database change that the class makes was 
-        //performed. There should be two record inserted, one for the sync call and one for the
-        //async call
+        //performed
         List<Contact> contacts = [select FirstName, LastName from Contact];
-        System.assertEquals(200, contacts.size());
+        //Since we are using the alreadyCalled flag the class will only be called once. That's ok,
+        //since we already tested performance without the flag.
+        //System.assertEquals(200, contacts.size());
+        System.assertEquals(1, contacts.size());
     }
     
     public static testmethod void manyRecordChangesOneClass() {

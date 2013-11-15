@@ -43,4 +43,16 @@ public with sharing class TDTM_TriggerActionHelper {
            ta = Action.AfterUndelete;
         return ta;
     }
+    
+    //@TODO: this method should be moved into a general utilities class
+    public static Schema.DescribeSObjectResult getDescribeObjectByName(String objectName) {
+    	Schema.DescribeSObjectResult objResult;
+        for(Schema.SObjectType t : Schema.getGlobalDescribe().values()){
+            if (t.getDescribe().getName() == objectName){
+                objResult = t.getDescribe();
+                break;
+            }
+        }
+        return objResult;
+    }
 }

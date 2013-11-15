@@ -22,7 +22,7 @@ public with sharing class TDTM_TriggerHandler {
     
     public static void runClasses(TDTM_iTableDataGateway dao) {
         
-        DmlWrapper dmlWrapper = new DmlWrapper();
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
         //Get the classes to run
         List<SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers(obj.getName(), thisAction);
@@ -31,7 +31,7 @@ public with sharing class TDTM_TriggerHandler {
             
             //Run the relevant classes
             for (SObject classToRun : classesToCallOnTriggers) {
-                DmlWrapper dmlWrapperLocal = runClass(classToRun);
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToRun);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -48,14 +48,14 @@ public with sharing class TDTM_TriggerHandler {
         delete dmlWrapper.objectsToDelete.values();
     }
     
-    private static DmlWrapper runClass(SObject classToRunRecord) {
+    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
 	        System.debug('****Name of class to run: ' + classToRunName);
 	        Type classType = Type.forName(classToRunName);
 	        
-	        if(classType != null) {	        	
+	        if(classType != null) {   	
 	        	Object classInstance = classType.newInstance();
 	        	
 	        	//The objects we create dynamically need to implement the TDTM_Runnable interface
@@ -63,7 +63,7 @@ public with sharing class TDTM_TriggerHandler {
 			        TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
 			        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
 			        String action = String.valueOf(classToRunRecord.get('Trigger_Action__c'));
-			        			        
+
 			        if(!async) {
                         System.debug('****Running Sync: ' + classToRunName); 
                         return classToRun.run(newlist, oldlist, thisAction, obj);
@@ -91,15 +91,13 @@ public with sharing class TDTM_TriggerHandler {
         return null;
     }
     
-    private static void runAsync(TDTM_Runnable classToRun, String classToRunName) {       
+    private static void runAsync(TDTM_Runnable classToRun, String classToRunName) {
        Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
-       Map<Id,Sobject> om = new Map<Id,Sobject>(oldlist);
-       classToRun.runFuture(nm.keySet(), om.keySet(), thisAction.name(), obj.getName());
-    }
-    
-    public class DmlWrapper {
-        public List<SObject> objectsToInsert = new List<SObject>(); 
-        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
-        public Map<Id, SObject> objectsToDelete = new Map<Id, SObject>();
+       
+       Map<Id,Sobject> om;
+       if(oldlist != null) om = new Map<Id,SObject>(oldlist);
+       else om = new Map<Id, SObject>();
+       
+       classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
     }
 }
