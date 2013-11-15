@@ -1,27 +1,30 @@
-public with sharing class AFFL_UpdatesHandler {
+public with sharing class AFFL_UpdatesHandler extends TDTM_Runnable {
 
-    TDTM_TriggerHandler.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
-    TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
+    public override TDTM_Runnable.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
+    TDTM_TriggerActionHelper.Action ta, Schema.DescribeSObjectResult obj) {
         
-        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper();
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
-        
-        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
-            List<Contact> affiliationUpdates = new List<Contact>();
-            Integer i = 0;
-            for (Sobject so : newlist) {
-            	Contact contact = (Contact)so; 
-            	Contact oldContact = (Contact)oldlist[i];
-                // AFTER UPDATE
-                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate && contact.AccountId != oldContact.AccountId 
-                && oldContact.AccountId != null) {
-                    affiliationUpdates.add(oldContact);
-                }
-                i++;
-            }
-            
-            if (affiliationUpdates.size() > 0)
-                dmlWrapper.objectsToUpdate.putAll(updateAffiliation(affiliationUpdates));
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        if(!alreadyCalled) {
+            alreadyCalled = true;
+	        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
+	        
+	        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
+	            List<Contact> affiliationUpdates = new List<Contact>();
+	            Integer i = 0;
+	            for (Sobject so : newlist) {
+	            	Contact contact = (Contact)so; 
+	            	Contact oldContact = (Contact)oldlist[i];
+	                // AFTER UPDATE
+	                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate && contact.AccountId != oldContact.AccountId 
+	                && oldContact.AccountId != null) {
+	                    affiliationUpdates.add(oldContact);
+	                }
+	                i++;
+	            }
+	            
+	            if (affiliationUpdates.size() > 0)
+	                dmlWrapper.objectsToUpdate.putAll(updateAffiliation(affiliationUpdates));
+	        }
         }
         return dmlWrapper;
     }

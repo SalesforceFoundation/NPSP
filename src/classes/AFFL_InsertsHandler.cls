@@ -1,33 +1,36 @@
-public with sharing class AFFL_InsertsHandler {
-
-    TDTM_TriggerHandler.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
-    TDTM_TriggerActionHelper.Action ta, Schema.Describesobjectresult obj) {
-        
-        TDTM_TriggerHandler.DmlWrapper dmlWrapper = new TDTM_TriggerHandler.DmlWrapper();
-    	npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();        
-
-        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {       
-            List<Contact> affiliationInserts = new List<Contact>();
-            Integer i = 0;
-            for (SObject so : newlist) {
-            	Contact contact = (Contact)so;
-                // AFTER INSERT
-                if (ta == TDTM_TriggerActionHelper.Action.AfterInsert && contact.AccountId != null) {
-                    //insert affiliations for contacts with an Account
-                        affiliationInserts.add(contact);
-                }
-                
-                // AFTER UPDATE
-                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-                	Contact oldContact = (Contact) oldlist[i];
-                    if (contact.AccountId != oldContact.AccountId && contact.AccountId != null)
-                        affiliationInserts.add(contact);
-                }
-                i++;
-            }
+public with sharing class AFFL_InsertsHandler extends TDTM_Runnable {
     
-            if (affiliationInserts.size() > 0)
-                dmlWrapper.objectsToInsert.addAll(insertAffiliation(affiliationInserts));                    
+    public override TDTM_Runnable.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
+    TDTM_TriggerActionHelper.Action ta, Schema.DescribeSObjectResult describeSObjectResult) {
+        
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        if(!alreadyCalled) {
+        	alreadyCalled = true;
+	    	npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();        
+	
+	        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {       
+	            List<Contact> affiliationInserts = new List<Contact>();
+	            Integer i = 0;
+	            for (SObject so : newlist) {
+	            	Contact contact = (Contact)so;
+	                // AFTER INSERT
+	                if (ta == TDTM_TriggerActionHelper.Action.AfterInsert && contact.AccountId != null) {
+	                    //insert affiliations for contacts with an Account
+	                        affiliationInserts.add(contact);
+	                }
+	                
+	                // AFTER UPDATE
+	                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+	                	Contact oldContact = (Contact) oldlist[i];
+	                    if (contact.AccountId != oldContact.AccountId && contact.AccountId != null)
+	                        affiliationInserts.add(contact);
+	                }
+	                i++;
+	            }
+	    
+	            if (affiliationInserts.size() > 0)
+	                dmlWrapper.objectsToInsert.addAll(insertAffiliation(affiliationInserts));                    
+	        }
         }
         return dmlWrapper; 
     }
