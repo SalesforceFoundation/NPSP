@@ -8,12 +8,12 @@ public with sharing class STTG_AffiliationsSettings_CTRL {
     }
     
     public npe5__affiliations_Settings__c getSettings() {
-        pageSettings = AFFL_Affiliations.getAffiliationsSettings();
+        pageSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
         return pageSettings;
     }
     //we can't do a DML in a getter, so I call it from the action of the page
     public PageReference getSettingsFirstTime() {
-        pageSettings = AFFL_Affiliations.getAffiliationsSettings();
+        pageSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
         return null;
     }
     

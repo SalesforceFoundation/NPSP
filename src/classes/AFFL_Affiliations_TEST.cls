@@ -32,7 +32,7 @@ public class AFFL_Affiliations_TEST {
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
         
-        npe5__Affiliations_Settings__c affiliationsSettingsForTests = AFFL_Affiliations.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         Account acc = new Account(Name='test77');
         insert acc;
@@ -76,7 +76,7 @@ public class AFFL_Affiliations_TEST {
     
     static testMethod void newContactOnOrgAccountAutoOff() {
         
-        npe5__Affiliations_Settings__c affiliationsSettingsForTests = AFFL_Affiliations.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
         
         Account acc = new Account(Name='test77');
         insert acc;
@@ -102,7 +102,7 @@ public class AFFL_Affiliations_TEST {
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
         
-        npe5__Affiliations_Settings__c affiliationsSettingsForTests = AFFL_Affiliations.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         Account acc = new Account(Name='Individual');
         insert acc;
@@ -120,7 +120,7 @@ public class AFFL_Affiliations_TEST {
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void contactWithMultipleAffiliations() {
         
-        npe5__Affiliations_Settings__c affiliationsSettingsForTests = AFFL_Affiliations.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         Account acc = new Account(Name='test77');
         insert acc;
