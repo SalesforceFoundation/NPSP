@@ -172,18 +172,6 @@ public class AFFL_Affiliations_TEST {
     
     public static void setupTDTM() {
     	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-    	
-    	/*handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_InsertsHandler', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_InsertsHandler', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));
-                    
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_UpdatesHandler', Load_Order__c = 2, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));*/
         
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
