@@ -1,14 +1,27 @@
 public with sharing class AFFL_UpdatesHandler extends TDTM_Runnable {
 
+    private static Boolean alreadyCalledBefore = false;
+    private static Boolean alreadyCalledAfter = false;
+    
+    public override Boolean wasAlreadyCalledBefore() {
+        return alreadyCalledBefore;
+    }
+    
+    public override Boolean wasAlreadyCalledAfter() {
+        return alreadyCalledAfter;
+    }
+    
     public override TDTM_Runnable.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
     TDTM_TriggerActionHelper.Action ta, Schema.DescribeSObjectResult obj) {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        if(!alreadyCalled) {
-            alreadyCalled = true;
+        if(!alreadyCalledAfter) {
+            System.debug('****Running AFFL_UpdatesHandler');
+            alreadyCalledAfter = true;
 	        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
 	        
 	        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
+	        	System.debug('****Automatic affiliation creation is ON');
 	            List<Contact> affiliationUpdates = new List<Contact>();
 	            Integer i = 0;
 	            for (Sobject so : newlist) {
@@ -24,6 +37,8 @@ public with sharing class AFFL_UpdatesHandler extends TDTM_Runnable {
 	            
 	            if (affiliationUpdates.size() > 0)
 	                dmlWrapper.objectsToUpdate.putAll(updateAffiliation(affiliationUpdates));
+	        } else {
+	        	System.debug('****Automatic affiliation creation is OFF');
 	        }
         }
         return dmlWrapper;
@@ -63,6 +78,7 @@ public with sharing class AFFL_UpdatesHandler extends TDTM_Runnable {
                 npe5__Affiliation__c affiliation = new npe5__Affiliation__c(Id=conAccMap.get(u));
                 affiliation.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
                 affiliation.npe5__EndDate__c = System.Today();
+                System.debug('****Adding affiliation with ID ' + affiliation.Id + ' to the list of updates');
                 affiliationUpdates.put(affiliation.Id, affiliation);
             }
         }

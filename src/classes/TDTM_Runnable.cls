@@ -1,10 +1,11 @@
 public abstract class TDTM_Runnable {
 
-    //It will be the duty of the run method implementation to set this field to true. We cannot do that
-    //for them in TDTM_Handler, even if it's after calling the future, because then it might actually 
-    //get set before the future runs (and since the future method calls the non-future method, which 
-    //checks the flag, the future method would have no effect.)
-    public static Boolean alreadyCalled = false;
+    //It will be the duty of the run method implementation to set the fields alreadyCalledBefore and 
+    //wasAlreadyCalledAfter to true. We cannot do that for them in TDTM_Handler, even if it's after 
+    //calling the future, because then they might get set before the future runs (and since the future 
+    //method calls the non-future method, which checks the flag, the future method would have no effect.)
+    public abstract Boolean wasAlreadyCalledBefore();   
+    public abstract Boolean wasAlreadyCalledAfter();
     
     //We need this method because Apex won't let us call a non-static method from a separate object instance
     public void runFutureNonStatic(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {

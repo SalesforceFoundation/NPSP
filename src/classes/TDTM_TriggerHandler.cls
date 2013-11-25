@@ -16,7 +16,7 @@ public with sharing class TDTM_TriggerHandler {
 
         thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
-
+        System.debug('****ACTION: ' + thisAction);
         obj = describeobj;
     }
     
@@ -27,8 +27,8 @@ public with sharing class TDTM_TriggerHandler {
         //Get the classes to run
         List<SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers(obj.getName(), thisAction);
         
-        if(classesToCallOnTriggers != null) {
-            
+        if(classesToCallOnTriggers != null && classesToCallOnTriggers.size() > 0) {
+            System.debug('****Classes to call: ' + classesToCallOnTriggers);
             //Run the relevant classes
             for (SObject classToRun : classesToCallOnTriggers) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToRun);
@@ -40,19 +40,22 @@ public with sharing class TDTM_TriggerHandler {
                     if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
                         dmlWrapper.objectsToDelete.putAll(dmlWrapperLocal.objectsToDelete);
                 }          
-            }    
-        }  
-        
-        insert dmlWrapper.objectsToInsert;
-        update dmlWrapper.objectsToUpdate.values();
-        delete dmlWrapper.objectsToDelete.values();
+            }
+            
+            System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
+	        insert dmlWrapper.objectsToInsert;
+	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
+	        update dmlWrapper.objectsToUpdate.values();
+	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete.values());
+	        delete dmlWrapper.objectsToDelete.values();
+        }
     }
     
     private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
-	        System.debug('****Name of class to run: ' + classToRunName);
+	        //System.debug('****Name of class to run: ' + classToRunName);
 	        Type classType = Type.forName(classToRunName);
 	        
 	        if(classType != null) {   	
@@ -65,18 +68,18 @@ public with sharing class TDTM_TriggerHandler {
 			        String action = String.valueOf(classToRunRecord.get('Trigger_Action__c'));
 
 			        if(!async) {
-                        System.debug('****Running Sync: ' + classToRunName); 
+                        System.debug('****Calling Synchronously: ' + classToRunName); 
                         return classToRun.run(newlist, oldlist, thisAction, obj);
 			             
 			        } else if(async && action != 'BeforeInsert') {
-			        	System.debug('****Running Async: ' + classToRunName);
+			        	System.debug('****Calling Asynchronously: ' + classToRunName);
 			        	runAsync(classToRun, classToRunName);
 			        
 			        //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert
 			        } else if(async && action == 'BeforeInsert') {
-			        	System.debug('****Cannot run the class aynchronously on beforeinsert.');
-			        	System.debug('********Running Sync: ' + classToRunName);
+			        	System.debug('****Cannot call this class aynchronously on beforeinsert.');
+			        	System.debug('****Calling Synchronously: ' + classToRunName);
 			        	return classToRun.run(newlist, oldlist, thisAction, obj);
 			        }
 	        	} else {

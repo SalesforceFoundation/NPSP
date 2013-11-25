@@ -1,11 +1,23 @@
 public with sharing class AFFL_InsertsHandler extends TDTM_Runnable {
     
+    private static Boolean alreadyCalledBefore = false;
+    private static Boolean alreadyCalledAfter = false;
+    
+    public override Boolean wasAlreadyCalledBefore() {
+        return alreadyCalledBefore;
+    }
+    
+    public override Boolean wasAlreadyCalledAfter() {
+        return alreadyCalledAfter;
+    }
+    
     public override TDTM_Runnable.DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
     TDTM_TriggerActionHelper.Action ta, Schema.DescribeSObjectResult describeSObjectResult) {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        if(!alreadyCalled) {
-        	alreadyCalled = true;
+        //if(!alreadyCalled) {
+            System.debug('****Running AFFL_InsertsHandler');
+        	//alreadyCalled = true;
 	    	npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();        
 	
 	        if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {       
@@ -14,16 +26,26 @@ public with sharing class AFFL_InsertsHandler extends TDTM_Runnable {
 	            for (SObject so : newlist) {
 	            	Contact contact = (Contact)so;
 	                // AFTER INSERT
-	                if (ta == TDTM_TriggerActionHelper.Action.AfterInsert && contact.AccountId != null) {
-	                    //insert affiliations for contacts with an Account
-	                        affiliationInserts.add(contact);
+	                if(!alreadyCalledBefore) {
+	                	alreadyCalledBefore = true;
+		                if (ta == TDTM_TriggerActionHelper.Action.AfterInsert && contact.AccountId != null) {
+		                	System.debug('****Inserting new contact on afterInsert');
+		                    //insert affiliations for contacts with an Account
+		                    affiliationInserts.add(contact);
+		                }
 	                }
 	                
 	                // AFTER UPDATE
-	                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-	                	Contact oldContact = (Contact) oldlist[i];
-	                    if (contact.AccountId != oldContact.AccountId && contact.AccountId != null)
-	                        affiliationInserts.add(contact);
+	                if(!alreadyCalledAfter) {
+	                	alreadyCalledAfter = true;
+		                if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+		                	System.debug('****Inserting new contact on afterUpdate');
+		                	Contact oldContact = (Contact) oldlist[i];
+		                    if (contact.AccountId != oldContact.AccountId && contact.AccountId != null) {
+		                       System.debug('****The account has changed!');
+		                       affiliationInserts.add(contact);
+		                    }
+		                }
 	                }
 	                i++;
 	            }
@@ -31,7 +53,7 @@ public with sharing class AFFL_InsertsHandler extends TDTM_Runnable {
 	            if (affiliationInserts.size() > 0)
 	                dmlWrapper.objectsToInsert.addAll(insertAffiliation(affiliationInserts));                    
 	        }
-        }
+        //}
         return dmlWrapper; 
     }
     
@@ -61,9 +83,9 @@ public with sharing class AFFL_InsertsHandler extends TDTM_Runnable {
                 a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                 a.npe5__StartDate__c = System.Today();
                 //user title as Role
-                if (c.Title != null) {
+                if (c.Title != null)
                     a.npe5__Role__c = c.Title;
-                }
+                System.debug('****Adding npe5__Affiliation__c for contact ' + c.Id + ' and account ' + c.AccountId + ' to the list of inserts');
                 affiliationInserts.add(a);
             }
         }
