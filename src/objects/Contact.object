@@ -175,6 +175,7 @@
         <fullName>HHId__c</fullName>
         <externalId>false</externalId>
         <formula>CASESAFEID(if ( Account.npe01__SYSTEM_AccountType__c ==&apos;HH Account&apos;,  AccountId,  npo02__Household__c ))</formula>
+        <inlineHelpText>holds the ID of the current household, whether it is a Household Account, or a Household Object.</inlineHelpText>
         <label>HHId</label>
         <required>false</required>
         <type>Text</type>
@@ -182,6 +183,9 @@
     </fields>
     <fields>
         <fullName>LeadSource</fullName>
+        <picklist>
+            <sorted>false</sorted>
+        </picklist>
         <type>Picklist</type>
     </fields>
     <fields>
