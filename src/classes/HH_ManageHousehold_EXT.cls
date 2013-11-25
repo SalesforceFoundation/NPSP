@@ -713,7 +713,6 @@ global with sharing class HH_ManageHousehold_EXT {
         ApexPages.StandardController sc = new ApexPages.standardController(hh);
         PageReference sv = sc.save();
         
-        //Rollup household - uncomment this in NPSP - the constructor is not global so cannot be called outside the managed package
         RLLP_OppRollup rg = new RLLP_OppRollup();
         rg.rollupHouseholds(new map<id, npo02__Household__c>(new list<npo02__Household__c>{hh}));
                 
