@@ -1245,9 +1245,9 @@ private class ACCT_IndividualAccounts_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(con);
         //pass the controller into the extension
-        //DJH:UNDONE ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
+        ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
         
-        //DJH:UNDONE system.assertEquals(system.label.npe01.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
+        system.assertEquals(system.label.npe01.DefaultContactTransactionCurrency + '500.00',ext.getContactDonationHistory());
     }
 
     /// <name> getContactLastDonation </name>
@@ -1286,9 +1286,9 @@ private class ACCT_IndividualAccounts_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(con);
         //pass the controller into the extension
-        //DJH:UNDONE ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
+        ContactDonationCredit_EXT ext = new ContactDonationCredit_EXT(sc);
 
-        //DJH:UNDONE system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getContactLastDonation());        
+        system.assertEquals(String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year),ext.getContactLastDonation());        
     }   
 ************************* DEPRECATE IN CUMULUS ***********************************/    
      

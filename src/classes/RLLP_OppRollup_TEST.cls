@@ -1590,7 +1590,7 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.startTest();
 
         // create the page 
-        PageReference pageRef=Page.npo02__OpportunityRollup; //DJH:UNDONE replace w/ cumulus page 
+        PageReference pageRef=Page.RLLP_OppRollup; 
         Test.setCurrentPage(pageRef); 
 
         // set the parameter for the contact
