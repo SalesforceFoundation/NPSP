@@ -28,23 +28,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
-    
-    private static Boolean alreadyCalledBefore = false;
-    private static Boolean alreadyCalledAfter = false;
-    
-    public override Boolean wasAlreadyCalledBefore() {
-    	return alreadyCalledBefore;
-    }
-    
-    public override Boolean wasAlreadyCalledAfter() {
-        return alreadyCalledAfter;
-    }
 
     /// <name> AFFL_Affiliations </name>
     /// <summary> Overloads the Affiliation object constructor to handle Affiliation processing </summary>
-    /// <param name="contacts"> Contact objects that are being triggered </param>
-    /// <param name="oldContacts"> Contact object values before trigger event </param>
-    /// <param name="ta"> Trigger action that is occuring </param>
+    /// <param name="newlist"> Contact objects that are being triggered </param>
+    /// <param name="oldlist"> Contact object values before trigger event </param>
+    /// <param name="triggerAction"> Trigger action that is occuring </param>
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
@@ -60,8 +49,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             for (SObject so : newlist) {
             	Contact contact = (Contact)so;
                 // AFTER INSERT
-                if (!alreadyCalledBefore && triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
-                	alreadyCalledBefore = true;
+                if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
                     //insert affiliations for contacts with an Account
                     if (contact.AccountId != null) {
                         affiliationInserts.add(contact);
@@ -69,8 +57,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 }
                 
                 // AFTER UPDATE
-                if (!alreadyCalledAfter && triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-                	alreadyCalledAfter = true;
+                if ( triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                	//alreadyCalledAfterUpdate = true;
                     Contact oldContact = (Contact) oldlist[i];
                     if (contact.AccountId != oldContact.AccountId) {
                         if (oldContact.AccountId != null) {
@@ -85,10 +73,12 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             }
     
             if (affiliationInserts.size() > 0) {
+            	System.debug('****Number of contacts that need new affiliations: ' + affiliationInserts.size());
                 dmlWrapper.objectsToInsert.addAll(processInserts(affiliationInserts));
             }
             
             if (affiliationUpdates.size() > 0) {
+            	System.debug('****Number of contacts that need updated affiliations: ' + affiliationUpdates.size());
                 dmlWrapper.objectsToUpdate.putAll(processUpdates(affiliationUpdates));
             }
         }
@@ -168,7 +158,6 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 npe5__Affiliation__c affiliation = new npe5__Affiliation__c(Id=conAccMap.get(u));
                 affiliation.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
                 affiliation.npe5__EndDate__c = System.Today();
-                System.debug('****Adding affiliation with ID ' + affiliation.Id + ' to the list of updates');
                 affiliationUpdates.put(affiliation.Id, affiliation);
             }
         }

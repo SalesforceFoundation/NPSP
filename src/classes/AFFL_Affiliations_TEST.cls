@@ -40,8 +40,9 @@ public class AFFL_Affiliations_TEST {
         npe5__Affiliation__c[] createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
             where npe5__Contact__c=:contact.id AND npe5__Organization__c = :acc.id];     
-        Id firstAffiliationId = createdAffiliations[0].Id;
+        Id firstAffiliationId = createdAffiliations[0].Id; //storing the id for later use
         
+        System.assertEquals(1, createdAffiliations.size());
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__StartDate__c);
@@ -53,8 +54,9 @@ public class AFFL_Affiliations_TEST {
             
         npe5__Affiliation__c[] createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
-            where npe5__Contact__c =:contact.id AND npe5__Organization__c = :acc2.id];
+            where npe5__Contact__c =:contact.id AND npe5__Organization__c = :acc2.id];        
         
+        System.assertEquals(1, createdAffiliations2.size());
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations2[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].npe5__StartDate__c);
@@ -62,11 +64,12 @@ public class AFFL_Affiliations_TEST {
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, 
             npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where id=:firstAffiliationId];
         
+        System.assertEquals(1, createdAffiliations.size());
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__EndDate__c);
     }
     
-    /*
+    
     static testMethod void newContactOnOrgAccountAutoOff() {
         setupTDTM();
         
@@ -154,10 +157,9 @@ public class AFFL_Affiliations_TEST {
         createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);        
-    }*/
+    }
     
     private static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
-        setupTDTM();
         
         //clear out whatever settings exist
         delete [select id from npe5__Affiliations_Settings__c limit 100];
