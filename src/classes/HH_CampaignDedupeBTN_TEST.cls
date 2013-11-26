@@ -38,7 +38,8 @@ private class HH_CampaignDedupeBTN_TEST {
   public static testMethod void testCampaignHHReport(){
       npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
-                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,                    
+                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
+                    npo02__DISABLE_Households_trigger__c = false,                   
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,
@@ -65,6 +66,7 @@ private class HH_CampaignDedupeBTN_TEST {
     );
     insert con;
     id hhid = [select npo02__Household__r.id from Contact where id = :con.id].npo02__household__r.id;
+    system.assert(hhid != null);
     system.debug('HHID IS===================' + hhid);
     Contact con2 = new Contact (
       FirstName = 'Amy',

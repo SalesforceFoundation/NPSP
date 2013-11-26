@@ -31,6 +31,8 @@
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
 * @description Controls generation of household names for lists of households 
+* NOTE: This class handles both household naming for the Household__c object
+* as well as for HH Account objects. 
 */
 global virtual without sharing class HH_HouseholdNaming {
       
@@ -44,6 +46,7 @@ global virtual without sharing class HH_HouseholdNaming {
         //this is b/c of the global visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         hn.UpdateNames(hhids);      
+        HH_ProcessControl.inFutureContext = false;    
     }
     global virtual string getOtherName(list<Contact> ContactList){return null;}
     global virtual void UpdateNames(list<id> hhids){
@@ -53,41 +56,52 @@ global virtual without sharing class HH_HouseholdNaming {
         
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
-        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, npo02__Household__r.id, npo02__Naming_Exclusions__c from Contact where npo02__Household__c IN :hhids and npo02__Household__c != null ORDER BY npo02__Household__c,npo02__Household_Naming_Order__c ASC NULLS LAST ];
-        list<npo02__Household__c> hhupdatelist = [select Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
+        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, hhId__c, npo02__Naming_Exclusions__c from Contact 
+            where hhId__c IN :hhids and hhId__c != null 
+            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST ];
+            
+        list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
+        list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];
+
+        // handle two types of households by using an SObject    
+        list<SObject> hhupdatelist = new list<SObject>();
+        hhupdatelist.addAll(listHHObj);
+        hhupdatelist.addAll(listHHAcct);        
         
         map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
         
         //sort contacts by household
         for (Contact c : contactlist){          
-            if(!hhIDContactMap.containskey(c.npo02__household__r.id)){
-                hhIDContactMap.put(c.npo02__household__r.id, new list<Contact>{c});
+            if(!hhIDContactMap.containskey(c.hhId__c)){
+                hhIDContactMap.put(c.hhId__c, new list<Contact>{c});
             }
             else{
-                list<Contact> clist = hhIDContactMap.get(c.npo02__household__r.id);
+                list<Contact> clist = hhIDContactMap.get(c.hhId__c);
                 clist.add(c);                
             }
         }
                 
         //loop through the households needing name changes, if necessary, make them.
-        for (npo02__Household__c h : hhupdatelist){    
-        
+        for (SObject h : hhupdatelist){    
+            ID hhId = string.valueOf(h.get('Id'));
             string customnameparam = '';
-            if (h.npo02__SYSTEM_CUSTOM_NAMING__c != null){
-                customnameparam = h.npo02__SYSTEM_CUSTOM_NAMING__c;
+            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
+                customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
             }            
             
             if (!customnameparam.contains('Name'))
-                h.Name = getHHName(hhIDContactMap.get(h.id));   
+                h.put('Name', getHHName(hhIDContactMap.get(hhId)));   
             
             if (!customnameparam.contains('Formal_Greeting__c'))
-                h.npo02__Formal_Greeting__c = getFormalName(hhIDContactMap.get(h.id));
+                h.put('npo02__Formal_Greeting__c', getFormalName(hhIDContactMap.get(hhId)));
 
             if (!customnameparam.contains('Informal_Greeting__c'))
-                h.npo02__Informal_Greeting__c = getInformalName(hhIDContactMap.get(h.id));             
+                h.put('npo02__Informal_Greeting__c', getInformalName(hhIDContactMap.get(hhId)));             
         } 
         
         if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);
+
+        HH_ProcessControl.inFutureContext = false;    
     }
     
     //get generic household name 
@@ -104,7 +118,7 @@ global virtual without sharing class HH_HouseholdNaming {
              
             for (Contact c : ContactList){
                 //add valid values to the contactnames and lastnames lists for processing if not already in the set
-                if((c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.Name')) 
+                if((c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Name'))    
                     && !contactlastnamesSet.contains(c.LastName))
                 {
                     contactlastnames.add(c.LastName);
@@ -154,7 +168,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         
         for (Contact c : ContactList){ 
-            if(c.FirstName != null && (c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.npo02__Informal_Greeting__c')))
+            if(c.FirstName != null && (c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('npo02__Informal_Greeting__c')))
                 contactnames.add(c);
         }
         
@@ -203,7 +217,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         //remove any excluded contacts
         for (Contact c : ContactList){ 
-            if(c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Household__c.npo02__Formal_Greeting__c'))
+            if(c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('npo02__Formal_Greeting__c'))
                 contactnames.add(c);
         }
         

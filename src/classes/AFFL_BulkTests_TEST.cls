@@ -75,7 +75,7 @@ public with sharing class AFFL_BulkTests_TEST {
     }
     
     static testMethod void newContactOnIndividualAccount() {
-        Account acc = new Account(Name='Individual');
+        Account acc = new Account(Name='Individual', npe01__SYSTEMIsIndividual__c=true);
         insert acc;
         
         String newContactfirstName = 'test';
