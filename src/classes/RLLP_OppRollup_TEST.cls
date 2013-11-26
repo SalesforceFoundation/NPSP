@@ -35,7 +35,13 @@
 @isTest
 public with sharing class RLLP_OppRollup_TEST {
     
-    static testMethod void testGivingRollup(){
+    static testMethod void testGivingRollupOne2One(){
+        testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupHHAccount(){
+        testGivingRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    static void testGivingRollupProcessor(string strProcessor){
                 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
@@ -53,7 +59,7 @@ public with sharing class RLLP_OppRollup_TEST {
             
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -108,7 +114,13 @@ public with sharing class RLLP_OppRollup_TEST {
         system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.npo02__household__r.npo02__Best_Gift_Year__c);        
     }
     
-    static testMethod void testGivingRollupIndividual () {
+    static testMethod void testGivingRollupIndividualBucket(){
+        testGivingRollupIndividualProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    static testMethod void testGivingRollupIndividualHHAccount(){
+        testGivingRollupIndividualProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    static void testGivingRollupIndividualProcessor(string strProcessor) {
        
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
             npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -124,7 +136,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.BUCKET_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -187,7 +199,13 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }
     
-    static testMethod void testGivingRollupExcludedRT () {
+    static testMethod void testGivingRollupExcludedRTOne2One(){
+        testGivingRollupExcludedRTProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupExcludedRTHHAccount(){
+        testGivingRollupExcludedRTProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    static void testGivingRollupExcludedRTProcessor (string strProcessor) {
       
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
@@ -204,7 +222,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -266,7 +284,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     
     
-   static testMethod void testGivingRollupAlwaysPrimary () {
+    static testMethod void testGivingRollupAlwaysPrimaryOne2One(){
+        testGivingRollupAlwaysPrimaryProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupAlwaysPrimaryHHAccount(){
+        testGivingRollupAlwaysPrimaryProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+   static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
             npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -282,7 +306,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
             
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -346,7 +370,13 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }
     
- static testMethod void testMemberRollup () {
+    static testMethod void testMemberRollupOne2One(){
+        testMemberRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testMemberRollupHHAccount(){
+        testMemberRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testMemberRollupProcessor (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
@@ -364,7 +394,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -412,7 +442,13 @@ public with sharing class RLLP_OppRollup_TEST {
         }   
     }
     
-    static testMethod void testGivingRollupAcct () {
+    static testMethod void testGivingRollupAcctOne2One(){
+        testGivingRollupAcct(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupAcctHHAccount(){
+        testGivingRollupAcct(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testGivingRollupAcct (string strProcessor) {
  
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
@@ -430,7 +466,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -476,7 +512,13 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );    
     }   
 
-    static testMethod void testGivingRollupAcctMembership () {
+    static testMethod void testGivingRollupAcctMembershipOne2One(){
+        testGivingRollupAcctMembership(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupAcctMembershipHHAccount(){
+        testGivingRollupAcctMembership(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testGivingRollupAcctMembership (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
@@ -494,7 +536,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -543,7 +585,13 @@ public with sharing class RLLP_OppRollup_TEST {
         }
     }   
 
-    static testMethod void testGivingRollupBatch () {
+    static testMethod void testGivingRollupBatchOne2One(){
+        testGivingRollupBatch(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupBatchHHAccount(){
+        testGivingRollupBatch(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testGivingRollupBatch (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -560,7 +608,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -585,7 +633,13 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }   
 
-    public static testMethod void OneContactMultipleOpps() {
+    static testMethod void OneContactMultipleOppsOne2One(){
+        OneContactMultipleOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount(){
+        OneContactMultipleOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps(string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
@@ -603,7 +657,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -740,7 +794,13 @@ public with sharing class RLLP_OppRollup_TEST {
         }
     }
 
-    static testMethod void OneContactOneInkind() {
+    static testMethod void OneContactOneInkindOne2One(){
+        OneContactOneInkind(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactOneInkindHHAccount(){
+        OneContactOneInkind(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void OneContactOneInkind(string strProcessor) {
  
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -757,7 +817,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -781,7 +841,13 @@ public with sharing class RLLP_OppRollup_TEST {
             System.Assert(!(UpdatedCon.npo02__TotalOppAmount__c>0));
     }
 
-    static testMethod void testGivingRollupBulk () {
+    static testMethod void testGivingRollupBulkOne2One(){
+        testGivingRollupBulk(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupBulkHHAccount(){
+        testGivingRollupBulk(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testGivingRollupBulk (string strProcessor) {
     
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
@@ -798,7 +864,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -834,7 +900,13 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }
 
-    static testMethod void testGivingRollupTooManyOpps () {
+    static testMethod void testGivingRollupTooManyOppsOne2One(){
+        testGivingRollupTooManyOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testGivingRollupTooManyOppsHHAccount(){
+        testGivingRollupTooManyOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testGivingRollupTooManyOpps (string strProcessor) {
   
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -851,7 +923,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -886,7 +958,13 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 45000 , UpdatedCon.npo02__TotalOppAmount__c );        
     } 
     
-    static testMethod void testHouseholdStats () {
+    static testMethod void testHouseholdStatsOne2One(){
+        testHouseholdStats(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testHouseholdStatsHHAccount(){
+        testHouseholdStats(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testHouseholdStats (string strProcessor) {
    
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -903,7 +981,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -922,7 +1000,7 @@ public with sharing class RLLP_OppRollup_TEST {
             );
             insert Con1;
             
-            Contact con = [SELECT npo02__household__r.id FROM Contact WHERE id = :Con1.id LIMIT 1];
+            Contact con = [SELECT AccountId, npo02__household__r.id FROM Contact WHERE id = :Con1.id LIMIT 1];
             
             // create & insert second household member
             Contact Con2 = new contact(
@@ -933,7 +1011,8 @@ public with sharing class RLLP_OppRollup_TEST {
                 npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
                 npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
                 npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
-                npo02__household__c = con.npo02__household__c
+                npo02__household__c = con.npo02__household__c,
+                AccountId = (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR ? con.AccountId : null)
             );
             insert Con2;
             
@@ -968,7 +1047,13 @@ public with sharing class RLLP_OppRollup_TEST {
             System.assertEquals (200, c.npo02__household__r.npo02__Best_Gift_Year_Total__c);                    
     }    
         
-    static testMethod void testUserDefinedRollup() {
+    static testMethod void testUserDefinedRollupOne2One(){
+        testUserDefinedRollup(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testUserDefinedRollupHHAccount(){
+        testUserDefinedRollup(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testUserDefinedRollup(string strProcessor) {
 
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -982,7 +1067,7 @@ public with sharing class RLLP_OppRollup_TEST {
                     npo02__Membership_Record_Types__c = null
          ));
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -1046,7 +1131,18 @@ public with sharing class RLLP_OppRollup_TEST {
         system.assertEquals(system.today().addDays(-2), ct.BirthDate);        
     }
     
-    static testMethod void testMultiCurrencyMethods(){
+    static testMethod void testMultiCurrencyMethodsOne2One(){
+        testMultiCurrencyMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testMultiCurrencyMethodsHHAccount(){
+        testMultiCurrencyMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testMultiCurrencyMethods(string strProcessor){
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = strProcessor,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
         //exercise internal multicurrency helper methods, check currency conversion             
         decimal d = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 55.00);      
         d = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 55.00);
@@ -1078,9 +1174,22 @@ public with sharing class RLLP_OppRollup_TEST {
         
         RLLP_OppRollup opproll = new RLLP_OppRollup();
         map<Id, Opportunity> omap = RLLP_OppRollup_UTIL.rcfFindCurrency(sobjectList);
+        
+        // UNDONE: THERE ARE NO ASSERTS!!!!
     }
     
-    static testMethod void testRollupAlls(){
+    static testMethod void testRollupAllsOne2One(){
+        testRollupAlls(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testRollupAllsHHAccount(){
+        testRollupAlls(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testRollupAlls(string strProcessor){
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = strProcessor,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
         RLLP_OppRollup og = new RLLP_OppRollup();
         
         test.startTest();
@@ -1090,8 +1199,17 @@ public with sharing class RLLP_OppRollup_TEST {
         decimal y = RLLP_OppRollup_UTIL.ConvertFromCorporate('USD', 500.00);
         decimal z = RLLP_OppRollup_UTIL.ConvertCurrency('USD', 'USD', 6565.54);
         test.stopTest();
+        
+        // UNDONE: THERE ARE NO ASSERTRS!!!!
     }
-    static testMethod void testFiscalYearandCustomNDay () {
+    
+    static testMethod void testFiscalYearandCustomNDayOne2One(){
+        testFiscalYearandCustomNDay(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testFiscalYearandCustomNDayHHAccount(){
+        testFiscalYearandCustomNDay(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testFiscalYearandCustomNDay (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -1111,7 +1229,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -1148,7 +1266,13 @@ public with sharing class RLLP_OppRollup_TEST {
             system.assertEquals(100, [select npo02__OppAmountLastNDays__c from Contact where id = :TestCons[0].id].npo02__OppAmountLastNDays__c);
     }
     
-   static testMethod void testSoftCredits() {
+    static testMethod void testSoftCreditsOne2One(){
+        testSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testSoftCreditsHHAccount(){
+        testSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+   static void testSoftCredits(string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
@@ -1168,7 +1292,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -1224,7 +1348,13 @@ public with sharing class RLLP_OppRollup_TEST {
             system.assertEquals(100, c2.npo02__Soft_Credit_Two_Years_Ago__c);
     }  
     
-    static testMethod void testFutureMethods(){
+    static testMethod void testFutureMethodsOne2One(){
+        testFutureMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testFutureMethodsHHAccount(){
+        testFutureMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testFutureMethods(string strProcessor){
          String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
             npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -1243,7 +1373,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -1273,7 +1403,13 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.stopTest();
     }    
     
-    static testMethod void testOpportunityUtilityErrorHandling(){
+    static testMethod void testOpportunityUtilityErrorHandlingOne2One(){
+        testOpportunityUtilityErrorHandling(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testOpportunityUtilityErrorHandlingHHAccount(){
+        testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void testOpportunityUtilityErrorHandling(string strProcessor){
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -1293,7 +1429,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -1320,8 +1456,14 @@ public with sharing class RLLP_OppRollup_TEST {
         system.assert(fy != null);      
     }
     
+    static testMethod void testUDRChangeBehaviorOne2One(){
+        testUDRChangeBehavior(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testUDRChangeBehaviorHHAccount(){
+        testUDRChangeBehavior(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //a change to a UDR value should trigger a rollup
-    static testMethod void testUDRChangeBehavior(){
+    static void testUDRChangeBehavior(string strProcessor){
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
@@ -1334,7 +1476,7 @@ public with sharing class RLLP_OppRollup_TEST {
                     npo02__Membership_Record_Types__c = null
          ));
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -1408,7 +1550,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
 
 
-    public static testMethod void testRollupCtrl() {
+    static testMethod void testRollupCtrlOne2One(){
+        testRollupCtrl(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testRollupCtrlHAccount(){
+        testRollupCtrl(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void testRollupCtrl(string strProcessor) {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
@@ -1423,7 +1571,7 @@ public with sharing class RLLP_OppRollup_TEST {
             ));
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -1442,7 +1590,7 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.startTest();
 
         // create the page 
-        PageReference pageRef=Page.npo02__OpportunityRollup; //DJH:UNDONE replace w/ cumulus page 
+        PageReference pageRef=Page.RLLP_OppRollup; 
         Test.setCurrentPage(pageRef); 
 
         // set the parameter for the contact

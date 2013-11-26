@@ -109,8 +109,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         //String lId = ApexPages.currentPage().getParameters().get('id');  
         PageReference pageRef;
         
+        //DJH:UNDONE treat HH Account model just like 1:1?
+        
         //don't test if we're not in the one-to-one model
-        if (CAO_Constants.isOneToOne() && !((l.company.toUpperCase() != 'INDIVIDUAL' && 
+        if (!CAO_Constants.isBucketModel() && !((l.company.toUpperCase() != 'INDIVIDUAL' && 
                 (l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || 
                 l.company.toUpperCase() == l.name)))) {
 
@@ -144,7 +146,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             lc.setAccountId(conMap.get(con).accountId);          
         }
         else{
-            if (!CAO_Constants.isOneToOne() && 
+            if (CAO_Constants.isBucketModel() && 
             (l.Company == CAO_Constants.BUCKET_ACCOUNT_NAME || l.Company == 'self' 
             || l.Company == '' || l.Company == null))
                lc.setAccountID(CAO_Constants.getIndividualAccountID());
@@ -160,14 +162,19 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             
             
             // fix the account that lead conversion created
-            if (con == 'NEW_CONTACT' && CAO_Constants.isOneToOne()) {     
+            if (con == 'NEW_CONTACT' && !CAO_Constants.isBucketModel()) {     
                 //
                 Contact[] myconvertedContact = [select id,firstname, lastname from contact where id=:lcr.getContactId()];
                 
                 Account myAccount = new Account(Id=lcr.getAccountId());
-                myAccount.Name= myconvertedContact[0].firstName + ' ' + myconvertedContact[0].lastName;
-                myAccount.npe01__One2OneContact__c=lcr.getContactId();
-                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                if (CAO_Constants.isOneToOne()) {
+	                myAccount.Name= ACCT_IndividualAccounts.strNameOne2OneAccountForContact(myconvertedContact[0]);
+	                myAccount.npe01__One2OneContact__c=lcr.getContactId();
+	                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                } else { 
+                	myAccount.Name = ACCT_IndividualAccounts.strNameHHAccountForContact(myconvertedContact[0]);
+                	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+                }
                 myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
                 update myAccount;
             }   
@@ -175,6 +182,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             
             //clean up the extra OCR Issue #214
             // if we create an opp, its a 1x1, and its merged into an existing contact
+            // DJH:UNDONE is this issue affect HH Account as well?
             if (!lc.isDoNotCreateOpportunity() && CAO_Constants.isOneToOne() && con != 'NEW_CONTACT'){
                 
                 //get the new OCRs

@@ -99,41 +99,34 @@ public class AFFL_Affiliations {
     /// <name> insertAffiliation </name>
     /// <summary> Creates a new Affiliation record when a Contact is related to a new non-Individual Account </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void insertAffiliation(Contact[] contacts)
-    {
+    private static void insertAffiliation(Contact[] contacts) {
         List<Id> accountIds = new List<Id>();
-        for(Contact c : contacts)
-        {
+        for (Contact c : contacts) {
             accountIds.add(c.AccountId);
         }
         //get all the accounts associated wth these contacts
-        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, Name from Account where Id in :accountIds]);
+        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account where Id in :accountIds]);
 
         List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
-        for(Contact c : contacts)
-        {
+        for(Contact c : contacts) {
             String cName = c.FirstName;
             cName += ' ';
             cName += c.LastName;
-            //check to see if this account isn't an individual. Can't use the real systemisindividual field on account
-            //because that would make this dependent on the Contacts and Organizations package
-            if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual' )
-            {
+            //check to see if this account isn't an individual. 
+            if (accountMap.get(c.AccountId).npe01__SYSTEMIsIndividual__c != true) {
                 npe5__Affiliation__c a = new npe5__Affiliation__c();
                 a.npe5__Contact__c = c.Id;
                 a.npe5__Organization__c = c.AccountId;
                 a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                 a.npe5__StartDate__c = System.Today();
                 //user title as Role
-                if (c.Title != null)
-                {
+                if (c.Title != null) {
                     a.npe5__Role__c = c.Title;
                 }
                 affiliationInserts.add(a);
             }
         }
-        if (affiliationInserts.size() > 0)
-        {
+        if (affiliationInserts.size() > 0) {
             Database.SaveResult[] lsr = Database.insert(affiliationInserts, false);
         }
     }
@@ -143,7 +136,7 @@ public class AFFL_Affiliations {
     /// <name> updateAffiliation </name>
     /// <summary> Updates an existing Affiliation record when a Contact's Account is changed </summary>
     /// <param name="Contact"> List of original contacts before update that met trigger criteria </param>
-    public static void updateAffiliation(Contact[] contacts)
+    private static void updateAffiliation(Contact[] contacts)
     {
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
