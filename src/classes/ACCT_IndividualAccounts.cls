@@ -240,11 +240,18 @@ public with sharing class ACCT_IndividualAccounts {
                 updateExistingHHAccounts(contacts);                    
             }
             if (listAccountIdHHToUpdate.size() > 0) {
-                RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
-                renameHHAccountsFuture(listAccountIdHHToUpdate);    
+            	if (!system.isFuture()) {
+                    RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
+            	} else {
+		            RLLP_OppRollup rg = new RLLP_OppRollup();
+		            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+		                                                           ' where id IN :listAccountIdHHToUpdate')); 
+		            rg.rollupAccounts(amap);		            
+            	}    
+                renameHHAccounts(listAccountIdHHToUpdate);
             }
             if (listAccountIdHHToRename.size() > 0) {
-                renameHHAccountsFuture(listAccountIdHHToRename);    
+                renameHHAccounts(listAccountIdHHToRename);    
             }
             if (listContactAccountDelete.size() > 0) {
                 // check all old accounts to delete is they are left hanging around
@@ -284,14 +291,14 @@ public with sharing class ACCT_IndividualAccounts {
             }
         }
         
-        renameHHAccountsFuture(listAccountIdHHRename);
+        renameHHAccounts(listAccountIdHHRename);
     }
 
-    /// <name> renameHHAccountsFuture </name>
+    /// <name> renameHHAccounts </name>
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
-    private void renameHHAccountsFuture(ID[] listAccountId) {
-    	if (listAccountId.size() == 1) {
+    private void renameHHAccounts(ID[] listAccountId) {
+    	if (listAccountId.size() == 1 || system.isFuture()) {
     	    HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
     	} else {
