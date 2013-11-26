@@ -132,12 +132,18 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
           
         set<id> HouseholdIDSet = new set<id>();        
     
-        for (CampaignMember m : [Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Status From CampaignMember where CampaignId=:campaign.Id and ContactId != null and Contact.npo02__household__c != null order by Contact.npo02__TotalOppAmount__c desc]) {
+        for (CampaignMember m : [Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Contact.AccountId, Contact.Account.npe01__SYSTEM_AccountType__c, Status 
+            From CampaignMember where CampaignId=:campaign.Id and ContactId != null and 
+                (Contact.npo02__household__c != null or Contact.Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE)
+                order by Contact.npo02__TotalOppAmount__c desc]) {
             
             //do not want null status
             if (m.Status==null) m.Status = statuses[0].label;
       
             string newStatus = null;
+            
+            ID hhId = (m.Contact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ?
+                m.Contact.AccountId : m.Contact.npo02__household__c;
       /*
             //if this contact's household is already in the set, its a dupe from this household
             //also filter any we've already marked 
@@ -159,14 +165,14 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             //mark it as a duplicate if not already marked
             //if the HH id is not in the set, it's not a duplicate.  If it's marked as such,
             //(e.g. from a previous time the report was run), unmark it.            
-            if(HouseholdIDSet.contains(m.Contact.npo02__household__c)){
+            if(HouseholdIDSet.contains(hhId)){
                 if (!m.Status.endsWith(DupeText)) {
                     newStatus =  m.Status + DupeText;
                 }
             }
              
             else{
-                HouseholdIDSet.add(m.Contact.npo02__household__c);
+                HouseholdIDSet.add(hhId);
                 
                 if (m.Status.endsWith(DupeText)) {
                     newStatus =  m.Status.substring(0, m.status.length()-DupeText.length());                

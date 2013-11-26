@@ -13,7 +13,7 @@
 <apex:stylesheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/smoothness/jquery-ui.css" />
 
 <!-- ensure the css overrides any salesforce css by loading it later -->
-<link href="{!$Resource.npo02__ManageHouseholdcss}" type="text/css" rel="stylesheet" />
+<link href="{!$Resource.ManageHouseholdcss}" type="text/css" rel="stylesheet" />
 
 <!-- The below code needs VF merge values so has not been migrated to the static resource in {!$Resource.ManageHouseholdjs} -->
 <!-- the values prefixed lbl need to be translated in custom labels / object / field labels -->
@@ -43,7 +43,7 @@ gwManageHH.jsonState = JSON.stringify(gwManageHH.state);
 gwManageHH.originalState = JSON.stringify({!originalState});
 </script>
 <!-- Load custom JS after objects and labels have been initialised -->
-<script type="text/javascript" src="{!$Resource.npo02__ManageHouseholdjs}" />
+<script type="text/javascript" src="{!$Resource.ManageHouseholdjs}" />
 
 <div id="dialog-addmember" class="gwDialog gwHidden" title="{!$label.npo02__AlreadyInHousehold}">
     <p><strong id="dialog-addmember-name" /> {!$label.npo02__ContactAlreadyInHousehold}</p>

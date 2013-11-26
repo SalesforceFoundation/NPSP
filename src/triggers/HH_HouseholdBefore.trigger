@@ -77,7 +77,7 @@ trigger HH_HouseholdBefore on npo02__Household__c (before update) {
                     }
                     h.npo02__SYSTEM_CUSTOM_NAMING__c = customname;
                 }
-            }  // DJH:UNDONE should the contains calls look for npo02__foo or just foo?
+            }  
         }   
     }
 }

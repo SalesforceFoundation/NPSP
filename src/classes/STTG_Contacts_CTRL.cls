@@ -72,6 +72,7 @@ public with sharing class STTG_Contacts_CTRL {
     public List<SelectOption> getaccountmodels() {
         if(accountmodels == null){
             accountmodels = new List<SelectOption>();
+            accountmodels.add(new SelectOption('HH Account', 'HH Account'));
             accountmodels.add(new SelectOption('One-to-One', 'One-to-One'));
             accountmodels.add(new SelectOption('Individual', 'Individual'));
         }

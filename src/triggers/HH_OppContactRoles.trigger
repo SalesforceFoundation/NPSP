@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger HH_OppContactRoles on Opportunity (after insert) {
+trigger HH_OppContactRoles on Opportunity (after insert) { // DJH:UNDONE why not also do this after update?  ie, changes to the opp should immediately update soft credits, rather than relying on batch rollup.
     
     npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings(); 
     

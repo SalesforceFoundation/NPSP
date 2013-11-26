@@ -45,6 +45,11 @@ global with sharing class CAO_Constants {
     //Bucket Account name
     global static  String BUCKET_ACCOUNT_NAME = 'Individual';
     
+    //HH_Account value for system processor field
+    global static final String HH_ACCOUNT_PROCESSOR = 'HH Account';
+    //HH_Account type value
+    global static final String HH_ACCOUNT_TYPE = 'HH Account';
+
     global static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
     
     global static  string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
@@ -62,6 +67,7 @@ global with sharing class CAO_Constants {
     //get the settings. handles the case where the managed value doesn't exist yet
     global static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
         boolean usedToBeOneToOne = false;
+        boolean usedToBeBucket = false;
         //if no settings exist, create defaults
         if (ContactsSettings == null) {
             //first see if we already have settings
@@ -73,24 +79,30 @@ global with sharing class CAO_Constants {
                 Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npe01__SystemAccountProcessor__c; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 
-                for(Schema.PicklistEntry pe : P){
-
-                    if (pe.isDefaultValue()){
-                        if(pe.getValue()==CAO_Constants.ONE_TO_ONE_PROCESSOR){
+                for(Schema.PicklistEntry pe : P) {
+                    if (pe.isDefaultValue()) {
+                        if (pe.getValue()==CAO_Constants.ONE_TO_ONE_PROCESSOR) {
                             usedToBeOneToOne = true;
                             break;
                         }
+                        if (pe.getValue()==CAO_Constants.BUCKET_PROCESSOR) {
+                            usedToBeBucket = true;
+                            break;
+                        }                        
                     }
                 }
 
                 //ContactsSettings = new npe01__Contacts_and_Orgs_Settings__c();
 
                 //set them up with their old setting in the new settings object
-                if(usedToBeOneToOne){
+                if (usedToBeOneToOne) {
                     ContactsSettings.npe01__Account_Processor__c = ONE_TO_ONE_PROCESSOR;
-                } else {
+                } else if (usedToBeBucket) {
                     ContactsSettings.npe01__Account_Processor__c = BUCKET_PROCESSOR;
+                } else {
+                    ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                	
                 }
+                
                 //set the other settings to reasonable defaults
                 ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
                 ContactsSettings.npe01__Payments_Enabled__c  = true;
@@ -137,17 +149,23 @@ global with sharing class CAO_Constants {
         return isOneToOneModel;
     }
     */
-     global static boolean isOneToOne() {
-        
-        
+    global static boolean isOneToOne() {        
         //if no settings exist, create defaults
         if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
             return true;
         } else {
             return false;
-        }
-        
+        }        
     }
+    
+    global static boolean isBucketModel() {
+        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
+    }
+    
+    global static boolean isHHAccountModel() {
+        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
+    }
+    
     /// <name> triggerAction </name>
     /// <summary> contains possible actions for a trigger </summary>
     public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}

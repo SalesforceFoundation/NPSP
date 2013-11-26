@@ -95,16 +95,16 @@ public class AFFL_Affiliations {
             accountIds.add(c.AccountId);
         }
         //get all the accounts associated wth these contacts
-        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, Name from Account where Id in :accountIds]);
+        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account where Id in :accountIds]);
 
         List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
         for(Contact c : contacts) {
             String cName = c.FirstName;
             cName += ' ';
             cName += c.LastName;
-            //check to see if this account isn't an individual. Can't use the real systemisindividual field on account
-            //because that would make this dependent on the Contacts and Organizations package
-            if ( accountMap.get(c.AccountId).Name != cName && accountMap.get(c.AccountId).Name != 'Individual') {
+
+            //check to see if this account isn't an individual. 
+            if (accountMap.get(c.AccountId).npe01__SYSTEMIsIndividual__c != true) {
                 npe5__Affiliation__c a = new npe5__Affiliation__c();
                 a.npe5__Contact__c = c.Id;
                 a.npe5__Organization__c = c.AccountId;
@@ -128,6 +128,7 @@ public class AFFL_Affiliations {
     /// <summary> Updates an existing Affiliation record when a Contact's Account is changed </summary>
     /// <param name="Contact"> List of original contacts before update that met trigger criteria </param>
     /*public static void updateAffiliation(Contact[] contacts) {
+
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
         Map<String,Id> conAccMap = new Map<String,Id>();
