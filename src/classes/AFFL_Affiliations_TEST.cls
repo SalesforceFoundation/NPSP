@@ -104,7 +104,7 @@ public class AFFL_Affiliations_TEST {
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = AFFL_Affiliations.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
-        Account acc = new Account(Name='Individual');
+        Account acc = new Account(Name='my bucket account', npe01__SYSTEMIsIndividual__c=true);
         insert acc;
         
         Contact con = new Contact(FirstName='test', LastName='contact34',AccountId=acc.id);

@@ -392,7 +392,7 @@ global without sharing class HH_Households {
         }
     }
 
-
+/*********************************** Not Used **********************************
     /// <name> getHouseholdLastTransaction </name>
     /// <summary>  </summary>
     webservice static String getHouseholdLastTransaction(Id householdId)
@@ -494,6 +494,7 @@ global without sharing class HH_Households {
         totalString += totalFormat;
         return String.valueOf(totalString);
     }
+***********************************************************************************/  
     
      //get the settings. handles the case where the managed value doesn't exist yet
     public static npo02__Households_Settings__c getHouseholdsSettings() {

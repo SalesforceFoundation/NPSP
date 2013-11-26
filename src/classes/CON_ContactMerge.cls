@@ -63,6 +63,9 @@ public class CON_ContactMerge {
         Id winningAccountId = null;
         Boolean winnerAccountIsOneToOne = false;
         winner = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id=:winner.Id];
+
+        // DJH:UNDONE handle HH Accounts the same way as 1:1 Accounts?
+
         //get winner contact Account
         if (winner.AccountId!=null){
             winnerAccount = [Select Id,npe01__SYSTEM_AccountType__c,Name from Account where Id=:winner.accountid];
@@ -72,7 +75,8 @@ public class CON_ContactMerge {
             
             winningAccountId = winnerAccount[0].Id;
             
-            if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
+            if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
+                winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.HH_ACCOUNT_TYPE){
                 winnerAccountIsOneToOne = true;
             }
             
@@ -88,13 +92,15 @@ public class CON_ContactMerge {
         //system.debug('losers: ' + loserAccountIds);
         //system.debug('winneraccountid: ' + winner.AccountId);
         //get loser contact Accounts that should be merged out--only one-to-one accounts
-        loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account where Id IN :loserAccountIds and npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE and Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];
+        loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account 
+            where Id IN :loserAccountIds and 
+            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or npe01__SYSTEM_AccountType__c=:CAO_Constants.HH_ACCOUNT_TYPE) and
+            Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];
         
         
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
         //we merge the Accounts first, if there are any one-to-one Accounts in the mix
-        if(loserAccountsToBeMerged.size()>0){   
-                    
+        if(loserAccountsToBeMerged.size()>0){                      
             merge winnerAccount[0] loserAccountsToBeMerged;
         }
         
