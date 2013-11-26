@@ -168,7 +168,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         
         for (Contact c : ContactList){ 
-            if(c.FirstName != null && (c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('npo02__Informal_Greeting__c')))
+            if(c.FirstName != null && (c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c')))
                 contactnames.add(c);
         }
         
@@ -217,7 +217,7 @@ global virtual without sharing class HH_HouseholdNaming {
         if (Contactlist != null){
         //remove any excluded contacts
         for (Contact c : ContactList){ 
-            if(c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('npo02__Formal_Greeting__c'))
+            if(c.npo02__Naming_Exclusions__c == null || !c.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
                 contactnames.add(c);
         }
         
