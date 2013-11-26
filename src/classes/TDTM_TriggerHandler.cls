@@ -64,21 +64,16 @@ public with sharing class TDTM_TriggerHandler {
 			        TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
 			        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
 			        String action = String.valueOf(classToRunRecord.get('Trigger_Action__c'));
-
-			        if(!async) {
-                        System.debug('****Calling synchronously: ' + classToRunName); 
-                        return classToRun.run(newlist, oldlist, thisAction, obj);
-			             
-			        } else if(async && action != 'BeforeInsert') {
-			        	System.debug('****Calling asynchronously: ' + classToRunName);
-			        	runAsync(classToRun, classToRunName);
 			        
 			        //A class can only run asynchronously (calling a future) if we have the ids of the
-                    //records we want to affect. This means we can only run it for after in insert
-			        } else if(async && action == 'BeforeInsert') {
-			        	System.debug('****Cannot call this class aynchronously on beforeinsert.');
-			        	System.debug('****Calling synchronously, because we cannot call it async: ' + classToRunName);
-			        	return classToRun.run(newlist, oldlist, thisAction, obj);
+                    //records we want to affect. This means we can only run it for after in insert. 
+                    //Also,a future cannot be called from a future or batch method.
+			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
+			        	System.debug('****Calling asynchronously: ' + classToRunName);
+			        	runAsync(classToRun, classToRunName);
+			        } else {
+			        	System.debug('****Calling synchronously: ' + classToRunName); 
+                        return classToRun.run(newlist, oldlist, thisAction, obj);
 			        }
 	        	} else {
 	        		System.debug('****The class does not implement the required interface.');
