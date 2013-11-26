@@ -12,9 +12,11 @@ after update, before delete, before insert, before update) {
     }
     
     private void run(TDTM_iTableDataGateway dao) {
-    	TDTM_TriggerHandler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, 
+    	TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
+    	
+    	handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, 
     	                               Trigger.isUpdate, Trigger.isDelete, Trigger.isUnDelete, Trigger.new, Trigger.old, 
 	                                   Schema.Sobjecttype.Campaign);
-	    TDTM_TriggerHandler.runClasses(dao);
+	    handler.runClasses(dao);
     }
 }

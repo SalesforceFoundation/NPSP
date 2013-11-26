@@ -1,13 +1,11 @@
 public with sharing class TDTM_TriggerHandler {
 
-    private static List<Sobject> newlist;
-    private static List<Sobject> oldlist; 
-    private static TDTM_TriggerActionHelper.Action thisAction;
-    private static Schema.DescribeSobjectResult obj;
-    
-    public static String activeClassName; //The class that is currently running
-    
-    public static void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
+    private List<Sobject> newlist;
+    private List<Sobject> oldlist; 
+    private TDTM_TriggerActionHelper.Action thisAction;
+    private Schema.DescribeSobjectResult obj;
+        
+    public void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newlistfromtrigger, List<Sobject>oldlistFromTrigger, 
     Schema.DescribeSobjectResult describeobj) {
         
@@ -20,7 +18,7 @@ public with sharing class TDTM_TriggerHandler {
         obj = describeobj;
     }
     
-    public static void runClasses(TDTM_iTableDataGateway dao) {
+    public void runClasses(TDTM_iTableDataGateway dao) {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
@@ -51,7 +49,7 @@ public with sharing class TDTM_TriggerHandler {
         }
     }
     
-    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
+    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -94,7 +92,7 @@ public with sharing class TDTM_TriggerHandler {
         return null;
     }
     
-    private static void runAsync(TDTM_Runnable classToRun, String classToRunName) {
+    private void runAsync(TDTM_Runnable classToRun, String classToRunName) {
        Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
        
        Map<Id,Sobject> om;

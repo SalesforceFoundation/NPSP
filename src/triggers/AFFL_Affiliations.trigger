@@ -29,16 +29,11 @@
 */
 trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
 after insert, after update, after delete, after undelete) {
-    /*
-    if( Trigger.isAfter && Trigger.isInsert ){
-        AFFL_Affiliations process = new AFFL_Affiliations(Trigger.new, Trigger.old, AFFL_Affiliations.triggerAction.afterInsert);
-    }
-    if( Trigger.isAfter && Trigger.isUpdate ){
-        AFFL_Affiliations process = new AFFL_Affiliations(Trigger.new, Trigger.old, AFFL_Affiliations.triggerAction.afterUpdate);
-    }*/
     
-    TDTM_TriggerHandler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
+    
+    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
                                     Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    TDTM_TriggerHandler.runClasses(new TDTM_ObjectDataGateway());
+    handler.runClasses(new TDTM_ObjectDataGateway());
 
 }
