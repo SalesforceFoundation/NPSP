@@ -1,5 +1,7 @@
 <project name="Cumulus" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
 
+    <include file="${basedir}/lib/ant-salesforce.xml" />
+
     <!-- Managed Package Versions -->
     <property name="version.npe01" value="2.91" />
     <property name="version.npo02" value="2.93" />
@@ -7,98 +9,7 @@
     <property name="version.npe4" value="2.9" />
     <property name="version.npe5" value="1.90" />
 
-    <!-- Following typedefs and macro definitions are from https://gist.github.com/afawcett/5843110 -->
-    <!--   Download from Salesforce Tools page under Setup -->
-    <typedef 
-        uri="antlib:com.salesforce" 
-        resource="com/salesforce/antlib.xml" 
-        classpath="${basedir}/lib/ant-salesforce.jar"/>
-        
-    <!--   Download from http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ -->
-    <taskdef 
-        resource="net/sf/antcontrib/antlib.xml" 
-        classpath="${basedir}/lib/ant-contrib-1.0b3.jar"
-        />  
-
-    <macrodef name="installPackage" description="Installs the given managed package">
-        <attribute name="namespace" description="Namespace of managed package to install."/>
-        <attribute name="version" description="Version of managed package to install."/>
-        <attribute name="packagePassword" description="Password used to install the pacakge. Optional." default=""/>
-        <attribute name="username" description="Salesforce user name."/>
-        <attribute name="password" description="Salesforce password."/>
-        <sequential>
-            <!-- Generate optional <password> element? -->
-            <if><equals arg1="@{packagePassword}" arg2=""/>
-                <then><property name="passwordElement" value=""/></then>
-                <else><property name="passwordElement" value="&lt;password&gt;@{packagePassword}&lt;/password&gt;"/></else>
-            </if>
-            <!-- Generate working folder and metadata files representing the package to install -->
-            <delete dir="${basedir}/installdeploy"/>
-            <mkdir dir="${basedir}/installdeploy"/>
-            <mkdir dir="${basedir}/installdeploy"/>         
-            <mkdir dir="${basedir}/installdeploy/installedPackages"/>
-            <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>28.0</version></Package>]]></echo>
-            <echo file="${basedir}/installdeploy/installedPackages/@{namespace}.installedPackage"><![CDATA[<InstalledPackage xmlns="http://soap.sforce.com/2006/04/metadata"><versionNumber>@{version}</versionNumber>${passwordElement}</InstalledPackage>]]></echo>
-            <sf:deploy deployRoot="${basedir}/installdeploy" username="@{username}" password="@{password}" maxPoll="100" />
-            <delete dir="${basedir}/installdeploy"/>
-        </sequential>
-    </macrodef>
- 
-    <macrodef name="uninstallPackage" description="Uninstalls the given managed package">
-        <attribute name="namespace" description="Namespace of managed package to install."/>
-        <attribute name="username" description="Salesforce user name."/>
-        <attribute name="password" description="Salesforce password."/>
-        <sequential>
-            <!-- Generate working folder and metadata files representing the package to uninstall -->       
-            <delete dir="${basedir}/installdeploy"/>
-            <mkdir dir="${basedir}/installdeploy"/>
-            <mkdir dir="${basedir}/installdeploy"/>         
-            <mkdir dir="${basedir}/installdeploy/installedPackages"/>
-            <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>28.0</version></Package>]]></echo>
-            <echo file="${basedir}/installdeploy/destructiveChanges.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>28.0</version></Package>]]></echo>
-            <echo file="${basedir}/installdeploy/installedPackages/@{namespace}.installedPackage"><![CDATA[<InstalledPackage xmlns="http://soap.sforce.com/2006/04/metadata"><versionNumber>@{version}</versionNumber></InstalledPackage>]]></echo>
-            <sf:deploy deployRoot="${basedir}/installdeploy" username="@{username}" password="@{password}" maxPoll="100" />
-        </sequential>
-    </macrodef>
-
-    <macrodef name="getPackageVersion" description="Sets the InstalledPackage.NAMESPACE.versionNumber property to the version number of the package">
-      <attribute name="namespace" description="Package's name to fetch version number for" />
-      <attribute name="refresh" default="true" description="Should installedPackages be refreshed from the target org and deleted at the end of execution?" />
-      <sequential>
-        <!-- If we should refresh the installed packages, refresh them -->
-        <if><istrue value="@{refresh}" />
-          <then>
-            <sf:bulkRetrieve
-              username="${sf.username}"
-              password="${sf.password}"
-              metadataType="InstalledPackage"
-              retrieveTarget="${basedir}/installedPackages"/>
-          </then>
-        </if>
-
-        <if>
-          <available file="${basedir}/installedPackages/installedPackages/@{namespace}.installedPackage" />
-          <then>
-            <!-- replace the string versionNumber with @{namespace}.versionNumber so the property is namespaced when loaded -->
-            <replace file="${basedir}/installedPackages/installedPackages/@{namespace}.installedPackage" token="versionNumber" value="@{namespace}.versionNumber" />
-
-            <!-- load the installedPackage file as properties -->
-            <xmlproperty file="${basedir}/installedPackages/installedPackages/@{namespace}.installedPackage" />
-          </then>
-          <else>
-            <property name="InstalledPackage.@{namespace}.versionNumber" value="Not Installed" />
-          </else>
-        </if>
-
-        <if><istrue value="@{refresh}"/>
-          <then>
-            <delete dir="${basedir}/installedPackages"/>
-          </then>
-        </if>
-
-      </sequential>
-    </macrodef>
-
+    <!-- Cumulus specific macros -->
     <macrodef name="getPackageNamespaces" description="Gets the namespaces for all dependent packages">
       <sequential>
         <delete dir="${basedir}/installedPackages"/>
@@ -129,6 +40,7 @@ npe5: ${InstalledPackage.npe5.versionNumber}
 
       </sequential>
     </macrodef>
+
 
     <macrodef name="updateDependentPackages">
       <sequential>
@@ -228,26 +140,8 @@ npe5: ${InstalledPackage.npe5.versionNumber}
       </sequential>
     </macrodef>
 
-    <!-- Actual Cumulus Build Targets -->
-    <macrodef name="uninstallDependentPackages" description="Uninstalls all Cumulus dependent packages">
-      <sequential>
-        <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}"/>
-        <uninstallPackage namespace="npe01" username="${sf.username}" password="${sf.password}"/> 
-        <uninstallPackage namespace="npe03" username="${sf.username}" password="${sf.password}"/> 
-        <uninstallPackage namespace="npe4" username="${sf.username}" password="${sf.password}"/> 
-        <uninstallPackage namespace="npe5" username="${sf.username}" password="${sf.password}"/> 
-      </sequential>
-    </macrodef>
 
-    <macrodef name="installDependentPackages" description="Installs the required version of all Cumulus dependent packages">
-      <sequential>
-        <installPackage namespace="npe01" version="2.91" username="${sf.username}" password="${sf.password}"/> 
-        <installPackage namespace="npo02" version="2.93" username="${sf.username}" password="${sf.password}"/> 
-        <installPackage namespace="npe03" version="2.91" username="${sf.username}" password="${sf.password}"/> 
-        <installPackage namespace="npe4" version="2.9" username="${sf.username}" password="${sf.password}"/> 
-        <installPackage namespace="npe5" version="1.90" username="${sf.username}" password="${sf.password}"/> 
-      </sequential>
-    </macrodef>
+    <!-- Cumulus build targets -->
 
     <!--   test: Run a checkOnly deployment which runs all tests but never actually deploys the package permanently.  Updates all dependent packages to the correct version which is permanent --> 
     <target name="test">
