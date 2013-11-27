@@ -1,3 +1,6 @@
+/**
+ * To test using Custom Settings for the TDTM design.
+ */ 
 @isTest
 public with sharing class TDTM_CustomSettingPerf_TEST {
 

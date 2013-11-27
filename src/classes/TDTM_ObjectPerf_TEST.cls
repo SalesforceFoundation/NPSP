@@ -1,3 +1,6 @@
+/**
+ * To test using Custom Objects for the TDTM design.
+ */ 
 @isTest
 public with sharing class TDTM_ObjectPerf_TEST {
 

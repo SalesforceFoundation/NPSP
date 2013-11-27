@@ -1,3 +1,7 @@
+/**
+ * These bulk tests are used to compare the performance of the TDTM design using 
+ * Custom Settings vs Custom Objects.
+ */
 @isTest
 public with sharing class TDTM_ObjectPerf_Batch_TEST {
 
