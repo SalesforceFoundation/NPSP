@@ -73,9 +73,12 @@ public abstract class TDTM_Runnable {
 	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
 	        //Process the result
-	        insert dmlWrapper.objectsToInsert;
-	        update dmlWrapper.objectsToUpdate.values();
-	        delete dmlWrapper.objectsToDelete.values();
+	        System.debug('****Objects to insert in future: ' + dmlWrapper.objectsToInsert);
+            insert dmlWrapper.objectsToInsert;
+            System.debug('****Objects to update in future: ' + dmlWrapper.objectsToUpdate.values());
+            update dmlWrapper.objectsToUpdate.values();
+            System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete.values());
+            delete dmlWrapper.objectsToDelete.values();
         }
     }
     
