@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
-    
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
-    
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    handler.runClasses(new TDTM_ObjectDataGateway());
 
+/**
+ * Class that the data gateways used in the TDTM design need to implement.
+ */
+public interface TDTM_iTableDataGateway {
+
+    /**
+     * The list returned is already sorted by load order.
+     **/ 
+     List<SObject> getClassesToCallOnTriggers(String objectName, TDTM_TriggerActionHelper.Action action);
 }
