@@ -6,7 +6,7 @@
     Changes made throughout to support NPSP HH
     * String.escapeSingleQuotes() added (bug fix for names including ' etc.)
     * class renamed HH_ManageHousehold_EXT
-    * Fields / objects updated to NPSP values / names e.g. npo02__Household__c (namespace prefix required?)
+    * Fields / objects updated to NPSP values / names e.g. Account (namespace prefix required?)
     * Naming methods updated to support NPSP's Name / Formal / Informal structure and npo02__SYSTEM_CUSTOM_NAMING__c setting field
     * Address object updated with viableAddress class to store household or contact addresses
     * use Mailing* instead of Other* fields for addresses
@@ -23,13 +23,14 @@
 * to set the address on the household.  
 */
 @isTest
-public with sharing class HH_ManageHousehold_TEST {
-    
+public with sharing class HH_ManageHHAccount_TEST {
+
     // TEST METHOD
     public static testMethod void testExistingHH() { 
         
-        npo02__Household__c hh = new npo02__Household__c(
-            Name = 'test_hh'
+        Account hh = new Account(
+            Name = 'test_hh',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
             );
         insert hh;
         
@@ -37,7 +38,7 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'David',
             LastName = 'TestContactASDF',
             email = 'testemail@groundwiretest.org',
-            npo02__Household__c = hh.id,
+            AccountId = hh.id,
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
             MailingState = 'WA',
@@ -48,7 +49,7 @@ public with sharing class HH_ManageHousehold_TEST {
         
         Test.startTest();
         
-        npo02__Household__c tempHH = new npo02__Household__c();
+        Account tempHH = new Account(npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE);
         ApexPages.StandardController sc = new ApexPages.standardController(tempHH);
         
         // Test a bogus hhid
@@ -67,7 +68,7 @@ public with sharing class HH_ManageHousehold_TEST {
         
         // Make sure we correctly got the right HH
         system.assertEquals(hh.Id, ext.hh.Id);
-        
+        system.assertEquals(true, ext.isHHAccount);
         system.assertEquals(false, ext.activeContacts.isEmpty());
         
         //test active address variables are set
@@ -92,13 +93,15 @@ public with sharing class HH_ManageHousehold_TEST {
     
     public static testMethod void testHHAddrToContact() {
         //tests writing the household address to the contact if the flag is ticked
-        npo02__Household__c hh = new npo02__Household__c(
+        Account hh = new Account(
             Name = 'test_hh',
-            npo02__MailingStreet__c = '1234 Testing Drive Suite 1000',
-            npo02__MailingCity__c = 'Seattle',
-            npo02__MailingState__c = 'WA',
-            npo02__MailingPostalCode__c = '98101',
-            npo02__MailingCountry__c = 'USA'
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE,
+            ShippingStreet = '1234 Testing Drive Suite 1000',
+            ShippingCity = 'Seattle',
+            ShippingState = 'WA',
+            ShippingPostalCode = '98101',
+            ShippingCountry = 'USA'
+            
             );
         insert hh;
         
@@ -106,14 +109,14 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'David',
             LastName = 'TestContactASDF',
             email = 'testemail@groundwiretest.org',
-            npo02__Household__c = hh.id
+            AccountId = hh.id
             );
         insert con;
         Test.startTest();
         
         ApexPages.StandardController sc = new ApexPages.standardController(hh);
               
-        Test.setCurrentPageReference(new PageReference('Page.HH_ManageHousehold'));              
+        Test.setCurrentPageReference(new PageReference('Page.HH_ManageHHAccount'));              
         // Test a good hhid
         ApexPages.currentPage().getParameters().put('hhid', hh.Id);
         HH_ManageHousehold_EXT ext = new HH_ManageHousehold_EXT(sc);
@@ -133,26 +136,27 @@ public with sharing class HH_ManageHousehold_TEST {
         Test.stopTest();
         Contact con1 = [select MailingStreet,MailingState,MailingCity,MailingPostalCode,MailingCountry from contact where id = :con.id][0];
         //test household address written to contact
-        system.assertEquals(con1.MailingStreet, ext.hhO.npo02__MailingStreet__c);
-        system.assertEquals(con1.MailingState, ext.hhO.npo02__MailingState__c);
-        system.assertEquals(con1.MailingCity, ext.hhO.npo02__MailingCity__c);
-        system.assertEquals(con1.MailingPostalCode, ext.hhO.npo02__MailingPostalCode__c);
-        system.assertEquals(con1.MailingCountry, ext.hhO.npo02__MailingCountry__c);
+        system.assertEquals(con1.MailingStreet, ext.hhA.ShippingStreet);
+        system.assertEquals(con1.MailingState, ext.hhA.ShippingState);
+        system.assertEquals(con1.MailingCity, ext.hhA.ShippingCity);
+        system.assertEquals(con1.MailingPostalCode, ext.hhA.ShippingPostalCode);
+        system.assertEquals(con1.MailingCountry, ext.hhA.ShippingCountry);
 
         Contact con2 = [select MailingStreet,MailingState,MailingCity,MailingPostalCode,MailingCountry from contact where name = 'John Jones'][0];
         //test household address written to contact
-        system.assertEquals(con2.MailingStreet, ext.hhO.npo02__MailingStreet__c);
-        system.assertEquals(con2.MailingState, ext.hhO.npo02__MailingState__c);
-        system.assertEquals(con2.MailingCity, ext.hhO.npo02__MailingCity__c);
-        system.assertEquals(con2.MailingPostalCode, ext.hhO.npo02__MailingPostalCode__c);
-        system.assertEquals(con2.MailingCountry, ext.hhO.npo02__MailingCountry__c);   
+        system.assertEquals(con2.MailingStreet, ext.hhA.ShippingStreet);
+        system.assertEquals(con2.MailingState, ext.hhA.ShippingState);
+        system.assertEquals(con2.MailingCity, ext.hhA.ShippingCity);
+        system.assertEquals(con2.MailingPostalCode, ext.hhA.ShippingPostalCode);
+        system.assertEquals(con2.MailingCountry, ext.hhA.ShippingCountry);   
     }
     
     public static testMethod void testRemoveContactActiveAddress() {
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
         
-        npo02__Household__c hh = new npo02__Household__c(
-            Name = 'test_hh'
+        Account hh = new Account(
+            Name = 'test_hh',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
             );
         insert hh;
         
@@ -160,7 +164,7 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'David',
             LastName = 'TestContactASDF',
             email = 'testemail@groundwiretest.org',
-            npo02__Household__c = hh.id,
+            AccountId = hh.id,
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
             MailingState = 'WA',
@@ -173,7 +177,7 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'David',
             LastName = 'TestContactASDF',
             email = 'testemail@groundwiretest.org',
-            npo02__Household__c = hh.id,
+            AccountId = hh.id,
             MailingStreet = '5678 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
             MailingState = 'WA',
@@ -184,7 +188,7 @@ public with sharing class HH_ManageHousehold_TEST {
         
         Test.startTest();
         
-        npo02__Household__c tempHH = new npo02__Household__c();
+        Account tempHH = new Account();
         ApexPages.StandardController sc = new ApexPages.standardController(tempHH);
         
         // Test a good hhid
@@ -227,8 +231,9 @@ public with sharing class HH_ManageHousehold_TEST {
     
     public static testMethod void testNewHH() {
         
-        npo02__Household__c hh = new npo02__Household__c(
-            Name = 'test_hh'
+        Account hh = new Account(
+            Name = 'test_hh',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
             );
         
         Contact con = new Contact(
@@ -282,27 +287,27 @@ public with sharing class HH_ManageHousehold_TEST {
         system.assertEquals(1, ext.activeContacts.size());
         
         // Get contacts in household
-        //list<Contact> householdMembers = [SELECT Id, Name, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, npo02__Household__c FROM Contact WHERE npo02__Household__c = :ext.hh.id];
+        //list<Contact> householdMembers = [SELECT Id, Name, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, Account FROM Contact WHERE Account = :ext.hh.id];
         
         //test household address is set
-        system.assertEquals(con.MailingStreet, ext.hhO.npo02__MailingStreet__c);
-        system.assertEquals(con.MailingState, ext.hhO.npo02__MailingState__c);
-        system.assertEquals(con.MailingCity, ext.hhO.npo02__MailingCity__c);
-        system.assertEquals(con.MailingPostalCode, ext.hhO.npo02__MailingPostalCode__c);
-        system.assertEquals(con.MailingCountry, ext.hhO.npo02__MailingCountry__c);
+        system.assertEquals(con.MailingStreet, ext.hhA.ShippingStreet);
+        system.assertEquals(con.MailingState, ext.hhA.ShippingState);
+        system.assertEquals(con.MailingCity, ext.hhA.ShippingCity);
+        system.assertEquals(con.MailingPostalCode, ext.hhA.ShippingPostalCode);
+        system.assertEquals(con.MailingCountry, ext.hhA.ShippingCountry);
         
         Test.stopTest();
     }
     
     public static testMethod void testFindAndAdd() {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
-        npo02__Household__c hh = new npo02__Household__c();
+        Account hh = new Account(            
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
+        );
         
-        npo02__Household__c existingHH = new npo02__Household__c (
-            Name = 'existing hh'
+        Account existingHH = new Account (
+            Name = 'existing hh',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
             );
         insert existingHH;
         
@@ -359,7 +364,7 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'Andy',
             LastName = 'David WithHousehold',
             email = 'testEmail@groundwiretest2.org',
-            npo02__Household__c = existingHH.id
+            AccountId = existingHH.id
             );
         insert conWithHH;
         
@@ -367,12 +372,12 @@ public with sharing class HH_ManageHousehold_TEST {
             FirstName = 'Cheryl',
             LastName = 'WithHousehold',
             email = 'testEmail@groundwiretest3.org',
-            npo02__Household__c = existingHH.id
+            AccountId = existingHH.id
             );
         insert conWithHH2;
         
-        Test.startTest();
-        ApexPages.StandardController sc = new ApexPages.standardController(new npo02__Household__c());
+        
+        ApexPages.StandardController sc = new ApexPages.standardController(new Account(npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE));
         
         ApexPages.currentPage().getParameters().put('cid', con2.id);
         ApexPages.currentPage().getParameters().put('hhid', hh.id);
@@ -380,9 +385,7 @@ public with sharing class HH_ManageHousehold_TEST {
         HH_ManageHousehold_EXT ext = new HH_ManageHousehold_EXT(sc);
         
         list<Contact> cQ = HH_ManageHousehold_EXT.findContacts('abc', ext.jsonState);
-        
-        Contact ca = [SELECT Id, MailingStreet FROM Contact WHERE id = :con2.id];
-        
+                
         // make sure we only got three
         system.assertEquals(3, cQ.size());
         
@@ -411,8 +414,7 @@ public with sharing class HH_ManageHousehold_TEST {
         
         //verify that we found two valid addresses even though the matches aren't exactly the same
         system.AssertEquals(2, ext.viableAddresses.size());
-        
-        
+                
         String jsSt = JSON.serialize(ext);
         
         // now test adding a contact with its existing household members
@@ -457,16 +459,19 @@ public with sharing class HH_ManageHousehold_TEST {
         // Verify that name and greeting were set
         system.assertEquals('The Test123Awesomes', ext.hhName);
         system.assertEquals('TestZZ1234', ext.hhFormalGreeting);
-        
+
+        // too much going on in this test, so we've pushed startTest() down to help keep us under limits.
+        Test.startTest();
+
         // Save
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
         // query for a contact and make sure it got the correct fields set
-        Contact con4q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con4.id];
+        Contact con4q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con4.id];
         
-        system.assertEquals(ext.hh.id, con4q.npo02__Household__c);
+        system.assertEquals(ext.hh.id, con4q.AccountId);
         
         // Set the address to the new contact
         ext.setActiveAddress(con4.id);
@@ -480,9 +485,9 @@ public with sharing class HH_ManageHousehold_TEST {
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
-        con4q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con4.id];
+        con4q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con4.id];
         
-        system.assertNotEquals(ext.hh.id, con4q.npo02__Household__c);
+        system.assertNotEquals(ext.hh.id, con4q.AccountId);
         
         // Now add a completely new contact and save
         ext.insertContacts.add(new Contact(FirstName = 'Lefty', LastName = 'TestFunky123'));
@@ -493,38 +498,41 @@ public with sharing class HH_ManageHousehold_TEST {
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
         // Query for our new contact
-        Contact newCon = [SELECT Id, npo02__Household__c, Name FROM Contact WHERE Name = 'Lefty TestFunky123'];
-        system.assertEquals(ext.hh.id, newCon.npo02__Household__c);
+        Contact newCon = [SELECT Id, AccountId, Name FROM Contact WHERE Name = 'Lefty TestFunky123'];
+        system.assertEquals(ext.hh.id, newCon.AccountId);
         
         Id fHHid = ext.hh.id;
         
+        // moved this up to avoid soql limits.
+        Test.stopTest();        
+
         // Cover the "standard" save
         ext.save();
         
         // Now, test delete
         ext.deleteHH();
         
-        Test.stopTest();        
     }
     
     public static testMethod void testRemoveReAdd() {
         
-        npo02__Household__c hh = new npo02__Household__c (
-            Name = 'Household'
+        Account hh = new Account (
+            Name = 'Household',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
             );
         insert hh;
         
         Contact con1 = new Contact(
             FirstName = 'Joe',
             LastName = 'Test',
-            npo02__Household__c = hh.id
+            AccountId = hh.id
             );
         insert con1;
         
         Contact con2 = new Contact(
             FirstName = 'Jim',
             LastName = 'Test',
-            npo02__Household__c = hh.id
+            AccountId = hh.id
             );
         insert con2;
               
@@ -562,8 +570,8 @@ public with sharing class HH_ManageHousehold_TEST {
 
         ext.save();
 
-        system.assertEquals(2,[SELECT Id, npo02__Household__c FROM Contact WHERE npo02__Household__c = :hh.id].size());       
 
+        system.assertEquals(2,[SELECT Id, AccountId FROM Contact WHERE AccountId = :hh.id].size());       
         Test.stopTest();        
     }
 

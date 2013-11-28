@@ -23,8 +23,26 @@
 * to set the address on the household.  
 */
 global with sharing class HH_ManageHousehold_EXT {
-
-    public npo02__Household__c hh{get; set;}
+    
+    // use an SObject to handle both HH Accounts and HH Objects
+    public SObject hh { get; set; }
+    
+    // for code that knows it is a HH Account
+    public Account hhA {
+    	get {
+    		return (isHHAccount ? (Account) hh : null);
+    	}
+    }
+    
+    // for code that knows it is a HH Object
+    public npo02__Household__c hhO {
+    	get {
+            return (!isHHAccount ? (npo02__Household__c) hh : null);
+    	}
+    }
+    
+    public boolean isHHAccount { get; set; }
+    
     public String ctrlName {
         get {
             return 'HH_ManageHousehold_EXT';
@@ -34,12 +52,12 @@ global with sharing class HH_ManageHousehold_EXT {
     public Boolean autoName {
         get {            
             if (hhsettings.npo02__Advanced_Household_Naming__c){ 
-                if (hh.Id == null && hh.Name == null) {
+                if (hh.Id == null && hh.get('Name') == null) {
                     return true;
                 }
                 
-                if (hh.npo02__SYSTEM_CUSTOM_NAMING__c != null) {
-                    if(hh.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'))
+                if (hh.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null) {
+                    if(string.valueOf(hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')).contains('Name'))
                         return false;
                 }
                 return true;
@@ -52,11 +70,11 @@ global with sharing class HH_ManageHousehold_EXT {
     public Boolean autoFormalGreeting {
         get {
             if (hhsettings.npo02__Advanced_Household_Naming__c){
-                if (hh.Id == null && hh.npo02__Formal_Greeting__c == null) {
+                if (hh.Id == null && hh.get('npo02__Formal_Greeting__c') == null) {
                     return true;
                 }
-                if (hh.npo02__SYSTEM_CUSTOM_NAMING__c != null){
-                    if(hh.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c'))
+                if (hh.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
+                    if(string.valueOf(hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')).contains('Formal_Greeting__c'))
                         return false;
                 }   
                 return true; 
@@ -69,12 +87,12 @@ global with sharing class HH_ManageHousehold_EXT {
     public Boolean autoInformalGreeting {
         get {
             if (hhsettings.npo02__Advanced_Household_Naming__c){                
-                if (hh.Id == null && hh.npo02__Informal_Greeting__c == null) {
+                if (hh.Id == null && hh.get('npo02__Informal_Greeting__c') == null) {
                     return true;
                 }
-                if (hh.npo02__SYSTEM_CUSTOM_NAMING__c != null)
+                if (hh.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null)
                 {
-                    if(hh.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c'))
+                    if(string.valueOf(hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')).contains('Informal_Greeting__c'))
                         return false;
                 }   
                 return true; 
@@ -90,7 +108,7 @@ global with sharing class HH_ManageHousehold_EXT {
             if (autoName) {
                 return getHHName();
             }
-            return hh.Name;
+            return string.valueOf(hh.get('Name'));
         }
         set;
     }
@@ -99,7 +117,7 @@ global with sharing class HH_ManageHousehold_EXT {
             if (autoFormalGreeting) {
                 return getHHFormalName();
             }
-            return hh.npo02__Formal_Greeting__c;
+            return string.valueOf(hh.get('npo02__Formal_Greeting__c'));
         }
         set;
     }
@@ -108,7 +126,7 @@ global with sharing class HH_ManageHousehold_EXT {
             if (autoInformalGreeting) {
                 return getHHInformalName();
             }
-            return hh.npo02__Informal_Greeting__c;
+            return string.valueOf(hh.get('npo02__Informal_Greeting__c'));
         }
         set;
     }    
@@ -132,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
+    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -167,7 +185,7 @@ global with sharing class HH_ManageHousehold_EXT {
         insertContacts = new list<Contact>();
         
         Id tempHHid;
-        npo02__Household__c thh = (npo02__Household__c)controller.getRecord();
+        SObject thh = (SObject)controller.getRecord();
         if (thh.Id == null) {
             try {
                 String paramHhId = String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('hhid'));
@@ -179,6 +197,9 @@ global with sharing class HH_ManageHousehold_EXT {
             tempHHid = thh.Id;
         }
         hh = tempHHid != null ? getHH(tempHHid) : thh;
+        
+        // remember whether we are dealing with HH Accounts or HH Objects
+        isHHAccount = hh.getSObjectType() == Account.sObjectType;
         
         //Get the contact id from the query if present - ensure it is sanitised
         try {
@@ -300,21 +321,21 @@ global with sharing class HH_ManageHousehold_EXT {
     global static string remoteSetNaming(Boolean aN, String nN, Boolean aFG, String nFG, Boolean aIG, String nIG, String state) {
         HH_ManageHousehold_EXT ManageHousehold = unpackState(state);
         
-        ManageHousehold.hh.npo02__SYSTEM_CUSTOM_NAMING__c = '';
+        ManageHousehold.hh.put('npo02__SYSTEM_CUSTOM_NAMING__c', '');
         //for each of the naming exceptions, set the override field and the overridden value
         if (!aN) { 
-            ManageHousehold.hh.Name = nN;
-            ManageHousehold.hh.npo02__SYSTEM_CUSTOM_NAMING__c += 'Name;';
+            ManageHousehold.hh.put('Name', nN);
+            ManageHousehold.hh.put('npo02__SYSTEM_CUSTOM_NAMING__c',  string.valueOf(ManageHousehold.hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) + 'Name;');
         }
         
         if (!aFG) {
-            ManageHousehold.hh.npo02__Formal_Greeting__c = nFG;
-            ManageHousehold.hh.npo02__SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c;';
+            ManageHousehold.hh.put('npo02__Formal_Greeting__c', nFG);
+            ManageHousehold.hh.put('npo02__SYSTEM_CUSTOM_NAMING__c',  string.valueOf(ManageHousehold.hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) + 'Formal_Greeting__c;');
         }
         
         if (!aIG) {
-            ManageHousehold.hh.npo02__Informal_Greeting__c = nIG;
-            ManageHousehold.hh.npo02__SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c;';
+            ManageHousehold.hh.put('npo02__Informal_Greeting__c', nIG);
+            ManageHousehold.hh.put('npo02__SYSTEM_CUSTOM_NAMING__c',  string.valueOf(ManageHousehold.hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) + 'Informal_Greeting__c;');
         }
         
         return packState(ManageHousehold);
@@ -331,12 +352,25 @@ global with sharing class HH_ManageHousehold_EXT {
         return packState(ManageHousehold);
     }
     
+    
+    /*******************************************************************************************************
+    * get the household record by Id with all of the fields.
+    * @return SObject.
+    ********************************************************************************************************/
+    public SObject getHH(string hhId) {
+    	 if (hhId.startsWith('001'))
+    	    return (SObject)getHHA(hhId);
+         else
+            return (Sobject)getHHO(hhId);
+    }
+
+
     /*******************************************************************************************************
     * @Describes npo02__Household__c to get all of the fields, then runs a SOQL to get the household record by
     * Id with all of the fields.
     * @return npo02__Household__c.
     ********************************************************************************************************/
-    public npo02__Household__c getHH(Id hhId) {
+    public npo02__Household__c getHHO(Id hhId) {
         Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.npo02__Household__c.fields.getMap();
         list<String> fields = new list<String>();
         fields.addAll(fieldMap.keySet());
@@ -353,6 +387,28 @@ global with sharing class HH_ManageHousehold_EXT {
         return houseHold;
     }
     
+    /*******************************************************************************************************
+    * @Describes Account to get all of the fields, then runs a SOQL to get the household record by
+    * Id with all of the fields.
+    * @return Account.
+    ********************************************************************************************************/
+    public Account getHHA(Id hhId) {
+        Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Account.fields.getMap();
+        list<String> fields = new list<String>();
+        fields.addAll(fieldMap.keySet());
+        String hhq = 'SELECT ';
+        Integer i = 1;
+        for (String fld : fields) {
+            hhq += fld;
+            if (i != fields.size()) hhq += ', ';
+            i += 1;
+        }
+        hhq += ' FROM Account WHERE Id = \''+hhId+'\'';
+        String q = hhq;
+        Account houseHold = database.query(q);
+        return houseHold;
+    }
+
     /*******************************************************************************************************
     * @description add a contact to the household by id.
     * @param Id cid the id to add.
@@ -383,8 +439,12 @@ global with sharing class HH_ManageHousehold_EXT {
         if (con == null) return false;
         
         // If this is an existing HH and the contact was a member, add the contact to list of removes
-        if (hh.Id != null && con.npo02__Household__c == hh.Id) {
-            con.npo02__Household__c = null;
+        // don't use con.HHId__c in case they were added in this session, and not yet saved, the formula field would not be populated
+        if (hh.Id != null && ((isHHAccount && con.AccountId == hh.Id) || (!isHHAccount && con.npo02__Household__c == hh.Id))) {
+        	if (isHHAccount)
+        	    con.AccountId = null;
+        	else
+                con.npo02__Household__c = null;
             removeContacts.put(con.id,con);
         }
         
@@ -420,8 +480,8 @@ global with sharing class HH_ManageHousehold_EXT {
             activeContacts.put(con[0].id, con[0]);
             removeContacts.remove(con[0].id);
             // check for household then find and add contacts
-            if (con[0].npo02__Household__c != null) {
-                whereClause = 'WHERE npo02__Household__c = \''+con[0].npo02__Household__c+'\'';
+            if (con[0].HHId__c != null) {
+                whereClause = 'WHERE HHId__c = \''+con[0].HHId__c+'\'';
                 q = conSelect + whereClause;
                 list<Contact> hhcons = Database.query(q);
                 if (!hhcons.isEmpty()) {
@@ -465,11 +525,31 @@ global with sharing class HH_ManageHousehold_EXT {
         //list<Contact> retCons = new list<contact>();
         //if (activeContacts.isEmpty()) return retCons;
         viableAddresses.clear();
-        //add household address
-        if (hh.npo02__MailingStreet__c != null || hh.npo02__MailingCity__c != null || hh.npo02__MailingState__c != null || hh.npo02__MailingPostalCode__c != null || hh.npo02__MailingCountry__c != null)
+        
+        string strStreet = null;
+        string strCity = null;
+        string strState = null;
+        string strPostalCode = null;
+        string strCountry = null;
+        
+        if (isHHAccount) {
+        	strStreet = hhA.ShippingStreet;
+        	strCity = hhA.ShippingCity;
+        	strState = hhA.ShippingState;
+        	strPostalCode = hhA.ShippingPostalCode;
+        	strCountry = hhA.ShippingCountry;
+        } else {
+        	strStreet = hhO.npo02__MailingStreet__c;
+            strCity = hhO.npo02__MailingCity__c;
+            strState = hhO.npo02__MailingState__c;
+            strPostalCode = hhO.npo02__MailingPostalCode__c;
+            strCountry = hhO.npo02__MailingCountry__c;
+        }
+        
+        if (strStreet != null || strCity != null || strState != null || strPostalCode != null || strCountry != null)
         {
-            string addressString = hh.npo02__MailingStreet__c + '#' + hh.npo02__MailingCity__c + '#' + hh.npo02__MailingState__c + '#' + hh.npo02__MailingPostalCode__c + '#' + hh.npo02__MailingCountry__c;
-            
+            string addressString = strStreet + '#' + strCity + '#' + strState  + '#' + strPostalCode + '#' + strCountry;
+
             // regex pattern for getting all white space
             pattern whtspc = pattern.compile('[\\s]');
             
@@ -482,21 +562,19 @@ global with sharing class HH_ManageHousehold_EXT {
             if (!viableAddresses.containsKey(addressString))
             {
                 viableAddress hhaddr = new viableAddress();
-
                 hhaddr.AddressKey = addressString;
-                hhaddr.MailingStreet = hh.npo02__MailingStreet__c;
-                hhaddr.MailingCity =hh.npo02__MailingCity__c ;
-                hhaddr.MailingState =hh.npo02__MailingState__c;
-                hhaddr.MailingPostalCode = hh.npo02__MailingPostalCode__c;
-                hhaddr.MailingCountry =hh.npo02__MailingCountry__c;
-
+                hhaddr.MailingStreet = strStreet;
+                hhaddr.MailingCity = strCity;
+                hhaddr.MailingState = strState;
+                hhaddr.MailingPostalCode = strPostalCode;
+                hhaddr.MailingCountry = strCountry;                	
                 viableAddresses.put(addressString, hhaddr);
             }
             
             if(activeAddressKey == null)
                 setActiveAddress(addressString);
         }
-        
+                
         list<Id> activeConIds = new list<Id>();
         activeConIds.addAll(activeContacts.keySet());
         String q = conSelect + 'WHERE id IN :activeConIds';
@@ -520,14 +598,12 @@ global with sharing class HH_ManageHousehold_EXT {
                 if (!viableAddresses.containsKey(addressString))
                 {
                     viableAddress conaddr = new viableAddress();
-
                     conaddr.AddressKey = addressString;
                     conaddr.MailingStreet = con.MailingStreet;
                     conaddr.MailingCity = con.MailingCity;
                     conaddr.MailingState = con.MailingState;
                     conaddr.MailingPostalCode = con.MailingPostalCode;
                     conaddr.MailingCountry = con.MailingCountry;
-
                     viableAddresses.put(addressString, conaddr);
                     
                     if(activeAddressKey == null)
@@ -620,7 +696,7 @@ global with sharing class HH_ManageHousehold_EXT {
         if (conId != null || hh.id != null) q += ' WHERE';
         if (conId != null) q += ' Id=\''+conId+'\'';
         if (conId != null && hh.id != null) q += ' or';
-        if (hh.id != null) q += ' npo02__Household__c = \''+hh.id+'\' LIMIT 500';
+        if (hh.id != null) q += ' HHId__c = \''+hh.id+'\' LIMIT 500';
         String qry = q;
         return Database.query(qry);
     }
@@ -633,12 +709,18 @@ global with sharing class HH_ManageHousehold_EXT {
     public void saveHH() {      
         
         //save the household address if this is a new household, in an existing household this is handled by the vanilla save action
-        if (hh.id == null) { 
-            hh.npo02__MailingStreet__c = activeStreet;
-            hh.npo02__MailingCity__c = activeCity;
-            hh.npo02__MailingState__c = activeState;
-            hh.npo02__MailingPostalCode__c = activePostalCode;
-            hh.npo02__MailingCountry__c = activeCountry;
+        if (hh.id == null && !isHHAccount) { 
+            hhO.npo02__MailingStreet__c = activeStreet;
+            hhO.npo02__MailingCity__c = activeCity;
+            hhO.npo02__MailingState__c = activeState;
+            hhO.npo02__MailingPostalCode__c = activePostalCode;
+            hhO.npo02__MailingCountry__c = activeCountry;
+        } else if (hh.id == null && isHHAccount) { 
+            hhA.ShippingStreet = activeStreet;
+            hhA.ShippingCity = activeCity;
+            hhA.ShippingState = activeState;
+            hhA.ShippingPostalCode = activePostalCode;
+            hhA.ShippingCountry = activeCountry;
         }
         // Insert Household
         upsert hh;
@@ -647,7 +729,11 @@ global with sharing class HH_ManageHousehold_EXT {
         // This MUST happen before updating contacts
         if (!insertContacts.isEmpty()) {
             for (Contact con : insertContacts) {
-                con.npo02__Household__c = hh.id;
+            	if (isHHAccount) {
+            		con.AccountId = hh.Id;
+            	} else {
+                    con.npo02__Household__c = hh.id;
+            	}
                 
                 // Set Addresses on new Contacts
                 if (useAddress == true) {
@@ -676,7 +762,11 @@ global with sharing class HH_ManageHousehold_EXT {
                 }
                 
                 // Set household on contacts
-                con.npo02__Household__c = hh.id;
+                if (isHHAccount) {
+                    con.AccountId = hh.Id;
+                } else {
+                    con.npo02__Household__c = hh.id;
+                }
                 
                 update con;
             }
@@ -686,7 +776,11 @@ global with sharing class HH_ManageHousehold_EXT {
         if (!removeContacts.isEmpty()) {
             list<Contact> contactsToRemove = new list<Contact>();
             for (Contact con : removeContacts.values()) {
-                con.npo02__Household__c = null;
+            	if (isHHAccount) {
+            	    con.AccountId = null;
+            	} else {
+                    con.npo02__Household__c = null;
+            	}
                 contactsToRemove.add(con);
             }
             update contactsToRemove;
@@ -709,13 +803,23 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return PageReference.
     ********************************************************************************************************/
     public PageReference save() {
+        // DJH:UNDONE: why is this needed.  Git shows Kevin checked it in to fix a bug with naming while dragging tiles?
         HH_ProcessControl.inFutureContext = true;
         ApexPages.StandardController sc = new ApexPages.standardController(hh);
         PageReference sv = sc.save();
         
         RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupHouseholds(new map<id, npo02__Household__c>(new list<npo02__Household__c>{hh}));
-                
+	
+       if (isHHAccount) {
+       	    // This shouldn't be needed.  Our trigger for maintaining HHAccounts should do the rollups.
+            //rg.rollupAccounts(new map<Id, Account>(new list<Account>{hhA}));
+       } else  {
+       	    // DJH: Unfortunately, the trigger for households does not do rollups, and all my attempts to 
+       	    // get it working failed.  It seemed like the rollup code was updating the household fields, but 
+       	    // then those changes didn't persist to the database.  Requires much more investigation if we
+       	    // want to remove this code!
+            rg.rollupHouseholds(new map<id, npo02__Household__c>(new list<npo02__Household__c>{hhO}));
+       }     
         return sv;
     }
 

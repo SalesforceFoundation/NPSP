@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>28.0</apiVersion>
-    <label>HH_ManageHousehold</label>
+    <label>HH_ManageHHAccount</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>95</minorNumber>
