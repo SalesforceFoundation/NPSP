@@ -25,7 +25,7 @@ public class AFFL_Affiliations_TEST {
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
-        setupTDTM();
+        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -71,7 +71,7 @@ public class AFFL_Affiliations_TEST {
     
     
     static testMethod void newContactOnOrgAccountAutoOff() {
-        setupTDTM();
+        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                             (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
@@ -94,7 +94,7 @@ public class AFFL_Affiliations_TEST {
     /// <name> createAffiliation_Test </name>
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
-        setupTDTM();
+        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                                 (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -115,7 +115,7 @@ public class AFFL_Affiliations_TEST {
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void contactWithMultipleAffiliations() {
-        setupTDTM();
+        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -171,7 +171,7 @@ public class AFFL_Affiliations_TEST {
             
         return affiliationsSettings;
     }
-    
+    /*
     public static void setupTDTM() {
     	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
         
@@ -184,7 +184,7 @@ public class AFFL_Affiliations_TEST {
               Trigger_Action__c = 'AfterUpdate'));
                     
         insert handlers; 
-    }
+    }*/
     
     private static Contact getContact(Id accountId, String title) {
     	return new Contact(FirstName = 'test', LastName = 'testerson', AccountId = accountId, Title = title);

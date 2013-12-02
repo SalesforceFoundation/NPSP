@@ -35,6 +35,13 @@ public with sharing class TDTM_SettingsDataGateway implements TDTM_iTableDataGat
 
     private static Map<String, Trigger_Handler_Setting__c> allClassesToCall;
     
+    public static Boolean isEmpty() {
+    	Map<String, Trigger_Handler_Setting__c> allRows = Trigger_Handler_Setting__c.getAll();
+    	if(allRows.size() == 0)
+    	   return true;
+    	return false;
+    }
+    
     public static List<SObject> getClassesToCallOnTriggers(String objectName, TDTM_TriggerActionHelper.Action action) {
         Map<String, SObject> classesToCallMap = new Map<String, SObject>();
         if (allClassesToCall == null) {

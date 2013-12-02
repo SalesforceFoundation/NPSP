@@ -51,6 +51,11 @@ public with sharing class TDTM_TriggerHandler {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
+        //If there are no records insert the defaults.
+        if(dao.isEmpty()) {
+        	insertDefaultRecords();
+        }
+        
         //Get the classes to run
         List<SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers(obj.getName(), thisAction);
         
@@ -76,6 +81,20 @@ public with sharing class TDTM_TriggerHandler {
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete.values());
 	        delete dmlWrapper.objectsToDelete.values();
         }
+    }
+    
+    private void insertDefaultRecords() {
+    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+                    
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));
+                    
+        insert handlers; 
     }
     
     private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {

@@ -34,6 +34,11 @@
 public interface TDTM_iTableDataGateway {
 
     /**
+     * Checks is any records exist.
+     */
+    Boolean isEmpty();
+    
+    /**
      * The list returned is already sorted by load order.
      **/ 
      List<SObject> getClassesToCallOnTriggers(String objectName, TDTM_TriggerActionHelper.Action action);
