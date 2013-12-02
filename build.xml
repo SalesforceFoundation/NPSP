@@ -146,17 +146,17 @@ npe5: ${InstalledPackage.npe5.versionNumber}
     <!--   test: Run a checkOnly deployment which runs all tests but never actually deploys the package permanently.  Updates all dependent packages to the correct version which is permanent --> 
     <target name="test">
       <updateDependentPackages />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="100" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="200" />
     </target>
 
     <!--   deploy: Run a full deployment including running all tests -->
     <target name="deploy">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="100" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
     </target>
 
     <!--   deployWithoutTests: Run a full deployment but don't run all tests.  This is useful if you already know tests will pass from previous runs and just want to deploy faster -->
     <target name="deployWithoutTest">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="100" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
     </target>
 
     <!--   updateDependendentPackages: Ensures all dependent packages are the correct version -->
