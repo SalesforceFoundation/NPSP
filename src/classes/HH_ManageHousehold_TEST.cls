@@ -294,7 +294,7 @@ public with sharing class HH_ManageHousehold_TEST {
         Test.stopTest();
     }
     
-    public static testMethod void testFindAndAdd() {
+    public static testMethod void testFindAndAddPart1() {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -449,6 +449,63 @@ public with sharing class HH_ManageHousehold_TEST {
         // Test that it was removed
         system.assertEquals(false, ext.activeContacts.containsKey(con5.id));
         
+        Test.stopTest();
+    }
+    
+    
+    public static testMethod void testFindAndAddPart2() {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        npo02__Household__c hh = new npo02__Household__c();
+        
+        npo02__Household__c existingHH = new npo02__Household__c (
+            Name = 'existing hh'
+            );
+        insert existingHH;
+        
+        Contact con1 = new Contact(
+            FirstName = 'John',
+            LastName = 'TEST abc Monkey',
+            email = 'testemail@groundwiretest.org',
+            MailingStreet = '1234 Testing Drive Suite 1000',
+            MailingCity = 'Seattle',
+            MailingState = 'WA',
+            MailingPostalCode = '98101',
+            MailingCountry = 'USA'
+            );
+        insert con1;
+        
+        Contact con2 = new Contact(
+            FirstName = 'Mike',
+            LastName = 'TEST Monkey abc',
+            email = 'testemail@groundwiretest.org',
+            MailingStreet = '1234 Testing Drive Suite 1000',
+            MailingCity = 'Seattle ',
+            MailingState = ' WA',
+            MailingPostalCode = '98101',
+            MailingCountry = 'USA '
+            );
+        insert con2;
+                        
+        Test.startTest();
+        ApexPages.StandardController sc = new ApexPages.standardController(new npo02__Household__c());
+        
+        ApexPages.currentPage().getParameters().put('cid', con1.id);
+        ApexPages.currentPage().getParameters().put('hhid', hh.id);
+        
+        HH_ManageHousehold_EXT ext = new HH_ManageHousehold_EXT(sc);
+
+        // Add another existing contact
+        string jsSt = JSON.serialize(ext);
+        string nwSt = HH_ManageHousehold_EXT.remoteAddMember(con2.id, false, jsSt);
+        ext = HH_ManageHousehold_EXT.unpackState(nwSt);
+
+        // Check that the contacts got added
+        system.assertEquals(true, ext.activeContacts.containsKey(con1.id));
+        system.assertEquals(true, ext.activeContacts.containsKey(con2.id));
+        
         // Test changing name
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSetNaming(false, 'The Test123Awesomes', false, 'TestZZ1234', false, 'blah', jsSt);
@@ -464,39 +521,25 @@ public with sharing class HH_ManageHousehold_TEST {
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
         // query for a contact and make sure it got the correct fields set
-        Contact con4q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con4.id];
+        Contact con2q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con2.id];
         
-        system.assertEquals(ext.hh.id, con4q.npo02__Household__c);
+        system.assertEquals(ext.hh.id, con2q.npo02__Household__c);
         
         // Set the address to the new contact
-        ext.setActiveAddress(con4.id);
+        ext.setActiveAddress(con2.id);
         
         // Now remove another member, save, and make sure the lookup field is set to null
         jsSt = JSON.serialize(ext);
-        nwSt = HH_ManageHousehold_EXT.remoteRemoveMember(con4.id, jsSt);
+        nwSt = HH_ManageHousehold_EXT.remoteRemoveMember(con1.id, jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         // Save
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
-        con4q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con4.id];
+        Contact con1q = [SELECT Id, npo02__Household__c, MailingStreet FROM Contact WHERE Id = :con1.id];
         
-        system.assertNotEquals(ext.hh.id, con4q.npo02__Household__c);
-        
-        // Now add a completely new contact and save
-        ext.insertContacts.add(new Contact(FirstName = 'Lefty', LastName = 'TestFunky123'));
-        
-        // Save
-        jsSt = JSON.serialize(ext);
-        nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
-        ext = HH_ManageHousehold_EXT.unpackState(nwSt);
-        
-        // Query for our new contact
-        Contact newCon = [SELECT Id, npo02__Household__c, Name FROM Contact WHERE Name = 'Lefty TestFunky123'];
-        system.assertEquals(ext.hh.id, newCon.npo02__Household__c);
-        
-        Id fHHid = ext.hh.id;
+        system.assertNotEquals(ext.hh.id, con1q.npo02__Household__c);
         
         // Cover the "standard" save
         ext.save();
