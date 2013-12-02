@@ -347,7 +347,7 @@ global with sharing class HH_ManageHousehold_EXT {
     ********************************************************************************************************/
     @RemoteAction
     global static string remoteSave(String state) {
-        HH_ManageHousehold_EXT ManageHousehold = unpackState(state);        
+        HH_ManageHousehold_EXT ManageHousehold = unpackState(state);      
         ManageHousehold.saveHH();
         return packState(ManageHousehold);
     }
@@ -804,23 +804,52 @@ global with sharing class HH_ManageHousehold_EXT {
     ********************************************************************************************************/
     public PageReference save() {
         // DJH:UNDONE: why is this needed.  Git shows Kevin checked it in to fix a bug with naming while dragging tiles?
-        HH_ProcessControl.inFutureContext = true;
-        ApexPages.StandardController sc = new ApexPages.standardController(hh);
-        PageReference sv = sc.save();
+        //HH_ProcessControl.inFutureContext = true;
         
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-	
-       if (isHHAccount) {
-       	    // This shouldn't be needed.  Our trigger for maintaining HHAccounts should do the rollups.
-            //rg.rollupAccounts(new map<Id, Account>(new list<Account>{hhA}));
-       } else  {
-       	    // DJH: Unfortunately, the trigger for households does not do rollups, and all my attempts to 
-       	    // get it working failed.  It seemed like the rollup code was updating the household fields, but 
-       	    // then those changes didn't persist to the database.  Requires much more investigation if we
-       	    // want to remove this code!
-            rg.rollupHouseholds(new map<id, npo02__Household__c>(new list<npo02__Household__c>{hhO}));
-       }     
-        return sv;
+        // don't call StandardController, or it will overwrite any changes we did asynchronously (like updating rollups)
+        //ApexPages.StandardController sc = new ApexPages.standardController(hh);
+        //PageReference sv = sc.save();
+        
+        // only update the hh fields that are in the field set.
+        if (isHHAccount) {
+        	Account acc = new Account(Id = hh.Id);
+	        for (Schema.FieldSetMember f : Schema.SObjectType.Account.fieldSets.Manage_Household_Custom.getFields()) { 
+	        	try {
+	               acc.put(f.getFieldPath(), hh.get(f.getFieldPath()));
+	        	} catch (exception ex) { }
+	        }          
+	        // add additional fields the page always uses
+	        acc.Name = hhA.Name;
+	        acc.npo02__SYSTEM_CUSTOM_NAMING__c = hhA.npo02__SYSTEM_CUSTOM_NAMING__c;
+	        acc.npo02__Formal_Greeting__c = hhA.npo02__Formal_Greeting__c;
+	        acc.npo02__Informal_Greeting__c = hhA.npo02__Informal_Greeting__c;
+            acc.ShippingStreet = hhA.ShippingStreet;
+	        acc.ShippingCity = hhA.ShippingCity;
+            acc.ShippingState = hhA.ShippingState;
+	        acc.ShippingPostalCode = hhA.ShippingPostalCode;
+            acc.ShippingCountry = hhA.ShippingCountry;
+            upsert acc;
+        } else {
+            npo02__Household__c h = new npo02__Household__c(Id = hh.Id);
+            for (Schema.FieldSetMember f : Schema.SObjectType.npo02__Household__c.fieldSets.npo02__Manage_Household_Custom.getFields()) {
+            	try {
+                    h.put(f.getFieldPath(), hh.get(f.getFieldPath()));
+            	} catch (exception ex) { }
+            }
+            // add additional fields the page always uses
+            h.Name = hhO.Name;
+            h.npo02__SYSTEM_CUSTOM_NAMING__c = hhO.npo02__SYSTEM_CUSTOM_NAMING__c;
+            h.npo02__Formal_Greeting__c = hhO.npo02__Formal_Greeting__c;
+            h.npo02__Informal_Greeting__c = hhO.npo02__Informal_Greeting__c;
+            h.npo02__MailingStreet__c = hhO.npo02__MailingStreet__c;
+            h.npo02__MailingCity__c = hhO.npo02__MailingCity__c;
+            h.npo02__MailingState__c = hhO.npo02__MailingState__c;
+            h.npo02__MailingPostalCode__c = hhO.npo02__MailingPostalCode__c;
+            h.npo02__MailingCountry__c = hhO.npo02__MailingCountry__c;
+            upsert h;
+        }
+            
+        return (new PageReference('/' + hh.Id));        
     }
 
 }
