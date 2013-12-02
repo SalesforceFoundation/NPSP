@@ -153,7 +153,7 @@ gwManageHH.originalState = JSON.stringify({!originalState});
 <apex:pageBlockSection columns="2">
 
         
-        <apex:repeat value="{!$ObjectType.npo02__Household__c.FieldSets.npo02__Manage_Household_Custom}" var="f">
+        <apex:repeat value="{!$ObjectType.Account.FieldSets.Manage_Household_Custom}" var="f">
             <apex:inputField rendered="{!NOT(CONTAINS('npo02__AverageAmount__c,npo02__FirstCloseDate__c,npo02__Formal_Greeting__c,npo02__Formula_MailingAddress__c,npo02__Household_ID__c,Informal_Greeting__c,npo02__LargestAmount__c,npo02__LastCloseDate__c,npo02__LastMembershipAmount__c,npo02__LastMembershipDate__c,npo02__LastMembershipLevel__c,npo02__LastMembershipOrigin__c,npo02__LastOppAmount__c,npo02__MailingCity__c,npo02__MailingCountry__c,npo02__MailingPostalCode__c,npo02__MailingState__c,npo02__MailingStreet__c,npo02__MembershipEndDate__c,npo02__MembershipJoinDate__c,npo02__Membership_Span__c,npo02__Membership_Status__c,npo02__NumberOfClosedOpps__c,npo02__NumberOfMembershipOpps__c,npo02__OppAmount2YearsAgo__c,npo02__OppAmountLastNDays__c,npo02__OppAmountLastYear__c,npo02__OppAmountThisYear__c,npo02__OppsClosed2YearsAgo__c,npo02__OppsClosedLastNDays__c,npo02__OppsClosedLastYear__c,npo02__OppsClosedThisYear__c,npo02__SYSTEM_CUSTOM_NAMING__c,npo02__SmallestAmount__c,npo02__TotalMembershipOppAmount__c,npo02__TotalOppAmount__c', f.FieldPath))}"
                 value="{!hhA[f]}" styleClass="sfField sfField-{!f.FieldPath}"/>
 

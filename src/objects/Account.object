@@ -6,7 +6,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>HH_ManageHHAccount</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>EnableCustomerPortalUser</actionName>
@@ -107,6 +109,16 @@
             <isRequired>false</isRequired>
         </displayedFields>
         <label>BDE List FS</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>Manage_Household_Custom</fullName>
+        <description>HH_ManageHHAccount.page</description>
+        <displayedFields>
+            <field>npo02__HouseholdPhone__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Manage Household Custom</label>
     </fieldSets>
     <fields>
         <fullName>AccountSource</fullName>
@@ -857,6 +869,21 @@
         <columns>CORE.USERS.ALIAS</columns>
         <filterScope>Everything</filterScope>
         <label>All Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>HH_Accounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>ACCOUNT.TYPE</columns>
+        <columns>npe01__SYSTEM_AccountType__c</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__NumberOfClosedOpps__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>npe01__SYSTEM_AccountType__c</field>
+            <operation>equals</operation>
+            <value>HH Account</value>
+        </filters>
+        <label>HH Accounts</label>
     </listViews>
     <listViews>
         <fullName>MyAccounts</fullName>
