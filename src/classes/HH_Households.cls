@@ -564,10 +564,19 @@ global without sharing class HH_Households {
                 householdsSettings.npo02__Schedule_Job_Limit__c = 25;
                 householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
+                
+                // new HH Account model overrides having HH objects
+                if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+
                 insert householdsSettings;
             }
         }
         
+        // new HH Account model overrides having HH objects
+        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+            householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+
         return householdsSettings;
     }
     
@@ -598,7 +607,15 @@ global without sharing class HH_Households {
             npo02__Schedule_Job_Limit__c = 25
             );
         insert householdsSettings;
-            
+ 
+        // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
+        if (householdsSettings.npo02__Household_Rules__c != NO_HOUSEHOLDS_PROCESSOR) {
+        	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+            if (ContactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+                ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+                upsert ContactsSettings;	
+            }	
+        }           
         return householdsSettings;
     }
 
