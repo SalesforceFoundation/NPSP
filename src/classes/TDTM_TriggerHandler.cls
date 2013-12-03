@@ -133,13 +133,22 @@ public with sharing class TDTM_TriggerHandler {
     
     //@TODO: read from text file
     private void insertDefaultRecords() {
-        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        //List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
         
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+        /*handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert'));
                     
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));*/
+              
+        handlers.add(new Trigger_Handler_Setting__c(Name = 'AFF_Contact_AI', Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+                    
+        handlers.add(new Trigger_Handler_Setting__c(Name = 'AFF_Contact_AU', Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterUpdate'));
                     
