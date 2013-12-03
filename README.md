@@ -14,7 +14,7 @@ ducking-octo-happiness, laughing-archer
 * Install the 5 required Nonprofit Starter Pack Packages  
  
 [Affiliations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cZtq)
-[Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cd3G)
+[Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cd2w)
 [Households](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000lNu0)
 [Recurring_Donations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pZK6)
 [Relationships](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pY9P)
