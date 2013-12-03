@@ -123,6 +123,7 @@ global with sharing class CAO_Constants {
         //create our own based on what's passed in from the test 
         ContactsSettings = new npe01__Contacts_and_Orgs_Settings__c (
             npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c, 
+            npe01__HH_Account_RecordTypeID__c = mySettings.npe01__HH_Account_RecordTypeID__c,
             npe01__Account_Processor__c = mySettings.npe01__Account_Processor__c,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = mySettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c,
             npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c,

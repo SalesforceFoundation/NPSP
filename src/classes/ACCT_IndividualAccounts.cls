@@ -139,7 +139,10 @@ public with sharing class ACCT_IndividualAccounts {
                             mapAccountIdContactId.put(c.AccountId, c.Id);
                         }
                         // there is no after insert processing for the bucket account model.
-                        // HHAccount renaming is called below after we update accounts.
+
+                        // HHAccount renaming needs to be called to set various HH naming fields like greeting.
+                        if (c.AccountId != null && c.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                           listAccountIdHHToRename.add(c.AccountId);    
                     }
         
                     // BEFORE UPDATE
@@ -240,11 +243,17 @@ public with sharing class ACCT_IndividualAccounts {
                 updateExistingHHAccounts(contacts);                    
             }
             if (listAccountIdHHToUpdate.size() > 0) {
-                RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
-                renameHHAccountsFuture(listAccountIdHHToUpdate);    
+            	if (!system.isFuture()) {
+                    RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountIdHHToUpdate));
+            	} else {
+		            RLLP_OppRollup rg = new RLLP_OppRollup();
+		            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+		                                                           ' where id IN :listAccountIdHHToUpdate')); 
+		            rg.rollupAccounts(amap);		            
+            	}    
             }
             if (listAccountIdHHToRename.size() > 0) {
-                renameHHAccountsFuture(listAccountIdHHToRename);    
+                renameHHAccounts(listAccountIdHHToRename);    
             }
             if (listContactAccountDelete.size() > 0) {
                 // check all old accounts to delete is they are left hanging around
@@ -284,14 +293,14 @@ public with sharing class ACCT_IndividualAccounts {
             }
         }
         
-        renameHHAccountsFuture(listAccountIdHHRename);
+        renameHHAccounts(listAccountIdHHRename);
     }
 
-    /// <name> renameHHAccountsFuture </name>
+    /// <name> renameHHAccounts </name>
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
-    private void renameHHAccountsFuture(ID[] listAccountId) {
-    	if (listAccountId.size() == 1) {
+    private void renameHHAccounts(ID[] listAccountId) {
+    	if (listAccountId.size() == 1 || system.isFuture()) {
     	    HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
     	} else {
@@ -361,8 +370,7 @@ public with sharing class ACCT_IndividualAccounts {
         Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
-            // DJH:UNDONE change code when we have new version of npe01 package to use npe01__HH_Account_RecordTypeID__c
-        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__One_to_One_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
+        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (rtId != null) {
             Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
             Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();

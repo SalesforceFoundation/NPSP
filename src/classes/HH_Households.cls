@@ -70,10 +70,10 @@ global without sharing class HH_Households {
         list<id> householdnameupdates = new list<id>();        
         list<id> oldHouseholds = new list<id>();
         map<id, integer> oldHouseholdSize = new map<id, integer>();
+        set<Id> setHHIdToRollup = new set<Id>();
         
         Set<Id> mergedWinningContact = new Set<Id>();
-        
-        
+                
         //typically this is handled through the contact, but for old households
         //being updated, we need to get the list here
         list<id> blankHHDeletes = new list<id>();
@@ -86,7 +86,7 @@ global without sharing class HH_Households {
                 
                 if (oldcmap.get(c.id).npo02__household__c != null){
                     oldHouseholds.add(oldcmap.get(c.id).npo02__household__c);
-                    system.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
+                    //system.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
                 }
                 
             }            
@@ -95,7 +95,7 @@ global without sharing class HH_Households {
             
             //create a map from the old household id and its size
             for (AggregateResult a : ar){
-                system.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
+                //system.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
                 oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
             }
             
@@ -150,8 +150,10 @@ global without sharing class HH_Households {
                 //if not, delete it.
                 else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
                     householdnameupdates.add(c.npo02__household__c);
+                    setHHIdToRollup.add(c.npo02__household__c);
                     if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
                         householdnameupdates.add(oldcmap.get(c.id).npo02__household__c);
+                        setHHIdToRollup.add(oldcmap.get(c.id).npo02__household__c);
                     }
                     else if(oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0){
                         blankHHDeletes.add(oldcmap.get(c.id).npo02__household__c);
@@ -199,6 +201,17 @@ global without sharing class HH_Households {
                 HH_HouseholdNaming hn = new HH_HouseholdNaming(); 
                 hn.UpdateNames(householdnameupdates);
             }                   
+        }
+        
+        if (setHHIdToRollup.size() > 0) {
+        	if (system.isFuture() || setHHIdToRollup.size() <= 2) {
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
+	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+	                                                                            ' where id IN :setHHIdToRollup'));
+	            rg.rollupHouseholds(hhmap);
+        	} else {
+        		RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
+        	}                                                                         
         }
     }
     
@@ -551,10 +564,19 @@ global without sharing class HH_Households {
                 householdsSettings.npo02__Schedule_Job_Limit__c = 25;
                 householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
+                
+                // new HH Account model overrides having HH objects
+                if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+
                 insert householdsSettings;
             }
         }
         
+        // new HH Account model overrides having HH objects
+        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+            householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+
         return householdsSettings;
     }
     
@@ -585,7 +607,15 @@ global without sharing class HH_Households {
             npo02__Schedule_Job_Limit__c = 25
             );
         insert householdsSettings;
-            
+ 
+        // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
+        if (householdsSettings.npo02__Household_Rules__c != NO_HOUSEHOLDS_PROCESSOR) {
+        	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+            if (ContactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+                ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+                upsert ContactsSettings;	
+            }	
+        }           
         return householdsSettings;
     }
 
