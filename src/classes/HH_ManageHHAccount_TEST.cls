@@ -299,7 +299,7 @@ public with sharing class HH_ManageHHAccount_TEST {
         Test.stopTest();
     }
     
-    public static testMethod void testFindAndAdd() {
+    public static testMethod void testFindAndAddPart1() {
         
         Account hh = new Account(            
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
@@ -376,7 +376,7 @@ public with sharing class HH_ManageHHAccount_TEST {
             );
         insert conWithHH2;
         
-        
+        Test.startTest();        
         ApexPages.StandardController sc = new ApexPages.standardController(new Account(npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE));
         
         ApexPages.currentPage().getParameters().put('cid', con2.id);
@@ -451,6 +451,62 @@ public with sharing class HH_ManageHHAccount_TEST {
         // Test that it was removed
         system.assertEquals(false, ext.activeContacts.containsKey(con5.id));
         
+        Test.stopTest();
+    }
+
+    public static testMethod void testFindAndAddPart2() {
+        
+        Account hh = new Account(            
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
+        );
+        
+        Account existingHH = new Account (
+            Name = 'existing hh',
+            npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
+            );
+        insert existingHH;
+        
+        Contact con1 = new Contact(
+            FirstName = 'John',
+            LastName = 'TEST abc Monkey',
+            email = 'testemail@groundwiretest.org',
+            MailingStreet = '1234 Testing Drive Suite 1000',
+            MailingCity = 'Seattle',
+            MailingState = 'WA',
+            MailingPostalCode = '98101',
+            MailingCountry = 'USA'
+            );
+        insert con1;
+        
+        Contact con2 = new Contact(
+            FirstName = 'Mike',
+            LastName = 'TEST Monkey abc',
+            email = 'testemail@groundwiretest.org',
+            MailingStreet = '1234 Testing Drive Suite 1000',
+            MailingCity = 'Seattle ',
+            MailingState = ' WA',
+            MailingPostalCode = '98101',
+            MailingCountry = 'USA '
+            );
+        insert con2;
+                        
+        Test.startTest();
+        ApexPages.StandardController sc = new ApexPages.standardController(new Account());
+        
+        ApexPages.currentPage().getParameters().put('cid', con1.id);
+        ApexPages.currentPage().getParameters().put('hhid', hh.id);
+        
+        HH_ManageHousehold_EXT ext = new HH_ManageHousehold_EXT(sc);
+
+        // Add another existing contact
+        string jsSt = JSON.serialize(ext);
+        string nwSt = HH_ManageHousehold_EXT.remoteAddMember(con2.id, false, jsSt);
+        ext = HH_ManageHousehold_EXT.unpackState(nwSt);
+
+        // Check that the contacts got added
+        system.assertEquals(true, ext.activeContacts.containsKey(con1.id));
+        system.assertEquals(true, ext.activeContacts.containsKey(con2.id));
+        
         // Test changing name
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSetNaming(false, 'The Test123Awesomes', false, 'TestZZ1234', false, 'blah', jsSt);
@@ -459,61 +515,43 @@ public with sharing class HH_ManageHHAccount_TEST {
         // Verify that name and greeting were set
         system.assertEquals('The Test123Awesomes', ext.hhName);
         system.assertEquals('TestZZ1234', ext.hhFormalGreeting);
-
-        // too much going on in this test, so we've pushed startTest() down to help keep us under limits.
-        Test.startTest();
-
+        
         // Save
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
         // query for a contact and make sure it got the correct fields set
-        Contact con4q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con4.id];
+        Contact con2q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con2.id];
         
-        system.assertEquals(ext.hh.id, con4q.AccountId);
+        system.assertEquals(ext.hh.id, con2q.AccountId);
         
         // Set the address to the new contact
-        ext.setActiveAddress(con4.id);
+        ext.setActiveAddress(con2.id);
         
         // Now remove another member, save, and make sure the lookup field is set to null
         jsSt = JSON.serialize(ext);
-        nwSt = HH_ManageHousehold_EXT.remoteRemoveMember(con4.id, jsSt);
+        nwSt = HH_ManageHousehold_EXT.remoteRemoveMember(con1.id, jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         // Save
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         
-        con4q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con4.id];
+        Contact con1q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con1.id];
         
-        system.assertNotEquals(ext.hh.id, con4q.AccountId);
+        system.assertNotEquals(ext.hh.id, con1q.AccountId);
         
-        // Now add a completely new contact and save
-        ext.insertContacts.add(new Contact(FirstName = 'Lefty', LastName = 'TestFunky123'));
-        
-        // Save
-        jsSt = JSON.serialize(ext);
-        nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
-        ext = HH_ManageHousehold_EXT.unpackState(nwSt);
-        
-        // Query for our new contact
-        Contact newCon = [SELECT Id, AccountId, Name FROM Contact WHERE Name = 'Lefty TestFunky123'];
-        system.assertEquals(ext.hh.id, newCon.AccountId);
-        
-        Id fHHid = ext.hh.id;
-        
-        // moved this up to avoid soql limits.
-        Test.stopTest();        
-
         // Cover the "standard" save
         ext.save();
         
         // Now, test delete
         ext.deleteHH();
         
+        Test.stopTest();        
     }
     
+        
     public static testMethod void testRemoveReAdd() {
         
         Account hh = new Account (
