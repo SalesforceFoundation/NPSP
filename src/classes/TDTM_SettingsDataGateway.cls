@@ -42,7 +42,7 @@ public with sharing class TDTM_SettingsDataGateway implements TDTM_iTableDataGat
     	return false;
     }
     
-    public static List<SObject> getClassesToCallOnTriggers(String objectName, TDTM_TriggerActionHelper.Action action) {
+    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_TriggerActionHelper.Action action) {
         Map<String, SObject> classesToCallMap = new Map<String, SObject>();
         if (allClassesToCall == null) {
            allClassesToCall = Trigger_Handler_Setting__c.getAll();

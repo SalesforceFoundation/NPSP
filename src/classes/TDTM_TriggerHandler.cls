@@ -57,13 +57,13 @@ public with sharing class TDTM_TriggerHandler {
         }
         
         //Get the classes to run
-        List<SObject> classesToCallOnTriggers = dao.getClassesToCallOnTriggers(obj.getName(), thisAction);
+        List<SObject> classesToCall = dao.getclassesToCallForObject(obj.getName(), thisAction);
+        System.debug('****Classes To Call for ' + obj.getName() + ': ' + classesToCall);
         
-        if(classesToCallOnTriggers != null && classesToCallOnTriggers.size() > 0) {
-            System.debug('****Classes to call: ' + classesToCallOnTriggers);
+        if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
-            for (SObject classToRun : classesToCallOnTriggers) {
-                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToRun);
+            for (SObject classToCall : classesToCall) {
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToCall);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -81,20 +81,6 @@ public with sharing class TDTM_TriggerHandler {
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete.values());
 	        delete dmlWrapper.objectsToDelete.values();
         }
-    }
-    
-    private void insertDefaultRecords() {
-    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-                    
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));
-                    
-        insert handlers; 
     }
     
     private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
@@ -143,5 +129,20 @@ public with sharing class TDTM_TriggerHandler {
        else om = new Map<Id, SObject>();
        
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
+    }
+    
+    //@TODO: read from text file
+    private void insertDefaultRecords() {
+        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+                    
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));
+                    
+        insert handlers; 
     }
 }

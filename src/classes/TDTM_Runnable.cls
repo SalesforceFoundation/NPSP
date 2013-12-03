@@ -34,8 +34,8 @@
  */
 public abstract class TDTM_Runnable {
 
-    //It will be the duty of the run method implementation to set a flag to prevent re-entrancy. We cannot 
-    //do that for them in TDTM_Handler, even if it's after calling the future, because then it might get set 
+    //It will be the duty of the run method implementation to set a flag to prevent re-entrancy. We cannot do 
+    //that for them in TDTM_TriggerHandler, even if it's after calling the future, because then it might get set 
     //before the future runs (and since the future method calls the non-future method, which checks the flag, 
     //the future method would have no effect.) Also, some classes might not want to prevent it.
     

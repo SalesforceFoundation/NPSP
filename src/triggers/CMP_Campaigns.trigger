@@ -1,5 +1,5 @@
 /**
- * @TODO: this trigger can be deleted. We were just using it to test the alternative TDTM designs. 
+ * We are using this trigger to test the alternative TDTM designs. 
  */
 trigger CMP_Campaigns on Campaign (after delete, after insert, after undelete, 
 after update, before delete, before insert, before update) {
