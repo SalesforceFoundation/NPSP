@@ -1,15 +1,167 @@
 <project name="Cumulus" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
 
+    <include file="${basedir}/lib/ant-salesforce.xml" />
+
+    <!-- Managed Package Versions -->
+    <property name="version.npe01" value="2.91" />
+    <property name="version.npo02" value="2.95" />
+    <property name="version.npe03" value="2.91" />
+    <property name="version.npe4" value="2.9" />
+    <property name="version.npe5" value="1.90" />
+
+    <!-- Cumulus specific macros -->
+    <macrodef name="getPackageNamespaces" description="Gets the namespaces for all dependent packages">
+      <sequential>
+        <delete dir="${basedir}/installedPackages"/>
+        <mkdir dir="${basedir}/installedPackages"/>
+
+        <sf:bulkRetrieve
+            username="${sf.username}"
+            password="${sf.password}"
+            metadataType="InstalledPackage"
+            retrieveTarget="${basedir}/installedPackages"/>
+
+        <getPackageVersion namespace="npe01" refresh="false" />
+        <getPackageVersion namespace="npo02" refresh="false" />
+        <getPackageVersion namespace="npe03" refresh="false" />
+        <getPackageVersion namespace="npe4" refresh="false" />
+        <getPackageVersion namespace="npe5" refresh="false" />
+
+        <echo>Dependent Package Versions:
+-------------------------------
+npe01: ${InstalledPackage.npe01.versionNumber}
+npo02: ${InstalledPackage.npo02.versionNumber}
+npe03: ${InstalledPackage.npe03.versionNumber}
+npe4: ${InstalledPackage.npe4.versionNumber}
+npe5: ${InstalledPackage.npe5.versionNumber}
+        </echo>
+
+        <delete dir="${basedir}/installedPackages"/>
+
+      </sequential>
+    </macrodef>
+
+
+    <macrodef name="updateDependentPackages">
+      <sequential>
+        <getPackageNamespaces />
+
+        <!-- npo02 depends on npe01 so we have to uninstall npo02 first if needed -->
+        <if>
+          <and>
+            <or>
+              <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="${version.npo02}" /></not>
+              <!-- If the npo02 version is correct but npe01 needs a reinstall, we have to uninstall npo02 first -->
+              <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
+            </or>
+            <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" /></not>
+          </and>
+          <then>
+            <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}"/>
+          </then>
+        </if>
+
+        <!-- reinstall npe01 if version doesn't match -->
+        <if>
+          <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
+          <then>
+            <echo>Changing npe01 from ${InstalledPackage.npe01.versionNumber} to ${version.npe01}</echo>
+            <if>
+              <!-- only uninstall if package exists -->
+              <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" /></not>
+              <then>
+                <uninstallPackage namespace="npe01" username="${sf.username}" password="${sf.password}"/>
+              </then> 
+            </if>
+            <installPackage namespace="npe01" version="${version.npe01}" username="${sf.username}" password="${sf.password}"/> 
+          </then>
+        </if>
+
+        <!-- npo02 depends on npe01 so we have to install it after npe01 if needed -->
+        <if>
+          <or>
+            <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="${version.npo02}" /></not>
+            <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
+          </or>
+          <then>
+            <echo>Changing npo02 from ${InstalledPackage.npo02.versionNumber} to ${version.npo02}</echo>
+            <installPackage namespace="npo02" version="${version.npo02}" username="${sf.username}" password="${sf.password}"/> 
+          </then>
+        </if>
+
+        <!-- reinstall npe03 if version doesn't match -->
+        <if>
+          <not><equals arg1="${InstalledPackage.npe03.versionNumber}" arg2="${version.npe03}" /></not>
+          <then>
+            <echo>Changing npe03 from ${InstalledPackage.npe03.versionNumber} to ${version.npe03}</echo>
+            <if>
+              <!-- only uninstall if package exists -->
+              <not><equals arg1="${InstalledPackage.npe03.versionNumber}" arg2="Not Installed" /></not>
+              <then>
+                <uninstallPackage namespace="npe03" username="${sf.username}" password="${sf.password}"/>
+              </then> 
+            </if>
+            <installPackage namespace="npe03" version="${version.npe03}" username="${sf.username}" password="${sf.password}"/> 
+          </then>
+        </if>
+
+        <!-- reinstall npe4 if version doesn't match -->
+        <if>
+          <not><equals arg1="${InstalledPackage.npe4.versionNumber}" arg2="${version.npe4}" /></not>
+          <then>
+            <echo>Changing npe4 from ${InstalledPackage.npe4.versionNumber} to ${version.npe4}</echo>
+            <if>
+              <!-- only uninstall if package exists -->
+              <not><equals arg1="${InstalledPackage.npe4.versionNumber}" arg2="Not Installed" /></not>
+              <then>
+                <uninstallPackage namespace="npe4" username="${sf.username}" password="${sf.password}"/>
+              </then> 
+            </if>
+            <installPackage namespace="npe4" version="${version.npe4}" username="${sf.username}" password="${sf.password}"/> 
+          </then>
+        </if>
+
+        <!-- reinstall npe5 if version doesn't match -->
+        <if>
+          <not><equals arg1="${InstalledPackage.npe5.versionNumber}" arg2="${version.npe5}" /></not>
+          <then>
+            <echo>Changing npe5 from ${InstalledPackage.npe5.versionNumber} to ${version.npe5}</echo>
+            <if>
+              <!-- only uninstall if package exists -->
+              <not><equals arg1="${InstalledPackage.npe5.versionNumber}" arg2="Not Installed" /></not>
+              <then>
+                <uninstallPackage namespace="npe5" username="${sf.username}" password="${sf.password}"/>
+              </then> 
+            </if>
+            <installPackage namespace="npe5" version="${version.npe5}" username="${sf.username}" password="${sf.password}"/> 
+          </then>
+        </if>
+
+      </sequential>
+    </macrodef>
+
+
+    <!-- Cumulus build targets -->
+
+    <!--   test: Run a checkOnly deployment which runs all tests but never actually deploys the package permanently.  Updates all dependent packages to the correct version which is permanent --> 
     <target name="test">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="100" />
+      <updateDependentPackages />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="200" />
     </target>
 
+    <!--   deploy: Run a full deployment including running all tests -->
     <target name="deploy">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="100" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
     </target>
 
+    <!--   deployWithoutTests: Run a full deployment but don't run all tests.  This is useful if you already know tests will pass from previous runs and just want to deploy faster -->
     <target name="deployWithoutTest">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="100" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
+    </target>
+
+    <!--   updateDependendentPackages: Ensures all dependent packages are the correct version -->
+    <target name="updateDependentPackages">
+      <updateDependentPackages />
     </target>
 
 </project>
