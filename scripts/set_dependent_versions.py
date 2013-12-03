@@ -13,6 +13,7 @@ config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),'cumulus.c
 root_dir = os.path.abspath(os.path.join(os.path.abspath(__file__),os.path.pardir,os.path.pardir))
 src_dir = os.path.join(root_dir,'src')
 readme_file = os.path.join(root_dir,'README.md')
+build_xml_file = os.path.join(root_dir,'build.xml')
 
 def get_meta_files():
     matches = []
@@ -69,6 +70,8 @@ def update_meta_files(files):
                         changed = True
                         print 'Updated %s majorNumber from %s to %s' % (namespace, major, cfg_major)
                         output.append(namespace_lines['major']['line'].replace(major, cfg_major))
+                    else:
+                        output.append(namespace_lines['major']['line'])
 
                     # Check if minor needs changed and if so, change it
                     minor = str(int(namespace_lines['minor']['value']))
@@ -77,6 +80,8 @@ def update_meta_files(files):
                         changed = True
                         print 'Updated %s minorNumber from %s to %s' % (namespace, minor, cfg_minor)
                         output.append(namespace_lines['minor']['line'].replace(minor, cfg_minor))
+                    else:
+                        output.append(namespace_lines['minor']['line'])
 
                     namespace = None
                     namespace_lines = {}
@@ -104,6 +109,19 @@ def update_readme_links():
     if orig_readme != readme:
         print 'Updated install urls in README.md'
         open(readme_file, 'w').write(readme)    
+
+def update_build_xml_versions():
+    print 'Checking installPackage versions in build.xml'
+    build_xml = open(build_xml_file, 'r').read()
+    orig_build_xml = build_xml
+    for section in config.sections():
+        search = r'(<property.*name="version.%s".*value=)"(\d+\.\d+)"' % section
+        full_version = '%s.%s' % (config.get(section, 'major'), config.get(section, 'minor')) 
+        replace = r'\1"%s"' % full_version
+        build_xml = re.sub(search, replace, build_xml)
+    if orig_build_xml != build_xml:
+        print 'Updated installPackage versions in build.xml'
+        open(build_xml_file, 'w').write(build_xml)
     
 def main():
     # Parse the config file
@@ -114,6 +132,7 @@ def main():
     files = get_meta_files()
     update_meta_files(files)
     update_readme_links()
+    update_build_xml_versions()
 
 if __name__ == '__main__':
   main()
