@@ -8,19 +8,11 @@ This config file contains common values used by the scripts such as version numb
 set_dependent_versions.py
 =========================
 
-This script uses the values in scripts/cumulus.cfg to ensure all \*-meta.xml files require the correct dependent package versions.  The script will list all the files it examines and any changes it makes to those files.
+This script uses the values in scripts/cumulus.cfg to ensure all references to a dependent package version are correct
+- \*-meta.xml files require the correct dependent package versions
+- Install links in README.md in the root of the repository
+- version.NAMESPACE properties in build.xml
 
-The script also updates the install links in the README.md in the root of the repository.
+The script will list all the files it examines and any changes it makes to those files.
 
 `python scripts/set_dependent_versions.py`
-
-setup_dev_org.py
-================
-
-This script uses Selenium to automate the browser based tasks of setting up a new Developer Edition org to handle deployment of the Cumulus code into the organization passing all tests.  In order to run this, you will need to have a working version of Python, selenium, and Firefox.  On OS X, you can use the built in system python and use the following command to install selenium if not already installed:
-
-`sudo easy_install selenium`
-
-To run the script from the root of the repository, run the following command and provide the credentials to the target org when prompted:
-
-`python scripts/setup_dev_org.py`
