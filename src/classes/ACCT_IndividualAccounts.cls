@@ -368,8 +368,7 @@ public with sharing class ACCT_IndividualAccounts {
         Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
-            // DJH:UNDONE change code when we have new version of npe01 package to use npe01__HH_Account_RecordTypeID__c
-        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__One_to_One_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
+        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (rtId != null) {
             Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
             Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
