@@ -37,7 +37,9 @@ The build.xml file in the root of the repository contains a number of useful bui
 
 You can run the ant targets using the following command syntax:
 
-> ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
+```
+ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
+```
 
 **Build Targets**
 
