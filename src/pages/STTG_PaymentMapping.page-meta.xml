@@ -3,8 +3,7 @@
     <apiVersion>28.0</apiVersion>
     <label>STTG_PaymentMapping</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>91</minorNumber>
         <namespace>npe01</namespace>
+        <minorNumber>92</minorNumber>
     </packageVersions>
 </ApexPage>
