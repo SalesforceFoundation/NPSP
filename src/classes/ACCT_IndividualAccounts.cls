@@ -139,7 +139,10 @@ public with sharing class ACCT_IndividualAccounts {
                             mapAccountIdContactId.put(c.AccountId, c.Id);
                         }
                         // there is no after insert processing for the bucket account model.
-                        // HHAccount renaming is called below after we update accounts.
+
+                        // HHAccount renaming needs to be called to set various HH naming fields like greeting.
+                        if (c.AccountId != null && c.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                           listAccountIdHHToRename.add(c.AccountId);    
                     }
         
                     // BEFORE UPDATE
@@ -248,7 +251,6 @@ public with sharing class ACCT_IndividualAccounts {
 		                                                           ' where id IN :listAccountIdHHToUpdate')); 
 		            rg.rollupAccounts(amap);		            
             	}    
-                renameHHAccounts(listAccountIdHHToUpdate);
             }
             if (listAccountIdHHToRename.size() > 0) {
                 renameHHAccounts(listAccountIdHHToRename);    
