@@ -34,6 +34,6 @@ after insert, after update, after delete, after undelete) {
     
     handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
                                     Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    //handler.runClasses(new TDTM_ObjectDataGateway());
-    handler.runClasses(new TDTM_SettingsDataGateway());
+    handler.runClasses(new TDTM_ObjectDataGateway());
+    //handler.runClasses(new TDTM_SettingsDataGateway());
 }
