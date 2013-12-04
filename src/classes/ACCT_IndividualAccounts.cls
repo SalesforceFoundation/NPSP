@@ -238,9 +238,6 @@ public with sharing class ACCT_IndividualAccounts {
             if (mapAccountIdContactId.size() > 0) {
                 //update Accounts that have newly created Contacts connected to them
                 updateAccountPrimaryContact(mapAccountIdContactId);
-                
-                // update any HHAccount names
-                updateExistingHHAccounts(contacts);                    
             }
             if (listAccountIdHHToUpdate.size() > 0) {
             	if (!system.isFuture()) {
