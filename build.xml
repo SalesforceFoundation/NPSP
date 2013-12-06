@@ -182,13 +182,13 @@ npe5: ${InstalledPackage.npe5.versionNumber}
         password="${sf.password}" 
         serverurl="${sf.serverurl}" 
         retrieveTarget="projectFolder/standard" 
-        unpackaged="standard_objects.xml"/>
+        unpackaged="lib/standard_objects.xml"/>
       <sf:retrieve 
         username="${sf.username}" 
         password="${sf.password}" 
         serverurl="${sf.serverurl}" 
         retrieveTarget="projectFolder/unpackaged" 
-        unpackaged="all_meta_types.xml"/>
+        unpackaged="lib/all_meta_types.xml"/>
 
       <delete file="projectFolder/unpackaged/applications/Force_com.app" />
     </target>
