@@ -373,7 +373,7 @@ npe5: ${InstalledPackage.npe5.versionNumber}
     <target name="test">
       <antcall target="uninstallCumulus" />
       <antcall target="updateDependentPackages" />
-      <antcall target="deployWithoutTest" />
+      <antcall target="deploy" />
     </target>
 
 </project>
