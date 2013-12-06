@@ -192,7 +192,15 @@ npe5: ${InstalledPackage.npe5.versionNumber}
         retrieveTarget="projectFolder/unpackaged" 
         unpackaged="lib/all_meta_types.xml"/>
 
-      <delete file="projectFolder/unpackaged/applications/Force_com.app" />
+      <!-- Delete whitelisted files which are added to the org by Salesforce.  This includes both components which are always in an org and components which are automatically created by enabling Sites -->
+      <foreach target="deleteFile" param="filename" parallel="true" list="Force_com.app,Exception.page,Unauthorized.page,FileNotFound.page,BandwidthExceeded.page,SiteTemplate.page,InMaintenance.page,AnswersHome.page" />
+    </target>
+
+    <target name="deleteFile">
+      <echo>Deleting ${filename}</echo>
+      <delete>
+        <fileset dir="projectFolder/unpackaged" includes="**/*/${filename}" />
+      </delete>
     </target>
 
     <target name="buildDestructiveChanges">
