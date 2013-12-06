@@ -148,10 +148,12 @@ npe5: ${InstalledPackage.npe5.versionNumber}
     <!-- Cumulus build targets -->
 
     <!--   test: Run a checkOnly deployment which runs all tests but never actually deploys the package permanently.  Updates all dependent packages to the correct version which is permanent --> 
+    <!--
     <target name="test">
       <updateDependentPackages />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="200" />
     </target>
+    -->
 
     <!--   deploy: Run a full deployment including running all tests -->
     <target name="deploy">
@@ -350,6 +352,8 @@ npe5: ${InstalledPackage.npe5.versionNumber}
     </target>
 
     <target name="uninstallCumulus">
+      <antcall target="retrieveUnpackaged" />
+      <antcall target="buildDestructiveChanges" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" purgeOnDelete="true" />
     </target>
@@ -364,6 +368,12 @@ npe5: ${InstalledPackage.npe5.versionNumber}
       <uninstallPackage namespace="npe03" username="${sf.username}" password="${sf.password}"/>
       <uninstallPackage namespace="npe4" username="${sf.username}" password="${sf.password}"/>
       <uninstallPackage namespace="npe5" username="${sf.username}" password="${sf.password}"/>
+    </target>
+
+    <target name="test">
+      <antcall target="uninstallCumulus" />
+      <antcall target="updateDependentPackages" />
+      <antcall target="deployWithoutTest" />
     </target>
 
 </project>
