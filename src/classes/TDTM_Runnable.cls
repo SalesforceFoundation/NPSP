@@ -61,7 +61,7 @@ public abstract class TDTM_Runnable {
         qn += ' from ' + objectName + ' where id IN ';
         System.debug('****Query for future: ' + qn);
         List<SObject> newlist = Database.query(qn + ':newIds');
-        List<SObject> oldlist = Database.query(qn + ':oldIds'); 
+        List<SObject> oldlist = Database.query(qn + ':oldIds');
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
@@ -77,8 +77,8 @@ public abstract class TDTM_Runnable {
             insert dmlWrapper.objectsToInsert;
             System.debug('****Objects to update in future: ' + dmlWrapper.objectsToUpdate.values());
             update dmlWrapper.objectsToUpdate.values();
-            System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete.values());
-            delete dmlWrapper.objectsToDelete.values();
+            System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete);
+            Database.delete(dmlWrapper.objectsToDelete, true);
         }
     }
     
@@ -88,6 +88,6 @@ public abstract class TDTM_Runnable {
     public class DmlWrapper {
         public List<SObject> objectsToInsert = new List<SObject>(); 
         public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
-        public Map<Id, SObject> objectsToDelete = new Map<Id, SObject>();
+        public List<Id> objectsToDelete = new List<Id>();
     }
 }

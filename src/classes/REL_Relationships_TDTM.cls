@@ -264,8 +264,8 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToDelete.size() > 0 ) {
-            DmlWrapper wrapper = deleteRelationship(relationshipsToDelete);
-            mainWrapper.objectsToDelete.putAll(wrapper.objectsToDelete);
+            DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);
+            mainWrapper.objectsToDelete.addAll(wrapper.objectsToDelete);
         }
 
         if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {
@@ -278,23 +278,19 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <name> deleteRelationships </name>
     /// <summary> Deletes Reciprocal Relationships when a Relationship is deleted </summary>
     /// <param name="relationships">  </param>
-    public static DmlWrapper deleteRelationship(npe4__Relationship__c[] relationships) {
+    public static DmlWrapper deleteRelationships(npe4__Relationship__c[] relationships) {
     	System.debug('****Deleting relationships: ' + relationships);
     	DmlWrapper dmlWrapper = new DmlWrapper();
-        Map<Id, SObject> relationshipsToDelete = new Map<Id, SObject>();
+        List<Id> relationshipsToDelete = new List<Id>();
         for(npe4__Relationship__c r : Relationships) {
             if(r.npe4__ReciprocalRelationship__c != null) {
-            	//We don't have the whole object, but we don't need it. The delete will happen
-                //just using the Ids in the map keys.
-                relationshipsToDelete.put(r.npe4__ReciprocalRelationship__c, null);
+                relationshipsToDelete.add(r.npe4__ReciprocalRelationship__c);
             } else if(r.npe4__RelatedContact__c == null) {
-            	//We don't have the whole object, but we don't need it. The delete will happen
-            	//just using the Ids in the map keys.
-	            relationshipsToDelete.put(r.Id, null); 
+	            relationshipsToDelete.add(r.Id); 
 	        }
         }
         if ( relationshipsToDelete.size() > 0 ) {
-            dmlWrapper.objectsToDelete.putAll(relationshipsToDelete);
+            dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
         }
         return dmlWrapper;
     }
@@ -304,12 +300,12 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <param name="contacts"> List of Contacts that were deleted </param>
     public static DmlWrapper deleteEmptyRelationships() {
     	DmlWrapper dmlWrapper = new DmlWrapper();
-        Map<Id, SObject> relationshipsToDelete = new Map<Id, SObject>();
+        List<Id> relationshipsToDelete = new List<Id>();
         for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null]) {
-            relationshipsToDelete.put(r.Id, r);
+            relationshipsToDelete.add(r.Id);
         }
         if ( relationshipsToDelete.size() > 0 ) {
-            dmlWrapper.objectsToDelete.putAll(relationshipsToDelete);
+            dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
         }
         return dmlWrapper;
     }

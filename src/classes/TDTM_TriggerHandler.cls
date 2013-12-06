@@ -70,7 +70,7 @@ public with sharing class TDTM_TriggerHandler {
                     if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
                         dmlWrapper.objectsToUpdate.putAll(dmlWrapperLocal.objectsToUpdate);
                     if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
-                        dmlWrapper.objectsToDelete.putAll(dmlWrapperLocal.objectsToDelete);
+                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
                 }          
             }
             
@@ -78,9 +78,8 @@ public with sharing class TDTM_TriggerHandler {
 	        insert dmlWrapper.objectsToInsert;
 	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
 	        update dmlWrapper.objectsToUpdate.values();
-	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete.values());
-	        //We only need IDs to delete objects 
-	        Database.delete(new List<ID>(dmlWrapper.objectsToDelete.keySet()), true);
+	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
+	        Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
         }
     }
     
