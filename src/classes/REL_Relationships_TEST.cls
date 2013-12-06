@@ -501,6 +501,9 @@ private class REL_Relationships_TEST {
         npe4__Relationship__c recRel = [select id, npe4__Type__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
     }
+    
+    /* @TODO: we need a global design for TDTM-related errors. Commenting this test out for now.
+    
     static testMethod void testErrorRecordCreation(){
         setupRelationshipTestData(null);
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -514,7 +517,8 @@ private class REL_Relationships_TEST {
         crel[0].npe4__RelatedContact__c = c1.id;
         sr = Database.update(crel, false);
         npe4__Relationship_Error__c re = REL_Utils.createRelationshipError(sr[0], crel[0]);
-    }
+    }*/
+    
     static testMethod void testExceptionRecordCreation(){
         setupRelationshipTestData(null);
         

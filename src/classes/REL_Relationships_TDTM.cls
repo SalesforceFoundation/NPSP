@@ -39,6 +39,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper emptyWrapper = new DmlWrapper();
     	
     	if(objResult.getSObjectType() == Contact.getSObjectType()) {
+    		//@TODO: do we really need all this casting?
     		List<Contact> newListCasted = (List<Contact>)newList;
             if(newListCasted == null) newListCasted = new List<Contact>();
     		List<Contact> oldListCasted = (List<Contact>)oldList;
@@ -81,32 +82,39 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         List<Id> ReciprocalIds = new List<Id>();
         List<String> Types = new List<String>();        
         
-        for (Contact c : newlist){
-            for(String s : REL_Utils.getAutoCreateMap().keySet()){
-                npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
-                if (rac.npe4__Object__c == 'Contact'){
-                    Id relatedContactId;
-                    try{
-                        //get the id from the field                        
-                        relatedContactId = (Id)c.get(rac.npe4__Field__c);
-                    }catch(Exception e){
-                        c.addError(system.Label.npe4.AutoCreateFieldError);
-                    }    
-                    
-                    if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
-                        ContactIds.add(c.Id);
-                        ReciprocalIds.add(relatedContactId);
-                        Types.add(rac.npe4__Relationship_Type__c);
-                    }
-                    else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
-                    && relatedContactId != oldMap.get(c.id).get(rac.npe4__Field__c)){
-                        ContactIds.add(c.Id);
-                        ReciprocalIds.add(relatedContactId);
-                        Types.add(rac.npe4__Relationship_Type__c);
-                    }
-                }               
-            }           
-        }   
+        if(newlist != null && newlist.size() > 0) {
+	        for (Contact c : newlist){
+	            for(String s : REL_Utils.getAutoCreateMap().keySet()){
+	                npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
+	                if (rac.npe4__Object__c == 'Contact'){
+	                    Id relatedContactId;
+	                    try{
+	                        //get the id from the field                        
+	                        relatedContactId = (Id)c.get(rac.npe4__Field__c);
+	                    }catch(Exception e){
+	                        c.addError(system.Label.npe4.AutoCreateFieldError);
+	                    }    
+	                    
+	                    if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
+	                        ContactIds.add(c.Id);
+	                        ReciprocalIds.add(relatedContactId);
+	                        Types.add(rac.npe4__Relationship_Type__c);
+	                    }
+	                    else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
+	                    && relatedContactId != oldMap.get(c.id).get(rac.npe4__Field__c)){
+	                        ContactIds.add(c.Id);
+	                        ReciprocalIds.add(relatedContactId);
+	                        Types.add(rac.npe4__Relationship_Type__c);
+	                    }
+	                }               
+	            }           
+	        }
+        }
+        
+        if(triggerAction == TDTM_TriggerActionHelper.Action.afterDelete) {
+        	DmlWrapper w = deleteEmptyRelationships();
+        	dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
+        }
         
         /*if (!ContactIds.isEmpty() && !REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
             createNewRelationshipsFuture(ContactIds, ReciprocalIds, Types);

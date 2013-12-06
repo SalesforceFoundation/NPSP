@@ -78,7 +78,7 @@ public abstract class TDTM_Runnable {
             System.debug('****Objects to update in future: ' + dmlWrapper.objectsToUpdate.values());
             update dmlWrapper.objectsToUpdate.values();
             System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete);
-            Database.delete(dmlWrapper.objectsToDelete, true);
+            Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
         }
     }
     
