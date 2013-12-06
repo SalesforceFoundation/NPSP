@@ -72,7 +72,7 @@ j$(function () {
     	var linode = j$( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
     	
     	// If the contact is in a household add a visual indicator
-    	if (item.contact[fldNm('Household__c')] != null) {
+    	if (item.contact[fldNm('HHId__c')] != null) {
     		linode.find('.hhSearch-item-address').after('<span class="hhSearch-item-hh">' + gwManageHH.lblExistingHH + '</span>');
     	}
     	
@@ -135,11 +135,11 @@ j$(function () {
     	//build naming exclusions field
     	var namingExclusions = '';
     	if(card.find('.hh-name-exclude-input').is(':checked'))
-    		namingExclusions += 'Household__c.Name;';
+    		namingExclusions += 'Name;';
     	if(card.find('.hh-formal-exclude-input').is(':checked'))
-			namingExclusions += 'Household__c.Formal_Greeting__c;';
+			namingExclusions += 'Formal_Greeting__c;';
 		if(card.find('.hh-informal-exclude-input').is(':checked'))
-    		namingExclusions += 'Household__c.Informal_Greeting__c;';
+    		namingExclusions += 'Informal_Greeting__c;';
     	
     	if (!card.hasClass('hhCard-new')) {
     		var cid = card.attr('id');
@@ -230,19 +230,19 @@ gwManageHH.renderCard = function(contact) {
 	 
 	var namingExclusions = contact[fldNm('Naming_Exclusions__c')];
 	
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Name') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Name') != -1) {
 		card.find('.hh-name-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-name-exclude').find('input').removeAttr('checked');
 	}
 	
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Formal_Greeting__c') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
 		card.find('.hh-formal-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-formal-exclude').find('input').removeAttr('checked');
 	}
 	
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Informal_Greeting__c') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
 		card.find('.hh-informal-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-informal-exclude').find('input').removeAttr('checked');
@@ -291,19 +291,19 @@ gwManageHH.updateCard = function (contact) {
 	  
 	var namingExclusions = contact[fldNm('Naming_Exclusions__c')];
 		
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Name') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Name') != -1) {
 		card.find('.hh-name-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-name-exclude').find('input').removeAttr('checked');
 	}
 		
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Formal_Greeting__c') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Formal_Greeting__c') != -1) {
 		card.find('.hh-formal-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-formal-exclude').find('input').removeAttr('checked');
 	}
 		
-	if (namingExclusions != null && namingExclusions.indexOf('Household__c.Informal_Greeting__c') != -1) {
+	if (namingExclusions != null && namingExclusions.indexOf('Informal_Greeting__c') != -1) {
 		card.find('.hh-informal-exclude').find('input').attr('checked','checked');
 	} else {
 		card.find('.hh-informal-exclude').find('input').removeAttr('checked');
@@ -400,7 +400,7 @@ gwManageHH.dialogAddMember = function(event) {
 	var linode = j$(this).closest('.hhSearch-item');
 	var contact = linode.data('item.autocomplete').contact;
 	
-	if (contact[fldNm('Household__c')] != null) {
+	if (contact[fldNm('HHId__c')] != null) {
 		var dialog = j$('#dialog-addmember');
 		dialog.data('contact',contact);
 		
@@ -755,7 +755,7 @@ gwManageHH.renderNaming = function () {
 		j$('#hhName').val(state.hhName);
 		j$('#hhName').removeAttr('disabled').removeClass('gwField-disabled', 200);
 		
-		customNaming += 'Household__c.Name;';
+		customNaming += 'Name;';
 		
 	}
 	
@@ -771,7 +771,7 @@ gwManageHH.renderNaming = function () {
 		j$('#hhFormalGreeting').val(state.hhFormalGreeting);
 		j$('#hhFormalGreeting').removeAttr('disabled').removeClass('gwField-disabled', 200);
 		
-		customNaming += 'Household__c.Formal_Greeting__c;';
+		customNaming += 'Formal_Greeting__c;';
 	}
 	
 	if (state.autoInformalGreeting == true) {
@@ -786,7 +786,7 @@ gwManageHH.renderNaming = function () {
 		j$('#hhInformalGreeting').val(state.hhInformalGreeting);
 		j$('#hhInformalGreeting').removeAttr('disabled').removeClass('gwField-disabled', 200);
 		
-		customNaming += 'Household__c.Informal_Greeting__c;';
+		customNaming += 'Informal_Greeting__c;';
 	}
 	
 	j$('.sfField-SYSTEM_CUSTOM_NAMING__c').val(customNaming);

@@ -14,7 +14,7 @@ ducking-octo-happiness, laughing-archer
 * Install the 5 required Nonprofit Starter Pack Packages  
  
     * [Affiliations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cZtq)
-    * [Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cd2w)
+    * [Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cd3G)
     * [Households](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000lNu0)
     * [Recurring_Donations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pZK6)
     * [Relationships](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pY9P)
@@ -37,7 +37,9 @@ The build.xml file in the root of the repository contains a number of useful bui
 
 You can run the ant targets using the following command syntax:
 
-> ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
+```
+ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
+```
 
 **Build Targets**
 
