@@ -79,6 +79,7 @@ private class REL_Relationships_TEST {
             insert c3;
         }
     }
+    
     /// <name> TestContactRel </name>
     /// <summary> test method for relationships and the mirroring </summary>
     static testMethod void testContactRel() {
@@ -176,23 +177,30 @@ private class REL_Relationships_TEST {
         //original should have updated relationship
         System.assertEquals(0, orphanedCrel.size());
     }
+    
     //deleting the original should delete the reciprocal
     static testMethod void testRelationshipDelete(){
         setupRelationshipTestData(null);
-        npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, npe4__Type__c='Buddies')
-        };
-        insert crel;
+        npe4__Relationship__c crel_original = new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, 
+                                                                npe4__Type__c='Buddies');
+        insert crel_original;
         
-        // check that rel gets created
-        npe4__Relationship__c crel_original = [select id, npe4__Description__c,npe4__Type__c,npe4__reciprocalrelationship__c from npe4__Relationship__c where id=:crel[0].Id];
-        //relationship should be set right
-        System.assertEquals(crel_original.npe4__Type__c, 'Buddies');
+        crel_original = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
+                                            from npe4__Relationship__c where Id=:crel_original.Id];
+        System.debug('****Original relationship: ' + crel_original);
 
-        // check for mirror rel
-        npe4__Relationship__c crel_mirror = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c from npe4__Relationship__c where npe4__reciprocalrelationship__c=:crel_original.Id];
+        // check mirror rel got created
+        npe4__Relationship__c crel_mirror = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
+                                            from npe4__Relationship__c where npe4__reciprocalrelationship__c=:crel_original.Id];
+
+        System.debug('****Mirror relationship: ' + crel_mirror);
+                                        
         //mirror should reference the original
-        System.assertEquals(crel_mirror.npe4__reciprocalrelationship__c, crel_original.Id);        
+        System.assertEquals(crel_original.Id, crel_mirror.npe4__reciprocalrelationship__c);        
+        
+        //original should reference mirror
+        System.assertEquals(crel_mirror.Id, crel_original.npe4__reciprocalrelationship__c);  
+        System.debug('***Original successfully references mirror');
         
         //reset the process controller to mimic a second user action
         //Relationships_ProcessControl.hasRun = false;
@@ -201,7 +209,8 @@ private class REL_Relationships_TEST {
         delete crel_original;
         Test.stopTest();        
         system.assertEquals(0, [select count() from npe4__Relationship__c where id = :crel_mirror.id]);
-    }  
+    } 
+    
     static testMethod void testAutoCreateCampaignMemberInsert(){
         setupRelationshipTestData(null);
         
@@ -736,5 +745,4 @@ private class REL_Relationships_TEST {
         system.assertNotEquals(null, rsCTRL.relSettings);
         system.assertNotEquals(null, rsCtrl.relSettings.Id);    
     }
-  
 }

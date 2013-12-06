@@ -28,7 +28,8 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 trigger REL_RelationshipContacts on Contact (after delete, after insert, after update) {
-    if(!REL_Utils.getRelationshipSettings().npe4__DISABLE_RelationshipContacts_trigger__c){
+    
+    /*if(!REL_Utils.getRelationshipSettings().npe4__DISABLE_RelationshipContacts_trigger__c){
         if (REL_Utils.hasContactAutoCreate && trigger.isAfter && trigger.isInsert){
             REL_Relationships process = new REL_Relationships(trigger.newMap, null, REL_Utils.triggerAction.afterInsert);            
         }
@@ -38,5 +39,10 @@ trigger REL_RelationshipContacts on Contact (after delete, after insert, after u
         else if (trigger.isAfter && trigger.isDelete){
             REL_Relationships.deleteEmptyRelationships();   
         }
-    }
+    }*/
+    
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
+    handler.runClasses(new TDTM_ObjectDataGateway());
 }

@@ -29,7 +29,8 @@
 */
 trigger REL_Relationships on npe4__Relationship__c (before insert, before update, before delete, 
 after insert, after update, after delete, after undelete) {
-    if (REL_ProcessControl.hasRun != true && !REL_Utils.getRelationshipSettings().npe4__DISABLE_Relationships_trigger__c){  
+    
+    /*if (REL_ProcessControl.hasRun != true && !REL_Utils.getRelationshipSettings().npe4__DISABLE_Relationships_trigger__c){  
         if(Trigger.isBefore && Trigger.isInsert){          
             REL_Relationships process = new REL_Relationships(Trigger.new, Trigger.old, REL_Utils.triggerAction.beforeInsert);
         }        
@@ -45,5 +46,10 @@ after insert, after update, after delete, after undelete) {
         else if(Trigger.isAfter && Trigger.isDelete ){
             REL_Relationships process = new REL_Relationships(Trigger.old, null, REL_Utils.triggerAction.afterDelete);
         }   
-    }
+    }*/
+    
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c);
+    handler.runClasses(new TDTM_ObjectDataGateway());
 }

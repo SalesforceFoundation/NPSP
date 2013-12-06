@@ -43,7 +43,7 @@ public with sharing class TDTM_TriggerHandler {
 
         thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
-        System.debug('****ACTION: ' + thisAction);
+        System.debug('****ACTION: ' + thisAction + ' on ' + describeobj);
         obj = describeobj;
     }
     
@@ -79,7 +79,8 @@ public with sharing class TDTM_TriggerHandler {
 	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
 	        update dmlWrapper.objectsToUpdate.values();
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete.values());
-	        delete dmlWrapper.objectsToDelete.values();
+	        //We only need IDs to delete objects 
+	        Database.delete(new List<ID>(dmlWrapper.objectsToDelete.keySet()), true);
         }
     }
     
@@ -133,9 +134,10 @@ public with sharing class TDTM_TriggerHandler {
     
     //@TODO: read from text file
     private void insertDefaultRecords() {
-        //If we use Objects       
+        //***If we use Objects***       
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
         
+        //Affiliations on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert'));
@@ -143,8 +145,51 @@ public with sharing class TDTM_TriggerHandler {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterUpdate'));
+        
+        //Relationships on CampaignMember
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
+              Trigger_Action__c = 'AfterInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
+              Trigger_Action__c = 'AfterUpdate'));      
+        
+        //Relationships on Contact
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));  
               
-        //If we use Custom Settings
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterDelete'));
+        
+        //Relationships on npe4__Relationship__c
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'BeforeInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'BeforeUpdate'));  
+              
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'AfterInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'AfterUpdate'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'AfterDelete'));
+                                 
+        //***If we use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               
         handlers.add(new Trigger_Handler_Setting__c(Name = 'AFF_Contact_AI', Active__c = true, Asynchronous__c = false, 
