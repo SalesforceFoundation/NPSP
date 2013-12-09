@@ -129,7 +129,9 @@
         unpackaged="lib/all_meta_types.xml"/>
 
       <!-- Delete whitelisted files which are added to the org by Salesforce.  This includes both components which are always in an org and components which are automatically created by enabling Sites -->
-      <for param="filename" list="Force_com.app,Exception.page,Unauthorized.page,FileNotFound.page,BandwidthExceeded.page,SiteTemplate.page,InMaintenance.page,AnswersHome.page,SiteLoginController.cls,ForgotPassword.page,SiteRegister.page,StdExceptionTemplate.page,SiteFooter.component,SitePoweredBy.component,SiteLogin.component,SiteHeader.component,SiteSamples.resource">
+      <loadfile property="metadata_whitelist" srcfile="lib/metadata_whitelist.txt" />
+      <for param="filename" list="${metadata_whitelist}" delimiter="${line.separator}" >
+      <!--list="Force_com.app,Exception.page,Unauthorized.page,FileNotFound.page,BandwidthExceeded.page,SiteTemplate.page,InMaintenance.page,AnswersHome.page,SiteLoginController.cls,SiteRegisterController.cls,ForgotPasswordController.cls,ForgotPassword.page,ForgotPasswordConfirm.page,SiteLogin.page,SiteRegister.page,SiteRegisterConfirm.page,StdExceptionTemplate.page,SiteFooter.component,SitePoweredBy.component,SiteLogin.component,SiteHeader.component,SiteSamples.resource">-->
         <sequential>
           <echo>Deleting whitelisted metadata file @{filename}</echo>
           <delete>
