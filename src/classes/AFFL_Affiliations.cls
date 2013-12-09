@@ -113,17 +113,29 @@ public class AFFL_Affiliations {
             cName += ' ';
             cName += c.LastName;
             //check to see if this account isn't an individual. 
-            if (accountMap.get(c.AccountId).npe01__SYSTEMIsIndividual__c != true) {
-                npe5__Affiliation__c a = new npe5__Affiliation__c();
-                a.npe5__Contact__c = c.Id;
-                a.npe5__Organization__c = c.AccountId;
-                a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-                a.npe5__StartDate__c = System.Today();
-                //user title as Role
-                if (c.Title != null) {
-                    a.npe5__Role__c = c.Title;
+            Account acct = accountMap.get(c.AccountId);
+            if (acct != null) {
+                if (acct.npe01__SYSTEMIsIndividual__c != true) {
+                    npe5__Affiliation__c a = new npe5__Affiliation__c();
+                    a.npe5__Contact__c = c.Id;
+                    a.npe5__Organization__c = c.AccountId;
+                    a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                    a.npe5__StartDate__c = System.Today();
+                    //user title as Role
+                    if (c.Title != null) {
+                        a.npe5__Role__c = c.Title;
+                    }
+                    affiliationInserts.add(a);
                 }
-                affiliationInserts.add(a);
+            } else {
+                // This situation should never occur as init filters contacts with a null id.  However, we were hitting
+                // NullPointerExceptions after looking up an account that debug shows was in the accountMap but a get by
+                // c.AccountId returned null.  Attempting to look at a field on the null result raised the exception.
+                // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
+                // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
+                // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
+
+                system.debug('Failed to find account with id ' + c.AccountId + ' in ' + accountMap);
             }
         }
         if (affiliationInserts.size() > 0) {
