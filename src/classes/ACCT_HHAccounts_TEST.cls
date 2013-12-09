@@ -579,4 +579,16 @@ private with sharing class ACCT_HHAccounts_TEST {
     
     }
 
+    /*********************************************************************************************************
+    WHAT IS NOT TESTED:
+        creating a mixture of 1:1, bucket, and HH Accounts in the same insert operation
+        updating existing contacts from 1:1 and bucket to HH Accounts
+        updating existing contacts from HH Accounts to 1:1 and bucket
+        deleting a mixture of 1:1, bucket, and HH Accounts
+        ensuring that in all tests cases, HH accounts with rollups get rolled up correctly
+        ensuring that in account delete scenarios, HH accounts with opps don't get deleted
+        more extensive testing with Private__c field
+        scenarios with both a HH Account and a HH object for the same contact(s)
+        
+    **********************************************************************************************************/            
 }
