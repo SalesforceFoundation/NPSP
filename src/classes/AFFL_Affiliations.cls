@@ -113,17 +113,22 @@ public class AFFL_Affiliations {
             cName += ' ';
             cName += c.LastName;
             //check to see if this account isn't an individual. 
-            if (accountMap.get(c.AccountId).npe01__SYSTEMIsIndividual__c != true) {
-                npe5__Affiliation__c a = new npe5__Affiliation__c();
-                a.npe5__Contact__c = c.Id;
-                a.npe5__Organization__c = c.AccountId;
-                a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-                a.npe5__StartDate__c = System.Today();
-                //user title as Role
-                if (c.Title != null) {
-                    a.npe5__Role__c = c.Title;
+            Account acct = accountMap.get(c.AccountId);
+            if (acct != null) {
+                if (acct.npe01__SYSTEMIsIndividual__c != true) {
+                    npe5__Affiliation__c a = new npe5__Affiliation__c();
+                    a.npe5__Contact__c = c.Id;
+                    a.npe5__Organization__c = c.AccountId;
+                    a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                    a.npe5__StartDate__c = System.Today();
+                    //user title as Role
+                    if (c.Title != null) {
+                        a.npe5__Role__c = c.Title;
+                    }
+                    affiliationInserts.add(a);
                 }
-                affiliationInserts.add(a);
+            } else {
+                system.debug('Failed to find account with id ' + c.AccountId + ' in ' + accountMap);
             }
         }
         if (affiliationInserts.size() > 0) {
