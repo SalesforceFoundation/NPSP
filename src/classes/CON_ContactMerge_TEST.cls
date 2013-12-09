@@ -35,10 +35,17 @@
 @isTest
 private class CON_ContactMerge_TEST {
 
-    npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
     
+    static testMethod void exerciseUIOne2One(){
+        exerciseUI(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void exerciseUIHHAccount(){
+        exerciseUI(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //exercise the many UI variables
-    static testMethod void exerciseUI() {
+    static void exerciseUI(string strProcessor) {
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         
@@ -163,10 +170,16 @@ private class CON_ContactMerge_TEST {
         
     }
     
+    static testMethod void failNextStepWithDeletedRecordSelectedOne2One(){
+        failNextStepWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void failNextStepWithDeletedRecordSelectedHHAccount(){
+        failNextStepWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     // Try selecting a deleted record for merge
-    static testMethod void failNextStepWithDeletedRecordSelected() {
+    static void failNextStepWithDeletedRecordSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         String newContactMailingStreet = '123 Elm St';
@@ -234,10 +247,16 @@ private class CON_ContactMerge_TEST {
         
     }
     
+    static testMethod void failMergeWithDeletedRecordSelectedOne2One(){
+        failMergeWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
+        failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
         // Try selecting a deleted record for merge
-    static testMethod void failMergeWithDeletedRecordSelected() {
+    static void failMergeWithDeletedRecordSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         String newContactMailingStreet = '123 Elm St';
@@ -306,9 +325,15 @@ private class CON_ContactMerge_TEST {
         
     }
    
-    static testMethod void tooFewContactsSelected() {
+    static testMethod void tooFewContactsSelectedOne2One(){
+        tooFewContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void tooFewContactsSelectedHHAccount(){
+        tooFewContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void tooFewContactsSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         String newContactMailingStreet = '123 Elm St';
@@ -347,9 +372,15 @@ private class CON_ContactMerge_TEST {
     }
     
     
-    static testMethod void tooManyContactsSelected() {
+    static testMethod void tooManyContactsSelectedOne2One(){
+        tooManyContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void tooManyContactsSelectedHHAccount(){
+        tooManyContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void tooManyContactsSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         String newContactMailingStreet = '123 Elm St';
@@ -440,11 +471,17 @@ private class CON_ContactMerge_TEST {
         }   
     }
     
+    static testMethod void merge2OneToOneOne2One(){
+        merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2OneToOneHHAccount(){
+        merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
-    static testMethod void merge2OneToOne() {
+    static void merge2OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -507,11 +544,19 @@ private class CON_ContactMerge_TEST {
         //Second contact's account id should not have changed
         system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
     }
+
+
+    static testMethod void merge2OneToOneOppsOne2One(){
+        merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2OneToOneOppsHHAccount(){
+        merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org shouldn't be deleted because it has open opportunities
-    static testMethod void merge2OneToOneOpps() {
+    static void merge2OneToOneOpps(string strProcessor) {
         
-        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -584,9 +629,17 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
     }
     
+    static testMethod void merge2OrganizationsOne2One(){
+        merge2Organizations(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2OrganizationsHHAccount(){
+        merge2Organizations(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge a one-to-one contact with one in a normal organzation
     //the organization shouldn't be deleted
-    static testMethod void merge2Organizations() {
+    static void merge2Organizations(string strProcessor) {
+    
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -661,9 +714,17 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
+    static testMethod void merge2PrivateContactsOne2One(){
+        merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2PrivateContactsHHAccount(){
+        merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge two private contacts
     //the organization shouldn't be deleted
-    static testMethod void merge2PrivateContacts() {
+    static void merge2PrivateContacts(string strProcessor) {
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -726,9 +787,15 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(null,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
+    static testMethod void merge2IndividualsOne2One(){
+        merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2IndividualsHHAccount(){
+        merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge two contacts in the Individual Account
     //the organization shouldn't be deleted
-    static testMethod void merge2Individuals() {
+    static void merge2Individuals(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         
@@ -798,7 +865,7 @@ private class CON_ContactMerge_TEST {
     //the individual organization shouldn't be deleted
     static testMethod void merge1Individual1OneToOne() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -875,7 +942,7 @@ private class CON_ContactMerge_TEST {
             LastName=secondContactLastName,
             MailingStreet = secondContactMailingStreet,
             
-            npe01__SystemAccountProcessor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
+            npe01__SystemAccountProcessor__c = strProcessor
         );
         insert new Contact[]{con, con2};
         
@@ -916,11 +983,19 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     */
+
+
+    static testMethod void merge1Org1OneToOneOne2One(){
+        merge1Org1OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge1Org1OneToOneHHAccount(){
+        merge1Org1OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge one contacts in the Individual Account, one in one-to-one model
     //the individual organization shouldn't be deleted
-    static testMethod void merge1Org1OneToOne() {
+    static void merge1Org1OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -990,9 +1065,15 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
-    static testMethod void merge3OneToOne() {
+    static testMethod void merge3OneToOneOne2One(){
+        merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge3OneToOneHHAccount(){
+        merge3OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void merge3OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -1075,11 +1156,17 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
     }
     
+    static testMethod void merge2OneToOneInSameAccountOne2One(){
+        merge2OneToOneInSameAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void merge2OneToOneInSameAccountHHAccount(){
+        merge2OneToOneInSameAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
-    static testMethod void merge2OneToOneInSameAccount() {
+    static void merge2OneToOneInSameAccount(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
         Contact con = new Contact(
@@ -1140,17 +1227,29 @@ private class CON_ContactMerge_TEST {
         //second contact should be deleted
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account shouldn't be deleted
-        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+	        //second contact's account shouldn't be deleted
+	        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
+	        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        } else {
+            //contacts have the same account which should not be deleted
+            system.assertEquals(con.AccountId, con2.AccountId);
+            system.assertEquals(1,[select count() from Account where id=:con.AccountId]);       
+        }
         //First contact's account id should not have changed
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
     
-    static testMethod void ghIssue6(){
+    static testMethod void ghIssue6One2One(){
+        ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void ghIssue6HHAccount(){
+        ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void ghIssue6(string strProcessor){
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         String newContactMailingStreet = '123 Elm St';
 
