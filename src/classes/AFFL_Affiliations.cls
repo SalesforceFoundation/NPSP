@@ -128,6 +128,13 @@ public class AFFL_Affiliations {
                     affiliationInserts.add(a);
                 }
             } else {
+                // This situation should never occur as init filters contacts with a null id.  However, we were hitting
+                // NullPointerExceptions after looking up an account that debug shows was in the accountMap but a get by
+                // c.AccountId returned null.  Attempting to look at a field on the null result raised the exception.
+                // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
+                // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
+                // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
+
                 system.debug('Failed to find account with id ' + c.AccountId + ' in ' + accountMap);
             }
         }
