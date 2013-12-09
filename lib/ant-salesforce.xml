@@ -131,7 +131,7 @@
       <!-- Delete whitelisted files which are added to the org by Salesforce.  This includes both components which are always in an org and components which are automatically created by enabling Sites -->
       <for param="filename" list="Force_com.app,Exception.page,Unauthorized.page,FileNotFound.page,BandwidthExceeded.page,SiteTemplate.page,InMaintenance.page,AnswersHome.page">
         <sequential>
-          <echo>Deleting ${filename}</echo>
+          <echo>Deleting whitelisted metadata file @{filename}</echo>
           <delete>
             <fileset dir="@{dir}" includes="**/*/@{filename}" />
           </delete>

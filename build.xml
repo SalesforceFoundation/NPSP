@@ -1,4 +1,4 @@
-<project name="Cumulus" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+<project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
 
     <taskdef uri="antlib:com.salesforce"
          resource="com/salesforce/antlib.xml"
@@ -171,7 +171,7 @@ npe5: ${InstalledPackage.npe5.versionNumber}
       <updateDependentPackages />
 
       <!-- Do a deployment without tests.  FIXME: This seems to be necessary to stop tests from failing on AFFL_Affiliations.insertAffiliations and may be a platform bug -->
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
+      <!--<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />-->
 
       <!-- Finally, do a deploy with all tests -->
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
