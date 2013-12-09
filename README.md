@@ -43,10 +43,16 @@ ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
 
 **Build Targets**
 
-* test: Runs a checkOnly deployment of the Cumulus code which runs all tests but never actually deploys the Cumulus code to the target org.  This job also runs the same actions as updateDependentPackages which ensures all dependent packages are the correct version.  This target can only be run against an org which does not have the Cumulus code deployed as the Cumulus code prevents the automated uninstall and reinstall of dependent managed packages.
-
 * deploy: Deploys Cumulus to the target org if all Apex tests pass.  This target requires an org which already has the dependent managed packages installed at the correct version.  If you want to setup an org for this job, run the updateDependentPackages target against the org first
 
-* deploysWithoutTest: Same as deploy but does not execute all Apex tests before deployment.  This is useful if you know the code passes tests and just want to deploy faster.
+* deployWithoutTest: Same as deploy but does not execute all Apex tests before deployment.  This is useful if you know the code passes tests and just want to deploy faster.
 
 * updateDependentPackages: Checks that all dependent managed packages are installed and meet the version requirement for Cumulus.  This target will uninstall/reinstall existing packages which are not the correct veersion and install the correct version of packages which are not yet installed in the target org.  Since Cumulus depends on the managed packages, this target will fail if run against an org that has Cumulus deployed.
+
+** CI Build Targets **
+
+*WARNING!!!*: The targets below are destructive.  They are intended to be used as part of a Continuous Integration environment with orgs dedicated solely to build testing.  They will destroy all unpackaged metadata of types used by Cumulus regardless of if the metadata originated from Cumulus or not.
+
+* deployCI: Destructive deploy.  First, remove all unpackaged non-standard metadata from the target org for metadata types used in Cumulus.  Then ensure all managed packages used by Cumulus are at the correct version.  Then deploy Cumulus code and run all tests.
+
+* uninstallCumulus: Undeploy all unpackaged non-standard metadata from the target org for metadata types used in Cumulus.
