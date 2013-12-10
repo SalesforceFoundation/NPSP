@@ -29,10 +29,6 @@
         <name>CustomTab</name>
     </types>
     <types>
-        <members>Trigger_Handler__c-Trigger Handler Layout</members>
-        <name>Layout</name>
-    </types>
-    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
