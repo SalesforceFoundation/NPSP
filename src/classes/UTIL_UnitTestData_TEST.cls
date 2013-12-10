@@ -89,13 +89,13 @@ public class UTIL_UnitTestData_TEST {
         
         for (integer i=0;i<n;i++) {
             Contact newCon = New Contact (
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle'
             );
             ContactsToAdd.add (newCon);
@@ -113,13 +113,13 @@ public class UTIL_UnitTestData_TEST {
         
         for (integer i=0;i<firstContactList.size();i++) {
             Contact newCon = New Contact (
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 OtherCity = 'Seattle',
                 Household__c = firstContactList[i].Household__c
             );
@@ -161,22 +161,26 @@ public class UTIL_UnitTestData_TEST {
         
     }
     
-
-/*
-    Public static list<Account> CreateMultipleTestAccounts (integer n) {
+    Public static list<Account> CreateMultipleTestAccounts (integer n, string strType) {
         
         list<Account> AcctsToAdd = New list<Account> ();
         
         for (integer i=0;i<n;i++) {
             Account newAcct = New Account (
-                Name = 'Yet Another Org ' + i
+                Name = 'Yet Another Org ' + i,
+                npe01__SYSTEM_AccountType__c = strType
             );
+            if (strType != null) {
+            	newAcct.npe01__SYSTEMIsIndividual__c = true;
+            	if (strType == CAO_Constants.BUCKET_ORGANIZATION_TYPE)
+            	   newAcct.name = CAO_Constants.BUCKET_ACCOUNT_NAME;
+            }
             AcctsToAdd.add (newAcct);
         }
         
         return AcctsToAdd;
     }
-  */  
+
 /*
         Public static list<Opportunity> OppsForAccountList (list<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
     
