@@ -580,9 +580,84 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
+    operation:
+        updating existing contacts from 1:1 and bucket model to HH Accounts
+    verify:
+        1:1 accounts deleted, bucket account left alone
+        accounts' name and naming fields updated
+        hh accounts' primary contact valid
+    **********************************************************************************************************/    
+    static testmethod void UpdateOneToOneAndBucketContactsToHHAccounts() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        system.assertEquals(null, listCon[0].AccountId); 
+
+        list<Account> listAccOne2One = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(3, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+        insert listAccOne2One;
+        system.assertNotEquals(null, listAccOne2One[0].Id);
+ 
+        ID bucketId = CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        system.assertNotEquals(null, bucketId);
+        
+        // create our 1:1 and Bucket contacts
+        listCon[0].AccountId = listAccOne2One[0].Id;
+        listCon[1].AccountId = listAccOne2One[1].Id;
+        listCon[2].AccountId = listAccOne2One[2].Id;
+        listCon[3].AccountId = bucketId;
+        listCon[4].AccountId = bucketId;
+        listCon[5].AccountId = bucketId;
+        insert listCon;
+
+        // refresh our contacts to get their accounts
+        listCon = [select Name, FirstName, LastName, AccountId from Contact];
+        system.assertEquals(6, listCon.size());
+        system.assertNotEquals(null, listCon[0].AccountId);   
+        
+        list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+        system.debug(listAcc);
+        system.assertEquals(4, listAcc.size()); // 3 1:1 and 1 Bucket
+        
+        // how clear out their accounts to cause them to get an HH Account
+        listCon[0].AccountId = null;
+        listCon[1].AccountId = null;     
+        listCon[2].AccountId = null;     
+        listCon[3].AccountId = null;
+        listCon[4].AccountId = null;     
+        listCon[5].AccountId = null;
+            
+        Test.startTest();
+        update listCon;
+        Test.stopTest();
+        
+        listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+        system.debug(listAcc);
+        system.assertEquals(7, listAcc.size()); // 6 HH, and 1 Bucket.
+        
+        for (Account acc : listAcc) {
+        	if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) 
+        	   continue;
+            system.assertNotEquals(null, acc.npe01__One2OneContact__c);
+            system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
+            system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
+            system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
+            if (acc.npe01__One2OneContact__c == listCon[1].Id) {
+                system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
+                system.assertEquals(listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[1].FirstName + ' ' + listCon[1].LastName, acc.npo02__Formal_Greeting__c);
+            }
+        }
+    }
+
+
+
+    /*********************************************************************************************************
     WHAT IS NOT TESTED:
-        creating a mixture of 1:1, bucket, and HH Accounts in the same insert operation
-        updating existing contacts from 1:1 and bucket to HH Accounts
         updating existing contacts from HH Accounts to 1:1 and bucket
         deleting a mixture of 1:1, bucket, and HH Accounts
         ensuring that in all tests cases, HH accounts with rollups get rolled up correctly

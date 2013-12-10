@@ -172,6 +172,8 @@ public class UTIL_UnitTestData_TEST {
             );
             if (strType != null) {
             	newAcct.npe01__SYSTEMIsIndividual__c = true;
+            	if (strType == CAO_Constants.BUCKET_ORGANIZATION_TYPE)
+            	   newAcct.name = CAO_Constants.BUCKET_ACCOUNT_NAME;
             }
             AcctsToAdd.add (newAcct);
         }

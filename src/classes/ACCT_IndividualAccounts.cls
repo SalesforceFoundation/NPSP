@@ -134,7 +134,7 @@ public with sharing class ACCT_IndividualAccounts {
                             2. The Contact is flagged as an individual
                             3. The one-to-one or HH Account model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        if (c.AccountId != null && c.npe01__Private__c != true && !CAO_Constants.isBucketModel() && c.Account.npe01__SYSTEMIsIndividual__c) {
+                        if (c.AccountId != null && c.npe01__Private__c != true && c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && c.Account.npe01__SYSTEMIsIndividual__c) {
                             // contacts are connected to Accounts, make the connection in the other direction
                             mapAccountIdContactId.put(c.AccountId, c.Id);
                         }
@@ -381,7 +381,8 @@ public with sharing class ACCT_IndividualAccounts {
     private void insertContactAccount(Contact[] contacts)
     {
         List<Id> contactIds = new List<Id>();
-        Map<Id,Id> conAccMap = new Map<Id,Id>();       
+        Map<Id,Account> mapContactIdAccount = new Map<Id,Account>();  
+        list<Contact> listContactNewAcct = new list<Contact>();     
         
         for (Contact c : contacts) {
             //track which contacts are being inserted vs. updated
@@ -390,8 +391,8 @@ public with sharing class ACCT_IndividualAccounts {
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account acc : [Select Id, npe01__One2OneContact__c from Account where npe01__One2OneContact__c in :contactIds]) {
-            conAccMap.put(acc.npe01__One2OneContact__c,acc.Id);
+        for (Account acc : [Select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where npe01__One2OneContact__c in :contactIds]) {
+            mapContactIdAccount.put(acc.npe01__One2OneContact__c, acc);
         }
         
         List<Contact> contactUpdates = new List<Contact>();
@@ -408,10 +409,14 @@ public with sharing class ACCT_IndividualAccounts {
         }
 
         for (Contact c : contacts) {
-            // if we found an Account already connected to this Contact, connect the Contact to that Account
-            if (conAccMap.containsKey(c.Id)) {
+            // if we found an Account already connected to this Contact, connect the Contact to that Account if it
+            // is the correct type for the current account processor
+            Account acc = mapContactIdAccount.get(c.Id);
+            if (acc != null && 
+                ((CAO_Constants.isHHAccountModel() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
+                (CAO_Constants.isOneToOne() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
-                c.AccountId = conAccMap.get(c.Id);                
+                c.AccountId = acc.Id;                
             } else {
                 // construct the individul account for the Contact
                 Account a = new Account();
@@ -440,13 +445,14 @@ public with sharing class ACCT_IndividualAccounts {
                 }
                 a.npe01__SYSTEMISINDIVIDUAL__c = true;
                 accountInserts.add(a);
+                listContactNewAcct.add(c);
             }
         }
         
         if (accountInserts.size() > 0) {
             Database.SaveResult[] lsr = Database.insert(accountInserts, false);
             Integer i = 0;
-            for (Contact c : contacts) {
+            for (Contact c : listContactNewAcct) {
                 // for each success, write the new AccountId to the Contact. 
                 if (lsr[i].isSuccess() == true) {
                     c.AccountId = lsr[i].getId();
