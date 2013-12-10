@@ -35,10 +35,16 @@
 @isTest
 private class LD_LeadConvertOverride_TEST {
 
+    static testMethod void newLeadConversion_TestOne2One(){
+        newLeadConversion_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void newLeadConversion_TestHHAccount(){
+        newLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //tests if the company is called Self. End point depends on the model
-    public static testMethod void newLeadConversion_Test() {
+    public static void newLeadConversion_Test(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -77,27 +83,36 @@ private class LD_LeadConvertOverride_TEST {
         
         ext.convertOneToOne();
         
-        if (CAO_Constants.isOneToOne()){                
+        if (CAO_Constants.isOneToOne() || CAO_Constants.isHHAccountModel()){                
             Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
             //one contact should have been created
             system.assertEquals(1,convertedContacts.size());
             //the account for this contact should be an individual account, no matter the model
             system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
             String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
-            system.assertEquals(accountName, convertedContacts[0].Account.Name);
-            
-            List<Account> createdAccount2 = [select id from Account where name = :accountName];
-            system.assertEquals(1,createdAccount2.size());
+            if (CAO_Constants.isOneToOne()) {
+                system.assertEquals(accountName, convertedContacts[0].Account.Name);
+	            List<Account> createdAccount2 = [select id from Account where name = :accountName];
+	            system.assertEquals(1,createdAccount2.size());
+            } else {
+                system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            }
         } else {
             system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
         }
 
     }
 
+    static testMethod void newLeadConversionMerge_TestOne2One(){
+        newLeadConversionMerge_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void newLeadConversionMerge_TestHHAccount(){
+        newLeadConversionMerge_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //tests if the company is called Self. End point depends on the model
-    public static testMethod void newLeadConversionMerge_Test() {
+    public static void newLeadConversionMerge_Test(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -142,7 +157,7 @@ private class LD_LeadConvertOverride_TEST {
         
         ext.convertOneToOne();
         
-        if (CAO_Constants.isOneToOne()){                
+        if (CAO_Constants.isOneToOne() || CAO_Constants.isHHAccountModel()){                
             Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
             lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
             //no lead still unconverted             
@@ -157,10 +172,16 @@ private class LD_LeadConvertOverride_TEST {
 
     }
 
+    static testMethod void newLeadConversionNamedCompany_TestOne2One(){
+        newLeadConversionNamedCompany_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void newLeadConversionNamedCompany_TestHHAccount(){
+        newLeadConversionNamedCompany_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //tests if it's a regular lead conversion in either model
-    public static testMethod void newLeadConversionNamedCompany_Test() {
+    public static void newLeadConversionNamedCompany_Test(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -187,10 +208,16 @@ private class LD_LeadConvertOverride_TEST {
         system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
     }
     
+    static testMethod void newLeadConversionNamedCompanyNoFirstName_TestOne2One(){
+        newLeadConversionNamedCompanyNoFirstName_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void newLeadConversionNamedCompanyNoFirstName_TestHHAccount(){
+        newLeadConversionNamedCompanyNoFirstName_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
      //tests if it's a regular lead conversion in either model
-    public static testMethod void newLeadConversionNamedCompanyNoFirstName_Test() {
+    public static void newLeadConversionNamedCompanyNoFirstName_Test(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride')); 
@@ -216,10 +243,16 @@ private class LD_LeadConvertOverride_TEST {
         system.Assert(landingPage.getUrl().contains('leadconvert.jsp'));
     }
     
+    static testMethod void newLeadWithCompanyMatchingLeadName_TestOne2One(){
+        newLeadWithCompanyMatchingLeadName_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void nnewLeadWithCompanyMatchingLeadName_TestHHAccount(){
+        newLeadWithCompanyMatchingLeadName_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //tests if the company has the exact same name as the lead. End point depends on the model
-    public static testMethod void newLeadWithCompanyMatchingLeadName_Test() {
+    public static void newLeadWithCompanyMatchingLeadName_Test(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -244,9 +277,15 @@ private class LD_LeadConvertOverride_TEST {
         
     }
     
+    static testMethod void newLeadBucketModelWithCompanyBucket(){
+        newLeadBucketModelWithCompany(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    static testMethod void newLeadBucketModelWithCompanyHHAccount(){
+        newLeadBucketModelWithCompany(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
     //make sure the lead conversion respects the bucket model
-    public static testMethod void newLeadBucketModelWithCompany(){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+    public static void newLeadBucketModelWithCompany(string strProcessor){
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -279,11 +318,21 @@ private class LD_LeadConvertOverride_TEST {
         
         //bucket model should forward the company account name
         //and not attach the individual unless no name is provided 
-        system.assertEquals('FunkyTown USA', c.Account.Name);   
+        if (CAO_Constants.isBucketModel()) 
+            system.assertEquals('FunkyTown USA', c.Account.Name);
+        else
+            system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household', c.Account.Name);   
+           
     }
     
-    public static testMethod void newLeadBucketModelWithOutCompany(){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+    static testMethod void newLeadBucketModelWithOutCompanyBucket(){
+        newLeadBucketModelWithOutCompany(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    static testMethod void newLeadBucketModelWithOutCompanyHHAccount(){
+        newLeadBucketModelWithOutCompany(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void newLeadBucketModelWithOutCompany(string strProcessor){
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -316,7 +365,10 @@ private class LD_LeadConvertOverride_TEST {
         
         //bucket model should forward the company account name
         //and not attach the individual unless no name is provided 
-        system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, c.Account.Name);   
+        if (CAO_Constants.isBucketModel()) 
+            system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, c.Account.Name);
+        else
+            system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household', c.Account.Name);   
     }
     
     
