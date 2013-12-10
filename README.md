@@ -53,6 +53,6 @@ ant -propertyfile <PATH_TO_PROP_FILE> <TARGET>
 
 *WARNING!!!*: The targets below are destructive.  They are intended to be used as part of a Continuous Integration environment with orgs dedicated solely to build testing.  They will destroy all unpackaged metadata of types used by Cumulus regardless of if the metadata originated from Cumulus or not.
 
-* deployCI: Destructive deploy.  First, remove all unpackaged non-standard metadata from the target org for metadata types used in Cumulus.  Then ensure all managed packages used by Cumulus are at the correct version.  Then deploy Cumulus code and run all tests.
+* deployCI: Destructive deploy.  First, remove all unpackaged non-standard metadata from the target org for metadata types used in Cumulus.  Then ensure all managed packages used by Cumulus are at the correct version.  Then deploy Cumulus code and run all tests.  You can use this target to install Cumulus and all required managed packages in a fresh org.
 
 * uninstallCumulus: Undeploy all unpackaged non-standard metadata from the target org for metadata types used in Cumulus.
