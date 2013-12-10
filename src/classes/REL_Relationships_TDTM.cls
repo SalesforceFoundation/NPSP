@@ -73,7 +73,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	return emptyWrapper; //We should never get here
     }
     
-    public DmlWrapper runForContacts(List<Contact> newlist, Map<Id, Contact> oldMap, 
+    private DmlWrapper runForContacts(List<Contact> newlist, Map<Id, Contact> oldMap, 
     TDTM_TriggerActionHelper.Action triggerAction) {
     	
     	DmlWrapper dmlWrapper = new DmlWrapper();
@@ -127,9 +127,9 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    public DmlWrapper runForCampaignMembers(List<CampaignMember> newlist, Map<Id, CampaignMember> oldMap, 
+    private DmlWrapper runForCampaignMembers(List<CampaignMember> newlist, Map<Id, CampaignMember> oldMap, 
     TDTM_TriggerActionHelper.Action triggerAction) {
-    	
+    	System.debug('****Running for CampaignMember on ' + triggerAction);
     	DmlWrapper dmlWrapper = new DmlWrapper();
     	
     	List<Id> ContactIds = new List<Id>();
@@ -140,7 +140,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         //CREATE CAMPAIGN MAP BASED ON newMAP KEYSET, THEN GET TYPE AND USE THAT MAP TO DETERMINE IF TYPE MATCHED 
         //rac.CMType requery newMap to get Campaign type
         for (CampaignMember cm : newlist){
-            cIds.add(cm.Id);
+            cIds.add(cm.CampaignId);
         }
         
         map<Id, Campaign> cMap = new Map<Id, Campaign>([select id, Type from Campaign where Id IN :cIds]);
@@ -151,9 +151,11 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                     npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
                     //retrieve the campaign for matching type
                     Campaign c = cMap.get(cm.CampaignId);
+                    System.debug('****Current Campaign Type: ' + c.Type);
                     //create a set from the rac
                     if (rac.npe4__Object__c == 'CampaignMember'){
-                        List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';'); 
+                        List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';');
+                        System.debug('****All Campaign Types: ' + cTypeList);
                         Set<String> cTypeSet = new Set<String>();
                         cTypeSet.addAll(cTypeList);                                             
                         if (cTypeSet.contains(c.Type)){                     
@@ -197,7 +199,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <param name="Relationships"> Relationship objects that are being triggered </param>
     /// <param name="oldRelationships"> Relationships object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
+    private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
     TDTM_TriggerActionHelper.Action triggerAction) {
     	
     	DmlWrapper mainWrapper = new DmlWrapper();
@@ -267,6 +269,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
             
         }
+        //@TODO: Why are we doing this twice? Is it a bug?
         if (relationshipsToUpdate.size() > 0 ) {
             DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
             mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
@@ -325,6 +328,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper dmlWrapper = new DmlWrapper();
         Map<Id, SObject> relationshipsToUpdate = new Map<Id, SObject>();
         for(npe4__Relationship__c r : Relationships) {
+        	System.debug('****Creating reciprocal relatioship');
             npe4__Relationship__c copy = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c, 
                                                                     npe4__ReciprocalRelationship__c = r.Id);
             relationshipsToUpdate.put(copy.Id, copy);
@@ -343,7 +347,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         List<SObject> relationshipsToCreate = new List<SObject>();
                 
         for(npe4__Relationship__c r : Relationships) {
-        	
+        	System.debug('****Creating relationship in createRelationship method');
             npe4__Relationship__c copy = new npe4__Relationship__c();              
             copy.npe4__Contact__c = r.npe4__RelatedContact__c;
             copy.npe4__RelatedContact__c = r.npe4__Contact__c;
@@ -382,7 +386,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             || r.npe4__Type__c != oldRelationships[counter].npe4__Type__c 
             || r.npe4__Description__c != oldRelationships[counter].npe4__Description__c) 
             && r.npe4__ReciprocalRelationship__c != null) {
-            	
+            	System.debug('****Creating relationship in updateRelationship method');
                 npe4__Relationship__c copy = new npe4__Relationship__c(Id=r.npe4__ReciprocalRelationship__c);
                 
                 //SWA 2009-05-13 - only attempt to modify the Contact field if the Related Contact  has changed
@@ -452,6 +456,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             }
             
             if (!doNotCreate){
+            	System.debug('****Creating relationship in createNewRelationships method');
                 npe4__Relationship__c r = new npe4__Relationship__c(
                     npe4__Contact__c = conId, 
                     npe4__RelatedContact__c = RelatedContactIds[i],
