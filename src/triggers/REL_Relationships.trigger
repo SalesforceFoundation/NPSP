@@ -50,6 +50,6 @@ after insert, after update, after delete, after undelete) {
     
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
     handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c);
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c);
     handler.runClasses(new TDTM_ObjectDataGateway());
 }

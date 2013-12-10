@@ -40,6 +40,6 @@ trigger REL_RelationshipCampaignMembers on CampaignMember (after insert, after u
     
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
     handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.CampaignMember);
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.CampaignMember);
     handler.runClasses(new TDTM_ObjectDataGateway());
 }

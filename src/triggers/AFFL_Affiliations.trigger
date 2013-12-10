@@ -30,10 +30,9 @@
 trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
 after insert, after update, after delete, after undelete) {
     
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
+    /*TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
     
     handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
                                     Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    handler.runClasses(new TDTM_ObjectDataGateway());
-    //handler.runClasses(new TDTM_SettingsDataGateway());
+    handler.runClasses(new TDTM_ObjectDataGateway());*/
 }
