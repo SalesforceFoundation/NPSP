@@ -86,7 +86,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     /// <name> insertAffiliation </name>
     /// <summary> Creates a new Affiliation record when a Contact is related to a new non-Individual Account </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static List<SObject> processInserts(Contact[] contacts) {
+    private static List<SObject> processInserts(Contact[] contacts) {
 
         List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
                 
@@ -123,7 +123,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     /// <name> updateAffiliation </name>
     /// <summary> Updates an existing Affiliation record when a Contact's Account is changed </summary>
     /// <param name="Contact"> List of original contacts before update that met trigger criteria </param>
-    public static Map<Id, SObject> processUpdates(Contact[] contacts) {
+    private static Map<Id, SObject> processUpdates(Contact[] contacts) {
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
         Map<String,Id> conAccMap = new Map<String,Id>();
