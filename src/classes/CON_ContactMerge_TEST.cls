@@ -1195,7 +1195,10 @@ private class CON_ContactMerge_TEST {
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
+        
+        Test.startTest();
         insert con2;
+        Test.stopTest();
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
