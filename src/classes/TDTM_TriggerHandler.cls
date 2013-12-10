@@ -33,7 +33,7 @@ public with sharing class TDTM_TriggerHandler {
     private List<Sobject> oldlist; 
     private TDTM_TriggerActionHelper.Action thisAction;
     private Schema.DescribeSobjectResult obj;
-        
+      
     public void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newlist, List<Sobject>oldlist, 
     Schema.DescribeSobjectResult describeobj) {
@@ -43,12 +43,11 @@ public with sharing class TDTM_TriggerHandler {
 
         thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
-        System.debug('****ACTION: ' + thisAction + ' on ' + describeobj);
+        System.debug('****ACTION: ' + thisAction + ' on ' + describeobj.getLabel());
         obj = describeobj;
     }
     
     public void runClasses(TDTM_iTableDataGateway dao) {
-        
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
         //If there are no records insert the defaults.
@@ -188,7 +187,7 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
               Trigger_Action__c = 'AfterDelete'));
                                  
-        //***If we use Custom Settings***
+        //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               
         handlers.add(new Trigger_Handler_Setting__c(Name = 'AFF_Contact_AI', Active__c = true, Asynchronous__c = false, 

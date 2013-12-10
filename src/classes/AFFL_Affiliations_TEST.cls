@@ -25,7 +25,6 @@ public class AFFL_Affiliations_TEST {
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -71,7 +70,6 @@ public class AFFL_Affiliations_TEST {
     
     
     static testMethod void newContactOnOrgAccountAutoOff() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                             (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
@@ -94,7 +92,6 @@ public class AFFL_Affiliations_TEST {
     /// <name> createAffiliation_Test </name>
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                                 (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
