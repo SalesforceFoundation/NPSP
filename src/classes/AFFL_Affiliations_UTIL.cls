@@ -27,7 +27,8 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class AFFL_AffiliationsHelper {
+
+public with sharing class AFFL_Affiliations_UTIL {
 
     public static npe5__Affiliations_Settings__c affiliationsSettings;
     

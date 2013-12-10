@@ -39,7 +39,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_AffiliationsHelper.getAffiliationsSettings();
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
         
         List<Contact> affiliationInserts = new List<Contact>();
         List<Contact> affiliationUpdates = new List<Contact>();
