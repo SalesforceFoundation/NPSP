@@ -1,4 +1,8 @@
-<project name="Cumulus" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+<project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <taskdef uri="antlib:com.salesforce"
+         resource="com/salesforce/antlib.xml"
+         classpath="lib/ant-salesforce.jar"/>
 
     <include file="${basedir}/lib/ant-salesforce.xml" />
 
@@ -9,7 +13,10 @@
     <property name="version.npe4" value="2.9" />
     <property name="version.npe5" value="1.90" />
 
+
     <!-- Cumulus specific macros -->
+
+
     <macrodef name="getPackageNamespaces" description="Gets the namespaces for all dependent packages">
       <sequential>
         <delete dir="${basedir}/installedPackages"/>
@@ -141,27 +148,53 @@ npe5: ${InstalledPackage.npe5.versionNumber}
     </macrodef>
 
 
-    <!-- Cumulus build targets -->
+    <!-- Cumulus Build Targets -->
 
-    <!--   test: Run a checkOnly deployment which runs all tests but never actually deploys the package permanently.  Updates all dependent packages to the correct version which is permanent --> 
-    <target name="test">
-      <updateDependentPackages />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" checkOnly="true" maxPoll="200" />
-    </target>
 
-    <!--   deploy: Run a full deployment including running all tests -->
+    <!-- deploy: Run a full deployment including running all tests.  Does not attempt to clean target org or ensure dependent package versions are correct -->
     <target name="deploy">
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
     </target>
 
-    <!--   deployWithoutTests: Run a full deployment but don't run all tests.  This is useful if you already know tests will pass from previous runs and just want to deploy faster -->
+    <!-- deployWithoutTests: Run a full deployment but don't run all tests.  This is useful if you already know tests will pass from previous runs and just want to deploy faster -->
     <target name="deployWithoutTest">
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
     </target>
 
+    <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying Cumulus with all tests --> 
+    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
+    <target name="deployCI">
+      <!-- First, uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
+      <antcall target="uninstallCumulus" />
+
+      <!-- Update any managed packages which are not at the right version -->
+      <updateDependentPackages />
+
+      <!-- Do a deployment without tests.  FIXME: This seems to be necessary to stop tests from failing on AFFL_Affiliations.insertAffiliations and may be a platform bug -->
+      <!--<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />-->
+
+      <!-- Finally, do a deploy with all tests -->
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
+    </target>
+
+    <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
+    <target name="uninstallCumulus">
+      <retrieveUnpackaged dir="uninstallsrc" />
+      <buildDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+    </target>
+
+
     <!--   updateDependendentPackages: Ensures all dependent packages are the correct version -->
     <target name="updateDependentPackages">
       <updateDependentPackages />
+    </target>
+
+    <!-- FIXME: Temporary target to allow feature branch to pass current Jenkins job config.  Remove this after the new build process is in place. -->
+    <target name="test">
+      <antcall target="deployCI" />
+      <antcall target="uninstallCumulus" />
     </target>
 
 </project>
