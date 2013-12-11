@@ -38,34 +38,27 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	
     	DmlWrapper emptyWrapper = new DmlWrapper();
     	
+    	//We need all the casting done here because you get an exception if you try to cast a null list or
+    	//if you pass null to a map constructor.
     	if(objResult.getSObjectType() == Contact.getSObjectType()) {
-    		//@TODO: do we really need all this casting?
-    		List<Contact> newListCasted = (List<Contact>)newList;
-            if(newListCasted == null) newListCasted = new List<Contact>();
-    		List<Contact> oldListCasted = (List<Contact>)oldList;
-    		if(oldListCasted == null) oldListCasted = new List<Contact>();
-    		Map<Id, Contact> oldMap = new Map<Id, Contact>(oldListCasted);
-    		return runForContacts((List<Contact>)newList, oldMap, triggerAction);
+    		List<Contact> newListCasted = (newList == null ? new List<Contact>(): (List<Contact>)newList);
+    		List<Contact> oldListCasted = (oldList == null ? new List<Contact>(): (List<Contact>)oldList);
+    		Map<Id, Contact> oldMapCasted = new Map<Id, Contact>(oldListCasted);
+    		return runForContacts(newListCasted, oldMapCasted, triggerAction);
     	
     	} else if(objResult.getSObjectType() == CampaignMember.getSObjectType()) {
-    		List<CampaignMember> newListCasted = (List<CampaignMember>)newList;
-            if(newListCasted == null) newListCasted = new List<CampaignMember>();
-            List<CampaignMember> oldListCasted = (List<CampaignMember>)oldList;
-            if(oldListCasted == null) oldListCasted = new List<CampaignMember>();
-    		Map<Id, CampaignMember> oldMap = new Map<Id, CampaignMember>((List<CampaignMember>)oldListCasted);
-    		return runForCampaignMembers(newListCasted, oldMap, triggerAction);
+    		List<CampaignMember> newListCasted = (newList == null ? new List<CampaignMember>(): (List<CampaignMember>)newList);
+            List<CampaignMember> oldListCasted = (oldList == null ? new List<CampaignMember>(): (List<CampaignMember>)oldList);
+            Map<Id, CampaignMember> oldMapCasted = new Map<Id, CampaignMember>(oldListCasted);
+    		return runForCampaignMembers(newListCasted, oldMapCasted, triggerAction);
     	
     	} else if(objResult.getSObjectType() == npe4__Relationship__c.getSObjectType()) {
-    		List<npe4__Relationship__c> newListCasted = (List<npe4__Relationship__c>)newList;
-            if(newListCasted == null) newListCasted = new List<npe4__Relationship__c>();
-            List<npe4__Relationship__c> oldListCasted = (List<npe4__Relationship__c>)oldList;
-            if(oldListCasted == null) oldListCasted = new List<npe4__Relationship__c>();
-            //@TODO: Should this be done in the method itself better?
+    		List<npe4__Relationship__c> newListCasted = (newList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)newList);
+            List<npe4__Relationship__c> oldListCasted = (oldList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)oldList);
+
             if(triggerAction != TDTM_TriggerActionHelper.Action.afterDelete) {
     		  return runForRelationships(newListCasted, oldListCasted, triggerAction);
             } else {
-              System.debug('****Running for after delete');
-              System.debug('****Old List: ' + oldListCasted);
               return runForRelationships(oldListCasted, null, triggerAction);
             }
     	}
@@ -116,10 +109,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         	dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
         }
         
-        /*if (!ContactIds.isEmpty() && !REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationshipsFuture(ContactIds, ReciprocalIds, Types);
-        }                    
-        else if (!ContactIds.isEmpty() && REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){ */
         if (!ContactIds.isEmpty()){
             DmlWrapper w = createNewRelationships(ContactIds, ReciprocalIds, Types);
             dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
@@ -183,10 +172,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             }           
         }   
 
-        /*if (!ContactIds.isEmpty() && !REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationshipsFuture(ContactIds, ReciprocalIds, Types);
-        }               
-        else if (!ContactIds.isEmpty() && REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){*/
         if (!ContactIds.isEmpty()) {
             DmlWrapper w = createNewRelationships(ContactIds, ReciprocalIds, Types);
             dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
@@ -222,11 +207,9 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             	System.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
                 if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
-                    System.debug('****Relationship created');
                 }
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     reciprocalsToUpdate.add(r);
-                    System.debug('****Reciprocal updated');
                 }
             }
             
@@ -248,7 +231,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             	System.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
-                    System.debug('****Adding object to list of objects to delete: ' + r);
                 }
             }
 
@@ -408,11 +390,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         }
         return dmlWrapper;
     }
-    
-    /*public static DmlWrapper createNewRelationshipsFuture(List<Id> ContactIds, List<Id> RelatedContactIds, 
-    List<String> Types) {
-        return createNewRelationships(ContactIds, RelatedContactIds, Types);   
-    }*/
     
     public static DmlWrapper createNewRelationships(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types) {
         
