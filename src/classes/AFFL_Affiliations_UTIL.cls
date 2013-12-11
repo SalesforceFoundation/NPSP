@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,27 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
+
+public with sharing class AFFL_Affiliations_UTIL {
+
+    public static npe5__Affiliations_Settings__c affiliationsSettings;
     
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
-    
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    //handler.runClasses(new TDTM_ObjectDataGateway());
-    handler.runClasses(new TDTM_SettingsDataGateway());
+    //get the settings. handles the case where the managed value doesn't exist yet
+    public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
+        //if no settings exist, create defaults
+        if (affiliationsSettings == null) {
+            //first see if we already have settings
+            affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+            system.debug(npe5__Affiliations_Settings__c.getOrgDefaults());
+            if (affiliationsSettings.id == null) { 
+                //affiliationsSettings = new npe5__Affiliations_Settings__c();
+                affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
+               
+                affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();
+
+                insert affiliationsSettings;
+            }
+        }
+        return affiliationsSettings;
+    }
 }
