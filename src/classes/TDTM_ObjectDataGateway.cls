@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,25 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger AFFL_Affiliations on Contact (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
+
+/**
+ * Class that queries Custom Object to retrieve classes to call on a specific trigger. 
+ */
+public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
     
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
+    public static Boolean isEmpty() {
+    	//@TODO: is this the best way to check if a table (object) is empty?
+    	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
+    	Integer rowCount = (Integer)result[0].get('rowCount');
+    	if(rowCount == 0)
+    	   return true;	
+    	return false;
+    }
     
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-                                    Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Contact);
-    //handler.runClasses(new TDTM_ObjectDataGateway());
-    handler.runClasses(new TDTM_SettingsDataGateway());
+    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_TriggerActionHelper.Action action) {   
+        
+        return [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Trigger_Action__c 
+                from Trigger_Handler__c where Active__c = true and Object__c = :objectName and 
+                Trigger_Action__c = :action.name() order by Load_Order__c];
+    }
 }
