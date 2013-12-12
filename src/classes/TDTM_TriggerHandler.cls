@@ -48,7 +48,7 @@ public with sharing class TDTM_TriggerHandler {
     }
     
     public void runClasses(TDTM_iTableDataGateway dao) {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        DmlWrapper dmlWrapper = new DmlWrapper();
         
         //If there are no records insert the defaults.
         if(dao.isEmpty()) {
@@ -62,7 +62,7 @@ public with sharing class TDTM_TriggerHandler {
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
-                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToCall);
+                DmlWrapper dmlWrapperLocal = runClass(classToCall);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -73,27 +73,31 @@ public with sharing class TDTM_TriggerHandler {
                 }          
             }
             
-            System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
-	        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
-	        
-	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
-	        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
-	        
-	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
-	        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);
-	        
-	        //Not yet using either of these, as far as I know, but no reason not to support them
-	        System.debug('****Objects to upsert: ' + dmlWrapper.objectsToUpsert.values());
-            List<Database.UpsertResult> upsertResults = Database.upsert(dmlWrapper.objectsToUpsert.values(), false);
-            
-            System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUpsert.values());
-            List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
-            
-            //Should we also support Database.merge?
+            //Process the result
+            processDML(dmlWrapper);
         }
     }
     
-    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
+    public static void processDML(DmlWrapper dmlWrapper) {
+    	System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
+        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
+        
+        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
+        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
+        
+        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
+        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
+        
+        //Not yet using this one, as far as I know, but no reason not to support them
+        System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUndelete);
+        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
+        
+        //We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type
+        
+        //Should we also support Database.merge?
+    }
+    
+    private DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -139,6 +143,13 @@ public with sharing class TDTM_TriggerHandler {
        else om = new Map<Id, SObject>();
        
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
+    }
+    
+    public class DmlWrapper {
+        public List<SObject> objectsToInsert = new List<SObject>(); 
+        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
+        public List<Id> objectsToDelete = new List<Id>();
+        public List<Id> objectsToUndelete = new List<Id>();
     }
     
     //@TODO: read from text file

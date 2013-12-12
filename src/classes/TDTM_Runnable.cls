@@ -70,26 +70,13 @@ public abstract class TDTM_Runnable {
             classInstance = classType.newInstance();
         if(classInstance instanceof TDTM_Runnable) {
         	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
-	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
+	        TDTM_TriggerHandler.DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
 	        //Process the result
-	        System.debug('****Objects to insert in future: ' + dmlWrapper.objectsToInsert);
-            insert dmlWrapper.objectsToInsert;
-            System.debug('****Objects to update in future: ' + dmlWrapper.objectsToUpdate.values());
-            update dmlWrapper.objectsToUpdate.values();
-            System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete);
-            Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
+	        TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
     
-    public abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    public abstract TDTM_TriggerHandler.DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult);
-            
-    public class DmlWrapper {
-        public List<SObject> objectsToInsert = new List<SObject>(); 
-        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
-        public List<Id> objectsToDelete = new List<Id>();
-        public Map<Id, SObject> objectsToUpsert = new Map<Id, SObject>();
-        public List<Id> objectsToUndelete = new List<Id>();
-    }
 }
