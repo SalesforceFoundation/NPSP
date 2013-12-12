@@ -75,7 +75,7 @@ npe5: ${InstalledPackage.npe5.versionNumber}
             <echo>Changing npe01 from ${InstalledPackage.npe01.versionNumber} to ${version.npe01}</echo>
             <if>
               <!-- only uninstall if package exists -->
-              <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" /></not>
+              <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="Not Installed" /></not>
               <then>
                 <uninstallPackage namespace="npe01" username="${sf.username}" password="${sf.password}"/>
               </then> 
