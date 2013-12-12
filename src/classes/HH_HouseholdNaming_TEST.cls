@@ -51,8 +51,8 @@ public class HH_HouseholdNaming_TEST {
                 npo02__Advanced_Household_Naming__c = true
             ));
             
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-           npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+           npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
@@ -60,13 +60,13 @@ public class HH_HouseholdNaming_TEST {
                 
         // create & insert contact(s)
         Contact[] TestCons = new contact[]{ new contact(
-            FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__Private__c=false,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         ) };
         insert TestCons;
             
@@ -96,8 +96,8 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Excluded_Contact_Opp_Types__c = null                    
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -155,8 +155,8 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
@@ -270,8 +270,8 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
