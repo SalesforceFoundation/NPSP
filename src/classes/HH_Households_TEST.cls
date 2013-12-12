@@ -562,8 +562,8 @@ public with sharing class HH_Households_TEST {
     }
     
     static testMethod void testMergeRollupSupport(){
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR, npe01__Enable_Opportunity_Contact_Role_Trigger__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
          
         Contact c1 = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,

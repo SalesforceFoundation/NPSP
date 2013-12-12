@@ -24,6 +24,8 @@
 public with sharing class AFFL_BulkTests_TEST {
 
     static testMethod void newContactOnOrgAccount() {
+    	//AFFL_Affiliations_TEST.setupTDTM();
+    	
         Account acc = new Account(Name='test77');
         insert acc;
         
@@ -103,6 +105,8 @@ public with sharing class AFFL_BulkTests_TEST {
     }
     
      static testMethod void contactWithMultipleAffiliations() {
+     	//AFFL_Affiliations_TEST.setupTDTM();
+     	
         Account acc = new Account(Name='test77');
         insert acc;
         

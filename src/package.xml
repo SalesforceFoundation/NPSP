@@ -22,10 +22,6 @@
     </types>
     <types>
         <members>*</members>
-        <members>Account</members>
-        <members>Contact</members>
-        <members>Lead</members>
-        <members>Opportunity</members>
         <name>CustomObject</name>
     </types>
     <types>

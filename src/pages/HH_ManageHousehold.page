@@ -137,28 +137,28 @@ gwManageHH.originalState = JSON.stringify({!originalState});
 
 <apex:form >
 <!-- inputText so that the javascript can write back to the multiselect field -->
-<apex:inputText value="{!hh.npo02__SYSTEM_CUSTOM_NAMING__c}" styleClass="gwHidden sfField sfField-SYSTEM_CUSTOM_NAMING__c" />
-<apex:inputField value="{!hh.Name}" styleClass="gwHidden sfField sfField-Name" />
-<apex:inputField value="{!hh.npo02__Formal_Greeting__c}" styleClass="gwHidden sfField sfField-Formal_Greeting__c" />
-<apex:inputField value="{!hh.npo02__Informal_Greeting__c}" styleClass="gwHidden sfField sfField-Informal_Greeting__c" />
+<apex:inputText value="{!hhO.npo02__SYSTEM_CUSTOM_NAMING__c}" styleClass="gwHidden sfField sfField-SYSTEM_CUSTOM_NAMING__c" />
+<apex:inputField value="{!hhO.Name}" styleClass="gwHidden sfField sfField-Name" />
+<apex:inputField value="{!hhO.npo02__Formal_Greeting__c}" styleClass="gwHidden sfField sfField-Formal_Greeting__c" />
+<apex:inputField value="{!hhO.npo02__Informal_Greeting__c}" styleClass="gwHidden sfField sfField-Informal_Greeting__c" />
 <!-- Mailing Street on contacts is multi-line, but isn't in NPSP - using inputTextArea instead of inputField so that the CRLF is replaced by a space instead of deleted - still not perfect! -->
-<apex:inputTextarea value="{!hh.npo02__MailingStreet__c}" styleClass="gwHidden sfField sfField-MailingStreet__c" />
-<apex:inputField value="{!hh.npo02__MailingCity__c}" styleClass="gwHidden sfField sfField-MailingCity__c" />
-<apex:inputField value="{!hh.npo02__MailingState__c}" styleClass="gwHidden sfField sfField-MailingState__c" />
-<apex:inputField value="{!hh.npo02__MailingPostalCode__c}" styleClass="gwHidden sfField sfField-MailingPostalCode__c" />
-<apex:inputField value="{!hh.npo02__MailingCountry__c}" styleClass="gwHidden sfField sfField-MailingCountry__c" />
+<apex:inputTextarea value="{!hhO.npo02__MailingStreet__c}" styleClass="gwHidden sfField sfField-MailingStreet__c" />
+<apex:inputField value="{!hhO.npo02__MailingCity__c}" styleClass="gwHidden sfField sfField-MailingCity__c" />
+<apex:inputField value="{!hhO.npo02__MailingState__c}" styleClass="gwHidden sfField sfField-MailingState__c" />
+<apex:inputField value="{!hhO.npo02__MailingPostalCode__c}" styleClass="gwHidden sfField sfField-MailingPostalCode__c" />
+<apex:inputField value="{!hhO.npo02__MailingCountry__c}" styleClass="gwHidden sfField sfField-MailingCountry__c" />
 
-<apex:pageBlock id="hhDetails" rendered="{!hh.id!=null}" title="{!$Label.npo02__HouseholdDetails}">
+<apex:pageBlock id="hhDetails" rendered="{!hhO.id!=null}" title="{!$Label.npo02__HouseholdDetails}">
 
 <apex:pageBlockSection columns="2">
 
         
         <apex:repeat value="{!$ObjectType.npo02__Household__c.FieldSets.npo02__Manage_Household_Custom}" var="f">
             <apex:inputField rendered="{!NOT(CONTAINS('npo02__AverageAmount__c,npo02__FirstCloseDate__c,npo02__Formal_Greeting__c,npo02__Formula_MailingAddress__c,npo02__Household_ID__c,Informal_Greeting__c,npo02__LargestAmount__c,npo02__LastCloseDate__c,npo02__LastMembershipAmount__c,npo02__LastMembershipDate__c,npo02__LastMembershipLevel__c,npo02__LastMembershipOrigin__c,npo02__LastOppAmount__c,npo02__MailingCity__c,npo02__MailingCountry__c,npo02__MailingPostalCode__c,npo02__MailingState__c,npo02__MailingStreet__c,npo02__MembershipEndDate__c,npo02__MembershipJoinDate__c,npo02__Membership_Span__c,npo02__Membership_Status__c,npo02__NumberOfClosedOpps__c,npo02__NumberOfMembershipOpps__c,npo02__OppAmount2YearsAgo__c,npo02__OppAmountLastNDays__c,npo02__OppAmountLastYear__c,npo02__OppAmountThisYear__c,npo02__OppsClosed2YearsAgo__c,npo02__OppsClosedLastNDays__c,npo02__OppsClosedLastYear__c,npo02__OppsClosedThisYear__c,npo02__SYSTEM_CUSTOM_NAMING__c,npo02__SmallestAmount__c,npo02__TotalMembershipOppAmount__c,npo02__TotalOppAmount__c', f.FieldPath))}"
-                value="{!hh[f]}" styleClass="sfField sfField-{!f.FieldPath}"/>
+                value="{!hhO[f]}" styleClass="sfField sfField-{!f.FieldPath}"/>
 
             <apex:outputField rendered="{!CONTAINS('npo02__AverageAmount__c,npo02__FirstCloseDate__c,npo02__Formal_Greeting__c,npo02__Formula_MailingAddress__c,npo02__Household_ID__c,Informal_Greeting__c,npo02__LargestAmount__c,npo02__LastCloseDate__c,npo02__LastMembershipAmount__c,npo02__LastMembershipDate__c,npo02__LastMembershipLevel__c,npo02__LastMembershipOrigin__c,npo02__LastOppAmount__c,npo02__MailingCity__c,npo02__MailingCountry__c,npo02__MailingPostalCode__c,npo02__MailingState__c,npo02__MailingStreet__c,npo02__MembershipEndDate__c,npo02__MembershipJoinDate__c,npo02__Membership_Span__c,npo02__Membership_Status__c,npo02__NumberOfClosedOpps__c,npo02__NumberOfMembershipOpps__c,npo02__OppAmount2YearsAgo__c,npo02__OppAmountLastNDays__c,npo02__OppAmountLastYear__c,npo02__OppAmountThisYear__c,npo02__OppsClosed2YearsAgo__c,npo02__OppsClosedLastNDays__c,npo02__OppsClosedLastYear__c,npo02__OppsClosedThisYear__c,npo02__SYSTEM_CUSTOM_NAMING__c,npo02__SmallestAmount__c,npo02__TotalMembershipOppAmount__c,npo02__TotalOppAmount__c', f.FieldPath)}"
-                value="{!hh[f]}" styleClass="sfField sfField-{!f.FieldPath}"/>
+                value="{!hhO[f]}" styleClass="sfField sfField-{!f.FieldPath}"/>
         </apex:repeat>
 
 </apex:pageBlockSection>
@@ -171,7 +171,7 @@ gwManageHH.originalState = JSON.stringify({!originalState});
     
     <input class="gwPreventUI btn gwControls-save" name="bottomSave" value="{!$Label.site.save}" type="submit" />
     <apex:commandButton styleClass="gwHidden" id="gwControls-StdSave" action="{!save}" value="{!$Label.site.save}" />
-    <apex:commandButton rendered="{!hh.id != null}" styleClass="gwPreventUI" action="{!deleteHH}" value="{!$Label.npo02__Delete}" />
+    <apex:commandButton rendered="{!hhO.id != null}" styleClass="gwPreventUI" action="{!deleteHH}" value="{!$Label.npo02__Delete}" />
     <apex:commandButton styleClass="gwPreventUI" action="{!cancel}" value="{!$Label.site.cancel}" />
     
 </div>
