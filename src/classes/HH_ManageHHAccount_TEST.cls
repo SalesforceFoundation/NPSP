@@ -321,7 +321,6 @@ public with sharing class HH_ManageHHAccount_TEST {
             MailingPostalCode = '98101',
             MailingCountry = 'USA'
             );
-        insert con;
         
         Contact con2 = new Contact(
             FirstName = 'Mike',
@@ -333,7 +332,6 @@ public with sharing class HH_ManageHHAccount_TEST {
             MailingPostalCode = '98101',
             MailingCountry = 'USA '
             );
-        insert con2;
         
         Contact con3 = new Contact(
             FirstName = 'Cheryl',
@@ -344,21 +342,18 @@ public with sharing class HH_ManageHHAccount_TEST {
             MailingState = 'WA',
             MailingPostalCode = '98034'
             );
-        insert con3;
         
         Contact con4 = new Contact(
             FirstName = 'Toivo',
             LastName = 'abc TEST Monkey',
             email = 'testemail@groundwiretest.org'
             );
-        insert con4;
         
         Contact con5 = new Contact(
             FirstName = 'Kelley',
             LastName = 'adc TEST Monkey',
             email = 'testemail@groundwiretest.org'
             );
-        insert con5;
         
         Contact conWithHH = new Contact (
             FirstName = 'Andy',
@@ -366,7 +361,6 @@ public with sharing class HH_ManageHHAccount_TEST {
             email = 'testEmail@groundwiretest2.org',
             AccountId = existingHH.id
             );
-        insert conWithHH;
         
         Contact conWithHH2 = new Contact (
             FirstName = 'Cheryl',
@@ -374,7 +368,7 @@ public with sharing class HH_ManageHHAccount_TEST {
             email = 'testEmail@groundwiretest3.org',
             AccountId = existingHH.id
             );
-        insert conWithHH2;
+        insert new Contact[] {con, con2, con3, con4, con5, conWithHH, conWithHH2};
         
         Test.startTest();        
         ApexPages.StandardController sc = new ApexPages.standardController(new Account(npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE));

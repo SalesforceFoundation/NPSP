@@ -720,6 +720,7 @@ public with sharing class RLLP_OppRollup_TEST {
             Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);
     
             insert testGift3;
+            test.stopTest();
             
             // now roll up manually
             rg = new RLLP_OppRollup();
@@ -731,12 +732,11 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 85 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );           
     
             // add another from this year (to test adding)
             Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
     
-            test.stopTest();
             insert testGift4;
             
             // now roll up manually

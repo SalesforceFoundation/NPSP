@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,79 +29,122 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2011, 2012 
 * @description Implements relationships behavior 
 */
-public with sharing class REL_Relationships {
+public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
 
-/// <name> REL_Relationships </name>
-    /// <summary> Default Constructor </summary>
-    public REL_Relationships(){}
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    	
+    	DmlWrapper emptyWrapper = new DmlWrapper();
+    	
+    	//We need all the casting done here because you get an exception if you try to cast a null list or
+    	//if you pass null to a map constructor.
+    	if(objResult.getSObjectType() == Contact.getSObjectType()) {
+    		List<Contact> newListCasted = (newList == null ? new List<Contact>(): (List<Contact>)newList);
+    		List<Contact> oldListCasted = (oldList == null ? new List<Contact>(): (List<Contact>)oldList);
+    		Map<Id, Contact> oldMapCasted = new Map<Id, Contact>(oldListCasted);
+    		return runForContacts(newListCasted, oldMapCasted, triggerAction);
+    	
+    	} else if(objResult.getSObjectType() == CampaignMember.getSObjectType()) {
+    		List<CampaignMember> newListCasted = (newList == null ? new List<CampaignMember>(): (List<CampaignMember>)newList);
+            List<CampaignMember> oldListCasted = (oldList == null ? new List<CampaignMember>(): (List<CampaignMember>)oldList);
+            Map<Id, CampaignMember> oldMapCasted = new Map<Id, CampaignMember>(oldListCasted);
+    		return runForCampaignMembers(newListCasted, oldMapCasted, triggerAction);
+    	
+    	} else if(objResult.getSObjectType() == npe4__Relationship__c.getSObjectType()) {
+    		List<npe4__Relationship__c> newListCasted = (newList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)newList);
+            List<npe4__Relationship__c> oldListCasted = (oldList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)oldList);
+
+            if(triggerAction != TDTM_TriggerActionHelper.Action.afterDelete) {
+    		  return runForRelationships(newListCasted, oldListCasted, triggerAction);
+            } else {
+              return runForRelationships(oldListCasted, null, triggerAction);
+            }
+    	}
+    	
+    	return emptyWrapper; //We should never get here
+    }
     
-    public REL_Relationships(Map<Id, Contact> newMap, Map<Id, Contact> oldMap, REL_Utils.triggerAction ta){
+    private DmlWrapper runForContacts(List<Contact> newlist, Map<Id, Contact> oldMap, 
+    TDTM_TriggerActionHelper.Action triggerAction) {
+    	
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+    	
         List<Id> ContactIds = new List<Id>();
         List<Id> ReciprocalIds = new List<Id>();
         List<String> Types = new List<String>();        
         
-        for (Id i : newMap.keySet()){
-            Contact c = newMap.get(i);
-            for(String s : REL_Utils.getAutoCreateMap().keySet()){
-                npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
-                if (rac.npe4__Object__c == 'Contact'){
-                    Id relatedContactId;
-                    try{
-                        //get the id from the field                        
-                        relatedContactId = (Id)c.get(rac.npe4__Field__c);
-                    }catch(Exception e){
-                        c.addError(system.Label.npe4.AutoCreateFieldError);
-                    }    
-                    
-                    if(ta == REL_Utils.triggerAction.afterInsert && relatedContactId != null){                        
-                        ContactIds.add(c.Id);
-                        ReciprocalIds.add(relatedContactId);
-                        Types.add(rac.npe4__Relationship_Type__c);
-                    }
-                    else if (ta == REL_Utils.triggerAction.afterUpdate && relatedContactId != null && relatedContactId != oldMap.get(c.id).get(rac.npe4__Field__c)){
-                        ContactIds.add(c.Id);
-                        ReciprocalIds.add(relatedContactId);
-                        Types.add(rac.npe4__Relationship_Type__c);
-                    }
-                }               
-            }           
-        }   
-        //use @future for inserts
-        if (!ContactIds.isEmpty() && !REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationshipsFuture(ContactIds, ReciprocalIds, Types);
-        }               
-        else if (!ContactIds.isEmpty() && REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationships(ContactIds, ReciprocalIds, Types);
+        if(newlist != null && newlist.size() > 0) {
+	        for (Contact c : newlist){
+	            for(String s : REL_Utils.getAutoCreateMap().keySet()){
+	                npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
+	                if (rac.npe4__Object__c == 'Contact'){
+	                    Id relatedContactId;
+	                    try{
+	                        //get the id from the field                        
+	                        relatedContactId = (Id)c.get(rac.npe4__Field__c);
+	                    }catch(Exception e){
+	                        c.addError(system.Label.npe4.AutoCreateFieldError);
+	                    }    
+	                    
+	                    if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
+	                        ContactIds.add(c.Id);
+	                        ReciprocalIds.add(relatedContactId);
+	                        Types.add(rac.npe4__Relationship_Type__c);
+	                    }
+	                    else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
+	                    && relatedContactId != oldMap.get(c.id).get(rac.npe4__Field__c)){
+	                        ContactIds.add(c.Id);
+	                        ReciprocalIds.add(relatedContactId);
+	                        Types.add(rac.npe4__Relationship_Type__c);
+	                    }
+	                }               
+	            }           
+	        }
         }
+        
+        if(triggerAction == TDTM_TriggerActionHelper.Action.afterDelete) {
+        	DmlWrapper w = deleteEmptyRelationships();
+        	dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
+        }
+        
+        if (!ContactIds.isEmpty()){
+            DmlWrapper w = createNewRelationships(ContactIds, ReciprocalIds, Types);
+            dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
+        }
+        return dmlWrapper;
     }
     
-    public REL_Relationships(Map<Id, CampaignMember> newMap, Map<Id, CampaignMember> oldMap, REL_Utils.triggerAction ta){
-        List<Id> ContactIds = new List<Id>();
+    private DmlWrapper runForCampaignMembers(List<CampaignMember> newlist, Map<Id, CampaignMember> oldMap, 
+    TDTM_TriggerActionHelper.Action triggerAction) {
+    	System.debug('****Running for CampaignMember on ' + triggerAction);
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+    	
+    	List<Id> ContactIds = new List<Id>();
         List<Id> ReciprocalIds = new List<Id>();
         List<String> Types = new List<String>();
         List<Id> cIds = new List<Id>();  
         
-        //CREATE CAMPAIGN MAP BASED ON newMAP KEYSET, THEN GET TYPE AND USE THAT MAP TO DETERMINE IF TYPE MATCHED rac.CMType
-        //requery newMap to get Campaign type
-        for (Id i : newMap.keySet()){
-            cIds.add(newMap.get(i).CampaignId);
+        //CREATE CAMPAIGN MAP BASED ON newMAP KEYSET, THEN GET TYPE AND USE THAT MAP TO DETERMINE IF TYPE MATCHED 
+        //rac.CMType requery newMap to get Campaign type
+        for (CampaignMember cm : newlist){
+            cIds.add(cm.CampaignId);
         }
         
         map<Id, Campaign> cMap = new Map<Id, Campaign>([select id, Type from Campaign where Id IN :cIds]);
                 
-        for (Id i : newMap.keySet()){
-            CampaignMember cm = newMap.get(i);
+        for (CampaignMember cm : newlist){
             if (cm.ContactId != null){
                 for(String s : REL_Utils.getAutoCreateMap().keySet()){
                     npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
                     //retrieve the campaign for matching type
                     Campaign c = cMap.get(cm.CampaignId);
+                    System.debug('****Current Campaign Type: ' + c.Type);
                     //create a set from the rac
                     if (rac.npe4__Object__c == 'CampaignMember'){
-                        List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';'); 
+                        List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';');
+                        System.debug('****All Campaign Types: ' + cTypeList);
                         Set<String> cTypeSet = new Set<String>();
                         cTypeSet.addAll(cTypeList);                                             
                         if (cTypeSet.contains(c.Type)){                     
@@ -109,15 +152,16 @@ public with sharing class REL_Relationships {
                             try{
                                 //get the id from the field                        
                                 relatedContactId = (Id)cm.get(rac.npe4__Field__c);
-                            }catch(Exception e){
+                            }catch(Exception e) {
                                 cm.addError(system.Label.npe4.AutoCreateFieldError); 
                             }
-                            if(ta == REL_Utils.triggerAction.afterInsert && relatedContactId != null){                        
+                            if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
                                 ContactIds.add(cm.ContactId);
                                 ReciprocalIds.add(relatedContactId);
                                 Types.add(rac.npe4__Relationship_Type__c);
                             }
-                            else if (ta == REL_Utils.triggerAction.afterUpdate && relatedContactId != null && relatedContactId != oldMap.get(cm.id).get(rac.npe4__Field__c)){
+                            else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
+                            && relatedContactId != oldMap.get(cm.id).get(rac.npe4__Field__c)){
                                 ContactIds.add(cm.ContactId);
                                 ReciprocalIds.add(relatedContactId);
                                 Types.add(rac.npe4__Relationship_Type__c);
@@ -127,13 +171,12 @@ public with sharing class REL_Relationships {
                 }
             }           
         }   
-        //use @future for inserts
-        if (!ContactIds.isEmpty() && !REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationshipsFuture(ContactIds, ReciprocalIds, Types);
-        }               
-        else if (!ContactIds.isEmpty() && REL_Utils.getRelationshipSettings().npe4__Force_Synchronous_Auto_Create__c){
-            createNewRelationships(ContactIds, ReciprocalIds, Types);
+
+        if (!ContactIds.isEmpty()) {
+            DmlWrapper w = createNewRelationships(ContactIds, ReciprocalIds, Types);
+            dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
         }
+        return dmlWrapper;
     }
 
     /// <name> REL_Relationships </name>
@@ -141,8 +184,11 @@ public with sharing class REL_Relationships {
     /// <param name="Relationships"> Relationship objects that are being triggered </param>
     /// <param name="oldRelationships"> Relationships object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public REL_Relationships(npe4__Relationship__c[] Relationships, npe4__Relationship__c[] oldRelationships, REL_Utils.triggerAction ta) 
-    {   
+    private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
+    TDTM_TriggerActionHelper.Action triggerAction) {
+    	
+    	DmlWrapper mainWrapper = new DmlWrapper();
+    	
         // Relationship list for termination updates
         List<npe4__Relationship__c> origrelationships = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> relationshipsToCreate = new List<npe4__Relationship__c>();
@@ -150,140 +196,140 @@ public with sharing class REL_Relationships {
         List<npe4__Relationship__c> relationshipsToDelete = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> reciprocalsToUpdate = new List<npe4__Relationship__c>();
         
-        if (ta==REL_Utils.triggerAction.afterUpdate){
+        if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {
             REL_ProcessControl.hasRun = true;
         }
-        Integer i = 0;          // processing counter       
         
-        for(npe4__Relationship__c r : Relationships) 
-        {
+        Integer i = 0;          // processing counter            
+        for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
-            if (ta==REL_Utils.triggerAction.afterInsert) 
-            {
-                if (r.npe4__ReciprocalRelationship__c == null)
-                {
+            if (triggerAction == TDTM_TriggerActionHelper.Action.afterInsert) {
+            	System.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
+                if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
                 }
-                if (r.npe4__ReciprocalRelationship__c != null) 
-                {
+                if (r.npe4__ReciprocalRelationship__c != null) {
                     reciprocalsToUpdate.add(r);
                 }
             }
             
             // AFTER UPDATE
-            if (ta==REL_Utils.triggerAction.afterUpdate) 
-            {               
-                if (r.npe4__ReciprocalRelationship__c == oldRelationships[i].npe4__ReciprocalRelationship__c && r.npe4__RelatedContact__c != null)
-                {
+            if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {   
+            	System.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
+                if (r.npe4__ReciprocalRelationship__c == oldlist[i].npe4__ReciprocalRelationship__c 
+                && r.npe4__RelatedContact__c != null) {
                     relationshipsToUpdate.add(r);
-                    origRelationships.add(oldRelationships[i]);
+                    origRelationships.add(oldlist[i]);
                 }
-                if (r.npe4__RelatedContact__c == null)
-                {
+                if (r.npe4__RelatedContact__c == null) {
                     relationshipsToDelete.add(r);
                 }
             }
 
             // AFTER DELETE
-            if (ta==REL_Utils.triggerAction.afterDelete) 
-            {
-                if (r.npe4__ReciprocalRelationship__c != null)
-                {
+            if (triggerAction == TDTM_TriggerActionHelper.Action.afterDelete) {
+            	System.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
+                if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
                 }
             }
 
-            i += 1;
+            i++;
         }
 
         if (relationshipsToCreate.size() > 0 ) {
-            createRelationship(relationshipsToCreate);
+        	DmlWrapper wrapper = createRelationship(relationshipsToCreate);
+            mainWrapper.objectsToInsert.addAll(wrapper.objectsToInsert);
+            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToUpdate.size() > 0 ) {
-            updateRelationship(relationshipsToUpdate, origRelationships);
+            DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
+            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
         }
         if (reciprocalsToUpdate.size() > 0 ) {
-            reciprocate(reciprocalsToUpdate);
+            DmlWrapper wrapper = reciprocate(reciprocalsToUpdate);
+            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
+            
         }
+        //@TODO: Why are we doing this twice? Is it a bug?
         if (relationshipsToUpdate.size() > 0 ) {
-            updateRelationship(relationshipsToUpdate, origRelationships);
+            DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
+            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToDelete.size() > 0 ) {
-            deleteRelationship(relationshipsToDelete);
+            DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);
+            mainWrapper.objectsToDelete.addAll(wrapper.objectsToDelete);
         }
 
-        if (ta==REL_Utils.triggerAction.afterUpdate){
+        if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {
             REL_ProcessControl.hasRun = false;
         }
-
+        return mainWrapper;
     }
 
 
     /// <name> deleteRelationships </name>
     /// <summary> Deletes Reciprocal Relationships when a Relationship is deleted </summary>
     /// <param name="relationships">  </param>
-    public static void deleteRelationship(npe4__Relationship__c[] relationships)
-    {
+    public static DmlWrapper deleteRelationships(npe4__Relationship__c[] relationships) {
+    	System.debug('****Deleting relationships: ' + relationships);
+    	DmlWrapper dmlWrapper = new DmlWrapper();
         List<Id> relationshipsToDelete = new List<Id>();
-        for(npe4__Relationship__c r : Relationships) 
-        {
-            if (r.npe4__ReciprocalRelationship__c != null)
-            {
+        for(npe4__Relationship__c r : Relationships) {
+            if(r.npe4__ReciprocalRelationship__c != null) {
                 relationshipsToDelete.add(r.npe4__ReciprocalRelationship__c);
-            } else
-            if (r.npe4__RelatedContact__c == null)
-            {
-                relationshipsToDelete.add(r.Id);
-            }
+            } else if(r.npe4__RelatedContact__c == null) {
+	            relationshipsToDelete.add(r.Id); 
+	        }
         }
-        if ( relationshipsToDelete.size() > 0 )
-        {
-            Database.DeleteResult[] lsr = Database.delete(relationshipsToDelete, false);
+        if ( relationshipsToDelete.size() > 0 ) {
+            dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
         }
-        
+        return dmlWrapper;
     }
 
     /// <name> deleteEmptyRelationships </name>
     /// <summary> Deletes Relationships when a Contact is deleted </summary>
     /// <param name="contacts"> List of Contacts that were deleted </param>
-    @future
-    public static void deleteEmptyRelationships()
-    {
-        List<npe4__Relationship__c> relationshipsToDelete = new List<npe4__Relationship__c>();
-        for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null])
-        {
-            relationshipsToDelete.add(r);
+    public static DmlWrapper deleteEmptyRelationships() {
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+        List<Id> relationshipsToDelete = new List<Id>();
+        for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null]) {
+            relationshipsToDelete.add(r.Id);
         }
-        if ( relationshipsToDelete.size() > 0 )
-        {
-            Database.DeleteResult[] lsr = Database.delete(relationshipsToDelete, false);
+        if ( relationshipsToDelete.size() > 0 ) {
+            dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
         }
+        return dmlWrapper;
     }
     
     /// <name> reciprocate </name>
     /// <summary>  </summary>
     /// <param name="Relationships">  </param>
-    public static void reciprocate(npe4__Relationship__c[] Relationships)
-    {
-        List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
-        for(npe4__Relationship__c r : Relationships) 
-        {
-            npe4__Relationship__c copy = new npe4__Relationship__c(Id=r.npe4__ReciprocalRelationship__c, npe4__ReciprocalRelationship__c=r.Id);
-            relationshipsToUpdate.add(copy);
+    public static DmlWrapper reciprocate(npe4__Relationship__c[] Relationships) {
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+        Map<Id, SObject> relationshipsToUpdate = new Map<Id, SObject>();
+        for(npe4__Relationship__c r : Relationships) {
+        	System.debug('****Creating reciprocal relatioship');
+            npe4__Relationship__c copy = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c, 
+                                                                    npe4__ReciprocalRelationship__c = r.Id);
+            relationshipsToUpdate.put(copy.Id, copy);
         }
-        update relationshipsToUpdate;
+        dmlWrapper.objectsToUpdate.putAll(relationshipsToUpdate);
+        return dmlWrapper;
     }
     
     /// <name> createRelationship </name>
     /// <summary> Inserts a new reciprocal Relationship After a relationship is Inserted</summary>
     /// <param name="Relationships">  </param>
-    public static void createRelationship(npe4__Relationship__c[] Relationships)
-    {
-        List<npe4__Relationship__c> relationshipsToCreate = new List<npe4__Relationship__c>();
-        List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
+    public static DmlWrapper createRelationship(npe4__Relationship__c[] Relationships) {
+    	
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+    	
+        List<SObject> relationshipsToCreate = new List<SObject>();
                 
-        for(npe4__Relationship__c r : Relationships) 
-        {
+        for(npe4__Relationship__c r : Relationships) {
+        	System.debug('****Creating relationship in createRelationship method');
             npe4__Relationship__c copy = new npe4__Relationship__c();              
             copy.npe4__Contact__c = r.npe4__RelatedContact__c;
             copy.npe4__RelatedContact__c = r.npe4__Contact__c;
@@ -296,60 +342,69 @@ public with sharing class REL_Relationships {
         
         //evaluate and add the type
         addType(Relationships, relationshipstoCreate);      
-        Database.Saveresult[] sr = Database.insert(relationshipsToCreate, false);
-        inspectSaveResults(sr, relationshipsToCreate);
+        dmlWrapper.objectsToInsert.addAll(relationshipsToCreate);
+        //inspectSaveResults(sr, relationshipsToCreate);
+        
+        return dmlWrapper;
     }
 
     /// <name> updateRelationship </name>
     /// <summary> Updates the Status and/or Type of a relationship After its reciprocal has been updated </summary>
     /// <param name="Relationships">  </param>
     /// <param name="oldRelationships">  </param>
-    public static void updateRelationship(npe4__Relationship__c[] Relationships, npe4__Relationship__c[] oldRelationships)
-    {       
+    public static DmlWrapper updateRelationship(npe4__Relationship__c[] Relationships, 
+    npe4__Relationship__c[] oldRelationships){
+    	
+    	DmlWrapper dmlWrapper = new DmlWrapper();
+    	
         List<npe4__Relationship__c> originalRelationships = new List<npe4__Relationship__c>();
-        List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
+        Map<Id, SObject> relationshipsToUpdate = new Map<Id, SObject>();
         Integer counter = 0;                                            // processing counter       
 
-        for(npe4__Relationship__c r : Relationships) 
-        {
+        for(npe4__Relationship__c r : Relationships) {
+        	
             //SWA 2009-05-13 removed a duplicate check for change to npe4__Status__c from this OR statement
-            if ((r.npe4__Status__c != oldRelationships[counter].npe4__Status__c || r.npe4__Type__c != oldRelationships[counter].npe4__Type__c || r.npe4__Description__c != oldRelationships[counter].npe4__Description__c)&& r.npe4__ReciprocalRelationship__c != null)
-            {
+            if ((r.npe4__Status__c != oldRelationships[counter].npe4__Status__c 
+            || r.npe4__Type__c != oldRelationships[counter].npe4__Type__c 
+            || r.npe4__Description__c != oldRelationships[counter].npe4__Description__c) 
+            && r.npe4__ReciprocalRelationship__c != null) {
+            	System.debug('****Creating relationship in updateRelationship method');
                 npe4__Relationship__c copy = new npe4__Relationship__c(Id=r.npe4__ReciprocalRelationship__c);
                 
                 //SWA 2009-05-13 - only attempt to modify the Contact field if the Related Contact  has changed
-                if(oldRelationships[counter].npe4__RelatedContact__c!=r.npe4__RelatedContact__c){
+                if(oldRelationships[counter].npe4__RelatedContact__c!=r.npe4__RelatedContact__c) {
                     copy.npe4__Contact__c = r.npe4__RelatedContact__c;
                 }
                 copy.npe4__Status__c = r.npe4__Status__c;
                 copy.npe4__Description__c = r.npe4__Description__c;
-                relationshipsToUpdate.add(copy);
+                relationshipsToUpdate.put(copy.Id, copy);
                 originalRelationships.add(r);
             }
-            counter += 1;
+            counter++;
         }
         //add type info as needed
-        if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()){
-            addType(originalRelationships, relationshipstoUpdate);
-            Database.Saveresult[] sr = Database.update(relationshipsToUpdate,false);        
-            inspectSaveResults(sr, relationshipsToUpdate);
-        }            
+        if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()) {
+            addType(originalRelationships, relationshipstoUpdate.values());
+            dmlWrapper.objectsToUpdate.putAll(relationshipsToUpdate);        
+            //inspectSaveResults(sr, relationshipsToUpdate);
+        }
+        return dmlWrapper;
     }
     
-    @future
-    public static void createNewRelationshipsFuture(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types){
-        createNewRelationships(ContactIds, RelatedContactIds, Types);   
-    }    
-    public static void createNewRelationships(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types){
+    public static DmlWrapper createNewRelationships(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types) {
+        
+        DmlWrapper dmlWrapper = new DmlWrapper();
         Integer i = 0;
-        List<npe4__Relationship__c> relationshipsForInsert = new List<npe4__Relationship__c>();
+        List<SObject> relationshipsForInsert = new List<SObject>();
         
         //used to hold existing relationships for the group of contacts and check for dupes
         List<npe4__Relationship__c> existingRelationships = new List<npe4__Relationship__c>();
         Map<Id, List<npe4__Relationship__c>> relationshipsByContact = new Map<Id, List<npe4__Relationship__c>>();
         
-        if (!REL_Utils.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c){
-            existingRelationships = [select Id, npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c from npe4__Relationship__c where npe4__Contact__c IN :ContactIds limit 2000];
+        if (!REL_Utils.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c) {
+        	
+            existingRelationships = [select Id, npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c 
+            from npe4__Relationship__c where npe4__Contact__c IN :ContactIds limit 2000];
             
             //sort by npe4__Contact__c so we can pull relationships based on the inserted Contact
             for(npe4__Relationship__c r : existingRelationships){
@@ -378,6 +433,7 @@ public with sharing class REL_Relationships {
             }
             
             if (!doNotCreate){
+            	System.debug('****Creating relationship in createNewRelationships method');
                 npe4__Relationship__c r = new npe4__Relationship__c(
                     npe4__Contact__c = conId, 
                     npe4__RelatedContact__c = RelatedContactIds[i],
@@ -390,12 +446,14 @@ public with sharing class REL_Relationships {
         }       
         
         if (!relationshipsForInsert.isEmpty()){
-            Database.Saveresult[] sr = Database.insert(relationshipsForInsert, false);
-            inspectSaveResults(sr, relationshipsForInsert);
+            dmlWrapper.objectsToInsert.addAll(relationshipsForInsert);
+            //inspectSaveResults(sr, relationshipsForInsert);
         }
+        
+        return dmlWrapper;
     }
     
-    private static void addType(list<npe4__Relationship__c> rList, list<npe4__Relationship__c> rCopy){
+    private static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
         
         npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
         
@@ -433,7 +491,7 @@ public with sharing class REL_Relationships {
             
             for(npe4__Relationship__c r : rList){
                 
-                npe4__Relationship__c copy = rCopy[counter];
+                npe4__Relationship__c copy = (npe4__Relationship__c)rCopy[counter];
 
                 Contact relatedContact = cMap.get(r.npe4__Contact__c);
             
@@ -477,10 +535,13 @@ public with sharing class REL_Relationships {
                         else
                             copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Neutral__c;
                     }
-                    else if ((relatedContact.Salutation == 'Mr.' || maleset.contains(relatedContact.Salutation))  && rlMap.get(r.npe4__Type__c).npe4__Male__c != null){
+                    else if ((relatedContact.Salutation == 'Mr.' || maleset.contains(relatedContact.Salutation))  
+                    && rlMap.get(r.npe4__Type__c).npe4__Male__c != null){
                         copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Male__c;
                     }
-                    else if (((relatedContact.Salutation == 'Ms.' || relatedContact.Salutation == 'Mrs.') || femaleset.contains(relatedContact.Salutation)) && rlMap.get(r.npe4__Type__c).npe4__Female__c != null){
+                    else if (((relatedContact.Salutation == 'Ms.' || relatedContact.Salutation == 'Mrs.') 
+                    || femaleset.contains(relatedContact.Salutation)) && rlMap.get(r.npe4__Type__c).npe4__Female__c 
+                    != null){
                         copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Female__c;
                     }
                     
@@ -507,19 +568,22 @@ public with sharing class REL_Relationships {
                 else
                     newstring = r.npe4__Type__c;
             
-                rCopy[counter].npe4__Type__c = newstring;
+                npe4__Relationship__c castedObject = (npe4__Relationship__c)rCopy[counter];
+                castedObject.npe4__Type__c = newstring;
                 counter++;
             }
         }
         else{
             for (npe4__Relationship__c r : rList){
-                rCopy[counter].npe4__Type__c = r.npe4__Type__c;
+            	npe4__Relationship__c castedObject = (npe4__Relationship__c)rCopy[counter];
+                castedObject.npe4__Type__c = r.npe4__Type__c;
                 counter++; 
             }   
         }
     }   
-    
-    private static void inspectSaveResults(Database.SaveResult[] sr, List<npe4__Relationship__c> rl){
+    /*
+    private static DmlWrapper inspectSaveResults(Database.SaveResult[] sr, List<npe4__Relationship__c> rl){
+        DmlWrapper dmlWrapper = new DmlWrapper();
         List<npe4__Relationship_Error__c> elist = new List<npe4__Relationship_Error__c>();
         //needed to match errors to update list index
         integer i = 0;
@@ -530,7 +594,7 @@ public with sharing class REL_Relationships {
             i++;
         }        
         if(!elist.isEmpty()){
-            insert elist;
+            dmlWrapper.objectsToInsert.addAll(elist);
         }
-    }
+    }*/
 }
