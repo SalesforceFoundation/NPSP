@@ -3,8 +3,8 @@
     <apiVersion>28.0</apiVersion>
     <label>HH_ManageHousehold</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>95</minorNumber>
         <namespace>npo02</namespace>
+        <majorNumber>2</majorNumber>
+        <minorNumber>96</minorNumber>
     </packageVersions>
 </ApexPage>

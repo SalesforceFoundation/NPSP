@@ -3,8 +3,8 @@
     <apiVersion>28.0</apiVersion>
     <label>REL_RelationshipsViewer</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>9</minorNumber>
         <namespace>npe4</namespace>
+        <majorNumber>2</majorNumber>
+        <minorNumber>91</minorNumber>
     </packageVersions>
 </ApexPage>
