@@ -3,8 +3,8 @@
     <apiVersion>28.0</apiVersion>
     <label>RD_AddDonationsBTN</label>
     <packageVersions>
-        <namespace>npe03</namespace>
         <majorNumber>2</majorNumber>
         <minorNumber>92</minorNumber>
+        <namespace>npe03</namespace>
     </packageVersions>
 </ApexPage>
