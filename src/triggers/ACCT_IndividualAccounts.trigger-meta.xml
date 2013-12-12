@@ -2,9 +2,9 @@
 <ApexTrigger xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>28.0</apiVersion>
     <packageVersions>
-        <namespace>npe01</namespace>
         <majorNumber>2</majorNumber>
         <minorNumber>95</minorNumber>
+        <namespace>npe01</namespace>
     </packageVersions>
     <status>Active</status>
 </ApexTrigger>
