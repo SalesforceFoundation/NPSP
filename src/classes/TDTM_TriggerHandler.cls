@@ -74,11 +74,22 @@ public with sharing class TDTM_TriggerHandler {
             }
             
             System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
-	        insert dmlWrapper.objectsToInsert;
+	        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
+	        
 	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
-	        update dmlWrapper.objectsToUpdate.values();
+	        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
+	        
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
-	        Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
+	        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);
+	        
+	        //Not yet using either of these, as far as I know, but no reason not to support them
+	        System.debug('****Objects to upsert: ' + dmlWrapper.objectsToUpsert.values());
+            List<Database.UpsertResult> upsertResults = Database.upsert(dmlWrapper.objectsToUpsert.values(), false);
+            
+            System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUpsert.values());
+            List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
+            
+            //Should we also support Database.merge?
         }
     }
     

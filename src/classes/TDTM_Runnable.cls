@@ -89,5 +89,7 @@ public abstract class TDTM_Runnable {
         public List<SObject> objectsToInsert = new List<SObject>(); 
         public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
         public List<Id> objectsToDelete = new List<Id>();
+        public Map<Id, SObject> objectsToUpsert = new Map<Id, SObject>();
+        public List<Id> objectsToUndelete = new List<Id>();
     }
 }
