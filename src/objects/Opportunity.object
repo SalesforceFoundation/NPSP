@@ -159,6 +159,9 @@
     </fields>
     <fields>
         <fullName>LeadSource</fullName>
+        <picklist>
+            <sorted>false</sorted>
+        </picklist>
         <type>Picklist</type>
     </fields>
     <fields>
@@ -270,6 +273,7 @@
     <fields>
         <fullName>npe01__Amount_Outstanding__c</fullName>
         <deprecated>false</deprecated>
+        <description>Formula: The Amount of this Opportunity minus the Payment Writeoff Amount and Payment Amount Received.</description>
         <externalId>false</externalId>
         <formula>Amount - NULLVALUE(npe01__Payments_Made__c, 0) - NULLVALUE(npe01__Amount_Written_Off__c, 0)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -282,6 +286,7 @@
     <fields>
         <fullName>npe01__Amount_Written_Off__c</fullName>
         <deprecated>false</deprecated>
+        <description>Total value of the Payments marked as written-off or noncollectable for this Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>Value of the payments marked as written-off or noncollectable.</inlineHelpText>
         <label>Payment Writeoff Amount</label>
@@ -298,6 +303,7 @@
     <fields>
         <fullName>npe01__Contact_Id_for_Role__c</fullName>
         <deprecated>false</deprecated>
+        <description>System field updated automatically.  Do not use.</description>
         <externalId>false</externalId>
         <inlineHelpText>Hidden field for passing a Contact Id for Contact Role creation.</inlineHelpText>
         <label>Contact Id for Role</label>
@@ -311,6 +317,7 @@
         <fullName>npe01__Do_Not_Automatically_Create_Payment__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
+        <description>If payments are active, and if this is checked, a new payment will not be automatically created for this Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>If payments are active, and if checked, a new payment will not be automatically created for this Opportunity.</inlineHelpText>
         <label>Do Not Automatically Create Payment</label>
@@ -320,6 +327,7 @@
     <fields>
         <fullName>npe01__Is_Opp_From_Individual__c</fullName>
         <deprecated>false</deprecated>
+        <description>Formula: Whether or not the related Account is defined as an individual (SYSTEMIsIndividual__c)</description>
         <externalId>false</externalId>
         <formula>IF( Account.npe01__SYSTEMIsIndividual__c, &apos;true&apos;, &apos;false&apos; )</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -331,6 +339,7 @@
     <fields>
         <fullName>npe01__Member_Level__c</fullName>
         <deprecated>false</deprecated>
+        <description>Used for Membership Opportunities (Record Type)</description>
         <externalId>false</externalId>
         <label>Member Level</label>
         <picklist>
@@ -354,6 +363,7 @@
     <fields>
         <fullName>npe01__Membership_End_Date__c</fullName>
         <deprecated>false</deprecated>
+        <description>Used for Membership Opportunities (Record Type)</description>
         <externalId>false</externalId>
         <inlineHelpText>Date membership period ends.</inlineHelpText>
         <label>Membership End Date</label>
@@ -364,6 +374,7 @@
     <fields>
         <fullName>npe01__Membership_Origin__c</fullName>
         <deprecated>false</deprecated>
+        <description>Used for Membership Opportunities (Record Type)</description>
         <externalId>false</externalId>
         <inlineHelpText>Is this a renewal, a new membership, or a membership with someone who lapsed and has returned.</inlineHelpText>
         <label>Membership Origin</label>
@@ -388,6 +399,7 @@
     <fields>
         <fullName>npe01__Membership_Start_Date__c</fullName>
         <deprecated>false</deprecated>
+        <description>Used for Membership Opportunities (Record Type)</description>
         <externalId>false</externalId>
         <inlineHelpText>Date when membership period starts</inlineHelpText>
         <label>Membership Start Date</label>
@@ -398,6 +410,7 @@
     <fields>
         <fullName>npe01__Number_of_Payments__c</fullName>
         <deprecated>false</deprecated>
+        <description>Calculated based on the Payment object.</description>
         <externalId>false</externalId>
         <inlineHelpText>Total number of payments for this Opportunity (Donation)</inlineHelpText>
         <label>Number of Payments</label>
@@ -408,7 +421,7 @@
     <fields>
         <fullName>npe01__Payments_Made__c</fullName>
         <deprecated>false</deprecated>
-        <description>The sum of all payments marked as paid for this Opportunity.</description>
+        <description>The total value of Payments marked as paid for this Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>The sum of all payments marked as paid for this Opportunity.</inlineHelpText>
         <label>Payment Amount Received</label>
@@ -759,6 +772,17 @@
         <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
     </searchLayouts>
     <webLinks>
+        <fullName>My_Test</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>My Test</masterLabel>
+        <openType>sidebar</openType>
+        <page>npe01__BTN_MatchingDonation</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>npe01__Add_Matching_Donation</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
@@ -772,12 +796,13 @@
         <fullName>npe01__Matching_Donation</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
         <height>600</height>
-        <linkType>page</linkType>
+        <linkType>url</linkType>
         <masterLabel>Matching Donation</masterLabel>
         <openType>sidebar</openType>
-        <page>npe01__BTN_MatchingDonation</page>
         <protected>false</protected>
+        <url>/apex/npsp__OPP_MatchingDonationsBTN?id={!Opportunity.Id}</url>
     </webLinks>
     <webLinks>
         <fullName>npe01__New_Contact_Donation</fullName>
