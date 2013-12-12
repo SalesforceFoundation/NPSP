@@ -772,17 +772,6 @@
         <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
     </searchLayouts>
     <webLinks>
-        <fullName>My_Test</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>My Test</masterLabel>
-        <openType>sidebar</openType>
-        <page>npe01__BTN_MatchingDonation</page>
-        <protected>false</protected>
-    </webLinks>
-    <webLinks>
         <fullName>npe01__Add_Matching_Donation</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
