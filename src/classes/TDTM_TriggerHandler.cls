@@ -78,25 +78,6 @@ public with sharing class TDTM_TriggerHandler {
         }
     }
     
-    public static void processDML(DmlWrapper dmlWrapper) {
-    	System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
-        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
-        
-        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
-        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
-        
-        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
-        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
-        
-        //Not yet using this one, as far as I know, but no reason not to support them
-        System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUndelete);
-        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
-        
-        //We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type
-        
-        //Should we also support Database.merge?
-    }
-    
     private DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
@@ -143,6 +124,29 @@ public with sharing class TDTM_TriggerHandler {
        else om = new Map<Id, SObject>();
        
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
+    }
+    
+    public static void processDML(DmlWrapper dmlWrapper) {
+    	try {
+	        System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
+	        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
+	        
+	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
+	        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
+	        
+	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
+	        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
+	        
+	        //Not yet using this one, as far as I know, but no reason not to support them
+	        System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUndelete);
+	        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
+	        
+	        //We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
+	        //Should we support Database.merge?
+	        
+    	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
+    		//store in database?
+    	}
     }
     
     public class DmlWrapper {
