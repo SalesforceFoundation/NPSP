@@ -33,7 +33,9 @@ public with sharing class TDTM_TriggerHandler {
     private List<Sobject> oldlist; 
     private TDTM_TriggerActionHelper.Action thisAction;
     private Schema.DescribeSobjectResult obj;
-      
+
+    private static Boolean defaultRecordsInserted = false;
+    
     public void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newlist, List<Sobject>oldlist, 
     Schema.DescribeSobjectResult describeobj) {
@@ -51,7 +53,7 @@ public with sharing class TDTM_TriggerHandler {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         //If there are no records insert the defaults.
-        if(dao.isEmpty()) {
+        if(!defaultRecordsInserted && dao.isEmpty()) {
         	insertDefaultRecords();
         }
         
@@ -224,6 +226,7 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterUpdate'));
         */            
-        insert handlers; 
+        insert handlers;
+        defaultRecordsInserted = true;        
     }
 }

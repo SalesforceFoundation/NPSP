@@ -164,11 +164,9 @@ public class AFFL_Affiliations_TEST {
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
-        Account acc = new Account(Name='test77');
-        insert acc;
-        
+        Account acc = new Account(Name='test77');        
         Account acc2 = new Account(Name='test88');
-        insert acc2;
+        insert new Account[] {acc, acc2};
         
         Contact con = getContact(acc.ID, 'CEO');
         insert con;
