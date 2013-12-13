@@ -33,12 +33,11 @@
  */
 public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
     
-    public static Boolean isEmpty() {
-    	//@TODO: is this the best way to check if a table (object) is empty?
+    public Boolean isEmpty() {
     	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
     	Integer rowCount = (Integer)result[0].get('rowCount');
     	if(rowCount == 0)
-    	   return true;	
+    		return true;	
     	return false;
     }
     
