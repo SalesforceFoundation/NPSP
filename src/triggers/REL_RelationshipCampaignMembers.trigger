@@ -28,12 +28,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */ 
 trigger REL_RelationshipCampaignMembers on CampaignMember (after insert, after update) {
-    if(!REL_Utils.getRelationshipSettings().npe4__DISABLE_RelationshipCM_trigger__c){
-        if (REL_Utils.hasCMAutoCreate && trigger.isAfter && trigger.isInsert){
-            REL_Relationships process = new REL_Relationships(trigger.newMap, null, REL_Utils.triggerAction.afterInsert);         
-        }
-        else if (REL_Utils.hasCMAutoCreate && trigger.isAfter && trigger.isUpdate){
-            REL_Relationships process = new REL_Relationships(trigger.newMap, trigger.oldMap, REL_Utils.triggerAction.afterUpdate);
-        }        
-    }
+    
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
+    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.CampaignMember);
+    handler.runClasses(new TDTM_ObjectDataGateway());
 }

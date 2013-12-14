@@ -584,8 +584,7 @@ private class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-        
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];     
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
@@ -613,7 +612,9 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con2.id);
         
         //merge them
+        Test.startTest();
         controller.mergeContacts();
+        Test.stopTest();
         
         //first contact should be deleted
         system.assertEquals(1,[select count() from Contact where id=:con2.id]);
@@ -1222,7 +1223,9 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con.id);
         
         //merge them
+        Test.startTest();
         controller.mergeContacts();
+        Test.stopTest();
         
         //second contact should be deleted
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);

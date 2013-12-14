@@ -103,8 +103,8 @@ public with sharing class AFFL_BulkTests_TEST {
         system.assertEquals(0, createdAffiliations.size());
     
     }
-    
-     static testMethod void contactWithMultipleAffiliations() {
+    /****  A NEW VERSION CREATED WITH ONLY TWO EXECUTION CONTEXTS (ONE BEFORE STARTTEST AND ONE AFTER) - See below
+    static testMethod void contactWithMultipleAffiliations() {
      	//AFFL_Affiliations_TEST.setupTDTM();
      	
         Account acc = new Account(Name='test77');
@@ -130,21 +130,22 @@ public with sharing class AFFL_BulkTests_TEST {
             );
             cons.add(con);
         }
-        Test.startTest();
+        
         insert cons;
         
         Id firstAffiliationId;
         
-        npe5__Affiliation__c[] createdAffiliations = [select id from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc.id];
-        
+        npe5__Affiliation__c[] createdAffiliations = [select id from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc.id];     
         system.assertEquals(conCount,createdAffiliations.size());
-        
         firstAffiliationId = createdAffiliations[0].Id;
         
         for(Contact thisContact : cons){    
             thisContact.AccountId = acc2.id;
         }
+        
+        Test.startTest();
         update cons;
+        Test.stopTest();
         
         Id secondAffiliationId;
         
@@ -158,7 +159,6 @@ public with sharing class AFFL_BulkTests_TEST {
             thisContact.AccountId = acc3.id;
         }
         update cons;
-        Test.stopTest();
         
         npe5__Affiliation__c[] createdAffiliations3 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc3.id];
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc.id limit 1];
@@ -169,6 +169,54 @@ public with sharing class AFFL_BulkTests_TEST {
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations3[0].npe5__Status__c);
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);
+        
+    }*/
+    
+    //Modifying the test above to have only two DMLs, one before StartTest and one after
+    static testMethod void contactWithMultipleAffiliations_v2() {
+        //AFFL_Affiliations_TEST.setupTDTM();
+        
+        Account acc = new Account(Name='test77');
+        insert acc;
+
+        String newContactfirstName = 'test';
+        String newContactLastName = 'Contact_forTests';
+        String newContactTitle = 'CEO';
+        List<Contact> cons = new List<contact>();
+        Integer conCount = 200;
+        for(Integer i=0;i<conCount;i++){
+            Contact con = new Contact(
+                FirstName=newContactfirstName,
+                LastName=newContactLastName,
+                Title=newContactTitle,
+                AccountId = acc.Id
+            );
+            cons.add(con);
+        }
+        
+        insert cons;
+                
+        npe5__Affiliation__c[] createdAffiliations = [select id from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc.id];     
+        system.assertEquals(conCount,createdAffiliations.size());
+        
+        Account acc2 = new Account(Name='test88');
+        insert acc2;
+        for(Contact thisContact : cons){    
+            thisContact.AccountId = acc2.id;
+        }
+        
+        Test.startTest();
+        update cons;
+        Test.stopTest();
+                
+        npe5__Affiliation__c[] createdAffiliations2 = [select id from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc2.id];
+        system.assertEquals(conCount,createdAffiliations2.size());
+                
+        createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc.id limit 1];
+        createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc2.id limit 1];
+        
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
         
     }
 }

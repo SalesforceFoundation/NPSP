@@ -678,13 +678,16 @@ public with sharing class RLLP_OppRollup_TEST {
             Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
             insert TestCons;
             
-            test.starttest();
+            List<Opportunity> newOpps = new List<Opportunity>();
             // create a new gift for this yr
-            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
-            insert testGift1 ;
+            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+                datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
+            newOpps.addAll(testGift1);
             //create a 2nd gift for last yr
-            Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
-            insert testGift2;
+            Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+                dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
+            newOpps.addAll(testGift2);
+            insert newOpps;
             
             // now roll up manually
             RLLP_OppRollup rg = new RLLP_OppRollup();
@@ -699,26 +702,24 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
      
             // now chg the amts for both opps (cheapskate!)
-            testGift1[0].Amount = 50;
-            update TestGift1;
-            
+            testGift1[0].Amount = 50;            
             testGift2[0].Amount=25;
-            update TestGift2;
+            update newOpps;
             
             // now roll up manually
             rg = new RLLP_OppRollup();
+            
+            Test.startTest();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{UpdatedCon}));
     
             ThisConId = TestCons[0].id;
-            UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];
-            
+            UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];        
             System.AssertEquals ( 75 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
             
             // now create a gift from 2 yrs ago
-            Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);
-    
+            Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);  
             insert testGift3;
             
             // now roll up manually
@@ -731,20 +732,19 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 85 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );           
     
             // add another from this year (to test adding)
             Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
     
-            test.stopTest();
             insert testGift4;
             
             // now roll up manually
             rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
-    
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+            Test.stopTest();
             
+            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
             System.AssertEquals ( 110 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );        
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
@@ -752,7 +752,6 @@ public with sharing class RLLP_OppRollup_TEST {
     
             // TBD add a gift from longer ago
             Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
-    
             insert testGift5;
             
             // now roll up manually
@@ -777,8 +776,7 @@ public with sharing class RLLP_OppRollup_TEST {
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
             
             // totals should not have changed at all
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-            
+            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];       
             System.AssertEquals ( 310 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );        
             System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );

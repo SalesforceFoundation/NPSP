@@ -35,8 +35,6 @@
 public class REL_Utils {
     private static npe4__Relationship_Settings__c RelationshipSettings;
 
-    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
-
     public static npe4__Relationship_Settings__c getRelationshipSettings(){
         if (RelationshipSettings == null){
             //retrive the lowest level hierachy setting

@@ -25,7 +25,6 @@ public class AFFL_Affiliations_TEST {
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -71,7 +70,6 @@ public class AFFL_Affiliations_TEST {
     
     
     static testMethod void newContactOnOrgAccountAutoOff() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                             (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
@@ -94,7 +92,6 @@ public class AFFL_Affiliations_TEST {
     /// <name> createAffiliation_Test </name>
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                                 (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -114,8 +111,8 @@ public class AFFL_Affiliations_TEST {
 
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
+    /****  A NEW VERSION CREATED WITH ONLY TWO EXECUTION CONTEXTS (ONE BEFORE STARTTEST AND ONE AFTER) - See below
     static testMethod void contactWithMultipleAffiliations() {
-        //setupTDTM();
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -136,14 +133,17 @@ public class AFFL_Affiliations_TEST {
         Id firstAffiliationId = createdAffiliations[0].Id;
         //@TODO: no assertion here?
         
+        Test.startTest();
         con.AccountId = acc2.id;
         update con;
-                
+        Test.stopTest();
+          
         npe5__Affiliation__c[] createdAffiliations2 = [select id from npe5__Affiliation__c where npe5__Contact__c=:con.id 
                                                         AND npe5__Organization__c = :acc2.id];   
         Id secondAffiliationId = createdAffiliations2[0].id;
         
         con.AccountId = acc3.id;
+
         update con;
         
         npe5__Affiliation__c[] createdAffiliations3 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, 
@@ -157,6 +157,39 @@ public class AFFL_Affiliations_TEST {
         createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
         system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);        
+    }*/
+    
+    //Modifying the test above to have only two DMLs, one before StartTest and one after
+    static testMethod void contactWithMultipleAffiliations_v2() {
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        
+        Account acc = new Account(Name='test77');        
+        Account acc2 = new Account(Name='test88');
+        insert new Account[] {acc, acc2};
+        
+        Contact con = getContact(acc.ID, 'CEO');
+        insert con;
+        
+        npe5__Affiliation__c[] createdAffiliations = [select id from npe5__Affiliation__c where npe5__Contact__c=:con.id 
+                                                        AND npe5__Organization__c = :acc.id];
+        system.assertEquals(1, createdAffiliations.size());
+        
+        con.AccountId = acc2.id;
+        Test.startTest();      
+        update con;
+        Test.stopTest();
+          
+        npe5__Affiliation__c[] createdAffiliations2 = [select id from npe5__Affiliation__c where npe5__Contact__c=:con.id 
+                                                        AND npe5__Organization__c = :acc2.id];   
+        
+        createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
+            npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc.id];
+        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        
+        createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
+            npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);        
     }
     
     private static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
@@ -171,20 +204,6 @@ public class AFFL_Affiliations_TEST {
             
         return affiliationsSettings;
     }
-    /*
-    public static void setupTDTM() {
-    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-                    
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));
-                    
-        insert handlers; 
-    }*/
     
     private static Contact getContact(Id accountId, String title) {
     	return new Contact(FirstName = 'test', LastName = 'testerson', AccountId = accountId, Title = title);

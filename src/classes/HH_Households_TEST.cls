@@ -531,9 +531,6 @@ public with sharing class HH_Households_TEST {
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
         );
             
-        insert c1;      
-        Contact c1t = [select id, npo02__Household__c from Contact where id = :c1.id];
-        system.assert(c1t.npo02__household__c != null);
         Contact c2 = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName='c2test',
@@ -541,16 +538,21 @@ public with sharing class HH_Households_TEST {
             npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
-        );
-            
-        insert c2;       
+        );       
+        insert new Contact[] {c1, c2};       
+        
         Contact c2t = [select id, npo02__Household__c from Contact where id = :c2.id];
         system.assert(c2t.npo02__household__c != null);
+        Contact c1t = [select id, npo02__Household__c from Contact where id = :c1.id];
+        system.assert(c1t.npo02__household__c != null);
         
         //move the c2 contact into c1's household
         id c2thhid = c2t.npo02__household__c;
         c2t.npo02__household__c = c1t.npo02__household__c;
-        update c2t;
+        
+        Test.startTest();
+        update c2t; 
+        Test.stopTest();
         
         //get c1s household
         npo02__Household__c hh1 = [select Name from npo02__Household__c where id = :c1t.npo02__household__c];
