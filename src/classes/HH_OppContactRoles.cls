@@ -37,7 +37,7 @@ public class HH_OppContactRoles {
 
     public HH_OppContactRoles(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
         
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01.Constants.getContactsSettings();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
         npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
         
         set<string> HouseholdOCRRecordTypeExclusions = new set<string>();

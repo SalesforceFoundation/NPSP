@@ -4,7 +4,7 @@
     <label>STTG_PaymentMapping</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>92</minorNumber>
+        <minorNumber>95</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
 </ApexPage>
