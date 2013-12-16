@@ -36,7 +36,7 @@
 private class HH_OppContactRoles_TEST {
     
     static testMethod void HouseholdOpportunity() {
-        HH_OppContactRoles testHouseholdOpportunity = new HH_OppContactRoles();
+        HH_OppContactRoles_TDTM testHouseholdOpportunity = new HH_OppContactRoles_TDTM(); 
     }
     //test for individual account model
     
@@ -136,9 +136,15 @@ private class HH_OppContactRoles_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Household_Contact_Roles_On__c = false));
+
+        // put in the handler as inactive, to mimic turning the custom setting off.
+        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert'));
+        insert handlers;
         
         //create contact
-
         Contact con = new Contact(
             FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
