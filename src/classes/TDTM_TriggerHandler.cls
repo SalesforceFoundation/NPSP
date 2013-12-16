@@ -50,7 +50,7 @@ public with sharing class TDTM_TriggerHandler {
     }
     
     public void runClasses(TDTM_iTableDataGateway dao) {
-        DmlWrapper dmlWrapper = new DmlWrapper();
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         
         //If there are no records insert the defaults.
         if(!defaultRecordsInserted && dao.isEmpty()) {
@@ -64,7 +64,7 @@ public with sharing class TDTM_TriggerHandler {
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
-                DmlWrapper dmlWrapperLocal = runClass(classToCall);
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToCall);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -80,7 +80,7 @@ public with sharing class TDTM_TriggerHandler {
         }
     }
     
-    private DmlWrapper runClass(SObject classToRunRecord) {
+    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -128,7 +128,7 @@ public with sharing class TDTM_TriggerHandler {
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
     }
     
-    public static void processDML(DmlWrapper dmlWrapper) {
+    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
     	try {
 	        System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
 	        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
@@ -146,16 +146,11 @@ public with sharing class TDTM_TriggerHandler {
 	        //We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
 	        //Should we support Database.merge?
 	        
+	        UTIL_ErrorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults);
+	        
     	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
-    		//store in database?
+    		UTIL_ErrorHandler.saveErrorInfo(e);
     	}
-    }
-    
-    public class DmlWrapper {
-        public List<SObject> objectsToInsert = new List<SObject>(); 
-        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
-        public List<Id> objectsToDelete = new List<Id>();
-        public List<Id> objectsToUndelete = new List<Id>();
     }
     
     //@TODO: read from text file

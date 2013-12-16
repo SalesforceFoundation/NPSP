@@ -70,13 +70,20 @@ public abstract class TDTM_Runnable {
             classInstance = classType.newInstance();
         if(classInstance instanceof TDTM_Runnable) {
         	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
-	        TDTM_TriggerHandler.DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
+	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
 	        //Process the result
 	        TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
     
-    public abstract TDTM_TriggerHandler.DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    public abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult);
+        
+    public class DmlWrapper {
+        public List<SObject> objectsToInsert = new List<SObject>(); 
+        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
+        public List<Id> objectsToDelete = new List<Id>();
+        public List<Id> objectsToUndelete = new List<Id>();
+    }
 }
