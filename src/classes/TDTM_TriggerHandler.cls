@@ -215,6 +215,15 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert'));
 
+        // HH Object support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
+              Trigger_Action__c = 'BeforeUpdate'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
+              Trigger_Action__c = 'AfterUpdate'));
+
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               

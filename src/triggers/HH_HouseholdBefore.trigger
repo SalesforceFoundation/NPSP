@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE. 
 */
 trigger HH_HouseholdBefore on npo02__Household__c (before update) {
-    
+/***************    
     npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
     
     if (!hs.npo02__DISABLE_HouseholdBefore_trigger__c){
@@ -80,4 +80,5 @@ trigger HH_HouseholdBefore on npo02__Household__c (before update) {
             }  
         }   
     }
+***************/
 }
