@@ -189,6 +189,27 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
               Trigger_Action__c = 'AfterDelete'));
                                  
+        //Account Management on Contact
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeUpdate'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));  
+              
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterDelete'));
+        
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               

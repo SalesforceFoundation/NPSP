@@ -29,6 +29,11 @@
 */
 trigger ACCT_IndividualAccounts on Contact (before insert, before update, after insert, after update,after delete) {
 
+    
+        ////////////////////// NO LONGER USED. MOVED TO TDTM.
+        return;
+    
+    
     npe01__Contacts_and_Orgs_Settings__c cos = CAO_Constants.getContactsSettings();
     
     if (!cos.npe01__DISABLE_IndividualAccounts_trigger__c) {
