@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 trigger HH_ContactHouseholds on Contact (after insert, after update, after delete) {
-
+/*********************
     npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
     
     if (!hs.npo02__DISABLE_Households_trigger__c){
@@ -43,4 +43,5 @@ trigger HH_ContactHouseholds on Contact (after insert, after update, after delet
             HH_Households process = new HH_Households(Trigger.old, null, HH_Households.triggerAction.afterDelete);
         }
     }
+*****************************/
 }

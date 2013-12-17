@@ -76,10 +76,13 @@ public with sharing class TDTM_TriggerHandler {
             }
             
             System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
+            system.debug(dmlWrapper.objectsToInsert);
 	        insert dmlWrapper.objectsToInsert;
 	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
+            system.debug(dmlWrapper.objectsToUpdate.values());
 	        update dmlWrapper.objectsToUpdate.values();
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
+            system.debug(dmlWrapper.objectsToDelete);
 	        Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
         }
     }
@@ -223,6 +226,19 @@ public with sharing class TDTM_TriggerHandler {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
               Trigger_Action__c = 'AfterUpdate'));
+
+        // HH Object contact trigger support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));
+        
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterDelete'));
 
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();

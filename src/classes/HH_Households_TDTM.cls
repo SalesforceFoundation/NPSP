@@ -32,40 +32,35 @@
 * @date 2011 (2.0)
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
-global without sharing class HH_Households { 
-    
-    //One-to-One value for system processor field
-    public static String ALL_PROCESSOR = 'All New or Edited Contacts';
-    public static String ALL_INDIVIDUALS_PROCESSOR = 'All Individual Contacts';
-    public static String NO_HOUSEHOLDS_PROCESSOR = 'No Contacts';
-    
-    public static npo02__Households_Settings__c householdsSettings;
-
-    
-/**************************************************************    
-    /// <name> HH_Households </name>
-    /// <summary> Default Constructor </summary>
-    public HH_Households(){}
-
-    /// <name> triggerAction </name>
-    /// <summary> contains possible actions for a trigger </summary>
-    public enum triggerAction {beforeInsert, beforeUpdate, beforeDelete, afterInsert, afterUpdate, afterDelete, afterUndelete}
-
-    //need a new constructor overload for updates that provides the maps as well, we can dump them
-    //in as null values for inserts/deletes
-    public HH_Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta){
-        //zoinks! call the newer version 
-        this(contacts, oldContacts, ta, null, null);
-    }
-    
-    /// <name> HH_Households </name>
-    /// <summary> Overloads the HH_Households object constructor to handle Household processing </summary>
+global without sharing class HH_Households_TDTM extends TDTM_Runnable { 
+        
+    /// <name> HH_Households_TDTM </name>
+    /// <summary> Overloads the HH_Households_TDTM object constructor to handle Household processing </summary>
     /// <param name="households"> Household objects that are being triggered </param>
     /// <param name="oldHouseholds"> Household object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
-    public HH_Households(Contact[] contacts, Contact[] oldContacts, triggerAction ta, map<id, Contact> newcmap, map<id, Contact> oldcmap)
-    {        
-        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+  	
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        
+        list<Contact> contacts = newlist;
+        list<Contact> oldContacts = oldlist;
+        
+        // this code assumed newlist was filled in for AfterDelete, rather than oldlist
+        // rather than change the code to require two seperate contact loops, just
+        // continue the strategy.
+        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterDelete) {
+        	contacts = oldlist;
+        	oldContacts = null;
+        }
+        
+        map<Id, Contact> newcmap = new map<Id, Contact>(contacts);
+        map<Id, Contact> oldcmap;
+        if (oldContacts != null) oldcmap = new map<Id, Contact>(oldContacts);
+        
+        DmlWrapper dmlWrapper = new DmlWrapper();
+            	   
+        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -82,7 +77,7 @@ global without sharing class HH_Households {
      
         //if its an update, we need to get some data about their
         //old Household for processing
-        if (ta==triggerAction.afterUpdate){
+        if (triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate){
             
             for (Contact c : Contacts){
                 
@@ -114,30 +109,30 @@ global without sharing class HH_Households {
             //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
             //since we don't have the contact's household ids until after the insert
             //we'll check the trigger action again there to make sure it doesn't run twice
-            if ( ta==triggerAction.afterInsert )
+            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert )
             {
                 //If the user has chosen for all Contacts to have households, add them all to the list
                 //for Household creation
-                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_PROCESSOR)
+                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
                     householdInserts.add(c);
                 //If the user has chosen for only Contacts connected to Individual Accounts to have Households
                 //add them all to a list for evaluation
-                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
+                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
                 else if  (c.npo02__household__c != null)
                     householdnameupdates.add(c.npo02__household__c);
             }
 
             //AFTER UPDATE
-            if ( ta==triggerAction.afterUpdate )
+            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate )
             {            
                 //if we're doing an update, pile up all of the households into a list
                 //and send it to our naming code for action
                 //first contact's names to their old names, and see if anything changed
                 //salutation
-                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_PROCESSOR)
+                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
                     householdInserts.add(c);
-                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == ALL_INDIVIDUALS_PROCESSOR)
+                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
                     contactEvaluations.add(c);
                 
                 if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
@@ -165,7 +160,7 @@ global without sharing class HH_Households {
                     householdnameupdates.add(c.npo02__household__c);
             }
             
-            if ( ta==triggerAction.afterDelete ){
+            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterDelete ){
                 if (c.npo02__household__c != null )
                     householdDeletes.add(c);
             
@@ -182,14 +177,14 @@ global without sharing class HH_Households {
         if(!blankHHDeletes.isEmpty())
             Database.delete(blankHHDeletes);
         
-        if (householdInserts.size() > 0 && ta==triggerAction.afterInsert)        
+        if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
             insertHousehold(householdInserts, true);
-        else if (householdInserts.size() > 0 && ta==triggerAction.afterUpdate)
+        else if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
             insertHousehold(householdInserts, false);
         
-        if (contactEvaluations.size() > 0 && ta==triggerAction.afterInsert)        
+        if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
             evaluateContacts(contactEvaluations, true);
-        else if (contactEvaluations.size() > 0 && ta==triggerAction.afterUpdate)
+        else if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
             evaluateContacts(contactEvaluations, false);
         
         if (householdDeletes.size() > 0)        
@@ -206,15 +201,17 @@ global without sharing class HH_Households {
         }
         
         if (setHHIdToRollup.size() > 0) {
-        	if (system.isFuture() || setHHIdToRollup.size() <= 2) {
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
-	                                                                            ' where id IN :setHHIdToRollup'));
-	            rg.rollupHouseholds(hhmap);
-        	} else {
-        		RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
-        	}                                                                         
+            if (system.isFuture() || setHHIdToRollup.size() <= 2) {
+                RLLP_OppRollup rg = new RLLP_OppRollup();
+                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+                                                                                ' where id IN :setHHIdToRollup'));
+                rg.rollupHouseholds(hhmap);
+            } else {
+                RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
+            }                                                                         
         }
+        
+        return dmlWrapper;
     }
     
     public static void contactMergeUpdate(Set<Id> winningContacts){     
@@ -237,7 +234,7 @@ global without sharing class HH_Households {
     {
         List<npo02__household__c> householdInserts = new List<npo02__household__c>();
         //reload to evaluate insert criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
                 
         set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
@@ -368,7 +365,7 @@ global without sharing class HH_Households {
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
         //reload to evaluate delete criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
 
         //Generate a list of Household Ids
         for(Contact c : contacts){
@@ -405,221 +402,6 @@ global without sharing class HH_Households {
                 hn.UpdateNames(householdrenames);
             }
         }
-    }
-*******************************************/
-
-/*********************************** Not Used **********************************
-    /// <name> getHouseholdLastTransaction </name>
-    /// <summary>  </summary>
-    webservice static String getHouseholdLastTransaction(Id householdId)
-    {
-        List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
-        for (contact c : contacts)
-        {
-            contactIds.add(c.Id);
-        }
-        Double total = 0;
-        List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
-        if (ocr.size() > 0)
-        {
-            Date lastTransaction = ocr[0].Opportunity.CloseDate;
-            return String.valueOf(lastTransaction);
-        }
-        return null;
-    }
-
-
-    /// <name> getHouseholdTransactionTotal </name>
-    /// <summary>  </summary>
-    webservice static String getHouseholdTransactionTotal(Id householdId)
-    {
-        List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
-        for (contact c : contacts)
-        {
-            contactIds.add(c.Id);
-        }
-        Double total = 0;
-        Set<Id> opps = new Set<Id>();
-        
-        for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
-        {
-            if ( ocr.Opportunity.Amount != null )
-            {
-                opps.add(ocr.OpportunityId);
-
-            }
-        }
-        for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
-        {
-            total += wonOpps.Amount;
-        }
-        String totalString = system.label.npo02.DefaultHouseholdTransactionCurrency;
-        Decimal totalFormat = Decimal.valueOf(total).setScale(2);
-        totalString += totalFormat;
-        return String.valueOf(totalString);
-    }
-    
-    /// <name> getHouseholdLastTransaction </name>
-    /// <summary>  </summary>
-    public static String getHouseholdLastTransactionDate(Id householdId)
-    {
-        List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
-        for (contact c : contacts)
-        {
-            contactIds.add(c.Id);
-        }
-        Double total = 0;
-        List<OpportunityContactRole> ocr = [Select Opportunity.Amount, Opportunity.CloseDate from OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true Order By Opportunity.CloseDate DESC];
-        if (ocr.size() > 0)
-        {
-            return ocr[0].Opportunity.CloseDate.month() + '/' + ocr[0].Opportunity.CloseDate.day() + '/' + ocr[0].Opportunity.CloseDate.year();
-        }
-        return null;
-    }
-    
-     /// <name> getHouseholdTransactionTotal </name>
-    /// <summary>  </summary>
-    public static String getHouseholdTransactionAmount(Id householdId)
-    {
-        List<Id> contactIds = new List<Id>();
-        List<Contact> contacts = [Select Id from Contact where npo02__household__c = :householdId];
-        for (contact c : contacts)
-        {
-            contactIds.add(c.Id);
-        }
-        Double total = 0;
-        Set<Id> opps = new Set<Id>();
-        
-        for( OpportunityContactRole ocr : [Select Opportunity.Amount, OpportunityId From OpportunityContactRole where ContactId in :contactIds AND Opportunity.isWon = true])
-        {
-            if ( ocr.Opportunity.Amount != null )
-            {
-                opps.add(ocr.OpportunityId);
-
-            }
-        }
-        for( Opportunity wonOpps : [Select Amount From Opportunity where Id in :opps])
-        {
-            total += wonOpps.Amount;
-        }
-        String totalString = system.label.npo02.DefaultHouseholdTransactionCurrency;
-        Decimal totalFormat = Decimal.valueOf(total).setScale(2);
-        totalString += totalFormat;
-        return String.valueOf(totalString);
-    }
-***********************************************************************************/  
-    
-     //get the settings. handles the case where the managed value doesn't exist yet
-    public static npo02__Households_Settings__c getHouseholdsSettings() {
-        String oldProcessor = '';
-        //if no settings exist, create defaults
-        if (householdsSettings == null) {
-            //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
-            
-            //modified to check again the Id instead of the object
-            if (householdsSettings.Id == null) { 
-                //get the model they used to be in 
-                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                
-                for(Schema.PicklistEntry pe : P){
-                   // system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
-                    if (pe.isDefaultValue()){
-                        if(pe.getValue()==ALL_PROCESSOR){
-                            oldProcessor = ALL_PROCESSOR;
-                        } else if(pe.getValue()==ALL_INDIVIDUALS_PROCESSOR){
-                            oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
-                        } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
-                            oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
-                        }
-                        break;
-                    }
-                }
-                householdsSettings = new npo02__Households_Settings__c();
-                //set them up with their old setting in the new settings object
-                if(oldProcessor==ALL_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_PROCESSOR;
-                } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
-                } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-                } else {
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-                }
- 
-                householdsSettings.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
-                householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c = false;
-                householdsSettings.npo02__Enable_Opp_Rollup_Triggers__c = false;
-                householdsSettings.npo02__Excluded_Account_Opp_Rectypes__c = null;
-                householdsSettings.npo02__Excluded_Account_Opp_Types__c = null;
-                householdsSettings.npo02__Excluded_Contact_Opp_Rectypes__c = null;
-                householdsSettings.npo02__Excluded_Contact_Opp_Types__c = null;
-                householdsSettings.npo02__Membership_Record_Types__c = null;
-                householdsSettings.npo02__Rollup_N_Day_Value__c = 365;
-                householdsSettings.npo02__Membership_Grace_Period__c = 30;
-                householdsSettings.npo02__Advanced_Household_Naming__c = false;
-                householdsSettings.npo02__Async_Household_Naming__c = false;
-                householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                householdsSettings.npo02__Schedule_Job_Limit__c = 25;
-                householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
-                householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
-                
-                // new HH Account model overrides having HH objects
-                if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-
-                insert householdsSettings;
-            }
-        }
-        
-        // new HH Account model overrides having HH objects
-        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-
-        return householdsSettings;
-    }
-    
-    public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
-        
-        //clear out whatever settings exist
-        delete [select id from npo02__Households_Settings__c]; 
-         
-        //create our own based on what's passed in from the test
-        householdsSettings = new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c,
-            npo02__Household_Contact_Roles_On__c = mySettings.npo02__Household_Contact_Roles_On__c,
-            npo02__Household_Member_Contact_Role__c = mySettings.npo02__Household_Member_Contact_Role__c,
-            npo02__Always_Rollup_to_Primary_Contact__c = mySettings.npo02__Always_Rollup_to_Primary_Contact__c,
-            npo02__Enable_Opp_Rollup_Triggers__c = mySettings.npo02__Enable_Opp_Rollup_Triggers__c,
-            npo02__Excluded_Account_Opp_Rectypes__c = mySettings.npo02__Excluded_Account_Opp_Rectypes__c,
-            npo02__Excluded_Account_Opp_Types__c = mySettings.npo02__Excluded_Account_Opp_Types__c,
-            npo02__Excluded_Contact_Opp_Rectypes__c = mySettings.npo02__Excluded_Contact_Opp_Rectypes__c,
-            npo02__Excluded_Contact_Opp_Types__c = mySettings.npo02__Excluded_Contact_Opp_Types__c,
-            npo02__Membership_Grace_Period__c = mySettings.npo02__Membership_Grace_Period__c,
-            npo02__Rollup_N_Day_Value__c = mySettings.npo02__Rollup_N_Day_Value__c, 
-            npo02__Membership_Record_Types__c = mySettings.npo02__Membership_Record_Types__c,
-            npo02__Advanced_Household_Naming__c = mySettings.npo02__Advanced_Household_Naming__c,
-            npo02__Enable_Soft_Credit_Rollups__c = mySettings.npo02__Enable_Soft_Credit_Rollups__c,
-            npo02__Soft_Credit_Roles__c = mySettings.npo02__Soft_Credit_Roles__c,        
-            npo02__Household_OCR_Excluded_Recordtypes__c = mySettings.npo02__Household_OCR_Excluded_Recordtypes__c, 
-            npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c,
-            npo02__Schedule_Job_Limit__c = 25
-            );
-        insert householdsSettings;
- 
-        // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
-        if (householdsSettings.npo02__Household_Rules__c != NO_HOUSEHOLDS_PROCESSOR) {
-        	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
-            if (ContactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-                ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
-                upsert ContactsSettings;	
-            }	
-        }           
-        return householdsSettings;
     }
 
 }

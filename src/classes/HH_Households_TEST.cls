@@ -44,10 +44,10 @@ public with sharing class HH_Households_TEST {
     /// <name> newIndContactAllContactsProcessor </name>
     /// <summary> test insert individual with all contacts processor </summary>
     static testMethod void newIndContactAllContactsProcessor() {
-        
+
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
                 
             
         String street = '2345 Elm St.';
@@ -56,12 +56,12 @@ public with sharing class HH_Households_TEST {
         String zip = '88777';
         String country = 'US';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -77,7 +77,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
         
         //blank out the HH
         con.npo02__household__c = null;
@@ -91,14 +91,14 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
     
     static testMethod void newPrivateContactAllContactsProcessor() {
-        
+
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
                 
             
         String street = '2345 Elm St.';
@@ -107,13 +107,13 @@ public with sharing class HH_Households_TEST {
         String zip = '88777';
         String country = 'US';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__Private__c = true,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -129,7 +129,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
         
         //blank out the HH
         con.npo02__household__c = null;
@@ -143,11 +143,10 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
     
      static testMethod void noHouseholdSetting() {
-        
         delete [select id from npo02__Households_Settings__c];
         HH_Households.getHouseholdsSettings();
         system.Assert(!HH_Households.householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c);
@@ -156,10 +155,10 @@ public with sharing class HH_Households_TEST {
     /// <name> newIndContactIndividualsProcessor </name>
     /// <summary> test insert individual with individuals processor </summary>
     static testMethod void newIndContactIndividualsProcessor() {
-        
+
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
@@ -167,12 +166,12 @@ public with sharing class HH_Households_TEST {
         String zip = '88777';
         String country = 'US';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -188,7 +187,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
         
         //blank out the HH
         con.npo02__household__c = null;
@@ -202,12 +201,12 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
     
     static testMethod void newNoHouseholdProcessor() {
-        
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
       
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
         String street = '2345 Elm St.';
@@ -217,12 +216,12 @@ public with sharing class HH_Households_TEST {
         String country = 'US';
 
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -240,7 +239,7 @@ public with sharing class HH_Households_TEST {
     /// <summary> test insert org contact with all contacts processor </summary>
     static testMethod void newOrgContactAllContactsProcessor() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
         
@@ -255,12 +254,12 @@ public with sharing class HH_Households_TEST {
         String zip = '88777';
         String country = 'US';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -277,7 +276,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
         
         //blank out the HH
         con.npo02__household__c = null;
@@ -291,14 +290,14 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(state,createdContacts[0].npo02__household__r.npo02__MailingState__c);
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
-        system.assertEquals(npe01.Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
 
     /// <name> newOrgContactIndividualsProcessor </name>
     /// <summary> test insert org contact with Individuals processor </summary>
     static testMethod void newOrgContactIndividualsProcessor() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
@@ -313,12 +312,12 @@ public with sharing class HH_Households_TEST {
         String zip = '88777';
         String country = 'US';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             MailingStreet = street,
             MailingCity = city,
             MailingState = state,
@@ -344,18 +343,18 @@ public with sharing class HH_Households_TEST {
     /// <summary> test delete a contact that has it's own household </summary>
     static testMethod void contactDeleteWithOwnHousehold() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Contact[] createdContacts = [select npo02__Household__c from Contact where id=:con.id];
@@ -372,18 +371,18 @@ public with sharing class HH_Households_TEST {
     /// <summary> test delete a contact that has shared household </summary>
     static testMethod void contactDeleteWithSharedHousehold() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
         
         String lastname = 'SmithForTest99';
         Contact con = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
         Contact[] createdContacts = [select npo02__Household__c from Contact where id=:con.id];
@@ -411,12 +410,12 @@ public with sharing class HH_Households_TEST {
         npo02__Household__c h = new npo02__Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             npo02__Household__c=h.Id
         );
         insert c;
@@ -437,12 +436,12 @@ public with sharing class HH_Households_TEST {
         npo02__Household__c h = new npo02__Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             npo02__Household__c=h.Id
         );
         insert c;
@@ -462,12 +461,12 @@ public with sharing class HH_Households_TEST {
         npo02__Household__c h = new npo02__Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             npo02__Household__c=h.Id
         );
         insert c;
@@ -494,12 +493,12 @@ public with sharing class HH_Households_TEST {
         npo02__Household__c h = new npo02__Household__c(Name='Test Household');
         insert h;
         Contact c = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
             npo02__Household__c=h.Id
         );
         insert c;
@@ -520,24 +519,24 @@ public with sharing class HH_Households_TEST {
     static testMethod void deleteEmptyHouseholds_test(){
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true));
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
          
         Contact c1 = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
         );          
 
         Contact c2 = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName='c2test',
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
         );       
         insert new Contact[] {c1, c2};       
         
@@ -564,16 +563,16 @@ public with sharing class HH_Households_TEST {
     }
     
     static testMethod void testMergeRollupSupport(){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR, npe01__Enable_Opportunity_Contact_Role_Trigger__c = true));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, npe01__Enable_Opportunity_Contact_Role_Trigger__c = true));
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
          
         Contact c1 = new Contact(
-            FirstName=npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
         );            
         insert c1;  
         
@@ -593,7 +592,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c1.id]);
                 
         Test.startTest();        
-        HH_Households.contactMergeUpdate(new Set<Id>{c1.Id});  
+        HH_Households_TDTM.contactMergeUpdate(new Set<Id>{c1.Id});  
         Test.stopTest();
         c1 = [select npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c from Contact where Id = :c1.id];
         system.assertEquals(100, c1.npo02__TotalOppAmount__c);
@@ -605,7 +604,7 @@ public with sharing class HH_Households_TEST {
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = npe01.Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
