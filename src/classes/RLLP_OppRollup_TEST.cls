@@ -45,7 +45,7 @@ public with sharing class RLLP_OppRollup_TEST {
                 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -68,13 +68,13 @@ public with sharing class RLLP_OppRollup_TEST {
                 
         // create & insert contact(s)
         Contact c = new Contact( 
-            FirstName = npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName = npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
             npe01__Private__c=false,
-            npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert c;        
 
@@ -129,7 +129,7 @@ public with sharing class RLLP_OppRollup_TEST {
        
             String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -151,13 +151,13 @@ public with sharing class RLLP_OppRollup_TEST {
                 
             // create & insert contact(s)
             Contact[] TestCons = new contact[]{ new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
             insert TestCons;
     
@@ -215,7 +215,7 @@ public with sharing class RLLP_OppRollup_TEST {
       
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -237,13 +237,13 @@ public with sharing class RLLP_OppRollup_TEST {
                 
             // create & insert contact(s)
             Contact[] TestCons = new contact[]{ new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
             insert TestCons;
     
@@ -299,7 +299,7 @@ public with sharing class RLLP_OppRollup_TEST {
    static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -323,14 +323,14 @@ public with sharing class RLLP_OppRollup_TEST {
             insert testacct;
             // create & insert contact(s)
             Contact[] TestCons = new contact[]{ new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
                 AccountId = testacct.id,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
             insert TestCons;
     
@@ -387,7 +387,7 @@ public with sharing class RLLP_OppRollup_TEST {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -409,13 +409,13 @@ public with sharing class RLLP_OppRollup_TEST {
                 
             // create & insert contact(s)
             Contact[] TestCons = new contact[]{ new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             ) };
             insert TestCons;
     
@@ -459,7 +459,7 @@ public with sharing class RLLP_OppRollup_TEST {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -529,7 +529,7 @@ public with sharing class RLLP_OppRollup_TEST {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -601,7 +601,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -650,7 +650,7 @@ public with sharing class RLLP_OppRollup_TEST {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -808,7 +808,7 @@ public with sharing class RLLP_OppRollup_TEST {
  
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -855,7 +855,7 @@ public with sharing class RLLP_OppRollup_TEST {
     
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -914,7 +914,7 @@ public with sharing class RLLP_OppRollup_TEST {
   
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -972,7 +972,7 @@ public with sharing class RLLP_OppRollup_TEST {
    
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -994,13 +994,13 @@ public with sharing class RLLP_OppRollup_TEST {
                 
             // create & insert contact
             Contact Con1 = new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
             );
             insert Con1;
             
@@ -1008,13 +1008,13 @@ public with sharing class RLLP_OppRollup_TEST {
             
             // create & insert second household member
             Contact Con2 = new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second',
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second',
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
                 npo02__household__c = con.npo02__household__c,
                 AccountId = (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR ? con.AccountId : null)
             );
@@ -1039,7 +1039,7 @@ public with sharing class RLLP_OppRollup_TEST {
             
             Contact c = [SELECT Id,npo02__Total_Household_Gifts__c,npo02__OppAmountThisYearHH__c,npo02__OppAmountLastYearHH__c,
                             npo02__LastCloseDateHH__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__Household__r.npo02__Best_Gift_Year__c, npo02__Household__r.npo02__Best_Gift_Year_Total__c
-                FROM Contact WHERE LastName=:npe01.Constants.CONTACT_LASTNAME_FOR_TESTS AND FirstName=:npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second' LIMIT 1];
+                FROM Contact WHERE LastName=:CAO_Constants.CONTACT_LASTNAME_FOR_TESTS AND FirstName=:CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS+'second' LIMIT 1];
             System.assertEquals (375,c.npo02__Total_Household_Gifts__c);
             System.assertEquals (100,c.npo02__OppAmountThisYearHH__c);
             System.assertEquals (0,c.npo02__OppAmountLastYearHH__c);
@@ -1059,7 +1059,7 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testUserDefinedRollup(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1142,7 +1142,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testMultiCurrencyMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void testMultiCurrencyMethods(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1153,13 +1153,13 @@ public with sharing class RLLP_OppRollup_TEST {
 
         //create & insert second household member
         Contact Con = new contact(
-                FirstName= npe01.Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= npe01.Constants.CONTACT_LASTNAME_FOR_TESTS,
+                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
                 npe01__Private__c=false,
-                npe01__WorkEmail__c = npe01.Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = npe01.Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = npe01.Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = npe01.Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS                
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS                
             );
             insert Con;
             
@@ -1189,7 +1189,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testRollupAlls(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void testRollupAlls(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1217,7 +1217,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1280,7 +1280,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1361,7 +1361,7 @@ public with sharing class RLLP_OppRollup_TEST {
     static void testFutureMethods(string strProcessor){
          String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1416,7 +1416,7 @@ public with sharing class RLLP_OppRollup_TEST {
     static void testOpportunityUtilityErrorHandling(string strProcessor){
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -1468,7 +1468,7 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     //a change to a UDR value should trigger a rollup
     static void testUDRChangeBehavior(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1563,7 +1563,7 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     public static void testRollupCtrl(string strProcessor) {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = npe01.Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'

@@ -4,7 +4,7 @@
     <label>REL_RelationshipsViewer</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>9</minorNumber>
+        <minorNumber>91</minorNumber>
         <namespace>npe4</namespace>
     </packageVersions>
 </ApexPage>
