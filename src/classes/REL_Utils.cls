@@ -89,59 +89,7 @@ public class REL_Utils {
         }   
         return cmAutoCreate;
     }}
-    
-    public static npe4__Relationship_Error__c createRelationshipError(Database.SaveResult s, npe4__Relationship__c r){
-        npe4__Relationship_Error__c re = new npe4__Relationship_Error__c();
-        re.npe4__Error_Date_Time__c = system.now();
-        
-        string recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
-        
-        if (s.getId() != null)
-            recordURL += s.getId();
-        else            
-            recordURL += r.npe4__ReciprocalRelationship__c;
-                     
-        if (recordURL.startsWith('http:')){
-            recordURL = recordURL.replaceFirst('http:', 'https:');
-        }            
-        re.npe4__Error_Record_Link__c = recordURL; 
-        
-        if (s.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING){
-            re.npe4__Error_Type__c = 'Required Field Missing';   
-        }
-        else if (s.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION){
-            re.npe4__Error_Type__c = 'Custom Validation Rule Failed';
-        }
-        else{
-            re.npe4__Error_Type__c = 'Other';
-        }
-        
-        //trim error message
-        if (s.getErrors()[0].getMessage().length() > 255)
-            re.npe4__Full_Error_Message__c = s.getErrors()[0].getMessage().substring(0, 254);
-        else
-            re.npe4__Full_Error_Message__c = s.getErrors()[0].getMessage();
-    
-        return re;
-    }
-    
-    public static npe4__Relationship_Error__c createRelationshipError(Exception e){
-        npe4__Relationship_Error__c re = new npe4__Relationship_Error__c();
-        re.npe4__Error_Date_Time__c = system.now();        
-        re.npe4__Error_Type__c = e.getTypeName();
-        
-        //trim error message
-        if (e.getMessage().length() > 255)
-            re.npe4__Full_Error_Message__c = e.getMessage().substring(0, 254);
-        else
-            re.npe4__Full_Error_Message__c = e.getMessage();
-        
-        re.npe4__Error_Stack_Trace__c = e.getStackTraceString();
-        
-        return re;
-    }
-    
-    
+       
     //modified csv parser to load initial static resource for recip settings
     //http://wiki.developerforce.com/page/Code_Samples#Parse_a_CSV_with_APEX
     public static List<List<String>> parseCSV(String contents,Boolean skipHeaders) {
