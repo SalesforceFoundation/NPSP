@@ -76,13 +76,10 @@ public with sharing class TDTM_TriggerHandler {
             }
             
             System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
-            system.debug(dmlWrapper.objectsToInsert);
 	        insert dmlWrapper.objectsToInsert;
 	        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
-            system.debug(dmlWrapper.objectsToUpdate.values());
 	        update dmlWrapper.objectsToUpdate.values();
 	        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
-            system.debug(dmlWrapper.objectsToDelete);
 	        Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
         }
     }

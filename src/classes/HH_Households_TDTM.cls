@@ -171,24 +171,28 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
             i += 1;
         }
         
-        if (mergedWinningContact.size() > 0)
+        if (mergedWinningContact.size() > 0) {
+        	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
             contactMergeUpdate(mergedWinningContact);        
+        }
         
-        if(!blankHHDeletes.isEmpty())
-            Database.delete(blankHHDeletes);
+        if(!blankHHDeletes.isEmpty()) {
+            //Database.delete(blankHHDeletes);
+            dmlWrapper.objectsToDelete.addAll(blankHHDeletes);
+        }
         
         if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
-            insertHousehold(householdInserts, true);
+            insertHousehold(householdInserts, true, dmlWrapper);
         else if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
-            insertHousehold(householdInserts, false);
+            insertHousehold(householdInserts, false, dmlWrapper);
         
         if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
-            evaluateContacts(contactEvaluations, true);
+            evaluateContacts(contactEvaluations, true, dmlWrapper);
         else if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
-            evaluateContacts(contactEvaluations, false);
+            evaluateContacts(contactEvaluations, false, dmlWrapper);
         
         if (householdDeletes.size() > 0)        
-            deleteHousehold(householdDeletes);
+            deleteHousehold(householdDeletes, dmlWrapper);
         
         if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
                           
@@ -230,7 +234,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
     /// <name> insertHousehold </name>
     /// <summary> Creates a new Household record when a Contact does not have one </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void insertHousehold(Contact[] contacts, boolean isInsertTrigger)
+    public static void insertHousehold(Contact[] contacts, boolean isInsertTrigger, DmlWrapper dmlWrapper)
     {
         List<npo02__household__c> householdInserts = new List<npo02__household__c>();
         //reload to evaluate insert criteria
@@ -269,11 +273,12 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         if (householdInserts.size() > 0)
         {            
-            //THIS NEEDS TO HANDLED -
+            // ideally, we'd do this all with dmlWrapper.  But since we
+            // need to update the contact's hhId, we can't defer creating the HH's.
+            
+            //DJH:UNDONE: error handling needs to be added
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
-            
-            
-                        
+                       
             Integer i = 0;
             for (Contact c : contacts)
             {
@@ -292,8 +297,13 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 i += 1;
             }
             
-            if (contactUpdates.size() > 0)
+            if (contactUpdates.size() > 0) {
+                // using dmlWrapper here caused too many errors with other 
+                // trigger handlers on contact, so do the update directly.
+                //dmlWrapper.objectsToUpdate.putAll(contactUpdates);
                 Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
+                // DJH:UNDONE error handling
+            }
         
             //SETTING CHECK HERE!!!
             if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && isInsertTrigger){
@@ -318,10 +328,10 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }
     }
     
-    /// <name> insertHousehold </name>
+    /// <name> evaluateContacts </name>
     /// <summary> Determines if a Contact Should have a household created </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    public static void evaluateContacts(Contact[] contacts, boolean isAfterInsert) 
+    public static void evaluateContacts(Contact[] contacts, boolean isAfterInsert, DmlWrapper dmlWrapper) 
     {
         List<Contact> householdInserts = new List<Contact>();
 
@@ -351,7 +361,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
         if ( householdInserts.size() > 0)
         {
             //hand any Contacts that need Households over to the insert method
-            insertHousehold(householdInserts, isAfterInsert);
+            insertHousehold(householdInserts, isAfterInsert, dmlWrapper);
         }
     }
 
@@ -359,7 +369,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
     /// <name> deleteHousehold </name>
     /// <summary> Deletes a Household record when no Contacts are related to it </summary>
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-        public static void deleteHousehold(Contact[] contacts){
+        public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
             
         list<Id> householdDeletes = new list<Id>();
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
@@ -391,8 +401,10 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 householdrenames.add(c.npo02__household__c);        
         }
 
-        if (householdDeletes.size() > 0)
-            Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);           
+        if (householdDeletes.size() > 0) {
+            //Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);
+            dmlWrapper.objectsToDelete.addAll(householdDeletes);
+        }           
         
         if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdrenames.size() > 0){
             if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
