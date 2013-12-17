@@ -255,7 +255,6 @@
     <fields>
         <fullName>LeadSource</fullName>
         <picklist>
-            <sorted>false</sorted>
         </picklist>
         <type>Picklist</type>
     </fields>
