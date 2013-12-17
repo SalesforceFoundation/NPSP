@@ -4,7 +4,7 @@
     <label>STTG_affiliationsSettings</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>90</minorNumber>
+        <minorNumber>91</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
 </ApexPage>

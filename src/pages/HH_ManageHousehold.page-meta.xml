@@ -4,7 +4,7 @@
     <label>HH_ManageHousehold</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>95</minorNumber>
+        <minorNumber>96</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>

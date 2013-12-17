@@ -242,8 +242,8 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static set<id> getIndividualAccountIds(){
         if (IndividualAccountIds == null){         
             IndividualAccountIds = new set<id>();                       
-            if (npe01.Constants.getIndividualAccountId() != null)
-                IndividualAccountIds.add(npe01.Constants.getIndividualAccountId());        
+            if (CAO_Constants.getIndividualAccountId() != null)
+                IndividualAccountIds.add(CAO_Constants.getIndividualAccountId());        
         }
         return IndividualAccountIds;        
     }    
