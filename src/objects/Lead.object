@@ -253,10 +253,6 @@
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>LeadSource</fullName>
-        <type>Picklist</type>
-    </fields>
-    <fields>
         <fullName>OwnerId</fullName>
         <type>Lookup</type>
     </fields>
