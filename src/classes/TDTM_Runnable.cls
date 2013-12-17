@@ -72,8 +72,9 @@ public abstract class TDTM_Runnable {
         	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
 	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
-	        //Process the result
-	        TDTM_TriggerHandler.processDML(dmlWrapper);
+	        //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
+	        //in a future
+	        TDTM_TriggerHandler.processDML(dmlWrapper, null, null);
         }
     }
     

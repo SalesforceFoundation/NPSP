@@ -29,19 +29,19 @@
 */
 public with sharing class TDTM_TriggerHandler {
 
-    private List<Sobject> newlist;
-    private List<Sobject> oldlist; 
+    private List<Sobject> newList;
+    private List<Sobject> oldList; 
     private TDTM_TriggerActionHelper.Action thisAction;
     private Schema.DescribeSobjectResult obj;
 
     private static Boolean defaultRecordsInserted = false;
     
     public void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
-    Boolean isDelete, Boolean isUnDelete, List<Sobject> newlist, List<Sobject>oldlist, 
+    Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeobj) {
         
-        this.newlist = newlist;
-        this.oldlist = oldlist;
+        this.newList = newList;
+        this.oldList = oldList;
 
         thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
@@ -75,8 +75,11 @@ public with sharing class TDTM_TriggerHandler {
                 }          
             }
             
+            //Get the map-equivalent of the lists
+            Map<Id, SObject> newMap = (newList == null? new Map<Id, SObject>() : new Map<Id, SObject>(newList));
+            Map<Id, SObject> oldMap = (oldList == null? new Map<Id, SObject>() : new Map<Id, SObject>(oldList));
             //Process the result
-            processDML(dmlWrapper);
+            processDML(dmlWrapper, newMap, oldMap);
         }
     }
     
@@ -84,7 +87,6 @@ public with sharing class TDTM_TriggerHandler {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
-	        //System.debug('****Name of class to run: ' + classToRunName);
 	        Type classType = Type.forName(classToRunName);
 	        
 	        if(classType != null) {   	
@@ -128,7 +130,9 @@ public with sharing class TDTM_TriggerHandler {
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
     }
     
-    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    //We want this method to be static so that it can be called from the future method in TDTM_Runnable
+    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper, Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
+    	ERR_Handler errorHandler = new ERR_Handler();
     	try {
 	        System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
 	        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
@@ -143,13 +147,14 @@ public with sharing class TDTM_TriggerHandler {
 	        System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUndelete);
 	        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
 	        
-	        //We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
-	        //Should we support Database.merge?
+	        /** We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
+	         *  Also, should we support Database.merge? */
 	        
-	        UTIL_ErrorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults);
+	        //Process the results
+	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newMap, oldMap);
 	        
     	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
-    		UTIL_ErrorHandler.saveErrorInfo(e);
+    		errorHandler.saveErrorInfo(e);
     	}
     }
     
