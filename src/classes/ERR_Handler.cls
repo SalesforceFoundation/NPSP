@@ -4,10 +4,15 @@ public with sharing class ERR_Handler {
     
     public static MAP<integer, string>sObjInsErrMAP = new MAP<integer, string>(); // This stores the error associated with the list position of the SObjInsLIST to the triggering ID 
     public static MAP<integer, string>sObjUpdErrMAP = new MAP<integer, string>(); // This stores the error associated with the list position of the SObjUpdLIST to the triggering ID 
+    List<SObject> newList;
+    List<SObject> oldList;
     
     public void processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
+    List<SObject> newList, List<SObject> oldList) {
+        
+        this.newList = newList;
+        this.oldList = oldList;
         
         Map<String, String> errorMap = new Map<string, string>();
         
@@ -44,14 +49,13 @@ public with sharing class ERR_Handler {
                 }
             }
             
-            processErrorMap(errorMap, newMap, oldMap);
+            processErrorMap(errorMap);
         }
     }
     
-    private void processErrorMap(Map<String, String> errorMap, Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
+    private void processErrorMap(Map<String, String> errorMap) {
         
         if(errorMap != null && errorMap.size() > 0) {
-            List<SObject> newList = newMap.values(); 
             Integer i = 0;
             for (string strErrorID: errorMap.keySet()) {
                 //@TODO: store error in database (see REL code)
@@ -62,11 +66,11 @@ public with sharing class ERR_Handler {
                     i = integer.valueOf(strErrorID);
                     newList[i].addError(errorMap.get(strErrorID));
                 } else {
-                    if (trigger.isDelete) {
+                    /*if (trigger.isDelete) {
                         oldMap.get(strErrorID).addError(errorMap.get(strErrorID));
                     } else {
                         newMap.get(strErrorID).addError(errorMap.get(strErrorID));
-                    }
+                    }*/
                 }
                 i++;
             }

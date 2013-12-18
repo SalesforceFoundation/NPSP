@@ -74,12 +74,9 @@ public with sharing class TDTM_TriggerHandler {
                         dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
                 }          
             }
-            
-            //Get the map-equivalent of the lists
-            Map<Id, SObject> newMap = (newList == null? new Map<Id, SObject>() : new Map<Id, SObject>(newList));
-            Map<Id, SObject> oldMap = (oldList == null? new Map<Id, SObject>() : new Map<Id, SObject>(oldList));
+                         
             //Process the result
-            processDML(dmlWrapper, newMap, oldMap);
+            processDML(dmlWrapper, newList, oldList);
         }
     }
     
@@ -131,7 +128,7 @@ public with sharing class TDTM_TriggerHandler {
     }
     
     //We want this method to be static so that it can be called from the future method in TDTM_Runnable
-    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper, Map<Id, SObject> newMap, Map<Id, SObject> oldMap) {
+    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper, List<SObject> newList, List<SObject> oldList) {
     	ERR_Handler errorHandler = new ERR_Handler();
     	try {
 	        System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
@@ -151,7 +148,7 @@ public with sharing class TDTM_TriggerHandler {
 	         *  Also, should we support Database.merge? */
 	        
 	        //Process the results
-	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newMap, oldMap);
+	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newList, oldList);
 	        
     	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
     		errorHandler.saveErrorInfo(e);
