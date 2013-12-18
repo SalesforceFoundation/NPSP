@@ -181,6 +181,27 @@ public class UTIL_UnitTestData_TEST {
         return AcctsToAdd;
     }
 
+    public static User CreateNewUserForTests(string strUsername) {
+
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        UserRole r = [SELECT Id FROM UserRole WHERE Name='COO'];
+        User u;	
+        // to work around mixed DML errors during tests, you must
+        // create user account in its own transaction.  got this
+        // hack from the web.
+        System.runAs ( new User(Id = UserInfo.getUserId()) ) {        
+	        u = new User(alias = 'jsmith', email='jsmith@acme.com', 
+	            emailencodingkey='UTF-8', lastname='Smith', 
+	            languagelocalekey='en_US', 
+	            localesidkey='en_US', profileid = p.Id, userroleid = r.Id,
+	            timezonesidkey='America/Los_Angeles', 
+	            username=strUsername);
+	        insert u;
+        }
+        return u;
+    }
+    
+    
 /*
         Public static list<Opportunity> OppsForAccountList (list<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
     

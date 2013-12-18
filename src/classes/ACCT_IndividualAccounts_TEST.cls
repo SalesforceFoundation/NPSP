@@ -1352,4 +1352,6 @@ private class ACCT_IndividualAccounts_TEST {
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + ' Household');
     }
+
+
 }

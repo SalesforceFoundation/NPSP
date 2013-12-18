@@ -71,7 +71,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             list<Id> listAccountIdHHToUpdate = new list<Id>();
             list<Id> listAccountIdHHToRename = new list<Id>();
             Map<Id,Account> mapContactIdAccount = null;
-            
+            map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert || triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                    
                 // need to query account fields we need to look at
@@ -82,7 +82,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
                contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                    Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname,
+                    Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
                     Salutation, npo02__Naming_Exclusions__c,
                     MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
                     Phone, Fax from Contact where Id IN :contacts];
@@ -219,7 +219,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                            // HH Account didn't change, but it still might need renaming
                         } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
                            listAccountIdHHToRename.add(c.AccountId);    
-                        }                       
+                        }  
+                        
+                        // check for ownership changes
+                        if (c.OwnerId != oldContacts[i].OwnerId) {
+                        	mapContactIdContactOwnerChange.put(c.Id, c);
+                        }                     
                     }
                     i += 1;
                 }               
@@ -248,6 +253,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             if (listAccountIdHHToRename.size() > 0) {
                 renameHHAccounts(listAccountIdHHToRename);    
+            }
+            if (mapContactIdContactOwnerChange.size() > 0) {
+            	updateOwners(mapContactIdContactOwnerChange, dmlWrapper);
             }
             if (listContactAccountDelete.size() > 0) {
                 // check all old accounts to delete is they are left hanging around
@@ -556,6 +564,37 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         // update any HH accounts that just lost a contact
         updateHHAccount(listAccountIdUpdate, dmlWrapper);        
+    }
+
+    // contact's owner has changed.  consider updating related account owner.
+    private void updateOwners(map<Id, Contact> mapContactIdContactOwnerChange, DmlWrapper dmlWrapper) {        
+        if (mapContactIdContactOwnerChange.size() > 0) {
+            list<Account> listAccToUpdate = new list<Account>();
+            set<Id> setAccId = new set<Id>();
+            for (Contact con : mapContactIdContactOwnerChange.values()) {
+            	setAccId.add(con.AccountId);
+            }
+                       
+            list<Account> listAcc = [Select Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (select Id from Contacts limit 2) from Account 
+                where Id IN :setAccId];
+            
+            for (Account acc : listAcc) {
+                // only consider 1:1 and HH Accounts
+                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {                    
+                    // if there is only 1 contact associated with this account
+                    if (acc.Contacts.size() == 1 && acc.npe01__One2OneContact__c != null) {
+                    	Contact c = mapContactIdContactOwnerChange.get(acc.npe01__One2OneContact__c);
+                    	Id ownerIdContact = (c != null ? c.OwnerId : null);
+                    	if (acc.OwnerId != ownerIdContact) {
+                    		acc.OwnerId = ownerIdContact;
+                    		listAccToUpdate.add(acc);
+                    	}
+                    }
+                }   
+            }
+            // add all accounts needing updating to our list
+            dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);                        
+        }
     }
 
     // returns whether changes in the contact require an update to the 1:1 account   

@@ -35,7 +35,12 @@
 
 @isTest
 private with sharing class ACCT_HHAccounts_TEST {
-	
+
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
+    	
     /*********************************************************************************************************
     operation:
         create N new contacts, no accounts 
@@ -45,6 +50,8 @@ private with sharing class ACCT_HHAccounts_TEST {
 		hh accounts' primary contact set to new contact
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccounts() {
+    	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
+    	
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -85,6 +92,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact updated to contact
     **********************************************************************************************************/            
     static testMethod void NewContactsEmptyHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'NewContactsEmptyHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -153,6 +162,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact not updated
     **********************************************************************************************************/            
     static testMethod void NewContactsNonEmptyHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'NewContactsNonEmptyHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -228,6 +239,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         UNDONE: household object ignored or set???
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccountsWithHHObj() {
+        if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccountsWithHHObj') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -283,6 +296,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void UpdateContactsMergeHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'UpdateContactsMergeHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -357,6 +372,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void UpdateContactsSplitHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'UpdateContactsSplitHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -437,6 +454,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void DeleteContactsFromHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'DeleteContactsFromHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -503,6 +522,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact valid
     **********************************************************************************************************/            
     static testMethod void UndeleteContactsFromHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'UndeleteContactsFromHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -588,6 +609,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         hh accounts' primary contact valid
     **********************************************************************************************************/    
     static testmethod void UpdateOneToOneAndBucketContactsToHHAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'UpdateOneToOneAndBucketContactsToHHAccounts') return;
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
@@ -654,6 +677,76 @@ private with sharing class ACCT_HHAccounts_TEST {
         }
     }
 
+
+    /*********************************************************************************************************
+    operation:
+        change owner on N contacts with various types of accounts
+    verify:
+        accounts' owner changed to match
+        works for 1:1 and HH accounts
+        no change for HH accounts with multiple contacts
+        no change for any other type of account
+    **********************************************************************************************************/                
+    static testMethod void changeContactOwners() {
+        if (strTestOnly != '*' && strTestOnly != 'changeContactOwners') return;
+        
+        Id ownerId1 = UserInfo.getUserId();             
+        User u2 = UTIL_UnitTestData_TEST.CreateNewUserForTests('changeContactOnwerTest@bar.com');
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(7);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, null));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // single HH
+        listCon[1].AccountId = listAcc[1].Id;   // multi HH
+        listCon[2].AccountId = listAcc[1].Id;   // multi HH
+        listCon[3].AccountId = listAcc[2].Id;   // 1:1
+        listCon[4].AccountId = listAcc[3].Id;   // 1:1
+        listCon[5].AccountId = listAcc[4].Id;   // Bucket
+        listCon[6].AccountId = listAcc[5].Id;   // Org
+        
+        insert listCon;
+                
+        listCon[0].ownerId = u2.Id;   // single HH
+        listCon[1].ownerId = u2.Id;   // multi HH
+        //listCon[2].ownerId = u2.Id;   // multi HH
+        //listCon[3].ownerId = u2.Id;   // 1:1
+        listCon[4].ownerId = u2.Id;   // 1:1
+        listCon[5].ownerId = u2.Id;   // Bucket
+        listCon[6].ownerId = u2.Id;   // Org
+        
+        Test.startTest();
+        update listCon;
+        Test.stopTest();
+               
+        list<Contact> listCon2 = [select Name, OwnerId, Account.Id, Account.OwnerId from Contact where Id in :listCon];
+        system.assertEquals(listCon2.size(), listCon.size());
+        
+        system.debug('**** listCon2: ' + listCon2);
+        for (Contact con : listCon2) {
+            if (con.Id == listCon[0].Id || con.ID == listCon[4].Id) {
+               system.assertEquals(con.OwnerId, con.Account.OwnerId);
+               system.assertEquals(u2.Id, con.OwnerId);
+            } else if (con.Id == listCon[2].Id || con.Id == listCon[3].Id) {
+               system.assertEquals(con.OwnerId, con.Account.OwnerId);
+               system.assertEquals(ownerId1, con.OwnerId);              
+            } else {
+               system.assertNotEquals(con.OwnerId, con.Account.OwnerId);
+               system.assertEquals(u2.Id, con.OwnerId);                     
+               system.assertEquals(ownerId1, con.Account.OwnerId);                     
+            }
+        }
+    
+    }
 
 
     /*********************************************************************************************************
