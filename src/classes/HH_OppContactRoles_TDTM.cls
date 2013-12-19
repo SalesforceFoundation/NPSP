@@ -32,11 +32,18 @@
 * @date 2011 (2.0)
 * @description Updates and managed opportunity contact roles for Household members, invoked via opp trigger 
 */
-public class HH_OppContactRoles {
-    public HH_OppContactRoles() {}    
+public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
+    public HH_OppContactRoles_TDTM() {}    
 
-    public HH_OppContactRoles(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
-        
+//  public HH_OppContactRoles_TDTM(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        list<Opportunity> opportunities = newlist;
+        list<Opportunity> oldOpportunities = oldlist;
+   
+        DmlWrapper dmlWrapper = new DmlWrapper();
+             
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
         npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
         
@@ -52,8 +59,9 @@ public class HH_OppContactRoles {
             recordTypesOnCons = true;
                 
         // bail out if the user has disabled household contact roles.
-        if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
-            return;
+        // DJH: now controlled by our TDTM table
+        //if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
+        //    return null;
                 
         // get all Opps in the trigger set that are for individual accounts 
         // issue 318, also get Contact ID for Role if available
@@ -78,26 +86,8 @@ public class HH_OppContactRoles {
             // note that householdId can be either a Household__c or a HH Account.
             Map<id,List<Contact>> householdIdToContact = new Map<id, List<Contact>>();           
             
-            /**** not needed, since HH Accounts ended up using  npe01__One2OneContact__c ****           
-            // for HH Accounts, npe01__One2OneContact__c isn't used, and npe01__Contact_Id_for_Role__c may not be set
-            // so look at all OCR's already created to grab their contactId's as well.
-            list<OpportunityContactRole> listOCR = [select OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole where IsPrimary = true and OpportunityId in :oppsForContactRoles];
-            map<Id, Id> mapOppIdToPrimaryContactId = new map<Id, Id>();
-            for (OpportunityContactRole ocr : listOCR) {
-                mapOppIdToPrimaryContactId.put(ocr.OpportunityId, ocr.ContactId);
-            }
-            *****/
-            
             // loop throught the Opportunities
             for (Opportunity thisOpp : oppsForContactRoles) { 
-                              
-                /**** not needed, since HH Accounts ended up using  npe01__One2OneContact__c ****           
-                // use npe01__Contact_Id_for_Role__c if we found an existing primary ocr
-                // we do this to support the HH Account model
-                Id contactId = mapOppIdToPrimaryContactId.get(thisOpp.Id);
-                if (contactId != null)
-                    thisOpp.npe01__Contact_Id_for_Role__c = contactId;
-                *****/
 
                 // grab all the contacts off the Accounts or via the role lookup
                 if (thisOpp.account.npe01__One2OneContact__c != null)
@@ -143,12 +133,12 @@ public class HH_OppContactRoles {
                                 
             // create a map of Household Id to list of member contacts
             for (Contact myContact : householdContacts) {
-            	ID hhId;
-            	if (myContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-            		hhId = myContact.AccountId;
-            	} else {
-            		hhId = myContact.npo02__household__c;
-            	}
+                ID hhId;
+                if (myContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                    hhId = myContact.AccountId;
+                } else {
+                    hhId = myContact.npo02__household__c;
+                }
                 if (householdIdToContact.get(hhId) == null) {
                     householdIdToContact.put(hhId,new List<Contact>());                   
                 }
@@ -213,12 +203,16 @@ public class HH_OppContactRoles {
             }
             
             if (contactrolesforCreation != null) {
-                insert contactrolesforCreation;   
+            	dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
+                //insert contactrolesforCreation;   
             }
             
             if (contactRolesForUpdate != null) {
-                update contactRolesForUpdate;   
+                dmlWrapper.objectsToUpdate.putAll(contactRolesForUpdate);
+                //update contactRolesForUpdate;   
             }   
         }
+    
+    return dmlWrapper;
     }
 }

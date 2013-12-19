@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
-* @description Tests for ACCT_IndividualAccounts
+* @description Tests for ACCT_IndividualAccounts_TDTM
 */
 @isTest
 private class ACCT_IndividualAccounts_TEST {    
@@ -39,7 +39,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> ACCT_IndividualAccounts_TEST </name>
     /// <summary> test default constructor </summary>
     static testMethod void ACCT_IndividualAccounts_TEST() {
-        ACCT_IndividualAccounts testIndividualAccounts = new ACCT_IndividualAccounts();
+        ACCT_IndividualAccounts_TDTM testIndividualAccounts = new ACCT_IndividualAccounts_TDTM();
     }
 
     /// <name> insertPrivate </name>
@@ -120,6 +120,25 @@ private class ACCT_IndividualAccounts_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor,npe01__Disable_Account_Model_Trigger__c=true));
         
+        // turn off all TDTM triggers for this component
+        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert'));
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeUpdate'));
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert'));
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterUpdate'));                
+        handlers.add(new Trigger_Handler__c(Active__c = false, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterDelete'));
+        insert handlers;
+         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         Contact con = new Contact(
@@ -149,7 +168,6 @@ private class ACCT_IndividualAccounts_TEST {
     {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-        
         
         String newContactMailingStreet = '123 Elm St';
 
@@ -1334,4 +1352,6 @@ private class ACCT_IndividualAccounts_TEST {
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + ' Household');
     }
+
+
 }
