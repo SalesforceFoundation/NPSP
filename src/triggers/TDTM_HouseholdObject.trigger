@@ -27,13 +27,12 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger HH_OppContactRoles on Opportunity (after insert) { // DJH:UNDONE why not also do this after update?  ie, changes to the opp should immediately update soft credits, rather than relying on batch rollup.
+trigger TDTM_HouseholdObject on npo02__Household__c (after delete, after insert, after undelete, 
+    after update, before delete, before insert, before update) {
     
-    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings(); 
-    
-    if (!hs.npo02__DISABLE_Household_Opportunity_trigger__c){
-        if( Trigger.isAfter && Trigger.isInsert ){         
-            HH_OppContactRoles process = new HH_OppContactRoles(Trigger.new, Trigger.old, HH_Households.triggerAction.afterInsert);
-        }
-    }
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npo02__Household__c);
+    handler.runClasses(new TDTM_ObjectDataGateway());
+
 }
