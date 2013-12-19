@@ -677,7 +677,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         }
     }
 
-
     /*********************************************************************************************************
     operation:
         change owner on N contacts with various types of accounts
@@ -748,6 +747,75 @@ private with sharing class ACCT_HHAccounts_TEST {
     
     }
 
+    /*********************************************************************************************************
+    operation:
+        change N contacts with HH accounts and primary opps to new HH accounts 
+    verify:
+        closed opps stay with old HH accounts
+        open opps move to new HH accounts
+    **********************************************************************************************************/            
+    static testMethod void changeContactsCheckOpps() {
+        if (strTestOnly != '*' && strTestOnly != 'changeContactsCheckOpps') return;
+
+       npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null
+            ));
+  
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        system.assertEquals(null, listCon[0].AccountId); 
+        insert listCon;
+        listCon = [select Id, AccountId, Firstname, Lastname from Contact];
+        system.assertNotEquals(null, listCon[0].AccountId);
+        
+        // give the contacts a mixture of open and closed opps
+        string strClosed = UTIL_UnitTestData_TEST.getClosedWonStage();
+        string strOpen = UTIL_UnitTestData_TEST.getOpenStage();
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, strClosed, system.Today(), 100, null, null);       
+        listOpp.addAll(UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, strOpen, system.Today(), 100, null, null)); 
+        listOpp[0].AccountId = listCon[0].AccountId;
+        listOpp[1].AccountId = listCon[1].AccountId;
+        listOpp[2].AccountId = listCon[2].AccountId;
+        listOpp[3].AccountId = listCon[3].AccountId;
+        listOpp[4].AccountId = listCon[4].AccountId;
+        
+        listOpp[5].AccountId = listCon[0].AccountId;
+        listOpp[6].AccountId = listCon[1].AccountId;
+        listOpp[7].AccountId = listCon[2].AccountId;
+        listOpp[8].AccountId = listCon[3].AccountId;
+        listOpp[9].AccountId = listCon[4].AccountId;
+        insert listOpp;
+        
+        // now do some merging of households
+        listCon[1].AccountId = listCon[0].AccountId;
+        listCon[3].AccountId = listCon[2].AccountId;
+        listCon[4].AccountId = null;
+
+        Test.startTest();
+        update listCon;
+        Test.stopTest();
+
+        // make sure the open opps didn't stay with old accounts.
+        list<Opportunity> listOpp2 = [select Id, AccountId, Amount from Opportunity where IsClosed = false];
+        system.assertEquals(5, listOpp2.size());
+        for (Opportunity opp : listOpp2) {
+            system.assert(opp.AccountId != listOpp[6].AccountId && opp.AccountId != listOpp[8].AccountId);
+        }  
+            
+    }
 
     /*********************************************************************************************************
     WHAT IS NOT TESTED:

@@ -72,6 +72,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             list<Id> listAccountIdHHToRename = new list<Id>();
             Map<Id,Account> mapContactIdAccount = null;
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
+            map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
+            map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
             
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert || triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                    
                 // need to query account fields we need to look at
@@ -205,16 +207,20 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         if (c.AccountId != oldContacts[i].AccountId) {
                             
                             // need to update any HH Accounts, both rollups and naming
-                            if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                            if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                                 listAccountIdHHToUpdate.add(c.AccountId);
+                                mapContactIdAccountIdNewMoveOpps.put(c.Id, c.AccountId);
+                            }
                             
                             // old account should be checked for deletion (if it wasn't private)
                             if (c.npe01__Private__c != true && oldContacts[i].npe01__Private__c != true)
                                 listContactAccountDelete.add(oldContacts[i]);
                             
                             // old HH Accounts that don't get deleted still need to have name and rollups redone
-                            if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE)    
+                            if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE) {    
                                 listAccountIdHHToUpdate.add(oldContacts[i].AccountId);
+                                mapContactIdAccountIdOldMoveOpps.put(c.Id, oldContacts[i].AccountId);
+                            }
                                                                                  
                            // HH Account didn't change, but it still might need renaming
                         } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountRename(c, oldContacts[i])) {
@@ -247,6 +253,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             if (mapAccountIdContactId.size() > 0) {
                 //update Accounts that have newly created Contacts connected to them
                 updateAccountPrimaryContact(mapAccountIdContactId, dmlWrapper);
+            }
+            if (mapContactIdAccountIdNewMoveOpps.size() > 0) {
+            	moveOppsToContactHHAccount(mapContactIdAccountIdNewMoveOpps, mapContactIdAccountIdOldMoveOpps, dmlWrapper);
             }
             if (listAccountIdHHToUpdate.size() > 0) {
                 updateHHAccount(listAccountIdHHToUpdate, dmlWrapper);
@@ -594,6 +603,29 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             // add all accounts needing updating to our list
             dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);                        
+        }
+    }
+    
+    // moves all open opps for the provided contacts to their new hh account
+    private void moveOppsToContactHHAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
+        set<Id> setConId = mapContactIdAccountIdNew.keySet();
+        list<Id> listAccIdOld = mapContactIdAccountIdOld.values();
+        list<Opportunity> listOpp = new list<Opportunity>();
+    
+        list<OpportunityContactRole> listOCR = [select ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId from OpportunityContactRole
+            where Opportunity.isClosed = false and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
+            
+        for (OpportunityContactRole ocr : listOCR) {
+            if (mapContactIdAccountIdOld.get(ocr.ContactId) == ocr.Opportunity.AccountId) {
+            	listOpp.add(new Opportunity(Id = ocr.OpportunityId, AccountId = mapContactIdAccountIdNew.get(ocr.ContactId)));
+            }
+        }
+        
+        if (listOpp.size() > 0) {
+            // since our rollup code isn't using dmlWrapper,
+            // we must commit now.
+            //dmlWrapper.objectsToUpdate.putAll(listOpp);
+            update listOpp;
         }
     }
 
