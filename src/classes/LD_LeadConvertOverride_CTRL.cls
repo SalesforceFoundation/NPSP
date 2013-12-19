@@ -168,11 +168,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 
                 Account myAccount = new Account(Id=lcr.getAccountId());
                 if (CAO_Constants.isOneToOne()) {
-	                myAccount.Name= ACCT_IndividualAccounts.strNameOne2OneAccountForContact(myconvertedContact[0]);
+	                myAccount.Name= ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(myconvertedContact[0]);
 	                myAccount.npe01__One2OneContact__c=lcr.getContactId();
 	                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 } else { 
-                	myAccount.Name = ACCT_IndividualAccounts.strNameHHAccountForContact(myconvertedContact[0]);
+                	myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(myconvertedContact[0]);
                 	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
                 }
                 myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
