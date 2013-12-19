@@ -41,7 +41,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
     public boolean editRollupSettingsTab{get; set;}
     public boolean editHouseholdSettingsTab{get; set;}
     public boolean hasErrors{get; set;}
-    public List<npo02__Opportunity_Rollup_Error__c> errorList{get; set;}
+    public List<Error__c> errorList{get; set;}
      
     
     public STTG_HouseholdsSettings_CTRL(){
@@ -60,9 +60,9 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         editRollupSettingsTab = false;   
         
         //retrieve errors, if any        
-        errorList = [select npo02__Error_Type__c, npo02__Error_Record_Link__c, 
-                            npo02__Error_Object_Type__c, npo02__Error_Message__c, 
-                            npo02__Error_Datetime__c, Name, Id from npo02__Opportunity_Rollup_Error__c limit 999];
+        errorList = [select Error_Type__c, Record_URL__c, 
+                            Object_Type__c, Full_Message__c, 
+                            Datetime__c, Name, Id from Error__c limit 999];
                 
         if (!errorList.isEmpty()){
             hasErrors = true;            
@@ -369,7 +369,7 @@ public with sharing class STTG_HouseholdsSettings_CTRL {
         return null;
     }    
     public pageReference deleteErrors(){
-        delete [select id from npo02__Opportunity_Rollup_Error__c];
+        delete [select id from Error__c];
         hasErrors = false;
         return null;
     }    

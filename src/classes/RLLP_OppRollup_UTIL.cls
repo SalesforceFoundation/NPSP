@@ -745,7 +745,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     /****************************************/
     
     /*** Error Generation ***/    
-    public static npo02__Opportunity_Rollup_Error__c createError(Database.SaveResult s, string objecttype, id objid){
+    /*public static npo02__Opportunity_Rollup_Error__c createError(Database.SaveResult s, string objecttype, id objid){
         datetime thisDay = system.now();
         npo02__Opportunity_Rollup_Error__c ore = new npo02__Opportunity_Rollup_Error__c();
         
@@ -775,5 +775,5 @@ public without sharing class RLLP_OppRollup_UTIL {
         else
             ore.npo02__Error_Message__c = s.getErrors()[0].getMessage();                              
         return ore;
-    }
+    }*/
 }

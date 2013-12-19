@@ -1439,20 +1439,21 @@ public with sharing class RLLP_OppRollup_TEST {
         ));
                 
         // create & insert contact(s)
-        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10) ;
+        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10);
         insert TestCons;
     
         //create new opp with a missing required field
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
+        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList(TestCons, null, 
+            UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
                 
         Database.Saveresult[] sr = Database.insert(newOpps, false);
         system.assert(sr != null);
         system.assert(TestCons[0].id != null);
-        npo02__Opportunity_Rollup_Error__c ore = RLLP_OppRollup_UTIL.createError(sr[0], 'Opportunity', TestCons[0].id);
+        Error__c ore = ERR_Handler.createError(sr[0], 'Opportunity', TestCons[0].id);
         system.assert(ore != null);
-        system.assertEquals('Required Field Missing',ore.npo02__Error_Type__c);
-        system.assert(ore.Name.startsWith(TestCons[0].id));
-        system.assertEquals('Opportunity',ore.npo02__Error_Object_Type__c);
+        system.assertEquals('Required Field Missing',ore.Error_Type__c);
+        system.assert(ore.Record_URL__c.endsWith(TestCons[0].id));
+        system.assertEquals('Opportunity',ore.Object_Type__c);
     }
     
     static testMethod void testFYUtility(){     

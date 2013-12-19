@@ -64,7 +64,12 @@ public with sharing class TDTM_TriggerHandler {
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
-                TDTM_Runnable.DmlWrapper dmlWrapperLocal = runClass(classToCall);
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal;
+                try {
+                	dmlWrapperLocal = runClass(classToCall);
+                } catch(Exception e) {
+                	ERR_Handler.saveError(e);
+                }
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -151,7 +156,7 @@ public with sharing class TDTM_TriggerHandler {
 	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newList, oldList);
 	        
     	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
-    		errorHandler.saveErrorInfo(e);
+    		ERR_Handler.saveError(e);
     	}
     }
     

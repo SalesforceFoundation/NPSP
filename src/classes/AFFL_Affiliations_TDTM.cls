@@ -95,7 +95,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             accountIds.add(c.AccountId);
         }
         //get all the accounts associated wth these contacts
-        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account where Id in :accountIds]);
+        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account 
+                                                            where Id in :accountIds]);
 
         for(Contact c : contacts) {
             String cName = c.FirstName;
@@ -123,8 +124,9 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
                 // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
                 // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
-
-                system.debug('Failed to find account with id ' + c.AccountId + ' in ' + accountMap);
+                Exception e = new NullPointerException();
+                e.setMessage('Failed to find account with id ' + c.AccountId);
+                ERR_Handler.saveError(e);
             }
         }
         return affiliationInserts;
@@ -146,14 +148,19 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         }
 
         try {
-            List<npe5__Affiliation__c> existingAffiliations = [Select Id, npe5__Contact__c, npe5__Organization__c from npe5__Affiliation__c where npe5__EndDate__c = null and npe5__Contact__c in :contactIds and npe5__Organization__c in :accountIds];
+            List<npe5__Affiliation__c> existingAffiliations = [Select Id, npe5__Contact__c, npe5__Organization__c 
+                    from npe5__Affiliation__c where npe5__EndDate__c = null and npe5__Contact__c in :contactIds 
+                    and npe5__Organization__c in :accountIds];
+            
             for(npe5__Affiliation__c a : existingAffiliations) {
                 //concatenate the contact and account id for a unique string we can access later
                 String unique = a.npe5__Contact__c;
                 unique += a.npe5__Organization__c;
                 conAccMap.put(unique,a.Id);
             }
-        } catch (exception e) { }
+        } catch (exception e) { 
+            ERR_Handler.saveError(e);
+        }
         
         Map<Id, npe5__Affiliation__c> affiliationUpdates = new Map<Id, npe5__Affiliation__c>();
         

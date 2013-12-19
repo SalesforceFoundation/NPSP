@@ -1,37 +1,58 @@
 public with sharing class ERR_Handler {
 
+    //@TODO: we should read this from a custom setting
     public static Boolean DiagnosticsEnabled = true;
     
-    public static MAP<integer, string>sObjInsErrMAP = new MAP<integer, string>(); // This stores the error associated with the list position of the SObjInsLIST to the triggering ID 
-    public static MAP<integer, string>sObjUpdErrMAP = new MAP<integer, string>(); // This stores the error associated with the list position of the SObjUpdLIST to the triggering ID 
     List<SObject> newList;
     List<SObject> oldList;
+    Map<Id, SObject> newMap = new Map<Id, SObject>();
+    Map<Id, SObject> oldMap = new Map<Id, SObject>();
+    //Stores the error associated with the list position of the SObjInsLIST to the triggering ID 
+    public static MAP<integer, string>sObjInsErrMAP = new MAP<integer, string>();
+    //Stores the error associated with the list position of the SObjUpdLIST to the triggering ID
+    public static MAP<integer, string>sObjUpdErrMAP = new MAP<integer, string>();
     
     public void processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> newList, List<SObject> oldList) {
         
-        this.newList = newList;
-        this.oldList = oldList;
-        
-        Map<String, String> errorMap = new Map<string, string>();
-        
         if(DiagnosticsEnabled) {
+        	
+        	this.newList = newList;
+            this.oldList = oldList;
             
+            for(SObject record : newList)
+            	if(record.Id != null) newMap.put(record.Id, record);
+            
+            for(SObject record : oldList)
+                if(record.Id != null) oldMap.put(record.Id, record);
+        
+            Map<String, String> errorMap = new Map<string, string>();
+            
+            List<Error__c> errors = new List<Error__c>();
             //INSERT
             if(insertResults != null && insertResults.size() > 0) {
                 Integer i = 0;
-                for(Database.SaveResult srItem : insertResults) {
-                    if (!srItem.isSuccess())
-                        errorMap.put(sObjInsErrMAP.get(i), srItem.getErrors()[0].getMessage());
+                for(Database.SaveResult saveResult : insertResults) {
+                    if (!saveResult.isSuccess()) { //If there was an error
+                    	errors.add(createError(saveResult, 'Unknown Object Type', saveResult.getId()));
+                    	System.debug('****Putting key in errorMap: ' + sObjInsErrMAP.get(i));
+                        errorMap.put(sObjInsErrMAP.get(i), saveResult.getErrors()[0].getMessage());
+                    }
                     i++;
                 }
             }
             
             //UPDATE
             if(updateResults != null && updateResults.size() > 0) {
-                for(Database.SaveResult result : updateResults) {
-                    
+                Integer i = 0;
+                for(Database.SaveResult saveResult : updateResults) {
+                    if (!saveResult.isSuccess()) { //If there was an error
+                        errors.add(createError(saveResult, 'Unknown Object Type', saveResult.getId()));
+                        System.debug('****Putting key in errorMap: ' + sObjUpdErrMAP.get(i));
+                        errorMap.put(sObjUpdErrMAP.get(i), saveResult.getErrors()[0].getMessage());
+                    }
+                    i++;
                 }
             }
             
@@ -50,79 +71,150 @@ public with sharing class ERR_Handler {
             }
             
             processErrorMap(errorMap);
+            Database.insert(errors, false);
         }
     }
     
+    /**
+     * Adds the errors to the matching trigger records.
+     */
     private void processErrorMap(Map<String, String> errorMap) {
         
         if(errorMap != null && errorMap.size() > 0) {
             Integer i = 0;
-            for (string strErrorID: errorMap.keySet()) {
-                //@TODO: store error in database (see REL code)
+            for (string strErrorId : errorMap.keySet()) {
                 
-                //@TODO: will this work in our case, where we have more than one trigger for
-                //this context? If not, what do we do with the errors?
-                if (strErrorID.isNumeric()) {
+                //One advantage of the TriggerHandler not being static is that each instance of it 
+                //should have its own Trigger.now and Trigger.old available in its stack to be able 
+                //to add errors to.
+                if (strErrorId.isNumeric()) {
+                	System.debug('****Numeric key in error map: ' + strErrorId);
                     i = integer.valueOf(strErrorID);
                     newList[i].addError(errorMap.get(strErrorID));
                 } else {
-                    /*if (trigger.isDelete) {
+                	System.debug('****Non-Numeric key in error map: ' + strErrorId);
+                    if (trigger.isDelete) {
                         oldMap.get(strErrorID).addError(errorMap.get(strErrorID));
                     } else {
                         newMap.get(strErrorID).addError(errorMap.get(strErrorID));
-                    }*/
+                    }
                 }
                 i++;
             }
         }
     }
     
-    public void saveErrorInfo(Exception e) {
-        if(DiagnosticsEnabled) {
-            //String info = 'Exception occurred in line ' + e.getLineNumber() + ' - ' + e.getMessage()  
-            //      + ' stack: ' + e.getStackTraceString();   
-            //ErrorInfo__c errorRecord = new ErrorInfo__c(info);
-            //insert errorRecord;
-            
-            Error__c error = createError(e);
-            insert error;
-        }
-    } 
+    public static void saveError(Exception e) {
+    	if(DiagnosticsEnabled) {
+	    	if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+	    		saveError(e.getTypeName(), e.getMessage(), e.getStackTraceString(), System.now());
+	    	} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
+				Error__c error = new Error__c();
+		        error.Datetime__c = System.now();        
+		        error.Type__c = e.getTypeName();
+		        error.Full_Message__c = e.getMessage();
+		        error.Stack_Trace__c = e.getStackTraceString();
+		        System.debug('****Saving error caused by exception');
+		        insert error;
+	    	}
+    	}
+    }
     
-    public static Error__c createError(Database.SaveResult s, npe4__Relationship__c r){
-        
-        Error__c re = new Error__c();
-        re.Datetime__c = System.now();
+    @future
+    private static void saveError(String typeName, String message, String stackTrace, Datetime now) {
+        Error__c error = new Error__c();
+        error.Datetime__c = now;        
+        error.Type__c = typeName;
+        error.Full_Message__c = message;
+        error.Stack_Trace__c = stackTrace;
+        System.debug('****Saving error caused by exception');
+        insert error;
+    } 
+
+    public static void saveError(Database.SaveResult saveResult, String objectType, Id objId) {
+    	if(DiagnosticsEnabled) {
+	    	String message = saveResult.getErrors()[0].getMessage();
+	    	Id SaveResultId = saveResult.getId();
+	    	
+	    	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
+	        if (saveResult.getId() != null)
+	            recordURL += saveResult.getId();
+	        else            
+	            recordURL += objId;
+	                     
+	        if (recordURL.startsWith('http:'))
+	            recordURL = recordURL.replaceFirst('http:', 'https:');           
+	    	
+	    	String status; 
+	        if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING)
+	            status = 'Required Field Missing';   
+	        else if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+	            status = 'Custom Validation Rule Failed';
+	        else
+	            status = 'Other';
+	        
+	        if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+	    	   saveError(System.now(), objectType, recordURL, status, message);
+	    	} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
+	           Error__c error = new Error__c();
+		       error.Datetime__c = System.now();
+		       error.Object_Type__c = objectType;
+		       error.Full_Message__c = message;
+		       error.Error_Type__c = status;
+		       error.Record_URL__c = recordURL;        
+		
+		       System.debug('****Saving error caused by failure');
+		       insert error;
+	    	}
+    	}
+    }
+    
+    @future
+    private static void saveError(Datetime now, String objectType, String recordURL, String status,
+    String message) {
+    	Error__c error = new Error__c();
+	    error.Datetime__c = now;
+        error.Object_Type__c = objectType;
+        error.Full_Message__c = message;
+        error.Error_Type__c = status;
+        error.Record_URL__c = recordURL;
+	    insert error;
+    }
+    
+	public static Error__c createError(Exception e){
+		Error__c error = new Error__c();
+		error.Datetime__c = System.now();        
+		error.Type__c = e.getTypeName();
+		error.Full_Message__c = e.getMessage();
+		error.Stack_Trace__c = e.getStackTraceString();
+		return error;
+	}
+
+    public static Error__c createError(Database.SaveResult saveResult, string objectType, id objId){
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
         
         String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         
-        if (s.getId() != null)
-            recordURL += s.getId();
-        //else            
-        //    recordURL += r.ReciprocalRelationship__c;     @TODO. I don't see this field in the original object either!?!
+        if (saveResult.getId() != null)
+            recordURL += saveResult.getId();
+        else            
+            recordURL += objId;
                      
         if (recordURL.startsWith('http:'))
             recordURL = recordURL.replaceFirst('http:', 'https:');           
-        re.Record_URL__c = recordURL; 
+        error.Record_URL__c = recordURL; 
         
-        if (s.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING)
-            re.Type__c = 'Required Field Missing';   
-        else if (s.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            re.Type__c = 'Custom Validation Rule Failed';
+        if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING)
+            error.Error_Type__c = 'Required Field Missing';   
+        else if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+            error.Error_Type__c = 'Custom Validation Rule Failed';
         else
-            re.Type__c = 'Other';
+            error.Error_Type__c = 'Other';
         
-        re.Full_Message__c = s.getErrors()[0].getMessage();
+        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
     
-        return re;
-    }
-    
-    public static Error__c createError(Exception e){
-        Error__c re = new Error__c();
-        re.Datetime__c = System.now();        
-        re.Type__c = e.getTypeName();
-        re.Full_Message__c = e.getMessage();
-        re.Stack_Trace__c = e.getStackTraceString();
-        return re;
+        return error;
     }
 }

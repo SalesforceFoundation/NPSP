@@ -183,7 +183,7 @@
                             <apex:outputpanel id="errortablepanel">
                                 <apex:pageblocktable value="{!relErrorsList}" var="e" rendered="{!relErrorsSize > 0}">
                                     <apex:column headervalue="Link to Error Record">
-                                        <apex:outputlink target="_blank" title="Link to Error Record" value="{!URLFOR($Action.npe4__Relationship_Error__c.View, e.id)}">
+                                        <apex:outputlink target="_blank" title="Link to Error Record" value="{!URLFOR($Action.Error__c.View, e.id)}">
                                             {!e.id}
                                         </apex:outputlink>
                                     </apex:column>

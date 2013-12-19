@@ -70,7 +70,7 @@ public class RD_RecurringDonations_TEST {
         try {
             insert r0;
         } catch (exception e) {
-            
+            ERR_Handler.saveError(e);
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -239,7 +239,9 @@ public class RD_RecurringDonations_TEST {
         RD_ProcessControl.hasRun = false;
         try{
             delete r2;
-        } catch (exception e1) {}
+        } catch (exception e1) {
+            ERR_Handler.saveError(e1);
+        }
         
         //delete should have failed
         Opportunity[] installments3 = [select amount from Opportunity where npe03__Recurring_Donation__c = :r2.id];

@@ -49,6 +49,15 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>Error_Type__c</fullName>
+        <description>Type of error that occurred</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of error that occurred</inlineHelpText>
+        <label>Type</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Full_Message__c</fullName>
         <description>Full text of the error message</description>
         <externalId>false</externalId>
@@ -57,6 +66,15 @@
         <length>32768</length>
         <type>LongTextArea</type>
         <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Object_Type__c</fullName>
+        <description>Type of object on which the error occurred, if known.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of object on which the error occurred, if known.</inlineHelpText>
+        <label>Type</label>
+        <required>false</required>
+        <type>TextArea</type>
     </fields>
     <fields>
         <fullName>Record_URL__c</fullName>

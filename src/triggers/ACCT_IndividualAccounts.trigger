@@ -44,6 +44,15 @@ trigger ACCT_IndividualAccounts on Contact (before insert, before update, after 
         else if (Trigger.isAfter && Trigger.isDelete ) 
             ta = CAO_Constants.triggerAction.afterDelete;
 
-        ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, ta);
+        //ceiroa: I had to add this here because this trigger has not yet been converted into the TDTM design, and
+        //I need to test the error handler. This trigger was throwing the first exception.
+        try {
+            ACCT_IndividualAccounts process = new ACCT_IndividualAccounts(Trigger.new, Trigger.old, ta);
+        } catch(Exception e) {
+        	System.debug('****Catching exception in ACCT_IndividualAccounts trigger');
+        	ERR_Handler.saveError(e);
+        	//throw e; //@TODO: should we re-throw it to notify the user throwugh the UI? If we do that
+        	//the error won't be saved to the database... an automatic rollback will occur 
+        }
     }        
 }

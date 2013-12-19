@@ -61,12 +61,12 @@ public with sharing class STTG_Relationships_CTRL {
     /******/
     
     /*** Relationship Error Properties ***/
-    public List<npe4__Relationship_Error__c> relErrorsList{get{
+    public List<Error__c> relErrorsList{get{
         if (relErrorsList == null){        
-           relErrorsList = new List<npe4__Relationship_Error__c>();
-           relErrorsList = [select id, Name, npe4__Error_Record_Link__c, 
-                          npe4__Error_Type__c, npe4__Full_Error_Message__c, npe4__Error_Date_Time__c
-                          from npe4__Relationship_Error__c order by npe4__Error_Date_Time__c desc limit 1000];
+           relErrorsList = new List<Error__c>();
+           relErrorsList = [select id, Name, Record_URL__c, 
+                          Error_Type__c, Full_Message__c, Datetime__c
+                          from Error__c order by Datetime__c desc limit 1000];
         }                           
        return relErrorsList;
     }set;}
@@ -208,9 +208,9 @@ public with sharing class STTG_Relationships_CTRL {
     public PageReference deleteErrors(){
         delete relErrorsList;
         //requery
-        relErrorsList = [select id, Name, npe4__Error_Record_Link__c, 
-                          npe4__Error_Type__c, npe4__Full_Error_Message__c, npe4__Error_Date_Time__c
-                          from npe4__Relationship_Error__c order by npe4__Error_Date_Time__c desc limit 1000];
+        relErrorsList = [select id, Name, Record_URL__c, 
+                          Error_Type__c, Full_Message__c, Datetime__c
+                          from Error__c order by Datetime__c desc limit 1000];
         return null;
     }
     
