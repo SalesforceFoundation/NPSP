@@ -208,7 +208,7 @@
                             <apex:column value="{!e.Datetime__c}"/>
                             <apex:column value="{!e.Error_Type__c}"/>
                             <apex:column headervalue="Record Link">
-                                <apex:outputlink target="_blank" title="Link to the affected record" value="{!e.npo02__Error_Record_Link__c}">
+                                <apex:outputlink target="_blank" title="Link to the affected record" value="{!e.Record_URL__c}">
                                     {!e.Record_URL__c}
                                 </apex:outputlink>                                    
                             </apex:column>
