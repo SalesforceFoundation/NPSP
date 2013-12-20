@@ -71,7 +71,7 @@ public with sharing class ERR_Handler {
             }
             
             processErrorMap(errorMap);
-            Database.insert(errors, false);
+            //Database.insert(errors, false);
         }
     }
     
@@ -106,9 +106,9 @@ public with sharing class ERR_Handler {
     
     public static void saveError(Exception e) {
     	if(DiagnosticsEnabled) {
-	    	if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
-	    		saveError(e.getTypeName(), e.getMessage(), e.getStackTraceString(), System.now());
-	    	} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
+	    	//if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+	    	//	saveErrorFuture(e.getTypeName(), e.getMessage(), e.getStackTraceString(), System.now());
+	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
 				Error__c error = new Error__c();
 		        error.Datetime__c = System.now();        
 		        error.Type__c = e.getTypeName();
@@ -116,61 +116,39 @@ public with sharing class ERR_Handler {
 		        error.Stack_Trace__c = e.getStackTraceString();
 		        System.debug('****Saving error caused by exception');
 		        insert error;
-	    	}
+	    	//}
     	}
     }
     
     @future
-    private static void saveError(String typeName, String message, String stackTrace, Datetime now) {
+    private static void saveErrorFuture(String typeName, String message, String stackTrace, Datetime now) {
         Error__c error = new Error__c();
         error.Datetime__c = now;        
         error.Type__c = typeName;
         error.Full_Message__c = message;
         error.Stack_Trace__c = stackTrace;
-        System.debug('****Saving error caused by exception');
         insert error;
     } 
 
     public static void saveError(Database.SaveResult saveResult, String objectType, Id objId) {
-    	if(DiagnosticsEnabled) {
-	    	String message = saveResult.getErrors()[0].getMessage();
-	    	Id SaveResultId = saveResult.getId();
-	    	
-	    	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
-	        if (saveResult.getId() != null)
-	            recordURL += saveResult.getId();
-	        else            
-	            recordURL += objId;
-	                     
-	        if (recordURL.startsWith('http:'))
-	            recordURL = recordURL.replaceFirst('http:', 'https:');           
-	    	
-	    	String status; 
-	        if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING)
-	            status = 'Required Field Missing';   
-	        else if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-	            status = 'Custom Validation Rule Failed';
-	        else
-	            status = 'Other';
-	        
-	        if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
-	    	   saveError(System.now(), objectType, recordURL, status, message);
-	    	} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
+    	if(DiagnosticsEnabled) {        
+	        //if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+	    	//   saveErrorFuture(System.now(), objectType, getRecordURL(saveResult.getId(), objId), 
+	    	//        getStatusCode(saveResult.getErrors()[0].getStatusCode()), saveResult.getErrors()[0].getMessage());
+	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
 	           Error__c error = new Error__c();
 		       error.Datetime__c = System.now();
 		       error.Object_Type__c = objectType;
-		       error.Full_Message__c = message;
-		       error.Error_Type__c = status;
-		       error.Record_URL__c = recordURL;        
-		
-		       System.debug('****Saving error caused by failure');
+		       error.Full_Message__c = saveResult.getErrors()[0].getMessage();
+		       error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
+		       error.Record_URL__c = getRecordURL(saveResult.getId(), objId);        		
 		       insert error;
-	    	}
+	    	//}
     	}
     }
     
     @future
-    private static void saveError(Datetime now, String objectType, String recordURL, String status,
+    private static void saveErrorFuture(Datetime now, String objectType, String recordURL, String status,
     String message) {
     	Error__c error = new Error__c();
 	    error.Datetime__c = now;
@@ -193,28 +171,32 @@ public with sharing class ERR_Handler {
     public static Error__c createError(Database.SaveResult saveResult, string objectType, id objId){
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
-        error.Object_Type__c = objectType;
-        
-        String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
-        
-        if (saveResult.getId() != null)
-            recordURL += saveResult.getId();
+        error.Object_Type__c = objectType;   
+        error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
+        error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
+        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
+        return error;
+    }
+    
+    private static String getRecordURL(Id saveResultId, Id objId) {
+    	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
+        if (saveResultId != null)
+            recordURL += saveResultId;
         else            
             recordURL += objId;
                      
         if (recordURL.startsWith('http:'))
-            recordURL = recordURL.replaceFirst('http:', 'https:');           
-        error.Record_URL__c = recordURL; 
-        
-        if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING)
-            error.Error_Type__c = 'Required Field Missing';   
-        else if (saveResult.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
-            error.Error_Type__c = 'Custom Validation Rule Failed';
-        else
-            error.Error_Type__c = 'Other';
-        
-        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
+            recordURL = recordURL.replaceFirst('http:', 'https:');
+            
+        return recordURL;
+    }
     
-        return error;
+    private static String getStatusCode(system.StatusCode status) {
+    	if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
+            return 'Required Field Missing';   
+        else if (status == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION)
+            return 'Custom Validation Rule Failed';
+        else
+            return 'Other';
     }
 }

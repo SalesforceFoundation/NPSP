@@ -36,21 +36,26 @@
 private class ACCT_IndividualAccounts_TEST {    
 /* TESTING CONTACT AND ACCOUNT PLUMBING ------------------------------------------------*/
 
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
     /// <name> ACCT_IndividualAccounts_TEST </name>
     /// <summary> test default constructor </summary>
     static testMethod void ACCT_IndividualAccounts_TEST() {
+    	if (strTestOnly != '*' && strTestOnly != 'ACCT_IndividualAccounts_TEST') return;
         ACCT_IndividualAccounts_TDTM testIndividualAccounts = new ACCT_IndividualAccounts_TDTM();
     }
 
     /// <name> insertPrivate </name>
     /// <summary> Test Method for inserting a Contact that should get no account </summary>
     static testMethod void insertPrivate() {
+    	if (strTestOnly != '*' && strTestOnly != 'insertPrivate') return;
         insertPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
         insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }   
-    static void insertPrivateProcessor(string strProcessor)
-    {    
+    static void insertPrivateProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
@@ -71,16 +76,17 @@ private class ACCT_IndividualAccounts_TEST {
         
         //contact should have no AccountId
         system.assertEquals(null,insertedContacts[0].AccountId);
-    
     }
     
     static testMethod void insertOneToOneChangeToPrivate() {
+    	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneChangeToPrivate') return;
+    	
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR); 
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
-    static void insertOneToOneChangeToPrivateProcessor(string strProcessor)
-    {
+    
+    static void insertOneToOneChangeToPrivateProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -112,11 +118,12 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     static testMethod void insertOneToOneTriggerOff() {
+    	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneTriggerOff') return;
         insertOneToOneTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         insertOneToOneTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);    
     }
-    static void insertOneToOneTriggerOffProcessor(string strProcessor)
-    {
+    
+    static void insertOneToOneTriggerOffProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor,npe01__Disable_Account_Model_Trigger__c=true));
         
@@ -155,17 +162,17 @@ private class ACCT_IndividualAccounts_TEST {
 
         //contact should have no AccountId
         system.assertEquals(null,insertedContacts[0].AccountId);
-    
     }
 
     /// <name> insertUpdateOneToOne </name>
     /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
     static testMethod void insertUpdateOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOne') return;
     	insertUpdateOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
-    static void insertUpdateOneToOneProcessor(string strProcessor)
-    {
+    
+    static void insertUpdateOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -249,11 +256,12 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> detachOneToOne </name>
     /// <summary> Test Method for separating a Contact from it's One-to-One account</summary>
     static testMethod void detachOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'detachOneToOne') return;
         detachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         detachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void detachOneToOneProcessor(string strProcessor)
-    {
+    
+    static void detachOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -286,17 +294,17 @@ private class ACCT_IndividualAccounts_TEST {
         
         //AccountId of updated contact should match the orignial Account
         system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
-    
     }
         
     /// <name> editContactDuringDetachOneToOne </name>
     /// <summary> Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)</summary>
     static testMethod void editContactDuringDetachOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachOneToOne') return;
         editContactDuringDetachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         editContactDuringDetachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);	
     }
-    static void editContactDuringDetachOneToOneProcessor(string strProcessor)
-    {
+    
+    static void editContactDuringDetachOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
@@ -344,18 +352,18 @@ private class ACCT_IndividualAccounts_TEST {
         
         //addresses should be sync'd
         system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
-        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
-        
+        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet); 
     }
 
     /// <name> attachToIndividualAccount </name>
     /// <summary> Test Method for a new Contact in the Bucket Individual model </summary>
     static testMethod void attachToIndividualAccount() {
+    	if (strTestOnly != '*' && strTestOnly != 'attachToIndividualAccount') return;
         attachToIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
         attachToIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
-    static void attachToIndividualAccountProcessor(string strProcessor)
-    {
+    
+    static void attachToIndividualAccountProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
@@ -387,11 +395,12 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> detachIndividualAccount </name>
     /// <summary> Test Method for detaching a Contact from the bucket individual account </summary>
     static testMethod void detachIndividualAccount() {
+    	if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
     	detachIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
         detachIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void detachIndividualAccountProcessor(string strProcessor)
-    {
+    
+    static void detachIndividualAccountProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                
@@ -428,17 +437,17 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(updatedContacts[0].Lastname + ' Household',updatedContacts[0].Account.Name);
         //the account should have the correct AccountId
         system.assertEquals(AccountId,updatedContacts[0].AccountId);        
-        
     }
 
     /// <name> detachFromNormalAccountToBucket </name>
     /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
     static testMethod void detachFromNormalAccountToBucket() {
+    	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucket') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.BUCKET_PROCESSOR);
         detachFromNormalAccountToBucketProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void detachFromNormalAccountToBucketProcessor(string strProcessor)
-    {
+    
+    static void detachFromNormalAccountToBucketProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
                
@@ -482,11 +491,12 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     static testMethod void contactAddedToExistingOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingOneToOne') return;
         contactAddedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         contactAddedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
     }
-    static void contactAddedToExistingOneToOneProcessor(string strProcessor)
-    {
+    
+    static void contactAddedToExistingOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -519,11 +529,16 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     static testMethod void contactUpdatedToExistingOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOne') return;
         contactUpdatedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    
+    static testMethod void contactUpdatedToExistingOneToOneHH() {
+        if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOneHH') return;
         contactUpdatedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
     }
-    static void contactUpdatedToExistingOneToOneProcessor(string strProcessor)
-    {
+    
+    static void contactUpdatedToExistingOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -559,11 +574,12 @@ private class ACCT_IndividualAccounts_TEST {
     }
 
     static testMethod void contactInNormalOrgNameChange() {
+    	if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChange') return;
         contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void contactInNormalOrgNameChangeProcessor(string strProcessor)
-    {
+    
+    static void contactInNormalOrgNameChangeProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
@@ -601,15 +617,15 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(acctName,updatedContacts[0].Account.Name);         
     }
     
-    
     /// <name> detachFromNormalAccountToOneToOne </name>
     /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
     static testMethod void detachFromNormalAccountToOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOne') return;
     	detachFromNormalAccountToOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         detachFromNormalAccountToOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void detachFromNormalAccountToOneToOneProcessor(string strProcessor)
-    {
+    
+    static void detachFromNormalAccountToOneToOneProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -653,9 +669,11 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
      public static testMethod void deleteContactNoOpp() {
+     	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOpp') return;
         deleteContactNoOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         deleteContactNoOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
      }
+     
      public static void deleteContactNoOppProcessor(string strProcessor) {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
@@ -692,9 +710,11 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     public static testMethod void deleteContactWithOpp() {
+    	if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOpp') return;
         deleteContactWithOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         deleteContactWithOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
+    
     public static void deleteContactWithOppProcessor(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
@@ -734,13 +754,14 @@ private class ACCT_IndividualAccounts_TEST {
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
         system.assertEquals(1,missingAccount.size());
-
     }
     
     public static testMethod void deleteContactNormalAccount() {
+    	if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccount') return;
         deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         deleteContactNormalAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    
     public static void deleteContactNormalAccountProcessor(string strProcessor) {
               
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
@@ -775,7 +796,6 @@ private class ACCT_IndividualAccounts_TEST {
         
         Account[] missingAccount = [select id from Account where id=:createdAccountId];
         system.assertEquals(1,missingAccount.size());
-
     }
     
 /* TESTING PHONE NUMBER WORKFLOW -------------------------------------------------------
@@ -1311,11 +1331,15 @@ private class ACCT_IndividualAccounts_TEST {
 ************************* DEPRECATE IN CUMULUS ***********************************/    
      
     static testMethod void ghIssue16a(){
+    	if (strTestOnly != '*' && strTestOnly != 'ghIssue16a') return;
         ghIssue16Processor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    
     static testMethod void ghIssue16b(){
+    	if (strTestOnly != '*' && strTestOnly != 'ghIssue16b') return;
         ghIssue16Processor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    
     static void ghIssue16Processor(string strProcessor){
         /* Set value of Account name to blank when first name is blank, not null */ 
         
@@ -1352,6 +1376,4 @@ private class ACCT_IndividualAccounts_TEST {
         else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)            
             system.assertEquals(newAcc.Name, CAO_Constants.Contact_LASTNAME_FOR_TESTS + ' Household');
     }
-
-
 }

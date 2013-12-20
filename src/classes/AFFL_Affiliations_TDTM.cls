@@ -124,9 +124,11 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
                 // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
                 // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
+                String message = 'Failed to find account with id ' + c.AccountId;
+                System.debug('****' + message);
                 Exception e = new NullPointerException();
-                e.setMessage('Failed to find account with id ' + c.AccountId);
-                ERR_Handler.saveError(e);
+                e.setMessage(message);
+                //ERR_Handler.saveError(e);
             }
         }
         return affiliationInserts;

@@ -635,16 +635,15 @@ public with sharing class RLLP_OppRollup_TEST {
             Test.StartTest();
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
-            Test.StopTest();
-        
-    }   
+            Test.StopTest();  
+    } 
 
     static testMethod void OneContactMultipleOppsOne2One(){
         OneContactMultipleOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void OneContactMultipleOppsHHAccount(){
         OneContactMultipleOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
     public static void OneContactMultipleOpps(string strProcessor) {
 
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
@@ -1632,5 +1631,5 @@ public with sharing class RLLP_OppRollup_TEST {
         System.assertEquals('2022-09-03 00:00:00',String.valueOf(ct.NextFireTime)); 
         
         Test.stopTest();        
-    } 
+    }
 }
