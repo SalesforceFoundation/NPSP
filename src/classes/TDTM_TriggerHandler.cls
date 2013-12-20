@@ -155,7 +155,8 @@ public with sharing class TDTM_TriggerHandler {
 	        //Process the results
 	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newList, oldList);
 	        
-    	} catch (Exception e) { //Is this even necessary? Do those methods throw exceptions?
+    	} catch (Exception e) {
+    		System.debug('****Error generated in processDML method');
     		ERR_Handler.saveError(e);
     	}
     }

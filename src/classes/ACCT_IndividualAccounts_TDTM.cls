@@ -271,7 +271,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 deleteContactAccountsIfEmpty(listContactAccountDelete, dmlWrapper);
             }
             
-    return dmlWrapper;
+            return dmlWrapper;
     }
 
     /// <name> updateAccountPrimaryContact </name>

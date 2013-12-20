@@ -71,7 +71,7 @@ public with sharing class ERR_Handler {
             }
             
             processErrorMap(errorMap);
-            //Database.insert(errors, false);
+            Database.insert(errors, false);
         }
     }
     
@@ -127,6 +127,7 @@ public with sharing class ERR_Handler {
         error.Type__c = typeName;
         error.Full_Message__c = message;
         error.Stack_Trace__c = stackTrace;
+        System.debug('****Saving error caused by exception - in Future');
         insert error;
     } 
 
@@ -141,7 +142,8 @@ public with sharing class ERR_Handler {
 		       error.Object_Type__c = objectType;
 		       error.Full_Message__c = saveResult.getErrors()[0].getMessage();
 		       error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
-		       error.Record_URL__c = getRecordURL(saveResult.getId(), objId);        		
+		       error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
+		       System.debug('****Saving error stored in Database.SaveResult');       		
 		       insert error;
 	    	//}
     	}
@@ -156,6 +158,7 @@ public with sharing class ERR_Handler {
         error.Full_Message__c = message;
         error.Error_Type__c = status;
         error.Record_URL__c = recordURL;
+        System.debug('****Saving error stored in Database.SaveResult - in Future'); 
 	    insert error;
     }
     
