@@ -88,7 +88,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
     private static List<SObject> processInserts(Contact[] contacts) {
 
-        List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
+        List<SObject> affiliationInserts = new List<SObject>();
                 
         List<Id> accountIds = new List<Id>();
         for(Contact c : contacts) {
@@ -124,11 +124,12 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
                 // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
                 // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
-                String message = 'Failed to find account with id ' + c.AccountId;
+                String message = 'Failed to find account with id ' + c.AccountId + ' in ' + accountMap;
                 System.debug('****' + message);
                 Exception e = new NullPointerException();
                 e.setMessage(message);
-                //ERR_Handler.saveError(e);
+                Error__c error = ERR_Handler.createError(e);
+                affiliationInserts.add(error);   
             }
         }
         return affiliationInserts;
