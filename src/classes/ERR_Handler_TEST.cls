@@ -28,12 +28,18 @@ public with sharing class ERR_Handler_TEST {
         http://salesforce.stackexchange.com/questions/1496/can-i-force-to-store-information-even-if-the-trigger-throws-an-exception
 	    Summary: if every record in the trigger has errors all work done in the trigger, including @future method calls, 
 	    sending email, queueing batch jobs, or performing any DML, is rolled back.*/
-	    LIST<database.SaveResult> results = Database.insert(new Contact[]{contact1, contact2}, false);
+	    List<Contact> contacts =new Contact[]{contact1, contact2};
+	    LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
         
         for(database.SaveResult result : results) {
         	System.debug('***Record Errors:\n' + result.getErrors());
         }
+        
+        //Verify that one of the contacts (contact2) was properly inserted. This means the transaction
+        //was not rolled back.
+        list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
+        System.assertEquals(1, insertedContacts.size());
         
         //Verify no affiliation was created for first contact
         List<npe5__Affiliation__c> affs = [select Id from npe5__Affiliation__c 
