@@ -115,7 +115,7 @@ public with sharing class ERR_Handler {
 	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
 				Error__c error = new Error__c();
 		        error.Datetime__c = System.now();        
-		        error.Type__c = e.getTypeName();
+		        error.Error_Type__c = e.getTypeName();
 		        error.Full_Message__c = e.getMessage();
 		        error.Stack_Trace__c = e.getStackTraceString();
 		        System.debug('****Saving error caused by exception: ' + error.Full_Message__c);
@@ -129,7 +129,7 @@ public with sharing class ERR_Handler {
     private static void saveErrorFuture(String typeName, String message, String stackTrace, Datetime now) {
         Error__c error = new Error__c();
         error.Datetime__c = now;        
-        error.Type__c = typeName;
+        error.Error_Type__c = typeName;
         error.Full_Message__c = message;
         error.Stack_Trace__c = stackTrace;
         System.debug('****Saving error caused by exception - in Future');
@@ -170,7 +170,7 @@ public with sharing class ERR_Handler {
 	public static Error__c createError(Exception e){
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();        
-		error.Type__c = e.getTypeName();
+		error.Error_Type__c = e.getTypeName();
 		error.Full_Message__c = e.getMessage();
 		error.Stack_Trace__c = e.getStackTraceString();
 		return error;
