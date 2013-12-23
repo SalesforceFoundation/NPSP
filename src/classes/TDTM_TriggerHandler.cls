@@ -68,7 +68,8 @@ public with sharing class TDTM_TriggerHandler {
                 try {
                 	dmlWrapperLocal = runClass(classToCall);
                 } catch(Exception e) {
-                	ERR_Handler.saveError(e);
+                	System.debug('****Exception caught in TDTM_TriggerHandler.runClasses');
+                	dmlWrapper.objectsToInsert.add(ERR_Handler.createError(e));
                 }
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && dmlWrapperLocal.objectsToInsert.size() > 0)
@@ -156,7 +157,7 @@ public with sharing class TDTM_TriggerHandler {
 	        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, newList, oldList);
 	        
     	} catch (Exception e) {
-    		System.debug('****Error generated in processDML method');
+    		System.debug('****Exception caught in TDTM_TriggerHandler.processDML');
     		ERR_Handler.saveError(e);
     	}
     }

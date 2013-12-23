@@ -21,11 +21,15 @@ public with sharing class ERR_Handler {
         	this.newList = newList;
             this.oldList = oldList;
             
-            for(SObject record : newList)
-            	if(record.Id != null) newMap.put(record.Id, record);
+            if(newList != null && newList.size() > 0) {
+	            for(SObject record : newList)
+	            	if(record != null && record.Id != null) newMap.put(record.Id, record);
+            }
             
-            for(SObject record : oldList)
-                if(record.Id != null) oldMap.put(record.Id, record);
+            if(oldList != null && oldList.size() > 0) {
+	            for(SObject record : oldList)
+	                if(record != null && record.Id != null) oldMap.put(record.Id, record);
+            }
         
             Map<String, String> errorMap = new Map<string, string>();
             
@@ -105,7 +109,7 @@ public with sharing class ERR_Handler {
     }
     
     public static void saveError(Exception e) {
-    	if(DiagnosticsEnabled) {
+    	if(DiagnosticsEnabled && e != null) {
 	    	//if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
 	    	//	saveErrorFuture(e.getTypeName(), e.getMessage(), e.getStackTraceString(), System.now());
 	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
@@ -114,7 +118,8 @@ public with sharing class ERR_Handler {
 		        error.Type__c = e.getTypeName();
 		        error.Full_Message__c = e.getMessage();
 		        error.Stack_Trace__c = e.getStackTraceString();
-		        System.debug('****Saving error caused by exception');
+		        System.debug('****Saving error caused by exception: ' + error.Full_Message__c);
+		        System.debug('****Stack Trace: \n' + error.Stack_Trace__c);
 		        insert error;
 	    	//}
     	}

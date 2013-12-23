@@ -160,7 +160,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 unique += a.npe5__Organization__c;
                 conAccMap.put(unique,a.Id);
             }
-        } catch (exception e) { 
+        } catch (exception e) {
+        	System.debug('****Exception caught in AFFL_Affiliations_TDTM.processUpdates');
             ERR_Handler.saveError(e);
         }
         
