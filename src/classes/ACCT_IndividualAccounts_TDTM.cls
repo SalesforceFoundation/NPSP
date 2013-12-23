@@ -98,10 +98,16 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             Integer i = 0; // used to index into oldContacts when needed                    
             for (Contact c : contacts) {
                 
-                //@WARNING: I believe this uncoversa platform bug, because if we don't assign it to a String
-                //and exception is thrown when doing a comparison that is not caught by the try-cath around
-                //the call to "runClass" in TDTM_TriggerHandler
-                String accTypeInUse = mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c;
+                //Adding this try-catch just in case mapContactIdAccount is null. 
+                //@WARNING: I believe this uncoversa platform bug, because the exception that being 
+                //thrown here was otherwise not being caught by the try-catch around the call to
+                //"runClass" in TriggerHandler.
+                String accTypeInUse;
+                try {
+                    accTypeInUse = mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c;
+                } catch(Exception e) {
+                    dmlWrapper.objectsToInsert.add(ERR_Handler.createError(e));
+                }
                 
                 // BEFORE INSERT
                 if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
