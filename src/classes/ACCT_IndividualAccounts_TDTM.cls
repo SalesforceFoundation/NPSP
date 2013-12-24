@@ -70,7 +70,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             Map<Id,Id> mapAccountIdContactId = new Map<Id,Id>();
             list<Id> listAccountIdHHToUpdate = new list<Id>();
             list<Id> listAccountIdHHToRename = new list<Id>();
-            Map<Id,Account> mapContactIdAccount = null;
+            Map<Id,Account> mapAccountIdAccount = null;
             map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
@@ -80,7 +80,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 Set<Id> setAccountId = new Set<Id>();
                 for (Contact c : contacts) 
                     setAccountId.add(c.AccountId);
-                mapContactIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
+                mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
             } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
                contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
@@ -115,7 +115,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
                         */ 
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
                             // Avoid creating a new contact with the 1:1 account of another contact  
                             if (c.AccountId != null)
@@ -167,10 +167,10 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
                         */
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
                             // Avoid creating a new contact with the 1:1 account of another contact  
-                            if (c.AccountId != null && mapContactIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
+                            if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
                                 c.AccountId = null;
 
                             listContactNeedAccount.add(c);
