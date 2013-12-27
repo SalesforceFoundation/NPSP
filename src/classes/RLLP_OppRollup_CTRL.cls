@@ -51,7 +51,7 @@ public class RLLP_OppRollup_CTRL {
             objectId = ApexPages.currentPage().getParameters().get('id');
             oid = objectId;
         } catch (exception e) {
-        	ERR_Handler.saveError(e);
+        	ERR_Handler.processError(e, null);
         }  
         
         if (oid != null) {

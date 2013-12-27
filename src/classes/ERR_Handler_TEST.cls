@@ -20,7 +20,7 @@ public with sharing class ERR_Handler_TEST {
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');
         Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP');
         
-        //Delete the account go get the affiliations code to throw an exception
+        //Delete the account to get the affiliations code to throw an exception
         delete acc1;
         
         Test.startTest();

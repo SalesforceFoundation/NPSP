@@ -2,172 +2,81 @@ public with sharing class ERR_Handler {
 
     //@TODO: we should read this from a custom setting
     public static Boolean DiagnosticsEnabled = true;
-    
-    List<SObject> newList;
-    List<SObject> oldList;
-    Map<Id, SObject> newMap = new Map<Id, SObject>();
-    Map<Id, SObject> oldMap = new Map<Id, SObject>();
-    //Stores the error associated with the list position of the SObjInsLIST to the triggering ID 
-    public static MAP<integer, string>sObjInsErrMAP = new MAP<integer, string>();
-    //Stores the error associated with the list position of the SObjUpdLIST to the triggering ID
-    public static MAP<integer, string>sObjUpdErrMAP = new MAP<integer, string>();
+    List<Error__c> errors = new List<Error__c>();
     
     public void processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> newList, List<SObject> oldList) {
+    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
+    //List<SObject> objectsToDelete, List<SObject> objectsToUndelete
+    List<Id> objectsToDelete, List<Id> objectsToUndelete
+    ) {
         
         if(DiagnosticsEnabled) {
-        	
-        	this.newList = newList;
-            this.oldList = oldList;
-            
-            if(newList != null && newList.size() > 0) {
-	            for(SObject record : newList)
-	            	if(record != null && record.Id != null) newMap.put(record.Id, record);
-            }
-            
-            if(oldList != null && oldList.size() > 0) {
-	            for(SObject record : oldList)
-	                if(record != null && record.Id != null) oldMap.put(record.Id, record);
-            }
-        
-            Map<String, String> errorMap = new Map<string, string>();
-            
-            List<Error__c> errors = new List<Error__c>();
-            //INSERT
-            if(insertResults != null && insertResults.size() > 0) {
-                Integer i = 0;
-                for(Database.SaveResult saveResult : insertResults) {
-                    if (!saveResult.isSuccess()) { //If there was an error
-                    	errors.add(createError(saveResult, 'Unknown Object Type', saveResult.getId()));
-                    	System.debug('****Putting key in errorMap: ' + sObjInsErrMAP.get(i));
-                        errorMap.put(sObjInsErrMAP.get(i), saveResult.getErrors()[0].getMessage());
-                    }
-                    i++;
-                }
-            }
-            
-            //UPDATE
-            if(updateResults != null && updateResults.size() > 0) {
-                Integer i = 0;
-                for(Database.SaveResult saveResult : updateResults) {
-                    if (!saveResult.isSuccess()) { //If there was an error
-                        errors.add(createError(saveResult, 'Unknown Object Type', saveResult.getId()));
-                        System.debug('****Putting key in errorMap: ' + sObjUpdErrMAP.get(i));
-                        errorMap.put(sObjUpdErrMAP.get(i), saveResult.getErrors()[0].getMessage());
-                    }
-                    i++;
-                }
-            }
-            
-            //DELETE
-            if(deleteResults != null && deleteResults.size() > 0) {
-                for(Database.DeleteResult result : deleteResults) {
-                    
-                }
-            }
-            
-            //UNDELETE
-            if(undeleteResults != null && undeleteResults.size() > 0) {
-                for(Database.UndeleteResult result : undeleteResults) {
-                    
-                }
-            }
-            
-            processErrorMap(errorMap);
-            Database.insert(errors, false);
-        }
-    }
-    
-    /**
-     * Adds the errors to the matching trigger records.
-     */
-    private void processErrorMap(Map<String, String> errorMap) {
-        
-        if(errorMap != null && errorMap.size() > 0) {
-            Integer i = 0;
-            for (string strErrorId : errorMap.keySet()) {
-                
-                //One advantage of the TriggerHandler not being static is that each instance of it 
-                //should have its own Trigger.now and Trigger.old available in its stack to be able 
-                //to add errors to.
-                if (strErrorId.isNumeric()) {
-                	System.debug('****Numeric key in error map: ' + strErrorId);
-                    i = integer.valueOf(strErrorID);
-                    newList[i].addError(errorMap.get(strErrorID));
-                } else {
-                	System.debug('****Non-Numeric key in error map: ' + strErrorId);
-                    if (trigger.isDelete) {
-                        oldMap.get(strErrorID).addError(errorMap.get(strErrorID));
-                    } else {
-                        newMap.get(strErrorID).addError(errorMap.get(strErrorID));
-                    }
-                }
-                i++;
-            }
-        }
-    }
-    
-    public static void saveError(Exception e) {
-    	if(DiagnosticsEnabled && e != null) {
-	    	//if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
-	    	//	saveErrorFuture(e.getTypeName(), e.getMessage(), e.getStackTraceString(), System.now());
-	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
-				Error__c error = new Error__c();
-		        error.Datetime__c = System.now();        
-		        error.Error_Type__c = e.getTypeName();
-		        error.Full_Message__c = e.getMessage();
-		        error.Stack_Trace__c = e.getStackTraceString();
-		        System.debug('****Saving error caused by exception: ' + error.Full_Message__c);
-		        System.debug('****Stack Trace: \n' + error.Stack_Trace__c);
-		        insert error;
-	    	//}
-    	}
-    }
-    
-    @future
-    private static void saveErrorFuture(String typeName, String message, String stackTrace, Datetime now) {
-        Error__c error = new Error__c();
-        error.Datetime__c = now;        
-        error.Error_Type__c = typeName;
-        error.Full_Message__c = message;
-        error.Stack_Trace__c = stackTrace;
-        System.debug('****Saving error caused by exception - in Future');
-        insert error;
-    } 
 
-    public static void saveError(Database.SaveResult saveResult, String objectType, Id objId) {
-    	if(DiagnosticsEnabled) {        
-	        //if(!System.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
-	    	//   saveErrorFuture(System.now(), objectType, getRecordURL(saveResult.getId(), objId), 
-	    	//        getStatusCode(saveResult.getErrors()[0].getStatusCode()), saveResult.getErrors()[0].getMessage());
-	    	//} else if(Limits.getDMLStatements() < Limits.getLimitQueries()) {
-	           Error__c error = new Error__c();
-		       error.Datetime__c = System.now();
-		       error.Object_Type__c = objectType;
-		       error.Full_Message__c = saveResult.getErrors()[0].getMessage();
-		       error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
-		       error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
-		       System.debug('****Saving error stored in Database.SaveResult');       		
-		       insert error;
-	    	//}
+        	processInsertUpdateResults(insertResults, objectsToInsert);  //Insert
+        	processInsertUpdateResults(updateResults, objectsToUpdate);  //Update
+        	//processDeleteResults(deleteResults, objectsToDelete);  //Delete
+        	//processUndeleteResults(undeleteResults, objectsToUndelete);  //Undelete
+        	
+        	Database.insert(errors, false);
+        }
+    }
+    
+    /*** The following three methods are identical, but unfortunately we couldn't have only one because no parent
+        class of Database.SaveResult, Database.DeleteResult and Database.UndeleteResult was provided in the API ***/
+    private void processInsertUpdateResults(List<Database.SaveResult> results, List<SObject> objects) {
+    	for(Integer i=0; i<results.size(); i++) {
+            if(!results[i].isSuccess()) {
+                //Adding error message to the record
+                objects[i].addError(results[i].getErrors()[0].getMessage());
+                //Creating error object
+                errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
+            }
+        }
+    }
+    /* The problem wih delete and undelete is that we only have the IDs, not the object. Changing to objects would
+    mean a lot of work through the whole app. Might not even be doable...
+    private void processDeleteResults(List<Database.DeleteResult> results, List<SObject> objects) {
+        for(Integer i=0; i<results.size(); i++) {
+            if(!results[i].isSuccess()) {
+                //Adding error message to the record
+                objects[i].addError(results[i].getErrors()[0].getMessage());
+                //Creating error object
+                errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
+            }
+        }
+    }
+    
+    private void processUndeleteResults(List<Database.UndeleteResult> results, List<SObject> objects) {
+        for(Integer i=0; i<results.size(); i++) {
+            if(!results[i].isSuccess()) {
+                //Adding error message to the record
+                objects[i].addError(results[i].getErrors()[0].getMessage());
+                //Creating error object
+                errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
+            }
+        }
+    }*/
+    
+    /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
+    public static void processError(Exception e, List<SObject> records) {
+    	if(DiagnosticsEnabled && e != null) {
+			Error__c error = createError(e);
+	        insert error;
+	        
+	        if(e instanceof DmlException && records != null) {
+	        	DmlException de = (DmlException) e;
+		        for(Integer i=0; i<de.getNumDml(); i++) {
+	               System.debug('****Position of failed record in original list: ' + de.getDmlIndex(i));
+	               Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
+	               records[failedRecordIndex].addError(de.getDmlMessage(i));
+	           }
+	       }
     	}
     }
     
-    @future
-    private static void saveErrorFuture(Datetime now, String objectType, String recordURL, String status,
-    String message) {
-    	Error__c error = new Error__c();
-	    error.Datetime__c = now;
-        error.Object_Type__c = objectType;
-        error.Full_Message__c = message;
-        error.Error_Type__c = status;
-        error.Record_URL__c = recordURL;
-        System.debug('****Saving error stored in Database.SaveResult - in Future'); 
-	    insert error;
-    }
-    
-	public static Error__c createError(Exception e){
+    /*** Error creation methods ***/
+	public static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();        
 		error.Error_Type__c = e.getTypeName();
@@ -176,16 +85,39 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
-    public static Error__c createError(Database.SaveResult saveResult, string objectType, id objId){
+    /*** This is the same issue as above. Ideally we would only need 1 method, but since no interface was provided
+    for Database.SaveResult, Database.DeleteResult and Database.UndeleteResult ***/
+    public static Error__c createError(Database.SaveResult result, string objectType, id objId) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Object_Type__c = objectType;   
-        error.Record_URL__c = getRecordURL(saveResult.getId(), objId);
-        error.Error_Type__c = getStatusCode(saveResult.getErrors()[0].getStatusCode());
-        error.Full_Message__c = saveResult.getErrors()[0].getMessage();
+        error.Record_URL__c = getRecordURL(result.getId(), objId);
+        error.Error_Type__c = getStatusCode(result.getErrors()[0].getStatusCode());
+        error.Full_Message__c = result.getErrors()[0].getMessage();
+        return error;
+    }
+    /*
+    public static Error__c createError(Database.DeleteResult result, string objectType, id objId) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;   
+        error.Record_URL__c = getRecordURL(result.getId(), objId);
+        error.Error_Type__c = getStatusCode(result.getErrors()[0].getStatusCode());
+        error.Full_Message__c = result.getErrors()[0].getMessage();
         return error;
     }
     
+    public static Error__c createError(Database.UndeleteResult result, string objectType, id objId) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;   
+        error.Record_URL__c = getRecordURL(result.getId(), objId);
+        error.Error_Type__c = getStatusCode(result.getErrors()[0].getStatusCode());
+        error.Full_Message__c = result.getErrors()[0].getMessage();
+        return error;
+    }*/
+    
+    /*** Helper methods ***/
     private static String getRecordURL(Id saveResultId, Id objId) {
     	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
@@ -206,5 +138,28 @@ public with sharing class ERR_Handler {
             return 'Custom Validation Rule Failed';
         else
             return 'Other';
+    }
+    
+    /*** Future methods - not yet used ***/
+    @future
+    private static void saveErrorFuture(Datetime now, String objectType, String recordURL, String status,
+    String message) {
+        Error__c error = new Error__c();
+        error.Datetime__c = now;
+        error.Object_Type__c = objectType;
+        error.Error_Type__c = status;
+        error.Record_URL__c = recordURL;
+        error.Full_Message__c = message;
+        insert error;
+    }
+    
+    @future
+    private static void saveErrorFuture(Datetime now, String typeName, String stackTrace, String message) {
+        Error__c error = new Error__c();
+        error.Datetime__c = now;        
+        error.Error_Type__c = typeName;
+        error.Stack_Trace__c = stackTrace;
+        error.Full_Message__c = message;
+        insert error;
     }
 }

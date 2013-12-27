@@ -65,7 +65,7 @@ public abstract class TDTM_Runnable {
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
-        Object classInstance;         
+        Object classInstance; 
         if(classType != null)
             classInstance = classType.newInstance();
         if(classInstance instanceof TDTM_Runnable) {
@@ -74,7 +74,7 @@ public abstract class TDTM_Runnable {
 	        
 	        //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
 	        //in a future
-	        TDTM_TriggerHandler.processDML(dmlWrapper, null, null);
+	        TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
     

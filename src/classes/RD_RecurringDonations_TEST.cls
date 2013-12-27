@@ -69,8 +69,8 @@ public class RD_RecurringDonations_TEST {
         r0.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         try {
             insert r0;
-        } catch (exception e) {
-            ERR_Handler.saveError(e);
+        } catch (Exception e) {
+            ERR_Handler.processError(e, new SObject[] {r0});
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -240,7 +240,7 @@ public class RD_RecurringDonations_TEST {
         try{
             delete r2;
         } catch (exception e1) {
-            ERR_Handler.saveError(e1);
+            ERR_Handler.processError(e1, new SObject[] {r2});
         }
         
         //delete should have failed
