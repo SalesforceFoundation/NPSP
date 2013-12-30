@@ -269,12 +269,23 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
        }
     }
     
+    // static to prevent recursive call to runAfflTriggerHandler
+    public static boolean hasRanAfflTriggerHandler = false;
+    
     // the trigger handler on Affiliation for managing Affiliations        
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        	
+        // prevent a recursive call into this trigger handler.
+        // scenario is user changes fPrimary on the Affiliations object.
+        // this handler will update the contact.
+        // the Contact Affiliations trigger will then update the Affiliations.
+        // we need to prevent that update from causing us to update the contacts again!!
+        if (hasRanAfflTriggerHandler)
+            return null;
         
         DmlWrapper dmlWrapper = new DmlWrapper();
-
+        
         map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
         map<Id, Id> mapConIdAccIdUnprimary = new map<Id, Id>();
         
@@ -315,8 +326,11 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             con.Primary_Affiliation__c = null;
             listCon.add(con);
         }
-        
-        dmlWrapper.objectsToUpdate.putAll(listCon);
+    
+        if (listCon.size() > 0) {        
+	        hasRanAfflTriggerHandler = true;
+	        dmlWrapper.objectsToUpdate.putAll(listCon);
+        }
         return dmlWrapper;
     }
 
