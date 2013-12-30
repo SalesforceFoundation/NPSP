@@ -29,147 +29,295 @@
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
-    /// <name> AFFL_Affiliations </name>
-    /// <summary> Overloads the Affiliation object constructor to handle Affiliation processing </summary>
-    /// <param name="newlist"> Contact objects that are being triggered </param>
-    /// <param name="oldlist"> Contact object values before trigger event </param>
-    /// <param name="triggerAction"> Trigger action that is occuring </param>
+    // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    
+        // dispatch to the correct handler
+    	if (objResult == Schema.Sobjecttype.Contact)
+            return runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
+    	else if (objResult == Schema.Sobjecttype.npe5__Affiliation__c)
+            return runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
+        else
+            return null;
+    }
+        		
+    // the trigger handler on Contact for managing Affiliations        
+    private DmlWrapper runContactTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
         
-        List<Contact> affiliationInserts = new List<Contact>();
-        List<Contact> affiliationUpdates = new List<Contact>();
+        // we have multiple scenarios to support
+        // 1. create a new current affiliation, potentially mark primary
+        // 2. set an existing affiliation to former
+        // 3. set an existing affiliation to non-primary
+        // 4. set an existing affiliation to primary
+        
+        map<string, AfflOps> mapStrComboKeyAfflOps = new map<string, AfflOps>();
+        list<Id> listContactId = new list<Id>();
         
         Integer i = 0;
         if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
+        	
             for (SObject so : newlist) {
             	Contact contact = (Contact)so;
+
                 // AFTER INSERT
                 if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
-                    //insert affiliations for contacts with an Account
+
                     if (contact.AccountId != null) {
-                        affiliationInserts.add(contact);
+                    	string strComboKey = strComboKeyFromContactIdAccountId(contact.Id, contact.AccountId);
+                        AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+                        if (ao == null) ao = new AfflOps(contact.Id, contact.AccountId);
+                        ao.fCurrent = true;
+                        ao.strRole = contact.Title;
+                        mapStrComboKeyAfflOps.put(strComboKey, ao);
+                    }
+                    if (contact.Primary_Affiliation__c != null) {
+                        string strComboKey = strComboKeyFromContactIdAccountId(contact.Id, contact.Primary_Affiliation__c);                    	
+                    	AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+                    	if (ao == null) ao = new AfflOps(contact.Id, contact.Primary_Affiliation__c);
+                    	ao.fPrimary = true;
+                    	mapStrComboKeyAfflOps.put(strComboKey, ao);
                     }
                 }
-                
-                // AFTER UPDATE
-                if ( triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+
+	            // AFTER UPDATE
+	            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {	            
+                    listContactId.add(contact.Id);
                     Contact oldContact = (Contact) oldlist[i];
+                    
                     if (contact.AccountId != oldContact.AccountId) {
-                        if (oldContact.AccountId != null)
-                            affiliationUpdates.add(oldContact);
-                        if (contact.AccountId != null)
-                            affiliationInserts.add(contact);
+	                    if (contact.AccountId != null) {
+	                        string strComboKey = strComboKeyFromContactIdAccountId(contact.Id, contact.AccountId);
+	                        AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+	                        if (ao == null) ao = new AfflOps(contact.Id, contact.AccountId);
+	                        ao.fCurrent = true;
+                            ao.strRole = contact.Title;
+	                        mapStrComboKeyAfflOps.put(strComboKey, ao);
+	                    }
+                        if (oldContact.AccountId != null) {
+                            string strComboKey = strComboKeyFromContactIdAccountId(oldContact.Id, oldContact.AccountId);
+                            AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+                            if (ao == null) ao = new AfflOps(oldContact.Id, oldContact.AccountId);
+                            ao.fFormer = true;
+                            mapStrComboKeyAfflOps.put(strComboKey, ao);
+                        }
                     }
-                }
+	
+                    if (contact.Primary_Affiliation__c != oldContact.Primary_Affiliation__c) {
+                        if (contact.Primary_Affiliation__c != null) {
+                            string strComboKey = strComboKeyFromContactIdAccountId(contact.Id, contact.Primary_Affiliation__c);                     
+	                        AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+                            if (ao == null) ao = new AfflOps(contact.Id, contact.Primary_Affiliation__c);
+                            ao.fPrimary = true;
+                            mapStrComboKeyAfflOps.put(strComboKey, ao);
+                        }
+                        if (oldContact.Primary_Affiliation__c != null) {
+                            string strComboKey = strComboKeyFromContactIdAccountId(oldContact.Id, oldContact.Primary_Affiliation__c);                     
+	                        AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
+                            if (ao == null) ao = new AfflOps(oldContact.Id, oldContact.Primary_Affiliation__c);
+                            ao.fUnprimary = true;
+                            mapStrComboKeyAfflOps.put(strComboKey, ao);
+                        }
+                    }
+	            }
+	
                 i++;
             }
-    
-            if (affiliationInserts.size() > 0) {
-            	System.debug('****Number of contacts that need new affiliations: ' + affiliationInserts.size());
-                dmlWrapper.objectsToInsert.addAll(processInserts(affiliationInserts));
+        
+            if (mapStrComboKeyAfflOps.size() > 0) {
+            	processAfflOps(mapStrComboKeyAfflOps, dmlWrapper);
             }
-            
-            if (affiliationUpdates.size() > 0) {
-            	System.debug('****Number of contacts that need updated affiliations: ' + affiliationUpdates.size());
-                dmlWrapper.objectsToUpdate.putAll(processUpdates(affiliationUpdates));
-            }
+
         }
         return dmlWrapper;
     }
 
+    // temporary class used to track which affiliations need
+    // what type of operation performed on them.
+    private class AfflOps {
 
-    /// <name> insertAffiliation </name>
-    /// <summary> Creates a new Affiliation record when a Contact is related to a new non-Individual Account </summary>
-    /// <param name="Contact"> List of contacts meeting trigger criteria </param>
-    private static List<SObject> processInserts(Contact[] contacts) {
-
-        List<npe5__Affiliation__c> affiliationInserts = new List<npe5__Affiliation__c>();
-                
-        List<Id> accountIds = new List<Id>();
-        for(Contact c : contacts) {
-            accountIds.add(c.AccountId);
+        // constructor
+        AfflOps(Id contactId, Id accountId) {
+            strComboKey = strComboKeyFromContactIdAccountId(contactId, accountId);
+            fCurrent = false;
+            fFormer = false;
+            fPrimary = false;
+            fUnprimary = false;
         }
-        //get all the accounts associated wth these contacts
-        Map<Id,Account> accountMap = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account where Id in :accountIds]);
 
-        for(Contact c : contacts) {
-            String cName = c.FirstName;
-            cName += ' ';
-            cName += c.LastName;
-            //check to see if this account isn't an individual. 
-            Account acct = accountMap.get(c.AccountId);
-            if (acct != null) {
-                if (acct.npe01__SYSTEMIsIndividual__c != true) {
+    	string strComboKey;
+    	boolean fCurrent;
+    	boolean fFormer;
+    	boolean fPrimary;
+    	boolean fUnprimary;
+    	string strRole;
+    	
+    	ID ContactId {
+    		get {
+    			if (strComboKey == null) return null;
+    			return strComboKey.left(strComboKey.indexOf('|'));
+    		}
+    	}
+    	
+    	ID AccountId {
+    		get {
+    			if (strComboKey == null) return null;
+    			return strComboKey.substring(strComboKey.indexOf('|') + 1);
+    		}
+    	}
+    	
+    }
+    
+    
+    // utility to create a string based Combo Key for an affiliation's contactId and accountId
+    private static string strComboKeyFromContactIdAccountId(Id contactId, Id accountId) {
+        return contactId + '|' + accountId;
+    }
+
+    // looks at each affiliation and the possible operations to perform on them
+    // and figures out which to insert vs update, and adds them to the dmlWrapper.
+    private static void processAfflOps(map<string, AfflOps> mapStrComboKeyAfflOps, DmlWrapper dmlWrapper) {
+
+        // the collections we want to insert/update in the db
+        list<npe5__Affiliation__c> listAfflInsert = new list<npe5__Affiliation__c>();
+        map<Id, npe5__Affiliation__c> mapAfflIdAfflUpdate = new map<Id, npe5__Affiliation__c>();
+
+        // get all the accounts & contacts
+        set<Id> setContactId = new set<Id>();
+        set<Id> setAccountId = new set<Id>();
+        for (AfflOps ao : mapStrComboKeyAfflOps.values()) {
+            setContactId.add(ao.ContactId);
+            setAccountId.add(ao.AccountId);
+        }
+        
+        Map<Id,Account> mapAccountIdAccount = new Map<Id,Account>([Select Id, npe01__SYSTEMIsIndividual__c from Account where Id in :setAccountId]);
+        
+        // get existing affiliations
+        list<npe5__Affiliation__c> listAfflExisting = [Select Id, npe5__Contact__c, npe5__Organization__c from npe5__Affiliation__c 
+            where npe5__EndDate__c = null and npe5__Contact__c in :setContactId and npe5__Organization__c in :setAccountId];
+        map<string, npe5__Affiliation__c> mapStrComboKeyAffl = new map<string, npe5__Affiliation__c>();
+        for (npe5__Affiliation__c a : listAfflExisting) {
+            mapStrComboKeyAffl.put(strComboKeyFromContactIdAccountId(a.npe5__Contact__c, a.npe5__Organization__c), a);
+        }
+
+        for (AfflOps ao : mapStrComboKeyAfflOps.values()) {
+        	Id accountId = ao.AccountId;
+        	Id contactId = ao.ContactId;
+        	
+        	if (ao.fCurrent) {
+                //check to see if this account isn't an individual.
+                Account acc =  mapAccountIdAccount.get(accountId);
+                if (acc != null && acc.npe01__SYSTEMIsIndividual__c != true) {
                     npe5__Affiliation__c a = new npe5__Affiliation__c();
-                    a.npe5__Contact__c = c.Id;
-                    a.npe5__Organization__c = c.AccountId;
+                    a.npe5__Contact__c = contactId;
+                    a.npe5__Organization__c = accountId;
                     a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                     a.npe5__StartDate__c = System.Today();
-                    //user title as Role
-                    if (c.Title != null) {
-                        a.npe5__Role__c = c.Title;
-                    }
-                    affiliationInserts.add(a);
+                    a.npe5__Role__c = ao.strRole;
+                    a.npe5__Primary__c = ao.fPrimary;
+                    listAfflInsert.add(a);
+                }      		
+        	}
+        	
+        	if (!ao.fCurrent && ao.fPrimary) {
+        	   // see if we have an existing current affiliation to use, otherwise create a new one
+        	   npe5__Affiliation__c a = mapStrComboKeyAffl.get(ao.strComboKey);
+        	   if (a != null) {
+        	       a.npe5__Primary__c = true;
+        	       mapAfflIdAfflUpdate.put(a.Id, a);
+        	   } else {
+                    a = new npe5__Affiliation__c();
+                    a.npe5__Contact__c = contactId;
+                    a.npe5__Organization__c = accountId;
+                    a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                    a.npe5__StartDate__c = System.Today();
+                    a.npe5__Primary__c = true;
+                    listAfflInsert.add(a);        	   	
+        	   }
+        	}
+        	
+        	if (ao.fFormer || ao.fUnprimary) {
+               npe5__Affiliation__c a = mapStrComboKeyAffl.get(ao.strComboKey);
+               
+               // deal with the affiliation being deleted (if the org or contact was deleted)
+               if (a == null) continue;
+               
+               if (ao.fFormer) {
+	                //flag it as former ending today
+	                a.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
+	                a.npe5__EndDate__c = System.Today();               	
+               }
+               if (ao.fUnprimary) {
+                    a.npe5__Primary__c = false;
+               }  
+               mapAfflIdAfflUpdate.put(a.Id, a);
+        	}
+        }
+
+        if (listAfflInsert.size() > 0) {
+        	//system.debug('**** listAfflInsert: ' + listAfflInsert);
+            dmlWrapper.objectsToInsert.addAll((list<SObject>) listAfflInsert);
+        }
+            
+       if (mapAfflIdAfflUpdate.size() > 0) {
+            //system.debug('**** mapAfflIdAfflUpdate: ' + mapAfflIdAfflUpdate.values());
+            dmlWrapper.objectsToUpdate.putAll((map<Id, SObject>) mapAfflIdAfflUpdate);
+       }
+    }
+    
+    // the trigger handler on Affiliation for managing Affiliations        
+    private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        
+        DmlWrapper dmlWrapper = new DmlWrapper();
+
+        map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
+        map<Id, Id> mapConIdAccIdUnprimary = new map<Id, Id>();
+        
+        integer i = 0;        
+        for (SObject so : newlist) {
+            npe5__Affiliation__c affl = (npe5__Affiliation__c)so;
+
+            // AFTER INSERT
+            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+                if (affl.npe5__Primary__c && affl.npe5__Contact__c != null && affl.npe5__Organization__c != null) {
+                	mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
+                }        
+            }
+            
+            // AFTER UPDATE
+            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                npe5__Affiliation__c afflOld = (npe5__Affiliation__c)oldlist[i];
+                if (affl.npe5__Primary__c != afflOld.npe5__Primary__c) {
+                    if (affl.npe5__Primary__c)    
+                        mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
+                    else
+                        mapConIdAccIdUnprimary.put(afflOld.npe5__Contact__c, afflOld.npe5__Organization__c);                	
                 }
-            } else {
-                // This situation should never occur as init filters contacts with a null id.  However, we were hitting
-                // NullPointerExceptions after looking up an account that debug shows was in the accountMap but a get by
-                // c.AccountId returned null.  Attempting to look at a field on the null result raised the exception.
-                // This error only occurred from tests run as part of an ant deployment.  The same tests run through the 
-                // web ui after a deploy passed.  The tests that experienced the issue all created a contact without
-                // an AccountId set and relied on ACCT_IndividualAccount triggers to create the account and link the Contact.
-
-                system.debug('Failed to find account with id ' + c.AccountId + ' in ' + accountMap);
             }
+            
+        i++;            
         }
-        return affiliationInserts;
+       
+        // update all our contacts as appropriate
+        list<Contact> listCon = new list<Contact>();
+        for (Id contactId : mapConIdAccIdPrimary.keySet()) {
+        	Contact con = new Contact(Id = contactId);
+        	con.Primary_Affiliation__c = mapConIdAccIdPrimary.get(contactId);
+        	listCon.add(con);
+        }
+        for (Id contactId : mapConIdAccIdUnprimary.keySet()) {
+            Contact con = new Contact(Id = contactId);
+            con.Primary_Affiliation__c = null;
+            listCon.add(con);
+        }
+        
+        dmlWrapper.objectsToUpdate.putAll(listCon);
+        return dmlWrapper;
     }
 
-
-
-    /// <name> updateAffiliation </name>
-    /// <summary> Updates an existing Affiliation record when a Contact's Account is changed </summary>
-    /// <param name="Contact"> List of original contacts before update that met trigger criteria </param>
-    private static Map<Id, SObject> processUpdates(Contact[] contacts) {
-        List<Id> accountIds = new List<Id>();
-        List<Id> contactIds = new List<Id>();
-        Map<String,Id> conAccMap = new Map<String,Id>();
-
-        for(Contact c : contacts) {
-            contactIds.add(c.Id);
-            accountIds.add(c.AccountId);
-        }
-
-        try {
-            List<npe5__Affiliation__c> existingAffiliations = [Select Id, npe5__Contact__c, npe5__Organization__c from npe5__Affiliation__c where npe5__EndDate__c = null and npe5__Contact__c in :contactIds and npe5__Organization__c in :accountIds];
-            for(npe5__Affiliation__c a : existingAffiliations) {
-                //concatenate the contact and account id for a unique string we can access later
-                String unique = a.npe5__Contact__c;
-                unique += a.npe5__Organization__c;
-                conAccMap.put(unique,a.Id);
-            }
-        } catch (exception e) { }
-        
-        Map<Id, npe5__Affiliation__c> affiliationUpdates = new Map<Id, npe5__Affiliation__c>();
-        
-        for(Contact contact : contacts) {
-            String u = contact.Id;
-            u += contact.AccountId;
-            //get the affiliation based on that unique string
-            if (conAccMap.containsKey(u)) {
-                //flag it as former ending today
-                npe5__Affiliation__c affiliation = new npe5__Affiliation__c(Id=conAccMap.get(u));
-                affiliation.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
-                affiliation.npe5__EndDate__c = System.Today();
-                affiliationUpdates.put(affiliation.Id, affiliation);
-            }
-        }
-        
-        return affiliationUpdates;
-    }
 }
