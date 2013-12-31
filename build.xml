@@ -1,12 +1,15 @@
 <project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
-
+<!--
     <taskdef uri="antlib:com.salesforce"
          resource="com/salesforce/antlib.xml"
-         classpath="lib/ant-salesforce.jar"/>
-
+         classpath="${basedir}/lib/ant-salesforce.jar" />
+-->
     <include file="${basedir}/lib/ant-salesforce.xml" />
 
-    <!-- Managed Package Versions -->
+    <taskdef 
+         resource="net/sf/antcontrib/antlib.xml"
+         classpath="${basedir}/lib/ant-contrib-1.0b2.jar" />
+
     <property name="version.npe01" value="2.95" />
     <property name="version.npo02" value="2.96" />
     <property name="version.npe03" value="2.92" />
@@ -36,11 +39,11 @@
 
         <echo>Dependent Package Versions:
 -------------------------------
-npe01: ${InstalledPackage.npe01.versionNumber}
-npo02: ${InstalledPackage.npo02.versionNumber}
-npe03: ${InstalledPackage.npe03.versionNumber}
-npe4: ${InstalledPackage.npe4.versionNumber}
-npe5: ${InstalledPackage.npe5.versionNumber}
+npe01: ${InstalledPackage.npe01.versionNumber} (${version.npe01} required)
+npo02: ${InstalledPackage.npo02.versionNumber} (${version.npo02} required)
+npe03: ${InstalledPackage.npe03.versionNumber} (${version.npe03} required)
+npe4: ${InstalledPackage.npe4.versionNumber} (${version.npe4} required)
+npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
         </echo>
 
         <delete dir="${basedir}/installedPackages"/>
@@ -53,96 +56,28 @@ npe5: ${InstalledPackage.npe5.versionNumber}
       <sequential>
         <getPackageNamespaces />
 
-        <!-- npo02 depends on npe01 so we have to uninstall npo02 first if needed -->
+        <!-- npo02 depends on npe01 so we have to uninstall npo02 first if npo02 needs downgraded -->
         <if>
           <and>
-            <or>
-              <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="${version.npo02}" /></not>
-              <!-- If the npo02 version is correct but npe01 needs a reinstall, we have to uninstall npo02 first -->
-              <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
-            </or>
+            <!-- npo02 is installed -->
             <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" /></not>
-          </and>
+            <!-- and npe01 need downgraded -->
+            <bool><isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></bool>
+          </and>  
           <then>
-            <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}"/>
+            <echo>Uninstalling npo02 ${InstalledPackage.npe01.versionNumber} to allow for npe01 downgrade</echo>
+            <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}" />
+
+            <!-- Override the cached installed version of npo02 so we don't have to fetch versions again -->
+            <var name="InstalledPackage.npo02.versionNumber" value="Not Installed" />
           </then>
         </if>
 
-        <!-- reinstall npe01 if version doesn't match -->
-        <if>
-          <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
-          <then>
-            <echo>Changing npe01 from ${InstalledPackage.npe01.versionNumber} to ${version.npe01}</echo>
-            <if>
-              <!-- only uninstall if package exists -->
-              <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="Not Installed" /></not>
-              <then>
-                <uninstallPackage namespace="npe01" username="${sf.username}" password="${sf.password}"/>
-              </then> 
-            </if>
-            <installPackage namespace="npe01" version="${version.npe01}" username="${sf.username}" password="${sf.password}"/> 
-          </then>
-        </if>
-
-        <!-- npo02 depends on npe01 so we have to install it after npe01 if needed -->
-        <if>
-          <or>
-            <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="${version.npo02}" /></not>
-            <not><equals arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></not>
-          </or>
-          <then>
-            <echo>Changing npo02 from ${InstalledPackage.npo02.versionNumber} to ${version.npo02}</echo>
-            <installPackage namespace="npo02" version="${version.npo02}" username="${sf.username}" password="${sf.password}"/> 
-          </then>
-        </if>
-
-        <!-- reinstall npe03 if version doesn't match -->
-        <if>
-          <not><equals arg1="${InstalledPackage.npe03.versionNumber}" arg2="${version.npe03}" /></not>
-          <then>
-            <echo>Changing npe03 from ${InstalledPackage.npe03.versionNumber} to ${version.npe03}</echo>
-            <if>
-              <!-- only uninstall if package exists -->
-              <not><equals arg1="${InstalledPackage.npe03.versionNumber}" arg2="Not Installed" /></not>
-              <then>
-                <uninstallPackage namespace="npe03" username="${sf.username}" password="${sf.password}"/>
-              </then> 
-            </if>
-            <installPackage namespace="npe03" version="${version.npe03}" username="${sf.username}" password="${sf.password}"/> 
-          </then>
-        </if>
-
-        <!-- reinstall npe4 if version doesn't match -->
-        <if>
-          <not><equals arg1="${InstalledPackage.npe4.versionNumber}" arg2="${version.npe4}" /></not>
-          <then>
-            <echo>Changing npe4 from ${InstalledPackage.npe4.versionNumber} to ${version.npe4}</echo>
-            <if>
-              <!-- only uninstall if package exists -->
-              <not><equals arg1="${InstalledPackage.npe4.versionNumber}" arg2="Not Installed" /></not>
-              <then>
-                <uninstallPackage namespace="npe4" username="${sf.username}" password="${sf.password}"/>
-              </then> 
-            </if>
-            <installPackage namespace="npe4" version="${version.npe4}" username="${sf.username}" password="${sf.password}"/> 
-          </then>
-        </if>
-
-        <!-- reinstall npe5 if version doesn't match -->
-        <if>
-          <not><equals arg1="${InstalledPackage.npe5.versionNumber}" arg2="${version.npe5}" /></not>
-          <then>
-            <echo>Changing npe5 from ${InstalledPackage.npe5.versionNumber} to ${version.npe5}</echo>
-            <if>
-              <!-- only uninstall if package exists -->
-              <not><equals arg1="${InstalledPackage.npe5.versionNumber}" arg2="Not Installed" /></not>
-              <then>
-                <uninstallPackage namespace="npe5" username="${sf.username}" password="${sf.password}"/>
-              </then> 
-            </if>
-            <installPackage namespace="npe5" version="${version.npe5}" username="${sf.username}" password="${sf.password}"/> 
-          </then>
-        </if>
+        <updatePackageVersion namespace="npe01" version="${version.npe01}" />
+        <updatePackageVersion namespace="npo02" version="${version.npo02}" />
+        <updatePackageVersion namespace="npe03" version="${version.npe03}" />
+        <updatePackageVersion namespace="npe4" version="${version.npe4}" />
+        <updatePackageVersion namespace="npe5" version="${version.npe5}" />
 
       </sequential>
     </macrodef>
