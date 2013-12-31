@@ -22,9 +22,14 @@
 @isTest
 public class AFFL_Affiliations_TEST {
     
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+            
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
     static testMethod void newContactOnOrgAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'newContactOnOrgAccount') return;
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -70,6 +75,7 @@ public class AFFL_Affiliations_TEST {
     
     
     static testMethod void newContactOnOrgAccountAutoOff() {
+        if (strTestOnly != '*' && strTestOnly != 'newContactOnOrgAccountAutoOff') return;
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                             (npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
@@ -92,6 +98,7 @@ public class AFFL_Affiliations_TEST {
     /// <name> createAffiliation_Test </name>
     /// <summary> test method for createAffiliation_Test function </summary>
     static testMethod void newContactOnIndividualAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'newContactOnIndividualAccount') return;
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c 
                                                                                 (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -161,6 +168,7 @@ public class AFFL_Affiliations_TEST {
     
     //Modifying the test above to have only two DMLs, one before StartTest and one after
     static testMethod void contactWithMultipleAffiliations_v2() {
+        if (strTestOnly != '*' && strTestOnly != 'contactWithMultipleAffiliations_v2') return;
         
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c (npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -208,4 +216,393 @@ public class AFFL_Affiliations_TEST {
     private static Contact getContact(Id accountId, String title) {
     	return new Contact(FirstName = 'test', LastName = 'testerson', AccountId = accountId, Title = title);
     }
+   
+   
+    /*********************************************************************************************************
+    operation:
+        create N new contacts, with different account types, and set a primary affiliation
+    verify:
+        N affiliations created and marked Primary
+    **********************************************************************************************************/            
+    static testMethod void newContactsWithPrimaryAffiliation() {
+        if (strTestOnly != '*' && strTestOnly != 'newContactsWithPrimaryAffiliation') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
+        
+        for (Contact con : listCon) 
+            con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
+            
+        insert listCon;
+        
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        
+        System.assertEquals(9, listAffl.size());
+        for (npe5__Affiliation__c affl : listAffl) {
+            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(System.Today(), affl.npe5__StartDate__c);
+            if (affl.npe5__Organization__c == listAcc[5].Id) 
+                system.assertEquals(false, affl.npe5__Primary__c);
+            else
+                system.assertEquals(true, affl.npe5__Primary__c);
+        }
+   }
+
+    /*********************************************************************************************************
+    operation:
+        update N contacts, with different account types, with a primary affiliation
+    verify:
+        N affiliations created and marked Primary
+    **********************************************************************************************************/            
+    static testMethod void updateContactsWithPrimaryAffiliation() {
+        if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliation') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
+        
+        insert listCon;
+
+        // 2 org affiliations should get created
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
+        System.assertEquals(2, listAffl.size());
+
+        // now update our contacts with a Primary Affiliation
+        for (Contact con : listCon) 
+            con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
+        update listCon;            
+        
+        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        
+        System.assertEquals(9, listAffl.size());
+        for (npe5__Affiliation__c affl : listAffl) {
+            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(System.Today(), affl.npe5__StartDate__c);
+            if (affl.npe5__Organization__c == listAcc[5].Id) 
+                system.assertEquals(false, affl.npe5__Primary__c);
+            else
+                system.assertEquals(true, affl.npe5__Primary__c);
+        }
+   }
+     
+    /*********************************************************************************************************
+    operation:
+        update N contacts, with different account types, with a primary affiliation and account
+    verify:
+        N affiliations created and marked Primary
+    **********************************************************************************************************/            
+    static testMethod void updateContactsWithPrimaryAffiliationAndAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationAndAccount') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
+        
+        insert listCon;
+
+        // 2 org affiliations should get created
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
+        System.assertEquals(2, listAffl.size());
+
+        // now update our contacts with a Primary Affiliation and a different account
+        for (Contact con : listCon) {
+            con.AccountId = listAcc[4].Id; // Org1  
+            con.Primary_Affiliation__c = listAcc[4].Id; // Org1
+        }  
+        update listCon;            
+        
+        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        
+        System.assertEquals(9, listAffl.size());
+        for (npe5__Affiliation__c affl : listAffl) {
+            system.assertEquals(System.Today(), affl.npe5__StartDate__c);
+            if (affl.npe5__Organization__c == listAcc[5].Id) { 
+                system.assertEquals(false, affl.npe5__Primary__c);
+                system.assertEquals(System.Today(), affl.npe5__EndDate__c);
+                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+            } else {
+                system.assertEquals(true, affl.npe5__Primary__c);
+                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            }
+        }
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        update N contacts, with different account types with Primary Affiliation, to a different account.
+    verify:
+        N affiliations created and marked Primary
+    **********************************************************************************************************/            
+    static testMethod void updateContactsWithPrimaryAffiliationToDiffAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationToDiffAccount') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
+        
+        for (Contact con : listCon) {
+            con.Primary_Affiliation__c = listAcc[4].Id; // Org1
+        }  
+        insert listCon;
+
+        // 9 org affiliations should get created
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
+        System.assertEquals(9, listAffl.size());
+
+        // now update our contacts to a different account
+        for (Contact con : listCon) {
+            con.AccountId = listAcc[5].Id; // Org2  
+        }  
+        update listCon;            
+        
+        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        
+        // should end up with 8 primary affiliations to Org1 (one of which is now former)
+        // 8 current affilations to org2
+        System.assertEquals(16, listAffl.size());
+        integer cOrg1 = 0;
+        integer cOrg2 = 0;
+        for (npe5__Affiliation__c affl : listAffl) {
+            system.assertEquals(System.Today(), affl.npe5__StartDate__c);
+            if (affl.npe5__Status__c == system.label.npe5.DefaultFormerStatus) { 
+                system.assertEquals(true, affl.npe5__Primary__c);
+                system.assertEquals(System.Today(), affl.npe5__EndDate__c);
+                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+            } else {
+                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            }
+            if (affl.npe5__Organization__c == listAcc[4].id) cOrg1++;
+            if (affl.npe5__Organization__c == listAcc[5].id) cOrg2++;            
+        }
+        system.assertEquals(8, cOrg1);
+        system.assertEquals(8, cOrg2);
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update N contacts, with different account types with Primary Affiliation, clear primary.
+    verify:
+        N affiliations created and not marked Primary
+    **********************************************************************************************************/            
+    static testMethod void updateContactsWithPrimaryAffiliationClearPrimary() {
+        if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationClearPrimary') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
+        
+        for (Contact con : listCon) {
+            con.Primary_Affiliation__c = listAcc[4].Id; // Org1
+        }  
+        insert listCon;
+
+        // 9 org affiliations should get created
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
+        System.assertEquals(9, listAffl.size());
+
+        // now clear our primary affilation
+        for (Contact con : listCon) {
+            con.Primary_Affiliation__c = null; 
+        }  
+        update listCon;            
+        
+        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        
+        // should end up with 9 affiliations, none of the primary
+        System.assertEquals(9, listAffl.size());
+        for (npe5__Affiliation__c affl : listAffl) {
+            system.assertEquals(System.Today(), affl.npe5__StartDate__c);
+            system.assertEquals(false, affl.npe5__Primary__c);
+        }
+   }
+
+    /*********************************************************************************************************
+    operation:
+        create N primary Affiliations on contacts with different accounts
+    verify:
+        Primary Affiliation on contacts filled in to matching account
+    **********************************************************************************************************/            
+    static testMethod void newPrimaryAffiliations() {
+        if (strTestOnly != '*' && strTestOnly != 'newPrimaryAffiliations') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account        
+        insert listCon;
+        
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        System.assertEquals(2, listAffl.size());
+        
+        // now create our affiliation records directly
+        listAffl = new list<npe5__Affiliation__c>();
+        for (integer i = 0; i < 8; i++) {
+        	npe5__Affiliation__c affl = new npe5__Affiliation__c();
+        	affl.npe5__Contact__c = listCon[i].Id;
+        	affl.npe5__Organization__c = listAcc[4].Id;
+        	affl.npe5__StartDate__c = System.Today();
+        	affl.npe5__Primary__c = true;
+        	affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+        	listAffl.add(affl);
+        }
+        insert listAffl;
+        
+        // make sure primary affiliation set on Contacts
+        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
+        system.assertEquals(8, listCon.size());        
+        for (Contact con : listCon) {
+        	system.assertEquals(listAcc[4].Id, con.Primary_Affiliation__c);
+        }
+
+        // test2, let's clear the primary flags.
+        for (npe5__Affiliation__c affl : listAffl) {
+        	affl.npe5__Primary__c = false;
+        }
+        update listAffl;
+        
+        // make sure cleared on the contacts
+        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
+        system.assertEquals(8, listCon.size());        
+        for (Contact con : listCon) {
+            system.assertEquals(null, con.Primary_Affiliation__c);
+        }
+        
+   }
+
 }

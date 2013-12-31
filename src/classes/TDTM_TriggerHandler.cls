@@ -175,6 +175,15 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterUpdate'));
         
+        //Affiliations on Affiliation
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c', 
+              Trigger_Action__c = 'AfterInsert'));
+                    
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c', 
+              Trigger_Action__c = 'AfterUpdate'));
+        
         //Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 

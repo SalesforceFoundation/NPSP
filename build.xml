@@ -11,7 +11,7 @@
     <property name="version.npo02" value="2.96" />
     <property name="version.npe03" value="2.92" />
     <property name="version.npe4" value="2.91" />
-    <property name="version.npe5" value="1.91" />
+    <property name="version.npe5" value="1.92" />
 
 
     <!-- Cumulus specific macros -->

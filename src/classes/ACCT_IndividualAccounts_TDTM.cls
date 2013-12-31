@@ -63,94 +63,83 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     	   	
         ContactsSettings = CAO_Constants.getContactsSettings();
             
-        List<Contact> listContactNeedAccount = new List<Contact>();
-        List<Contact> listContactNeedAccountUpdate = new List<Contact>();
-        List<Contact> listContactAccountDelete = new List<Contact>();
-        List<Contact> listContactNeedBucketAccount = new List<Contact>();
-        Map<Id,Id> mapAccountIdContactId = new Map<Id,Id>();
-        list<Id> listAccountIdHHToUpdate = new list<Id>();
-        list<Id> listAccountIdHHToRename = new list<Id>();
-        Map<Id,Account> mapContactIdAccount = null;
-        map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
-        map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
-        map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-        
-        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert || triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                    
-            // need to query account fields we need to look at
-            Set<Id> setAccountId = new Set<Id>();
-            for (Contact c : contacts) 
-                setAccountId.add(c.AccountId);
-            mapContactIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
-        } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-           // requery to get correct Account values (and all the other fields we will look at)
-           contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
-                Salutation, npo02__Naming_Exclusions__c,
-                MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
-                Phone, Fax from Contact where Id IN :contacts];
-        }        
-                    
-        // AFTER DELETE
-        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterDelete) {
-            for (Contact c : oldContacts)
-                listContactAccountDelete.add(c);                     
-        } else {               
-            Integer i = 0; // used to index into oldContacts when needed                    
-            for (Contact c : contacts) {
-                
-                //Adding this try-catch just in case mapContactIdAccount is null. 
-                //@WARNING: I believe this uncoversa platform bug, because the exception that being 
-                //thrown here was otherwise not being caught by the try-catch around the call to
-                //"runClass" in TriggerHandler.
-                String accTypeInUse;
-                try {
-                    accTypeInUse = mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c;
-                } catch(Exception e) {
-                    dmlWrapper.objectsToInsert.add(ERR_Handler.createError(e));
-                }
-                
-                // BEFORE INSERT
-                if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
-                    /* HH Account should be created if:
-                        1. The account isn't set by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
-                    */
-                    if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
-                        listContactNeedAccount.add(c);
-                    } 
-                                         
-                    /*one-to-one account should be created if:
-                        1. The account isn't set by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
-                    */
-                    else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                        (c.AccountId == null || accTypeInUse == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+            List<Contact> listContactNeedAccount = new List<Contact>();
+            List<Contact> listContactNeedAccountUpdate = new List<Contact>();
+            List<Contact> listContactAccountDelete = new List<Contact>();
+            List<Contact> listContactNeedBucketAccount = new List<Contact>();
+            Map<Id,Id> mapAccountIdContactId = new Map<Id,Id>();
+            list<Id> listAccountIdHHToUpdate = new list<Id>();
+            list<Id> listAccountIdHHToRename = new list<Id>();
+            Map<Id,Account> mapAccountIdAccount = null;
+            map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
+            map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
+            map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
+            
+            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert || triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                    
+                // need to query account fields we need to look at
+                Set<Id> setAccountId = new Set<Id>();
+                for (Contact c : contacts) 
+                    setAccountId.add(c.AccountId);
+                mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
+            } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+               // requery to get correct Account values (and all the other fields we will look at)
+               contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
+                    Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
+                    Salutation, npo02__Naming_Exclusions__c,
+                    MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
+                    Phone, Fax from Contact where Id IN :contacts];
+            }        
                         
-                        // Avoid creating a new contact with the 1:1 account of another contact  
-                        if (c.AccountId != null)
-                            c.AccountId = null;
-                       
-                        listContactNeedAccount.add(c);
-                    }                    
-                    /*contact should be connected to the bucket account if:
-                        1. The account isn't set by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
-                    */
-                    else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
-                        listContactNeedBucketAccount.add(c);
-                    }                                                
-                }
-    
-                // AFTER INSERT
-                if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
-                    /*grab the Accounts that need to have the newly assigned Contact Id to them if:
-                        1. If the contact is connected to an Account
-                        2. The Contact is flagged as an individual
-                        3. The one-to-one or HH Account model is chosen in the npe01__SystemAccountProcessor__c
-                    */
+            // AFTER DELETE
+            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterDelete) {
+                for (Contact c : oldContacts)
+                    listContactAccountDelete.add(c);                     
+            } else {               
+                Integer i = 0; // used to index into oldContacts when needed                    
+                for (Contact c : contacts) {
+                    
+                    // BEFORE INSERT
+                    if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+                        /* HH Account should be created if:
+                            1. The account isn't set by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                        */
+                        if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
+                            listContactNeedAccount.add(c);
+                        } 
+                                             
+                        /*one-to-one account should be created if:
+                            1. The account isn't set by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
+                        */ 
+                        else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
+                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            
+                            // Avoid creating a new contact with the 1:1 account of another contact  
+                            if (c.AccountId != null)
+                                c.AccountId = null;
+                           
+                            listContactNeedAccount.add(c);
+                        }                    
+                        /*contact should be connected to the bucket account if:
+                            1. The account isn't set by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
+                        */
+                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
+                            listContactNeedBucketAccount.add(c);
+                        }                                                
+                    }
+        
+                    // AFTER INSERT
+                    if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+                        /*grab the Accounts that need to have the newly assigned Contact Id to them if:
+                            1. If the contact is connected to an Account
+                            2. The Contact is flagged as an individual
+                            3. The one-to-one or HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                        */
                         if (c.AccountId != null && c.npe01__Private__c != true && c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && c.Account.npe01__SYSTEMIsIndividual__c) {
                             // contacts are connected to Accounts, make the connection in the other direction
                             mapAccountIdContactId.put(c.AccountId, c.Id);
@@ -165,46 +154,46 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     // BEFORE UPDATE
                     if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
                         /* HH account should be created if:
-                        1. The account has been blanked out by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
-                    */
-                    if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
-                        listContactNeedAccount.add(c);
-                    }          
-                    /*one-to-one account should be created if:
-                        1. The account has been blanked out by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
-                    */
+                            1. The account has been blanked out by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                        */
+                        if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
+                            listContactNeedAccount.add(c);
+                        }          
+                        /*one-to-one account should be created if:
+                            1. The account has been blanked out by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
+                        */
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || mapContactIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
                             // Avoid creating a new contact with the 1:1 account of another contact  
-                            if (c.AccountId != null && mapContactIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
+                            if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
                                 c.AccountId = null;
 
                             listContactNeedAccount.add(c);
                         }          
                         /*contact should be connected to the bucket account if:
-                        1. The account has been blanked out by the user
-                        2. The npe01__Private__c checkbox isn't set by the user
-                        3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
-                    */ 
-                    else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
-                        listContactNeedBucketAccount.add(c);
+                            1. The account has been blanked out by the user
+                            2. The npe01__Private__c checkbox isn't set by the user
+                            3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
+                        */ 
+                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
+                            listContactNeedBucketAccount.add(c);
+                        }
+                        // for contacts marked private after they have been created, break the relationship from their account (any model)
+                        if (c.AccountId != null && c.npe01__Private__c == true) {
+                            c.AccountId = null;
+                        } 
                     }
-                    // for contacts marked private after they have been created, break the relationship from their account (any model)
-                    if (c.AccountId != null && c.npe01__Private__c == true) {
-                        c.AccountId = null;
-                    } 
-                }
-    
-                // AFTER UPDATE
-                if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-                    /*if the contact is in the one-to-one model, changes to fields on the Contact
-                    will require data changes on the Account to keep some fields in sync
-                    */
+        
+                    // AFTER UPDATE
+                    if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                        /*if the contact is in the one-to-one model, changes to fields on the Contact
+                        will require data changes on the Account to keep some fields in sync
+                        */
                         if (c.npe01__Organization_Type__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && needsOne2OneAccountUpdate(c, oldContacts[i])) {
                             listContactNeedAccountUpdate.add(c);                                
                         }
@@ -282,7 +271,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 deleteContactAccountsIfEmpty(listContactAccountDelete, dmlWrapper);
             }
             
-            return dmlWrapper;
+    return dmlWrapper;
     }
 
     /// <name> updateAccountPrimaryContact </name>

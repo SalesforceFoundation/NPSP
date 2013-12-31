@@ -13,7 +13,7 @@ ducking-octo-happiness, laughing-archer
 * Create an Opportunity Record Type (Setup | Customize | Opportunity | Record Type)
 * Install the 5 required Nonprofit Starter Pack Packages  
  
-    * [Affiliations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cct9)
+    * [Affiliations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cdEo)
     * [Contacts_and_Organizations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000cdEe)
     * [Households](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000lNu5)
     * [Recurring_Donations](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000pZOO)
