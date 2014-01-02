@@ -580,21 +580,5 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 counter++; 
             }   
         }
-    }   
-    /*
-    private static DmlWrapper inspectSaveResults(Database.SaveResult[] sr, List<npe4__Relationship__c> rl){
-        DmlWrapper dmlWrapper = new DmlWrapper();
-        List<npe4__Relationship_Error__c> elist = new List<npe4__Relationship_Error__c>();
-        //needed to match errors to update list index
-        integer i = 0;
-        for(Database.SaveResult s: sr){         
-            if (!s.isSuccess()){
-                elist.add(REL_Utils.createRelationshipError(s, rl[i]));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            dmlWrapper.objectsToInsert.addAll(elist);
-        }
-    }*/
+    }
 }
