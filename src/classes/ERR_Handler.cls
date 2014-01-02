@@ -1,7 +1,8 @@
 public with sharing class ERR_Handler {
 
-    //@TODO: we should read this from a custom setting
+    //@TODO: we should read this flag from a custom setting
     public static Boolean DiagnosticsEnabled = true;
+    
     List<Error__c> errors = new List<Error__c>();
     
     public void processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
@@ -10,16 +11,13 @@ public with sharing class ERR_Handler {
     //List<SObject> objectsToDelete, List<SObject> objectsToUndelete
     List<Id> objectsToDelete, List<Id> objectsToUndelete
     ) {
-        
-        if(DiagnosticsEnabled) {
 
-        	processInsertUpdateResults(insertResults, objectsToInsert);  //Insert
-        	processInsertUpdateResults(updateResults, objectsToUpdate);  //Update
-        	//processDeleteResults(deleteResults, objectsToDelete);  //Delete
-        	//processUndeleteResults(undeleteResults, objectsToUndelete);  //Undelete
-        	
-        	Database.insert(errors, false);
-        }
+    	processInsertUpdateResults(insertResults, objectsToInsert);  //Insert
+    	processInsertUpdateResults(updateResults, objectsToUpdate);  //Update
+    	//processDeleteResults(deleteResults, objectsToDelete);  //Delete
+    	//processUndeleteResults(undeleteResults, objectsToUndelete);  //Undelete
+    	
+    	storeErrors(errors);
     }
     
     /*** The following three methods are identical, but unfortunately we couldn't have only one because no parent
@@ -28,6 +26,8 @@ public with sharing class ERR_Handler {
     	for(Integer i=0; i<results.size(); i++) {
             if(!results[i].isSuccess()) {
                 //Adding error message to the record
+                System.debug('****Adding error message "' + results[i].getErrors()[0].getMessage() 
+                + ' to this record: ' + objects[i]);
                 objects[i].addError(results[i].getErrors()[0].getMessage());
                 //Creating error object
                 errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
@@ -61,17 +61,23 @@ public with sharing class ERR_Handler {
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
     public static void processError(Exception e, List<SObject> records) {
     	if(DiagnosticsEnabled && e != null) {
+			if(e instanceof DmlException && records != null) {
+                DmlException de = (DmlException) e;
+                for(Integer i=0; i<de.getNumDml(); i++) {
+                   System.debug('****Position of failed record in original list: ' + de.getDmlIndex(i));
+                   Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
+                   records[failedRecordIndex].addError(de.getDmlMessage(i));
+               }
+           }
+           
 			Error__c error = createError(e);
-	        insert error;
-	        
-	        if(e instanceof DmlException && records != null) {
-	        	DmlException de = (DmlException) e;
-		        for(Integer i=0; i<de.getNumDml(); i++) {
-	               System.debug('****Position of failed record in original list: ' + de.getDmlIndex(i));
-	               Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-	               records[failedRecordIndex].addError(de.getDmlMessage(i));
-	           }
-	       }
+	        storeErrors(new Error__c[]{error}); 
+    	}
+    }
+    
+    private static void storeErrors(List<Error__c> errors) {
+    	if(DiagnosticsEnabled) {
+    		Database.insert(errors);
     	}
     }
     
