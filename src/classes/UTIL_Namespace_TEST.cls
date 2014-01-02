@@ -38,7 +38,7 @@ public with sharing class UTIL_Namespace_TEST {
 
     static testmethod void TestNamespacePrefixFixups() {
         if (UTIL_Namespace.InManagedPackage) {
-            system.assertEquals('foo', UTIL_Namespace.StrTokenNSPrefix('foo'));
+            system.assertEquals('npsp__foo', UTIL_Namespace.StrTokenNSPrefix('foo'));
             system.assertEquals('npsp__foo__c', UTIL_Namespace.StrTokenNSPrefix('foo__c'));     
             system.assertEquals('foo', UTIL_Namespace.StrAllNSPrefix('foo'));
             system.assertEquals('npsp__foo__c', UTIL_Namespace.StrAllNSPrefix('foo__c'));

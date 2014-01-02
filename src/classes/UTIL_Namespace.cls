@@ -76,26 +76,32 @@ public without sharing class UTIL_Namespace {
     
     
     /*******************************************************************************************************
-    * @description Static method that takes a string of a potential field name or object name.  
-    * If it is a custom object (name ends with __c), it prepends the namespace prefix if required.
+    * @description Static method that takes a string
     * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
-    * If you ever deploy this package as unmanaged to a client, this routine will do nothing!
+    * If you ever deploy this package as unmanaged, this routine will do nothing!
     * @param str token name 
     * @return token name, with namespace prefix, if required.
     ********************************************************************************************************/
     public static string StrTokenNSPrefix(string str) {
         if (!InManagedPackage) return str;
-        if (str.endsWith('__c')) {
-            str = 'npsp__' + str;
-        }
+        str = 'npsp__' + str;
         return str;
     }
-    
+  
+    // If we ever need to only namespace strings ending in __c, the method below should work
+    /*
+    public static string StrTokenNSPrefixOnlyCustom(string str) {
+        if (str.endsWith('__c') || str.ends) {
+            return StrTokenNSPrefix(str);
+        }
+    }
+    */
     
     /*******************************************************************************************************
     * @description Static method that takes a string of a multiple potential field names or object names.  
+    * If it is a custom object or field (name ends with __c), it prepends the namespace prefix if required.
     * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
-    * If you ever deploy this package as unmanaged to a client, this routine will do nothing!
+    * If you ever deploy this package as unmanaged, this routine will do nothing!
     * @param str string that contains 0 or more token names 
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
