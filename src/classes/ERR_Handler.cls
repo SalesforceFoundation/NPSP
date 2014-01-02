@@ -156,7 +156,7 @@ public with sharing class ERR_Handler {
         error.Error_Type__c = status;
         error.Record_URL__c = recordURL;
         error.Full_Message__c = message;
-        insert error;
+        Database.insert(error, false);
     }
     
     @future
@@ -166,6 +166,6 @@ public with sharing class ERR_Handler {
         error.Error_Type__c = typeName;
         error.Stack_Trace__c = stackTrace;
         error.Full_Message__c = message;
-        insert error;
+        Database.insert(error, false);
     }
 }
