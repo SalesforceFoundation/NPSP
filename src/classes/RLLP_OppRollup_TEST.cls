@@ -34,6 +34,81 @@
 */
 @isTest
 public with sharing class RLLP_OppRollup_TEST {
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    // TEST DATA HELPER
+    //  use the following static variables and initialization routine to help setup test data for opportunities. 
+    //-----------------------------------------------------------------------------------------------------------------------
+    
+    // helper static variables provided by setupTestData
+    static Date datToday = System.Today();
+    static Date dat1YearAgo = Date.newInstance( datToday.year()-1,1,1);
+    static Date dat2YearAgo = Date.newInstance( datToday.year()-2,1,1);
+    static Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
+    static String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+    static String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+    static list<Contact> listConTest;
+    static list<Opportunity> listOppTest;
+
+    // helper utility to create test contacts and test opps
+    static boolean setupTestData(integer numContacts, string strProcessor) {      
+        
+        if (membershipRecordTypeNameForTests == null)
+            return false;
+            
+        // reinitialize our lists
+        listConTest = new list<Contact>();
+        listOppTest = new list<Opportunity>();
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = strProcessor,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+                
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = false, // DJH: not needed since calling opp rollups directly. 
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
+            ));
+                
+        // create & insert contact(s)
+        listConTest = UTIL_UnitTestData_TEST.CreateMultipleTestContacts (numContacts) ;
+        insert listConTest;
+            
+        // create a new gift for this yr
+        Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+            datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
+        listOppTest.addAll(testGift1);
+        //create a 2nd gift for last yr
+        Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
+            dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
+        listOppTest.addAll(testGift2);
+        insert listOppTest;
+            
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(listConTest));
+
+        //now test that the contact has received the proper stats from the trigger
+        string strSoql = RLLP_OppRollup_UTIL.buildContactQuery();
+        strSoql = strSoql.replace('select id,', 'select id, Firstname, LastName,');
+        listConTest = database.query(strSoql);
+            
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 0 , listConTest[0].npo02__OppAmount2YearsAgo__c );
+        return true;
+    }
+
+
     
     static testMethod void testGivingRollupOne2One(){
         testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -43,8 +118,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupProcessor(string strProcessor){
                 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
@@ -127,8 +200,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupIndividualProcessor(string strProcessor) {
        
-            String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -213,7 +284,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupExcludedRTProcessor (string strProcessor) {
       
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -298,7 +368,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }
    static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -384,8 +453,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testMemberRollupProcessor (string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -456,9 +523,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupAcct (string strProcessor) {
  
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -526,8 +590,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupAcctMembership (string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
         if(membershipRecordTypeNameForTests!=''){
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -599,8 +661,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupBatch (string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -639,163 +699,203 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }   
 
-    static testMethod void OneContactMultipleOppsOne2One(){
-        OneContactMultipleOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    static testMethod void OneContactMultipleOppsOne2One_1(){
+        OneContactMultipleOpps_1(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void OneContactMultipleOppsHHAccount(){
-        OneContactMultipleOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    static testMethod void OneContactMultipleOppsHHAccount_1(){
+        OneContactMultipleOpps_1(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
-    public static void OneContactMultipleOpps(string strProcessor) {
+    public static void OneContactMultipleOpps_1(string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
-        if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = strProcessor,
-                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-            ));
-                
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                    npo02__Always_Rollup_to_Primary_Contact__c = false,
-                    npo02__Enable_Opp_Rollup_Triggers__c = false, // DJH: not needed since calling opp rollups directly. true,
-                    npo02__Excluded_Account_Opp_Rectypes__c = null,
-                    npo02__Excluded_Account_Opp_Types__c = null,
-                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                    npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = membershipRecordTypeNameForTests
-                ));
-                
-            integer howMany = 1;
-            Date datToday = System.Today();
-            Date dat1YearAgo = Date.newInstance( datToday.year()-1,1,1);
-            Date dat2YearAgo = Date.newInstance( datToday.year()-2,1,1);
-            Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
-                
-            // create & insert contact(s)
-            Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
-            insert TestCons;
-            
-            List<Opportunity> newOpps = new List<Opportunity>();
-            // create a new gift for this yr
-            Opportunity[] testGift1 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
-                datToday, 100 , householdSettingsForTests.npo02__Membership_Record_Types__c,null);
-            newOpps.addAll(testGift1);
-            //create a 2nd gift for last yr
-            Opportunity[] testGift2 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), 
-                dat1YearAgo, 60, householdSettingsForTests.npo02__Membership_Record_Types__c,null);
-            newOpps.addAll(testGift2);
-            insert newOpps;
-            
-            // now roll up manually
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+ 
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
 
-            //now test that the contact has received the proper stats from the trigger
-            id ThisConId = TestCons[0].id;
-            Contact UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c FROM Contact WHERE Id = :ThisConId];
-            
-            System.AssertEquals ( 160 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );
-            System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
-     
-            // now chg the amts for both opps (cheapskate!)
-            testGift1[0].Amount = 50;            
-            testGift2[0].Amount=25;
-            update newOpps;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            
-            Test.startTest();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{UpdatedCon}));
+        // now chg the amts for both opps (cheapskate!)
+        listOppTest[0].Amount = 50;            
+        listOppTest[numCon].Amount = 25;
+        update listOppTest;
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();        
+        rg.rollupContacts(new map<id, Contact>(listConTest));
+
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];        
+        System.AssertEquals ( 75 , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+    }
+                
+    static testMethod void OneContactMultipleOppsOne2One_2(){
+        OneContactMultipleOpps_2(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount_2(){
+        OneContactMultipleOpps_2(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps_2(string strProcessor) {
+
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
+
+        // now create a gift from 2 yrs ago
+        Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);  
+        insert testGift3;
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(new list<Contact>{listConTest[0]}));
+
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  FROM Contact WHERE Id = :ThisConId];        
+        
+        System.AssertEquals ( 170 , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c ); 
+    }          
+
+    static testMethod void OneContactMultipleOppsOne2One_3(){
+        OneContactMultipleOpps_3(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount_3(){
+        OneContactMultipleOpps_3(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps_3(string strProcessor) {
+
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
     
-            ThisConId = TestCons[0].id;
-            UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c  FROM Contact WHERE Id = :ThisConId];        
-            System.AssertEquals ( 75 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
+        // add another from this year (to test adding)
+        Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
+        insert testGift4;
+        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
+        insert testGift5;
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(new list<Contact>{listConTest[0]}));
+        
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  FROM Contact WHERE Id = :ThisConId];        
+        System.AssertEquals ( 210 , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 150 , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
+    }
+        
+    static testMethod void OneContactMultipleOppsOne2One_4(){
+        OneContactMultipleOpps_4(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount_4(){
+        OneContactMultipleOpps_4(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps_4(string strProcessor) {
+
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
             
-            // now create a gift from 2 yrs ago
-            Opportunity[] testGift3 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat2YearAgo, 10 , giftRecordTypeNameForTests,null);  
-            insert testGift3;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
+        // TBD add a gift from longer ago
+        Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
+        insert testGift5;
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(new list<Contact>{listConTest[0]}));
+        
+        // totals should not have changed, except lifetime & best yr
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  FROM Contact WHERE Id = :ThisConId];        
+        
+        System.AssertEquals ( 360 , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );       
+    }        
     
-            ThisConId = TestCons[0].id;
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
+    static testMethod void OneContactMultipleOppsOne2One_5(){
+        OneContactMultipleOpps_5(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount_5(){
+        OneContactMultipleOpps_5(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps_5(string strProcessor) {
+
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
             
-            System.AssertEquals ( 85 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 50 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );           
+        // TBD add non-won gift
+        Opportunity[] testGift6 = UTIL_UnitTestData_TEST.OppsForContactList ( listConTest, null, UTIL_UnitTestData_TEST.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
+        insert testGift6;
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(new list<Contact>{listConTest[0]}));
+        
+        // totals should not have changed at all
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  FROM Contact WHERE Id = :ThisConId];        
+        System.AssertEquals ( 160 , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );       
+    }
     
-            // add another from this year (to test adding)
-            Opportunity[] testGift4 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datToday, 25 , giftRecordTypeNameForTests,null);
-    
-            insert testGift4;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
-            Test.stopTest();
-            
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-            System.AssertEquals ( 110 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
-    
-            // TBD add a gift from longer ago
-            Opportunity[] testGift5 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), dat4YearAgo, 200 , giftRecordTypeNameForTests,null);
-            insert testGift5;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
-            
-            // totals should not have changed, except lifetime & best yr
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-            
-            System.AssertEquals ( 310 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );       
-            
-            // TBD add non-won gift
-            Opportunity[] testGift6 = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getOpenStage(), dat4YearAgo, 35 , giftRecordTypeNameForTests,null);
-    
-            insert testGift6;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
-            
-            // totals should not have changed at all
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];       
-            System.AssertEquals ( 310 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 75 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );       
-                    
-            // now delete the 1st gift (now at $50), totals should decrease
-            delete testGift1;
-            
-            // now roll up manually
-            rg = new RLLP_OppRollup();
-            rg.rollupContacts(new map<id, Contact>(new list<Contact>{testcons[0]}));
-            
-            UpdatedCon = [SELECT Id,  npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c FROM Contact WHERE Id = :ThisConId];
-            
-            System.AssertEquals ( 260 , UpdatedCon.npo02__TotalOppAmount__c );
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountThisYear__c );        
-            System.AssertEquals ( 25 , UpdatedCon.npo02__OppAmountLastYear__c );
-            System.AssertEquals ( 10 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
-        }
+    static testMethod void OneContactMultipleOppsOne2One_6(){
+        OneContactMultipleOpps_6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void OneContactMultipleOppsHHAccount_6(){
+        OneContactMultipleOpps_6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    public static void OneContactMultipleOpps_6(string strProcessor) {
+
+        integer numCon = 1;
+        if (!setupTestData(numCon, strProcessor))
+            return;
+
+        System.AssertEquals ( 160 , listConTest[0].npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100 , listConTest[0].npo02__OppAmountThisYear__c );
+        System.AssertEquals ( 60 , listConTest[0].npo02__OppAmountLastYear__c );
+                                    
+        // now delete the 1st gift, totals should decrease
+        decimal dblAmt = listOppTest[0].Amount;
+        delete listOppTest[0];
+        
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupContacts(new map<id, Contact>(new list<Contact>{listConTest[0]}));
+        
+        ID ThisConId = listConTest[0].id;
+        Contact UpdatedCon = [SELECT Id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c  FROM Contact WHERE Id = :ThisConId];        
+        
+        System.AssertEquals ( 160-dblAmt , UpdatedCon.npo02__TotalOppAmount__c );
+        System.AssertEquals ( 100-dblAmt , UpdatedCon.npo02__OppAmountThisYear__c );        
+        System.AssertEquals ( 60 , UpdatedCon.npo02__OppAmountLastYear__c );
+        System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );        
     }
 
     static testMethod void OneContactOneInkindOne2One(){
@@ -806,8 +906,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void OneContactOneInkind(string strProcessor) {
  
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -827,7 +925,6 @@ public with sharing class RLLP_OppRollup_TEST {
                 ));
                 
             integer howMany = 1;
-            Date datToday = System.Today();
             
             // create & insert contact(s)
             Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( howMany ) ;
@@ -853,8 +950,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupBulk (string strProcessor) {
     
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -912,8 +1007,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupTooManyOpps (string strProcessor) {
   
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -970,8 +1063,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testHouseholdStats (string strProcessor) {
    
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -1216,8 +1307,6 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testFiscalYearandCustomNDay (string strProcessor) {
 
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -1278,8 +1367,6 @@ public with sharing class RLLP_OppRollup_TEST {
         testSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
    static void testSoftCredits(string strProcessor) {
-
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -1360,7 +1447,6 @@ public with sharing class RLLP_OppRollup_TEST {
         testFutureMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void testFutureMethods(string strProcessor){
-         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -1415,7 +1501,6 @@ public with sharing class RLLP_OppRollup_TEST {
         testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void testOpportunityUtilityErrorHandling(string strProcessor){
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
@@ -1563,7 +1648,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testRollupCtrl(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     public static void testRollupCtrl(string strProcessor) {
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
