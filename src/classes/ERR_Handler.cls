@@ -26,7 +26,7 @@ public with sharing class ERR_Handler {
     	for(Integer i=0; i<results.size(); i++) {
             if(!results[i].isSuccess()) {
                 //Adding error message to the record
-                System.debug('****Adding error message "' + results[i].getErrors()[0].getMessage() 
+                System.debug(LoggingLevel.WARN, '****Adding error message "' + results[i].getErrors()[0].getMessage() 
                 + ' to this record: ' + objects[i]);
                 objects[i].addError(results[i].getErrors()[0].getMessage());
                 //Creating error object
@@ -64,7 +64,7 @@ public with sharing class ERR_Handler {
 			if(e instanceof DmlException && records != null) {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
-                   System.debug('****Position of failed record in original list: ' + de.getDmlIndex(i));
+                   System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
                    records[failedRecordIndex].addError(de.getDmlMessage(i));
                }
@@ -77,7 +77,8 @@ public with sharing class ERR_Handler {
     
     private static void storeErrors(List<Error__c> errors) {
     	if(DiagnosticsEnabled) {
-    		Database.insert(errors);
+    		System.debug(LoggingLevel.WARN, '****Storing errors' + errors);
+    		Database.insert(errors, false);
     	}
     }
     

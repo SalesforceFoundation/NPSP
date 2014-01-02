@@ -45,7 +45,7 @@ public with sharing class TDTM_TriggerHandler {
 
         thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
                                                                         isDelete, isUnDelete);
-        System.debug('****ACTION: ' + thisAction + ' on ' + describeobj.getLabel());
+        System.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeobj.getLabel());
         obj = describeobj;
     }
     
@@ -59,16 +59,16 @@ public with sharing class TDTM_TriggerHandler {
         
         //Get the classes to run
         List<SObject> classesToCall = dao.getclassesToCallForObject(obj.getName(), thisAction);
-        System.debug('****Classes To Call for ' + obj.getName() + ': ' + classesToCall);
+        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + obj.getName() + ': ' + classesToCall);
         
         if(classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
-                TDTM_Runnable.DmlWrapper dmlWrapperLocal;
+                TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
                 try {
                 	dmlWrapperLocal = runClass(classToCall);
                 } catch(Exception e) {
-                	System.debug('****Exception caught in TDTM_TriggerHandler.runClasses');
+                	System.debug(LoggingLevel.WARN, '****Exception caught in TDTM_TriggerHandler.runClasses: ' + e);
                 	dmlWrapper.objectsToInsert.add(ERR_Handler.createError(e));
                 }
                 if(dmlWrapperLocal != null) {
@@ -107,20 +107,20 @@ public with sharing class TDTM_TriggerHandler {
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
 			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
-			        	System.debug('****Calling asynchronously: ' + classToRunName);
+			        	System.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
 			        	runAsync(classToRun, classToRunName);
 			        } else {
-			        	System.debug('****Calling synchronously: ' + classToRunName); 
+			        	System.debug(LoggingLevel.WARN, '****Calling synchronously: ' + classToRunName);
                         return classToRun.run(newlist, oldlist, thisAction, obj);
 			        }
 	        	} else {
-	        		System.debug('****The class does not implement the required interface.');
+	        		System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	        	}
 	        } else {
-	        	System.debug('****ClassType was null.');
+	        	System.debug(LoggingLevel.WARN, '****ClassType was null.');
 	        }
         } else {
-        	System.debug('****ClassToCall was null');
+        	System.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
     }
@@ -139,17 +139,17 @@ public with sharing class TDTM_TriggerHandler {
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
     	ERR_Handler errorHandler = new ERR_Handler();
 
-        System.debug('****Final objects to insert: ' + dmlWrapper.objectsToInsert);
+        System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + dmlWrapper.objectsToInsert);
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        System.debug('****Final objects to update: ' + dmlWrapper.objectsToUpdate.values());
+        System.debug(LoggingLevel.WARN, '****Final objects to update: ' + dmlWrapper.objectsToUpdate.values());
         List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
         
-        System.debug('****Final objects to delete: ' + dmlWrapper.objectsToDelete);
+        System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + dmlWrapper.objectsToDelete);
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
         //Not yet using this one, as far as I know, but no reason not to support them
-        System.debug('****Final objects to undelete: ' + dmlWrapper.objectsToUndelete);
+        System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + dmlWrapper.objectsToUndelete);
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
         /** We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
