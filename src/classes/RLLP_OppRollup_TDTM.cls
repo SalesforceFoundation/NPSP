@@ -1,5 +1,5 @@
-/*
-    Copyright (c) 2009, Salesforce.com Foundation
+/*  
+    Copyright (c) 2014 Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
+  
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,14 +27,31 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger RLLP_OppRollup on Opportunity (after delete, after insert, after update) {
-    
-    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
-    
-    if (!hs.npo02__DISABLE_Household_Opportunity_trigger__c){
-        // CALL THE NEW ROLLUP CODE
-        RLLP_OppRollup rg = new RLLP_OppRollup(); 
-        rg.rollupForOppTrigger(trigger.newMap, trigger.oldMap);
-    }
+/**
+* @author Salesforce.com Foundation 
+* @date 2014 
+* @description trigger handler on Opps for supporting Rollups 
+*/
+public with sharing class RLLP_OppRollup_TDTM extends TDTM_Runnable { 
 
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+	    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+	    
+	    // DJH:UNDONE do we remove this setting check and rely on TDTM settings?
+	    if (!hs.npo02__DISABLE_Household_Opportunity_trigger__c){
+	        RLLP_OppRollup rg = new RLLP_OppRollup(); 
+	        map<Id, Opportunity> mapIdOppNew;
+	        map<Id, Opportunity> mapIdOppOld;
+	        if (newlist != null) 
+	           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
+            if (oldlist != null) 
+               mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
+	           
+	        rg.rollupForOppTrigger(mapIdOppNew, mapIdOppOld);
+	    }
+	    // we aren't using dmlWrapper to defer DML, due to the existing complexity of the rollup code.
+	    return null;
+    }
 }
