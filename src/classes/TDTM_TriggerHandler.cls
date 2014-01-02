@@ -139,17 +139,17 @@ public with sharing class TDTM_TriggerHandler {
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
     	ERR_Handler errorHandler = new ERR_Handler();
 
-        System.debug('****Objects to insert: ' + dmlWrapper.objectsToInsert);
+        System.debug('****Final objects to insert: ' + dmlWrapper.objectsToInsert);
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        System.debug('****Objects to update: ' + dmlWrapper.objectsToUpdate.values());
+        System.debug('****Final objects to update: ' + dmlWrapper.objectsToUpdate.values());
         List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
         
-        System.debug('****Objects to delete: ' + dmlWrapper.objectsToDelete);
+        System.debug('****Final objects to delete: ' + dmlWrapper.objectsToDelete);
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
         //Not yet using this one, as far as I know, but no reason not to support them
-        System.debug('****Objects to undelete: ' + dmlWrapper.objectsToUndelete);
+        System.debug('****Final objects to undelete: ' + dmlWrapper.objectsToUndelete);
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
         /** We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
