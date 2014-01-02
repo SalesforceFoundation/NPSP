@@ -581,6 +581,8 @@ public class AFFL_Affiliations_TEST {
         	affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
         	listAffl.add(affl);
         }
+        // must manually clear this, since our context is still active
+        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
         insert listAffl;
         
         // make sure primary affiliation set on Contacts
@@ -594,6 +596,8 @@ public class AFFL_Affiliations_TEST {
         for (npe5__Affiliation__c affl : listAffl) {
         	affl.npe5__Primary__c = false;
         }
+        // must manually clear this, since our context is still active
+        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
         update listAffl;
         
         // make sure cleared on the contacts
@@ -603,6 +607,102 @@ public class AFFL_Affiliations_TEST {
             system.assertEquals(null, con.Primary_Affiliation__c);
         }
         
+   }
+
+    /*********************************************************************************************************
+    operation:
+        change primary Affiliations from the Affiliations object for N contacts with different account models.
+    verify:
+        Primary Affiliation on contacts changed to the new primary account
+    **********************************************************************************************************/            
+    static testMethod void newPrimaryAffiliationsFromAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'newPrimaryAffiliationsFromAffl') return;
+        
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+    
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
+        system.assertEquals(null, listCon[0].AccountId); 
+        
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
+        listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
+        insert listAcc;
+        
+        listCon[0].AccountId = listAcc[0].Id;   // HH account
+        listCon[1].AccountId = listAcc[1].Id;   // HH account
+        listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
+        listCon[3].AccountId = listAcc[3].Id;   // 1:1 account
+        listCon[4].AccountId = listAcc[4].Id;   // Org1 account
+        listCon[5].AccountId = listAcc[5].Id;   // Org2 account
+        listCon[6].AccountId = listAcc[6].Id;   // Bucket account
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account        
+        insert listCon;
+        
+        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        System.assertEquals(2, listAffl.size());
+        
+        // now create our affiliation records directly
+        listAffl = new list<npe5__Affiliation__c>();
+        for (integer i = 0; i < 8; i++) {
+            npe5__Affiliation__c affl = new npe5__Affiliation__c();
+            affl.npe5__Contact__c = listCon[i].Id;
+            affl.npe5__Organization__c = listAcc[4].Id;
+            affl.npe5__StartDate__c = System.Today();
+            affl.npe5__Primary__c = true;
+            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+            listAffl.add(affl);
+        }
+        // must manually clear this, since our context is still active
+        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        insert listAffl;
+        
+        // make sure primary affiliation set on Contacts
+        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
+        system.assertEquals(8, listCon.size());        
+        for (Contact con : listCon) {
+            system.assertEquals(listAcc[4].Id, con.Primary_Affiliation__c);
+        }
+
+        // now set a new primary affiliations record for each
+        listAffl = new list<npe5__Affiliation__c>();
+        for (integer i = 0; i < 8; i++) {
+            npe5__Affiliation__c affl = new npe5__Affiliation__c();
+            affl.npe5__Contact__c = listCon[i].Id;
+            affl.npe5__Organization__c = listAcc[5].Id;
+            affl.npe5__StartDate__c = System.Today();
+            affl.npe5__Primary__c = true;
+            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+            listAffl.add(affl);
+        }
+        // must manually clear this, since our context is still active
+        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        insert listAffl;
+                
+        // make sure primary affiliation set on Contacts
+        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
+        system.assertEquals(8, listCon.size());        
+        for (Contact con : listCon) {
+            system.assertEquals(listAcc[5].Id, con.Primary_Affiliation__c);
+        }
+        
+        // make sure other affiliations are not primary
+        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
+        integer cPrimary = 0;
+        for (npe5__Affiliation__c affl : listAffl) {
+        	if (affl.npe5__Primary__c) {
+        	   system.assertEquals(listAcc[5].Id, affl.npe5__Organization__c);
+        	   cPrimary++; 
+        	}
+        }
+        system.assertEquals(8, cPrimary);
    }
 
 }
