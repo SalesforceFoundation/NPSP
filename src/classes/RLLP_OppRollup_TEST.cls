@@ -1131,7 +1131,8 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.StopTest();     
     
         Contact ct = [select Birthdate, npo02__OppAmountThisYearHH__c from Contact where id = :c.id];
-        system.assertEquals (100,ct.npo02__OppAmountThisYearHH__c);    
+        if (system.today().addDays(-4).year() == system.today().year())
+            system.assertEquals (100,ct.npo02__OppAmountThisYearHH__c);    
         system.assertEquals(system.today().addDays(-2), ct.BirthDate);        
     }
     

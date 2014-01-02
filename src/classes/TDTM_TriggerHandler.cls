@@ -181,6 +181,16 @@ public with sharing class TDTM_TriggerHandler {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+                
+        // RecurringDonations on Opportunity
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterUpdate'));
+
+        // RecurringDonations on RecurringDonations
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeDelete;AfterInsert;AfterUpdate;'));
         
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
