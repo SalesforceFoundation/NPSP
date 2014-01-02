@@ -10,8 +10,15 @@
   <!--   Download from http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ -->
   <taskdef 
       resource="net/sf/antcontrib/antlib.xml" 
-      classpath="${basedir}/lib/ant-contrib-1.0b3.jar"
+      classpath="${basedir}/lib/ant-contrib-1.0b2.jar"
       />  
+
+
+  <!--
+  <taskdef 
+      resource="ise.antelope.tasks.antelope.taskdefs"
+      classpath="${basedir}/lib/AntelopeApp.jar" />
+      -->
 
   <!-- Ant doesn't like < in replace tokens or values so set a property with < via cdata for reuse later -->
   <property name="lt"><![CDATA[<]]></property>
@@ -101,6 +108,36 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="updatePackageVersion" description="Installs a specific version of a package.  If the package needs to be downgraded, first uninstalls the package.">
+    <attribute name="namespace" description="Package's name to be installed" />
+    <attribute name="version" description="The version to install (ex. 1.3)" />
+    <sequential>
+      <if>
+        <!-- NOTE: This assumes getPackageVersions was already run -->
+        <not><equals arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="@{version}" /></not>
+        <then>
+          <!-- decide if uninstall is needed -->
+          <if>
+            <and>
+              <!-- package is installed in org -->
+              <not><equals arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="Not Installed" /></not>
+              <!-- and package needs downgrade -->
+              <bool><isgreaterthan arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="@{version}" /></bool>
+            </and>
+            <then>
+              <echo>Uninstalling @{namespace} ${InstalledPackage.@{namespace}.versionNumber} to downgrade to @{version}</echo>
+              <uninstallPackage namespace="@{namespace}" username="${sf.username}" password="${sf.password}"/>
+            </then>
+            <else>
+              <!-- just an upgrade, no need to uninstall first -->
+              <echo>Upgrading @{namespace} from ${InstalledPackage.@{namespace}.versionNumber} to @{version}</echo>
+            </else>
+          </if>
+          <installPackage namespace="@{namespace}" version="@{version}" username="${sf.username}" password="${sf.password}"/>
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
 
   <macrodef name="retrieveUnpackaged" description="Retrieves all unpackaged metadata from the target org into the specified dir">
     <attribute name="dir" description="The local directory to store the metadata files" />

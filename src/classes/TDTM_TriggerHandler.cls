@@ -169,85 +169,33 @@ public with sharing class TDTM_TriggerHandler {
         //Affiliations on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
                     
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));
-        
         //Affiliations on Affiliation
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c', 
-              Trigger_Action__c = 'AfterInsert'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
                     
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c', 
-              Trigger_Action__c = 'AfterUpdate'));
-        
         //Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
-              Trigger_Action__c = 'AfterInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
-              Trigger_Action__c = 'AfterUpdate'));      
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
         
         //Relationships on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));  
-              
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterDelete'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
         
         //Relationships on npe4__Relationship__c
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'BeforeInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'BeforeUpdate'));  
-              
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'AfterInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'AfterUpdate'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'AfterDelete'));
-                                 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+                                         
         //Account Management on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'BeforeInsert'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
 
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'BeforeUpdate'));
-
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterUpdate'));  
-              
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterDelete'));
-        
         // OpportunityContactRole support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
@@ -256,25 +204,23 @@ public with sharing class TDTM_TriggerHandler {
         // HH Object support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
-              Trigger_Action__c = 'BeforeUpdate'));
-
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
-              Trigger_Action__c = 'AfterUpdate'));
+              Trigger_Action__c = 'BeforeUpdate;AfterUpdate'));
 
         // HH Object contact trigger support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert'));
-        
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+                
+        // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
+              Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterUpdate'));
-        
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterDelete'));
 
+        // RecurringDonations on RecurringDonations
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeDelete;AfterInsert;AfterUpdate;'));
+        
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               

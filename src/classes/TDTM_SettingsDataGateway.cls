@@ -50,7 +50,7 @@ public with sharing class TDTM_SettingsDataGateway implements TDTM_iTableDataGat
         
         //Filter by params
         for(Trigger_Handler_Setting__c setting : allClassesToCall.values()) {
-        	if(setting.Object__c == objectName && setting.Trigger_Action__c == action.name()) {
+        	if(setting.Object__c == objectName && setting.Trigger_Action__c.contains(action.name())) {
         	   classesToCallMap.put(setting.Name, setting);
         	}
         }
