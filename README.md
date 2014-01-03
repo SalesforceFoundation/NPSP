@@ -1,4 +1,4 @@
-Cumulus
+Project Cumulus for the Nonprofit Starter Pack
 =======
 
 #### What is Project Cumulus?
