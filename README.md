@@ -18,8 +18,8 @@ Please see the <a href="https://github.com/SalesforceFoundation/Cumulus/wiki" ta
 
 #### Current Build Status
 
-Dev code line (dev):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_dev)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
-Release code line (rel):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_rel)](http://ci.salesforcefoundation.org/job/Cumulus_rel)
+* Dev (dev):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_dev)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
+* Release (rel):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_rel)](http://ci.salesforcefoundation.org/job/Cumulus_rel)
 
 #### Meta
 
