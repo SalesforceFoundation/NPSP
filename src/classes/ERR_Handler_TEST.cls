@@ -4,7 +4,7 @@ public with sharing class ERR_Handler_TEST {
     public testmethod static void errorsStoredInDatabase() {
     	
     	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'DELETEME_ParentAccountUpdater', Load_Order__c = 1, Object__c = 'Contact', 
+              Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;');
     	
     	AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(
