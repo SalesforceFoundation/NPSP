@@ -6,12 +6,20 @@ Project Cumulus for the Nonprofit Starter Pack
 Project Cumulus is an update and overhaul of the existing Salesforce.com Foundation Nonprofit Starterpack.
 
 
-#### Developers
+#### For Users
 
-Build status of the Cumulus dev code line:  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_dev)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
+* <a href="https://github.com/SalesforceFoundation/Cumulus/issues?labels=&milestone=&page=1&state=open" target="_blank">Log an Issue or Feature Request</a>
+* <a href="http://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Documentation" target="_blank">User Documentation</a>
+
+#### For Developers
 
 The Cumulus project and Nonprofit Starter Pack are both released under the open source BSD license (see link below for additional license information).  Contributions (code and otherwise) are welcome and encouraged.  
 Please see the <a href="https://github.com/SalesforceFoundation/Cumulus/wiki" target="_blank">project wiki</a> for additional information. 
+
+#### Current Build Status
+
+Dev code line (dev):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_dev)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
+Release code line (rel):  [![Build Status](http://ci.salesforcefoundation.org/buildStatus/icon?job=Cumulus_rel)](http://ci.salesforcefoundation.org/job/Cumulus_rel)
 
 #### Meta
 
