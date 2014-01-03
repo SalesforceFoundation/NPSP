@@ -1,18 +1,11 @@
 @isTest
 public with sharing class ERR_Handler_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'errorsStoredInDatabase';
-
-    public testmethod static void accountInsertTest() {
-    	Account acc1 = new Account(Name='test1');
-        Account acc2 = new Account(Name='test2');
-        insert new Account[] {acc1, acc2};
-    }
-    
     public testmethod static void errorsStoredInDatabase() {
-    	if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDatabase') return;
+    	
+    	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'DELETEME_ParentAccountUpdater', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert;');
     	
     	AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(
     	                                   npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
@@ -28,8 +21,7 @@ public with sharing class ERR_Handler_TEST {
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
         Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP2');
         Contact contact3 = new Contact(FirstName = 'test', LastName = 'testerson3', AccountId = acc3.Id, Title = 'VP3');
-        
-        
+
         //Delete the account to get the affiliations code to throw an exception
         delete acc2;
         System.debug(LoggingLevel.WARN, '****IN TEST - Account deleted');
@@ -60,21 +52,6 @@ public with sharing class ERR_Handler_TEST {
         	System.debug(LoggingLevel.WARN, '****ID of inserted contact: ' + c.Id);
         	
         }
-        
-        //Verify affiliation was created for 1st contact
-        List<npe5__Affiliation__c> affs1 = [select Id from npe5__Affiliation__c 
-                                           where npe5__Contact__c = :contact1.Id];
-        System.assertEquals(1, affs1.size());
-        
-        //Verify no affiliation was created for 2nd contact
-        List<npe5__Affiliation__c> affs2 = [select Id from npe5__Affiliation__c 
-                                           where npe5__Contact__c = :contact2.Id];
-        System.assertEquals(0, affs2.size());
-        
-        //Verify affiliation was created for 3rd contact
-        List<npe5__Affiliation__c> affs3 = [select Id from npe5__Affiliation__c 
-                                           where npe5__Contact__c = :contact3.Id];
-        System.assertEquals(1, affs3.size());
         
         //Verify error record was created
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c limit 10];
