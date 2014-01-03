@@ -31,6 +31,8 @@ public with sharing class ERR_Handler {
                 objects[i].addError(results[i].getErrors()[0].getMessage());
                 //Creating error object
                 errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
+            } else {
+            	System.debug(LoggingLevel.WARN, '****Successful SaveResult: ' + results[i].getId());
             }
         }
     }
@@ -70,14 +72,14 @@ public with sharing class ERR_Handler {
                }
            }
            
-			Error__c error = createError(e);
-	        storeErrors(new Error__c[]{error}); 
+		   Error__c error = createError(e);
+	       storeErrors(new Error__c[]{error}); 
     	}
     }
     
     private static void storeErrors(List<Error__c> errors) {
     	if(DiagnosticsEnabled) {
-    		System.debug(LoggingLevel.WARN, '****Storing errors' + errors);
+    		System.debug(LoggingLevel.WARN, '****Storing errors: ' + errors);
     		Database.insert(errors, false);
     	}
     }
