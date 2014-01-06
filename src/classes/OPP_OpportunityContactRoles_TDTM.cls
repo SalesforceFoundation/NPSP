@@ -50,6 +50,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
         	dmlWrapper = new DmlWrapper();
         	createOrUpdateContactRoles((list<Opportunity>) newlist, dmlWrapper);
+            // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
+          	TDTM_TriggerHandler.processDML(dmlWrapper);
+        	dmlWrapper = null;
         }
         
         return dmlWrapper;
