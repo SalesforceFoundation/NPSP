@@ -307,11 +307,11 @@ global virtual without sharing class RLLP_OppRollup{
         }         
         
         Database.SaveResult[] SR = database.update(accountsToUpdate.values(), false);                
-        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
+        List<Error__c> elist = new List<Error__c>();
         integer i = 0;
         for(Database.SaveResult s: SR){
             if (!s.isSuccess()){
-                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Account', accountsToUpdate.values()[i].id));                              
+                elist.add(ERR_Handler.createError(s, 'Account', accountsToUpdate.values()[i].id));                            
             }
             i++;
         }        
@@ -458,12 +458,12 @@ global virtual without sharing class RLLP_OppRollup{
         }
         
         Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
+        List<Error__c> elist = new List<Error__c>();
         //needed to match errors to update list index
         integer i = 0;
         for(Database.SaveResult s: SR){         
             if (!s.isSuccess()){
-                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
+                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -610,11 +610,11 @@ global virtual without sharing class RLLP_OppRollup{
         }
         
         Database.SaveResult[] SR = database.update(householdsToUpdate.values(), false);
-        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
+        List<Error__c> elist = new List<Error__c>();
         integer i = 0;
         for(Database.SaveResult s: SR){
             if (!s.isSuccess()){
-                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
+                elist.add(ERR_Handler.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
             }
             i++;
         }        
@@ -666,12 +666,12 @@ global virtual without sharing class RLLP_OppRollup{
         }
         
         Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<npo02__Opportunity_Rollup_Error__c> elist = new List<npo02__Opportunity_Rollup_Error__c>();
+        List<Error__c> elist = new List<Error__c>();
         //needed to match errors to update list index
         integer i = 0;
         for(Database.SaveResult s: SR){         
             if (!s.isSuccess()){
-                elist.add(RLLP_OppRollup_UTIL.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
+                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
             }
             i++;
         }        

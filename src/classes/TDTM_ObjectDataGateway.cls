@@ -33,6 +33,8 @@
  */
 public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
     
+    private static List<ToRunOnObjectAction> classesQueried = new List<ToRunOnObjectAction>();
+    
     public Boolean isEmpty() {
     	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
     	Integer rowCount = (Integer)result[0].get('rowCount');
@@ -42,9 +44,37 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
     }
     
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_TriggerActionHelper.Action action) {   
-        
-        return [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Trigger_Action__c 
-                from Trigger_Handler__c where Active__c = true and Object__c = :objectName and 
+        ToRunOnObjectAction toRun = objectActionQueried(objectName, action);
+        if(toRun != null) {
+        	return toRun.classesToCall;
+        } else {
+            List<SObject> classesToCall =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, 
+                Trigger_Action__c from Trigger_Handler__c where Active__c = true and Object__c = :objectName and 
                 Trigger_Action__c includes ( :action.name() ) order by Load_Order__c];
+            toRun = new ToRunOnObjectAction(objectName, action, classesToCall);
+            classesQueried.add(toRun);
+            return classesToCall;
+        }
+    }
+    
+    private static ToRunOnObjectAction objectActionQueried(String objectName, TDTM_TriggerActionHelper.Action action) {
+    	for(ToRunOnObjectAction toRun : classesQueried) {
+    		if(toRun.objectName == objectName && toRun.action == action) {
+    		  return toRun;
+    		}
+    	}
+    	return null;
+    }
+    
+    private class ToRunOnObjectAction {
+    	private String objectName;
+    	private TDTM_TriggerActionHelper.Action action;
+    	private List<SObject> classesToCall;
+    	
+    	ToRunOnObjectAction(String objectName, TDTM_TriggerActionHelper.Action action, List<SObject> classesToCall) {
+    		this.objectName = objectName;
+    		this.action = action;
+    		this.classesToCall = classesToCall;
+    	}
     }
 }
