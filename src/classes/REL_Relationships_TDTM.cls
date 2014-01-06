@@ -274,13 +274,15 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     public static DmlWrapper deleteRelationships(npe4__Relationship__c[] relationships) {
     	System.debug('****Deleting relationships: ' + relationships);
     	DmlWrapper dmlWrapper = new DmlWrapper();
-        List<Id> relationshipsToDelete = new List<Id>();
+        List<SObject> relationshipsToDelete = new List<SObject>();
         for(npe4__Relationship__c r : Relationships) {
+        	npe4__Relationship__c relationshipToDelete;
             if(r.npe4__ReciprocalRelationship__c != null) {
-                relationshipsToDelete.add(r.npe4__ReciprocalRelationship__c);
+            	relationshipToDelete = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c);
             } else if(r.npe4__RelatedContact__c == null) {
-	            relationshipsToDelete.add(r.Id); 
+            	relationshipToDelete = new npe4__Relationship__c(Id = r.Id);
 	        }
+	        relationshipsToDelete.add(relationshipToDelete);
         }
         if ( relationshipsToDelete.size() > 0 ) {
             dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
@@ -293,9 +295,9 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <param name="contacts"> List of Contacts that were deleted </param>
     public static DmlWrapper deleteEmptyRelationships() {
     	DmlWrapper dmlWrapper = new DmlWrapper();
-        List<Id> relationshipsToDelete = new List<Id>();
+        List<SObject> relationshipsToDelete = new List<SObject>();
         for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null]) {
-            relationshipsToDelete.add(r.Id);
+            relationshipsToDelete.add(new npe4__Relationship__c(Id = r.Id));
         }
         if ( relationshipsToDelete.size() > 0 ) {
             dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);

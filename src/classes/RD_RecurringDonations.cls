@@ -877,10 +877,15 @@ public with sharing class RD_RecurringDonations {
          
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()){
                 //system.debug('IN THE PRIVATE METHOD3');
-                if (dmlWrapper != null)
-                    dmlWrapper.objectsToDelete.addAll(mapIdOpp.keySet());
-                else
+                if (dmlWrapper != null) {
+                    List<SObject> oppsToDelete = new List<SObject>();
+                    for(Id oppToDeleteId : mapIdOpp.keySet()) {
+                    	oppsToDelete.add(new Opportunity(Id = oppToDeleteId));
+                    }
+                    dmlWrapper.objectsToDelete.addAll(oppsToDelete);
+                } else {
                     database.delete(mapIdOpp.values());
+                }
             }              
             else if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()){
                 for (Opportunity o : mapIdOpp.values()){
