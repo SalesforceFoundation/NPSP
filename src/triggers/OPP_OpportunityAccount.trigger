@@ -29,12 +29,14 @@
 */
 trigger OPP_OpportunityAccount on Opportunity (before insert) {
     
+    return;
+    
     npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
     
      //Create contact roles as needed for new opps.
     if(Trigger.isBefore && Trigger.isInsert && !ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c && ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c)
     {
-        OPP_OpportunityContactRoles.opportunityAccounts(Trigger.new); 
+        //OPP_OpportunityContactRoles.opportunityAccounts(Trigger.new); 
     }
     
 }
