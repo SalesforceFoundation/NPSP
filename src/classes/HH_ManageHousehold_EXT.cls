@@ -816,7 +816,9 @@ global with sharing class HH_ManageHousehold_EXT {
 	        for (Schema.FieldSetMember f : Schema.SObjectType.Account.fieldSets.Manage_Household_Custom.getFields()) { 
 	        	try {
 	               acc.put(f.getFieldPath(), hh.get(f.getFieldPath()));
-	        	} catch (exception ex) { }
+	        	} catch (Exception e) { 
+	        	  ERR_Handler.processError(e, null);
+	        	}
 	        }          
 	        // add additional fields the page always uses
 	        acc.Name = hhA.Name;
@@ -834,7 +836,9 @@ global with sharing class HH_ManageHousehold_EXT {
             for (Schema.FieldSetMember f : Schema.SObjectType.npo02__Household__c.fieldSets.npo02__Manage_Household_Custom.getFields()) {
             	try {
                     h.put(f.getFieldPath(), hh.get(f.getFieldPath()));
-            	} catch (exception ex) { }
+            	} catch (Exception e) { 
+            	   ERR_Handler.processError(e, null);
+            	}
             }
             // add additional fields the page always uses
             h.Name = hhO.Name;

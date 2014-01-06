@@ -204,15 +204,15 @@
                            <apex:outputtext value="No Errors Found"/>
                         </apex:pageBlockSectionItem> 
                         <apex:pageblocktable value="{!errorList}" var="e" rendered="{!hasErrors}">
-                            <apex:column value="{!e.npo02__Error_Object_Type__c}"/>
-                            <apex:column value="{!e.npo02__Error_Datetime__c}"/>
-                            <apex:column value="{!e.npo02__Error_Type__c}"/>
+                            <apex:column value="{!e.Object_Type__c}"/>
+                            <apex:column value="{!e.Datetime__c}"/>
+                            <apex:column value="{!e.Error_Type__c}"/>
                             <apex:column headervalue="Record Link">
-                                <apex:outputlink target="_blank" title="Link to the affected record" value="{!e.npo02__Error_Record_Link__c}">
-                                    {!e.npo02__Error_Record_Link__c}
+                                <apex:outputlink target="_blank" title="Link to the affected record" value="{!e.Record_URL__c}">
+                                    {!e.Record_URL__c}
                                 </apex:outputlink>                                    
                             </apex:column>
-                            <apex:column value="{!e.npo02__Error_Message__c}"/>
+                            <apex:column value="{!e.Full_Message__c}"/>
                         </apex:pageblocktable>
                         <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;" >
                             <apex:commandButton value="Clear Error Queue" action="{!deleteErrors}" rendered="{!hasErrors}"/>

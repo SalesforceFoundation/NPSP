@@ -65,29 +65,26 @@ public abstract class TDTM_Runnable {
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
-        Object classInstance;         
+        Object classInstance; 
         if(classType != null)
             classInstance = classType.newInstance();
         if(classInstance instanceof TDTM_Runnable) {
         	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
 	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
-	        //Process the result
-	        System.debug('****Objects to insert in future: ' + dmlWrapper.objectsToInsert);
-            insert dmlWrapper.objectsToInsert;
-            System.debug('****Objects to update in future: ' + dmlWrapper.objectsToUpdate.values());
-            update dmlWrapper.objectsToUpdate.values();
-            System.debug('****Objects to delete in future: ' + dmlWrapper.objectsToDelete);
-            Database.delete(dmlWrapper.objectsToDelete, true); //it wouldn't let me use just 'delete'. bug?
+	        //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
+	        //in a future
+	        TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
     
     public abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult);
-            
+        
     public class DmlWrapper {
         public List<SObject> objectsToInsert = new List<SObject>(); 
         public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
         public List<Id> objectsToDelete = new List<Id>();
+        public List<Id> objectsToUndelete = new List<Id>();
     }
 }

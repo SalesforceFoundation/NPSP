@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Contains errors generated from the NPSP package during normal operations.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Datetime__c</fullName>
+        <defaultValue>now()</defaultValue>
+        <description>Date &amp; time the error occurred</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date &amp; time the error occurred</inlineHelpText>
+        <label>Datetime</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Error_Type__c</fullName>
+        <description>Type of error that occurred</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of error that occurred</inlineHelpText>
+        <label>Type</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Full_Message__c</fullName>
+        <description>Full text of the error message</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Full text of the error message</inlineHelpText>
+        <label>Full Message</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Object_Type__c</fullName>
+        <description>Type of object on which the error occurred, if known.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of object on which the error occurred, if known.</inlineHelpText>
+        <label>Type</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Record_URL__c</fullName>
+        <description>A link to the record which caused the error, if available.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A link to the record which caused the error, if available.</inlineHelpText>
+        <label>Record URL</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Stack_Trace__c</fullName>
+        <description>Stack trace for the thrown error, if available at runtime.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Stack trace for the thrown error, if available at runtime.</inlineHelpText>
+        <label>Stack Trace</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <label>Error</label>
+    <nameField>
+        <displayFormat>{000000}</displayFormat>
+        <label>Error Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Errors</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
