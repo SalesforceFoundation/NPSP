@@ -129,7 +129,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="uninstallCumulus" />
 
       <!-- Update any managed packages which are not at the right version -->
-      <updateDependentPackages />
+      <antcall target="updateDependentPackages" />
 
       <!-- Finally, do a deploy with all tests -->
       <antcall target="deploy" />
@@ -161,7 +161,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
         </then>
       </if>
 
-      <updateDependentPackages />
+      <antcall target="updateDependentPackages" />
+
+      <antcall target="runAllTests" />
 
     </target>
 
@@ -185,6 +187,10 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <target name="retrieveUnpackaged">
       <retrieveUnpackaged dir="unpackaged" /> 
+    </target>
+
+    <target name="runAllTests">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="lib/empty" runAllTests="true" maxPoll="200" />
     </target>
 
 </project>
