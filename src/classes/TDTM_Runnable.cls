@@ -84,7 +84,7 @@ public abstract class TDTM_Runnable {
     public class DmlWrapper {
         public List<SObject> objectsToInsert = new List<SObject>(); 
         public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
-        public List<Id> objectsToDelete = new List<Id>();
-        public List<Id> objectsToUndelete = new List<Id>();
+        public List<SObject> objectsToDelete = new List<SObject>();
+        public List<SObject> objectsToUndelete = new List<SObject>();
     }
 }
