@@ -45,7 +45,7 @@ public without sharing class PMT_PaymentCreator{
     public npe01__Contacts_And_Orgs_Settings__c ContactSettings;
 
     //constructor gets opps from trigger??
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, CAO_Constants.triggerAction ta) {
+    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_TriggerActionHelper.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
         
         ContactSettings = CAO_Constants.getContactsSettings();
                     
@@ -90,7 +90,7 @@ public without sharing class PMT_PaymentCreator{
             }
             
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
-            if(ta == CAO_Constants.triggerAction.afterUpdate){
+            if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate){
                 String soqlStatement = '';
                 soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
                 for (string s : paymentMappings.keyset()){
@@ -108,10 +108,9 @@ public without sharing class PMT_PaymentCreator{
             }
     
             //IF Trigger is Insert, Create a new Payment
-            if( ta == CAO_Constants.triggerAction.AfterInsert){
+            if( ta == TDTM_TriggerActionHelper.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
                     // if opp is closed won with no payments scheduled or made, add an automatic payment
-                    if( ta == CAO_Constants.triggerAction.AfterInsert){
                         if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
                                         thisOpp.amount > 0 && thisOpp.npe01__payments_made__c == 0 && thisOpp.npe01__Number_of_Payments__c == 0 && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c) {
                                 npe01__oppPayment__c op = new npe01__oppPayment__c(
@@ -157,11 +156,11 @@ public without sharing class PMT_PaymentCreator{
                             ));
                         }
                         */
-                    }   
                 }
                 try{
                     // put in the payment for closed opps       
-                    if (!paymentsToInsert.isEmpty()) insert paymentsToInsert;
+                    if (!paymentsToInsert.isEmpty()) 
+                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
                 }
                 catch (DMLException e){
                     for (npe01__OppPayment__c opay : paymentsToInsert) {
@@ -172,7 +171,7 @@ public without sharing class PMT_PaymentCreator{
             
             
             //IF Trigger is Update, keep synced Payments in Sync or delete if Opp is lost
-            if( ta == CAO_Constants.triggerAction.AfterUpdate ){
+            if( ta == TDTM_TriggerActionHelper.Action.AfterUpdate ){
                 list<Opportunity> oldOpps = oldOppsMap.values();
                 for (Opportunity thisOpp : updatedOpps){
                     Opportunity oldOpp = oldOppsMap.get(thisOpp.id);
@@ -255,14 +254,17 @@ public without sharing class PMT_PaymentCreator{
                                     op.put(pfms.npe01__Payment_Field__c, thisOpp.get(x));
                             }
                         }   
-                        paymentsToInsert.add(op);                                               
+                        paymentsToInsert.add(op);                                              
                     }   
                 }
                 //try{
                     // update or delete payments     
-                    if (!paymentsToUpdate.isEmpty()) update paymentsToUpdate;
-                    if (!paymentsToDelete.isEmpty()) delete paymentsToDelete;
-                    if (!paymentsToInsert.isEmpty()) insert paymentsToInsert;
+                    if (!paymentsToUpdate.isEmpty()) 
+                        dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>(paymentsToUpdate));
+                    if (!paymentsToDelete.isEmpty()) 
+                        dmlWrapper.objectsToDelete.addAll(new map<Id, SObject>(paymentsToDelete).keySet());
+                    if (!paymentsToInsert.isEmpty()) 
+                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
                 //}
                 /*catch (DMLException e){
                     for (npe01__OppPayment__c opay : paymentsToUpdate) {

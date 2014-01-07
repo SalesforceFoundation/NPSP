@@ -221,6 +221,21 @@ public with sharing class TDTM_TriggerHandler {
               Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeDelete;AfterInsert;AfterUpdate;'));
         
+        // OppRollups on Opportunity
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'RLLP_OppRollup_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+
+        // Payments on Opportunity
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'PMT_Payment_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        // OpportunityContactRoles on Opportunity
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'BeforeInsert;AfterInsert'));
+
         //***Sample of how to use Custom Settings***
         /*List<Trigger_Handler_Setting__c> handlers = new List<Trigger_Handler_Setting__c>();
               

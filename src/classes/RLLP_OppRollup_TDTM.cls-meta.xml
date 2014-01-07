@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ApexTrigger xmlns="http://soap.sforce.com/2006/04/metadata">
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>28.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
@@ -7,4 +7,4 @@
         <namespace>npo02</namespace>
     </packageVersions>
     <status>Active</status>
-</ApexTrigger>
+</ApexClass>

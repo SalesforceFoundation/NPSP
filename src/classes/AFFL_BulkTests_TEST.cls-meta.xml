@@ -2,14 +2,14 @@
 <ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>28.0</apiVersion>
     <packageVersions>
-        <namespace>npe01</namespace>
         <majorNumber>2</majorNumber>
         <minorNumber>95</minorNumber>
+        <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
-        <namespace>npe5</namespace>
         <majorNumber>1</majorNumber>
         <minorNumber>92</minorNumber>
+        <namespace>npe5</namespace>
     </packageVersions>
     <status>Active</status>
 </ApexClass>
