@@ -541,7 +541,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public void deleteContactAccountsIfEmpty(Contact[] contacts, DmlWrapper dmlWrapper) {
         List<Id> accountIds = new List<Id>();
         List<Account> accountsOnContacts = new List<Account>();
-        List<ID> accountsForDeletion = new List<ID>();
+        List<SObject> accountsForDeletion = new List<SObject>();
         List<Id> listAccountIdUpdate = new list<Id>();
         
         if (contacts.size() > 0) {
@@ -559,7 +559,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     
                     // if there are no Opportunities for this Account, add it for deletion
                     if (thisAccount.Opportunities.size() == 0 && thisAccount.Contacts.size() == 0) {
-                        accountsForDeletion.add(thisAccount.Id);
+                        accountsForDeletion.add(thisAccount);
                     } else if (thisAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                         listAccountIdUpdate.add(thisAccount.Id);
                     }
