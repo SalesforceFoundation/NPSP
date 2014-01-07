@@ -262,7 +262,7 @@ public without sharing class PMT_PaymentCreator{
                     if (!paymentsToUpdate.isEmpty()) 
                         dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>(paymentsToUpdate));
                     if (!paymentsToDelete.isEmpty()) 
-                        dmlWrapper.objectsToDelete.addAll(new map<Id, SObject>(paymentsToDelete).keySet());
+                        dmlWrapper.objectsToDelete.addAll(new map<Id, SObject>(paymentsToDelete).values());
                     if (!paymentsToInsert.isEmpty()) 
                         dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
                 //}
