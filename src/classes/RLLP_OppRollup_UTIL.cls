@@ -740,40 +740,5 @@ public without sharing class RLLP_OppRollup_UTIL {
             }
         }               
     return fiscal_year;
-    }  
-    
-    /****************************************/
-    
-    /*** Error Generation ***/    
-    public static npo02__Opportunity_Rollup_Error__c createError(Database.SaveResult s, string objecttype, id objid){
-        datetime thisDay = system.now();
-        npo02__Opportunity_Rollup_Error__c ore = new npo02__Opportunity_Rollup_Error__c();
-        
-        ore.Name = objid + '-' +  thisDay.month() + thisDay.day() + thisDay.hour() + thisDay.minute() + thisDay.second();
-        ore.npo02__Error_Datetime__c = thisDay;
-        ore.npo02__Error_Object_Type__c = objecttype;
-      
-        string recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/' + objid;
-        if (recordURL.startsWith('http:')){
-            recordURL = recordURL.replaceFirst('http:', 'https:');
-        }            
-        ore.npo02__Error_Record_Link__c = recordURL; 
-         
-        if (s.getErrors()[0].getStatusCode() == system.Statuscode.REQUIRED_FIELD_MISSING){
-            ore.npo02__Error_Type__c = 'Required Field Missing';   
-        }
-        else if (s.getErrors()[0].getStatusCode() == system.Statuscode.FIELD_CUSTOM_VALIDATION_EXCEPTION){
-            ore.npo02__Error_Type__c = 'Custom Validation Rule Failed';
-        }
-        else{
-            ore.npo02__Error_Type__c = 'Other';
-        }
-                 
-        //trim error message
-        if (s.getErrors()[0].getMessage().length() > 255)
-            ore.npo02__Error_Message__c = s.getErrors()[0].getMessage().substring(0, 254);
-        else
-            ore.npo02__Error_Message__c = s.getErrors()[0].getMessage();                              
-        return ore;
     }
 }

@@ -535,8 +535,8 @@ private class REL_Relationships_TEST {
             throw new MyException('TestException');
         }
         catch(Exception e){
-            npe4__Relationship_Error__c er = REL_Utils.createRelationshipError(e);
-            system.assertEquals('TestException', er.npe4__Full_Error_Message__c);
+            Error__c er = ERR_Handler.createError(e);
+            system.assertEquals('TestException', er.Full_Message__c);
         }       
     }
     

@@ -183,18 +183,18 @@
                             <apex:outputpanel id="errortablepanel">
                                 <apex:pageblocktable value="{!relErrorsList}" var="e" rendered="{!relErrorsSize > 0}">
                                     <apex:column headervalue="Link to Error Record">
-                                        <apex:outputlink target="_blank" title="Link to Error Record" value="{!URLFOR($Action.npe4__Relationship_Error__c.View, e.id)}">
+                                        <apex:outputlink target="_blank" title="Link to Error Record" value="{!URLFOR($Action.Error__c.View, e.id)}">
                                             {!e.id}
                                         </apex:outputlink>
                                     </apex:column>
-                                    <apex:column value="{!e.npe4__Error_Date_Time__c}"/>
-                                    <apex:column value="{!e.npe4__Error_Type__c}"/>
+                                    <apex:column value="{!e.Datetime__c}"/>
+                                    <apex:column value="{!e.Error_Type__c}"/>
                                     <apex:column headervalue="Record Link">
-                                        <apex:outputlink target="_blank" title="Affected Record - Actual or Reciprocal" value="{!e.npe4__Error_Record_Link__c}">
-                                            {!e.npe4__Error_Record_Link__c} 
+                                        <apex:outputlink target="_blank" title="Affected Record - Actual or Reciprocal" value="{!e.Record_URL__c}">
+                                            {!e.Record_URL__c}
                                         </apex:outputlink>                                    
                                     </apex:column>
-                                    <apex:column value="{!e.npe4__Full_Error_Message__c}"/>
+                                    <apex:column value="{!e.Full_Message__c}"/>
                                 </apex:pageblocktable>
                                 <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
                                     <apex:commandButton value="Clear Error List" action="{!deleteErrors}" rendered="{!relErrorsSize > 0}"/>

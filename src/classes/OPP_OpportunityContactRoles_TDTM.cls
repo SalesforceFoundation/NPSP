@@ -32,23 +32,36 @@
 * @date 2011 (1.x)
 * @description Provides opportunity and contact role support for all models  
 */
-public without sharing class OPP_OpportunityContactRoles {
+public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
-    /// <name> ContactRoles </name>
-    /// <summary> Default Constructor </summary>
-    public OPP_OpportunityContactRoles(){}
-
-    /// <name> ContactRoles </name>
-    /// <summary> Overloads the ContactRoles object constructor to handle ContactRoles processing </summary>
-    public OPP_OpportunityContactRoles(Map<Id, Opportunity> oppList){
-        List<Opportunity> triggerOpps = oppList.values();
-        // Set<Id> triggerOppIDs = oppList.keySet();
-        // Boolean haveCheckedOpportunityRoles = false;
-                
-        // List<Opportunity> oppsToProcess = new List<Opportunity>();
+    // the main entry point for TDTM to invoke our trigger handlers.
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        	
+        // DJH:UNDONE do we continue to check these settings, or just use TDTM flags?
+	    npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+        if (ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c || !ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c)
+            return null;
+        	
+        DmlWrapper dmlWrapper = null;
+        
+        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+        	setOpportunityAccountField((list<Opportunity>) newlist);
+        } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+        	dmlWrapper = new DmlWrapper();
+        	createOrUpdateContactRoles((list<Opportunity>) newlist, dmlWrapper);
+            // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
+          	TDTM_TriggerHandler.processDML(dmlWrapper);
+        	dmlWrapper = null;
+        }
+        
+        return dmlWrapper;
+    }
+ 
+    private void createOrUpdateContactRoles(list<Opportunity> listOpp, DmlWrapper dmlWrapper) {
+    	
+        Map<Id, Opportunity> oppsInsertCR = new map<Id, Opportunity>(listOpp);        
         List<OpportunityContactRole> CRUpdates = new List<OpportunityContactRole>();
-
-        Map<Id, Opportunity> oppsInsertCR = oppList.clone();
 
         //Get existing contact roles for the trigger opps. 
         List<OpportunityContactRole> CRs = [select OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole where IsPrimary = true and OpportunityId in :oppsInsertCR.keySet()];
@@ -62,37 +75,28 @@ public without sharing class OPP_OpportunityContactRoles {
                 oppsInsertCR.remove(cr.OpportunityId);
             }
         }
-        /*
-        //No existing primary, so add the trigger opps for contact role creation.
-        else {
-            for(Opportunity o : triggerOpps){
-                oppsToProcess.add(o);
-            }
-        }*/
 
         //Create CRs.
         if (oppsInsertCR.size() > 0){
-            insertCR(oppsInsertCR.values());
+            insertCR(oppsInsertCR.values(), dmlWrapper);
         }
 
         //Update existing CRs.
         if (CRUpdates.size() > 0){
-            updateCR(CRUpdates);
+            updateCR(CRUpdates, dmlWrapper);
         }
-
-      //  haveCheckedOpportunityRoles = true;
     }
 
     /// <name> getDefaultRole </name>
     /// <summary> Return the default role from the custom setting.  Use custom setting for default role value.</summary>
-    public static String getDefaultRole(){
+    private static String getDefaultRole(){
         return CAO_Constants.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
     }
 
     /// <name> insertCR </name>
     /// <summary> Creates a new Contact Role record when an opp is inserted and there is no primary CR.  Use custom setting for default role value.</summary>
     /// <param name="opportunties"> List of opportunities meeting trigger criteria </param>
-    public static void insertCR(Opportunity[] opportunities){
+    private static void insertCR(Opportunity[] opportunities, DmlWrapper dmlWrapper){
 
         List<OpportunityContactRole> CRs = new List<OpportunityContactRole>();
 
@@ -100,36 +104,40 @@ public without sharing class OPP_OpportunityContactRoles {
         for(Opportunity o : opportunities){
             if(o.npe01__Contact_ID_for_Role__c != null) {
                 try {
-                    CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_ID_for_Role__c, Role = OPP_OpportunityContactRoles.getDefaultRole(), IsPrimary = true));
+                    CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_ID_for_Role__c, Role = getDefaultRole(), IsPrimary = true));
                 } catch (exception e) {
                     o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                 }
             }
         }
         if (CRs.size() > 0){
-            Database.SaveResult[] lsr = Database.insert(CRs, false); 
+            //Database.SaveResult[] lsr = Database.insert(CRs, false);
+            dmlWrapper.objectsToInsert.addAll((list<SObject>) CRs); 
         }
     }
 
     /// <name> UpdateCR </name>
     /// <summary> Update a primary contact role where the role field is empty.  Use custom setting for default role value.</summary>
     /// <param name="CRs"> List of contact roles  </param>
-    public static void updateCR(OpportunityContactRole[] CRs){
+    private static void updateCR(OpportunityContactRole[] CRs, DmlWrapper dmlWrapper){
 
         for(OpportunityContactRole cr : CRs){
-            cr.Role = OPP_OpportunityContactRoles.getDefaultRole();
+            cr.Role = getDefaultRole();
         }
-        Database.SaveResult[] lsr = Database.update(CRs, false);
+        //Database.SaveResult[] lsr = Database.update(CRs, false);
+        dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>(CRs));
     }
+    
     //truncate string representation of an ID to 15 chars
-    public static string shortenId(String idForShortening){
+    private static string shortenId(String idForShortening){
         if(idForShortening.length() >= 15) {
             idForShortening = idForShortening.subString(0,15);
         }           
         return idForShortening;
     }
+    
     //fill one-to-one and HH Accounts for Opportunities where a Contact id is supplied
-    public static void opportunityAccounts(List<Opportunity> oppList){
+    private static void setOpportunityAccountField(List<Opportunity> oppList) {
         
         Map<String,Account> contactsAndOneToOneAccounts = new Map<String,Account>();
         Set<String> primaryContactIds = new Set<String>();
