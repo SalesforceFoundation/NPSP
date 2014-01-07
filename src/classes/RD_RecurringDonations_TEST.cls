@@ -35,10 +35,17 @@
 @isTest
 public class RD_RecurringDonations_TEST {
 
+
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
+
     /// <name> insertOpportunities_Test </name>
     /// <summary> test method for insertOpportunities function </summary>
     static testMethod void insertOpportunities()
     {
+        if (strTestOnly != '*' && strTestOnly != 'insertOpportunities') return;
         
         system.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
         system.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
@@ -69,8 +76,8 @@ public class RD_RecurringDonations_TEST {
         r0.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         try {
             insert r0;
-        } catch (exception e) {
-            
+        } catch (Exception e) {
+            ERR_Handler.processError(e, new SObject[] {r0});
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -100,6 +107,7 @@ public class RD_RecurringDonations_TEST {
     
     static testMethod void insertWeeklyOpportunities()
     {
+        if (strTestOnly != '*' && strTestOnly != 'insertWeeklyOpportunities') return;
         
          Account a = new Account();
         a.Name = 'test Individual';
@@ -134,6 +142,7 @@ public class RD_RecurringDonations_TEST {
     
     static testMethod void insertQuarterlyOpportunities()
     {
+        if (strTestOnly != '*' && strTestOnly != 'insertQuarterlyOpportunities') return;
         
          Account a = new Account();
         a.Name = 'test Individual';
@@ -168,6 +177,8 @@ public class RD_RecurringDonations_TEST {
     
     static testMethod void insertCampaignOpportunities()
     {
+        if (strTestOnly != '*' && strTestOnly != 'insertCampaignOpportunities') return;
+
         setRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());    
         Account a = new Account();
         a.Name = 'test Individual';
@@ -211,6 +222,8 @@ public class RD_RecurringDonations_TEST {
     
     static testMethod void deleteRecurringDonation()
     {
+        if (strTestOnly != '*' && strTestOnly != 'deleteRecurringDonation') return;
+
         Account a = new Account();
         a.Name = 'test Individual';
         insert a;
@@ -239,7 +252,9 @@ public class RD_RecurringDonations_TEST {
         RD_ProcessControl.hasRun = false;
         try{
             delete r2;
-        } catch (exception e1) {}
+        } catch (exception e1) {
+            ERR_Handler.processError(e1, new SObject[] {r2});
+        }
         
         //delete should have failed
         Opportunity[] installments3 = [select amount from Opportunity where npe03__Recurring_Donation__c = :r2.id];
@@ -249,6 +264,7 @@ public class RD_RecurringDonations_TEST {
     
     static testMethod void contactRolesOnOpps()
     {
+        if (strTestOnly != '*' && strTestOnly != 'contactRolesOnOpps') return;
         
          Account a = new Account();
         a.Name = 'test Individual';
@@ -277,6 +293,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void testSettingsCreation(){
+        if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
+
         delete [select id from npe03__Recurring_Donations_Settings__c];
         npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
         system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
@@ -287,6 +305,8 @@ public class RD_RecurringDonations_TEST {
     
     //tests inserts of various types of open ended donations
     static testMethod void insertOpenEndedRecurringDonations(){
+        if (strTestOnly != '*' && strTestOnly != 'insertOpenEndedRecurringDonations') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -354,6 +374,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void updateOpenEndedRecurringDonationMonthly(){
+        if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationMonthly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -396,7 +418,9 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);        
     }
     static testMethod void updateOpenEndedRecurringDonation1an15(){
-            setRecurringDonationsSettingsForTest(
+        if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonation1an15') return;
+
+        setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
         npe03__Maximum_Donations__c = 50,
@@ -435,6 +459,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void updateOpenEndedRecurringDonationYearly(){
+        if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationYearly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -477,6 +503,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
     }
     static testMethod void updateOpenEndedRecurringDonationWeekly(){
+        if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationWeekly') return;
+
             setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -519,6 +547,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void updateOpenEndedRecurringDonationQuarterly(){
+        if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationQuarterly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -563,6 +593,8 @@ public class RD_RecurringDonations_TEST {
         
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationWeekly(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationWeekly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -614,6 +646,8 @@ public class RD_RecurringDonations_TEST {
     }
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationMonthly(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationMonthly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 6,
@@ -669,6 +703,8 @@ public class RD_RecurringDonations_TEST {
     
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationQuarterly(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationQuarterly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -720,6 +756,8 @@ public class RD_RecurringDonations_TEST {
     
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomWeeks(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomWeeks') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -780,6 +818,8 @@ public class RD_RecurringDonations_TEST {
     
        //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomDays(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomDays') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 1,
@@ -839,6 +879,8 @@ public class RD_RecurringDonations_TEST {
     
        //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomMonths(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomMonths') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -898,6 +940,8 @@ public class RD_RecurringDonations_TEST {
     }
        //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomYears(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomYears') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -958,6 +1002,8 @@ public class RD_RecurringDonations_TEST {
     
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationYearly(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationYearly') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -1010,6 +1056,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void closeOpenEndedRecurringDonationMarkOppsClosedLost(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOpenEndedRecurringDonationMarkOppsClosedLost') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -1053,6 +1101,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void updateRecurringDonationWithClosedOpp(){
+        if (strTestOnly != '*' && strTestOnly != 'updateRecurringDonationWithClosedOpp') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -1106,6 +1156,8 @@ public class RD_RecurringDonations_TEST {
     
     //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationBadRecurrance(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationBadRecurrance') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -1154,6 +1206,8 @@ public class RD_RecurringDonations_TEST {
     
        //test closing an opportunity for an open recurring donation
     static testMethod void closeRecurringDonationDeleteOpps(){
+        if (strTestOnly != '*' && strTestOnly != 'closeRecurringDonationDeleteOpps') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -1200,6 +1254,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void multipleRDInsert(){
+        if (strTestOnly != '*' && strTestOnly != 'multipleRDInsert') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 6,
@@ -1264,6 +1320,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(50, originalOpps.values()[0].Amount);
     }
     static testMethod void tooManyInstallments(){
+        if (strTestOnly != '*' && strTestOnly != 'tooManyInstallments') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 6,
@@ -1300,6 +1358,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(null,r1.id);
     }
     static testmethod void updateOppsFromMultipleRDs(){
+        if (strTestOnly != '*' && strTestOnly != 'updateOppsFromMultipleRDs') return;
+
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 6,
@@ -1373,6 +1433,8 @@ public class RD_RecurringDonations_TEST {
     /*** Test Methods from RD_ErrorHandling ***/
     
     static testMethod void testErrorHandlingAllSysAdmins(){
+        if (strTestOnly != '*' && strTestOnly != 'testErrorHandlingAllSysAdmins') return;
+
         setRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
         npe03__Error_Email_Notifications__c ='All Sys Admins'                
         ));         
@@ -1410,6 +1472,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void testErrorHandlingUser(){
+        if (strTestOnly != '*' && strTestOnly != 'testErrorHandlingUser') return;
+
         User u = [select id from User limit 1];
         setRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
         npe03__Error_Email_Notifications__c = u.id                
@@ -1448,6 +1512,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
+        if (strTestOnly != '*' && strTestOnly != 'testErrorHandlingPublicGroup') return;
+
         Group g = new Group(Name = 'MyGroup');
         insert g;
         system.debug('GID IS: ' + g.id);
@@ -1489,6 +1555,8 @@ public class RD_RecurringDonations_TEST {
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------
     static testMethod void batchStatusBarTest(){
+        if (strTestOnly != '*' && strTestOnly != 'batchStatusBarTest') return;
+
         UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
         controller.getBatchJobs(); 
     }
@@ -1496,6 +1564,7 @@ public class RD_RecurringDonations_TEST {
     //--------------- from RD_RecurringDonations_BATCH -----------------
     @isTest 
     public static void testBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
         setRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
@@ -1547,6 +1616,8 @@ public class RD_RecurringDonations_TEST {
     
     /** Test Methods from STTG_RecurringDonations_CTRL  **/ 
     public static testMethod void TEST_RecurringDonationsSettings() {
+        if (strTestOnly != '*' && strTestOnly != 'TEST_RecurringDonationsSettings') return;
+
         id rtid = [select id from RecordType where sobjecttype = 'Opportunity' limit 1].id;
         id uid = [select id from User limit 1].id;
         setRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
@@ -1607,6 +1678,8 @@ public class RD_RecurringDonations_TEST {
     }   
     //covering everything else 
     public static testMethod void TEST_RecurringDonationsSettings2(){
+        if (strTestOnly != '*' && strTestOnly != 'TEST_RecurringDonationsSettings2') return;
+
         id rtid = [select id from RecordType where sobjecttype = 'Opportunity' limit 1].id;
         Group g = new Group(Name = 'Testgroup');
         insert g;        
@@ -1631,6 +1704,7 @@ public class RD_RecurringDonations_TEST {
    
    // from RD_RecurringDonations_SCHED  
    static testmethod void test(){ 
+        if (strTestOnly != '*' && strTestOnly != 'test') return;
              
         npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
         npe03__Recurring_Donation_Field__c = 'npe03__Last_Payment_Date__c',
@@ -1659,6 +1733,8 @@ public class RD_RecurringDonations_TEST {
     
     // from RD_AddDonationsBTN_CTRL
     public static testMethod void testBTN(){
+        if (strTestOnly != '*' && strTestOnly != 'testBTN') return;
+
         Account a = new Account(Name = 'TestA');
         insert a;
         npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
