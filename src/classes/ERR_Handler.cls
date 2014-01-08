@@ -17,32 +17,35 @@ public with sharing class ERR_Handler {
     	
     	storeErrors(errors);
     }
-    
-    private void processResults(List<Object> results, List<SObject> sObjects) {
-    	for(Integer i=0; i<results.size(); i++) {
-        	String message;
-        	Boolean isSuccess = true;
-        	if(results[i] instanceof Database.SaveResult) {
-        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
-        		if(!isSuccess)
-        		  message = ((Database.SaveResult)results[i]).getErrors()[0].getMessage();
-        	} else if(results[i] instanceof Database.DeleteResult) {
-        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
-        		if(!isSuccess)
-        		  message = ((Database.DeleteResult)results[i]).getErrors()[0].getMessage();
-        	} else if(results[i] instanceof Database.UndeleteResult) {
-        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
-        		if(!isSuccess)
-        		  message = ((Database.UndeleteResult)results[i]).getErrors()[0].getMessage();
-        	}
-        	
-        	if(!isSuccess && message != null) {
-        		//Creating error object
-                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
-                //Adding error message to the record
-                addErrorMessage(sObjects[i], message);
-        	}
-        }
+
+    private void processResults(List<Object> results, List<SObject> sObjects) {    	
+    	if(results != null) {	
+	    	for(Integer i=0; i<results.size(); i++) {
+	        	String message;
+	        	Boolean isSuccess = true;
+	        	if(results[i] instanceof Database.SaveResult) {
+	        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
+	        		if(!isSuccess)
+	        		  message = ((Database.SaveResult)results[i]).getErrors()[0].getMessage();
+	        	} else if(results[i] instanceof Database.DeleteResult) {
+	        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
+	        		if(!isSuccess)
+	        		  message = ((Database.DeleteResult)results[i]).getErrors()[0].getMessage();
+	        	} else if(results[i] instanceof Database.UndeleteResult) {
+	        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
+	        		if(!isSuccess)
+	        		  message = ((Database.UndeleteResult)results[i]).getErrors()[0].getMessage();
+	        	}
+	        	
+	        	if(!isSuccess && message != null) {
+	        		//Creating error object
+	                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
+	                //Adding error message to the record
+	                if(sObjects != null && sObjects.size() > i)
+	                   addErrorMessage(sObjects[i], message);
+	        	}
+	        }
+    	}
     }
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
