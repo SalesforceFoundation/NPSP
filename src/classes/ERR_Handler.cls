@@ -17,9 +17,9 @@ public with sharing class ERR_Handler {
     	
     	storeErrors(errors);
     }
-    
-    private void processResults(List<Object> results, List<SObject> objects) {
-    	if(results != null) {
+
+    private void processResults(List<Object> results, List<SObject> sObjects) {    	
+    	if(results != null) {	
 	    	for(Integer i=0; i<results.size(); i++) {
 	        	String message;
 	        	Boolean isSuccess = true;
@@ -39,10 +39,10 @@ public with sharing class ERR_Handler {
 	        	
 	        	if(!isSuccess && message != null) {
 	        		//Creating error object
-	                errors.add(createError(results[i], objects[i].getSObjectType().getDescribe().getName(), objects[i].Id));
+	                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
 	                //Adding error message to the record
-	                if(objects != null && objects.size() > i)
-	                   objects[i].addError(message);
+	                if(sObjects != null && sObjects.size() > i)
+	                   addErrorMessage(sObjects[i], message);
 	        	}
 	        }
     	}
@@ -56,13 +56,25 @@ public with sharing class ERR_Handler {
                 for(Integer i=0; i<de.getNumDml(); i++) {
                    System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-                   records[failedRecordIndex].addError(de.getDmlMessage(i));
+                   addErrorMessage( records[failedRecordIndex], de.getDmlMessage(i));
                }
            }
            
 		   Error__c error = createError(e);
 	       storeErrors(new Error__c[]{error}); 
     	}
+    }
+    
+    private static void addErrorMessage(SObject record, String defaultMessage) {
+    	String message = '';
+    	if(record.getSObjectType().getDescribe().getName() != null)
+            message = 'Error on record of type ' + record.getSObjectType().getDescribe().getName() + ' - ';
+    	if(record.get('Id') != null)
+            message = message + 'Record ID: ' + record.get('Id') + ' - ';
+        if(record.get('Name') != null)
+            message = message + 'Record Name: ' + record.get('Name') + ' - ';
+        message = message + '"' + defaultMessage + '"';
+        record.addError(message);
     }
     
     private static void storeErrors(List<Error__c> errors) {
