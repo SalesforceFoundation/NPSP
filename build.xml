@@ -15,12 +15,14 @@
     <property name="version.npe03" value="2.92" />
     <property name="version.npe4" value="2.91" />
     <property name="version.npe5" value="1.92" />
+    <!-- If the managed package version of Cumulus is installed, uninstall it -->
+    <property name="version.npsp" value="Not Installed" />
 
 
     <!-- Cumulus specific macros -->
 
 
-    <macrodef name="getPackageNamespaces" description="Gets the namespaces for all dependent packages">
+    <macrodef name="getPackageVersions" description="Gets the version for all installed packages">
       <sequential>
         <delete dir="${basedir}/installedPackages"/>
         <mkdir dir="${basedir}/installedPackages"/>
@@ -36,6 +38,7 @@
         <getPackageVersion namespace="npe03" refresh="false" />
         <getPackageVersion namespace="npe4" refresh="false" />
         <getPackageVersion namespace="npe5" refresh="false" />
+        <getPackageVersion namespace="npsp" refresh="false" />
 
         <echo>Dependent Package Versions:
 -------------------------------
@@ -44,6 +47,8 @@ npo02: ${InstalledPackage.npo02.versionNumber} (${version.npo02} required)
 npe03: ${InstalledPackage.npe03.versionNumber} (${version.npe03} required)
 npe4: ${InstalledPackage.npe4.versionNumber} (${version.npe4} required)
 npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
+npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
+
         </echo>
 
         <delete dir="${basedir}/installedPackages"/>
@@ -54,7 +59,28 @@ npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
 
     <macrodef name="updateDependentPackages">
       <sequential>
-        <getPackageNamespaces />
+        <getPackageVersions />
+
+        <!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
+        <if>
+          <and>
+            <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" /></not>
+            <or>
+              <bool><isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="version.npe01" /></bool>
+              <bool><isgreaterthan arg1="${InstalledPackage.npo02.versionNumber}" arg2="version.npo02" /></bool>
+              <bool><isgreaterthan arg1="${InstalledPackage.npe03.versionNumber}" arg2="version.npe03" /></bool>
+              <bool><isgreaterthan arg1="${InstalledPackage.npe4.versionNumber}" arg2="version.npe4" /></bool>
+              <bool><isgreaterthan arg1="${InstalledPackage.npe5.versionNumber}" arg2="version.npe5" /></bool>
+            </or>
+          </and>
+          <then>
+            <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber} to allow for downgrade</echo>
+            <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />
+
+            <!-- Override the cached installed version of npsp so we don't have to fetch versions again -->
+            <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
+          </then>
+        </if>
 
         <!-- npo02 depends on npe01 so we have to uninstall npo02 first if npo02 needs downgraded -->
         <if>
@@ -78,13 +104,13 @@ npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
         <updatePackageVersion namespace="npe03" version="${version.npe03}" />
         <updatePackageVersion namespace="npe4" version="${version.npe4}" />
         <updatePackageVersion namespace="npe5" version="${version.npe5}" />
+        <updatePackageVersion namespace="npsp" version="${version.npsp}" />
 
       </sequential>
     </macrodef>
 
 
-    <!-- Cumulus Build Targets -->
-
+    <!-- Cumulus Primary Build Targets -->
 
     <!-- deploy: Run a full deployment including running all tests.  Does not attempt to clean target org or ensure dependent package versions are correct -->
     <target name="deploy">
@@ -103,14 +129,46 @@ npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
       <antcall target="uninstallCumulus" />
 
       <!-- Update any managed packages which are not at the right version -->
-      <updateDependentPackages />
-
-      <!-- Do a deployment without tests.  FIXME: This seems to be necessary to stop tests from failing on AFFL_Affiliations.insertAffiliations and may be a platform bug -->
-      <!--<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />-->
+      <antcall target="updateDependentPackages" />
 
       <!-- Finally, do a deploy with all tests -->
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="200" />
+      <antcall target="deploy" />
     </target>
+
+    <!-- Deploys the latest managed beta (UAT) release to an org -->
+    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
+    <target name="deployManagedUAT">
+      <!-- In case the unpackaged code was deployed previously, clean the unpackaged metadata from the target org -->
+      <antcall target="uninstallCumulus" />
+      
+      <!-- Get the latest beta release version number -->
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta" dest="${basedir}/version_uat" />
+      <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
+      <var name="version.npsp" value="${version.npsp.uat}" />
+      <delete file="${basedir}/version_uat" />
+
+      <getPackageVersions />
+
+      <!-- If npsp managed package is installed and version is not current, uninstall the package -->
+      <if>
+        <and>
+          <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" /></not>
+          <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="${version.npsp.uat}" /></not>
+        </and>
+        <then>
+          <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber}</echo>
+          <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />    
+        </then>
+      </if>
+
+      <antcall target="updateDependentPackages" />
+
+      <antcall target="runAllTests" />
+
+    </target>
+
+
+    <!-- Cumulus Utility Build Targets -->
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
     <target name="uninstallCumulus">
@@ -126,10 +184,13 @@ npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
       <updateDependentPackages />
     </target>
 
-    <!-- FIXME: Temporary target to allow feature branch to pass current Jenkins job config.  Remove this after the new build process is in place. -->
-    <target name="test">
-      <antcall target="deployCI" />
-      <antcall target="uninstallCumulus" />
+
+    <target name="retrieveUnpackaged">
+      <retrieveUnpackaged dir="unpackaged" /> 
+    </target>
+
+    <target name="runAllTests">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="lib/empty" runAllTests="true" maxPoll="200" />
     </target>
 
 </project>

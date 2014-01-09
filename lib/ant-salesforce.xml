@@ -110,7 +110,7 @@
 
   <macrodef name="updatePackageVersion" description="Installs a specific version of a package.  If the package needs to be downgraded, first uninstalls the package.">
     <attribute name="namespace" description="Package's name to be installed" />
-    <attribute name="version" description="The version to install (ex. 1.3)" />
+    <attribute name="version" description="The version to install (ex. 1.3).  Passing Not Installed will ensure the package is uninstalled" />
     <sequential>
       <if>
         <!-- NOTE: This assumes getPackageVersions was already run -->
@@ -121,8 +121,12 @@
             <and>
               <!-- package is installed in org -->
               <not><equals arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="Not Installed" /></not>
-              <!-- and package needs downgrade -->
-              <bool><isgreaterthan arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="@{version}" /></bool>
+            
+              <!-- package needs downgrade or should be Not Installed -->
+              <or>
+                <bool><isgreaterthan arg1="${InstalledPackage.@{namespace}.versionNumber}" arg2="@{version}" /></bool>
+                <equals arg1="@{version}" arg2="Not Installed" />
+              </or>
             </and>
             <then>
               <echo>Uninstalling @{namespace} ${InstalledPackage.@{namespace}.versionNumber} to downgrade to @{version}</echo>
@@ -133,7 +137,12 @@
               <echo>Upgrading @{namespace} from ${InstalledPackage.@{namespace}.versionNumber} to @{version}</echo>
             </else>
           </if>
-          <installPackage namespace="@{namespace}" version="@{version}" username="${sf.username}" password="${sf.password}"/>
+          <if>
+            <not><equals arg1="@{version}" arg2="Not Installed" /></not>
+            <then>
+              <installPackage namespace="@{namespace}" version="@{version}" username="${sf.username}" password="${sf.password}"/>
+            </then>
+          </if>
         </then>
       </if>
     </sequential>
