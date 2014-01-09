@@ -94,8 +94,6 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
-    /*** This is the same issue as above. Ideally we would only need 1 method, but since no interface was provided
-    for Database.SaveResult, Database.DeleteResult and Database.UndeleteResult ***/
     public static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
