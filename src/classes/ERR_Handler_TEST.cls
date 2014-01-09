@@ -38,6 +38,9 @@ public with sharing class ERR_Handler_TEST {
         System.debug(LoggingLevel.WARN, 'IN TEST - ****StopTest called');
         
         //Unfortunately we cannot see error messages added. There is "addError" method in SObjcet but no "getError".
+        //The easiest way to see the error message added to the record is to look at a VF. The errors get displayed by default
+        //if the page contains an apex:pageMessages element. There is an example of this in 
+        //https://github.com/SalesforceFoundation/Error_Handling.
         System.assertEquals(true, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
         System.assertEquals(true, results[2].isSuccess()); 
