@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -28,11 +28,29 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 trigger TDTM_Opportunity on Opportunity (after delete, after insert, after undelete, 
-    after update, before delete, before insert, before update) {
+after update, before delete, before insert, before update) {
 
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Opportunity);
-    handler.runClasses(new TDTM_ObjectDataGateway());
-
+    Savepoint sp = Database.setSavepoint();
+    
+    /** This solves the problem of not being able to save error records if everything gets rolled back. 
+        TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
+        DML operations. It also takes care of rolling everything back in that case, just so there are no 
+        issues (side effects) with re-entrant flags. **/
+    try {
+	    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+	    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+	        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Opportunity);
+	    handler.runClasses(new TDTM_ObjectDataGateway());
+    } catch(Exception e) {
+        Database.rollback(sp);
+        ERR_Handler.processError(e, null);
+        /** In this case we don't know which record caused the error. We know that only for DML exceptions. The 
+            exception might actually not have to do with a specific record. It could be a NullPointer exception, 
+            for example. We will annotate all records with an error message to give the client/user some feedback. **/ 
+        if(Trigger.new != null && Trigger.new.size() > 0) {
+            for(SObject so : Trigger.new) {
+                so.addError(e.getMessage());
+            }
+        }
+    }
 }

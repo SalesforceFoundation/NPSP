@@ -65,12 +65,7 @@ public with sharing class TDTM_TriggerHandler {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
-                try {
-                	dmlWrapperLocal = runClass(classToCall);
-                } catch(Exception e) {
-                	System.debug(LoggingLevel.WARN, '****Exception caught in TDTM_TriggerHandler.runClasses: ' + e);
-                	dmlWrapper.objectsToInsert.add(ERR_Handler.createError(e));
-                }
+                dmlWrapperLocal = runClass(classToCall);
                 if(dmlWrapperLocal != null) {
                 	if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
                         dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
@@ -139,6 +134,11 @@ public with sharing class TDTM_TriggerHandler {
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
     	ERR_Handler errorHandler = new ERR_Handler();
 
+        //Create transaction
+        Savepoint sp = Database.setSavepoint();
+        
+        /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
+        process of all the errors that occurred in the context **/
         System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + dmlWrapper.objectsToInsert);
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
@@ -152,13 +152,18 @@ public with sharing class TDTM_TriggerHandler {
         System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + dmlWrapper.objectsToUndelete);
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
-        /** We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
-         *  Also, should we support Database.merge? */
+        //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
+        //Also, should we support Database.merge?
         
         //Process the results
-        errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
+        Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate.values(), dmlWrapper.objectsToDelete, 
             dmlWrapper.objectsToUndelete);
+            
+        if(errorsExist) {
+            Database.rollback(sp);
+            errorHandler.storeErrors();   
+        }
     }
     
     //@TODO: read from text file
