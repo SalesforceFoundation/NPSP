@@ -43,13 +43,7 @@ trigger REL_RelationshipCampaignMembers on CampaignMember (after insert, after u
 	} catch(Exception e) {
         Database.rollback(sp);
         ERR_Handler.processError(e, null);
-        /** In this case we don't know which record caused the error. We know that only for DML exceptions. The 
-            exception might actually not have to do with a specific record. It could be a NullPointer exception, 
-            for example. We will annotate all records with an error message to give the client/user some feedback. **/ 
-        if(Trigger.new != null && Trigger.new.size() > 0) {
-	        for(SObject so : Trigger.new) {
-	        	so.addError(e.getMessage());
-	        }
-        }
+        /** We don't need to mark the error with an error (with addError) because the system does it automatically 
+            for us **/
     }
 }
