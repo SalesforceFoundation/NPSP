@@ -10,18 +10,10 @@
          resource="net/sf/antcontrib/antlib.xml"
          classpath="${basedir}/lib/ant-contrib-1.0b2.jar" />
 
-    <property name="version.npe01" value="2.95" />
-    <property name="version.npo02" value="2.96" />
-    <property name="version.npe03" value="2.92" />
-    <property name="version.npe4" value="2.91" />
-    <property name="version.npe5" value="1.92" />
-    <!-- If the managed package version of Cumulus is installed, uninstall it -->
-    <property name="version.npsp" value="Not Installed" />
-
+    <!-- Load up the version.properties file to get desired versions -->
+    <loadproperties srcFile="${basedir}/version.properties"/>
 
     <!-- Cumulus specific macros -->
-
-
     <macrodef name="getPackageVersions" description="Gets the version for all installed packages">
       <sequential>
         <delete dir="${basedir}/installedPackages"/>
@@ -141,6 +133,23 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- In case the unpackaged code was deployed previously, clean the unpackaged metadata from the target org -->
       <antcall target="uninstallCumulus" />
       
+      <!-- Get the latest beta release tag name -->
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+      <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
+      <delete file="${basedir}/managed_uat_tag" />
+
+      <!-- Fetch the version.properties file for the release from GitHub -->
+      <get src="https://raw.github.com/SalesforceFoundation/Cumulus/${managed_uat_tag}/version.properties" dest="${basedir}/managed/version.properties.uat" />
+
+      <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.uat file -->
+      <var name="version.npe01" unset="true" />
+      <var name="version.npo02" unset="true" />
+      <var name="version.npe03" unset="true" />
+      <var name="version.npe4" unset="true" />
+      <var name="version.npe5" unset="true" />
+      <loadproperties srcFile="${basedir}/version.properties.uat"/>
+      <delete file="${basedir}/version.properties.uat" />
+
       <!-- Get the latest beta release version number -->
       <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta" dest="${basedir}/version_uat" />
       <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
