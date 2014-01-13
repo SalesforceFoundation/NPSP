@@ -34,7 +34,8 @@ public with sharing class TDTM_TriggerHandler {
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
-    	System.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
+    	if(newList != null)
+    	   System.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
     	/** This solves the problem of not being able to save error records if everything gets rolled back. 
         TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
         DML operations. It also takes care of rolling everything back in that case, just so there are no 
