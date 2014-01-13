@@ -31,16 +31,15 @@ trigger REL_Relationships on npe4__Relationship__c (before insert, before update
 after insert, after update, after delete, after undelete) {
     
     Savepoint sp = Database.setSavepoint();
-    
     /** This solves the problem of not being able to save error records if everything gets rolled back. 
         TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
         DML operations. It also takes care of rolling everything back in that case, just so there are no 
         issues (side effects) with re-entrant flags. **/
     try {
 	    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-	    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-	        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c);
-	    handler.runClasses(new TDTM_ObjectDataGateway());
+	    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+	        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c, 
+	        new TDTM_ObjectDataGateway());
 	} catch(Exception e) {
         Database.rollback(sp);
         ERR_Handler.processError(e, null);

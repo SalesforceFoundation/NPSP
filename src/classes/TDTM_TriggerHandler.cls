@@ -29,61 +29,63 @@
 */
 public with sharing class TDTM_TriggerHandler {
 
-    private List<Sobject> newList;
-    private List<Sobject> oldList; 
-    private TDTM_TriggerActionHelper.Action thisAction;
-    private Schema.DescribeSobjectResult obj;
-
     private static Boolean defaultRecordsInserted = false;
     
-    public void initialize(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
+    public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
-    Schema.DescribeSobjectResult describeobj) {
+    Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
+    	/** This solves the problem of not being able to save error records if everything gets rolled back. 
+        TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
+        DML operations. It also takes care of rolling everything back in that case, just so there are no 
+        issues (side effects) with re-entrant flags. **/
+    	Savepoint sp = Database.setSavepoint();
+    	
+    	try {
+    		TDTM_TriggerActionHelper.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, 
+    		                                              isAfter, isInsert, isUpdate, isDelete, isUnDelete);
+            System.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
         
-        this.newList = newList;
-        this.oldList = oldList;
-
-        thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, isAfter, isInsert, isUpdate,
-                                                                        isDelete, isUnDelete);
-        System.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeobj.getLabel());
-        obj = describeobj;
+	        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+	        
+	        //If there are no records insert the defaults.
+	        if(!defaultRecordsInserted && dao.isEmpty()) {
+	        	insertDefaultRecords();
+	        }
+	        
+	        //Get the classes to run
+	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getName(), thisAction);
+	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getName() + ': ' + classesToCall);
+	        
+	        if(classesToCall != null && classesToCall.size() > 0) {
+	            //Run the relevant classes
+	            for (SObject classToCall : classesToCall) {
+	                TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
+	                dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+	                if(dmlWrapperLocal != null) {
+	                	if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
+	                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
+	                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
+	                        dmlWrapper.objectsToUpdate.putAll(dmlWrapperLocal.objectsToUpdate);
+	                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
+	                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
+	                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
+	                        dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
+	                }          
+	            }
+	                         
+	            //Process the result
+	            processDML(dmlWrapper);
+	        }
+	    } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, null);
+            /** We don't need to mark the error with an error (with addError) because the system does it automatically 
+            for us **/
+        }
     }
     
-    public void runClasses(TDTM_iTableDataGateway dao) {
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        
-        //If there are no records insert the defaults.
-        if(!defaultRecordsInserted && dao.isEmpty()) {
-        	insertDefaultRecords();
-        }
-        
-        //Get the classes to run
-        List<SObject> classesToCall = dao.getclassesToCallForObject(obj.getName(), thisAction);
-        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + obj.getName() + ': ' + classesToCall);
-        
-        if(classesToCall != null && classesToCall.size() > 0) {
-            //Run the relevant classes
-            for (SObject classToCall : classesToCall) {
-                TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
-                dmlWrapperLocal = runClass(classToCall);
-                if(dmlWrapperLocal != null) {
-                	if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
-                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
-                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
-                        dmlWrapper.objectsToUpdate.putAll(dmlWrapperLocal.objectsToUpdate);
-                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
-                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
-                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
-                        dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
-                }          
-            }
-                         
-            //Process the result
-            processDML(dmlWrapper);
-        }
-    }
-    
-    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord) {
+    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
+    TDTM_TriggerActionHelper.Action thisAction, Schema.DescribeSobjectResult describeObj) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -103,10 +105,10 @@ public with sharing class TDTM_TriggerHandler {
                     //Also,a future cannot be called from a future or batch method.
 			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
 			        	System.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
-			        	runAsync(classToRun, classToRunName);
+			        	runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
 			        } else {
 			        	System.debug(LoggingLevel.WARN, '****Calling synchronously: ' + classToRunName);
-                        return classToRun.run(newlist, oldlist, thisAction, obj);
+                        return classToRun.run(newlist, oldlist, thisAction, describeObj);
 			        }
 	        	} else {
 	        		System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
@@ -120,14 +122,15 @@ public with sharing class TDTM_TriggerHandler {
         return null;
     }
     
-    private void runAsync(TDTM_Runnable classToRun, String classToRunName) {
+    private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
+    List<Sobject> oldList, TDTM_TriggerActionHelper.Action thisAction, Schema.DescribeSobjectResult describeObj) {
        Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
        
        Map<Id,Sobject> om;
        if(oldlist != null) om = new Map<Id,SObject>(oldlist);
        else om = new Map<Id, SObject>();
        
-       classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), obj.getName(), classToRunName);
+       classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), describeObj.getName(), classToRunName);
     }
     
     //We want this method to be static so that it can be called from the future method in TDTM_Runnable
