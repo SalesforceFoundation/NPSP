@@ -30,20 +30,8 @@
 trigger TDTM_Opportunity on Opportunity (after delete, after insert, after undelete, 
 after update, before delete, before insert, before update) {
 
-    Savepoint sp = Database.setSavepoint();
-    /** This solves the problem of not being able to save error records if everything gets rolled back. 
-        TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
-        DML operations. It also takes care of rolling everything back in that case, just so there are no 
-        issues (side effects) with re-entrant flags. **/
-    try {
-	    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-	    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-	        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Opportunity, 
-	        new TDTM_ObjectDataGateway());
-    } catch(Exception e) {
-        Database.rollback(sp);
-        ERR_Handler.processError(e, null);
-        /** We don't need to mark the error with an error (with addError) because the system does it automatically 
-            for us **/
-    }
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Opportunity, 
+        new TDTM_ObjectDataGateway());
 }
