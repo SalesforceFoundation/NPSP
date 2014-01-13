@@ -70,8 +70,11 @@ public with sharing class ERR_Handler {
            }
            
 		   Error__c error = createError(e);
-	       if(DiagnosticsEnabled)
-                Database.insert(error, false);
+	       if(DiagnosticsEnabled) {
+               Database.SaveResult result = Database.insert(error, false);
+               System.debug(LoggingLevel.WARN, '****Was error record inserted: ' + result.isSuccess());
+               System.debug(LoggingLevel.WARN, '****Error record: ' + error);
+	       }
     	}
     }
     

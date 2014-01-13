@@ -34,6 +34,7 @@ public with sharing class TDTM_TriggerHandler {
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
+    	System.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
     	/** This solves the problem of not being able to save error records if everything gets rolled back. 
         TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
         DML operations. It also takes care of rolling everything back in that case, just so there are no 
@@ -74,9 +75,11 @@ public with sharing class TDTM_TriggerHandler {
 	            }
 	                         
 	            //Process the result
-	            processDML(dmlWrapper);
+	            if(dmlWrapper != null)
+	               processDML(dmlWrapper);
 	        }
 	    } catch(Exception e) {
+	    	System.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
             Database.rollback(sp);
             ERR_Handler.processError(e, null);
             /** We don't need to mark the error with an error (with addError) because the system does it automatically 
@@ -164,6 +167,7 @@ public with sharing class TDTM_TriggerHandler {
             dmlWrapper.objectsToUndelete);
             
         if(errorsExist) {
+        	System.debug(LoggingLevel.WARN, '****Error found when processing DML');
             Database.rollback(sp);
             errorHandler.storeErrors();   
         }
