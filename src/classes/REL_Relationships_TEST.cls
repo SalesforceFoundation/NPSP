@@ -725,10 +725,10 @@ private class REL_Relationships_TEST {
         npe4__Relationship_Lookup__c newRL = new npe4__Relationship_Lookup__c(Name='TESTRL', npe4__Male__c='Male', npe4__Female__c='Female', npe4__Neutral__c='Neutral');
         insert newRL;
         //insert an error so the controller posts a message
-        npe4__Relationship_Error__c re = new npe4__Relationship_Error__c(
-           npe4__Error_Type__c = 'MyType',
-           npe4__Error_Date_Time__c = system.now(),
-           npe4__Full_Error_Message__c = 'FullTextErrorMessage'
+        Error__c re = new Error__c(
+           Error_Type__c = 'MyType',
+           DateTime__c = system.now(),
+           Full_Message__c = 'FullTextErrorMessage'
         );
         insert re;
         

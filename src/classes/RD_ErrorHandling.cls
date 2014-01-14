@@ -37,7 +37,7 @@ public without sharing class RD_ErrorHandling {
     public static npe03__Recurring_Donations_Settings__c rds;
     
     public static void handleDMLErrorsOnOppInsert(list<Database.SaveResult> lsr, list<Opportunity> badOpps){ 
-        list<npe03__Recurring_Donations_Error_Queue__c> rdeqList = new list<npe03__Recurring_Donations_Error_Queue__c>();
+        list<Error__c> rdeqList = new list<Error__c>();
         //we only want one error per id, so we filter with this set
         set<id> RDIDs = new set<id>(); 
         integer i = 0;            
@@ -46,10 +46,9 @@ public without sharing class RD_ErrorHandling {
             if (!RDIDs.contains(o.npe03__Recurring_Donation__c)){
                 Database.SaveResult thisSR = lsr[i];
                 //insert into our custom list setting?                  
-                npe03__Recurring_Donations_Error_Queue__c rdeq = new npe03__Recurring_Donations_Error_Queue__c();
-                rdeq.Name = 'E-' + o.npe03__Recurring_Donation__c + '-' + i;
-                rdeq.npe03__Recurring_Donation_ID__c = o.npe03__Recurring_Donation__c;
-                rdeq.npe03__Error_Message__c = thisSR.getErrors()[0].getMessage();
+                Error__c rdeq = new Error__c();
+                rdeq.Record_URL__c = URL.getSalesforceBaseUrl().toExternalForm() + '/' + o.npe03__Recurring_Donation__c;
+                rdeq.Full_Message__c = thisSR.getErrors()[0].getMessage();
                 rdeqList.add(rdeq);
                 RDIDs.add(o.npe03__Recurring_Donation__c);
             }            
@@ -71,7 +70,7 @@ public without sharing class RD_ErrorHandling {
     @future
     public static void sendErrorQueueEmailNotificationFuture(){sendErrorQueueEmailNotification();}
     public static void sendErrorQueueEmailNotification(){
-        map<string, npe03__Recurring_Donations_Error_Queue__c> rdeqMap = npe03__Recurring_Donations_Error_Queue__c.getAll();
+        map<Id, Error__c> rdeqMap = new Map<Id, Error__c>([select Id, Record_URL__c, Full_Message__c from Error__c]);
         rds = RD_RecurringDonations.getRecurringDonationsSettings();
         if (!rdeqMap.isEmpty() && rds.npe03__Error_Email_Notifications__c != 'None' && rds.npe03__Error_Email_Notifications__c != null){
             Messaging.SingleEmailMessage sme = createEmailMessage(rdeqMap.values());
@@ -80,10 +79,10 @@ public without sharing class RD_ErrorHandling {
         }
         //clear the queue if not in a batch, otherwise, save them 
         if (!system.isBatch() && !RD_ProcessControl.batchButton)           
-           delete [select id from npe03__Recurring_Donations_Error_Queue__c];
+           delete [select id from Error__c];
     } 
 
-    private static Messaging.SingleEmailMessage createEmailMessage(list<npe03__Recurring_Donations_Error_Queue__c> rdeqList){
+    private static Messaging.SingleEmailMessage createEmailMessage(list<Error__c> rdeqList){
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setSenderDisplayName('Salesforce Recurring Donations');
@@ -91,9 +90,9 @@ public without sharing class RD_ErrorHandling {
         string bodyString = '';
         bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
-        for (npe03__Recurring_Donations_Error_Queue__c rdeq : rdeqlist){
-            bodyString += '\n' + system.url.getSalesforceBaseUrl().toExternalForm() + '/' + rdeq.npe03__Recurring_Donation_ID__c;
-            bodystring += ' Error Message: ' + rdeq.npe03__Error_Message__c;           
+        for (Error__c rdeq : rdeqlist){
+            bodyString += '\n' + rdeq.Record_URL__c;
+            bodystring += ' Error Message: ' + rdeq.Full_Message__c;           
         }        
         mail.setPlainTextBody(bodyString);
         list<string> sendList = new list<string>();
