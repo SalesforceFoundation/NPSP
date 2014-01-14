@@ -307,16 +307,28 @@ public with sharing class BDE_BatchEntry_CTRL {
         /***** OTHER CONTROLLER METHODS ******/
         
         public pageReference saveBatch() {
+        	
+        	Savepoint sp = Database.setSavepoint();
+        	
+        	try {
+        		TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
                 // if we are using batch, save the batch                
                 if (displayBatchSection && itemList!=null) {
                     batch.number_of_items__c = itemList.size();
 
                     if (batch.id == null)
-                        insert batch;
+                        dmlWrapper.objectsToInsert.add(batch);
                     else
-                        update batch;
+                        dmlWrapper.objectsToUpdate.put(batch.Id, batch);
                 }
-                return null;
+                TDTM_TriggerHandler.processDML(dmlWrapper);
+        	
+        	} catch(Exception e) {
+        		Database.rollback(sp);
+                ERR_Handler.processError(e, null);
+                batch.addError(e.getMessage());
+        	}
+            return null;
         }
         
         public pageReference save() {

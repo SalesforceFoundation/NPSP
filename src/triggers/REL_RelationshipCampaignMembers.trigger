@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -28,9 +28,8 @@
     POSSIBILITY OF SUCH DAMAGE.
 */ 
 trigger REL_RelationshipCampaignMembers on CampaignMember (after insert, after update) {
-    
+
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.CampaignMember);
-    handler.runClasses(new TDTM_ObjectDataGateway());
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.CampaignMember, new TDTM_ObjectDataGateway());
 }
