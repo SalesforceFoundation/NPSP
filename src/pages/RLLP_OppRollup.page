@@ -9,6 +9,7 @@ ul.err li {
     font-weight: bold; 
 }
 </style>
+    <apex:pageMessages />
     <apex:sectionHeader title="Batch Opportunity Rollup" />
     <apex:form >
         <apex:pageBlock >

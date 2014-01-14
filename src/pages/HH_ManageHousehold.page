@@ -45,6 +45,8 @@ gwManageHH.originalState = JSON.stringify({!originalState});
 <!-- Load custom JS after objects and labels have been initialised -->
 <script type="text/javascript" src="{!$Resource.ManageHouseholdjs}" />
 
+<apex:pageMessages />
+
 <div id="dialog-addmember" class="gwDialog gwHidden" title="{!$label.npo02__AlreadyInHousehold}">
     <p><strong id="dialog-addmember-name" /> {!$label.npo02__ContactAlreadyInHousehold}</p>
 </div>
