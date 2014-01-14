@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.com Foundation
+    Copyright (c) 2013, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -28,10 +28,10 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 trigger TDTM_Affiliation on npe5__Affiliation__c (after delete, after insert, after undelete, 
-    after update, before delete, before insert, before update) {
+after update, before delete, before insert, before update) {
 
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-    handler.initialize(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe5__Affiliation__c);
-    handler.runClasses(new TDTM_ObjectDataGateway());
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe5__Affiliation__c, 
+        new TDTM_ObjectDataGateway());
 }

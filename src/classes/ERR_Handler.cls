@@ -3,22 +3,29 @@ public with sharing class ERR_Handler {
     //@TODO: we should read this flag from a custom setting
     public static Boolean DiagnosticsEnabled = true;
     
-    List<Error__c> errors = new List<Error__c>();
+    private List<Error__c> errors = new List<Error__c>();
     
-    public void processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
+    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
     List<SObject> objectsToDelete, List<SObject> objectsToUndelete) {
+        
+        Boolean errorsExist = false;
         	
-    	processResults(insertResults, objectsToInsert);  //Insert
-    	processResults(updateResults, objectsToUpdate);  //Update
-    	processResults(deleteResults, objectsToDelete);  //Delete
-    	processResults(undeleteResults, objectsToUndelete);  //Undelete
+    	Boolean errorsExistOnInserts = processResults(insertResults, objectsToInsert);  //Insert
+    	Boolean errorsExistOnUpdates = processResults(updateResults, objectsToUpdate);  //Update
+    	Boolean errorsExistOnDeletes = processResults(deleteResults, objectsToDelete);  //Delete
+    	Boolean errorsExistOnUndeletes = processResults(undeleteResults, objectsToUndelete);  //Undelete
     	
-    	storeErrors(errors);
+    	if(errorsExistOnInserts || errorsExistOnUpdates || errorsExistOnDeletes || errorsExistOnUndeletes) {
+    		errorsExist = true;
+    	}
+    	return ErrorsExist;
     }
 
-    private void processResults(List<Object> results, List<SObject> sObjects) {    	
+    private Boolean processResults(List<Object> results, List<SObject> sObjects) {    	
+    	Boolean errorsExist = false;
+    	
     	if(results != null) {	
 	    	for(Integer i=0; i<results.size(); i++) {
 	        	String message;
@@ -38,6 +45,7 @@ public with sharing class ERR_Handler {
 	        	}
 	        	
 	        	if(!isSuccess && message != null) {
+	        		errorsExist = true;
 	        		//Creating error object
 	                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
 	                //Adding error message to the record
@@ -46,6 +54,7 @@ public with sharing class ERR_Handler {
 	        	}
 	        }
     	}
+    	return errorsExist;
     }
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
@@ -61,7 +70,11 @@ public with sharing class ERR_Handler {
            }
            
 		   Error__c error = createError(e);
-	       storeErrors(new Error__c[]{error}); 
+	       if(DiagnosticsEnabled) {
+               Database.SaveResult result = Database.insert(error, false);
+               System.debug(LoggingLevel.WARN, '****Was error record inserted: ' + result.isSuccess());
+               System.debug(LoggingLevel.WARN, '****Error record: ' + error);
+	       }
     	}
     }
     
@@ -77,7 +90,7 @@ public with sharing class ERR_Handler {
         record.addError(message);
     }
     
-    private static void storeErrors(List<Error__c> errors) {
+    public void storeErrors() {
     	if(DiagnosticsEnabled) {
     		System.debug(LoggingLevel.WARN, '****Storing errors: ' + errors);
     		Database.insert(errors, false);
@@ -94,8 +107,6 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
-    /*** This is the same issue as above. Ideally we would only need 1 method, but since no interface was provided
-    for Database.SaveResult, Database.DeleteResult and Database.UndeleteResult ***/
     public static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();

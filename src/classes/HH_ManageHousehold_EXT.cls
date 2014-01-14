@@ -817,7 +817,7 @@ global with sharing class HH_ManageHousehold_EXT {
 	        	try {
 	               acc.put(f.getFieldPath(), hh.get(f.getFieldPath()));
 	        	} catch (Exception e) { 
-	        	  ERR_Handler.processError(e, null);
+	        	  //no need to save the error here. if the field is not updateable we will just ignore it
 	        	}
 	        }          
 	        // add additional fields the page always uses
@@ -837,7 +837,7 @@ global with sharing class HH_ManageHousehold_EXT {
             	try {
                     h.put(f.getFieldPath(), hh.get(f.getFieldPath()));
             	} catch (Exception e) { 
-            	   ERR_Handler.processError(e, null);
+            		//no need to save the error here. if the field is not updateable we will just ignore it
             	}
             }
             // add additional fields the page always uses

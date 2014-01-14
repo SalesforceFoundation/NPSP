@@ -4,4 +4,6 @@
     
     standardController="Account" extensions="ACCT_ViewOverride_CTRL">
 
+    <apex:pageMessages />
+    
 </apex:page>

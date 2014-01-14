@@ -569,20 +569,21 @@ private class REL_Relationships_TEST {
             new npe4__Relationship__c(npe4__contact__c = c2.id, npe4__Type__c='TestLookupType')
         };
         Database.SaveResult[] insertResults = Database.insert(relationships, false);
-        //assert an error
+        //assert an error - Required fields are missing: [npe4__Contact__c]
         system.assertEquals(1, [select count() from Error__c]);
         
-        //update relationship
+        //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
         Database.SaveResult[] updateResults = Database.update(relationships, false);
+        System.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
         errorHandler.processResults(null, updateResults, null, null, 
                                     null, (List<SObject>)relationships, null, null);
         System.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
-        //additional error created on update
-        system.assertEquals(2, [select count() from Error__c]);
+        //no additional error was created on update
+        system.assertEquals(1, [select count() from Error__c]);
     }
     
     static testMethod void testExceptionRecordCreation(){
