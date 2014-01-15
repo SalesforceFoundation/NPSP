@@ -155,7 +155,7 @@ public with sharing class ERR_Handler {
             return 'Other';
     }
     
-    /*** Future methods - not yet used ***/
+    /*** Future methods - not yet used 
     @future
     private static void saveErrorFuture(Datetime now, String objectType, String recordURL, String status,
     String message) {
@@ -176,5 +176,5 @@ public with sharing class ERR_Handler {
         error.Stack_Trace__c = stackTrace;
         error.Full_Message__c = message;
         Database.insert(error, false);
-    }
+    }***/
 }
