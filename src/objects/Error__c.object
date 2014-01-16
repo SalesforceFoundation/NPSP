@@ -39,6 +39,15 @@
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
     <fields>
+        <fullName>Context_Type__c</fullName>
+        <description>Context that generated the error, if known.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Context that generated the error, if known.</inlineHelpText>
+        <label>Context Type</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Datetime__c</fullName>
         <defaultValue>now()</defaultValue>
         <description>Date &amp; time the error occurred</description>
@@ -53,7 +62,7 @@
         <description>Type of error that occurred</description>
         <externalId>false</externalId>
         <inlineHelpText>Type of error that occurred</inlineHelpText>
-        <label>Type</label>
+        <label>Error Type</label>
         <required>false</required>
         <type>TextArea</type>
     </fields>
@@ -68,11 +77,20 @@
         <visibleLines>5</visibleLines>
     </fields>
     <fields>
+        <fullName>Module_Type__c</fullName>
+        <description>Module that generated the error, if known.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Module that generated the error, if known.</inlineHelpText>
+        <label>Module Type</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Object_Type__c</fullName>
         <description>Type of object on which the error occurred, if known.</description>
         <externalId>false</externalId>
         <inlineHelpText>Type of object on which the error occurred, if known.</inlineHelpText>
-        <label>Type</label>
+        <label>Object Type</label>
         <required>false</required>
         <type>TextArea</type>
     </fields>
