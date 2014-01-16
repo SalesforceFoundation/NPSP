@@ -5,11 +5,17 @@ public with sharing class ERR_Handler_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
     
+    private static void setup() {
+    	insert new Error_Settings__c(Store_Errors__c = true);
+    }
+    
     /*** We need to use Database.insert because otherwise the code does not pass the contacts insert
          in the test itself. A record gets inserted just because the name field for accounts was not
          retrieved. This happens in the second pass of the Database.insert ***/
     public testmethod static void errorsStoredInDbTdtmCustomConfig() {
     	if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfig') return;
+    	
+    	setup();
     	
     	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
@@ -55,6 +61,8 @@ public with sharing class ERR_Handler_TEST {
     public testmethod static void errorsStoredInDbTdtmCustomConfig2() {
         if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfig') return;
         
+        setup();
+        
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater2_TEST', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;');
@@ -97,6 +105,8 @@ public with sharing class ERR_Handler_TEST {
     public testmethod static void errorStoredInDbTdtmStandardConfig() {
     	if (strTestOnly != '*' && strTestOnly != 'errorStoredInDbTdtmStandardConfig') return;
     
+        setup();
+        
         AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(
                                            npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
                     
@@ -140,6 +150,8 @@ public with sharing class ERR_Handler_TEST {
     static testMethod void errorStoredInDatabaseFromInsert() {
         if (strTestOnly != '*' && strTestOnly != 'errorStoredInDatabaseFromInsert') return;
         
+        setup();
+        
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
         insert contact1;
                 
@@ -156,7 +168,8 @@ public with sharing class ERR_Handler_TEST {
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(null, updateResults, null, null, null, (List<SObject>)relationships, null, null);
+        errorHandler.processResults(null, updateResults, null, null, null, (List<SObject>)relationships, null, null, 
+                                    ERR_Handler.Context.REL);
 
         //assert no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);

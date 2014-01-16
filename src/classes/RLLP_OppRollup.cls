@@ -684,6 +684,9 @@ global virtual without sharing class RLLP_OppRollup{
     
     /*** Wrappers for Managing the batch process ***/
     public void rollupAll(){
+    	
+    	//clear the error queue from any previous runs
+        delete [select id from Error__c where Context_Type__c = 'RLLP'];
 
         rollupAllAccounts();
         rollupAllContacts(); 

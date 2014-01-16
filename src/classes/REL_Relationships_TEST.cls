@@ -564,6 +564,8 @@ private class REL_Relationships_TEST {
     static testMethod void testErrorRecordCreation(){
     	if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
     	
+    	insert new Error_Settings__c(Store_Errors__c = true);
+    	
         setupRelationshipTestData(null);
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = c2.id, npe4__Type__c='TestLookupType')
@@ -580,7 +582,7 @@ private class REL_Relationships_TEST {
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
         errorHandler.processResults(null, updateResults, null, null, 
-                                    null, (List<SObject>)relationships, null, null);
+                                    null, (List<SObject>)relationships, null, null, ERR_Handler.Context.REL);
         System.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
         //no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);

@@ -43,8 +43,8 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
     }
     
     global database.Querylocator start(Database.BatchableContext bc){
-        //clear any existing errors from the queue - @TODO: do we still want to do this? It will delete ALL errors.
-        delete [select id from Error__c];
+        //clear any existing errors from the queue
+        delete [select id from Error__c where Context_Type__c = 'RD'];
         return Database.getQueryLocator(query);      
     }
     global void execute(Database.BatchableContext bc, Sobject[] result){
@@ -68,8 +68,8 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         rds.npe03__Number_of_Failures__c = errorcount;
         update rds;                            
         
-        //if needed, send messages from teh error queue
-        RD_ErrorHandling.sendErrorQueueEmailNotification();        
+        //if needed, send messages from the error queue
+        ERR_Handler.sendErrorQueueEmailNotification();        
     }
     
     
