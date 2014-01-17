@@ -28,33 +28,28 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @isTest
-public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
+public with sharing class TDTM_Runnable_TEST {
 
-    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    /** This test verifies that the runFuture method of the TDTM_Runnable class works properly **/
+    public static testmethod void testAsync() {
+    	
+    	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = true, 
+              Class__c = 'ERR_ParentAccountUpdater2_TEST', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert;');
          
-        DmlWrapper dmlWrapper = new DmlWrapper();
- 
-        List<Contact> contactsWithParentId = [select AccountId from Contact where Id in :newList];
-        List<Id> parentAccIds = new List<Id>();
+        Account acc = new Account(Name = 'Old Acc Name');
+        insert acc;
         
-        for(SObject o : contactsWithParentId) {
-        	Contact contact = (Contact)o;
-        	contact.FirstName = 'New First Name';
-        	dmlWrapper.objectsToUpdate.put(contact.Id, contact);
-        	System.debug('****Parent Account Id: ' + contact.AccountId);
-        	parentAccIds.add(contact.AccountId);
-        }
+        Contact contact = new Contact(FirstName = 'Old First Name', LastName = 'Testerson', AccountId = acc.Id);
         
-        //NOTE: querying the name in the parent account would not be necessary unless we are on a future.
-        //It is necessary here because we are calling this class from TDTM_Runnable_TEST.
-        List<Account> parentAccs = [select Id, Name from Account where Id in :parentAccIds];
+        Test.startTest(); 
+        insert contact;
+        Test.stopTest();
         
-        for(Account acc : parentAccs) {
-            acc.Name = 'New Acc Name';
-            dmlWrapper.objectsToUpdate.put(acc.Id, acc);
-        }
+        contact = [select FirstName from Contact where Id = :contact.ID];
+        acc = [select Name from Account where Id = :acc.Id];
         
-        return dmlWrapper;
+        System.assertEquals('New First Name', contact.FirstName); //To verify fields from record are available in future
+        System.assertEquals('New Acc Name', acc.Name);
     }
 }
