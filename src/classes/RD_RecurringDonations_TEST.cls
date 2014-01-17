@@ -1468,7 +1468,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1508,7 +1509,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1550,7 +1552,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------
@@ -1607,7 +1610,7 @@ public class RD_RecurringDonations_TEST {
         Test.setCurrentPageReference(new PageReference('Page.RecurringDonationsSettings'));
         
         //pass the controller into the extension
-        STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL(); 
+        STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL();
         controller.getSettingsFirstTime();
         test.startTest();
         controller.runBatch();

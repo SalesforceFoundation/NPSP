@@ -1,14 +1,17 @@
 public with sharing class ERR_Handler {
 
-    //@TODO: we should read this flag from a custom setting
-    public static Boolean DiagnosticsEnabled = true;
+    public static Boolean diagnosticsEnabled = null;
+    public static Boolean sendEmailNotifications = null;
+    public static String mailList = null;
     
     private List<Error__c> errors = new List<Error__c>();
+    
+    public enum Context {REL, AFFL, RD, RLLP}
     
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
-    List<SObject> objectsToDelete, List<SObject> objectsToUndelete) {
+    List<SObject> objectsToDelete, List<SObject> objectsToUndelete, ERR_Handler.Context context) {
         
         Boolean errorsExist = false;
         	
@@ -20,6 +23,15 @@ public with sharing class ERR_Handler {
     	if(errorsExistOnInserts || errorsExistOnUpdates || errorsExistOnDeletes || errorsExistOnUndeletes) {
     		errorsExist = true;
     	}
+    	
+    	if(context != null && context == ERR_Handler.Context.RD) {
+    		if (!system.isBatch() && !RD_ProcessControl.batchButton && !system.isFuture()) {
+                ERR_Handler.sendErrorQueueEmailNotificationFuture();
+    	    } else if (system.isFuture()){
+                ERR_Handler.sendErrorQueueEmailNotification();
+            }  
+    	}
+    	
     	return ErrorsExist;
     }
 
@@ -59,6 +71,9 @@ public with sharing class ERR_Handler {
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
     public static void processError(Exception e, List<SObject> records) {
+    	if(DiagnosticsEnabled == null)
+    		setOrgSettings();
+    	
     	if(DiagnosticsEnabled && e != null) {
 			if(e instanceof DmlException && records != null) {
                 DmlException de = (DmlException) e;
@@ -91,6 +106,9 @@ public with sharing class ERR_Handler {
     }
     
     public void storeErrors() {
+    	if(DiagnosticsEnabled == null)
+    		setOrgSettings();
+    	
     	if(DiagnosticsEnabled) {
     		System.debug(LoggingLevel.WARN, '****Storing errors: ' + errors);
     		Database.insert(errors, false);
@@ -132,7 +150,74 @@ public with sharing class ERR_Handler {
         return error;
     }
     
+    /** Email methods **/
+    @future
+    public static void sendErrorQueueEmailNotificationFuture(){sendErrorQueueEmailNotification();}
+    
+    public static void sendErrorQueueEmailNotification(){
+        map<Id, Error__c> rdeqMap = new Map<Id, Error__c>([select Id, Record_URL__c, Full_Message__c from Error__c]);
+        
+        if(SendEmailNotifications == null)
+            setOrgSettings();
+        
+        if (!rdeqMap.isEmpty() && SendEmailNotifications == true){
+            Messaging.SingleEmailMessage sme = createEmailMessage(rdeqMap.values());
+            if (!test.isRunningTest())
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
+        }
+        //clear the queue if not in a batch, otherwise, save them 
+        if (!system.isBatch() && !RD_ProcessControl.batchButton)           
+           delete [select id from Error__c];
+    } 
+
+    private static Messaging.SingleEmailMessage createEmailMessage(list<Error__c> rdeqList){
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setUseSignature(false);
+        mail.setSenderDisplayName('Salesforce Recurring Donations');
+        mail.setSubject('Salesforce Recurring Donations Errors');
+        string bodyString = '';
+        bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
+        bodyString += '\n\nErrors:';
+        for (Error__c rdeq : rdeqlist){
+            bodyString += '\n' + rdeq.Record_URL__c;
+            bodystring += ' Error Message: ' + rdeq.Full_Message__c;           
+        }        
+        mail.setPlainTextBody(bodyString);
+        list<string> sendList = new list<string>();
+        //user, sysadmins or PG
+        if(mailList == null)
+            setOrgSettings();
+        
+        if (mailList.startsWith('005')) {
+            sendList.add([select email from User where id = :mailList].email);
+        } else if(mailList == 'All Sys Admins'){
+            list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator'];
+            for (User u : sysadminlist) {
+                sendList.add(u.email);              
+            }           
+        } else if(mailList.startsWith('00G')) {
+            list<GroupMember> groupUsers = [select g.UserOrGroupId from GroupMember g where GroupId = :mailList];
+            set<id> userIDs = new set<id>();
+            for (GroupMember g : groupUsers)
+               userIDs.add(g.UserOrGroupId);
+            list<User> userList = [select email from User where id IN :userIDs];
+            for (User u : userList){
+                sendList.add(u.email);
+            }
+        }        
+        mail.setToAddresses(sendList);                   
+
+        return mail;        
+    }
+    
     /*** Helper methods ***/
+    private static void setOrgSettings() {
+    	Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
+    	DiagnosticsEnabled = orgErrorSettings.Store_Errors__c;
+    	SendEmailNotifications = orgErrorSettings.Email_Notifications__c;
+    	mailList = orgErrorSettings.Email_List__c;
+    }
+    
     private static String getRecordURL(Id saveResultId, Id objId) {
     	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
@@ -155,7 +240,7 @@ public with sharing class ERR_Handler {
             return 'Other';
     }
     
-    /*** Future methods - not yet used ***/
+    /*** Future methods - not yet used 
     @future
     private static void saveErrorFuture(Datetime now, String objectType, String recordURL, String status,
     String message) {
@@ -176,5 +261,5 @@ public with sharing class ERR_Handler {
         error.Stack_Trace__c = stackTrace;
         error.Full_Message__c = message;
         Database.insert(error, false);
-    }
+    }***/
 }

@@ -165,7 +165,8 @@ public with sharing class TDTM_TriggerHandler {
         //Process the results
         Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate.values(), dmlWrapper.objectsToDelete, 
-            dmlWrapper.objectsToUndelete);
+            dmlWrapper.objectsToUndelete, null); //The last argument is numm because we cannot specify the context in 
+                                                 //this case. There might be more than one.
             
         if(errorsExist) {
         	System.debug(LoggingLevel.WARN, '****Error found when processing DML');
