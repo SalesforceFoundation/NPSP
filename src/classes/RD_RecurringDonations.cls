@@ -455,7 +455,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-                RD_ErrorHandling.handleDMLErrorsOnOppInsert(badSRs, badOpps);
+            	ERR_Handler errorHandler = new ERR_Handler();
+                errorHandler.processResults(badSRs, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -810,7 +811,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-                RD_ErrorHandling.handleDMLErrorsOnOppInsert(badSRs, badOpps);
+            	ERR_Handler errorHandler = new ERR_Handler();
+                errorHandler.processResults(badSRs, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);  
             }
         }
         
@@ -854,7 +856,7 @@ public with sharing class RD_RecurringDonations {
                 recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
                 recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = true;
                 recurringDonationsSettings.npe03__Enable_Update_Check__c = true;
-                recurringDonationsSettings.npe03__Error_Email_Notifications__c = 'All Sys Admins';
+                //recurringDonationsSettings.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting
                 recurringDonationsSettings.npe03__Maximum_Donations__c = 50;
                 recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = 12;
                 recurringDonationsSettings.npe03__Update_Check_Interval__c = 90;
