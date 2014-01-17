@@ -47,7 +47,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
     public npe03__Recurring_Donations_Settings__c rds {get; set;}
     public list<npe03__Custom_Installment_Settings__c> cis {get; set;}
     public list<npe03__Custom_Field_Mapping__c> cfm {get; set;}
-    public list<npe03__Recurring_Donations_Error_Queue__c> rdeq {get; set;}
+    public list<Error__c> rdeq {get; set;}
     public string selectedTab {get; set;}
     public integer cisSize{get; set;} 
     public integer cfmSize{get; set;}
@@ -56,7 +56,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
     public string replacementInstallment{get; set;}
     public map<string, npe03__Custom_Installment_Settings__c> cisMap;
     public map<string, npe03__Custom_Field_Mapping__c> cfmMap;
-    public map<string, npe03__Recurring_Donations_Error_Queue__c> rdeqMap;
+    public Map<Id, Error__c> rdeqMap;
     public string fieldMappingName{get; set;}
     public boolean runningBatch{get; set;}
     //holds value to evaluate change in forecast months
@@ -181,7 +181,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
         forecastMonths = (integer)rds.npe03__Opportunity_Forecast_Months__c;              
         cisMap = npe03__Custom_Installment_Settings__c.getAll();
         cfmMap = npe03__Custom_Field_Mapping__c.getAll().clone();
-        rdeqMap = npe03__Recurring_Donations_Error_Queue__c.getAll();
+        rdeqMap = new Map<Id, Error__c>([select Id, Name from Error__c]);
         rdeq = rdeqMap.values();
         cfm = cfmMap.values();        
         cis = cisMap.values();
@@ -362,7 +362,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
     }    
     
     public pageReference clearErrorQueue(){
-        delete [select id from npe03__Recurring_Donations_Error_Queue__c];
+        delete [select id from Error__c];
         rdeqSize = 0;
         return null;
     }

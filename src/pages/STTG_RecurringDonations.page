@@ -145,8 +145,8 @@
                 <apex:PageBlockSection columns="1" title="Most Recent Error Queue" collapsible="false">
                      <apex:outputText value="No errors currently in the queue" rendered="{!rdeqSize < 1}"/>
                      <apex:pageBlockTable var="eq" value="{!rdeq}">                
-                        <apex:column value="{!eq.npe03__Recurring_Donation_ID__c}" rendered="{!AND(rdeqSize>0,NOT(canEditCISettings),NOT(deleteInstallmentMode))}"/>
-                        <apex:column value="{!eq.npe03__Error_Message__c}" rendered="{!AND(rdeqSize>0,NOT(canEditCISettings),NOT(deleteInstallmentMode))}"/>                                                                      
+                        <apex:column value="{!eq.Record_URL__c}" rendered="{!AND(rdeqSize>0,NOT(canEditCISettings),NOT(deleteInstallmentMode))}"/>
+                        <apex:column value="{!eq.Full_Message__c}" rendered="{!AND(rdeqSize>0,NOT(canEditCISettings),NOT(deleteInstallmentMode))}"/>                                                                      
                     </apex:pageBlockTable>                    
                     <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
                         <apex:commandButton value="Clear Error Queue" action="{!clearErrorQueue}"/>                                                
