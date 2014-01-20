@@ -56,7 +56,7 @@ public with sharing class TDTM_TriggerHandler {
 	        
 	        //Get the classes to run
 	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getName(), thisAction);
-	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getName() + ': ' + classesToCall);
+	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getName() + ': ' + JSON.serializePretty(classesToCall));
 	        
 	        if(classesToCall != null && classesToCall.size() > 0) {
 	            //Run the relevant classes
@@ -146,17 +146,17 @@ public with sharing class TDTM_TriggerHandler {
         
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
-        System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + dmlWrapper.objectsToInsert);
+        System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        System.debug(LoggingLevel.WARN, '****Final objects to update: ' + dmlWrapper.objectsToUpdate.values());
+        System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate.values()));
         List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
         
-        System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + dmlWrapper.objectsToDelete);
+        System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
         //Not yet using this one, as far as I know, but no reason not to support them
-        System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + dmlWrapper.objectsToUndelete);
+        System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
@@ -165,8 +165,7 @@ public with sharing class TDTM_TriggerHandler {
         //Process the results
         Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate.values(), dmlWrapper.objectsToDelete, 
-            dmlWrapper.objectsToUndelete, null); //The last argument is numm because we cannot specify the context in 
-                                                 //this case. There might be more than one.
+            dmlWrapper.objectsToUndelete);
             
         if(errorsExist) {
         	System.debug(LoggingLevel.WARN, '****Error found when processing DML');
