@@ -136,7 +136,7 @@ public with sharing class ERR_Handler {
 	       if(DiagnosticsEnabled) {
                Database.SaveResult result = Database.insert(error, false);
                System.debug(LoggingLevel.WARN, '****Was error record inserted: ' + result.isSuccess());
-               System.debug(LoggingLevel.WARN, '****Error record: ' + error);
+               System.debug(LoggingLevel.WARN, '****Error record: ' + JSON.serializePretty(error));
 	       }
     	}
     }
@@ -158,7 +158,7 @@ public with sharing class ERR_Handler {
     		setOrgSettings();
     	
     	if(DiagnosticsEnabled) {
-    		System.debug(LoggingLevel.WARN, '****Storing errors: ' + errors);
+    		System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
     		Database.insert(errors, false);
     	}
     }
