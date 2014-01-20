@@ -193,13 +193,22 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <updateDependentPackages />
     </target>
 
-
     <target name="retrieveUnpackaged">
       <retrieveUnpackaged dir="unpackaged" /> 
     </target>
 
     <target name="runAllTests">
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="lib/empty" runAllTests="true" maxPoll="200" />
+    </target>
+
+    <target name="retrieveCumulusPackage">
+      <mkdir dir="CumulusPackage" />
+      <sf:retrieve 
+          username="${sf.username}" 
+          password="${sf.password}" 
+          serverurl="${sf.serverurl}" 
+          retrieveTarget="CumulusPackage" 
+          packageNames="Cumulus"/>
     </target>
 
 </project>
