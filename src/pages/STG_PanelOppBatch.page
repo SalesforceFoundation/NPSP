@@ -1,0 +1,27 @@
+<apex:page controller="STG_PanelOppBatch_CTRL" >
+
+    <apex:form id="form">   
+        <apex:sectionHeader subtitle="Opportunity Rollup Batch Run" />        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock id="pbRelBatch" mode="maindetail">
+  
+            <apex:pageBlockSection title="Batch Status" columns="1" collapsible="false" />
+            <apex:outputPanel layout="block" styleClass="sectionHelp">
+	                Use this page to roll up totals for all closed opportunities, saving the results in
+	                contact, household, and organization records. The process may take some time; you can
+	                close this page and the process will continue in the background.
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!isRunningBatch}">
+                <br/><br/>
+                <c:UTIL_JobProgress strBatchComponentLabel="Batch Rollup Progress" cNumberOfJobs="4" bRerenderOnComplete="true" />
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="block" styleClass="panelButtons" >
+                <p/>
+                <apex:commandButton value="Run Batch Update" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRelBatch" />
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

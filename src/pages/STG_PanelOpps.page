@@ -1,0 +1,46 @@
+<apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
+
+    <apex:form id="form">   
+        <apex:sectionHeader subtitle="Opportunity Settings" title="NPSP Settings" />        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock mode="maindetail">
+  
+            <apex:pageBlockSection title="Miscellaneous Settings" columns="1" collapsible="false" />
+            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}"/>
+                <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.InlineHelpText}" />
+                             
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}"/>
+                <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.InlineHelpText}" />
+                                                          
+            </apex:panelGrid> 
+            
+            <apex:pageBlockSection title="Membership Settings" columns="1" collapsible="false" />
+            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}"/>
+                <apex:selectList value="{!stgService.stgHH.npo02__Membership_Record_Types__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                    <apex:selectOptions value="{!listSOOppRecTypes}"/>
+                </apex:selectList>
+                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.InlineHelpText}" />
+
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.Label}"/>
+                <apex:outputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" rendered="{!isReadOnlyMode}" />                          
+                <apex:inputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" type="number" rendered="{!isEditMode}" />                          
+                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.InlineHelpText}" />
+                                                          
+            </apex:panelGrid>             
+
+            <apex:outputPanel layout="block" styleClass="panelButtons" >
+                <p/>
+                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

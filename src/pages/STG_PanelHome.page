@@ -1,0 +1,13 @@
+<apex:page controller="STG_SettingsManager_CTRL" >
+
+        <apex:sectionHeader subtitle="Non Profit Starter Pack Settings" />        
+        <apex:pageMessages id="pageMessages"/>
+        <h1>Welcome to Non Profit Starter Pack Settings!</h1>
+
+
+	    <p>Some debug data:</p>
+	    <ul>
+	        <li>idPanelCurrent: {!idPanelCurrent} </li>
+	    </ul>
+
+</apex:page>
