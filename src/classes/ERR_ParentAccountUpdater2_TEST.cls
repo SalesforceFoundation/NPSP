@@ -35,26 +35,35 @@ public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
          
         DmlWrapper dmlWrapper = new DmlWrapper();
  
-        List<Contact> contactsWithParentId = [select AccountId from Contact where Id in :newList];
-        List<Id> parentAccIds = new List<Id>();
-        
-        for(SObject o : contactsWithParentId) {
-        	Contact contact = (Contact)o;
-        	contact.FirstName = 'New First Name';
-        	dmlWrapper.objectsToUpdate.put(contact.Id, contact);
-        	System.debug('****Parent Account Id: ' + contact.AccountId);
-        	parentAccIds.add(contact.AccountId);
-        }
-        
-        //NOTE: querying the name in the parent account would not be necessary unless we are on a future.
+        //Querying the name in the parent account is only necessary if we are in a future.
         //It is necessary here because we are calling this class from TDTM_Runnable_TEST.
-        List<Account> parentAccs = [select Id, Name from Account where Id in :parentAccIds];
-        
-        for(Account acc : parentAccs) {
-            acc.Name = 'New Acc Name';
-            dmlWrapper.objectsToUpdate.put(acc.Id, acc);
+        if(System.isFuture()) {
+	        List<Contact> contactsWithParentId = [select AccountId from Contact where Id in :newList];
+	        List<Id> parentAccIds = new List<Id>();
+	        
+	        for(SObject o : contactsWithParentId) {
+	        	Contact contact = (Contact)o;
+	        	contact.FirstName = 'New First Name';
+	        	dmlWrapper.objectsToUpdate.put(contact.Id, contact);
+	        	parentAccIds.add(contact.AccountId);
+	        }
+
+	        List<Account> parentAccs = [select Id, Name from Account where Id in :parentAccIds];
+	        for(Account acc : parentAccs) {
+	            acc.Name = 'New Acc Name';
+	            dmlWrapper.objectsToUpdate.put(acc.Id, acc);
+	        }
+        //If we are not in a future setting the name of the parent account does not throw a null pointer exception.	
+        } else {
+        	List<Contact> contactsWithParentInfo = [select Account.Id, Account.Name from Contact where Id in :newList];
+        	for(SObject o : contactsWithParentInfo) {
+        		Contact contact = (Contact)o;
+        		contact.FirstName = 'New First Name';
+        		contact.Account.Name = 'New Acc Name';
+        		dmlWrapper.objectsToUpdate.put(contact.Account.Id, contact.Account);
+        	}
         }
-        
+
         return dmlWrapper;
     }
 }
