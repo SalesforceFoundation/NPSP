@@ -197,8 +197,7 @@ public with sharing class ERR_Handler_TEST {
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(null, updateResults, null, null, null, (List<SObject>)relationships, null, null, 
-                                    ERR_Handler.Context.REL);
+        errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
 
         //assert no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);

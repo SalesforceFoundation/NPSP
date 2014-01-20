@@ -456,7 +456,7 @@ public with sharing class RD_RecurringDonations {
             
             if (!badSRs.isEmpty()){
             	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.processResults(badSRs, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
+                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -812,7 +812,7 @@ public with sharing class RD_RecurringDonations {
             
             if (!badSRs.isEmpty()){
             	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.processResults(badSRs, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);  
+                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
             }
         }
         

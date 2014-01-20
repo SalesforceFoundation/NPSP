@@ -1469,7 +1469,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1510,7 +1510,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1553,7 +1553,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(lsr, null, null, null, badOpps, null, null, null, ERR_Handler.Context.RD);
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------
@@ -1561,7 +1561,7 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'batchStatusBarTest') return;
 
         UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
-        controller.getBatchJobs(); 
+        controller.getBatchJobs();
     }
 
     //--------------- from RD_RecurringDonations_BATCH -----------------
