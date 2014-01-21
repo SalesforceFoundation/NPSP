@@ -325,8 +325,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         	
         	} catch(Exception e) {
         		Database.rollback(sp);
-                ERR_Handler.processError(e, null);
-                batch.addError(e.getMessage());
+                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
         	}
             return null;
         }

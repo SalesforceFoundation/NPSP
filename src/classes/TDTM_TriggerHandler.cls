@@ -82,7 +82,7 @@ public with sharing class TDTM_TriggerHandler {
 	    } catch(Exception e) {
 	    	System.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
             Database.rollback(sp);
-            ERR_Handler.processError(e, null);
+            ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
             /** We don't need to mark the error with an error (with addError) because the system does it automatically 
             for us **/
         }
@@ -170,7 +170,7 @@ public with sharing class TDTM_TriggerHandler {
         if(errorsExist) {
         	System.debug(LoggingLevel.WARN, '****Error found when processing DML');
             Database.rollback(sp);
-            errorHandler.storeErrors();   
+            errorHandler.storeErrors();
         }
     }
     
