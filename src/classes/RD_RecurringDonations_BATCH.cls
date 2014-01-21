@@ -44,7 +44,7 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
     
     global database.Querylocator start(Database.BatchableContext bc){
         //clear any existing errors from the queue
-        delete [select id from npe03__Recurring_Donations_Error_Queue__c];
+        delete [select id from Error__c where Context_Type__c = 'RD'];
         return Database.getQueryLocator(query);      
     }
     global void execute(Database.BatchableContext bc, Sobject[] result){
@@ -61,15 +61,15 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
                             from AsyncApexJob 
                             where Id = :BC.getJobId()];
         integer errorcount = 0;
-        errorcount = [select count() from npe03__Recurring_Donations_Error_Queue__c];                             
+        errorcount = [select count() from Error__c];                             
                             
         rds.npe03__Last_Batch_Run__c = a.CompletedDate;
         rds.npe03__Number_of_Successes__c = recCount - errorcount;
         rds.npe03__Number_of_Failures__c = errorcount;
         update rds;                            
         
-        //if needed, send messages from teh error queue
-        RD_ErrorHandling.sendErrorQueueEmailNotification();        
+        //if needed, send messages from the error queue
+        ERR_Handler.sendErrorQueueEmailNotification();        
     }
     
     
