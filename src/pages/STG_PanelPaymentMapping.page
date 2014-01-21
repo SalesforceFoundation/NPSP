@@ -1,59 +1,55 @@
-<apex:page id="PaymentMapping" controller="STTG_PaymentMapping_CTRL" action="{!checkSettings}" >
+<apex:page controller="STG_PanelPaymentMapping_CTRL" >
 
-    <apex:sectionHeader title="Payment Field Mappings" subtitle="Map custom fields from Opportunity to Payment"  >
-        <description>
-            <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.<br/><br/>
-            </apex:outputPanel>
-        </description>  
-    </apex:sectionHeader>
-    <apex:pagemessages />   
-    
-   <apex:outputPanel id="panelAll" >
-    <apex:form id="PmntFieldWizardForm" style="height:50px">
-        <apex:outputPanel id="wizardsteps">
-        <apex:pageBlock id="ButtonBlock" rendered="{!step==0}"  mode="maindetail">
-            <apex:commandlink title="Start the Payment Field Mapping Wizard" action="{!next}"  value="Begin New Payment Field Mapping Wizard" rerender="panelAll" />                        
-        </apex:pageBlock>
-        
-        <apex:pageBlock id="step1" rendered="{!step==1}" mode="maindetail">
-            <apex:pageBlockSection title="Select the Opportunity Field to be Mapped" collapsible="false" columns="2" >
-                    <apex:selectList rendered="{!NOT(ISNULL(sourcefields))}" title="Available Opportunity Fields" value="{!opptyfield}" multiselect="false"  size="1">
-                        <apex:selectOptions value="{!sourcefields}"  />
-                    </apex:selectList>
-                    <apex:outputText rendered="{!ISNULL(sourcefields)}">No valid Opportunity fields found.</apex:outputText>
-            </apex:pageBlockSection>
-        </apex:pageBlock> 
-
-        <apex:pageBlock id="Step2" rendered="{!step==2}" mode="maindetail">
-            <apex:pageBlockSection title="Select the Payment Field that this field maps to" collapsible="false" columns="1" >
-                <apex:selectList title="Supported Fields" value="{!targetfield}" multiselect="false"  size="1">
-                    <apex:selectOptions value="{!targetfields}" />
-                </apex:selectList>
-            </apex:pageBlockSection>
-        </apex:pageBlock>   
-    
-        <apex:pageBlock id="Step3" rendered="{!step==3}" mode="maindetail">
-            <apex:pageBlockSection title="Confirm" collapsible="false" columns="1" >
-                <apex:outputText value="{!operationstring}" />
-                <apex:commandButton value="Confirm & Create Mapping" action="{!createMapping}" rendered="{!NOT(CONTAINS(targetfield,'NO VALID FIELD AVAILABLE'))}" rerender="panelAll" />
-            </apex:pageBlockSection>
-        </apex:pageBlock>   
-        
-        <apex:commandlink title="Next" value="Next   |   " action="{!next}" rendered="{!step>0&&step<3}" rerender="panelAll" />
-        <apex:commandlink value="Back   |   " action="{!back}" rendered="{!step>0&&step<4}" rerender="panelAll" />
-        <apex:commandlink value="Cancel" action="{!cancel}" rendered="{!step>0&&step<4}" rerender="panelAll" />
-    </apex:outputPanel>
-    </apex:form>
-    
-    <apex:outputPanel rendered="{!step==0}" id="listviewpanel">
-        <apex:pageBlock id="PaymentFieldMappingListViewBlock" title="Current Payment Field Mappings" mode="maindetail">
-            <apex:outputPanel layout="block" title="It is recommended you do not directly edit the existing field mappings, and instead delete and recreate them using the included wizard above.">
-                <apex:listViews type="npe01__Payment_Field_Mapping_Settings__c" />
-            </apex:outputPanel> 
-        </apex:pageBlock>
-    </apex:outputPanel>
-   </apex:outputPanel>
-
+    <apex:form id="form">  
+	    <apex:sectionHeader title="Payment Field Mappings" subtitle="Map custom fields from Opportunity to Payment" >
+	        <description>
+	            <apex:outputPanel layout="block" styleClass="sectionHelp" >
+	                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.<br/><br/>
+	            </apex:outputPanel>
+	        </description>  
+	    </apex:sectionHeader>
+	    <apex:pageMessages />
+	    <apex:pageBlock mode="maindetail">
  
+	        <apex:pageBlockSection title="Payment Mappings" collapsible="false" >
+	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
+	                <apex:column headerValue="Action" styleClass="actionColumn" >
+	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
+	                        <apex:param assignTo="{!pfmIdDelete}" name="idDeletePfm" value="{!pfm.Id}" /> 
+	                    </apex:commandLink>
+	                </apex:column>
+	                <apex:column value="{!pfm.npe01__Opportunity_Field__c}" />
+	                <apex:column value="{!pfm.npe01__Payment_Field__c}" />
+	            </apex:pageBlockTable> 
+	        </apex:pageBlockSection>
+	        
+            <apex:pageBlockSection title="New Payment Field Mapping" columns="1" collapsible="false" rendered="{!isEditMode}" >
+            <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Opportunity field to be mapped, and the Payment field it maps to.</apex:outputPanel>
+            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
+ 
+                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}"/>
+                <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="1" >
+                    <apex:selectOptions value="{!sourcefields}"  />
+                    <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
+                </apex:selectList>
+                <apex:outputLabel value="{!'(need inline help text added to npe01 setting)' /* $ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.InlineHelpText */ }"/>
+                
+                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}"/>
+                <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="1" >
+                    <apex:selectOptions value="{!targetfields}"  />
+                </apex:selectList>
+                <apex:outputLabel value="{!'(need inline help text added to npe01 setting)' /* $ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.InlineHelpText */ }"/>
+                
+            </apex:panelGrid>
+            </apex:pageBlockSection>
+             
+	        <apex:outputPanel layout="block" styleClass="panelButtons" >
+	            <p/>
+	            <apex:commandButton value="New" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+	            <apex:commandButton value="Save" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+	            <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+	        </apex:outputPanel>
+     
+        </apex:pageBlock> 
+    </apex:form>
 </apex:page>

@@ -96,7 +96,18 @@ public with sharing class STG_SettingsService {
     		} 
             return mapRDCustomField;    	   
     	}
-    	private set;
+    	public set;
+    }
+    
+    public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
+        get {
+            if (listPMTFieldMapping == null) {
+                listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
+                listPMTFieldMapping = npe01__Payment_Field_Mapping_Settings__c.getAll().values();
+            } 
+            return listPMTFieldMapping;           
+        }
+        public set;    	
     }
     
     public void saveAll() {

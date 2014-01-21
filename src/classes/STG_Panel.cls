@@ -182,6 +182,5 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-
     
 }
