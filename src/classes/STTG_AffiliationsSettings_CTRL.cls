@@ -13,7 +13,14 @@ public with sharing class STTG_AffiliationsSettings_CTRL {
     }
     //we can't do a DML in a getter, so I call it from the action of the page
     public PageReference getSettingsFirstTime() {
-        pageSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+            pageSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+    	} catch(Exception e) {
+    		Database.rollback(sp);
+    		ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+    		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+    	}
         return null;
     }
     

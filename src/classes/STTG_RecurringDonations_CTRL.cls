@@ -245,7 +245,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
     }
 
     public pagereference saveRDSettings(){
-        
+        Savepoint sp = Database.setSavepoint();
         try{
             update rds;
             canEditRDSettings = false;
@@ -259,7 +259,9 @@ public with sharing class STTG_RecurringDonations_CTRL {
             }
             forecastMonths = (integer)rds.npe03__Opportunity_Forecast_Months__c;
         }
-        catch (Exception e){
+        catch (Exception e) {
+        	Database.rollback(sp);
+        	ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, e.getMessage());
             ApexPages.addMessage(myMsg);                        
         }
@@ -307,47 +309,61 @@ public with sharing class STTG_RecurringDonations_CTRL {
     
     //handles the delete & replace button
     public pageReference deleteInstallment(){
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        list<npe03__Recurring_Donation__c> rdupdatelist = new list<npe03__Recurring_Donation__c>();
+	        rdupdatelist = [select npe03__Installment_Period__c from npe03__Recurring_Donation__c where npe03__Installment_Period__c = :selectedInstallmentName];
+	        for (npe03__Recurring_Donation__c rd : rdupdatelist){
+	           rd.npe03__Installment_Period__c = replacementInstallment;
+	        
+	        }
+	        delete [select id from npe03__Custom_Installment_Settings__c where Name = :selectedInstallmentName];
+	        cisMap = npe03__Custom_Installment_Settings__c.getAll();
+	        cis = cisMap.values();
+	        cisSize = cisMap.keySet().size();
+	        rds = RD_RecurringDonations.getRecurringDonationsSettings(); 
+	        
+	        selectedTab = 'installment_settings';
+	        deleteInstallmentMode = false;
         
-        list<npe03__Recurring_Donation__c> rdupdatelist = new list<npe03__Recurring_Donation__c>();
-        rdupdatelist = [select npe03__Installment_Period__c from npe03__Recurring_Donation__c where npe03__Installment_Period__c = :selectedInstallmentName];
-        for (npe03__Recurring_Donation__c rd : rdupdatelist){
-           rd.npe03__Installment_Period__c = replacementInstallment;
-        
-        }
-        delete [select id from npe03__Custom_Installment_Settings__c where Name = :selectedInstallmentName];
-        cisMap = npe03__Custom_Installment_Settings__c.getAll();
-        cis = cisMap.values();
-        cisSize = cisMap.keySet().size();
-        rds = RD_RecurringDonations.getRecurringDonationsSettings(); 
-        
-        selectedTab = 'installment_settings';
-        deleteInstallmentMode = false;   
+        } catch(Exception e) {
+        	Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }   
         return null;
     }    
     
     public pageReference saveFieldMapping(){
-        //get existing Opp fields
-        set<string> opptyFields = new set<string>();
-        for (npe03__Custom_Field_Mapping__c cf : cfm){
-            opptyFields.add(cf.npe03__Opportunity_Field__c);
-        } 
-        
-        if (isValidMapping(RDField, OppField) && !opptyFields.contains(OppField)){
-           string fmName = 'FieldMapping-' + system.now();   
-           
-           npe03__Custom_Field_Mapping__c myFM = new npe03__Custom_Field_Mapping__c(npe03__Opportunity_Field__c = OppField, npe03__Recurring_Donation_Field__c = RDField, Name = fmName); 
-           insert myFM;
-           cfm.add(myFM);
-           cfmSize = cfm.size();
-           cfmMap.put(myFM.Name, myFM); 
-           addingFieldMapping = false;  
-        }       
-        //add error
-        else{
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npe03.RecurringDonationBadFieldMapping);
-            ApexPages.addMessage(myMsg);
-        }
-        selectedTab = 'field_mapping_settings';        
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+	        //get existing Opp fields
+	        set<string> opptyFields = new set<string>();
+	        for (npe03__Custom_Field_Mapping__c cf : cfm){
+	            opptyFields.add(cf.npe03__Opportunity_Field__c);
+	        } 
+	        
+	        if (isValidMapping(RDField, OppField) && !opptyFields.contains(OppField)){
+	           string fmName = 'FieldMapping-' + system.now();   
+	           
+	           npe03__Custom_Field_Mapping__c myFM = new npe03__Custom_Field_Mapping__c(npe03__Opportunity_Field__c = OppField, npe03__Recurring_Donation_Field__c = RDField, Name = fmName); 
+	           insert myFM;
+	           cfm.add(myFM);
+	           cfmSize = cfm.size();
+	           cfmMap.put(myFM.Name, myFM); 
+	           addingFieldMapping = false;  
+	        }       
+	        //add error
+	        else{
+	            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npe03.RecurringDonationBadFieldMapping);
+	            ApexPages.addMessage(myMsg);
+	        }
+	        selectedTab = 'field_mapping_settings';
+    	}catch(Exception e) {
+    		Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+    	}        
         return null;
     }    
     

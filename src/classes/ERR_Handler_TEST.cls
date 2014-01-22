@@ -202,4 +202,47 @@ public with sharing class ERR_Handler_TEST {
         //assert no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }
+    
+    /***  ***/
+    static testMethod void controllerWithoutManualRollback() {
+        if (strTestOnly != '*' && strTestOnly != 'controllerWithoutManualRollback') return;
+        
+        setup();
+        
+        ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
+        
+        Test.startTest();
+        controller.withoutManualRollback();
+        Test.stopTest();
+        
+        //assert contact record creation was not automatically rolled back
+         system.assertEquals(1, [select count() from Contact]);
+        
+        //assert relationship record was stored (but the additional relationship was not created)
+         system.assertEquals(1, [select count() from npe4__Relationship__c]);
+         
+        //assert an error record was created - Required fields are missing: [npe4__Contact__c]
+        system.assertEquals(1, [select count() from Error__c]);  
+    }
+    
+    static testMethod void controllerWithManualRollback() {
+        if (strTestOnly != '*' && strTestOnly != 'controllerWithManualRollback') return;
+        
+        setup();
+        
+        ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
+        
+        Test.startTest();
+        controller.withManualRollback();
+        Test.stopTest();
+        
+        //assert contact record creation was rolled back
+         system.assertEquals(0, [select count() from Contact]);
+        
+        //assert relationship record was not stored
+         system.assertEquals(0, [select count() from npe4__Relationship__c]);
+         
+        //assert an error record was created - Required fields are missing: [npe4__Contact__c]
+        system.assertEquals(1, [select count() from Error__c]);    
+    }
 }

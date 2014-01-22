@@ -35,7 +35,7 @@ public with sharing class ERR_Handler {
     
     private List<Error__c> errors = new List<Error__c>();
     
-    public enum Context {REL, AFFL, RD, RLLP, BDE, OPP, TDTM}
+    public enum Context {AFFL, BDE, CON, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM}
     
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
