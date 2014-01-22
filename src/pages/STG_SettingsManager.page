@@ -72,7 +72,7 @@
     }
     
     table .propHelpText {
-        color: steelblue; // a font color that appears dark, but non-black, on both Windows and Mac!
+        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
     }
     
     .sub-nav-item {
@@ -88,7 +88,7 @@
     }
     
     .sectionHelp {
-        color: steelblue; // a font color that appears dark, but non-black, on both Windows and Mac!
+        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
         padding: 20px;    
     }
     
@@ -101,6 +101,15 @@
         width: 400px;
         height: 40px;       
     }   
+    
+    .sectionBar {
+        display: block;
+        background: #E5F2F6;
+        text-indent: 10px;
+        padding: 5px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
     
     
 </style>
@@ -228,6 +237,10 @@
 
                         <div class="panel" id="idPanelPaymentMapping" style="display:none" >
                             <apex:include pageName="STG_PanelPaymentMapping" />
+                        </div>
+
+                        <div class="panel" id="idPanelUserRollup" style="display:none" >
+                            <apex:include pageName="STG_PanelUserRollup" />
                         </div>
                 </div>
             </td>

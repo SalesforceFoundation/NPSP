@@ -139,7 +139,6 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppContactRoles == null) {
                 listSOOppContactRoles = new list<SelectOption>();
-                system.debug('***** creating listSOOppContactRoles');
                 listSOOppContactRoles.add(new SelectOption(' ','- none -'));
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
@@ -182,5 +181,25 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-    
+
+    static public string strHHAccountRecordTypeLabel {
+    	get {
+    		if (strHHAccountRecordTypeLabel == null) {
+    			strHHAccountRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Account', stgService.stgCon.npe01__HH_Account_RecordTypeID__c);
+    		}
+    		return strHHAccountRecordTypeLabel;
+    	}
+    	private set;
+    }
+       
+    static public string strOneToOneRecordTypeLabel {
+        get {
+            if (strOneToOneRecordTypeLabel == null) {
+                strOneToOneRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Account', stgService.stgCon.npe01__One_to_One_RecordTypeID__c);
+            }
+            return strOneToOneRecordTypeLabel;
+        }
+        private set;
+    }
+      
 }

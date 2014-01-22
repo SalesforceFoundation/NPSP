@@ -118,8 +118,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     //retrieve valid source fields from opportunity object
     public list<SelectOption> getSourceFields(){
         
-        set<string> knownOpptyFields = new set<string>{'Amount', 'CloseDate', 'ExpectedRevenue', 
-            'Probability', 'TotalOpportunityQuantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
+        // sets of strings are case sensitive, so use lower case in our set for the contains() against knownopptyFields.
+        set<string> knownOpptyFields = new set<string>{'amount', 'closedate', 'expectedrevenue', 
+            'probability', 'totalopportunityquantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
         
         if (sourcefields.isEmpty()){
                        

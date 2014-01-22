@@ -10,10 +10,16 @@
 	    </apex:sectionHeader>
 	    <apex:pageMessages />
 	    <apex:pageBlock mode="maindetail">
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="New Payment Field Mapping" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="Create Mapping" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
  
-	        <apex:pageBlockSection title="Payment Mappings" collapsible="false" >
+	        <h3 class="sectionBar" >Payment Mappings</h3>
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
-	                <apex:column headerValue="Action" styleClass="actionColumn" >
+	                <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
 	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
 	                        <apex:param assignTo="{!pfmIdDelete}" name="idDeletePfm" value="{!pfm.Id}" /> 
 	                    </apex:commandLink>
@@ -21,9 +27,9 @@
 	                <apex:column value="{!pfm.npe01__Opportunity_Field__c}" />
 	                <apex:column value="{!pfm.npe01__Payment_Field__c}" />
 	            </apex:pageBlockTable> 
-	        </apex:pageBlockSection>
 	        
-            <apex:pageBlockSection title="New Payment Field Mapping" columns="1" collapsible="false" rendered="{!isEditMode}" >
+            <apex:outputPanel rendered="{!isEditMode}" >
+            <h3 class="sectionBar" >New Payment Field Mapping</h3>
             <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Opportunity field to be mapped, and the Payment field it maps to.</apex:outputPanel>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
  
@@ -41,15 +47,8 @@
                 <apex:outputLabel value="{!'(need inline help text added to npe01 setting)' /* $ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.InlineHelpText */ }"/>
                 
             </apex:panelGrid>
-            </apex:pageBlockSection>
-             
-	        <apex:outputPanel layout="block" styleClass="panelButtons" >
-	            <p/>
-	            <apex:commandButton value="New" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-	            <apex:commandButton value="Save" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
-	            <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
-	        </apex:outputPanel>
-     
+            </apex:outputPanel>
+                  
         </apex:pageBlock> 
     </apex:form>
 </apex:page>
