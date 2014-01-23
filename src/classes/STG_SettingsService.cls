@@ -99,6 +99,17 @@ public with sharing class STG_SettingsService {
     	public set;
     }
     
+    public list<npe03__Custom_Installment_Settings__c> listRDCustomInstallment {
+        get {
+            if (listRDCustomInstallment == null) {
+                listRDCustomInstallment = new list<npe03__Custom_Installment_Settings__c>();
+                listRDCustomInstallment = npe03__Custom_Installment_Settings__c.getAll().values();
+            } 
+            return listRDCustomInstallment;           
+        }
+        public set;     
+    }
+
     public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {
