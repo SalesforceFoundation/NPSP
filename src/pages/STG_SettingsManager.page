@@ -111,6 +111,9 @@
         margin-top: 10px;
     }
     
+    .stgForm {
+        width: 100%;
+    }
     
 </style>
 
@@ -225,6 +228,10 @@
             
                         <div class="panel" id="idPanelRDBatch" style="display:none" >
                             <apex:include pageName="STG_PanelRDBatch" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRDInstPd" style="display:none" >
+                            <apex:include pageName="STG_PanelRDCustomInstallment" />
                         </div>
             
                         <div class="panel" id="idPanelRel" style="display:none" >
