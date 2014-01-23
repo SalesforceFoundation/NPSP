@@ -11,12 +11,6 @@
 	    <apex:pageMessages />
 	    <apex:pageBlock mode="maindetail">
 
-            <apex:pageBlockButtons >
-                <apex:commandButton value="New Payment Field Mapping" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Create Mapping" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
-            </apex:pageBlockButtons>
- 
 	        <h3 class="sectionBar" >Payment Mappings</h3>
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
 	                <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
@@ -49,6 +43,12 @@
             </apex:panelGrid>
             </apex:outputPanel>
                   
+            <apex:pageBlockButtons >
+                <apex:commandButton value="New Payment Field Mapping" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="Create Mapping" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
+ 
         </apex:pageBlock> 
     </apex:form>
 </apex:page>
