@@ -80,37 +80,45 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
   
     //we'll run this from the pages action method
     public PageReference RunReport(){
-        string ActiveID = campaign.id;
-        ActiveID = ActiveID.substring(0,15);
-        string newPageUrl = '';
-        integer dupsmarked;
-        boolean redirectpage = false;
-        
-        //this dml need to be done by the action method        
-        if (updateSettingsWithID){
-            hs.npo02__Household_Mailing_List_ID__c = CampaignMailingListReportId;
-            update hs;
-        }
-        
-        if (!haveReportID){
-            string errormsg = 'Could not find report. Create a report with the Report Unique Name of \'NPSP_Campaign_Household_Mailing_List\'. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain \'Duplicate\'';
-            showMsg(errormsg, ApexPages.Severity.ERROR);
-        }
-        
-        else{
-            dupsmarked = MarkDuplicates();
-            newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
-            redirectpage = true;                
-        }
-        
-        if (redirectPage){
-            PageReference pageref = new PageReference(newPageURL);
-            pageRef.setRedirect(true);
-            return pageRef;
-        }        
-        else{
-            return null;
-        }
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+	        string ActiveID = campaign.id;
+	        ActiveID = ActiveID.substring(0,15);
+	        string newPageUrl = '';
+	        integer dupsmarked;
+	        boolean redirectpage = false;
+	        
+	        //this dml need to be done by the action method        
+	        if (updateSettingsWithID){
+	            hs.npo02__Household_Mailing_List_ID__c = CampaignMailingListReportId;
+	            update hs;
+	        }
+	        
+	        if (!haveReportID){
+	            string errormsg = 'Could not find report. Create a report with the Report Unique Name of \'NPSP_Campaign_Household_Mailing_List\'. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain \'Duplicate\'';
+	            showMsg(errormsg, ApexPages.Severity.ERROR);
+	        }
+	        
+	        else{
+	            dupsmarked = MarkDuplicates();
+	            newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
+	            redirectpage = true;                
+	        }
+	        
+	        if (redirectPage){
+	            PageReference pageref = new PageReference(newPageURL);
+	            pageRef.setRedirect(true);
+	            return pageRef;
+	        }        
+	        else{
+	            return null;
+	        }
+    	} catch(Exception e) {
+    		Database.rollback(sp);
+    		ERR_Handler.processError(e, ERR_Handler.Context.HH);
+    		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+    		return null;
+    	}
     }
 
     private integer MarkDuplicates(){
@@ -200,6 +208,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }
         }            
         catch (Exception e){
+        	ERR_Handler.processError(e, ERR_Handler.Context.HH);
             showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
         }
         

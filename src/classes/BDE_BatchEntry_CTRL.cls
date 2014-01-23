@@ -306,10 +306,8 @@ public with sharing class BDE_BatchEntry_CTRL {
         
         /***** OTHER CONTROLLER METHODS ******/
         
-        public pageReference saveBatch() {
-        	
-        	Savepoint sp = Database.setSavepoint();
-        	
+        public pageReference saveBatch() {      	
+        	Savepoint sp = Database.setSavepoint();      	
         	try {
         		TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
                 // if we are using batch, save the batch                
@@ -325,13 +323,16 @@ public with sharing class BDE_BatchEntry_CTRL {
         	
         	} catch(Exception e) {
         		Database.rollback(sp);
-                ERR_Handler.processError(e, null);
-                batch.addError(e.getMessage());
+                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));  
         	}
             return null;
         }
         
         public pageReference save() {
+        	Savepoint sp = Database.setSavepoint();
+            
+            try {
                 if (currentItem.sobj.id != null) {
                     if(currentItem.sobj.getSObjectType() == Opportunity.Sobjecttype){
                             currentItem.sobj.put('npe01__Contact_ID_for_Role__c', currentItem.npspocr.ContactID);
@@ -373,7 +374,13 @@ public with sharing class BDE_BatchEntry_CTRL {
                 // update the current item, in case any triggers modified values we will display.
                 requeryItem(currentItem);
                 currentItem = new BatchItem(this);
-                return null;    
+                return null; 
+            } catch(Exception e) {
+                Database.rollback(sp);
+                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            }
+            return null;   
         }
 
         public pageReference clear() {
@@ -382,6 +389,8 @@ public with sharing class BDE_BatchEntry_CTRL {
         }
         
         public void deleteItem(sobject sobj) {
+        	Savepoint sp = Database.setSavepoint();
+            try {
                 delete sobj;
                 for (integer i = 0; i < itemList.size(); i++) {
                         if (itemList[i].sobj.id == sobj.id) { 
@@ -390,6 +399,11 @@ public with sharing class BDE_BatchEntry_CTRL {
                         }
                 }
                 saveBatch();
+            } catch(Exception e) {
+			    Database.rollback(sp);
+			    ERR_Handler.processError(e, ERR_Handler.Context.BDE);
+			    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+			}        
         }
         
         public pageReference openBatchEnterPage() {

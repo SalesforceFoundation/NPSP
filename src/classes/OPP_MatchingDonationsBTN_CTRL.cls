@@ -45,56 +45,65 @@ public with sharing class OPP_MatchingDonationsBTN_CTRL {
     // Code we will invoke on page load.
     public PageReference MatchingDonationPage()
     {
-        //get the Id of the current record. we will query for the current record in case any fields we expect are not exposed
-        Id opptyId = opty.getId();
-        
-        //multi-currency support - get the schema map to see if we have the CurrencyIsoCode field
-        SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
-        
-        //query for the current donation to create the matching one
-        Opportunity oppty = Database.query('select id, name,RecordTypeId,accountId,Account.Name,Amount,closedate' + 
-        (OppCurrencyField != null ? ',CurrencyIsoCode' : '') + 
-        ' from Opportunity where id = :opptyId');
-        
-        //start preparing our oppty new record url to redirect to       
-        PageReference pageRef = new PageReference('/006/e');
-
-        //get the URL parameters map to add to it
-        Map<string,string> params = pageRef.getParameters();
-
-        //set record type based on source donation (label.npe01.= "$Source"), or other type
-        if(system.label.npe01.Matching_Donation_Record_Type == '$Source')
-        {
-            params.put('RecordType',oppty.RecordTypeId);
-        } 
-        else
-        {
-            List <RecordType> rts = [select Id from RecordType where SobjectType = 'Opportunity' and Name = :system.label.npe01.Matching_Donation_Record_Type limit 1];
-            if (rts.size() > 0)
-                params.put('RecordType', rts[0].Id);
-        }
-
-        //find primary contact
-        List<OpportunityContactRole> ocr = [select id, ContactId from OpportunityContactRole where IsPrimary = true and OpportunityId = :oppty.Id limit 1];
-        if ( ocr.size() > 0 ) 
-            params.put('conid',ocr[0].ContactId);
-            
-        //and the rest of the params
-        params.put('retURL','/'+opptyId);
-        params.put('cancelURL','/'+opptyId);
-
-        //put in important fields
-        params.put('accid',oppty.AccountId);
-        params.put('opp3',string.format(system.label.npe01.Matching_Donation_Record_Suffix, new string[] {oppty.Name,oppty.Account.Name,oppty.CloseDate.format(),system.today().format()}));
-        params.put('opp7',oppty.Amount.format());
-        params.put('opp9',oppty.CloseDate.format());
-        
-        //copy currency accross if mutli currency org
-        if(OppCurrencyField != null)
-            params.put('opp16',String.ValueOf(oppty.get(OppCurrencyField)));
-
-        pageRef.setRedirect(true);
-        
-        return pageRef;
+    	Savepoint sp = Database.setSavepoint();
+    	
+    	try {
+	        //get the Id of the current record. we will query for the current record in case any fields we expect are not exposed
+	        Id opptyId = opty.getId();
+	        
+	        //multi-currency support - get the schema map to see if we have the CurrencyIsoCode field
+	        SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+	        
+	        //query for the current donation to create the matching one
+	        Opportunity oppty = Database.query('select id, name,RecordTypeId,accountId,Account.Name,Amount,closedate' + 
+	        (OppCurrencyField != null ? ',CurrencyIsoCode' : '') + 
+	        ' from Opportunity where id = :opptyId');
+	        
+	        //start preparing our oppty new record url to redirect to       
+	        PageReference pageRef = new PageReference('/006/e');
+	
+	        //get the URL parameters map to add to it
+	        Map<string,string> params = pageRef.getParameters();
+	
+	        //set record type based on source donation (label.npe01.= "$Source"), or other type
+	        if(system.label.npe01.Matching_Donation_Record_Type == '$Source')
+	        {
+	            params.put('RecordType',oppty.RecordTypeId);
+	        } 
+	        else
+	        {
+	            List <RecordType> rts = [select Id from RecordType where SobjectType = 'Opportunity' and Name = :system.label.npe01.Matching_Donation_Record_Type limit 1];
+	            if (rts.size() > 0)
+	                params.put('RecordType', rts[0].Id);
+	        }
+	
+	        //find primary contact
+	        List<OpportunityContactRole> ocr = [select id, ContactId from OpportunityContactRole where IsPrimary = true and OpportunityId = :oppty.Id limit 1];
+	        if ( ocr.size() > 0 ) 
+	            params.put('conid',ocr[0].ContactId);
+	            
+	        //and the rest of the params
+	        params.put('retURL','/'+opptyId);
+	        params.put('cancelURL','/'+opptyId);
+	
+	        //put in important fields
+	        params.put('accid',oppty.AccountId);
+	        params.put('opp3',string.format(system.label.npe01.Matching_Donation_Record_Suffix, new string[] {oppty.Name,oppty.Account.Name,oppty.CloseDate.format(),system.today().format()}));
+	        params.put('opp7',oppty.Amount.format());
+	        params.put('opp9',oppty.CloseDate.format());
+	        
+	        //copy currency accross if mutli currency org
+	        if(OppCurrencyField != null)
+	            params.put('opp16',String.ValueOf(oppty.get(OppCurrencyField)));
+	
+	        pageRef.setRedirect(true);
+	        
+	        return pageRef;
+    	} catch(Exception e) {
+    		Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.OPP);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
+    	}
     }
 }

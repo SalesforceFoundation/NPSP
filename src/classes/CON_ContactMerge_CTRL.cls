@@ -470,6 +470,7 @@ public with sharing class CON_ContactMerge_CTRL {
                 }
             } catch (Exception e) {
                 Database.rollback(sp);
+                ERR_Handler.processError(e, ERR_Handler.Context.CON);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
             }
         } else {
