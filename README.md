@@ -27,4 +27,4 @@ Released under the [BSD 3-Clause License](http://www.opensource.org/licenses/BSD
 
 _ducking-octo-happiness, laughing-archer_
 
-test
+test.
