@@ -419,49 +419,57 @@ public with sharing class STTG_RecurringDonations_CTRL {
     }
     
     public pageReference scheduleRecurringDonationsUpdate(){
-        PageReference pr = null;
-        
-        if (!rds.npe03__Disable_Nightly_Job__c){
-            Integer scheduledJobLimit = 25;
-            boolean alreadyScheduled = false;            
-            
-            List<cronTrigger> scheduledUpdates = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
-            
-            if(rds.npe03__Nightly_Update_ID__c != null){
-                for(cronTrigger thisScheduledJob : scheduledUpdates){ 
-                    if(thisScheduledJob.id == rds.npe03__Nightly_Update_ID__c){
-                        alreadyScheduled = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(!alreadyScheduled){
-                if(scheduledUpdates.size()<scheduledJobLimit){     
-                    
-                    RD_RecurringDonations_SCHED nightlyJob = new RD_RecurringDonations_SCHED(); 
-                    //need to check for already scheduled job
-                    String sch='17 11 3 * * ?'; 
-                    scheduledUpdates.clear();
-                    scheduledUpdates = [SELECT Id FROM cronTrigger where cronExpression = :sch];
-                    if (scheduledUpdates.size()==0){
-                        String jobId = system.schedule('Recurring Donation Updates', sch ,nightlyJob);
-                        rds.npe03__Nightly_Update_ID__c = jobId;
-                    }
-                    else{
-                        rds.npe03__Nightly_Update_ID__c = scheduledUpdates[0].Id;
-                    }
-                    //if we update page settings, we need to call a redirect
-                    update rds;
-                    pr = ApexPages.currentPage();                    
-                } 
-                else{
-                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, system.label.npe03.RecurringDonationSchedulingError);
-                    ApexPages.addMessage(myMsg);                    
-                }
-            }    
-        }
-        return pr;
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        PageReference pr = null;
+	        
+	        if (!rds.npe03__Disable_Nightly_Job__c){
+	            Integer scheduledJobLimit = 25;
+	            boolean alreadyScheduled = false;            
+	            
+	            List<cronTrigger> scheduledUpdates = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
+	            
+	            if(rds.npe03__Nightly_Update_ID__c != null){
+	                for(cronTrigger thisScheduledJob : scheduledUpdates){ 
+	                    if(thisScheduledJob.id == rds.npe03__Nightly_Update_ID__c){
+	                        alreadyScheduled = true;
+	                        break;
+	                    }
+	                }
+	            }
+	            
+	            if(!alreadyScheduled){
+	                if(scheduledUpdates.size()<scheduledJobLimit){     
+	                    
+	                    RD_RecurringDonations_SCHED nightlyJob = new RD_RecurringDonations_SCHED(); 
+	                    //need to check for already scheduled job
+	                    String sch='17 11 3 * * ?'; 
+	                    scheduledUpdates.clear();
+	                    scheduledUpdates = [SELECT Id FROM cronTrigger where cronExpression = :sch];
+	                    if (scheduledUpdates.size()==0){
+	                        String jobId = system.schedule('Recurring Donation Updates', sch ,nightlyJob);
+	                        rds.npe03__Nightly_Update_ID__c = jobId;
+	                    }
+	                    else{
+	                        rds.npe03__Nightly_Update_ID__c = scheduledUpdates[0].Id;
+	                    }
+	                    //if we update page settings, we need to call a redirect
+	                    update rds;
+	                    pr = ApexPages.currentPage();                    
+	                } 
+	                else{
+	                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, system.label.npe03.RecurringDonationSchedulingError);
+	                    ApexPages.addMessage(myMsg);                    
+	                }
+	            }    
+	        }
+	        return pr;
+	   }catch(Exception e) {
+	       Database.rollback(sp);
+		   ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+		   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+		   return null;
+	   }
     }
     
     //checks the compatibility of a recurring donation and opp field

@@ -208,6 +208,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }
         }            
         catch (Exception e){
+        	ERR_Handler.processError(e, ERR_Handler.Context.HH);
             showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
         }
         
