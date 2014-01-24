@@ -201,6 +201,12 @@ private class HH_OppContactRoles_TEST {
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
+        
+        //Disabling trigger
+        Trigger_Handler__c triggerHandler = [select Active__c from Trigger_Handler__c where Class__c = 'OPP_OpportunityContactRoles_TDTM'];
+		triggerHandler.Active__c = false;
+		update triggerHandler;
+        
         Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
         Id householdId = createdContacts[0].npo02__household__c;
