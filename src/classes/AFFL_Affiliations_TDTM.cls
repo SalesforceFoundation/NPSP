@@ -259,12 +259,12 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         }
 
         if (listAfflInsert.size() > 0) {
-        	//system.debug('**** listAfflInsert: ' + listAfflInsert);
+        	//system.debug('**** listAfflInsert: ' + JSON.serializePretty(listAfflInsert));
             dmlWrapper.objectsToInsert.addAll((list<SObject>) listAfflInsert);
         }
             
        if (mapAfflIdAfflUpdate.size() > 0) {
-            //system.debug('**** mapAfflIdAfflUpdate: ' + mapAfflIdAfflUpdate.values());
+            //system.debug('**** mapAfflIdAfflUpdate: ' + JSON.serializePretty(mapAfflIdAfflUpdate.values()));
             dmlWrapper.objectsToUpdate.putAll((map<Id, SObject>) mapAfflIdAfflUpdate);
        }
     }

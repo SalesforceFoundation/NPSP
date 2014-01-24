@@ -59,7 +59,7 @@ public abstract class TDTM_Runnable {
             qn += ' ' + allFields[i] + ', ';
         qn += ' ' + allFields[allFields.size() - 1]; //add last field to query
         qn += ' from ' + objectName + ' where id IN ';
-        System.debug('****Query for future: ' + qn);
+
         List<SObject> newlist = Database.query(qn + ':newIds');
         List<SObject> oldlist = Database.query(qn + ':oldIds');
 
@@ -70,6 +70,9 @@ public abstract class TDTM_Runnable {
             classInstance = classType.newInstance();
         if(classInstance instanceof TDTM_Runnable) {
         	TDTM_Runnable runnable = (TDTM_Runnable) classInstance;
+        	//WARNING: we have queried all the fields that would be available in the records themselves, but NOT the fields
+        	//from related (parent or child) records. Those would need to be queried independently in the class itself (see 
+        	//ERR_ParentAccountUpdater2_TEST class for an example on how to do that).
 	        DmlWrapper dmlWrapper = runnable.run(newlist, oldlist, triggerAction, objResult);
 	        
 	        //Process the result. In this case we cannot pass the original Trigger.new and Trigger.old, since we are
