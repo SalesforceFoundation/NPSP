@@ -231,7 +231,8 @@ public with sharing class STTG_PaymentMapping_CTRL {
             }
         
            catch(Exception e){
-              showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
+           	  ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+              showMsg('An error has occurred. Please try again.',ApexPages.Severity.FATAL);
               showMsg('Exception type' + e, ApexPages.Severity.INFO);            
            }
         }

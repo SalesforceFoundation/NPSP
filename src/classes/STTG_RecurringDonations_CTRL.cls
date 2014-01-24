@@ -245,7 +245,7 @@ public with sharing class STTG_RecurringDonations_CTRL {
     }
 
     public pagereference saveRDSettings(){
-        
+        Savepoint sp = Database.setSavepoint();
         try{
             update rds;
             canEditRDSettings = false;
@@ -259,7 +259,9 @@ public with sharing class STTG_RecurringDonations_CTRL {
             }
             forecastMonths = (integer)rds.npe03__Opportunity_Forecast_Months__c;
         }
-        catch (Exception e){
+        catch (Exception e) {
+        	Database.rollback(sp);
+        	ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, e.getMessage());
             ApexPages.addMessage(myMsg);                        
         }
@@ -307,47 +309,61 @@ public with sharing class STTG_RecurringDonations_CTRL {
     
     //handles the delete & replace button
     public pageReference deleteInstallment(){
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        list<npe03__Recurring_Donation__c> rdupdatelist = new list<npe03__Recurring_Donation__c>();
+	        rdupdatelist = [select npe03__Installment_Period__c from npe03__Recurring_Donation__c where npe03__Installment_Period__c = :selectedInstallmentName];
+	        for (npe03__Recurring_Donation__c rd : rdupdatelist){
+	           rd.npe03__Installment_Period__c = replacementInstallment;
+	        
+	        }
+	        delete [select id from npe03__Custom_Installment_Settings__c where Name = :selectedInstallmentName];
+	        cisMap = npe03__Custom_Installment_Settings__c.getAll();
+	        cis = cisMap.values();
+	        cisSize = cisMap.keySet().size();
+	        rds = RD_RecurringDonations.getRecurringDonationsSettings(); 
+	        
+	        selectedTab = 'installment_settings';
+	        deleteInstallmentMode = false;
         
-        list<npe03__Recurring_Donation__c> rdupdatelist = new list<npe03__Recurring_Donation__c>();
-        rdupdatelist = [select npe03__Installment_Period__c from npe03__Recurring_Donation__c where npe03__Installment_Period__c = :selectedInstallmentName];
-        for (npe03__Recurring_Donation__c rd : rdupdatelist){
-           rd.npe03__Installment_Period__c = replacementInstallment;
-        
-        }
-        delete [select id from npe03__Custom_Installment_Settings__c where Name = :selectedInstallmentName];
-        cisMap = npe03__Custom_Installment_Settings__c.getAll();
-        cis = cisMap.values();
-        cisSize = cisMap.keySet().size();
-        rds = RD_RecurringDonations.getRecurringDonationsSettings(); 
-        
-        selectedTab = 'installment_settings';
-        deleteInstallmentMode = false;   
+        } catch(Exception e) {
+        	Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }   
         return null;
     }    
     
     public pageReference saveFieldMapping(){
-        //get existing Opp fields
-        set<string> opptyFields = new set<string>();
-        for (npe03__Custom_Field_Mapping__c cf : cfm){
-            opptyFields.add(cf.npe03__Opportunity_Field__c);
-        } 
-        
-        if (isValidMapping(RDField, OppField) && !opptyFields.contains(OppField)){
-           string fmName = 'FieldMapping-' + system.now();   
-           
-           npe03__Custom_Field_Mapping__c myFM = new npe03__Custom_Field_Mapping__c(npe03__Opportunity_Field__c = OppField, npe03__Recurring_Donation_Field__c = RDField, Name = fmName); 
-           insert myFM;
-           cfm.add(myFM);
-           cfmSize = cfm.size();
-           cfmMap.put(myFM.Name, myFM); 
-           addingFieldMapping = false;  
-        }       
-        //add error
-        else{
-            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npe03.RecurringDonationBadFieldMapping);
-            ApexPages.addMessage(myMsg);
-        }
-        selectedTab = 'field_mapping_settings';        
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+	        //get existing Opp fields
+	        set<string> opptyFields = new set<string>();
+	        for (npe03__Custom_Field_Mapping__c cf : cfm){
+	            opptyFields.add(cf.npe03__Opportunity_Field__c);
+	        } 
+	        
+	        if (isValidMapping(RDField, OppField) && !opptyFields.contains(OppField)){
+	           string fmName = 'FieldMapping-' + system.now();   
+	           
+	           npe03__Custom_Field_Mapping__c myFM = new npe03__Custom_Field_Mapping__c(npe03__Opportunity_Field__c = OppField, npe03__Recurring_Donation_Field__c = RDField, Name = fmName); 
+	           insert myFM;
+	           cfm.add(myFM);
+	           cfmSize = cfm.size();
+	           cfmMap.put(myFM.Name, myFM); 
+	           addingFieldMapping = false;  
+	        }       
+	        //add error
+	        else{
+	            ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npe03.RecurringDonationBadFieldMapping);
+	            ApexPages.addMessage(myMsg);
+	        }
+	        selectedTab = 'field_mapping_settings';
+    	}catch(Exception e) {
+    		Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+    	}        
         return null;
     }    
     
@@ -403,49 +419,57 @@ public with sharing class STTG_RecurringDonations_CTRL {
     }
     
     public pageReference scheduleRecurringDonationsUpdate(){
-        PageReference pr = null;
-        
-        if (!rds.npe03__Disable_Nightly_Job__c){
-            Integer scheduledJobLimit = 25;
-            boolean alreadyScheduled = false;            
-            
-            List<cronTrigger> scheduledUpdates = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
-            
-            if(rds.npe03__Nightly_Update_ID__c != null){
-                for(cronTrigger thisScheduledJob : scheduledUpdates){ 
-                    if(thisScheduledJob.id == rds.npe03__Nightly_Update_ID__c){
-                        alreadyScheduled = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(!alreadyScheduled){
-                if(scheduledUpdates.size()<scheduledJobLimit){     
-                    
-                    RD_RecurringDonations_SCHED nightlyJob = new RD_RecurringDonations_SCHED(); 
-                    //need to check for already scheduled job
-                    String sch='17 11 3 * * ?'; 
-                    scheduledUpdates.clear();
-                    scheduledUpdates = [SELECT Id FROM cronTrigger where cronExpression = :sch];
-                    if (scheduledUpdates.size()==0){
-                        String jobId = system.schedule('Recurring Donation Updates', sch ,nightlyJob);
-                        rds.npe03__Nightly_Update_ID__c = jobId;
-                    }
-                    else{
-                        rds.npe03__Nightly_Update_ID__c = scheduledUpdates[0].Id;
-                    }
-                    //if we update page settings, we need to call a redirect
-                    update rds;
-                    pr = ApexPages.currentPage();                    
-                } 
-                else{
-                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, system.label.npe03.RecurringDonationSchedulingError);
-                    ApexPages.addMessage(myMsg);                    
-                }
-            }    
-        }
-        return pr;
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        PageReference pr = null;
+	        
+	        if (!rds.npe03__Disable_Nightly_Job__c){
+	            Integer scheduledJobLimit = 25;
+	            boolean alreadyScheduled = false;            
+	            
+	            List<cronTrigger> scheduledUpdates = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
+	            
+	            if(rds.npe03__Nightly_Update_ID__c != null){
+	                for(cronTrigger thisScheduledJob : scheduledUpdates){ 
+	                    if(thisScheduledJob.id == rds.npe03__Nightly_Update_ID__c){
+	                        alreadyScheduled = true;
+	                        break;
+	                    }
+	                }
+	            }
+	            
+	            if(!alreadyScheduled){
+	                if(scheduledUpdates.size()<scheduledJobLimit){     
+	                    
+	                    RD_RecurringDonations_SCHED nightlyJob = new RD_RecurringDonations_SCHED(); 
+	                    //need to check for already scheduled job
+	                    String sch='17 11 3 * * ?'; 
+	                    scheduledUpdates.clear();
+	                    scheduledUpdates = [SELECT Id FROM cronTrigger where cronExpression = :sch];
+	                    if (scheduledUpdates.size()==0){
+	                        String jobId = system.schedule('Recurring Donation Updates', sch ,nightlyJob);
+	                        rds.npe03__Nightly_Update_ID__c = jobId;
+	                    }
+	                    else{
+	                        rds.npe03__Nightly_Update_ID__c = scheduledUpdates[0].Id;
+	                    }
+	                    //if we update page settings, we need to call a redirect
+	                    update rds;
+	                    pr = ApexPages.currentPage();                    
+	                } 
+	                else{
+	                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, system.label.npe03.RecurringDonationSchedulingError);
+	                    ApexPages.addMessage(myMsg);                    
+	                }
+	            }    
+	        }
+	        return pr;
+	   }catch(Exception e) {
+	       Database.rollback(sp);
+		   ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+		   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+		   return null;
+	   }
     }
     
     //checks the compatibility of a recurring donation and opp field

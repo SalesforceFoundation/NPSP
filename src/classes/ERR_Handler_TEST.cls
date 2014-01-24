@@ -1,3 +1,32 @@
+/*
+    Copyright (c) 2013, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 @isTest
 public with sharing class ERR_Handler_TEST {
 
@@ -96,7 +125,7 @@ public with sharing class ERR_Handler_TEST {
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
         System.assertEquals(2, insertedContacts.size()); 
         
-        //Verify error record was created
+        //Verify no error record was created
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
         System.assertEquals(0, errors.size()); 
     }
@@ -168,10 +197,54 @@ public with sharing class ERR_Handler_TEST {
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processResults(null, updateResults, null, null, null, (List<SObject>)relationships, null, null, 
-                                    ERR_Handler.Context.REL);
+        errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
 
         //assert no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);
+    }
+    
+    /*** Tests that DML that occurs before an exception is thrown and caught does not get automatically rolled back ***/
+    static testMethod void controllerWithoutManualRollback() {
+        if (strTestOnly != '*' && strTestOnly != 'controllerWithoutManualRollback') return;
+        
+        setup();
+        
+        ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
+        
+        Test.startTest();
+        controller.withoutManualRollback();
+        Test.stopTest();
+        
+        //assert contact record creation was not automatically rolled back
+         system.assertEquals(1, [select count() from Contact]);
+        
+        //assert relationship record was stored (but the additional relationship was not created)
+         system.assertEquals(1, [select count() from npe4__Relationship__c]);
+         
+        //assert an error record was created - Required fields are missing: [npe4__Contact__c]
+        system.assertEquals(1, [select count() from Error__c]);  
+    }
+    
+    /*** Tests that DML changes are properly rolled back in a controller that adheres to our error-handling design, and
+         that the error is properly stored. ***/
+    static testMethod void controllerWithManualRollback() {
+        if (strTestOnly != '*' && strTestOnly != 'controllerWithManualRollback') return;
+        
+        setup();
+        
+        ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
+        
+        Test.startTest();
+        controller.withManualRollback();
+        Test.stopTest();
+        
+        //assert contact record creation was rolled back
+         system.assertEquals(0, [select count() from Contact]);
+        
+        //assert relationship record was not stored
+         system.assertEquals(0, [select count() from npe4__Relationship__c]);
+         
+        //assert an error record was created - Required fields are missing: [npe4__Contact__c]
+        system.assertEquals(1, [select count() from Error__c]);    
     }
 }

@@ -27,27 +27,29 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-
-/**
- * This class performs a small database change to check the TDTM design, just
- * to showcase a sample implementation of a class that extends TDTM_Runnable.
- */
 @isTest
-public with sharing class TDTM_Runnable_Impl extends TDTM_Runnable {
+public with sharing class TDTM_Runnable_TEST {
 
-    private static Boolean alreadyCalled = false;
-    
-    public override DmlWrapper run(List<Sobject> newlist, List<Sobject> oldlist, 
-    TDTM_TriggerActionHelper.Action ta, Schema.DescribeSObjectResult describeSObjectResult) {
-
-        DmlWrapper dmlWrapper = new DmlWrapper();
-        if(!alreadyCalled) {
-        	alreadyCalled = true;
-	        for(Integer i = 0; i < newlist.size(); i++) {
-	        	dmlWrapper.objectsToInsert.add(new Contact(FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS + i,
-	                                                        LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + i));
-	        }
-        }
-        return dmlWrapper;
+    /** This test verifies that the runFuture method of the TDTM_Runnable class works properly **/
+    public static testmethod void testAsync() {
+    	
+    	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = true, 
+              Class__c = 'ERR_ParentAccountUpdater2_TEST', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert;');
+         
+        Account acc = new Account(Name = 'Old Acc Name');
+        insert acc;
+        
+        Contact contact = new Contact(FirstName = 'Old First Name', LastName = 'Testerson', AccountId = acc.Id);
+        
+        Test.startTest(); 
+        insert contact;
+        Test.stopTest();
+        
+        contact = [select FirstName from Contact where Id = :contact.ID];
+        acc = [select Name from Account where Id = :acc.Id];
+        
+        System.assertEquals('New First Name', contact.FirstName); //To verify fields from record are available in future
+        System.assertEquals('New Acc Name', acc.Name);
     }
 }

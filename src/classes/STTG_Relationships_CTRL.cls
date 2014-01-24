@@ -222,6 +222,7 @@ public with sharing class STTG_Relationships_CTRL {
             update relSettings;
         }catch(Exception e){
             ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR, 'Error updating General Settings.  Please refresh your page and try again.'));
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
         }
         return null;
     }
@@ -280,6 +281,7 @@ public with sharing class STTG_Relationships_CTRL {
                 relACMap = npe4__Relationship_Auto_Create__c.getAll();  
             }catch(Exception e){
                 ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR, 'Error Saving Auto-Relationship Record.  Please refresh your page and try again.'));
+                ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             }
         }
         else{
@@ -314,6 +316,7 @@ public with sharing class STTG_Relationships_CTRL {
             setCon = null;
         }catch(Exception e){
             ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR, 'Error Saving Relationship Lookup Record.  Please refresh your page and try again.'));
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
         }
         return null;
     }
