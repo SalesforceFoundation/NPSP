@@ -1,30 +1,27 @@
 global class STTG_InstallScript implements InstallHandler {
 
-    Map<String, List<String>> npspToCumulusMap;
+    Map<String, String> npspToCumulusMap;
     
     public STTG_InstallScript() {
         npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();
     }
+    
+    
     global void onInstall(InstallContext context) {
     	
     	//First install of Cumulus
     	if(context.previousVersion() == null) {
-    		//Check if they already had the NPSP installed
-    		Boolean npspAlreadyInstalled = isNpspInstalled();
+    		//NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
     		
-    		//If they had it installed, we have to map the old settings to the new TDTM default setup
-    		if(npspAlreadyInstalled) {
-    			//Read existing NPSP trigger configuration
-    			Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig();
+    		//Map the old settings to the new TDTM default setup
+
+    	    //Read existing NPSP trigger configuration
+    	    Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig();
     			
-    			//Setup the new configuration
-    			setupTdtmConfig(existingTriggerConfig);
-    		}
+    		//Setup the new configuration
+    		setupTdtmConfig(existingTriggerConfig);
+    		
     	}
-    }
-    
-    private Boolean isNpspInstalled() {
-    	return null;
     }
     
     private Map<String, Boolean> getExistingNpspTriggerConfig() {

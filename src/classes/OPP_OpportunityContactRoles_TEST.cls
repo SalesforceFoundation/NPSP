@@ -98,7 +98,10 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppCRTriggerTurnedOff() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = false, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = false, 
+                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
           
         String title = 'CEO';
         Contact con = new Contact(

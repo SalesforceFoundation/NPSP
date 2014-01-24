@@ -35,24 +35,17 @@
 public with sharing class PMT_Payment_TDTM extends TDTM_Runnable { 
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-	    npe01__Contacts_and_Orgs_Settings__c cos = CAO_Constants.getContactsSettings();
-
-        // DJH:UNDONE use setting or use TDTM setting?	    
-	    if (!cos.npe01__DISABLE_OpportunityPayments_trigger__c){
-            map<Id, Opportunity> mapIdOppNew;
-            map<Id, Opportunity> mapIdOppOld;
-            if (newlist != null) 
-               mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
-            if (oldlist != null) 
-               mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
-                           
-            DmlWrapper dmlWrapper = new dmlWrapper();
-            PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper); 
-            return dmlWrapper;
-        }
-
-        return null;
+        map<Id, Opportunity> mapIdOppNew;
+        map<Id, Opportunity> mapIdOppOld;
+        if (newlist != null) 
+           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
+        if (oldlist != null) 
+           mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
+                       
+        DmlWrapper dmlWrapper = new dmlWrapper();
+        PMT_PaymentCreator pc = new PMT_PaymentCreator(mapIdOppNew, mapIdOppOld, triggerAction, dmlWrapper); 
+        return dmlWrapper;
     }
 }

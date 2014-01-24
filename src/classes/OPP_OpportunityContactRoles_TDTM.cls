@@ -36,12 +36,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
-        // DJH:UNDONE do we continue to check these settings, or just use TDTM flags?
-	    npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
-        if (ContactsSettings.npe01__DISABLE_OpportunityAccount_trigger__c || !ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c)
-            return null;
+    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
         DmlWrapper dmlWrapper = null;
         

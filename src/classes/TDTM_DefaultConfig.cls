@@ -44,12 +44,12 @@ public with sharing class TDTM_DefaultConfig {
                     
         //Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
+              Class__c = 'CM_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
         
         //Relationships on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Class__c = 'CON_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
         
         //Relationships on npe4__Relationship__c
@@ -79,7 +79,7 @@ public with sharing class TDTM_DefaultConfig {
                 
         // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Class__c = 'OPP_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterUpdate'));
 
         // RecurringDonations on RecurringDonations
@@ -108,8 +108,29 @@ public with sharing class TDTM_DefaultConfig {
     /**
       * Returns a map that specifies how the old NPSP settings match to the new Cumulus TDTM classes
       */
-    public static Map<String, List<String>> getNpspToCumulusMap() {
-    	Map<String, List<String>> npspToCumulusMap = new Map<String, List<String>>();
+    public static Map<String, String> getNpspToCumulusMap() {
+    	Map<String, String> npspToCumulusMap = new Map<String, String>();
+    	
+    	npspToCumulusMap.put('npe01__DISABLE_IndividualAccounts_trigger__c', 'ACCT_IndividualAccounts_TDTM'); //No code refs
+    	npspToCumulusMap.put('npe01__DISABLE_OpportunityAccount_trigger__c', 'OPP_OpportunityContactRoles_TDTM');
+    	npspToCumulusMap.put('npe01__DISABLE_OpportunityContactRoles_trigger__c', ''); //No code refs
+    	npspToCumulusMap.put('npe01__DISABLE_OpportunityPayments_trigger__c', 'PMT_Payment_TDTM');
+    	npspToCumulusMap.put('npo02__DISABLE_Household_Opportunity_trigger__c', 'RLLP_OppRollup_TDTM');
+    	
+    	//@TODO: These two don't make sense. All the actions in HH_Households_TDTM are after actions, and there seems
+    	//to be another flag for the whole thing (right after)
+    	npspToCumulusMap.put('npo02__DISABLE_HouseholdAfter_trigger__c', ''); //No code refs
+    	npspToCumulusMap.put('npo02__DISABLE_HouseholdBefore_trigger__c', ''); //No code refs	
+    	npspToCumulusMap.put('npo02__DISABLE_Households_trigger__c', 'HH_Households_TDTM'); //No code refs
+    	
+    	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', ''); //No code refs
+    	
+    	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'OPP_RecurringDonations_TDTM'); //Was at line 57 of RD_RecurringDonations_TDTM
+    	npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD_RecurringDonations_TDTM'); //Was at line 107 of RD_RecurringDonations_TDTM
+    	
+    	npspToCumulusMap.put('npe4__DISABLE_RelationshipCM_trigger__c', 'CM_Relationships_TDTM'); //No code refs
+    	npspToCumulusMap.put('npe4__DISABLE_RelationshipContacts_trigger__c', 'CON_Relationships_TDTM'); //No code refs
+    	npspToCumulusMap.put('npe4__DISABLE_Relationships_trigger__c', 'REL_Relationships_TDTM'); //No code refs
     	
     	return npspToCumulusMap;
     }
