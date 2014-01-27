@@ -234,6 +234,10 @@
                             <apex:include pageName="STG_PanelRDCustomInstallment" />
                         </div>
             
+                        <div class="panel" id="idPanelRDFieldMap" style="display:none" >
+                            <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+                        </div>
+            
                         <div class="panel" id="idPanelRel" style="display:none" >
                             <apex:include pageName="STG_PanelRel" />
                         </div>
