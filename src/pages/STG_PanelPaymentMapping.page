@@ -1,12 +1,10 @@
-<apex:page controller="STG_PanelPaymentMapping_CTRL" >
+<apex:page controller="STG_PanelPaymentMapping_CTRL" action="{!checkSettings}" >
 
     <apex:form id="form">  
 	    <apex:sectionHeader title="Payment Field Mappings" subtitle="Map custom fields from Opportunity to Payment" >
-	        <description>
-	            <apex:outputPanel layout="block" styleClass="sectionHelp" >
-	                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.<br/><br/>
-	            </apex:outputPanel>
-	        </description>  
+            <apex:outputPanel layout="block" styleClass="sectionHelp" >
+                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.<br/><br/>
+            </apex:outputPanel>
 	    </apex:sectionHeader>
 	    <apex:pageMessages />
 	    <apex:pageBlock mode="maindetail">
