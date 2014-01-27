@@ -165,11 +165,19 @@ public with sharing class RD_RecurringDonations {
     } 
    
     // requery for all the fields we need on the list of new RD's (including currency info) 
-    public static list<npe03__Recurring_Donation__c> requeryListRD(set<Id> setRDId) {
-    
-        //James Melville 05/03/2011 Dynamically build Recurring donation query to allow currency to be included if needed.
-        //build start of dynamic query
+    public static list<npe03__Recurring_Donation__c> requeryListRD(set<Id> setRDId) {    
+        string queryRCD = strQueryRDNoWhere();
+        queryRCD += ' where Id in :setRDId';
         
+        //execute query
+        return Database.query(queryRCD);
+    }
+    
+    // shared helper routine to create the soql string against Recurring Donations.
+    // includes fields from the custom field map, and currencyiso fields.
+    // does not include the where clause (since different callers had different filtering needs)
+    public static string strQueryRDNoWhere() {
+    	
         set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name',
                                                        'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
                                                        'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
@@ -196,13 +204,11 @@ public with sharing class RD_RecurringDonations {
         if (isMultiCurrency)
             queryRCD = queryRCD + ',CurrencyIsoCode';
     
-        queryRCD=queryRCD+' from npe03__Recurring_Donation__c where Id in :setRDId';
+        queryRCD=queryRCD+' from npe03__Recurring_Donation__c';
         
-        //execute query
-        return Database.query(queryRCD);
-    }
-    
-    
+        return (queryRCD);
+    }   
+     
     //future wrapper for rds with no opptys closed
     @future
     public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids){
