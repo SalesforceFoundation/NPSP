@@ -27,10 +27,18 @@ public with sharing virtual class STG_Panel {
     }
 
     public virtual PageReference saveSettings() { 
-    	STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-        stgService.saveAll();
-        isEditMode = false;
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        stgService.saveAll();
+	        isEditMode = false;
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, null);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
         return null;
+        
     }
 
     public PageReference editSettings() { 
@@ -62,7 +70,7 @@ public with sharing virtual class STG_Panel {
         get {    
             if (listSOContactRoles == null) {
                 listSOContactRoles = new list<SelectOption>();
-                listSOContactRoles.add(new SelectOption(' ','- none -'));
+                listSOContactRoles.add(new SelectOption('','- none -'));
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
@@ -91,7 +99,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOContactRecTypes == null) {
                 listSOContactRecTypes = new list<SelectOption>();
-                listSOContactRecTypes.add(new SelectOption(' ', '- none -'));
+                listSOContactRecTypes.add(new SelectOption('', '- none -'));
                 listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Contact'));            
             }       
             return listSOContactRecTypes;
@@ -103,7 +111,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOAccountRecTypeIds == null) {
                 listSOAccountRecTypeIds = new list<SelectOption>();
-                listSOAccountRecTypeIds.add(new SelectOption(' ', '- none -'));
+                listSOAccountRecTypeIds.add(new SelectOption('', '- none -'));
                 listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Account'));            
             }       
             return listSOAccountRecTypeIds;
@@ -115,7 +123,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppRecTypes == null) {
                 listSOOppRecTypes = new list<SelectOption>();
-                listSOOppRecTypes.add(new SelectOption(' ', '- none -'));
+                listSOOppRecTypes.add(new SelectOption('', '- none -'));
                 listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Opportunity'));            
             }       
             return listSOOppRecTypes;
@@ -127,7 +135,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppRecTypesIds == null) {
                 listSOOppRecTypesIds = new list<SelectOption>();
-                listSOOppRecTypesIds.add(new SelectOption(' ', '- none -'));
+                listSOOppRecTypesIds.add(new SelectOption('', '- none -'));
                 listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity'));            
             }       
             return listSOOppRecTypesIds;
@@ -139,7 +147,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppContactRoles == null) {
                 listSOOppContactRoles = new list<SelectOption>();
-                listSOOppContactRoles.add(new SelectOption(' ','- none -'));
+                listSOOppContactRoles.add(new SelectOption('','- none -'));
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for(Schema.PicklistEntry pe : P) {
@@ -155,7 +163,7 @@ public with sharing virtual class STG_Panel {
     	get {
 	        if (listSOOppTypes == null) {
 	            listSOOppTypes = new list<SelectOption>();
-	            listSOOppTypes.add(new SelectOption(' ','- none -'));
+	            listSOOppTypes.add(new SelectOption('','- none -'));
 	            Schema.DescribeFieldResult F = Schema.sObjectType.Opportunity.fields.Type; 
 	            list<Schema.PicklistEntry> P = F.getPicklistValues();
 	        
@@ -172,7 +180,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOMailingReportIds == null) {
                 listSOMailingReportIds = new list<SelectOption>();
-                listSOMailingReportIds.add(new SelectOption(' ','- none -'));
+                listSOMailingReportIds.add(new SelectOption('','- none -'));
                 for (Report rpt : [select Id, Name from Report where Name like '%mail%']) {
                     listSOMailingReportIds.add(new SelectOption(rpt.Id, rpt.Name));
                 }
