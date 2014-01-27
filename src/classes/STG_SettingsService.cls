@@ -110,6 +110,17 @@ public with sharing class STG_SettingsService {
         public set;     
     }
 
+    public list<npe03__Custom_Field_Mapping__c> listRDCustomFieldMapping {
+        get {
+            if (listRDCustomFieldMapping == null) {
+                listRDCustomFieldMapping = new list<npe03__Custom_Field_Mapping__c>();
+                listRDCustomFieldMapping = npe03__Custom_Field_Mapping__c.getAll().values();
+            } 
+            return listRDCustomFieldMapping;           
+        }
+        public set;     
+    }
+
     public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {
