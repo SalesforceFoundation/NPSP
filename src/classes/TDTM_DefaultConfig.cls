@@ -115,6 +115,7 @@ public with sharing class TDTM_DefaultConfig {
     	npspToCumulusMap.put('npe01__DISABLE_OpportunityAccount_trigger__c', 'OPP_OpportunityContactRoles_TDTM');
     	npspToCumulusMap.put('npe01__DISABLE_OpportunityContactRoles_trigger__c', ''); //No code refs
     	npspToCumulusMap.put('npe01__DISABLE_OpportunityPayments_trigger__c', 'PMT_Payment_TDTM');
+    	
     	npspToCumulusMap.put('npo02__DISABLE_Household_Opportunity_trigger__c', 'RLLP_OppRollup_TDTM');
     	
     	//@TODO: These two don't make sense. All the actions in HH_Households_TDTM are after actions, and there seems
