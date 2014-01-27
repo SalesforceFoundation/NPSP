@@ -1,18 +1,69 @@
+/*
+    Copyright (c) 2013, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 public with sharing class ERR_Handler {
 
-    public static Boolean diagnosticsEnabled = null;
+    public static Boolean storeErrors = null;
     public static Boolean sendEmailNotifications = null;
     public static String mailList = null;
     
     private List<Error__c> errors = new List<Error__c>();
     
-    public enum Context {REL, AFFL, RD, RLLP}
+    public enum Context {AFFL, BDE, CON, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM}
+    
+    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
+    List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
+    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
+    List<SObject> objectsToDelete, List<SObject> objectsToUndelete) {
+    	
+    	return processResults(insertResults, updateResults, deleteResults, undeleteResults, objectsToInsert, objectsToUpdate, 
+    	               objectsToDelete, objectsToUndelete, null);
+    }
+    
+    public Boolean processInsertResults(List<Database.SaveResult> insertResults, List<SObject> objectsToInsert, 
+    ERR_Handler.Context context) {
+    	return processResults(insertResults, null, null, null, objectsToInsert, null, null, null, context);
+    }
+    
+    public Boolean processUpdateResults(List<Database.SaveResult> updateResults, List<SObject> objectsToUpdate, 
+    ERR_Handler.Context context) {
+        return processResults(null, updateResults, null, null, null, objectsToUpdate, null, null, context);
+    }
     
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
     List<SObject> objectsToDelete, List<SObject> objectsToUndelete, ERR_Handler.Context context) {
         
+        if(storeErrors == null || sendEmailNotifications == null)
+            setOrgSettings();
+            
         Boolean errorsExist = false;
         	
     	Boolean errorsExistOnInserts = processResults(insertResults, objectsToInsert);  //Insert
@@ -24,13 +75,12 @@ public with sharing class ERR_Handler {
     		errorsExist = true;
     	}
     	
-    	if(context != null && context == ERR_Handler.Context.RD) {
-    		if (!system.isBatch() && !RD_ProcessControl.batchButton && !system.isFuture()) {
-                ERR_Handler.sendErrorQueueEmailNotificationFuture();
-    	    } else if (system.isFuture()){
-                ERR_Handler.sendErrorQueueEmailNotification();
-            }  
-    	}
+    	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.
+    	if(storeErrors)
+    	   storeErrors(); ***/
+    	
+    	if(SendEmailNotifications)
+    	   sendEmailNotifications(context);
     	
     	return ErrorsExist;
     }
@@ -70,27 +120,38 @@ public with sharing class ERR_Handler {
     }
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
-    public static void processError(Exception e, List<SObject> records) {
-    	if(DiagnosticsEnabled == null)
-    		setOrgSettings();
+    public static void processError(Exception e, ERR_Handler.Context context) {
+        processError(e, new List<SObject>(), context);
+    }
+    
+    public static void processError(Exception e, SObject record, ERR_Handler.Context context) {
+    	processError(e, new SObject[]{record}, context);
+    }
+    
+    public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
     	
-    	if(DiagnosticsEnabled && e != null) {
-			if(e instanceof DmlException && records != null) {
+    	if(storeErrors == null || sendEmailNotifications == null)
+            setOrgSettings();
+    	
+    	if(e != null) {
+			if(e instanceof DmlException && records != null && records.size() > 0) {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
                    System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-                   addErrorMessage( records[failedRecordIndex], de.getDmlMessage(i));
+                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i));
                }
            }
            
-		   Error__c error = createError(e);
-	       if(DiagnosticsEnabled) {
+           if(storeErrors) {
+               Error__c error = createError(e);
                Database.SaveResult result = Database.insert(error, false);
-               System.debug(LoggingLevel.WARN, '****Was error record inserted: ' + result.isSuccess());
-               System.debug(LoggingLevel.WARN, '****Error record: ' + error);
-	       }
+               System.debug(LoggingLevel.WARN, '****Error record: ' + JSON.serializePretty(error));
+           }
     	}
+    	
+    	if(SendEmailNotifications)
+    	   sendEmailNotifications(context);
     }
     
     private static void addErrorMessage(SObject record, String defaultMessage) {
@@ -105,14 +166,15 @@ public with sharing class ERR_Handler {
         record.addError(message);
     }
     
+    /*** NOTE: we want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {
-    	if(DiagnosticsEnabled == null)
-    		setOrgSettings();
-    	
-    	if(DiagnosticsEnabled) {
-    		System.debug(LoggingLevel.WARN, '****Storing errors: ' + errors);
-    		Database.insert(errors, false);
-    	}
+    	if(storeErrors == null)
+            setOrgSettings();
+            
+        if(storeErrors) {
+		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
+		  Database.insert(errors, false);
+        }
     }
     
     /*** Error creation methods ***/
@@ -151,6 +213,16 @@ public with sharing class ERR_Handler {
     }
     
     /** Email methods **/
+    public static void sendEmailNotifications(ERR_Handler.Context context) {
+        if(context != null && context == ERR_Handler.Context.RD) {
+            if (!system.isBatch() && !RD_ProcessControl.batchButton && !system.isFuture()) {
+                ERR_Handler.sendErrorQueueEmailNotificationFuture();
+            } else if (system.isFuture()){
+                ERR_Handler.sendErrorQueueEmailNotification();
+            }  
+        }	
+    }
+    
     @future
     public static void sendErrorQueueEmailNotificationFuture(){sendErrorQueueEmailNotification();}
     
@@ -160,7 +232,7 @@ public with sharing class ERR_Handler {
         if(SendEmailNotifications == null)
             setOrgSettings();
         
-        if (!rdeqMap.isEmpty() && SendEmailNotifications == true){
+        if (!rdeqMap.isEmpty()){
             Messaging.SingleEmailMessage sme = createEmailMessage(rdeqMap.values());
             if (!test.isRunningTest())
                 Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
@@ -213,7 +285,7 @@ public with sharing class ERR_Handler {
     /*** Helper methods ***/
     private static void setOrgSettings() {
     	Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
-    	DiagnosticsEnabled = orgErrorSettings.Store_Errors__c;
+    	storeErrors = orgErrorSettings.Store_Errors__c;
     	SendEmailNotifications = orgErrorSettings.Email_Notifications__c;
     	mailList = orgErrorSettings.Email_List__c;
     }

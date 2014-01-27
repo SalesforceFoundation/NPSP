@@ -214,22 +214,27 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
     
     public pageReference writeoff() {
-        list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
-        system.debug(CurrentOpp.Id);
-        npe01__OppPayment__c[] delPymnts = [select id, npe01__Paid__c from npe01__OppPayment__c where npe01__OppPayment__c.npe01__Opportunity__c = :CurrentOpp.Id];
-        system.debug(delPymnts.size());
-        
-        for (npe01__OppPayment__c thisPayment : delPymnts){
-            if(thisPayment.npe01__Paid__c == False){
-                paymentsToDelete.add(thisPayment);
-            }
-        }
-        //system.debug('paymentstodelete: ' + paymentsToDelete.size());
-        if (!paymentsToDelete.isEmpty()) delete paymentsToDelete;
-        insert writeoffPayment;
-        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-        oldOppPage.setRedirect(true);
-        return oldOppPage;
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+	        list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
+	        npe01__OppPayment__c[] delPymnts = [select id, npe01__Paid__c from npe01__OppPayment__c where npe01__OppPayment__c.npe01__Opportunity__c = :CurrentOpp.Id];
+	        
+	        for (npe01__OppPayment__c thisPayment : delPymnts){
+	            if(thisPayment.npe01__Paid__c == False){
+	                paymentsToDelete.add(thisPayment);
+	            }
+	        }
+	        if (!paymentsToDelete.isEmpty()) delete paymentsToDelete;
+	        insert writeoffPayment;
+	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
+	        oldOppPage.setRedirect(true);
+	        return oldOppPage;
+    	} catch(Exception e) {
+    		Database.rollback(sp);
+    		ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+    		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+    		return null;
+    	}
     }
 
     //list of items for picklist of the number of payments to be created
@@ -265,25 +270,34 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
 
     public PageReference createPayments() {
-        // first delete unpaid payments
-        npe01__oppPayment__c[] old = [select id from npe01__oppPayment__c where npe01__opportunity__c = :currentOpp.id and npe01__paid__c = false];
-        if (!old.isEmpty()) delete old;
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        // first delete unpaid payments
+	        npe01__oppPayment__c[] old = [select id from npe01__oppPayment__c where npe01__opportunity__c = :currentOpp.id and npe01__paid__c = false];
+	        if (!old.isEmpty()) delete old;
+	        
+	        // If deleting paid Payments, delete paid payments
+	        npe01__oppPayment__c[] oldPaid = [select id from npe01__oppPayment__c where npe01__opportunity__c = :currentOpp.id and npe01__paid__c = true];
+	        if (!old.isEmpty() && removePaidPayments == true) delete oldPaid;
+	        
+	        // get the new payments into a list
+	        npe01__oppPayment__c[] pmts = new npe01__oppPayment__c[0];
+	        for (payment p : newPayments) pmts.add(p.oppPayment);
+	        
+	        // create the payment records
+	        insert pmts;
+	        
+	        // Send the user to the detail page for the new account.
+	        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
+	        oldOppPage.setRedirect(true);
+	        return oldOppPage;
         
-        // If deleting paid Payments, delete paid payments
-        npe01__oppPayment__c[] oldPaid = [select id from npe01__oppPayment__c where npe01__opportunity__c = :currentOpp.id and npe01__paid__c = true];
-        if (!old.isEmpty() && removePaidPayments == true) delete oldPaid;
-        
-        // get the new payments into a list
-        npe01__oppPayment__c[] pmts = new npe01__oppPayment__c[0];
-        for (payment p : newPayments) pmts.add(p.oppPayment);
-        
-        // create the payment records
-        insert pmts;
-        
-        // Send the user to the detail page for the new account.
-        PageReference oldOppPage = new PageReference('/' + currentOpp.id);
-        oldOppPage.setRedirect(true);
-        return oldOppPage;
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
+        }
     }
     
     public pageReference RemovePaidPayments() {
