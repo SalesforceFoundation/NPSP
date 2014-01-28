@@ -5,28 +5,22 @@ global class STTG_InstallScript implements InstallHandler {
     	//First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
     	if(context.previousVersion() == null) {
     		System.debug('****First install');
-    		
     		//Get the mapping from old settings to the new TDTM default setup
-            Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();
-            
-    	    //Read existing NPSP trigger configuration
-    	    Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);
-    		
+            Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+    	    //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+    	    Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap); 		
     		//Setup the new configuration
-    		setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
-    		
-    		//All disable flags have been set to false in existingTriggerConfig (so next time no work needs to be done)
-    	
-    	} else if(context.previousVersion().compareTo(new Version(1,0)) == 0) {
-    		System.debug('****First upgrade from version 1.0');
+    		setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);		
     	}
     	
     	if(context.isUpgrade()) {
     		System.debug('****It is an upgrade');
+    		//No need to disable NPSP flags - they should have been disabled on install
     	}
     	
     	if(context.isPush()) {
     		System.debug('****It is a push');
+    		//No need to disable NPSP flags - they should have been disabled on install
     	}
     }
     
@@ -41,81 +35,77 @@ global class STTG_InstallScript implements InstallHandler {
     	npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults();
     	
     	for(String setting : npspToCumulusMap.keySet()) {
-    		//System.debug('****Mapping key: ' + setting);
     		if(setting.startsWith('npe01')) {
-	    		if(npe01Settings.get(setting) != null) {
-	    			//System.debug('****Adding key to existing settings map.');
-	    			npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));
-	    			//Deactivating flag
-	    			npe01Settings.put(setting, false);
+	    		if(npe01Settings.Id != null && npe01Settings.get(setting) != null) {
+	    			npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));	    			
+	    			npe01Settings.put(setting, false); //Deactivating flag
 	    			continue;
 	    		}
     		} else if(setting.startsWith('npo02')) {
-    			if(npo02Settings.get(setting) != null) {
-                    //System.debug('****Adding key to existing settings map.');
-                    npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));
-                    //Deactivating flag
-                    npo02Settings.put(setting, false);
+    			if(npo02Settings.Id != null && npo02Settings.get(setting) != null) {
+                    npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));            
+                    npo02Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
     		} else if(setting.startsWith('npe03')) {
-    			if(npe03Settings.get(setting) != null) {
-                    //System.debug('****Adding key to existing settings map.');
-                    npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));
-                    //Deactivating flag
-                    npe03Settings.put(setting, false);
+    			if(npe03Settings.Id != null && npe03Settings.get(setting) != null) {
+                    npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));                    
+                    npe03Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
     		} else if(setting.startsWith('npe4')) {
-    			if(npe04Settings.get(setting) != null) {
-                    //System.debug('****Adding key to existing settings map.');
+    			if(npe04Settings.Id != null && npe04Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe04Settings.get(setting));
-                    //Deactivating flag
-                    npe04Settings.put(setting, false);
+                    npe04Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
     		}
     	}
     	
-    	List<SObject> allSettings = new SObject[] {npe01Settings, npo02Settings, npe03Settings, npe04Settings};
-    	update allSettings; //To deactivate the flags
+    	//Deactivate NPSP flags - getOrgDefaults returns an empty object if the custom setting has no records
+    	List<SObject> npspCustomSettings = new List<SObject>();
+    	if(npe01Settings.Id != null) npspCustomSettings.add(npe01Settings);
+    	if(npo02Settings.Id != null) npspCustomSettings.add(npo02Settings);
+    	if(npe03Settings.Id != null) npspCustomSettings.add(npe03Settings);
+    	if(npe04Settings.Id != null) npspCustomSettings.add(npe04Settings);
+    	update npspCustomSettings;
     	
     	return npspExistingSettings;
     }
     
-    private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
-        
-        System.debug('****NPSP to Cumulus Map: \n' + JSON.serializePretty(npspToCumulusMap));
-        System.debug('****Existing Trigger Config: \n' + JSON.serializePretty(existingTriggerConfig));
-        
+    private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
         //First we insert all TDTM records as active
-        List<Trigger_Handler__c> triggerHandlers = TDTM_DefaultConfig.getDefaultRecords();
-        for(Trigger_Handler__c handler : triggerHandlers) {
-        	handler.Active__c = false;
-        }
-        insert triggerHandlers;
-        
+        insertTdtmDefauls();   
         //Now we can deactive only those that were flagged as inactive in NPSP
-        List<String> handlerSettingsToUpdate = new List<String>();
+        deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
+    }
+    
+    private static void insertTdtmDefauls() {
+    	List<Trigger_Handler__c> triggerHandlers = TDTM_DefaultConfig.getDefaultRecords();
+        for(Trigger_Handler__c handler : triggerHandlers)
+            handler.Active__c = true;
+        insert triggerHandlers;
+    }
+    
+    private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
+    	//System.debug('****NPSP to Cumulus Map: \n' + JSON.serializePretty(npspToCumulusMap));
+        //System.debug('****Existing Trigger Config: \n' + JSON.serializePretty(existingTriggerConfig));
         
+    	List<String> handlerSettingsToUpdate = new List<String>();
+    	
         for(String flag : existingTriggerConfig.keySet()) {
-        	Boolean active = existingTriggerConfig.get(flag);
-        	//System.debug('****Value of flag ' + flag + ': ' + active);
-        	
-        	String mapsTo = npspToCumulusMap.get(flag);
-        	//System.debug('****Maps to: ' + mapsTo);
-        	
-        	if(active) {
-        	   handlerSettingsToUpdate.add(mapsTo);
-        	}
+            Boolean active = existingTriggerConfig.get(flag);           
+            String mapsTo = npspToCumulusMap.get(flag);         
+            if(active)
+               handlerSettingsToUpdate.add(mapsTo);
         }
         
         List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c 
                                                      IN :handlerSettingsToUpdate];
         for(Trigger_Handler__c handler : handlersToUpdate) {
-        	System.debug('****Deactivating class: ' + handler.Class__c);
-        	handler.Active__c = false;
+            System.debug('****Deactivating class: ' + handler.Class__c);
+            handler.Active__c = false;
         }
-        update handlersToUpdate;                	
+        update handlersToUpdate; 
     }
 }

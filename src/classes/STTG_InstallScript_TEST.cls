@@ -3,33 +3,62 @@ public with sharing class STTG_InstallScript_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'runScriptCustomConfigOnInstall';
+    private static string strTestOnly = '*';
     
-    /** If it's the first time we install Cumulus and there was no custom flag enabled **/
-    public testmethod static void runScriptNoCustomConfigOnInstall() {
-        if (strTestOnly != '*' && strTestOnly != 'runScriptNoCustomConfigOnInstall') return;
-                
-        //Run the script. @TODO: we should be reading the version number from a config file
+    /** to verify no exception is thrown if the custom settings don't exist **/
+    public testmethod static void runScriptNoCustomSettings() {
+        if (strTestOnly != '*' && strTestOnly != 'runScriptNoCustomSettings') return;
+               
+        //Don't create NPSP custom settings
+        
         Test.testInstall(new STTG_InstallScript(), null);
         
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
-        afterScriptConfig.sort();
         
         List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-        defaultConfig.sort();
         
-        System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
+        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+    }
+    
+    /** If it's the first time we install Cumulus and there was no custom DISABLE flag enabled **/
+    public testmethod static void runScriptNoCustomConfigOnInstall() {
+        if (strTestOnly != '*' && strTestOnly != 'runScriptNoCustomConfigOnInstall') return;
+         
+        //Create NPSP custom settings with all disable flags off
+        setAllNpspFlags(false);
+               
+        Test.testInstall(new STTG_InstallScript(), null);
+        
+        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
+            Object__c, Trigger_Action__c from Trigger_Handler__c];
+              
+        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+        
+        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+    }
+    
+    private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
+    	afterScriptConfig.sort();
+    	defaultConfig.sort();
+    	
+    	System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
         for(Integer i = 0; i < defaultConfig.size(); i++) {
-        	System.assertEquals(afterScriptConfig[i], defaultConfig[i]);
+            System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
+            System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
+            System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
+            System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
+            System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
+            System.assertEquals(afterScriptConfig[i].Trigger_Action__c, defaultConfig[i].Trigger_Action__c);
         }
     }
     
+    /** If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
     public testmethod static void runScriptCustomConfigOnInstall() {
         if (strTestOnly != '*' && strTestOnly != 'runScriptCustomConfigOnInstall') return;
     	
-    	//Set disable flags (pre-Cumulus config)
-    	setNpspFlags();
+        //Create NPSP custom settings with all disable flags on
+    	setAllNpspFlags(true);
 
         //Run the script. @TODO: we should be reading the version number from a config file
         Test.testInstall(new STTG_InstallScript(), null);
@@ -72,30 +101,30 @@ public with sharing class STTG_InstallScript_TEST {
     	
     }
     
-    private static void setNpspFlags() {
+    private static void setAllNpspFlags(Boolean flagValue) {
     	List<SObject> settingsToInsert = new List<SObject>();
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
-        npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
-        npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = true;
-        npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = true;
+        npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = flagValue;
         settingsToInsert.add(npe01Settings);
         
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
-        npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
-        npo02Settings.npo02__DISABLE_Households_trigger__c = true;
-        npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = true;
+        npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_Households_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
         settingsToInsert.add(npo02Settings);
         
         npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-        npe03Settings.npe03__DISABLE_Donations_trigger__c = true;
-        npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = true;
+        npe03Settings.npe03__DISABLE_Donations_trigger__c = flagValue;
+        npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = flagValue;
         settingsToInsert.add(npe03Settings);
         
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
-        npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = true;
-        npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = true;
-        npe04Settings.npe4__DISABLE_Relationships_trigger__c = true;
+        npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
+        npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
+        npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
         settingsToInsert.add(npe04Settings);
         
         insert settingsToInsert;
