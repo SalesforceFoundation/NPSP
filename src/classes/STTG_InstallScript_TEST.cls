@@ -54,16 +54,15 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     /** If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
-    public testmethod static void runScriptCustomConfigOnInstall() {
-        if (strTestOnly != '*' && strTestOnly != 'runScriptCustomConfigOnInstall') return;
+    public testmethod static void runScriptCustomConfigOnInstallAllFlags() {
+        if (strTestOnly != '*' && strTestOnly != 'runScriptCustomConfigOnInstallAllFlags') return;
     	
         //Create NPSP custom settings with all disable flags on
     	setAllNpspFlags(true);
 
-        //Run the script. @TODO: we should be reading the version number from a config file
         Test.testInstall(new STTG_InstallScript(), null);
         
-        //Get the TDTM classes that map the NPSP flags
+        //Get the TDTM classes that map to the NPSP flags
         List<String> tdtmClasses = TDTM_DefaultConfig.getNpspToCumulusMap().values();
         //Remove empty values
         List<String> tdtmClassesWithValues = new List<String>();
@@ -72,15 +71,44 @@ public with sharing class STTG_InstallScript_TEST {
         	   tdtmClassesWithValues.add(tdtmClass);
         }
         
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-            Object__c, Trigger_Action__c from Trigger_Handler__c where Class__c IN :tdtmClasses];
-        
-        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size());
-        
-        //Verify that the TDTM flags have been deactivated (since all the NPSP disable flags were on)     
+        //Verify that all the TDTM classes have been deactivated (since all the NPSP disable flags were on)
+        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :tdtmClasses];     
+        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size());     
         for(Trigger_Handler__c handler : afterScriptConfig) {
         	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
         	System.assertEquals(false, handler.Active__c);
+        }
+        
+        //Assert old flags have been properly disabled
+        assertNpspFlagsDeactivated();
+    }
+    
+     /** If it's the first time we install Cumulus and some the custom DISABLE flag were enabled **/
+    public testmethod static void runScriptCustomConfigOnInstallSomeFlags() {
+        if (strTestOnly != '*' && strTestOnly != 'runScriptCustomConfigOnInstallSomeFlags') return;
+        
+        //Create NPSP custom settings with some disable flags on
+        List<SObject> settingsToInsert = new List<SObject>();
+        
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
+        npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
+        settingsToInsert.add(npe01Settings);    
+        
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
+        npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
+        settingsToInsert.add(npo02Settings); 
+        insert settingsToInsert;
+
+        Test.testInstall(new STTG_InstallScript(), null);
+        
+        //Verify that the right TDTM classes have been deactivated
+        List<String> mappedTdtmClasses = new String[] {'ACCT_IndividualAccounts_TDTM', 'OPP_OpportunityContactRoles_TDTM', 
+                                                               'RLLP_OppRollup_TDTM'};
+        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :mappedTdtmClasses];
+        for(Trigger_Handler__c handler : afterScriptConfig) {
+        	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
+            System.assertEquals(false, handler.Active__c);
         }
         
         //Assert old flags have been properly disabled
