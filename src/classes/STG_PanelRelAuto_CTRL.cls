@@ -53,7 +53,14 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     }
 
     // action method to save the new ac to the database.
-    public PageReference createRelAutoCreate() {        
+    public PageReference createRelAutoCreate() {  
+
+        // validate required fields
+    	if (acNew.npe4__Object__c == null || acNew.npe4__Field__c == null || acNew.npe4__Relationship_Type__c == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Auto-creation requires a valid Object, Field and Relationship Type to save.'));
+            return null;    		
+    	}      
+
         Savepoint sp = Database.setSavepoint();
         try {
         	acNew.Name = 'AutoCreateRel-' + system.now();
