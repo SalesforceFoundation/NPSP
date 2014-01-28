@@ -1,13 +1,12 @@
-<apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0">
+<apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0" >
 
 <!-- We need jQuery - use CDNs to save user from re-downloading it if possible -->
 <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" />
-<!-- We also need jQuery UI --> 
-<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" />
-<!-- get our jQuery UI theme -->
-<apex:stylesheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/smoothness/jquery-ui.css" />
 
-<style>    
+<apex:includeScript value="{!$Resource.CollapsibleListJS}" />
+
+<style> 
+       
 	.sidebar {
 	    width: 200px; 
 	    position: relative; 
@@ -18,20 +17,29 @@
 	.sidebar ul {
 	    margin: 0; 
 	    padding: 0; 
-	    list-style: none; 
+	    list-style: none;
+	    background: lightgray; 
 	}
 	    
 	div.navbar ul li {
 	    font-size: 100%; 
-	    margin-bottom: 2px;
+	    margin-bottom: 0px;
 	    margin-left: 0px;
 	    padding: 2px; 
-	    background: Gainsboro;
+	    background: #f2f5f6;
 	    font-weight: normal; 
+		border-top: 1px solid #fff;
+		border-bottom: 1px solid #dce4e7;	    
+		border-left: 1px solid #dce4e7;       
+		border-right: 1px solid #dce4e7;       
 	}
 	    
 	div.navbar ul li:hover {
 	    background: Gray; 
+	}
+	
+	div.navbar {
+	   border-top: 1px solid #dce4e7;
 	}
 	
 	div.navbar ul li a {
@@ -40,7 +48,6 @@
 	    padding: 5px 5px 5px 10px;
 	    font-size: 100%; 
 	    color: black;
-	    font-family: Tahoma, sans-serif; 
 	}
 	    
 	div.navbar ul li a:hover {
@@ -49,9 +56,48 @@
 	}
     
     div.navbar ul li.nav-selected {
-        background: CadetBlue;
+        background: LightGray;
+    }
+
+    .nav-section-title {
+        display: block; 
+        text-decoration: none; 
+        padding: 5px 5px 5px 10px;
+        font-size: 100%; 
+        color: black;
+        font-family: Tahoma, sans-serif; 
     }
         
+    li.collapsed .caret {
+		float: right;
+		width: 0;
+		height: 0;
+		display: inline-block;
+		vertical-align: top;
+		content: "";
+		margin-top: 8px;
+		margin-left: 2px;
+        border-top: 4px solid #000;
+        border-bottom: 0px;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+	}
+
+    li .caret {
+        float: right;
+        width: 0;
+        height: 0;
+        display: inline-block;
+        vertical-align: top;
+        content: "";
+        margin-top: 8px;
+        margin-left: 2px;
+		border-top: none;
+		border-bottom: 4px solid #000;
+		border-right: 4px solid transparent;
+		border-left: 4px solid transparent;
+    }
+         
 	.content {
 	    padding:10px;
 	}
@@ -125,6 +171,7 @@
     // page init function
     j$(function () {        
         ShowPanel(idPanelCurrent);
+        j$('#mynavbar').collapsibleList('.header', {search: false, animate: false});
     });
         
     function ShowPanel(idPanel) {            
@@ -162,24 +209,48 @@
             <div class="sidebar" >
             <div class="navbar" >
                 <nav role="navigation">
-                    <ul>
+                    <ul id="mynavbar" >
                     <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">Non Profit Starter Pack Settings</a></li>
-                    <li id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item">Contacts &amp; Organizations</a></li>
+
+                    <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">Contacts<span class="caret"></span></a></li>
+                    <ul>
+                    <li id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">Account Model</a></li>
+                    <li id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">Contact Roles</a></li>
+                    <li id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
+                    </ul>
+                    
                     <li id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item">Households</a></li>
-                    <li id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item">Opportunities</a></li>
-                    <li id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Opportunity Rollups</a></li>
-                    <li id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Rollups</a></li>
+
+                    <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">Connections<span class="caret"></span></a></li>
+                    <ul>
+                    <li id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
+                    <li id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">Relationships</a></li>
+                    <li id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Relationship Reciprocal Settings</a></li>
+                    <li id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Relationships Autocreation</a></li>
+                    </ul>
+                    
+                    <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">Donations &amp; Money<span class="caret"></span></a></li>
+                    <ul>
+                    <li id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">Membership</a></li>
+                    <li id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">Payments</a></li>
                     <li id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">Payment Mappings</a></li>
-                    <li id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Batch Update</a></li>
-                    <li id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item">Recurring Donations</a></li>
-                    <li id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Custom Installment Periods</a></li>
-                    <li id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Custom Field Mappings</a></li>
-                    <li id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Batch Status</a></li>
-                    <li id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item">Relationships</a></li>
-                    <li id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Reciprocal Relationships</a></li>
-                    <li id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Auto Relationships</a></li>
+                    <li id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Donor Statistics</a></li>
+                    <li id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Defined Rollups</a></li>
+                    <li id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">Recurring Donations</a></li>
+                    <li id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Recurring Donation Installment Periods</a></li>
+                    <li id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
+                    </ul>
+
                     <li id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item">Batch Data Entry</a></li>
-                    <li id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item">Error Log</a></li>
+                    
+                    <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
+                    <ul>
+                    <li id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li id="idPanelTriggersNav"><a href="." onclick="ShowPanel('idPanelTriggers');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
+                    <li id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
+                    <li id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
+                    <li id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
+                    </ul>
                     </ul>
                 </nav>
            </div>
@@ -199,17 +270,33 @@
 			            </div>                                                                  
                 
                         <div class="panel" id="idPanelHome" style="display:none" >
-                            <apex:include pageName="STG_PanelHome" />    
+                            <apex:include pageName="STG_PanelHome" />                               
                         </div>
                         
 	                    <div class="panel" id="idPanelCon" style="display:none" >
                             <apex:include pageName="STG_PanelContacts" />
 	                    </div>
 
+                        <div class="panel" id="idPanelConRole" style="display:none" >
+                            <apex:include pageName="STG_PanelContactRoles" />
+                        </div>
+
+                        <div class="panel" id="idPanelLeads" style="display:none" >
+                            <apex:include pageName="STG_PanelLeads" />
+                        </div>
+
                         <div class="panel" id="idPanelHH" style="display:none" >
                             <apex:include pageName="STG_PanelHouseholds" />
                         </div>
             
+                        <div class="panel" id="idPanelAffl" style="display:none" >
+                            <apex:include pageName="STG_PanelAffiliations" />
+                        </div>
+            
+                        <div class="panel" id="idPanelMembership" style="display:none" >
+                            <apex:include pageName="STG_PanelMembership" />
+                        </div>
+    
                         <div class="panel" id="idPanelOpp" style="display:none" >
                             <apex:include pageName="STG_PanelOpps" />
                         </div>

@@ -5,7 +5,7 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbHH" mode="maindetail">
  
-            <apex:pageBlockSection title="Household Rules" columns="1" collapsible="false" />
+            <h3 class="sectionBar" >Household Rules</h3>                        
             <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</apex:outputPanel>
             <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
                 
@@ -21,27 +21,7 @@
 
             </apex:panelGrid>
 
-            <apex:pageBlockSection title="Household Opportunity Contact Roles" columns="1" collapsible="false" />
-            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__Household_Contact_Roles_Help_Text}</apex:outputPanel>
-            <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
-                
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}"/>
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" disabled="{!isReadOnlyMode}"/>
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.InlineHelpText}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}"/>
-                <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
-                    <apex:selectOptions value="{!listSOOppContactRoles}"/>
-                </apex:selectList>
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.InlineHelpText}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}"/>
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.InlineHelpText}" />
-
-            </apex:panelGrid>
-
-            <apex:pageBlockSection title="General Settings" columns="1" collapsible="false" />
+            <h3 class="sectionBar" >General Settings</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}"/>
@@ -52,7 +32,7 @@
 
             </apex:panelGrid>
 
-            <apex:pageBlockSection title="Household Name Settings" columns="1" collapsible="false" />
+            <h3 class="sectionBar" >Household Name Settings</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}"/>
@@ -78,12 +58,11 @@
                 <br/>
             </apex:outputPanel>
 
-            <apex:outputPanel layout="block" styleClass="panelButtons" >
-                <p/>
+            <apex:pageBlockButtons location="bottom" >
                 <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
                 <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
                 <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
-            </apex:outputPanel>
+            </apex:pageBlockButtons>
 
         </apex:pageBlock>
     </apex:form>
