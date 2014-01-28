@@ -2,8 +2,14 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
 
     public list<SelectOption> listSelectOption { get; set; }
     public boolean isEditMode { get; set; }
+    public boolean isDisabled { get; set; }
     public SObject sobjBinding { get; set; }
     public string strField { get; set; }
+    
+    public STG_DataBoundMultiSelect_CTRL() {
+    	isDisabled = false;
+    	isEditMode = false;
+    }
     
     public string strValues { 
     	get {
