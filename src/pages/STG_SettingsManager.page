@@ -104,7 +104,7 @@
 
     .propLabel { 
         font-weight: bold;
-        width: 300px;
+        width: 250px;
         text-align: right;
     }
     
@@ -327,6 +327,14 @@
             
                         <div class="panel" id="idPanelRel" style="display:none" >
                             <apex:include pageName="STG_PanelRel" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRelReciprocal" style="display:none" >
+                            <apex:include pageName="STG_PanelRelReciprocal" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRelAuto" style="display:none" >
+                            <apex:include pageName="STG_PanelRelAuto" />
                         </div>
             
                         <div class="panel" id="idPanelBDE" style="display:none" >

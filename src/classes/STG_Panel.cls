@@ -176,6 +176,38 @@ public with sharing virtual class STG_Panel {
     	private set;
     }
 
+     static public list<SelectOption> listSORelTypes {
+        get {    
+            if (listSORelTypes == null) {
+                listSORelTypes = new list<SelectOption>();
+                listSORelTypes.add(new SelectOption('','- none -'));
+                Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c; 
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                for (Schema.PicklistEntry pe : P) {
+                    listSORelTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                }
+            }
+            return listSORelTypes;
+        }
+        private set;
+    }
+
+     static public list<SelectOption> listSOCampaignTypes {
+        get {    
+            if (listSOCampaignTypes == null) {
+                listSOCampaignTypes = new list<SelectOption>();
+                listSOCampaignTypes.add(new SelectOption('','- none -'));
+                Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type; 
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                for (Schema.PicklistEntry pe : P) {
+                    listSOCampaignTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                }
+            }
+            return listSOCampaignTypes;
+        }
+        private set;
+    }
+
     static public list<SelectOption> listSOMailingReportIds {
         get {
             if (listSOMailingReportIds == null) {
