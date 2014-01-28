@@ -38,6 +38,15 @@
 	    background: Gray; 
 	}
 	
+    div.navbar ul li.subitem:hover {
+        background: Gray; 
+    }
+    div.navbar ul li.subitem {
+        background: #eaeef0; 
+		border-bottom: 0;
+		border-top: 0;        
+    }
+    
 	div.navbar {
 	   border-top: 1px solid #dce4e7;
 	}
@@ -214,42 +223,42 @@
 
                     <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">Contacts<span class="caret"></span></a></li>
                     <ul>
-                    <li id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">Account Model</a></li>
-                    <li id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">Contact Roles</a></li>
-                    <li id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
+                    <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">Account Model</a></li>
+                    <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">Contact Roles</a></li>
+                    <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
                     </ul>
                     
                     <li id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item">Households</a></li>
 
                     <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">Connections<span class="caret"></span></a></li>
                     <ul>
-                    <li id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
-                    <li id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">Relationships</a></li>
-                    <li id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Relationship Reciprocal Settings</a></li>
-                    <li id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Relationships Autocreation</a></li>
+                    <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
+                    <li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">Relationships</a></li>
+                    <li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Relationship Reciprocal Settings</a></li>
+                    <li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Relationships Autocreation</a></li>
                     </ul>
                     
                     <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">Donations &amp; Money<span class="caret"></span></a></li>
                     <ul>
-                    <li id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">Membership</a></li>
-                    <li id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">Payments</a></li>
-                    <li id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">Payment Mappings</a></li>
-                    <li id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Donor Statistics</a></li>
-                    <li id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Defined Rollups</a></li>
-                    <li id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">Recurring Donations</a></li>
-                    <li id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Recurring Donation Installment Periods</a></li>
-                    <li id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
+                    <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">Membership</a></li>
+                    <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">Payments</a></li>
+                    <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">Payment Mappings</a></li>
+                    <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Donor Statistics</a></li>
+                    <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Defined Rollups</a></li>
+                    <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">Recurring Donations</a></li>
+                    <li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Recurring Donation Installment Periods</a></li>
+                    <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
                     </ul>
 
                     <li id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item">Batch Data Entry</a></li>
                     
                     <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
                     <ul>
-                    <li id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
-                    <li id="idPanelTriggersNav"><a href="." onclick="ShowPanel('idPanelTriggers');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
-                    <li id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
-                    <li id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
-                    <li id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
+                    <li class="subitem" id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li class="subitem" id="idPanelTriggersNav"><a href="." onclick="ShowPanel('idPanelTriggers');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
+                    <li class="subitem" id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
+                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
+                    <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
                     </ul>
                     </ul>
                 </nav>
