@@ -134,7 +134,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="uninstallCumulus" />
       
       <!-- Get the latest beta release tag name -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
       <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
       <delete file="${basedir}/managed_uat_tag" />
 
@@ -151,7 +151,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete file="${basedir}/version.properties.uat" />
 
       <!-- Get the latest beta release version number -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta" dest="${basedir}/version_uat" />
       <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
       <var name="version.npsp" value="${version.npsp.uat}" />
       <delete file="${basedir}/version_uat" />
@@ -181,10 +181,20 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
     <target name="uninstallCumulus">
+      <!-- Delete unpackaged metadata (NOTE: This will be removed in the future once we switch all branches to using a Package) -->
       <retrieveUnpackaged dir="uninstallsrc" />
-      <buildDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
+      <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+
+      <!-- Delete metadata from the Cumulus package -->
+      <retrievePackaged dir="uninstallsrc" />
+      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
     </target>
 
 
@@ -209,6 +219,10 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
           serverurl="${sf.serverurl}" 
           retrieveTarget="CumulusPackage" 
           packageNames="Cumulus"/>
+    </target>
+
+    <target name="updatePackageXml">
+      <buildPackageXml package="Cumulus" version="29.0" />
     </target>
 
 </project>
