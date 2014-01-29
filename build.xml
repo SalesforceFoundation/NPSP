@@ -177,19 +177,19 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
     <target name="uninstallCumulus">
-      <!-- Delete metadata from the Cumulus package -->
-      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
-      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-
-      <!-- Delete unpackaged metadata (NOTE: This will be removed in the future once we switch all branches to using a Package) -->
+      <!-- Delete unpackaged metadata -->
       <retrieveUnpackaged dir="uninstallsrc" />
       <deleteWhitelistedMetadata dir="uninstallsrc/unpackaged" />
       <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+
+      <!-- Delete metadata from the Cumulus package -->
+      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
+      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
     </target>
