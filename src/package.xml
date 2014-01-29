@@ -140,7 +140,6 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
-    <members>Account.MyTestField__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
