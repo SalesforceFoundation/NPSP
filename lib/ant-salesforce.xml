@@ -13,14 +13,9 @@
       classpath="${basedir}/lib/ant-contrib-1.0b2.jar"
       />  
 
+  <!-- load whitelists -->
   <loadproperties srcFile="${basedir}/lib/whitelists/object_subtype.properties"/>
-
-
-  <!--
-  <taskdef 
-      resource="ise.antelope.tasks.antelope.taskdefs"
-      classpath="${basedir}/lib/AntelopeApp.jar" />
-      -->
+  <loadfile property="metadata_whitelist" srcfile="lib/whitelists/metadata.txt" />
 
   <!-- Ant doesn't like < in replace tokens or values so set a property with < via cdata for reuse later -->
   <property name="lt"><![CDATA[<]]></property>
@@ -176,8 +171,13 @@
         retrieveTarget="@{dir}/unpackaged" 
         unpackaged="lib/all_meta_types.xml"/>
 
+    </sequential>
+  </macrodef>
+
+  <macrodef name="deleteWhitelistedMetadata" description="Deletes any metadata files from a given directory which are listed in lib/whitelists/metadata.txt">
+    <attribute name="dir" description="The directory to delete metadata from" />
+    <sequential>
       <!-- Delete whitelisted files which are added to the org by Salesforce.  This includes both components which are always in an org and components which are automatically created by enabling Sites -->
-      <loadfile property="metadata_whitelist" srcfile="lib/whitelists/metadata.txt" />
       <for param="filename" list="${metadata_whitelist}" delimiter="${line.separator}" >
         <sequential>
           <echo>Deleting whitelisted metadata file @{filename}</echo>
@@ -186,7 +186,6 @@
           </delete>
         </sequential>
       </for>
-
     </sequential>
   </macrodef>
 
@@ -201,7 +200,7 @@
         password="${sf.password}" 
         serverurl="${sf.serverurl}" 
         retrieveTarget="@{dir}" 
-        package="@{package}"/>
+        packageNames="@{package}"/>
     </sequential>
   </macrodef>
 
@@ -210,6 +209,7 @@
     <attribute name="xmlfile" description="The output file path" />
     <attribute name="version" description="The value for the version element of the package.xml file to set the api version (i.e. 29.0)" />
     <attribute name="package" description="If provided, a fullName element will be added to the file so it is deployed into a Package in the target org" default="NOTSET" />
+    <attribute name="exclude" description="If provided, a list of filenames to skip." default="" />
     <sequential>
       <!-- Write the header for the destructiveChanges.xml -->
       <echo file="@{xmlfile}">&lt;?xml version="1.0" encoding="UTF-8"?&gt;${line.separator}</echo>
@@ -235,9 +235,6 @@
             </case>
             <case value="components">
               <property name="typename" value="ApexComponent" />
-            </case>
-            <case value="layouts">
-              <property name="typename" value="PageLayout" />
             </case>
             <case value="objects">
               <property name="typename" value="CustomObject" />
@@ -267,21 +264,28 @@
               <!-- Loop through files in the type's dir and add <members /> element for each file -->
               <for param="file">
                 <path>
-                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml" />
+                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml @{exclude}" />
                 </path>
                 <sequential>
                   <!-- get basename and basename without suffix for file. propertyregex is used since we don't know the file suffix from only the dir name (i.e. classes vs .class) -->
                   <basename property="component_file" file="@{file}" />
                   <propertyregex property="component" input="${component_file}" regexp="(.*)\.(.*)" select="\1" />
 
-                  <!-- Write the <members/> element -->
-                  <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component}&lt;/members&gt;${line.separator}</echo>
-
-                  <!-- Unset basename properties for next execution since we're using basename and propertyregex which will not overwrite a property -->
-                  <var name="component" unset="true" />
-                  <var name="component_file" unset="true" />
+                  <!-- If the file is not in the exclude list, add it to the package.xml -->
+                  <if>
+                    <not><contains string="@{exclude}" substring="${component_file}" /></not>
+                    <then>
+                      <!-- Write the <members/> element -->
+                      <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component}&lt;/members&gt;${line.separator}</echo>
+    
+                      <!-- Unset basename properties for next execution since we're using basename and propertyregex which will not overwrite a property -->
+                      <var name="component" unset="true" />
+                      <var name="component_file" unset="true" />
+                    </then>
+                  </if>
                 </sequential>
               </for>
+
               <!-- Write the <name/> element and close the <types/> element -->
               <echo file="@{xmlfile}" append="true">    &lt;name&gt;${typename}&lt;/name&gt;${line.separator}</echo>
               <echo file="@{xmlfile}" append="true">  &lt;/types&gt;${line.separator}</echo>
@@ -379,23 +383,27 @@
       </concat>
 
       <!-- If there are any members to extract, add the <types/> section to package.xml -->
-      <loadfile property="type.extract" srcfile="@{dir}/objects/@{typename}.extract" />
       <if>
-        <isset property="type.extract" /> 
+        <available file="@{dir}/objects/@{typename}.extract" />
         <then>
-          <var name="type.extract" value="${line.separator}  ${lt}types>${line.separator}${type.extract}    ${lt}name>@{typename}${lt}/name>${line.separator}  ${lt}/types>" />
-          <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>${type.extract}" />
-          <xslt in="@{xmlfile}" out="@{xmlfile}.tidy" style="lib/tidy_package_xml.xsl" />
-          <move file="@{xmlfile}.tidy" tofile="@{xmlfile}" />
-        </then>
+          <loadfile property="type.extract" srcfile="@{dir}/objects/@{typename}.extract" />
+          <if>
+            <isset property="type.extract" /> 
+            <then>
+              <var name="type.extract" value="${line.separator}  ${lt}types>${line.separator}${type.extract}    ${lt}name>@{typename}${lt}/name>${line.separator}  ${lt}/types>" />
+              <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>${type.extract}" />
+              <xslt in="@{xmlfile}" out="@{xmlfile}.tidy" style="lib/tidy_package_xml.xsl" />
+              <move file="@{xmlfile}.tidy" tofile="@{xmlfile}" />
+            </then>
+          </if>
+          <delete>
+              <fileset dir="@{dir}/objects" includes="**/*.@{typename}" />
+          </delete>
+          <delete file="@{dir}/objects/@{typename}.extract" />
+    
+          <var name="type.extract" unset="true" />
+        </then>  
       </if>
-      <delete>
-          <fileset dir="@{dir}/objects" includes="**/*.@{typename}" />
-      </delete>
-      <delete file="@{dir}/objects/@{typename}.extract" />
-
-      <var name="type.extract" unset="true" />
-
     </sequential>  
   </macrodef>
 
@@ -436,16 +444,15 @@
 
       <!-- Add the package name to the package.xml file -->
       <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>&lt;fullName>@{package}%lt;/fullName>${line-separator}" />
-<fullName>@{package}</fullName>
 
       <!-- Build the destructiveChanges.xml file by walking the srcdir and adding all metadata -->
-      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" />
+      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist}" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
       <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
       <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
       <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
-      <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />
+      <!--<addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
     </sequential>
   </macrodef>
 
@@ -494,7 +501,6 @@
 
       <!-- Add sub metadata types which can be deleted to destructiveChanges.xml.  Currently this only handles custom fields and fieldsets. -->
 
-      <!--<addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="BusinessProcess" element="businessProcesses" />-->
       <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
       <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
       <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />

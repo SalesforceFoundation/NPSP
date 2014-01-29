@@ -220,12 +220,6 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Batch__c-Batch Layout</members>
-    <members>Error__c-Error Layout</members>
-    <members>Trigger_Handler__c-Trigger Handler Layout</members>
-    <name>PageLayout</name>
-  </types>
-  <types>
     <members>Account.HH_Account</members>
     <name>RecordType</name>
   </types>
