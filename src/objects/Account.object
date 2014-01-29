@@ -88,16 +88,6 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
     </fields>
-    <fields>
-        <fullName>MyTestField__c</fullName>
-        <externalId>false</externalId>
-        <label>MyTestField</label>
-        <length>32</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
     <listViews>
         <fullName>HH_Accounts</fullName>
         <columns>ACCOUNT.NAME</columns>
