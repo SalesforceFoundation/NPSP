@@ -45,7 +45,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 
         // DJH:UNDONE remove trigger check when handled by TDTM.
         npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
-        if (rds.npe03__DISABLE_RecurringDonations_trigger__c || RD_ProcessControl.hasRun) 
+        if (RD_ProcessControl.hasRun) 
             return null;
             
         if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
