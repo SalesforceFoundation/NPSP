@@ -140,6 +140,8 @@ public with sharing class STTG_InstallScript_TEST {
         
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_Households_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
         settingsToInsert.add(npo02Settings);
@@ -167,6 +169,8 @@ public with sharing class STTG_InstallScript_TEST {
         
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Households_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c);
         
