@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="NPSP Settings" subtitle="Trigger Configuration" >
+        <apex:sectionHeader title="System" subtitle="Trigger Configuration" >
             <apex:pageMessage summary="These triggers control Cumulus, and if you mess it up, we will be very unhappy!" severity="warning" strength="1" />
         </apex:sectionHeader>
         <apex:pageMessages />

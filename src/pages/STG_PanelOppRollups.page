@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelOppRollups_CTRL" docType="html-5.0">
 
     <apex:form id="form">   
-        <apex:sectionHeader subtitle="Donor Statistics" />        
+        <apex:sectionHeader title="Donations" subtitle="Donor Statistics" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  

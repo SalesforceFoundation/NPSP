@@ -1,11 +1,11 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader subtitle="Recurring Donations Batch Status" />        
+        <apex:sectionHeader title="System" subtitle="Recurring Donations Batch Status" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbRDBatch" mode="maindetail">
   
-            <apex:pageBlockSection title="Batch Status" columns="1" collapsible="false" />
+            <h3 class="sectionBar" >Batch Status</h3>
             <apex:panelGrid id="panelStats" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}"/>
@@ -30,11 +30,10 @@
                 <apex:actionPoller rerender="panelStats" interval="5" />                
             </apex:outputPanel>
 
-            <apex:outputPanel layout="block" styleClass="panelButtons" >
-                <p/>
+            <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Run Batch Update" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRDBatch" />
-            </apex:outputPanel>
-
+            </apex:pageBlockButtons>
+            
         </apex:pageBlock>
     </apex:form>
 </apex:page>

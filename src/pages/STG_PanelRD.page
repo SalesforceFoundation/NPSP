@@ -1,11 +1,11 @@
 <apex:page controller="STG_PanelRD_CTRL" docType="html-5.0">
 
     <apex:form id="form">   
-        <apex:sectionHeader subtitle="Recurring Donation Settings" />        
+        <apex:sectionHeader title="Donations" subtitle="Recurring Donation Settings" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <apex:pageBlockSection title="General Settings" columns="1" collapsible="false" />
+            <h3 class="sectionBar" >Recurring Donation Settings</h3>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.Label}"/>
@@ -48,12 +48,11 @@
 
             </apex:panelGrid> 
 
-            <apex:outputPanel layout="block" styleClass="panelButtons" >
-                <p/>
+            <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
-            </apex:outputPanel>
+            </apex:pageBlockButtons>
 
         </apex:pageBlock>
     </apex:form>

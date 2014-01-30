@@ -41,7 +41,7 @@
                 </apex:panelGrid>
             </apex:outputPanel>
                   
-            <apex:pageBlockButtons >
+            <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="New Field Mapping" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
                 <apex:commandButton value="Create Field Mapping" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:commandButton value="Cancel" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />

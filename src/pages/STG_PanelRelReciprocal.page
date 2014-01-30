@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="NPSP Settings" subtitle="Reciprocal Relationships" >
+        <apex:sectionHeader title="Relationship Settings" subtitle="Reciprocal Relationships" >
             <apex:outputText value="{!$Label.npe4__RelationshipsLookupDescription}" styleClass="sectionHelp" />            
         </apex:sectionHeader>
         <apex:pageMessages />

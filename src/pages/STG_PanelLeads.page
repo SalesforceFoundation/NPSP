@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelLeads_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader subtitle="Lead Settings" title="NPSP Settings" />        
+        <apex:sectionHeader title="{!$ObjectType.Contact.LabelPlural}" subtitle="Lead Settings" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
@@ -16,7 +16,7 @@
             
             <apex:pageBlockButtons location="bottom" >
                 <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
             

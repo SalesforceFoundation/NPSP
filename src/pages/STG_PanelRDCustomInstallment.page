@@ -40,9 +40,9 @@
 	            </apex:panelGrid>
             </apex:outputPanel>
                   
-            <apex:pageBlockButtons >
+            <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="New Installment Period" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Create Installment Period" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />&nbsp;&nbsp;
+                <apex:commandButton value="Create Installment Period" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:commandButton value="Cancel" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
  

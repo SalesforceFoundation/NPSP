@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelRelAuto_CTRL" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="NPSP Settings" subtitle="Automatic Relationship Settings" >
+        <apex:sectionHeader title="Relationship Settings" subtitle="Automatic Relationship Settings" >
             <apex:outputText value="{!$Label.npe4__RelationshipsAutoDescription}" styleClass="sectionHelp" />            
         </apex:sectionHeader>
         <apex:pageMessages />

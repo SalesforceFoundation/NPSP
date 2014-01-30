@@ -425,9 +425,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         public void save(){
             
             if (myUDR.id == null){
-                map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll();
-                integer nameNumber = userRollups.size();             
-                myUDR.Name = 'CustomRollup' + nameNumber; 
+                myUDR.Name = 'CustomRollup-' + system.Now(); 
                 myUDR.npo02__Object_Name__c = TargetObject;
                 myUDR.npo02__Target_Field__c = TargetField;
                 myUDR.npo02__Field_Action__c = Operation;
