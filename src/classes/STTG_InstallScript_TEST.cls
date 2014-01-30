@@ -73,7 +73,9 @@ public with sharing class STTG_InstallScript_TEST {
         
         //Verify that all the TDTM classes have been deactivated (since all the NPSP disable flags were on)
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :tdtmClasses];     
-        System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfig.size());     
+        //The -1 is because there are two NPSP flags (npe01__DISABLE_OpportunityAccount_trigger__c and 
+        //npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class (OPP_OpportunityContactRoles_TDTM)
+        System.assertEquals(tdtmClassesWithValues.size() - 1, afterScriptConfig.size());     
         for(Trigger_Handler__c handler : afterScriptConfig) {
         	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
         	System.assertEquals(false, handler.Active__c);
@@ -104,7 +106,7 @@ public with sharing class STTG_InstallScript_TEST {
         
         //Verify that the right TDTM classes have been deactivated
         List<String> mappedTdtmClasses = new String[] {'ACCT_IndividualAccounts_TDTM', 'OPP_OpportunityContactRoles_TDTM', 
-                                                               'RLLP_OppRollup_TDTM'};
+                                                               'HH_OppContactRoles_TDTM'};
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :mappedTdtmClasses];
         for(Trigger_Handler__c handler : afterScriptConfig) {
         	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
@@ -113,20 +115,6 @@ public with sharing class STTG_InstallScript_TEST {
         
         //Assert old flags have been properly disabled
         assertNpspFlagsDeactivated();
-    }
-    
-    public testmethod static void runScriptNoCustomConfigOnPush() {
-        if (strTestOnly != '*' && strTestOnly != 'runScriptNoCustomConfigOnPush') return;
-        
-        Test.testInstall(new STTG_InstallScript(), new Version(1,0), true);
-        
-    }
-    
-    public testmethod static void runScriptCustomConfigOnPush() {
-    	if (strTestOnly != '*' && strTestOnly != 'runScriptCustomConfigOnPush') return;
-    	
-    	Test.testInstall(new STTG_InstallScript(), new Version(1,0), true);
-    	
     }
     
     private static void setAllNpspFlags(Boolean flagValue) {

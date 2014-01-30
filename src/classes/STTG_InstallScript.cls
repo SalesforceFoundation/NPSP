@@ -12,16 +12,6 @@ global class STTG_InstallScript implements InstallHandler {
     		//Setup the new configuration
     		setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);		
     	}
-    	
-    	if(context.isUpgrade()) {
-    		System.debug('****It is an upgrade');
-    		//No need to disable NPSP flags - they should have been disabled on install
-    	}
-    	
-    	if(context.isPush()) {
-    		System.debug('****It is a push');
-    		//No need to disable NPSP flags - they should have been disabled on install
-    	}
     }
     
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {

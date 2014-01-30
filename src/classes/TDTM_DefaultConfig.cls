@@ -113,23 +113,25 @@ public with sharing class TDTM_DefaultConfig {
     	
     	//No code refs in Cumulus - ref in IndividualAccounts trigger in Contacts_and_Organizations package
     	npspToCumulusMap.put('npe01__DISABLE_IndividualAccounts_trigger__c', 'ACCT_IndividualAccounts_TDTM'); 
-    	//Flag removed from OPP_OpportunityContactRoles_TDTM class
+    	//Flag removed from OPP_OpportunityContactRoles_TDTM class - this TDTM class is being referred to by two of the old flags,
+    	//this one and the one right below.
     	npspToCumulusMap.put('npe01__DISABLE_OpportunityAccount_trigger__c', 'OPP_OpportunityContactRoles_TDTM');
     	//No code refs in Cumulus - ref in OpportunityContactRoles trigger in Contacts_and_Organizations package
-    	npspToCumulusMap.put('npe01__DISABLE_OpportunityContactRoles_trigger__c', 'HH_OppContactRoles_TDTM');
+    	npspToCumulusMap.put('npe01__DISABLE_OpportunityContactRoles_trigger__c', 'OPP_OpportunityContactRoles_TDTM');
     	//Flag removed from PMT_Payment_TDTM
     	npspToCumulusMap.put('npe01__DISABLE_OpportunityPayments_trigger__c', 'PMT_Payment_TDTM');
     	
     	//Flag removed from RLLP_OppRollup_TDTM
-    	npspToCumulusMap.put('npo02__DISABLE_Household_Opportunity_trigger__c', 'RLLP_OppRollup_TDTM');
-    	//No code refs in Cumulus - ref in HouseholdAfter trigger in Households package - @TODO: still needed?
-    	npspToCumulusMap.put('npo02__DISABLE_HouseholdAfter_trigger__c', '');
-    	//No code refs in Cumulus - ref in HouseholdBefore trigger in Households package - @TODO: is this the right one?
-    	npspToCumulusMap.put('npo02__DISABLE_HouseholdBefore_trigger__c', 'HH_HHObject_TDTM');	
+    	npspToCumulusMap.put('npo02__DISABLE_Household_Opportunity_trigger__c', 'HH_OppContactRoles_TDTM');
+    	//No code refs in Cumulus - ref in HouseholdAfter trigger in Households package
+    	npspToCumulusMap.put('npo02__DISABLE_HouseholdAfter_trigger__c', 'HH_HHObject_TDTM');
+    	//No code refs in Cumulus - ref in HouseholdBefore trigger in Households package - We are going to ignore this flag 
+    	//because the before logic is tighly coupled to the after logic and it wouldn't make sense to disable on its own
+    	npspToCumulusMap.put('npo02__DISABLE_HouseholdBefore_trigger__c', '');	
     	//No code refs in Cumulus - ref in Households trigger in Households package
     	npspToCumulusMap.put('npo02__DISABLE_Households_trigger__c', 'HH_Households_TDTM'); 
-    	//No code refs in Cumulus or NPSP - @TODO
-    	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', '');
+    	//No code refs in Cumulus or NPSP
+    	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', 'RLLP_OppRollup_TDTM');
     	
     	////Flag removed from line 57 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'OPP_RecurringDonations_TDTM');
