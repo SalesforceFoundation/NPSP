@@ -40,6 +40,20 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, ctrl.setPanelCurrent());
     }
      
+    public static testMethod void testDataBoundMultiSelect() {
+        STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
+        Contact con = new Contact();
+        con.npo02__Naming_Exclusions__c = 'a;b;c';
+        ctrl.sobjBinding = con;
+        ctrl.strField = 'npo02__Naming_Exclusions__c';
+        system.assertNotEquals(null, ctrl.listStrValues);
+        system.assertEquals(3, ctrl.listStrValues.size());
+        system.assertEquals('a;b;c', ctrl.strValues);
+        list<string> listStr = new list<string>{'x', 'y', 'z'};
+        ctrl.listStrValues = listStr;
+        system.assertEquals('x;y;z', ctrl.strValues);        
+    }
+
     public static testMethod void testPanel() {
         STG_Panel ctrl = new STG_Panel();
         system.assertEquals(null, ctrl.idPanel());
