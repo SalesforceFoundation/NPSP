@@ -603,5 +603,40 @@ public with sharing class STG_SettingsManager_TEST {
         
     }
     
+    public static testMethod void testPanelTDTM() {
+        STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
+        system.assertEquals('idPanelTDTM', panel.idPanel());
+        system.assertEquals(false, ApexPages.hasMessages());               
+        system.assertEquals(null, panel.newTh());        
+        system.assertNotEquals(null, panel.thNew);
+        system.assertEquals(true, panel.isEditMode);
+        system.assertEquals(null, panel.cancelTh());
+        system.assertEquals(false, panel.isEditMode);
+        system.assertEquals(null, panel.newTh());        
+        system.assertNotEquals(null, panel.thNew);
+        system.assertEquals(true, panel.isEditMode);
+        panel.thNew.Object__c = null;        
+        panel.thNew.Class__c = null;        
+        panel.thNew.Trigger_Action__c = null;        
+        panel.thNew.Load_Order__c = null;        
+        system.assertEquals(null, panel.createTh());
+        system.assertEquals(true, panel.isEditMode);
+        panel.thNew.Object__c = 'foo';        
+        panel.thNew.Class__c = 'bar';        
+        panel.thNew.Trigger_Action__c = 'AfterInsert';        
+        panel.thNew.Load_Order__c = 1;
+        panel.thNew.Active__c = false;        
+        system.assertEquals(null, panel.createTh());
+        system.assertEquals(false, panel.isEditMode);
+        system.assertNotEquals(null, panel.listTH);
+        system.assertEquals(1, panel.listTH.size());
+        panel.thIdDelete = 'not a valid id';
+        system.assertEquals(null, panel.deleteTh());
+        panel.thIdDelete = panel.listTH[0].Id;
+        system.assertEquals(null, panel.deleteTh());
+        system.assertNotEquals(null, panel.listTH);
+        system.assertEquals(0, panel.listTH.size());
+        system.assertNotEquals(null, panel.listSOTriggerAction); 
+    }
 
 }
