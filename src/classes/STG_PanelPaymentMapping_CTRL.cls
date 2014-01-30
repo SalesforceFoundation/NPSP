@@ -43,9 +43,6 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public list<SelectOption> sourcefields = new list<SelectOption>();
     public list<SelectOption> targetfields = new list<SelectOption>();
            
-    //the test string of the rollup
-    public string operationstring;
-        
     //called on load of the page
     public PageReference checkSettings(){
         //if there are invalid rollups defined, display an error 
@@ -64,12 +61,6 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         pfmNew = null;
         isEditMode = false;
         return null;
-    }
-    
-    //retrieve syntax for fields
-    public string getOperationString(){
-        operationstring = 'Map the ' + pfmNew.npe01__Opportunity_Field__c + ' field on Opportunity to the ' + pfmNew.npe01__Payment_Field__c + ' field on Payment?';
-        return operationstring;
     }
     
     //retrieve possible target fields for the selected object

@@ -51,15 +51,19 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         new SelectOption('npo02__Household__c', 'npo02__Household__c')    
     }; 
     
-    public list<UDR> udrList;
-    public list<UDR> getudrList(){
-        list<npo02__User_Rollup_Field_Settings__c> thisList = npo02__User_Rollup_Field_Settings__c.getAll().values(); 
-        udrlist = new list<UDR>();
-        for (npo02__User_Rollup_Field_Settings__c udr : thisList){
-            udrList.add(new UDR(udr, this));
-        }
-        udrlistsize = udrList.size();
-        return udrList;
+    public list<UDR> udrList {
+    	get {
+    		if (udrList == null) {
+		        list<npo02__User_Rollup_Field_Settings__c> thisList = npo02__User_Rollup_Field_Settings__c.getAll().values(); 
+		        udrList = new list<UDR>();
+		        for (npo02__User_Rollup_Field_Settings__c udr : thisList) {
+		            udrList.add(new UDR(udr, this));
+		        }
+		        udrlistsize = udrList.size();
+    		}
+            return udrList;
+    	}
+    	private set;
     }
     
     public integer udrlistsize{get;set;}
@@ -432,7 +436,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
             try{
                 upsert myUDR;                        
-                mydad.udrList.add(this);                
+                mydad.udrList = null;                
                 mydad.activeUDR = null;
                 mydad.isEditMode = false;
             }
@@ -449,6 +453,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         public void deleteMe(){         
             if (myUDR.id != null)
               delete myUDR;
+            mydad.udrList = null;                
             mydad.activeUDR = null;
             mydad.isEditMode = false;
         }       
