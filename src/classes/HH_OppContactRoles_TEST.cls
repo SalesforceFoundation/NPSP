@@ -183,9 +183,12 @@ private class HH_OppContactRoles_TEST {
     }
     static testMethod void opportunityWithNoHousehold() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
                 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02__Household_Contact_Roles_On__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR, 
+                npo02__Household_Contact_Roles_On__c = true));
         
         //create contact
 
@@ -198,6 +201,12 @@ private class HH_OppContactRoles_TEST {
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
+        
+        //Disabling trigger
+        Trigger_Handler__c triggerHandler = [select Active__c from Trigger_Handler__c where Class__c = 'OPP_OpportunityContactRoles_TDTM'];
+		triggerHandler.Active__c = false;
+		update triggerHandler;
+        
         Contact[] createdContacts = [select AccountId,npo02__Household__c from Contact where id=:con.id];
         Id accountId = createdContacts[0].AccountId;
         Id householdId = createdContacts[0].npo02__household__c;

@@ -98,8 +98,10 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppCRTriggerTurnedOff() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = false, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
-          
+        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
+                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+
         String title = 'CEO';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -111,6 +113,10 @@ private class OPP_OpportunityContactRoles_TEST {
             npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
         insert con;
+        
+        Trigger_Handler__c triggerHandler = [select Active__c from Trigger_Handler__c where Class__c = 'OPP_OpportunityContactRoles_TDTM'];
+        triggerHandler.Active__c = false;
+        update triggerHandler;
         
         Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
 
