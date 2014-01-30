@@ -714,7 +714,8 @@ private class REL_Relationships_TEST {
         }
     }
 
-    /*** TEST METHODS from STTG_Relationships_CTRL ***/
+/*********************************************************
+    // TEST METHODS from STTG_Relationships_CTRL 
     static testMethod void STTG_Relationships_CTRL_TEST(){
         if (strTestOnly != '*' && strTestOnly != 'STTG_Relationships_CTRL_TEST') return;
         
@@ -826,4 +827,6 @@ private class REL_Relationships_TEST {
         system.assertNotEquals(null, rsCTRL.relSettings);
         system.assertNotEquals(null, rsCtrl.relSettings.Id);    
     }
+**************************************************/
+    
 }
