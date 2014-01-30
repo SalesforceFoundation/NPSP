@@ -31,9 +31,9 @@
 * @author Salesforce.com Foundation
 * @description Implements relationships behavior 
 */
-public with sharing class CON_Relationships_TDTM extends TDTM_Runnable {
-
-    public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
+public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
+	
+	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //Casting them to contacts, since this class should be run only for contacts
@@ -159,7 +159,6 @@ public with sharing class CON_Relationships_TDTM extends TDTM_Runnable {
         
         if (!relationshipsForInsert.isEmpty()){
             dmlWrapper.objectsToInsert.addAll(relationshipsForInsert);
-            //inspectSaveResults(sr, relationshipsForInsert);
         }
         
         return dmlWrapper;

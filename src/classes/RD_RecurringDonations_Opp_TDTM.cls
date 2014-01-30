@@ -32,8 +32,8 @@
 * @date 2013
 * @description The main class for controlling the behavior of Recurring Donations, both open ended and standard 
 */
-public with sharing class OPP_RecurringDonations_TDTM extends TDTM_Runnable {
-
+public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
+    
     // trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
     // needs to see if the Opp is changing to closed, and if it has open RD's, update them.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 

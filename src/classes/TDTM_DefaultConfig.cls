@@ -44,12 +44,12 @@ public with sharing class TDTM_DefaultConfig {
                     
         //Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'CM_Relationships_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
+              Class__c = 'REL_Relationships_Cm_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
         
         //Relationships on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'CON_Relationships_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Class__c = 'REL_Relationships_Con_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
         
         //Relationships on npe4__Relationship__c
@@ -79,7 +79,7 @@ public with sharing class TDTM_DefaultConfig {
                 
         // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'OPP_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Class__c = 'RD_RecurringDonations_Opp_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterUpdate'));
 
         // RecurringDonations on RecurringDonations
@@ -134,14 +134,14 @@ public with sharing class TDTM_DefaultConfig {
     	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', 'RLLP_OppRollup_TDTM');
     	
     	////Flag removed from line 57 of RD_RecurringDonations_TDTM
-    	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'OPP_RecurringDonations_TDTM');
+    	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'RD_RecurringDonations_Opp_TDTM');
     	//Flag removed from line 107 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD_RecurringDonations_TDTM');
     	
     	//No code refs in Cumulus - ref in RelationshipCampaignMembers trigger in Relationshipsv
-    	npspToCumulusMap.put('npe4__DISABLE_RelationshipCM_trigger__c', 'CM_Relationships_TDTM');
+    	npspToCumulusMap.put('npe4__DISABLE_RelationshipCM_trigger__c', 'REL_Relationships_Cm_TDTM');
     	//No code refs in Cumulus - ref in RelationshipContacts trigger in Relationships package
-    	npspToCumulusMap.put('npe4__DISABLE_RelationshipContacts_trigger__c', 'CON_Relationships_TDTM'); 
+    	npspToCumulusMap.put('npe4__DISABLE_RelationshipContacts_trigger__c', 'REL_Relationships_Con_TDTM'); 
     	//No code refs in Cumulus - ref in Relationships trigger in Relatioships package
     	npspToCumulusMap.put('npe4__DISABLE_Relationships_trigger__c', 'REL_Relationships_TDTM'); 
     	

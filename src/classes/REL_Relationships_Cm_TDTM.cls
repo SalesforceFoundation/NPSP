@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @description Implements relationships behavior 
 */
-public with sharing class CM_Relationships_TDTM extends TDTM_Runnable {
+public with sharing class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
@@ -94,7 +94,7 @@ public with sharing class CM_Relationships_TDTM extends TDTM_Runnable {
         }   
 
         if (!ContactIds.isEmpty()) {
-            DmlWrapper w = CON_Relationships_TDTM.createNewRelationships(ContactIds, ReciprocalIds, Types);
+            DmlWrapper w = REL_Relationships_Con_TDTM.createNewRelationships(ContactIds, ReciprocalIds, Types);
             dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
         }
         return dmlWrapper;
