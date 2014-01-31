@@ -1,0 +1,371 @@
+<apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0" >
+
+<!-- We need jQuery - use CDNs to save user from re-downloading it if possible -->
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" />
+
+<apex:includeScript value="{!$Resource.CollapsibleListJS}" />
+
+<style> 
+       
+	.sidebar {
+	    width: 200px; 
+	    position: relative; 
+	    top: 0px; 
+	    left: 0px; 
+	}
+	        
+	.sidebar ul {
+	    margin: 0; 
+	    padding: 0; 
+	    list-style: none;
+	    background: lightgray; 
+	}
+	    
+	div.navbar ul li {
+	    font-size: 100%; 
+	    margin-bottom: 0px;
+	    margin-left: 0px;
+	    padding: 2px; 
+	    background: #f2f5f6;
+	    font-weight: normal; 
+		border-top: 1px solid #fff;
+		border-bottom: 1px solid #dce4e7;	    
+		border-left: 1px solid #dce4e7;       
+		border-right: 1px solid #dce4e7;       
+	}
+	    
+	div.navbar ul li:hover {
+	    background: Gray; 
+	}
+	
+    div.navbar ul li.subitem:hover {
+        background: Gray; 
+    }
+    div.navbar ul li.subitem {
+        background: #eaeef0; 
+		border-bottom: 0;
+		border-top: 0;        
+    }
+    
+	div.navbar {
+	   border-top: 1px solid #dce4e7;
+	}
+	
+	div.navbar ul li a {
+	    display: block; 
+	    text-decoration: none; 
+	    padding: 5px 5px 5px 10px;
+	    font-size: 100%; 
+	    color: black;
+	}
+	    
+	div.navbar ul li a:hover {
+	    color: #fff; 
+	    background: none; 
+	}
+    
+    div.navbar ul li.nav-selected {
+        background: LightGray;
+    }
+
+    .nav-section-title {
+        display: block; 
+        text-decoration: none; 
+        padding: 5px 5px 5px 10px;
+        font-size: 100%; 
+        color: black;
+        font-family: Tahoma, sans-serif; 
+    }
+        
+    li.collapsed .caret {
+		float: right;
+		width: 0;
+		height: 0;
+		display: inline-block;
+		vertical-align: top;
+		content: "";
+		margin-top: 8px;
+		margin-left: 2px;
+        border-top: 4px solid #000;
+        border-bottom: 0px;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+	}
+
+    li .caret {
+        float: right;
+        width: 0;
+        height: 0;
+        display: inline-block;
+        vertical-align: top;
+        content: "";
+        margin-top: 8px;
+        margin-left: 2px;
+		border-top: none;
+		border-bottom: 4px solid #000;
+		border-right: 4px solid transparent;
+		border-left: 4px solid transparent;
+    }
+         
+	.content {
+	    padding:10px;
+	}
+
+    .propLabel { 
+        font-weight: bold;
+        width: 250px;
+        text-align: right;
+    }
+    
+    .propEdit {
+        width: 200px;
+        padding-left: 15px;
+    }
+    
+    .propEdit select:disabled {
+        color: black;   // on Windows, disabled was too washed out.  On Mac, this color gets ignored!
+    }
+    
+    table .propHelpText {
+        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
+    }
+    
+    .sub-nav-item {
+        margin-left: 20px;
+    }
+    
+    .panelButtons {
+		padding-left: 400px;
+		border-top: #6aafac;
+		border-width: 2px 0 0 0;
+		border-style: solid;        
+        margin-top: 10px;    
+    }
+    
+    .sectionHelp {
+        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
+        padding: 20px;    
+    }
+    
+    .clsLoading {
+        z-index: 99;
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        background: lightyellow;
+        width: 400px;
+        height: 40px;       
+    }   
+    
+    .sectionBar {
+        display: block;
+        background: #E5F2F6;
+        text-indent: 10px;
+        padding: 5px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    
+    .stgForm {
+        width: 100%;
+    }
+    
+</style>
+
+<script>
+    var j$ = jQuery.noConflict();
+    var idPanelCurrent = '{!idPanelCurrent}';
+    if (idPanelCurrent == '') idPanelCurrent = 'idPanelHome';
+    
+    // page init function
+    j$(function () {        
+        ShowPanel(idPanelCurrent);
+        j$('#mynavbar').collapsibleList('.header', {search: false, animate: false});
+    });
+        
+    function ShowPanel(idPanel) {            
+        var node;
+        node = document.getElementById(idPanelCurrent);
+        if (node != null) node.style.display =  'none';
+        node = document.getElementById(idPanelCurrent + 'Nav');
+        if (node != null) node.classList.remove('nav-selected');
+
+        node = document.getElementById(idPanel);
+        if (node != null) node.style.display =  'inline';
+        idPanelCurrent = idPanel;
+        node = document.getElementById(idPanelCurrent + 'Nav');
+        if (node != null) node.classList.add('nav-selected');
+        
+        // save current panel to server?
+        // or assume panels maintain this?
+        // I added this hoping it would solve going back to
+        // the correct tab when a validation error was hit on Save,
+        // but for some reason the page reloads with {idPanelCurrent} empty,
+        // even though it has been set by this actionFunction before editing the panel.
+        if (idPanelCurrent != '{!idPanelCurrent}') 
+            setPanelCurrent(idPanelCurrent);
+    }
+</script>
+    <apex:form >
+	    <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
+	        <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
+	    </apex:actionFunction>
+    </apex:form>
+
+    <table>
+        <tr style="vertical-align: top;" >
+            <td>
+            <div class="sidebar" >
+            <div class="navbar" >
+                <nav role="navigation">
+                    <ul id="mynavbar" >
+                    <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">Non Profit Starter Pack Settings</a></li>
+
+                    <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">Contacts<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">Account Model</a></li>
+                    <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">Contact Roles</a></li>
+                    <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
+                    </ul>
+                    
+                    <li id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item">Households</a></li>
+
+                    <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">Connections<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
+                    <li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">Relationships</a></li>
+                    <li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Relationship Reciprocal Settings</a></li>
+                    <li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Relationships Autocreation</a></li>
+                    </ul>
+                    
+                    <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">Donations &amp; Money<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">Membership</a></li>
+                    <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">Payments</a></li>
+                    <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">Payment Mappings</a></li>
+                    <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Donor Statistics</a></li>
+                    <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Defined Rollups</a></li>
+                    <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">Recurring Donations</a></li>
+                    <li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Recurring Donation Installment Periods</a></li>
+                    <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
+                    </ul>
+
+                    <li id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item">Batch Data Entry</a></li>
+                    
+                    <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
+                    <li class="subitem" id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
+                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
+                    <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
+                    </ul>
+                    </ul>
+                </nav>
+           </div>
+           </div>
+            </td>
+            <td>
+                <div class="content" >
+                
+			            <apex:actionStatus id="statusLoad" 
+			                 onstart="document.getElementById('divLoading').style.display = 'block';" 
+			                 onstop="document.getElementById('divLoading').style.display = 'none';" />
+			            <div class="loading clsLoading" id="divLoading" style="display:none" >
+			              <p style="vertical-align: middle;" >
+			                <img src="/img/loading.gif" alt="Processing..." width="16" height="16" title="Processing..." style="vertical-align: middle;"/>
+			                <span class="loadingText" style="vertical-align: middle;" >Processing...</span>
+			              </p>
+			            </div>                                                                  
+                
+                        <div class="panel" id="idPanelHome" style="display:none" >
+                            <apex:include pageName="STG_PanelHome" />                               
+                        </div>
+                        
+	                    <div class="panel" id="idPanelCon" style="display:none" >
+                            <apex:include pageName="STG_PanelContacts" />
+	                    </div>
+
+                        <div class="panel" id="idPanelConRole" style="display:none" >
+                            <apex:include pageName="STG_PanelContactRoles" />
+                        </div>
+
+                        <div class="panel" id="idPanelLeads" style="display:none" >
+                            <apex:include pageName="STG_PanelLeads" />
+                        </div>
+
+                        <div class="panel" id="idPanelHH" style="display:none" >
+                            <apex:include pageName="STG_PanelHouseholds" />
+                        </div>
+            
+                        <div class="panel" id="idPanelAffl" style="display:none" >
+                            <apex:include pageName="STG_PanelAffiliations" />
+                        </div>
+            
+                        <div class="panel" id="idPanelMembership" style="display:none" >
+                            <apex:include pageName="STG_PanelMembership" />
+                        </div>
+    
+                        <div class="panel" id="idPanelOpp" style="display:none" >
+                            <apex:include pageName="STG_PanelOpps" />
+                        </div>
+    
+                        <div class="panel" id="idPanelOppRollup" style="display:none" >
+                            <apex:include pageName="STG_PanelOppRollups" />
+                        </div>
+    
+                        <div class="panel" id="idPanelOppBatch" style="display:none" >
+                            <apex:include pageName="STG_PanelOppBatch" />
+                        </div>
+    
+                        <div class="panel" id="idPanelRD" style="display:none" >
+                            <apex:include pageName="STG_PanelRD" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRDBatch" style="display:none" >
+                            <apex:include pageName="STG_PanelRDBatch" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRDInstPd" style="display:none" >
+                            <apex:include pageName="STG_PanelRDCustomInstallment" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRDFieldMap" style="display:none" >
+                            <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRel" style="display:none" >
+                            <apex:include pageName="STG_PanelRel" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRelReciprocal" style="display:none" >
+                            <apex:include pageName="STG_PanelRelReciprocal" />
+                        </div>
+            
+                        <div class="panel" id="idPanelRelAuto" style="display:none" >
+                            <apex:include pageName="STG_PanelRelAuto" />
+                        </div>
+            
+                        <div class="panel" id="idPanelBDE" style="display:none" >
+                            <apex:include pageName="STG_PanelBDE" />
+                        </div>
+
+                        <div class="panel" id="idPanelPaymentMapping" style="display:none" >
+                            <apex:include pageName="STG_PanelPaymentMapping" />
+                        </div>
+
+                        <div class="panel" id="idPanelUserRollup" style="display:none" >
+                            <apex:include pageName="STG_PanelUserRollup" />
+                        </div>
+
+                        <div class="panel" id="idPanelTDTM" style="display:none" >
+                            <apex:include pageName="STG_PanelTDTM" />
+                        </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+   
+
+
+</apex:page>

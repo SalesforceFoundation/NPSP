@@ -1610,14 +1610,17 @@ public class RD_RecurringDonations_TEST {
         Test.setCurrentPageReference(new PageReference('Page.RecurringDonationsSettings'));
         
         //pass the controller into the extension
+        /****
         STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL();
         controller.getSettingsFirstTime();
         test.startTest();
         controller.runBatch();
-        test.stopTest();  
+        test.stopTest();
+        *********/  
     }  
-    
-    /** Test Methods from STTG_RecurringDonations_CTRL  **/ 
+
+/******************************************************************    
+    // Test Methods from STTG_RecurringDonations_CTRL   
     public static testMethod void TEST_RecurringDonationsSettings() {
         if (strTestOnly != '*' && strTestOnly != 'TEST_RecurringDonationsSettings') return;
 
@@ -1704,6 +1707,7 @@ public class RD_RecurringDonations_TEST {
         controller.cis.add(new npe03__Custom_Installment_Settings__c(Name = 'CisSetTest', npe03__Value__c = 1, npe03__Increment__c = 'Weeks'));
         controller.saveCISettings();
     }
+*************************************************************************/
    
    // from RD_RecurringDonations_SCHED  
    static testmethod void test(){ 

@@ -1,0 +1,68 @@
+<apex:page controller="STG_SettingsManager_CTRL" >
+
+<style>
+	.pageBlock {
+		overflow: hidden;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		margin-bottom: 20px;
+		background: #fff;
+		top: 1px;
+		position: relative;
+		width: 600px;
+	}
+
+	.top-line {
+		-moz-border-radius-topleft: 5px;
+		-moz-border-radius-topright: 5px;
+		-moz-border-radius-bottomright: 0;
+		-moz-border-radius-bottomleft: 0;
+		-webkit-border-radius: 5px 5px 0 0;
+		border-radius: 5px 5px 0 0;
+		border: 1px solid #ccc;
+		background-color: #E5F2F6;
+    }
+
+    .panelHeader {
+		position: relative;
+		font-weight: bold;
+		color: #222;
+        font-size: 2em;
+        margin: 10px;
+    }
+    
+    .panelContent {
+		-moz-border-radius-bottomleft: 5px;
+		-webkit-border-bottom-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		-moz-border-radius-bottomright: 5px;
+		-webkit-border-bottom-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		border-bottom: 1px solid #ccc;
+		border-right: 1px solid #ccc;
+		border-left: 1px solid #ccc;
+		padding: 20px;
+		font-size: 1.4em;
+    }    
+</style>
+
+
+        <apex:sectionHeader title="NPSP Settings" subtitle="Non Profit Starter Pack Settings" />        
+        <apex:pageMessages id="pageMessages"/>
+        
+        <div class="pageBlock" >
+            <div class="top-line">
+                <div class="panelHeader">
+                    <h2>Welcome</h2>
+                </div> 
+            </div>
+            <div class="panelContent">
+                <h1>NPSP Settings are now all in one place!</h1>
+                <p>We certainly hope you like it.</p>
+                <h2><i>This Space for Rent!</i></h2>
+            </div>
+        </div>
+
+
+</apex:page>

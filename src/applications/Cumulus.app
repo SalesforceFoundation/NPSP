@@ -2,7 +2,6 @@
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
     <defaultLandingTab>standard-home</defaultLandingTab>
     <label>Cumulus</label>
-    <tab>standard-Chatter</tab>
     <tab>standard-Account</tab>
     <tab>standard-Contact</tab>
     <tab>standard-Lead</tab>
@@ -10,14 +9,5 @@
     <tab>standard-Campaign</tab>
     <tab>standard-report</tab>
     <tab>npe03__Recurring_Donation__c</tab>
-    <tab>About_Cumulus</tab>
     <tab>Contact_Merge</tab>
-    <tab>Affiliations_Settings</tab>
-    <tab>Contacts_Settings</tab>
-    <tab>Recurring_Donations_Settings</tab>
-    <tab>Relationships_Settings</tab>
-    <tab>Payment_Mapping</tab>
-    <tab>Household_Settings</tab>
-    <tab>User_Rollup_Settings</tab>
-    <tab>Opportunity_Rollup</tab>
 </CustomApplication>
