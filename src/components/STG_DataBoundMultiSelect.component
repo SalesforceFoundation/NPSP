@@ -1,0 +1,14 @@
+<apex:component controller="STG_DataBoundMultiSelect_CTRL" selfClosing="true">
+
+    <apex:attribute name="settingObject" type="SObject" assignTo="{!sobjBinding}" description="the setting object we are binding to." />
+    <apex:attribute name="fieldname" type="string" assignTo="{!strField}" description="the field to bind to" />
+    <apex:attribute name="listSO" type="SelectOption[]" assignTo="{!listSelectOption}" description="The list of SelectOptions to put in the picklist"/>
+    <apex:attribute name="inEditMode" type="boolean" assignTo="{!isEditMode}" description="whether to display the edit version or readonly version of the control."/>
+    <apex:attribute name="inDisabledMode" type="boolean" assignTo="{!isDisabled}" description="whether the control is enabled or disabled."/>
+
+                <apex:outputText value="{!strValues}" rendered="{!!isEditMode}" />
+                <apex:selectList value="{!listStrValues}" multiselect="true" size="1" rendered="{!isEditMode}" disabled="{!isDisabled}" >
+                    <apex:selectOptions value="{!listSelectOption}"/>
+                </apex:selectList>
+
+</apex:component>
