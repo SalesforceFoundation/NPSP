@@ -10,5 +10,4 @@
     <tab>standard-report</tab>
     <tab>npe03__Recurring_Donation__c</tab>
     <tab>Contact_Merge</tab>
-    <tab>Cumulus_Settings</tab>
 </CustomApplication>

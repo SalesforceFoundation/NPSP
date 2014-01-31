@@ -126,7 +126,7 @@ public with sharing class TDTM_DefaultConfig {
     	//No code refs in Cumulus - ref in HouseholdAfter trigger in Households package
     	npspToCumulusMap.put('npo02__DISABLE_HouseholdAfter_trigger__c', 'HH_HHObject_TDTM');
     	//No code refs in Cumulus - ref in HouseholdBefore trigger in Households package - We are going to ignore this flag 
-    	//because the before logic is tighly coupled to the after logic and it wouldn't make sense to disable on its own
+    	//because the before logic is tightly coupled to the after logic and it wouldn't make sense to disable on its own
     	npspToCumulusMap.put('npo02__DISABLE_HouseholdBefore_trigger__c', '');	
     	//No code refs in Cumulus - ref in Households trigger in Households package
     	npspToCumulusMap.put('npo02__DISABLE_Households_trigger__c', 'HH_Households_TDTM'); 
