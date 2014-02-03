@@ -255,6 +255,7 @@
                     <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
                     <ul>
                     <li class="subitem" id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">Error Notifications</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
                     <li class="subitem" id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
                     <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
@@ -360,6 +361,10 @@
 
                         <div class="panel" id="idPanelTDTM" style="display:none" >
                             <apex:include pageName="STG_PanelTDTM" />
+                        </div>
+                        
+                        <div class="panel" id="idPanelErrorNotif" style="display:none" >
+                            <apex:include pageName="STG_PanelERR" />
                         </div>
                 </div>
             </td>

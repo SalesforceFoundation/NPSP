@@ -70,8 +70,8 @@ public with sharing class ERR_Handler {
     	
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
-    	if(ERR_Notifier.getOrgSettings().sendEmailNotifications)
-    	   ERR_Notifier.sendEmailNotifications(context, ERR_Notifier.getOrgSettings().mailList);
+    	if(ERR_Notifier.getOrgSettings().Email_Notifications__c)
+    	   ERR_Notifier.sendEmailNotifications(context, ERR_Notifier.getOrgSettings().Email_List__c);
     	
     	return ErrorsExist;
     }
@@ -131,15 +131,15 @@ public with sharing class ERR_Handler {
                }
            }
            
-           if(ERR_Notifier.getOrgSettings().storeErrors) {
+           if(ERR_Notifier.getOrgSettings().Store_Errors__c) {
                Error__c error = createError(e);
                Database.SaveResult result = Database.insert(error, false);
                System.debug(LoggingLevel.WARN, '****Error record: ' + JSON.serializePretty(error));
            }
     	}
     	
-    	if(ERR_Notifier.getOrgSettings().sendEmailNotifications)
-           ERR_Notifier.sendEmailNotifications(context, ERR_Notifier.getOrgSettings().mailList);
+    	if(ERR_Notifier.getOrgSettings().Email_Notifications__c)
+           ERR_Notifier.sendEmailNotifications(context, ERR_Notifier.getOrgSettings().Email_List__c);
     }
     
     private static void addErrorMessage(SObject record, String defaultMessage) {
@@ -156,7 +156,7 @@ public with sharing class ERR_Handler {
     
     /*** NOTE: we want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
-        if(ERR_Notifier.getOrgSettings().storeErrors) {
+        if(ERR_Notifier.getOrgSettings().Store_Errors__c) {
 		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
 		  Database.insert(errors, false);
         }

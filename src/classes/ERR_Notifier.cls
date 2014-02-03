@@ -1,5 +1,13 @@
 public with sharing class ERR_Notifier {
 
+    static NotificationOptions notificationOptions = new NotificationOptions();
+    
+    public class NotificationOptions {
+    	public final String user = '005';
+    	public final String sysAdmins = 'All Sys Admins';
+    	public final String userGroup = '00G';
+    } 
+    
     public static void sendEmailNotifications(ERR_Handler.Context context, String mailList) {
         if(context != null && context == ERR_Handler.Context.RD) {
             if (!system.isBatch() && !RD_ProcessControl.batchButton && !system.isFuture()) {
@@ -44,14 +52,14 @@ public with sharing class ERR_Notifier {
         list<string> sendList = new list<string>();
         
         //user, sysadmins or PG
-        if (mailList.startsWith('005')) {
+        if (mailList.startsWith(NotificationOptions.user)) {
             sendList.add([select email from User where id = :mailList].email);
-        } else if(mailList == 'All Sys Admins'){
+        } else if(mailList == NotificationOptions.sysAdmins){
             list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator'];
             for (User u : sysadminlist) {
                 sendList.add(u.email);              
             }           
-        } else if(mailList.startsWith('00G')) {
+        } else if(mailList.startsWith(NotificationOptions.userGroup)) {
             list<GroupMember> groupUsers = [select g.UserOrGroupId from GroupMember g where GroupId = :mailList];
             set<id> userIDs = new set<id>();
             for (GroupMember g : groupUsers)
@@ -61,7 +69,7 @@ public with sharing class ERR_Notifier {
                 sendList.add(u.email);
             }
         }        
-        mail.setToAddresses(sendList);                   
+        mail.setToAddresses(sendList);         
 
         return mail;        
     }
@@ -71,18 +79,18 @@ public with sharing class ERR_Notifier {
     	
     }
     
-    public static ErrorSettings getOrgSettings() {
-        ErrorSettings errorSettings = new ErrorSettings();
+    public static Error_Settings__c getOrgSettings() {
         Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
-        errorSettings.storeErrors = orgErrorSettings.Store_Errors__c;
-        errorSettings.sendEmailNotifications = orgErrorSettings.Email_Notifications__c;
-        errorSettings.mailList = orgErrorSettings.Email_List__c;
-        return errorSettings;
+        
+        if(orgErrorSettings.Id == null) {
+            orgErrorSettings.Chatter_Notifications__c = true; 
+	        orgErrorSettings.Email_Notifications__c = true;
+	        orgErrorSettings.Email_List__c = NotificationOptions.sysAdmins;
+	        orgErrorSettings.Store_Errors__c = true;	
+	            
+	        insert orgErrorSettings;
+        }
+        return orgErrorSettings;
     }
-    
-    public class ErrorSettings {
-        public Boolean storeErrors;
-        public Boolean sendEmailNotifications;
-        public String mailList;
-    }
+
 }

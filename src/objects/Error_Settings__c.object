@@ -5,6 +5,15 @@
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Chatter_Notifications__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Flag that determines whether to post chatter error notifications.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this field if you&apos;d like the system to post chatter notifications for certain type of errors.</inlineHelpText>
+        <label>Chatter Notifications</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Email_List__c</fullName>
         <description>Profile to send email notifications to.</description>
         <externalId>false</externalId>
@@ -16,7 +25,7 @@
     <fields>
         <fullName>Email_Notifications__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Flag that determines whether to send email notifications.</description>
+        <description>Flag that determines whether to send email error notifications.</description>
         <externalId>false</externalId>
         <inlineHelpText>Check this field if you&apos;d like the system to send email notifications for certain type of errors.</inlineHelpText>
         <label>Email Notifications</label>
