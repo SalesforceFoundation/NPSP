@@ -1,6 +1,6 @@
 public with sharing class ERR_Notifier {
 
-    static NotificationOptions notificationOptions = new NotificationOptions();
+    public static NotificationOptions notificationOptions = new NotificationOptions();
     
     public class NotificationOptions {
     	public final String user = '005';

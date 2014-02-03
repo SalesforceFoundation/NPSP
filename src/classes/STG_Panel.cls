@@ -221,6 +221,19 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
+    
+    static public list<SelectOption> listSOERREmailOptions {
+        get {
+            if (listSOERREmailOptions == null) {
+                listSOERREmailOptions = new list<SelectOption>();
+                listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.user, 'User'));
+                listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.sysAdmins, ERR_Notifier.notificationOptions.sysAdmins));
+                listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.userGroup, 'User Group'));
+            }
+            return listSOERREmailOptions;
+        }
+        private set;
+    }
 
     static public string strHHAccountRecordTypeLabel {
     	get {

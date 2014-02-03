@@ -9,7 +9,7 @@
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to post chatter error notifications.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this field if you&apos;d like the system to post chatter notifications for certain type of errors.</inlineHelpText>
+        <inlineHelpText>Check this if you&apos;d like the system to post chatter notifications for certain type of errors.</inlineHelpText>
         <label>Chatter Notifications</label>
         <type>Checkbox</type>
     </fields>
@@ -27,7 +27,7 @@
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to send email error notifications.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this field if you&apos;d like the system to send email notifications for certain type of errors.</inlineHelpText>
+        <inlineHelpText>Check this if you&apos;d like the system to send email notifications for certain type of errors.</inlineHelpText>
         <label>Email Notifications</label>
         <type>Checkbox</type>
     </fields>
@@ -36,7 +36,7 @@
         <defaultValue>true</defaultValue>
         <description>Flag that indicates whether errors are going to be stored in the database.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this field if you&apos;d like errors to be stored in the database.</inlineHelpText>
+        <inlineHelpText>Check this if you&apos;d like errors to be stored in the database.</inlineHelpText>
         <label>Store Errors</label>
         <type>Checkbox</type>
     </fields>

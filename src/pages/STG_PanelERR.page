@@ -11,7 +11,21 @@
                 <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors__c.Label}" />
                 <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors__c.InlineHelpText}" />
-                                
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Chatter_Notifications__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Chatter_Notifications__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Chatter_Notifications__c.InlineHelpText}" />
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Email_Notifications__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Email_Notifications__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_Notifications__c.InlineHelpText}" />
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.Label}"/>
+                <apex:selectList value="{!stgService.stgErr.Email_List__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                    <apex:selectOptions value="{!listSOERREmailOptions}"/>
+                </apex:selectList>
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.InlineHelpText}" />
+                
             </apex:panelGrid>
  
             <apex:pageBlockButtons location="bottom" >
