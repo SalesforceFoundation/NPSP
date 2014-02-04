@@ -226,6 +226,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOERREmailOptions == null) {
                 listSOERREmailOptions = new list<SelectOption>();
+                listSOERREmailOptions.add(new SelectOption('', ''));
                 listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.user, 'User'));
                 listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.sysAdmins, ERR_Notifier.notificationOptions.sysAdmins));
                 listSOERREmailOptions.add(new SelectOption(ERR_Notifier.notificationOptions.userGroup, 'User Group'));

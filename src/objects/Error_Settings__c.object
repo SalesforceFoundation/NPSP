@@ -15,9 +15,9 @@
     </fields>
     <fields>
         <fullName>Email_List__c</fullName>
-        <description>Profile to send email notifications to.</description>
+        <description>Type of user to send email notifications to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter here profile to send email notifications to.</inlineHelpText>
+        <inlineHelpText>Select the type of user to send email notifications to.</inlineHelpText>
         <label>Email List</label>
         <required>false</required>
         <type>TextArea</type>

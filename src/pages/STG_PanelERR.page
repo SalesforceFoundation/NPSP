@@ -21,10 +21,14 @@
                 <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_Notifications__c.InlineHelpText}" />
                 
                 <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.Label}"/>
-                <apex:selectList value="{!stgService.stgErr.Email_List__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                <apex:selectList value="{!emailOption}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
                     <apex:selectOptions value="{!listSOERREmailOptions}"/>
                 </apex:selectList>
                 <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.InlineHelpText}" />
+                
+                <apex:outputText value="Select User" rendered="{!userSelected}"/>
+                <apex:outputText value="Select Group" rendered="{!groupSelected}"/>
+                <apex:inputText value="{!stgService.stgErr.Email_List__c}" rendered="{!userOrGroupSelected}"/>
                 
             </apex:panelGrid>
  
