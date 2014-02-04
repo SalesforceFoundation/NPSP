@@ -5,34 +5,16 @@
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>Chatter_List__c</fullName>
-        <description>Type of user to send Chatter notifications to.</description>
+        <fullName>Store_Errors__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Flag that indicates whether errors are going to be stored in the database.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Select the type of user to send Chatter notifications to.</inlineHelpText>
-        <label>Chatter List</label>
-        <required>false</required>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>Chatter_Notifications__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Flag that determines whether to post chatter error notifications.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Check this if you&apos;d like the system to post chatter notifications for certain type of errors.</inlineHelpText>
-        <label>Chatter Notifications</label>
+        <inlineHelpText>Check this if you&apos;d like errors to be stored in the database.</inlineHelpText>
+        <label>Store Errors</label>
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Email_List__c</fullName>
-        <description>Type of user to send email notifications to.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Select the type of user to send email notifications to.</inlineHelpText>
-        <label>Email List</label>
-        <required>false</required>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>Email_Notifications__c</fullName>
+        <fullName>Error_Notifications_On__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to send email error notifications.</description>
         <externalId>false</externalId>
@@ -41,13 +23,13 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Store_Errors__c</fullName>
-        <defaultValue>true</defaultValue>
-        <description>Flag that indicates whether errors are going to be stored in the database.</description>
+        <fullName>Error_Notifications_To__c</fullName>
+        <description>Who should receive error notifications.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check this if you&apos;d like errors to be stored in the database.</inlineHelpText>
-        <label>Store Errors</label>
-        <type>Checkbox</type>
+        <inlineHelpText>Select the type of user to send email notifications to.</inlineHelpText>
+        <label>Email List</label>
+        <required>false</required>
+        <type>TextArea</type>
     </fields>
     <label>Error Settings</label>
 </CustomObject>
