@@ -77,15 +77,6 @@
         <visibleLines>5</visibleLines>
     </fields>
     <fields>
-        <fullName>Module_Type__c</fullName>
-        <description>Module that generated the error, if known.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Module that generated the error, if known.</inlineHelpText>
-        <label>Module Type</label>
-        <required>false</required>
-        <type>TextArea</type>
-    </fields>
-    <fields>
         <fullName>Object_Type__c</fullName>
         <description>Type of object on which the error occurred, if known.</description>
         <externalId>false</externalId>
