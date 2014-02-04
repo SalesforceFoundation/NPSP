@@ -5,6 +5,15 @@
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Chatter_List__c</fullName>
+        <description>Type of user to send Chatter notifications to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select the type of user to send Chatter notifications to.</inlineHelpText>
+        <label>Chatter List</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Chatter_Notifications__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to post chatter error notifications.</description>

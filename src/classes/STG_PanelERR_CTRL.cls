@@ -1,32 +1,27 @@
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
-    public enum EmailOptions {USER, SYSADMIN, USERGROUP}
-    
-    public EmailOptions emailOption { public get; public set; }
+    public String emailOption { public get; public set; }
+    public String chatterOption { public get; public set; }
     
     public override string idPanel() { return 'idPanelErrors'; }
     
-    public Boolean userSelected { public get; set; }
-    
-    public Boolean groupSelected { public get; set; }
-    
-    public Boolean userOrGroupSelected {
+    public Boolean emailUserSelected { public get; public set; }
+    public Boolean emailGroupSelected { public get; public set; }
+    public Boolean emailUserOrGroupSelected {
     	public get {
-    		if(userSelected == null) userSelected = false;
-    		if(groupSElected == null) groupSelected = false;
-    		return userSelected || groupSelected; 
+    		if(emailUserSelected == null) emailUserSelected = false;
+    		if(emailGroupSelected == null) emailGroupSelected = false;
+    		return emailUserSelected || emailGroupSelected; 
         }
     }
     
-    public STG_PanelERR_CTRL() {
-        if(ERR_Notifier.getOrgSettings().Email_List__c.startsWith(ERR_Notifier.NotificationOptions.user)) {
-            emailOption = EmailOptions.USER;
-            userSelected = true;
-        } else if(ERR_Notifier.getOrgSettings().Email_List__c.startsWith(ERR_Notifier.NotificationOptions.usergroup)) {
-            emailOption = EmailOptions.USERGROUP;
-            groupSelected = true;
-        } else if(ERR_Notifier.getOrgSettings().Email_List__c == ERR_Notifier.NotificationOptions.sysAdmins) {
-            emailOption = EmailOptions.USERGROUP;
+    public Boolean chatterUserSelected { public get; public set; }
+    public Boolean chatterGroupSelected { public get; public set; }
+    public Boolean chatterUserOrGroupSelected {
+        public get {
+            if(chatterUserSelected == null) chatterUserSelected = false;
+            if(chatterGroupSelected == null) chatterGroupSelected = false;
+            return chatterUserSelected || chatterGroupSelected; 
         }
     }
 }
