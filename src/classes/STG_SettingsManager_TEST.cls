@@ -255,9 +255,6 @@ public with sharing class STG_SettingsManager_TEST {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         system.assertNotEquals(null, panel.listSORDCloseOptions);
-        system.assertNotEquals(null, panel.listSOErrorEmailOptions);
-        STG_Panel.stgService.stgRD.npe03__Error_Email_Notifications__c = 'foo@bar.com';
-        system.assertNotEquals(null, panel.strErrorEmailDisplayName);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
         system.assertEquals(null, panel.saveSettings());
