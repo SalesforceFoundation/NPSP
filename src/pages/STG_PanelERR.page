@@ -8,37 +8,23 @@
             <h3 class="sectionBar" >Error Notification Settings</h3>        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.InlineHelpText}" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Chatter_Notifications__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgErr.Chatter_Notifications__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Chatter_Notifications__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.InlineHelpText}" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Chatter_List__c.Label}"/>
-                <apex:selectList value="{!chatterOption}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
-                    <apex:selectOptions value="{!listSOERRChatterOptions}"/>
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}"/>
+                <apex:outputText value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!notificationOption}" size="1" multiselect="false" rendered="{!isEditMode}" >
+                    <apex:selectOptions value="{!listSOERRNotifOptions}"/>
                 </apex:selectList>
-                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Chatter_List__c.InlineHelpText}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.InlineHelpText}" />
                 
-                <apex:outputText value="Select User" rendered="{!chatterUserSelected}"/>
                 <apex:outputText value="Select Group" rendered="{!chatterGroupSelected}"/>
-                <apex:inputText value="{!stgService.stgErr.Email_List__c}" rendered="{!chatterUserOrGroupSelected}"/>
-                
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Email_Notifications__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgErr.Email_Notifications__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_Notifications__c.InlineHelpText}" />
-                
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.Label}"/>
-                <apex:selectList value="{!emailOption}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
-                    <apex:selectOptions value="{!listSOERREmailOptions}"/>
-                </apex:selectList>
-                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Email_List__c.InlineHelpText}" />
-                
-                <apex:outputText value="Select User" rendered="{!emailUserSelected}"/>
-                <apex:outputText value="Select Group" rendered="{!emailGroupSelected}"/>
-                <apex:inputText value="{!stgService.stgErr.Email_List__c}" rendered="{!emailUserOrGroupSelected}"/>
+                <apex:inputText value="{!stgService.stgErr.Error_Notifications_To__c}" rendered="{!chatterGroupSelected}"/>
                 
             </apex:panelGrid>
  
@@ -50,5 +36,5 @@
      
         </apex:pageBlock>
     </apex:form>
-    
+     
 </apex:page>

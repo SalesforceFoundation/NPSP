@@ -3,9 +3,9 @@ public with sharing class ERR_Notifier {
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
     public class NotificationOptions {
-    	public final String user = '005';
     	public final String sysAdmins = 'All Sys Admins';
-    	public final String userGroup = '00G';
+    	public final String user = '005';  //specific system admin
+    	public final String userGroup = '00G'; //chatter group - @TODO: do chatter groups start with 00G?
     } 
     
     public static void sendEmailNotifications(ERR_Handler.Context context, String mailList) {
@@ -83,10 +83,10 @@ public with sharing class ERR_Notifier {
         Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
         
         if(orgErrorSettings.Id == null) {
-            orgErrorSettings.Chatter_Notifications__c = true; 
-	        orgErrorSettings.Email_Notifications__c = true;
-	        orgErrorSettings.Email_List__c = NotificationOptions.sysAdmins;
-	        orgErrorSettings.Store_Errors__c = true;	
+	        orgErrorSettings.Store_Errors_On__c = true;
+	        orgErrorSettings.Error_Notifications_On__c = true;
+	        orgErrorSettings.Error_Notifications_To__c = NotificationOptions.sysAdmins;
+	        	
 	            
 	        insert orgErrorSettings;
         }

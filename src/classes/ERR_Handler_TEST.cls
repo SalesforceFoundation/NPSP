@@ -35,7 +35,7 @@ public with sharing class ERR_Handler_TEST {
     private static string strTestOnly = '*';
     
     private static void setup() {
-    	insert new Error_Settings__c(Store_Errors__c = true);
+    	insert new Error_Settings__c(Store_Errors_On__c = true);
     }
     
     /*** We need to use Database.insert because otherwise the code does not pass the contacts insert

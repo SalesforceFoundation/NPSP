@@ -69,7 +69,7 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         update rds;                            
         
         //if needed, send messages from the error queue
-        ERR_Notifier.sendErrorQueueEmailNotification(ERR_Notifier.getOrgSettings().Email_List__c);        
+        ERR_Notifier.sendErrorQueueEmailNotification(ERR_Notifier.getOrgSettings().Error_Notifications_To__c);        
     }
     
     
