@@ -6,6 +6,23 @@
         <apex:pageBlock mode="maindetail">
 
             <h3 class="sectionBar" >Error Log</h3>            
+            <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
+                                              
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Clear Error Log" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
+
+        </apex:pageBlock> 
+    </apex:form>
+
+<!------------------------------------------
+
+    <apex:form id="form" styleClass="stgForm" >  
+        <apex:sectionHeader title="System" subtitle="Error Log" />
+        <apex:pageMessages />
+        <apex:pageBlock mode="maindetail">
+
+            <h3 class="sectionBar" >Error Log</h3>            
                 <apex:pageBlockTable value="{!listError}" var="err" rendered="{!hasErrors}" >
                     <apex:column value="{!err.Datetime__c}" />
                     <apex:column value="{!err.Context_Type__c}" />
@@ -26,7 +43,6 @@
         </apex:pageBlock> 
     </apex:form>
 
-<!------------------------------------------
 
         <apex:sectionHeader title="System" subtitle="Error Log" />
         <apex:pageMessages />
