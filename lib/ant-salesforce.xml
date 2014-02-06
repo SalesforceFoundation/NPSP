@@ -510,4 +510,39 @@
 
   </macrodef>
 
+  <macrodef name="updateMetaXml" description="Updates all references to a given namespace in *-meta.xml files to a specific version">
+    <attribute name="dir" description="The package directory containing the *-meta.xml files to update" />
+    <attribute name="namespace" description="The namespace (i.e. npe01)" />
+    <attribute name="version" description="The version number (i.e. 2.1)" />
+    <sequential>
+
+      <delete file="lib/update_meta_xml.xsl.rendered" />
+      <copy file="lib/update_meta_xml.xsl" tofile="lib/update_meta_xml.xsl.rendered" />
+      <replaceregexp file="lib/update_meta_xml.xsl.rendered" match="___namespace___" replace="@{namespace}" flags="g" />
+
+      <propertyregex property="updatemetaxml.major" override="true" input="${version.@{namespace}}" regexp="(\d+)\.(\d+)" replace="\1" />
+      <propertyregex property="updatemetaxml.minor" override="true" input="${version.@{namespace}}" regexp="(\d+)\.(\d+)" replace="\2" />
+
+      <for param="file">
+        <path>
+          <fileset dir="@{dir}" includes="**/*-meta.xml" />
+        </path>
+        <sequential>
+          <xslt in="@{file}" out="@{file}.updated" style="lib/update_meta_xml.xsl.rendered">
+            <param name="major" expression="${updatemetaxml.major}" />
+            <param name="minor" expression="${updatemetaxml.minor}" />
+          </xslt>
+          <if>
+            <not><filesmatch file1="@{file}" file2="@{file}.updated" /></not>
+            <then>
+              <echo>@{file} updated for @{namespace}</echo>
+              <move file="@{file}.updated" tofile="@{file}" />
+            </then>
+          </if>
+          <delete file="@{file}.updated" />
+        </sequential>
+      </for>
+      <delete file="lib/update_meta_xml.xsl.rendered" />
+    </sequential>
+  </macrodef>
 </project>

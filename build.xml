@@ -222,4 +222,12 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <buildPackageXml package="Cumulus" version="29.0" />
     </target>
 
+    <target name="updateMetaXml">
+      <updateMetaXml dir="${basedir}/src" namespace="npe01" version="${version.npe01}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npo02" version="${version.npo02}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
+    </target>
+
 </project>
