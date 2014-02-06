@@ -1,45 +1,31 @@
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
-    public override string idPanel() { return 'idPanelErrors'; }
+    public override String idPanel() { return 'idPanelErrors'; }
     
     public String notificationOption { public get; public set; }
-        
-    public Boolean chatterGroupSelected { public get; public set; }
     
-    /*
-    static public list<SelectOption> listSOERRNotifOptions {
-        get {
-            if (listSOERRNotifOptions == null) {
-                listSOERRNotifOptions = new list<SelectOption>();
-                listSOERRNotifOptions.add(new SelectOption('', ''));
-                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.notificationOptions.user, 'User'));
-                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.notificationOptions.sysAdmins, ERR_Notifier.notificationOptions.sysAdmins));
-                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.notificationOptions.userGroup, 'User Group'));
-            }
-            return listSOERRNotifOptions;
-        }
-        private set;
-    }*/
-    
-    public list<SelectOption> listSOERRNotifOptions {
+    //Displays the values of the drop-down (Edit Mode only)
+    public List<SelectOption> listSOERRNotifOptions {
         get {
             if (listSOERRNotifOptions == null) {
                 listSOERRNotifOptions = new list<SelectOption>();
                 listSOERRNotifOptions.add(new SelectOption('None', 'None'));
+                listSOERRNotifOptions.add(new SelectOption('Chatter Group', 'Chatter Group'));
                 listSOERRNotifOptions.add(new SelectOption('All Sys Admins', 'All Sys Admins'));
                 for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
                     listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
                 }
-                for (Group g : [select id, Name from Group where Type = 'Regular']) {
+                /*for (Group g : [select id, Name from Group where Type = 'Regular']) {
                     listSOERRNotifOptions.add(new SelectOption(g.id, 'Group: ' + g.Name));
-                } 
+                }*/ 
             }
             return listSOERRNotifOptions;
         }
         private set;
     }  
     
-    public string strErrorNotifDisplayName {
+    //Displays the Error Notification Recipients (View Mode only)
+    public String strErrorNotifDisplayName {
         get {
             if (strErrorNotifDisplayName == null) {
                 Group g = new Group();
@@ -61,6 +47,5 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
             return strErrorNotifDisplayName;
         }
         private set;
-    }
-    
+    }  
 }
