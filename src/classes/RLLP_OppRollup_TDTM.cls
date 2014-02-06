@@ -35,21 +35,17 @@
 public with sharing class RLLP_OppRollup_TDTM extends TDTM_Runnable { 
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-	    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        map<Id, Opportunity> mapIdOppNew;
+        map<Id, Opportunity> mapIdOppOld;
+        if (newlist != null) 
+           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
+        if (oldlist != null) 
+           mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
+        RLLP_OppRollup rg = new RLLP_OppRollup(); 	           
+        rg.rollupForOppTrigger(mapIdOppNew, mapIdOppOld);
 	    
-	    // DJH:UNDONE do we remove this setting check and rely on TDTM settings?
-	    if (!hs.npo02__DISABLE_Household_Opportunity_trigger__c){
-	        map<Id, Opportunity> mapIdOppNew;
-	        map<Id, Opportunity> mapIdOppOld;
-	        if (newlist != null) 
-	           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
-            if (oldlist != null) 
-               mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
-            RLLP_OppRollup rg = new RLLP_OppRollup(); 	           
-	        rg.rollupForOppTrigger(mapIdOppNew, mapIdOppOld);
-	    }
 	    // we aren't using dmlWrapper to defer DML, due to the existing complexity of the rollup code.
 	    return null;
     }
