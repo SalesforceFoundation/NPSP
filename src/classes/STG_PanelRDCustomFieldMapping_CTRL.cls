@@ -71,7 +71,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             fmNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, null);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;

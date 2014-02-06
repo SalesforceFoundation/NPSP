@@ -5,7 +5,7 @@
 
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 
-    <xsl:template match="sf:CustomObject">
+    <xsl:template match="sf:___parentelement___">
         <types>
         <xsl:for-each select="sf:___element___">
           <xsl:if test="not(contains($whitelist, concat(',', sf:___nameelement___, ',')))">

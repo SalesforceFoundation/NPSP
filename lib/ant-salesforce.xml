@@ -324,56 +324,71 @@
           <var name="@{property}" unset="true" />
         </then>
       </if>
-      <property name="@{property}" value="${whitelist.@{object}.@{type}}" />
+      <if>
+        <isset property="${whitelist.@{object}.@{type}}" />
+        <then>
+          <property name="@{property}" value="${whitelist.@{object}.@{type}}" />
+        </then>
+        <else>
+          <property name="@{property}" value="," />
+        </else>
+      </if>
     </sequential>
   </macrodef>
 
-  <macrodef name="addMetadataSubTypeFromObj" description="Uses an xsl template to parse out metadata subtypes from an object file and adds to a package.xml file">
-    <attribute name="dir" description="The package directory containing the standard objects" />
+  <macrodef name="addMetadataSubType" description="Uses an xsl template to parse out metadata subtypes from a parent file and adds to a package.xml file">
+    <attribute name="dir" description="The package directory containing the files to search in." />
+    <attribute name="suffix" description="The suffix of the metadata file to search in.  For example, object for object files" default="object" />
     <attribute name="xmlfile" description="The path of the target package.xml or destructiveChanges.xml file" />
     <attribute name="typename" description="The type name as would appear in the manifest type's name element" />
-    <attribute name="xslt" description="The path of the xslt transform to extract type components from the standard object file" default="lib/extract_obj_metadata.xsl" />
+    <attribute name="xslt" description="The path of the xslt transform to extract type components from the standard object file" default="lib/extract_subtype.xsl" />
     <attribute name="element" description="The xml element to look for.  This is passed to the xslt to allow easier template reuse" />
     <attribute name="nameelement" description="The xml element whose value should provide the name (used in the package.xml members tag)." default="fullName" />
+    <attribute name="parentelement" description="The containing element name in target files.  For example, CustomObject if looking in object files" default="CustomObject" />
     <sequential>
       <!-- First, build a OBJECT.object.typename file containing the <members/> elements for all components of the type -->
       <for param="file">
         <path>
-          <fileset dir="@{dir}/objects" includes="**/*.object" />
+          <fileset dir="@{dir}" includes="*.@{suffix}" />
         </path>
         <sequential>
-          <!-- Parse the file basename and object name from the object's filename -->
-          <basename property="obj_file" file="@{file}" />
-          <basename property="object" file="@{file}" suffix=".object" />
+          <!-- Parse the file basename and parent name from the parent's filename -->
+          <basename property="parent_file" file="@{file}" />
+          <basename property="parent" file="@{file}" suffix=".@{suffix}" />
 
           <!-- Construct an xslt file from the template by replacing ___element with @{element}.  
                This is to get around xslt's limitations in selecting an element whose name is passed as a parameter.
                This approach avoids the need to create an xsl file for each metadata subtype
             -->
           <copy file="@{xslt}" tofile="@{xslt}.rendered" />
+          <replaceregexp file="@{xslt}.rendered" match="___parentelement___" replace="@{parentelement}" flags="g" />
           <replaceregexp file="@{xslt}.rendered" match="___element___" replace="@{element}" flags="g" />
           <replaceregexp file="@{xslt}.rendered" match="___nameelement___" replace="@{nameelement}" flags="g" />
 
-          <!-- Run xslt to build a file for each object containing <members/> elements for components -->
-          <getWhitelistForObjectAndType object="${object}" type="@{typename}" property="obj_type_whitelist" />
-          <xslt in="@{file}" out="@{dir}/objects/${obj_file}.@{typename}" style="@{xslt}.rendered">
+          <!-- Run xslt to build a file for each parent containing <members/> elements for components -->
+          <getWhitelistForObjectAndType object="${parent}" type="@{typename}" property="obj_type_whitelist" />
+          <xslt in="@{file}" out="@{dir}/${parent_file}.@{typename}" style="@{xslt}.rendered">
             <param name="whitelist" expression="${obj_type_whitelist}" />
           </xslt>
-
           <delete file="@{xslt}.rendered" />
 
           <!-- Prepend member names with OBJECT. -->
-          <replaceregexp file="@{dir}/objects/${obj_file}.@{typename}" match="members>(.*)./members>" replace="members>${object}.\1&lt;/members>${line.separator}" flags="g" />
+          <if>
+            <equals arg1="@{suffix}" arg2="object" />
+            <then>
+              <replaceregexp file="@{dir}/${parent_file}.@{typename}" match="members>(.*)./members>" replace="members>${parent}.\1&lt;/members>${line.separator}" flags="g" />
+            </then>
+          </if>
 
           <!-- Unset properites for basename call in next iteration of loop -->
-          <var name="object" unset="true" />
-          <var name="obj_file" unset="true" />
+          <var name="parent" unset="true" />
+          <var name="parent_file" unset="true" />
         </sequential>
       </for>
 
       <!-- Concatenate all <members/> from earlier extraction output files -->
-      <concat destfile="@{dir}/objects/@{typename}.extract">
-        <fileset dir="@{dir}/objects" includes="**/*.object.@{typename}" />
+      <concat destfile="@{dir}/@{typename}.extract">
+        <fileset dir="@{dir}" includes="**/*.@{suffix}.@{typename}" />
         <filterchain>
           <prefixlines prefix="    " />
           <linecontains>
@@ -384,9 +399,9 @@
 
       <!-- If there are any members to extract, add the <types/> section to package.xml -->
       <if>
-        <available file="@{dir}/objects/@{typename}.extract" />
+        <available file="@{dir}/@{typename}.extract" />
         <then>
-          <loadfile property="type.extract" srcfile="@{dir}/objects/@{typename}.extract" />
+          <loadfile property="type.extract" srcfile="@{dir}/@{typename}.extract" />
           <if>
             <isset property="type.extract" /> 
             <then>
@@ -397,9 +412,9 @@
             </then>
           </if>
           <delete>
-              <fileset dir="@{dir}/objects" includes="**/*.@{typename}" />
+              <fileset dir="@{dir}" includes="**/*.@{typename}" />
           </delete>
-          <delete file="@{dir}/objects/@{typename}.extract" />
+          <delete file="@{dir}/@{typename}.extract" />
     
           <var name="type.extract" unset="true" />
         </then>  
@@ -414,11 +429,12 @@
       <buildPackageXmlFromDir dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" package="@{package}" version="@{version}" />
       
       <!-- Add metadata sub-types of object which need to be explicitly listed in package.xml -->
-      <!--<addMetadataSubTypeFromObj dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="ActionOverride" element="actionOverrides" nameelement="actionName" />-->
-      <addMetadataSubTypeFromObj dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
-      <addMetadataSubTypeFromObj dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="FieldSet" element="fieldSets" />
-      <addMetadataSubTypeFromObj dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="ListView" element="listViews" />
-      <addMetadataSubTypeFromObj dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="RecordType" element="recordTypes" />
+      <!--<addMetadataSubType dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="ActionOverride" element="actionOverrides" nameelement="actionName" />-->
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
+      <addMetadataSubType dir="${basedir}/src/labels" suffix="labels" xmlfile="${basedir}/src/package.xml.new" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="FieldSet" element="fieldSets" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="ListView" element="listViews" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="RecordType" element="recordTypes" />
 
       <move file="${basedir}/src/package.xml.new" tofile="${basedir}/src/package.xml" />
     </sequential>
@@ -449,10 +465,12 @@
       <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist}" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
-      <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
-      <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
-      <addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
-      <!--<addMetadataSubTypeFromObj dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
+      <addMetadataSubType dir="@{srcdir}/labels" suffix="labels" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
+      <!--<addMetadataSubType dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
     </sequential>
   </macrodef>
 
@@ -501,10 +519,11 @@
 
       <!-- Add sub metadata types which can be deleted to destructiveChanges.xml.  Currently this only handles custom fields and fieldsets. -->
 
-      <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
-      <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
-      <addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
-      <!--<addMetadataSubTypeFromObj dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
+      <addMetadataSubType dir="@{srcdir}/unpackaged/labels" suffix="labels" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
+      <!--<addMetadataSubType dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
 
     </sequential>
 

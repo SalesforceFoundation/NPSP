@@ -58,11 +58,14 @@
     <members>RD_ProcessControl</members>
     <members>RD_RecurringDonations</members>
     <members>RD_RecurringDonations_BATCH</members>
+    <members>RD_RecurringDonations_Opp_TDTM</members>
     <members>RD_RecurringDonations_SCHED</members>
     <members>RD_RecurringDonations_TDTM</members>
     <members>RD_RecurringDonations_TEST</members>
     <members>REL_ProcessControl</members>
     <members>REL_RelationshipsViewer_CTRL</members>
+    <members>REL_Relationships_Cm_TDTM</members>
+    <members>REL_Relationships_Con_TDTM</members>
     <members>REL_Relationships_TDTM</members>
     <members>REL_Relationships_TEST</members>
     <members>REL_Utils</members>
@@ -74,32 +77,57 @@
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_UTIL</members>
-    <members>STTG_AffiliationsSettings_CTRL</members>
-    <members>STTG_AffiliationsSettings_TEST</members>
-    <members>STTG_Contacts_CTRL</members>
-    <members>STTG_HouseholdsSettings_CTRL</members>
-    <members>STTG_HouseholdsSettings_TEST</members>
-    <members>STTG_PaymentMapping_CTRL</members>
-    <members>STTG_RecurringDonations_CTRL</members>
-    <members>STTG_Relationships_CTRL</members>
-    <members>STTG_UserRollupSettings_CTRL</members>
-    <members>STTG_UserRollupSettings_TEST</members>
+    <members>STG_DataBoundMultiSelect_CTRL</members>
+    <members>STG_Panel</members>
+    <members>STG_PanelAffiliations_CTRL</members>
+    <members>STG_PanelBDE_CTRL</members>
+    <members>STG_PanelContactRoles_CTRL</members>
+    <members>STG_PanelContacts_CTRL</members>
+    <members>STG_PanelErrorLog_CTRL</members>
+    <members>STG_PanelHouseholds_CTRL</members>
+    <members>STG_PanelLeads_CTRL</members>
+    <members>STG_PanelMembership_CTRL</members>
+    <members>STG_PanelOppBatch_CTRL</members>
+    <members>STG_PanelOppRollups_CTRL</members>
+    <members>STG_PanelOpps_CTRL</members>
+    <members>STG_PanelPaymentMapping_CTRL</members>
+    <members>STG_PanelRDBatch_CTRL</members>
+    <members>STG_PanelRDCustomFieldMapping_CTRL</members>
+    <members>STG_PanelRDCustomInstallment_CTRL</members>
+    <members>STG_PanelRD_CTRL</members>
+    <members>STG_PanelRelAuto_CTRL</members>
+    <members>STG_PanelRelReciprocal_CTRL</members>
+    <members>STG_PanelRel_CTRL</members>
+    <members>STG_PanelTDTM_CTRL</members>
+    <members>STG_PanelUserRollup_CTRL</members>
+    <members>STG_SettingsManager_CTRL</members>
+    <members>STG_SettingsManager_TEST</members>
+    <members>STG_SettingsService</members>
+    <members>STTG_InstallScript</members>
+    <members>STTG_InstallScript_TEST</members>
+    <members>TDTM_DefaultConfig</members>
     <members>TDTM_ObjectDataGateway</members>
     <members>TDTM_Runnable</members>
     <members>TDTM_Runnable_TEST</members>
     <members>TDTM_TriggerActionHelper</members>
     <members>TDTM_TriggerHandler</members>
     <members>TDTM_iTableDataGateway</members>
+    <members>UTIL_Describe</members>
+    <members>UTIL_Describe_TEST</members>
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
     <members>UTIL_RecordTypes_TEST</members>
+    <members>UTIL_SoqlListView_CTRL</members>
     <members>UTIL_UnitTestData_TEST</members>
+    <members>UTIL_iSoqlListViewConsumer</members>
     <name>ApexClass</name>
   </types>
   <types>
+    <members>STG_DataBoundMultiSelect</members>
     <members>UTIL_JobProgress</members>
+    <members>UTIL_SoqlListView</members>
     <name>ApexComponent</name>
   </types>
   <types>
@@ -115,13 +143,29 @@
     <members>RD_AddDonationsBTN</members>
     <members>REL_RelationshipsViewer</members>
     <members>RLLP_OppRollup</members>
-    <members>STTG_Contacts</members>
-    <members>STTG_HouseholdSettings</members>
-    <members>STTG_PaymentMapping</members>
-    <members>STTG_RecurringDonations</members>
-    <members>STTG_Relationships</members>
-    <members>STTG_UserRollupSettings</members>
-    <members>STTG_affiliationsSettings</members>
+    <members>STG_PanelAffiliations</members>
+    <members>STG_PanelBDE</members>
+    <members>STG_PanelContactRoles</members>
+    <members>STG_PanelContacts</members>
+    <members>STG_PanelErrorLog</members>
+    <members>STG_PanelHome</members>
+    <members>STG_PanelHouseholds</members>
+    <members>STG_PanelLeads</members>
+    <members>STG_PanelMembership</members>
+    <members>STG_PanelOppBatch</members>
+    <members>STG_PanelOppRollups</members>
+    <members>STG_PanelOpps</members>
+    <members>STG_PanelPaymentMapping</members>
+    <members>STG_PanelRD</members>
+    <members>STG_PanelRDBatch</members>
+    <members>STG_PanelRDCustomFieldMapping</members>
+    <members>STG_PanelRDCustomInstallment</members>
+    <members>STG_PanelRel</members>
+    <members>STG_PanelRelAuto</members>
+    <members>STG_PanelRelReciprocal</members>
+    <members>STG_PanelTDTM</members>
+    <members>STG_PanelUserRollup</members>
+    <members>STG_SettingsManager</members>
     <name>ApexPage</name>
   </types>
   <types>
@@ -136,6 +180,7 @@
   </types>
   <types>
     <members>Cumulus</members>
+    <members>Nonprofit_CRM</members>
     <name>CustomApplication</name>
   </types>
   <types>
@@ -171,6 +216,17 @@
     <name>CustomField</name>
   </types>
   <types>
+    <members>NPSP_Settings_title</members>
+    <members>labelListViewFirst</members>
+    <members>labelListViewLast</members>
+    <members>labelListViewNext</members>
+    <members>labelListViewPageInfo</members>
+    <members>labelListViewPrevious</members>
+    <members>labelMessageLoading</members>
+    <members>labelShowMore</members>
+    <name>CustomLabel</name>
+  </types>
+  <types>
     <members>Account</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
@@ -183,18 +239,10 @@
     <name>CustomObject</name>
   </types>
   <types>
-    <members>About_Cumulus</members>
-    <members>Affiliations_Settings</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
-    <members>Contacts_Settings</members>
-    <members>Household_Settings</members>
-    <members>Opportunity_Rollup</members>
-    <members>Payment_Mapping</members>
-    <members>Recurring_Donations_Settings</members>
-    <members>Relationships_Settings</members>
-    <members>Trigger_Handler__c</members>
-    <members>User_Rollup_Settings</members>
+    <members>Cumulus_Settings</members>
+    <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>
   <types>
@@ -225,6 +273,7 @@
   <types>
     <members>BDE_jQTSSkin</members>
     <members>BDE_jqtablesorter</members>
+    <members>CollapsibleListJS</members>
     <members>ManageHouseholdcss</members>
     <members>ManageHouseholdjs</members>
     <name>StaticResource</name>

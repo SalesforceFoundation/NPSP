@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>NPSP_Settings_title</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NPSP Settings title</shortDescription>
+        <value>Nonprofit Starter Pack Settings</value>
+    </labels>
+    <labels>
+        <fullName>labelListViewFirst</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for First link in list view</shortDescription>
+        <value>First</value>
+    </labels>
+    <labels>
+        <fullName>labelListViewLast</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for Last link in list view</shortDescription>
+        <value>Last</value>
+    </labels>
+    <labels>
+        <fullName>labelListViewNext</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for Next link in list view</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>labelListViewPageInfo</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for page info in list view</shortDescription>
+        <value>&amp;nbsp;&amp;nbsp;&amp;nbsp;Page {0} of {1} &amp;nbsp;&amp;nbsp;({2} records)</value>
+    </labels>
+    <labels>
+        <fullName>labelListViewPrevious</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for Previous link in list view</shortDescription>
+        <value>Previous</value>
+    </labels>
+    <labels>
+        <fullName>labelMessageLoading</fullName>
+        <categories>SoqlListView, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for the loading... message used in some pages</shortDescription>
+        <value>Loading...</value>
+    </labels>
+    <labels>
+        <fullName>labelShowMore</fullName>
+        <categories>SoqlListView</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>label for Show More on list views</shortDescription>
+        <value>Show more</value>
+    </labels>
+</CustomLabels>
