@@ -1,0 +1,64 @@
+<apex:page controller="STG_PanelErrorLog_CTRL" >
+
+    <apex:form id="form" styleClass="stgForm" >  
+        <apex:sectionHeader title="System" subtitle="Error Log" />
+        <apex:pageMessages />
+        <apex:pageBlock mode="maindetail">
+
+            <h3 class="sectionBar" >Error Log</h3>            
+            <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
+                                              
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Clear Error Log" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
+
+        </apex:pageBlock> 
+    </apex:form>
+
+<!------------------------------------------
+
+    <apex:form id="form" styleClass="stgForm" >  
+        <apex:sectionHeader title="System" subtitle="Error Log" />
+        <apex:pageMessages />
+        <apex:pageBlock mode="maindetail">
+
+            <h3 class="sectionBar" >Error Log</h3>            
+                <apex:pageBlockTable value="{!listError}" var="err" rendered="{!hasErrors}" >
+                    <apex:column value="{!err.Datetime__c}" />
+                    <apex:column value="{!err.Context_Type__c}" />
+                    <apex:column value="{!err.Module_Type__c}" />
+                    <apex:column value="{!err.Error_Type__c}" />
+                    <apex:column value="{!err.Full_Message__c}" />
+                    <apex:column value="{!err.Object_Type__c}" />
+                    <apex:column value="{!err.Record_URL__c}" />
+                    <apex:column value="{!err.Stack_Trace__c}" />
+                    <apex:column value="{!err.CreatedBy.Name}" />
+                </apex:pageBlockTable> 
+                <apex:outputText value="There are no errors to display." rendered="{! !hasErrors}" />
+                                              
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Clear Displayed Errors" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
+
+        </apex:pageBlock> 
+    </apex:form>
+
+
+        <apex:sectionHeader title="System" subtitle="Error Log" />
+        <apex:pageMessages />
+        <apex:pageBlock mode="maindetail">
+            <h3 class="sectionBar">Error Log</h3>  
+            <apex:outputPanel layout="block" >           
+                <apex:enhancedList type="Error__c" height="600" width="2600" rowsPerPage="25"  reRender="form" oncomplete="alert('oncomplete of listview called');" />
+            </apex:outputPanel> 
+        </apex:pageBlock>
+
+        <apex:form id="form" styleClass="stgForm" >  
+            <apex:pageBlock mode="maindetail" >
+                <apex:pageBlockButtons location="bottom">
+                    <apex:commandButton value="Clear Error Log" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="maindetail" />
+		        </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:form>
+------------------------------------>
+</apex:page>

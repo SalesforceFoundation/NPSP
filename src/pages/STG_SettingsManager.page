@@ -219,7 +219,7 @@
             <div class="navbar" >
                 <nav role="navigation">
                     <ul id="mynavbar" >
-                    <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">Non Profit Starter Pack Settings</a></li>
+                    <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">Nonprofit Starter Pack Settings</a></li>
 
                     <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">Contacts<span class="caret"></span></a></li>
                     <ul>
@@ -228,8 +228,11 @@
                     <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
                     </ul>
                     
-                    <li id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item">Households</a></li>
-
+                    <li class="header" id="idPanelHHHomeNav"><a class="nav-item nav-section-title">Households<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">Households</a></li>
+                    </ul>
+                    
                     <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">Connections<span class="caret"></span></a></li>
                     <ul>
                     <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
@@ -250,13 +253,15 @@
                     <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
                     </ul>
 
-                    <li id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item">Batch Data Entry</a></li>
+                    <li class="header" id="idPanelBDEHomeNav"><a class="nav-item nav-section-title">Batch Data Entry<span class="caret"></span></a></li>
+                    <ul>
+                    <li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">Batch Data Entry</a></li>
+                    </ul>
                     
                     <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelErrorsNav"><a href="." onclick="ShowPanel('idPanelErrors');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">Error Log</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
-                    <li class="subitem" id="idPanelSystemNav"><a class="nav-item sub-nav-item">Job Monitoring</a></li>
                     <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
                     <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
                     </ul>
@@ -273,8 +278,8 @@
 			                 onstop="document.getElementById('divLoading').style.display = 'none';" />
 			            <div class="loading clsLoading" id="divLoading" style="display:none" >
 			              <p style="vertical-align: middle;" >
-			                <img src="/img/loading.gif" alt="Processing..." width="16" height="16" title="Processing..." style="vertical-align: middle;"/>
-			                <span class="loadingText" style="vertical-align: middle;" >Processing...</span>
+			                <img src="/img/loading.gif" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" style="vertical-align: middle;"/>
+			                <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
 			              </p>
 			            </div>                                                                  
                 
@@ -356,6 +361,10 @@
 
                         <div class="panel" id="idPanelUserRollup" style="display:none" >
                             <apex:include pageName="STG_PanelUserRollup" />
+                        </div>
+
+                        <div class="panel" id="idPanelErrorLog" style="display:none" >
+                            <apex:include pageName="STG_PanelErrorLog" />
                         </div>
 
                         <div class="panel" id="idPanelTDTM" style="display:none" >
