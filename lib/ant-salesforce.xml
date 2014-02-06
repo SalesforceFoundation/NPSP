@@ -324,15 +324,7 @@
           <var name="@{property}" unset="true" />
         </then>
       </if>
-      <if>
-        <isset property="${whitelist.@{object}.@{type}}" />
-        <then>
-          <property name="@{property}" value="${whitelist.@{object}.@{type}}" />
-        </then>
-        <else>
-          <property name="@{property}" value="," />
-        </else>
-      </if>
+      <property name="@{property}" value="${whitelist.@{object}.@{type}}" />
     </sequential>
   </macrodef>
 
