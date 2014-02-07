@@ -1,68 +1,91 @@
 <apex:page controller="STG_SettingsManager_CTRL" >
 
+<head>
+    <script type="text/javascript">
+            window.jQuery || document.write('<script src="{!URLFOR($Resource.Bootstrap, 'js/jquery-1.10.2.min.js')}"><\/script>');
+    </script>
+    <script src="{!URLFOR($Resource.Bootstrap, 'js/bootstrap.min.js')}" type="text/javascript" />
+
+    <apex:styleSheet value="{!URLFOR($Resource.Bootstrap, IF(false /*isSalesforce1*/, 'css/bootstrap-namespaced-s1.css', 'css/bootstrap-namespaced.css'))}" />
+</head>
+
 <style>
-	.pageBlock {
-		overflow: hidden;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		margin-bottom: 20px;
-		background: #fff;
-		top: 1px;
-		position: relative;
-		width: 600px;
-	}
-
-	.top-line {
-		-moz-border-radius-topleft: 5px;
-		-moz-border-radius-topright: 5px;
-		-moz-border-radius-bottomright: 0;
-		-moz-border-radius-bottomleft: 0;
-		-webkit-border-radius: 5px 5px 0 0;
-		border-radius: 5px 5px 0 0;
-		border: 1px solid #ccc;
-		background-color: #E5F2F6;
+    body{
+        margin:0px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .bootstrap3 h1, .bootstrap3 h2, .bootstrap3 h3, .bootstrap3 h4{
+        font-family: Vagrolight,Arial,Helvetica,sans-serif;
+    }
+    .bootstrap3 p{
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .bootstrap .jumbotron{
+        background-color: #f0f1f2;
+        margin-bottom:0px;
     }
 
-    .panelHeader {
-		position: relative;
-		font-weight: bold;
-		color: #222;
-        font-size: 2em;
-        margin: 10px;
-    }
-    
-    .panelContent {
-		-moz-border-radius-bottomleft: 5px;
-		-webkit-border-bottom-left-radius: 5px;
-		border-bottom-left-radius: 5px;
-		-moz-border-radius-bottomright: 5px;
-		-webkit-border-bottom-right-radius: 5px;
-		border-bottom-right-radius: 5px;
-		border-bottom: 1px solid #ccc;
-		border-right: 1px solid #ccc;
-		border-left: 1px solid #ccc;
-		padding: 20px;
-		font-size: 1.4em;
-    }    
+	/* Customize container */
+	@media (min-width: 768px) {
+	  .container {
+	    max-width: 900px;
+	  }
+	}    
 </style>
 
 
-        <apex:sectionHeader title="NPSP Settings" subtitle="Non Profit Starter Pack Settings" />        
-        <apex:pageMessages id="pageMessages"/>
-        
-        <div class="pageBlock" >
-            <div class="top-line">
-                <div class="panelHeader">
-                    <h2>Welcome</h2>
-                </div> 
-            </div>
-            <div class="panelContent">
-                <h1>NPSP Settings are now all in one place!</h1>
-                <p>We certainly hope you like it.</p>
-                <h2><i>This Space for Rent!</i></h2>
+<div class="bootstrap" >
+    <!-- HEADER -->
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-sm-3 col-xs-12" >
+                    <img src="http://assets.salesforcefoundation.org/images/sf_foundation.png" class="img-rounded img-responsive" />
+                </div>
+                <div class="col-sm-9 col-xs-12" >
+                    <h2>Welcome to the Nonprofit Starter Pack Settings Page</h2>
+                    <p style="font-family: Vagrolight,Arial,Helvetica,sans-serif;">Now all of your Nonprofit Starter Pack options are right here on the NPSP
+                    Settings page - with a new organization to make them easier to find and manage.</p>
+                </div>
             </div>
         </div>
+    </div>
+    
 
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Configure</h2>
+                <p style="padding-bottom:10px;">Did you know you can customize how the Nonprofit Starter Pack works for your organization, by configuring our settings?</p>
 
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><h3 class="panel-title">Nonprofit Starter Pack Help</h3></div>
+                    <div class="panel-body"><p><img src="http://assets.salesforcefoundation.org/images/NPSP_Logo_Small.png" style="float:left; padding:10px;" width="100" alt="Nonprofit Starter Pack" />The Nonprofit Starter Pack is an application that extends the power of Salesforce CRM with customizations that allow you to better manage individual donors out-of-the-box. If you are using the Nonprofit Starter Pack, there are a host of resources specific to the application.</p>
+                        <p><a class="btn btn-primary btn-sm" href="http://www.salesforcefoundation.org/nonprofitstarterpack" role="button" target="_blank">View details »</a></p>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="col-md-6">
+                <h2>Learn First!</h2>
+                <p style="padding-bottom:10px;">You now have access to a whole suite of tools you can use to help your nonprofit meet its mission. Invest some time in learning how these tools work so you can work most efficiently to meet your mission.<br/>
+                </p>
+
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><h3 class="panel-title">Quicklinks</h3></div>
+                    <ul class="list-group">
+                        <li class="list-group-item">Get answers in the<a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a></li>
+                        <li class="list-group-item">How to <a href="https://powerofus.force.com/articles/Resource/How-to-log-a-tech-support-ticket-with-salesforce-com" title="How to log a tech support ticket with salesforce.com" target="_blank">log a tech support ticket</a></li>
+                        <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/findapartner" title="Find a partner" target="_blank">consulting partner or App</a></li>
+                        <li class="list-group-item">Find and join a local <a href="http://www.salesforcefoundation.org/user-groups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
+                        <li class="list-group-item">Ask a question at <a href="http://www.salesforcefoundation.org/webinars#webinars" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </apex:page>
