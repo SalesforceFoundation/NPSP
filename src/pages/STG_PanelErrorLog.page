@@ -26,7 +26,6 @@
                 <apex:pageBlockTable value="{!listError}" var="err" rendered="{!hasErrors}" >
                     <apex:column value="{!err.Datetime__c}" />
                     <apex:column value="{!err.Context_Type__c}" />
-                    <apex:column value="{!err.Module_Type__c}" />
                     <apex:column value="{!err.Error_Type__c}" />
                     <apex:column value="{!err.Full_Message__c}" />
                     <apex:column value="{!err.Object_Type__c}" />
