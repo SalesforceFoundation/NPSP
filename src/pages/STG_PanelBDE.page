@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="NPSP Settings" subtitle="Batch Data Entry Settings" />        
+        <apex:sectionHeader title="Nonprofit Starter Pack Settings" subtitle="Batch Data Entry Settings" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   

@@ -35,13 +35,6 @@
                 </apex:selectList>
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.InlineHelpText}"/>
 
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Error_Email_Notifications__c.Label}"/>
-                <apex:outputText value="{!strErrorEmailDisplayName}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgRD.npe03__Error_Email_Notifications__c}" size="1" multiselect="false" rendered="{!isEditMode}" >
-                    <apex:selectOptions value="{!listSOErrorEmailOptions}" />
-                </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Error_Email_Notifications__c.InlineHelpText}"/>
-
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}"/>
                 <apex:inputCheckbox value="{!stgService.stgRD.npe03__Disable_Nightly_Job__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.InlineHelpText}"/>
