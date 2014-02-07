@@ -276,6 +276,7 @@
   <types>
     <members>BDE_jQTSSkin</members>
     <members>BDE_jqtablesorter</members>
+    <members>Bootstrap</members>
     <members>CollapsibleListJS</members>
     <members>ManageHouseholdcss</members>
     <members>ManageHouseholdjs</members>
