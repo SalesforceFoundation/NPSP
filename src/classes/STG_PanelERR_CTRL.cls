@@ -11,8 +11,8 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
             if (listSOERRNotifOptions == null) {
                 listSOERRNotifOptions = new list<SelectOption>();
                 listSOERRNotifOptions.add(new SelectOption('None', 'None'));
-                listSOERRNotifOptions.add(new SelectOption('Chatter Group', 'Chatter Group'));
-                listSOERRNotifOptions.add(new SelectOption('All Sys Admins', 'All Sys Admins'));
+                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.chatterGroup, 'Chatter Group'));
+                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.sysAdmins, 'All Sys Admins'));
                 for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
                     listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
                 }
@@ -25,15 +25,15 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     //Displays the Error Notification Recipients (View Mode only)
     public String strErrorNotifDisplayName {
         get {
-        	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
+        	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c; 
         	
             if (errorNotifRecipient != null) {
                 if (errorNotifRecipient instanceof id) {
-                    if (errorNotifRecipient.startsWith('0F9')) {
+                    if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
                        strErrorNotifDisplayName = 'Group: ';
                        strErrorNotifDisplayName += [select Id, Name from CollaborationGroup where id = :errorNotifRecipient].Name;
                     }
-                    else if (errorNotifRecipient.startsWith('005')) {
+                    else if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.user)) {
                        strErrorNotifDisplayName = 'User: ';
                        strErrorNotifDisplayName += [select Name from User where id = :errorNotifRecipient].Name;
                     }               
