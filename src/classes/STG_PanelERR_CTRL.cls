@@ -2,8 +2,9 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
     public override String idPanel() { return 'idPanelErrors'; }
     
-    public String notificationOption { public get; public set; }
-    
+    public String notificationToDropDown { public get; public set; }
+    public CollaborationGroup notificationToChatter { public get; public set; }
+ 
     //Displays the values of the drop-down (Edit Mode only)
     public List<SelectOption> listSOERRNotifOptions {
         get {
@@ -15,9 +16,6 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
                 for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
                     listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
                 }
-                /*for (Group g : [select id, Name from Group where Type = 'Regular']) {
-                    listSOERRNotifOptions.add(new SelectOption(g.id, 'Group: ' + g.Name));
-                }*/ 
             }
             return listSOERRNotifOptions;
         }
@@ -27,25 +25,37 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     //Displays the Error Notification Recipients (View Mode only)
     public String strErrorNotifDisplayName {
         get {
-            if (strErrorNotifDisplayName == null) {
-                Group g = new Group();
-                string strErrorEmail = STG_SettingsService.stgService.stgRD.npe03__Error_Email_Notifications__c;          
-                if (strErrorEmail instanceof id) {
-                    if (strErrorEmail.startsWith('00G')) {
-                        g.Name = 'Group: ';
-                        g.Name += [select Name from Group where id = :strErrorEmail].Name;                   
+        	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
+        	
+            if (errorNotifRecipient != null) {
+                if (errorNotifRecipient instanceof id) {
+                    if (errorNotifRecipient.startsWith('0F9')) {
+                       strErrorNotifDisplayName = 'Group: ';
+                       strErrorNotifDisplayName += [select Id, Name from CollaborationGroup where id = :errorNotifRecipient].Name;
                     }
-                    else if (strErrorEmail.startsWith('005')) {
-                        g.Name = 'User: ';
-                        g.Name += [select Name from User where id = :strErrorEmail].Name;
+                    else if (errorNotifRecipient.startsWith('005')) {
+                       strErrorNotifDisplayName = 'User: ';
+                       strErrorNotifDisplayName += [select Name from User where id = :errorNotifRecipient].Name;
                     }               
                 } else {
-                   g.Name = strErrorEmail;
+                   strErrorNotifDisplayName = errorNotifRecipient;
                 }
-                strErrorNotifDisplayName = g.Name;
+            } else {
+            	strErrorNotifDisplayName = '';
             }
             return strErrorNotifDisplayName;
         }
         private set;
     }  
+    
+    public override PageReference saveSettings() {
+        System.debug('****notification to drop down: ' + notificationToDropDown);
+        System.debug('****notification to chatter: ' + notificationToChatter);
+        if(notificationToDropDown == 'Chatter Group' && notificationToChatter != null) { 
+           STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = notificationToChatter.Id;
+        } else {
+           STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = notificationToDropDown;
+        }
+        return super.saveSettings();
+    }
 }

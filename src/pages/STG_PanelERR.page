@@ -35,7 +35,7 @@
                 
                 <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}"/>
                 <apex:outputText value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList id="notificationOption" value="{!notificationOption}" size="1" multiselect="false" rendered="{!isEditMode}">
+                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}">
                     <apex:selectOptions value="{!listSOERRNotifOptions}" />
                 </apex:selectList>
                 <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.InlineHelpText}" />
@@ -44,7 +44,7 @@
             <apex:outputPanel id="chatterGroupBox">
                  <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                   <apex:outputLabel value="Select Chatter Group"/>
-                  <apex:inputText value="{!stgService.stgErr.Error_Notifications_To__c}"/>
+                  <apex:inputField value="{!notificationToChatter.Name}" required="false" />
                   <apex:outputText value="Chatter group where error notifications will be posted."/>
                  </apex:panelGrid>
             </apex:outputPanel>    
