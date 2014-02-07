@@ -227,6 +227,9 @@
     <name>CustomLabel</name>
   </types>
   <types>
+    <name>CustomLabel</name>
+  </types>
+  <types>
     <members>Account</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>

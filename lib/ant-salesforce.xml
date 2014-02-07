@@ -236,6 +236,9 @@
             <case value="components">
               <property name="typename" value="ApexComponent" />
             </case>
+            <case value="labels">
+              <property name="typename" value="CustomLabel" />
+            </case>
             <case value="objects">
               <property name="typename" value="CustomObject" />
             </case>
@@ -338,78 +341,84 @@
     <attribute name="nameelement" description="The xml element whose value should provide the name (used in the package.xml members tag)." default="fullName" />
     <attribute name="parentelement" description="The containing element name in target files.  For example, CustomObject if looking in object files" default="CustomObject" />
     <sequential>
-      <!-- First, build a OBJECT.object.typename file containing the <members/> elements for all components of the type -->
-      <for param="file">
-        <path>
-          <fileset dir="@{dir}" includes="*.@{suffix}" />
-        </path>
-        <sequential>
-          <!-- Parse the file basename and parent name from the parent's filename -->
-          <basename property="parent_file" file="@{file}" />
-          <basename property="parent" file="@{file}" suffix=".@{suffix}" />
-
-          <!-- Construct an xslt file from the template by replacing ___element with @{element}.  
-               This is to get around xslt's limitations in selecting an element whose name is passed as a parameter.
-               This approach avoids the need to create an xsl file for each metadata subtype
-            -->
-          <copy file="@{xslt}" tofile="@{xslt}.rendered" />
-          <replaceregexp file="@{xslt}.rendered" match="___parentelement___" replace="@{parentelement}" flags="g" />
-          <replaceregexp file="@{xslt}.rendered" match="___element___" replace="@{element}" flags="g" />
-          <replaceregexp file="@{xslt}.rendered" match="___nameelement___" replace="@{nameelement}" flags="g" />
-
-          <!-- Run xslt to build a file for each parent containing <members/> elements for components -->
-          <getWhitelistForObjectAndType object="${parent}" type="@{typename}" property="obj_type_whitelist" />
-          <xslt in="@{file}" out="@{dir}/${parent_file}.@{typename}" style="@{xslt}.rendered">
-            <param name="whitelist" expression="${obj_type_whitelist}" />
-          </xslt>
-          <delete file="@{xslt}.rendered" />
-
-          <!-- Prepend member names with OBJECT. -->
-          <if>
-            <equals arg1="@{suffix}" arg2="object" />
-            <then>
-              <replaceregexp file="@{dir}/${parent_file}.@{typename}" match="members>(.*)./members>" replace="members>${parent}.\1&lt;/members>${line.separator}" flags="g" />
-            </then>
-          </if>
-
-          <!-- Unset properites for basename call in next iteration of loop -->
-          <var name="parent" unset="true" />
-          <var name="parent_file" unset="true" />
-        </sequential>
-      </for>
-
-      <!-- Concatenate all <members/> from earlier extraction output files -->
-      <concat destfile="@{dir}/@{typename}.extract">
-        <fileset dir="@{dir}" includes="**/*.@{suffix}.@{typename}" />
-        <filterchain>
-          <prefixlines prefix="    " />
-          <linecontains>
-            <contains value="members>" />
-          </linecontains>
-        </filterchain>
-      </concat>
-
-      <!-- If there are any members to extract, add the <types/> section to package.xml -->
+      <!-- Make sure the directory actually exist, otherwise do nothing -->
       <if>
-        <available file="@{dir}/@{typename}.extract" />
+        <available file="@{dir}" type="dir" />
         <then>
-          <loadfile property="type.extract" srcfile="@{dir}/@{typename}.extract" />
+          <!-- First, build a FILE.SUFFIX.typename file containing the <members/> elements for all components of the type -->
+          <for param="file">
+            <path>
+              <fileset dir="@{dir}" includes="*.@{suffix}" />
+            </path>
+            <sequential>
+              <!-- Parse the file basename and parent name from the parent's filename -->
+              <basename property="parent_file" file="@{file}" />
+              <basename property="parent" file="@{file}" suffix=".@{suffix}" />
+
+              <!-- Construct an xslt file from the template by replacing ___element with @{element}.  
+                   This is to get around xslt's limitations in selecting an element whose name is passed as a parameter.
+                   This approach avoids the need to create an xsl file for each metadata subtype
+                -->
+              <copy file="@{xslt}" tofile="@{xslt}.rendered" />
+              <replaceregexp file="@{xslt}.rendered" match="___parentelement___" replace="@{parentelement}" flags="g" />
+              <replaceregexp file="@{xslt}.rendered" match="___element___" replace="@{element}" flags="g" />
+              <replaceregexp file="@{xslt}.rendered" match="___nameelement___" replace="@{nameelement}" flags="g" />
+
+              <!-- Run xslt to build a file for each parent containing <members/> elements for components -->
+              <getWhitelistForObjectAndType object="${parent}" type="@{typename}" property="obj_type_whitelist" />
+              <xslt in="@{file}" out="@{dir}/${parent_file}.@{typename}" style="@{xslt}.rendered">
+                <param name="whitelist" expression="${obj_type_whitelist}" />
+              </xslt>
+              <delete file="@{xslt}.rendered" />
+
+              <!-- Prepend member names with OBJECT. -->
+              <if>
+                <equals arg1="@{suffix}" arg2="object" />
+                <then>
+                  <replaceregexp file="@{dir}/${parent_file}.@{typename}" match="members>(.*)./members>" replace="members>${parent}.\1&lt;/members>${line.separator}" flags="g" />
+                </then>
+              </if>
+
+              <!-- Unset properites for basename call in next iteration of loop -->
+              <var name="parent" unset="true" />
+              <var name="parent_file" unset="true" />
+            </sequential>
+          </for>
+
+          <!-- Concatenate all <members/> from earlier extraction output files -->
+          <concat destfile="@{dir}/@{typename}.extract">
+            <fileset dir="@{dir}" includes="**/*.@{suffix}.@{typename}" />
+            <filterchain>
+              <prefixlines prefix="    " />
+              <linecontains>
+                <contains value="members>" />
+              </linecontains>
+            </filterchain>
+          </concat>
+
+          <!-- If there are any members to extract, add the <types/> section to package.xml -->
           <if>
-            <isset property="type.extract" /> 
+            <available file="@{dir}/@{typename}.extract" />
             <then>
-              <var name="type.extract" value="${line.separator}  ${lt}types>${line.separator}${type.extract}    ${lt}name>@{typename}${lt}/name>${line.separator}  ${lt}/types>" />
-              <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>${type.extract}" />
-              <xslt in="@{xmlfile}" out="@{xmlfile}.tidy" style="lib/tidy_package_xml.xsl" />
-              <move file="@{xmlfile}.tidy" tofile="@{xmlfile}" />
-            </then>
+              <loadfile property="type.extract" srcfile="@{dir}/@{typename}.extract" />
+              <if>
+                <isset property="type.extract" /> 
+                <then>
+                  <var name="type.extract" value="${line.separator}  ${lt}types>${line.separator}${type.extract}    ${lt}name>@{typename}${lt}/name>${line.separator}  ${lt}/types>" />
+                  <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>${type.extract}" />
+                  <xslt in="@{xmlfile}" out="@{xmlfile}.tidy" style="lib/tidy_package_xml.xsl" />
+                  <move file="@{xmlfile}.tidy" tofile="@{xmlfile}" />
+                </then>
+              </if>
+              <delete>
+                  <fileset dir="@{dir}" includes="**/*.@{typename}" />
+              </delete>
+              <delete file="@{dir}/@{typename}.extract" />
+        
+              <var name="type.extract" unset="true" />
+            </then>  
           </if>
-          <delete>
-              <fileset dir="@{dir}" includes="**/*.@{typename}" />
-          </delete>
-          <delete file="@{dir}/@{typename}.extract" />
-    
-          <var name="type.extract" unset="true" />
-        </then>  
+        </then>
       </if>
     </sequential>  
   </macrodef>
@@ -418,7 +427,8 @@
     <attribute name="version" description="The value for the version element in the package.xml" />
     <attribute name="package" description="The value for the fullName element in the package.xml" default="NOTSET" />
     <sequential>
-      <buildPackageXmlFromDir dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" package="@{package}" version="@{version}" />
+      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
+      <buildPackageXmlFromDir dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" package="@{package}" version="@{version}" exclude="CustomLabels.labels" />
       
       <!-- Add metadata sub-types of object which need to be explicitly listed in package.xml -->
       <!--<addMetadataSubType dir="${basedir}/src" xmlfile="${basedir}/src/package.xml.new" typename="ActionOverride" element="actionOverrides" nameelement="actionName" />-->
@@ -454,7 +464,8 @@
       <replaceregexp file="@{xmlfile}" match="Package(.*)>" replace="Package\1>&lt;fullName>@{package}%lt;/fullName>${line-separator}" />
 
       <!-- Build the destructiveChanges.xml file by walking the srcdir and adding all metadata -->
-      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist}" />
+      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
+      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist} CustomLabels.labels" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
@@ -484,7 +495,8 @@
 </Package>]]></echo>
 
       <!-- Build the destructiveChanges.xml file by walking the unpackaged directory and adding all metadata -->
-      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="29.0" />
+      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
+      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="29.0" exclude="CustomLabels.labels" />
      
       <!-- Copy the package manifest used to retrieve standard objects into srcdir and create an objects subfolder-->
       <copy file="@{srcdir}/standard/package.xml" todir="@{dir}/standard" />
