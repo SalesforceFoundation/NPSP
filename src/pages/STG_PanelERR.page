@@ -44,11 +44,12 @@
             <apex:outputPanel id="chatterGroupBox">
                  <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                   <apex:outputLabel value="Select Chatter Group"/>
-                  <apex:inputField value="{!notificationToChatter.Name}" required="false" />
+                  <c:UTIL_Typeahead searchBoxId="chatterGroupSearchBox" object="CollaborationGroup" primaryField="Name" searchScope="NAME"
+                    placeholder="Type something..." minSearchLength="2" destinationForSelectedId="groupId" stealFocus="false" style="width:80%;" /> 
                   <apex:outputText value="Chatter group where error notifications will be posted."/>
                  </apex:panelGrid>
             </apex:outputPanel>    
- 
+            <br/>      
             <apex:pageBlockButtons location="bottom" >
                 <apex:outputPanel id="commandButtons">
 	                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons" />
