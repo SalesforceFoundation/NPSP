@@ -39,7 +39,6 @@ private class HH_CampaignDedupeBTN_TEST {
       npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
-                    npo02__DISABLE_Households_trigger__c = false,                   
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,
@@ -51,7 +50,12 @@ private class HH_CampaignDedupeBTN_TEST {
                     npo02__Rollup_N_Day_Value__c = 10,
                     npo02__Household_Mailing_List_ID__c = null                    
                 ));
-                
+    
+    //Since test is using "seeAllData=true" we delete all trigger handlers and re-create them
+    delete [select Class__c from Trigger_Handler__c];    
+    List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+    insert defaultConfig;
+            
     // create test data
     Account acct = new Account (
       Name='Test Account'

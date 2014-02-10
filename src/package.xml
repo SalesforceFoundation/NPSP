@@ -22,6 +22,10 @@
     </types>
     <types>
         <members>*</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
         <members>Account</members>
         <members>Contact</members>
         <members>Lead</members>

@@ -1,0 +1,52 @@
+<apex:page controller="STG_PanelRDCustomFieldMapping_CTRL" >
+
+    <apex:form id="form" styleClass="stgForm" >  
+        <apex:sectionHeader title="Recurring Donation Settings" subtitle="Custom Field Mappings" >
+            <apex:outputPanel layout="block" styleClass="sectionHelp" >
+                Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.<br/><br/>
+            </apex:outputPanel>            
+        </apex:sectionHeader>
+        <apex:pageMessages />
+        <apex:pageBlock mode="maindetail">
+
+            <h3 class="sectionBar" >Custom Field Mappings</h3>            
+                <apex:pageBlockTable value="{!listRDCustomFieldMapping}" var="fm" >
+                    <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
+                        <apex:commandLink action="{!deleteFm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
+                            <apex:param assignTo="{!fmIdDelete}" name="idDeleteFm" value="{!fm.Id}" /> 
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column value="{!fm.npe03__Recurring_Donation_Field__c}" />
+                    <apex:column value="{!fm.npe03__Opportunity_Field__c}" />
+                </apex:pageBlockTable> 
+            
+            <apex:outputPanel rendered="{!isEditMode}" >
+                <h3 class="sectionBar" >New Field Mapping</h3>
+                <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Recurring Donation field to be mapped, and the Opportunity field it maps to.</apex:outputPanel>
+                <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
+     
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.Label}"/>
+                    <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" >
+                        <apex:selectOptions value="{!listSORDFields}"  />
+                    </apex:selectList>
+                    <apex:outputLabel value="(need inlinehelptext set on npe03__Custom_Field_Mapping__c fields)" />
+                    <!-- <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.InlineHelpText}"/> -->
+                                    
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.Label}"/>
+                    <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" >
+                        <apex:selectOptions value="{!listSOOppFields}"  />
+                    </apex:selectList>
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.InlineHelpText}"/>
+
+                </apex:panelGrid>
+            </apex:outputPanel>
+                  
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="New Field Mapping" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="Create Field Mapping" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="Cancel" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            </apex:pageBlockButtons>
+ 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

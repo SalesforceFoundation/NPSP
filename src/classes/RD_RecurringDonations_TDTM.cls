@@ -34,69 +34,10 @@
 */
 public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 	
-    // the main entry point for TDTM to invoke our trigger handlers.
-    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-    
-        // dispatch to the correct handler
-        if (objResult == Schema.Sobjecttype.Opportunity)
-            return runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        else if (objResult == Schema.Sobjecttype.npe03__Recurring_Donation__c)
-            return runRDTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        else
-            return null;
-    }
-	
-	// trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
-	// needs to see if the Opp is changing to closed, and if it has open RD's, update them.
-    private DmlWrapper runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
-        // DJH:UNDONE previous trigger checked this, but we will do differently with TDTM?
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
-        if (rds.npe03__DISABLE_Donations_trigger__c || system.isFuture()) 
-            return null;
-        	
-        RD_ProcessControl.hasRun = true;
-        DmlWrapper dmlWrapper = new DmlWrapper();
-        
-        set<id> rdIDs = new set<id>();        
-        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-        	integer i = 0;       
-            for (SObject sobj : newlist) {
-            	Opportunity o = (Opportunity)sobj;
-                //does it have a recurring donation reference?
-                //has it moved into a closed state?
-                Opportunity oppOld = (Opportunity)oldlist[i];
-                if (o.npe03__Recurring_Donation__c != null && o.isClosed && !oppOld.isClosed) {
-                    rdIds.add(o.npe03__Recurring_Donation__c);
-                }
-                i++;
-            }                  
-        }           
-        
-        //Get the open label for opps
-        string openLabel = system.label.npe03.RecurringDonationOpenStatus;
-        Integer rdcount = 0;
-        rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel and id IN :RDids];
-                                                                                          
-        //recurring donations that need to be updated      
-        if (rdcount > 0){
-            if (rdcount == 1 || system.isBatch() || RD_ProcessControl.batchButton)
-                RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
-            else
-                RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
-        }
-        
-        return dmlWrapper;            
-    }
-    
-
-
     // trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
     // needs to see if the Opp is changing to closed, and if it has open RD's, update them.
-    private DmlWrapper runRDTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>(); 
@@ -104,7 +45,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
 
         // DJH:UNDONE remove trigger check when handled by TDTM.
         npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
-        if (rds.npe03__DISABLE_RecurringDonations_trigger__c || RD_ProcessControl.hasRun) 
+        if (RD_ProcessControl.hasRun) 
             return null;
             
         if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {

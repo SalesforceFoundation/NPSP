@@ -73,7 +73,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 
         //typically this is handled through the contact, but for old households
         //being updated, we need to get the list here
-        list<id> blankHHDeletes = new list<id>();
+        list<SObject> blankHHDeletes = new list<SObject>();
      
         //if its an update, we need to get some data about their
         //old Household for processing
@@ -153,7 +153,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
                         setHHIdToRollup.add(oldcmap.get(c.id).npo02__household__c);
                     }
                     else if(oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0){
-                        blankHHDeletes.add(oldcmap.get(c.id).npo02__household__c);
+                        blankHHDeletes.add(new npo02__Household__c(Id = oldcmap.get(c.id).npo02__household__c));
                     }       
                 }                    
                 else if (newcmap.get(c.id).npo02__Naming_Exclusions__c != oldcmap.get(c.id).npo02__Naming_Exclusions__c)
@@ -371,7 +371,7 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
     /// <param name="Contact"> List of contacts meeting trigger criteria </param>
         public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
             
-        list<Id> householdDeletes = new list<Id>();
+        list<SObject> householdDeletes = new list<SObject>();
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
         //reload to evaluate delete criteria
@@ -395,14 +395,13 @@ global without sharing class HH_Households_TDTM extends TDTM_Runnable {
         for (Contact c : contacts){
             //If there are no other Contacts on the Account
             if (householdCountMap.get(c.npo02__household__c) < 1 )
-                householdDeletes.add(c.npo02__household__c);
+                householdDeletes.add(new npo02__Household__c(Id = c.npo02__household__c));
             //otherwise, we need to update the household
-            else     
+            else
                 householdrenames.add(c.npo02__household__c);        
         }
 
         if (householdDeletes.size() > 0) {
-            //Database.DeleteResult[] lsr = Database.delete(householdDeletes, false);
             dmlWrapper.objectsToDelete.addAll(householdDeletes);
         }           
         

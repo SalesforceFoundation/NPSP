@@ -50,7 +50,8 @@ public class RLLP_OppRollup_CTRL {
         try {
             objectId = ApexPages.currentPage().getParameters().get('id');
             oid = objectId;
-        } catch (exception e) {     
+        } catch (exception e) {
+        	ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
         }  
         
         if (oid != null) {
@@ -81,12 +82,19 @@ public class RLLP_OppRollup_CTRL {
     }
 
     public PageReference rollup() {
-        
-        // run batch rollup
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();
-        
-        batchRunning = true;
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        // run batch rollup
+	        RLLP_OppRollup rg = new RLLP_OppRollup();
+	        rg.rollupAll();
+	        
+	        batchRunning = true;
+	        
+        } catch(Exception e) {
+        	Database.rollback(sp);
+        	ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        	ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
         return null;                
     }
 

@@ -200,7 +200,7 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);        
     }
     
-    private static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
+    public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
         
         //clear out whatever settings exist
         delete [select id from npe5__Affiliations_Settings__c limit 100];

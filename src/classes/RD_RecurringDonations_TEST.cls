@@ -76,8 +76,8 @@ public class RD_RecurringDonations_TEST {
         r0.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         try {
             insert r0;
-        } catch (exception e) {
-            
+        } catch (Exception e) {
+            ERR_Handler.processError(e, r0, ERR_Handler.Context.RD);
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -252,7 +252,9 @@ public class RD_RecurringDonations_TEST {
         RD_ProcessControl.hasRun = false;
         try{
             delete r2;
-        } catch (exception e1) {}
+        } catch (exception e1) {
+            ERR_Handler.processError(e1, r2, ERR_Handler.Context.RD);
+        }
         
         //delete should have failed
         Opportunity[] installments3 = [select amount from Opportunity where npe03__Recurring_Donation__c = :r2.id];
@@ -1466,7 +1468,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1506,7 +1509,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1548,7 +1552,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        RD_ErrorHandling.handleDMLErrorsOnOppInsert(lsr, badOpps);
+        ERR_Handler errorHandler = new ERR_Handler();
+        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------
@@ -1556,7 +1561,7 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'batchStatusBarTest') return;
 
         UTIL_JobProgress_CTRL controller = new UTIL_JobProgress_CTRL();
-        controller.getBatchJobs(); 
+        controller.getBatchJobs();
     }
 
     //--------------- from RD_RecurringDonations_BATCH -----------------
@@ -1605,14 +1610,17 @@ public class RD_RecurringDonations_TEST {
         Test.setCurrentPageReference(new PageReference('Page.RecurringDonationsSettings'));
         
         //pass the controller into the extension
-        STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL(); 
+        /****
+        STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL();
         controller.getSettingsFirstTime();
         test.startTest();
         controller.runBatch();
-        test.stopTest();  
+        test.stopTest();
+        *********/  
     }  
-    
-    /** Test Methods from STTG_RecurringDonations_CTRL  **/ 
+
+/******************************************************************    
+    // Test Methods from STTG_RecurringDonations_CTRL   
     public static testMethod void TEST_RecurringDonationsSettings() {
         if (strTestOnly != '*' && strTestOnly != 'TEST_RecurringDonationsSettings') return;
 
@@ -1699,6 +1707,7 @@ public class RD_RecurringDonations_TEST {
         controller.cis.add(new npe03__Custom_Installment_Settings__c(Name = 'CisSetTest', npe03__Value__c = 1, npe03__Increment__c = 'Weeks'));
         controller.saveCISettings();
     }
+*************************************************************************/
    
    // from RD_RecurringDonations_SCHED  
    static testmethod void test(){ 

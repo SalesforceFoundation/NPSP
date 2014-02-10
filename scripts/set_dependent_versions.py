@@ -13,7 +13,8 @@ config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),'cumulus.c
 root_dir = os.path.abspath(os.path.join(os.path.abspath(__file__),os.path.pardir,os.path.pardir))
 src_dir = os.path.join(root_dir,'src')
 readme_file = os.path.join(root_dir,'README.md')
-build_xml_file = os.path.join(root_dir,'build.xml')
+#build_xml_file = os.path.join(root_dir,'build.xml')
+version_properties_file = os.path.join(root_dir,'version.properties')
 
 def get_meta_files():
     matches = []
@@ -110,18 +111,31 @@ def update_readme_links():
         print 'Updated install urls in README.md'
         open(readme_file, 'w').write(readme)    
 
-def update_build_xml_versions():
-    print 'Checking installPackage versions in build.xml'
-    build_xml = open(build_xml_file, 'r').read()
-    orig_build_xml = build_xml
+#def update_build_xml_versions():
+#    print 'Checking installPackage versions in build.xml'
+#    build_xml = open(build_xml_file, 'r').read()
+#    orig_build_xml = build_xml
+#    for section in config.sections():
+#        search = r'(<property.*name="version.%s".*value=)"(\d+\.\d+)"' % section
+#        full_version = '%s.%s' % (config.get(section, 'major'), config.get(section, 'minor')) 
+#        replace = r'\1"%s"' % full_version
+#        build_xml = re.sub(search, replace, build_xml)
+#    if orig_build_xml != build_xml:
+#        print 'Updated installPackage versions in build.xml'
+#        open(build_xml_file, 'w').write(build_xml)
+
+def update_version_properties():
+    print "Checking version.properties file"
+    props = open(version_properties_file, 'r').read()
+    orig_props = props
     for section in config.sections():
-        search = r'(<property.*name="version.%s".*value=)"(\d+\.\d+)"' % section
+        search = r'version\.%s=(.*)' % section
         full_version = '%s.%s' % (config.get(section, 'major'), config.get(section, 'minor')) 
-        replace = r'\1"%s"' % full_version
-        build_xml = re.sub(search, replace, build_xml)
-    if orig_build_xml != build_xml:
-        print 'Updated installPackage versions in build.xml'
-        open(build_xml_file, 'w').write(build_xml)
+        replace = r'version.%s=%s' % (section, full_version)
+        props = re.sub(search, replace, props)
+    if orig_props != props:
+        print 'Updated version.properites with new managed package versions'
+        open(version_properties_file, 'w').write(props)
     
 def main():
     # Parse the config file
@@ -132,7 +146,7 @@ def main():
     files = get_meta_files()
     update_meta_files(files)
     update_readme_links()
-    update_build_xml_versions()
+    update_version_properties()
 
 if __name__ == '__main__':
   main()

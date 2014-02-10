@@ -35,8 +35,13 @@
 @isTest
 public class HH_HouseholdNaming_TEST {
 
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
     /** @description Test method for batch */
     public static testMethod void testBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
@@ -84,6 +89,7 @@ public class HH_HouseholdNaming_TEST {
     }
     
     static testMethod void HouseholdNamingTest(){
+      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -137,12 +143,12 @@ public class HH_HouseholdNaming_TEST {
         
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         //test for coverage
-         hn.ActivateAdvancedGreetings(true);
-        
+        hn.ActivateAdvancedGreetings(true);
     }
     
     static testMethod void HouseholdNamingUpdateTest(){
-        //settings
+      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
+      //settings
       npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
@@ -257,7 +263,8 @@ public class HH_HouseholdNaming_TEST {
     }
     
     public static testMethod void testNamingOrder() {
-        //settings
+      if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
+      //settings
       npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,

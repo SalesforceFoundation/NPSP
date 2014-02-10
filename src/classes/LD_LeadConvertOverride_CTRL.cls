@@ -123,43 +123,37 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }           
 
     public pageReference convertOneToOne() {
-        if (con == null) {
-            apexPages.addMessage(
-                new ApexPages.Message(ApexPages.Severity.Error,
-                'You must select an option in the Contact box.'
-            ));
-            return null;
-        }
-        
-        // set up the conversion
-        Database.LeadConvert lc = new database.LeadConvert();
-        lc.setLeadId(l.Id);
-        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
-        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
-        lc.setConvertedStatus(leadConvStatus);
-        lc.setOwnerId(dummyCon.OwnerId);
-        
-        // is this a merge to existing?
-        if (con != 'NEW_CONTACT') { 
-            // get this contact's account
-            lc.setContactId(con);
-            lc.setAccountId(conMap.get(con).accountId);          
-        }
-        else{
-            if (CAO_Constants.isBucketModel() && 
-            (l.Company == CAO_Constants.BUCKET_ACCOUNT_NAME || l.Company == 'self' 
-            || l.Company == '' || l.Company == null))
-               lc.setAccountID(CAO_Constants.getIndividualAccountID());
-        }
-        
-               
-
-        // convert the lead
-        PageReference pageRef;
-        Database.LeadConvertResult lcr;
-        try {
-            lcr = Database.convertLead(lc);
-            
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+	        if (con == null) {
+	            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
+	                'You must select an option in the Contact box.'));
+	            return null;
+	        }
+	        
+	        // set up the conversion
+	        Database.LeadConvert lc = new database.LeadConvert();
+	        lc.setLeadId(l.Id);
+	        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
+	        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
+	        lc.setConvertedStatus(leadConvStatus);
+	        lc.setOwnerId(dummyCon.OwnerId);
+	        
+	        // is this a merge to existing?
+	        if (con != 'NEW_CONTACT') { 
+	            // get this contact's account
+	            lc.setContactId(con);
+	            lc.setAccountId(conMap.get(con).accountId);          
+	        }
+	        else{
+	            if (CAO_Constants.isBucketModel() && 
+	            (l.Company == CAO_Constants.BUCKET_ACCOUNT_NAME || l.Company == 'self' 
+	            || l.Company == '' || l.Company == null))
+	               lc.setAccountID(CAO_Constants.getIndividualAccountID());
+	        }    
+	
+	        // convert the lead
+	        Database.LeadConvertResult lcr = Database.convertLead(lc);
             
             // fix the account that lead conversion created
             if (con == 'NEW_CONTACT' && !CAO_Constants.isBucketModel()) {     
@@ -177,8 +171,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
                 myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
                 update myAccount;
-            }   
-            
+            }     
             
             //clean up the extra OCR Issue #214
             // if we create an opp, its a 1x1, and its merged into an existing contact
@@ -208,20 +201,15 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     ocr.IsPrimary = true;
                     update ocr;
                 } 
-            }
-            
-            
-            
-            pageRef = new PageReference('/' + lcr.getContactId());          
-        } catch (exception e) {
-            apexPages.addMessage(
-                new ApexPages.Message(ApexPages.Severity.Error, e.getMessage())
-            );
+                        
+	        }
+	        // redirect
+            return new PageReference('/' + lcr.getContactId());                  
+    	} catch (exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.LD);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
         }
-        
-                            
-        
-        // redirect
-        return pageRef;     
     }
 }

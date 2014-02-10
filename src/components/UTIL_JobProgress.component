@@ -36,15 +36,17 @@
  
     
     <!-- This action poller will check the status of the batch jobs every 5 seconds -->
-    <apex:actionPoller rerender="jobs" interval="5"/>
-    <apex:pageBlock title="{!batchComponentLabel}">
+    <!-- DH: note that it used to just rerender jobs, but i had to change it to rerender the pageblock to get it working in STG_SettingsManager panels. -->
+    <apex:actionPoller rerender="pbBatchJobsProgress" interval="5" />                                  
+    <apex:pageBlock title="{!batchComponentLabel}" id="pbBatchJobsProgress" >
     
         <apex:pageBlockTable value="{!batchJobs}" var="b" id="jobs">
-                                    
+
             <apex:column headerValue="Apex Class" value="{!b.job.ApexClass.Name}"/>
             <apex:column value="{!b.job.CreatedDate}"/>
             <apex:column value="{!b.job.CreatedById}"/>
             <apex:column value="{!b.job.Status}"/>            
+            <apex:column value="{!b.job.ExtendedStatus}"/>            
             <apex:column width="320px" >
  
                 <!-- Here with have two divs that construct our progresses bar. An outer which is the entire bar,

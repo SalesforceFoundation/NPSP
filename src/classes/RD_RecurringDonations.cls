@@ -165,11 +165,19 @@ public with sharing class RD_RecurringDonations {
     } 
    
     // requery for all the fields we need on the list of new RD's (including currency info) 
-    public static list<npe03__Recurring_Donation__c> requeryListRD(set<Id> setRDId) {
-    
-        //James Melville 05/03/2011 Dynamically build Recurring donation query to allow currency to be included if needed.
-        //build start of dynamic query
+    public static list<npe03__Recurring_Donation__c> requeryListRD(set<Id> setRDId) {    
+        string queryRCD = strQueryRDNoWhere();
+        queryRCD += ' where Id in :setRDId';
         
+        //execute query
+        return Database.query(queryRCD);
+    }
+    
+    // shared helper routine to create the soql string against Recurring Donations.
+    // includes fields from the custom field map, and currencyiso fields.
+    // does not include the where clause (since different callers had different filtering needs)
+    public static string strQueryRDNoWhere() {
+    	
         set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name',
                                                        'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
                                                        'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
@@ -196,13 +204,11 @@ public with sharing class RD_RecurringDonations {
         if (isMultiCurrency)
             queryRCD = queryRCD + ',CurrencyIsoCode';
     
-        queryRCD=queryRCD+' from npe03__Recurring_Donation__c where Id in :setRDId';
+        queryRCD=queryRCD+' from npe03__Recurring_Donation__c';
         
-        //execute query
-        return Database.query(queryRCD);
-    }
-    
-    
+        return (queryRCD);
+    }   
+     
     //future wrapper for rds with no opptys closed
     @future
     public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids){
@@ -455,7 +461,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-                RD_ErrorHandling.handleDMLErrorsOnOppInsert(badSRs, badOpps);
+            	ERR_Handler errorHandler = new ERR_Handler();
+                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -810,7 +817,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-                RD_ErrorHandling.handleDMLErrorsOnOppInsert(badSRs, badOpps);
+            	ERR_Handler errorHandler = new ERR_Handler();
+                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
             }
         }
         
@@ -854,7 +862,7 @@ public with sharing class RD_RecurringDonations {
                 recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
                 recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = true;
                 recurringDonationsSettings.npe03__Enable_Update_Check__c = true;
-                recurringDonationsSettings.npe03__Error_Email_Notifications__c = 'All Sys Admins';
+                //recurringDonationsSettings.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting
                 recurringDonationsSettings.npe03__Maximum_Donations__c = 50;
                 recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = 12;
                 recurringDonationsSettings.npe03__Update_Check_Interval__c = 90;
@@ -877,10 +885,15 @@ public with sharing class RD_RecurringDonations {
          
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()){
                 //system.debug('IN THE PRIVATE METHOD3');
-                if (dmlWrapper != null)
-                    dmlWrapper.objectsToDelete.addAll(mapIdOpp.keySet());
-                else
+                if (dmlWrapper != null) {
+                    List<SObject> oppsToDelete = new List<SObject>();
+                    for(Id oppToDeleteId : mapIdOpp.keySet()) {
+                    	oppsToDelete.add(new Opportunity(Id = oppToDeleteId));
+                    }
+                    dmlWrapper.objectsToDelete.addAll(oppsToDelete);
+                } else {
                     database.delete(mapIdOpp.values());
+                }
             }              
             else if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()){
                 for (Opportunity o : mapIdOpp.values()){
