@@ -14,6 +14,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             update STG_Panel.stgService.stgRD;
+            strRDOppRecordTypeLabel = null;
 
             //if we reduced the number of forecast months, we need to trim opps
             if (originalForecastMonths > STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
@@ -25,6 +26,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
                 rdbatch.runBatch();
             }
             originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
+            isEditMode = false;
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler.Context.STTG);
@@ -55,5 +57,15 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         }
         private set;
     }    
+
+    static public string strRDOppRecordTypeLabel {
+        get {
+            if (strRDOppRecordTypeLabel == null) {
+                strRDOppRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName('Opportunity', STG_Panel.stgService.stgRD.npe03__Record_Type__c);
+            }
+            return strRDOppRecordTypeLabel;
+        }
+        private set;
+    }
     
 }

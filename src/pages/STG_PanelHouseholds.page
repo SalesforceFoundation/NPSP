@@ -10,7 +10,8 @@
             <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}"/>
-                <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                <apex:outputText value="{!stgService.stgHH.npo02__Household_Rules__c}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}">
                     <apex:selectOptions value="{!listSOHHRules}"/>
                 </apex:selectList>
                 <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.InlineHelpText}" />
@@ -25,7 +26,8 @@
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}"/>
-                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}">
                     <apex:selectOptions value="{!listSOMailingReportIds}"/>
                 </apex:selectList>
                 <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.InlineHelpText}" />

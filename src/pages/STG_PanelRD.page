@@ -14,7 +14,8 @@
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.InlineHelpText}"/>
                 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Open_Opportunity_Behavior__c.Label}"/>
-                <apex:selectList value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" size="1" multiselect="false" disabled="{!isReadOnlyMode}">
+                <apex:outputField value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" size="1" multiselect="false" rendered="{!isEditMode}">
                     <apex:selectOptions value="{!listSORDCloseOptions}" />
                 </apex:selectList>
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Open_Opportunity_Behavior__c.InlineHelpText}"/>
@@ -30,7 +31,8 @@
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Add_Campaign_to_All_Opportunites__c.InlineHelpText}"/>
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.Label}"/>
-                <apex:selectList value="{!stgService.stgRD.npe03__Record_Type__c}" size="1" multiselect="false" disabled="{!isReadOnlyMode}">
+                <apex:outputText value="{!strRDOppRecordTypeLabel}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgRD.npe03__Record_Type__c}" size="1" multiselect="false" rendered="{!isEditMode}">
                     <apex:selectOptions value="{!listSOOppRecTypesIds}" />
                 </apex:selectList>
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.InlineHelpText}"/>
