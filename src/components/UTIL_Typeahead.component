@@ -142,8 +142,8 @@
                     j$(ctrl).attr('data-id', id);
 
                     // if destinations are defined, set them too
-                    j$('#{!destinationForSelectedId}').val( id );
-                    j$('#{!destinationForSelectedValue}').val( value );
+                    j$('[id$={!destinationForSelectedId}]').val( id );
+                    j$('[id$={!destinationForSelectedValue}]').val( value );
                 },
 
             fieldList: 
@@ -232,7 +232,6 @@
 
     <div>
     <input id="{!searchBoxId}" placeholder="{!placeholder}" class="{!styleClass}" style="{!style}" />
-    </div>
-    <input type="hidden" name="groupId" id="groupId" />
+    </div> 
 
 </apex:component>
