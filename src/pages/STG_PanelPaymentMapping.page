@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelPaymentMapping_CTRL" action="{!checkSettings}" >
+<apex:page controller="STG_PanelPaymentMapping_CTRL" >
 
     <apex:form id="form">  
 	    <apex:sectionHeader title="Donations" subtitle="Payment Field Mappings" />
