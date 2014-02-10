@@ -8,9 +8,9 @@
             <h3 class="sectionBar" >Lead Settings</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}"/>
-                <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" />
+                <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" id="cbxDOC" />
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.InlineHelpText}" />
                                                           
             </apex:panelGrid> 
             
