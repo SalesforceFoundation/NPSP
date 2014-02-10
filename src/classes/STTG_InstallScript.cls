@@ -1,19 +1,24 @@
-global class STTG_InstallScript implements InstallHandler {   
-  
+global class STTG_InstallScript implements InstallHandler {
+
     global void onInstall(InstallContext context) {
-    	
-    	//First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-    	if(context.previousVersion() == null) {
-    		System.debug('****First install');
-    		//Get the mapping from old settings to the new TDTM default setup
-            Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-    	    //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-    	    Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap); 		
-    		//Setup the new configuration
-    		setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);		
-    	}
+        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+        if(context.previousVersion() == null) {
+            System.debug('****First install');
+            runNewOrgScript();
+        }
     }
-    
+
+    global void runNewOrgScript(){
+        //provides a global callable method for running the default install script to setup TDTM in new orgs
+
+        //Get the mapping from old settings to the new TDTM default setup
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        //Setup the new configuration
+        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
+    }
+
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
     	
     	Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
