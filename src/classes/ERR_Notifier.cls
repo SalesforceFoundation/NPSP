@@ -79,7 +79,8 @@ public with sharing class ERR_Notifier {
     	
     	if(chatterGroupId instanceof Id) {
 	    	CollaborationGroup collaborationGroup = [select Id, Name from CollaborationGroup where id = :chatterGroupId];
-	        List<Error__c> errors = [select Id, Record_URL__c, Full_Message__c from Error__c where Posted_in_Chatter__c = false];    
+	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c from Error__c 
+	                                   where Posted_in_Chatter__c = false];    
 	        
 	        if (!errors.isEmpty()) {
 	        	List<FeedItem> postsToInsert = new List<FeedItem>();
