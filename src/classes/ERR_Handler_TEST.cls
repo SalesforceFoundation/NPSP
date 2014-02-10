@@ -37,7 +37,7 @@ public with sharing class ERR_Handler_TEST {
     private static Id chatterGroupId;
     
     private static void setup() {
-    	CollaborationGroup chatterGroup = new CollaborationGroup(Name = 'ChatterTestGroup', CollaborationType = 'Public');
+    	CollaborationGroup chatterGroup = new CollaborationGroup(Name = 'ChatterTestGroup', CollaborationType = 'Private');
     	insert chatterGroup;
     	chatterGroupId = chatterGroup.Id;
     	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
@@ -181,6 +181,7 @@ public with sharing class ERR_Handler_TEST {
         
         //Verify error record was created -> Nope. Since we are using Database insert the operation
         //gets rolled back and then run again only with records that succeed. No error is saved.
+        //**Note that we have not created a Trigger_Handler__c record with the test class that would throw an exception**
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
         System.assertEquals(0, errors.size());                                    
     }
