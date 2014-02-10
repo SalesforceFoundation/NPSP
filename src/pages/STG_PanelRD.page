@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelRD_CTRL" docType="html-5.0">
+<apex:page controller="STG_PanelRD_CTRL" docType="html-5.0" action="{!init}">
 
     <apex:form id="form">   
         <apex:sectionHeader title="Donations" subtitle="Recurring Donation Settings" />        
