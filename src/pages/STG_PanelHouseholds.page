@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="NPSP Settings" subtitle="Household Settings" />        
+        <apex:sectionHeader title="Households" subtitle="Household Settings" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbHH" mode="maindetail">
  

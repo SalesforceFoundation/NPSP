@@ -1,15 +1,14 @@
 <apex:page controller="STG_PanelPaymentMapping_CTRL" action="{!checkSettings}" >
 
     <apex:form id="form">  
-	    <apex:sectionHeader title="Donations" subtitle="Payment Field Mappings" >
-            <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.<br/><br/>
-            </apex:outputPanel>
-	    </apex:sectionHeader>
+	    <apex:sectionHeader title="Donations" subtitle="Payment Field Mappings" />
 	    <apex:pageMessages />
 	    <apex:pageBlock mode="maindetail">
 
 	        <h3 class="sectionBar" >Payment Mappings</h3>
+            <apex:outputPanel layout="block" styleClass="sectionHelp" >
+                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.
+            </apex:outputPanel>
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
 	                <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
 	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >

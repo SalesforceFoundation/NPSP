@@ -1,9 +1,7 @@
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0" action="{!getSettingsFirstTime}" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Recurring Donation Settings" subtitle="Custom Installment Periods" >
-            
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Donations" subtitle="Recurring Donation Custom Installment Periods" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 

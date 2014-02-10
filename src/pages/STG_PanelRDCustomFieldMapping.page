@@ -1,15 +1,12 @@
 <apex:page controller="STG_PanelRDCustomFieldMapping_CTRL" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Recurring Donation Settings" subtitle="Custom Field Mappings" >
-            <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.<br/><br/>
-            </apex:outputPanel>            
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Donations" subtitle="Recurring Donation Custom Field Mappings" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
             <h3 class="sectionBar" >Custom Field Mappings</h3>            
+                <apex:outputPanel layout="block" styleClass="sectionHelp">Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.</apex:outputPanel>
                 <apex:pageBlockTable value="{!listRDCustomFieldMapping}" var="fm" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteFm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >

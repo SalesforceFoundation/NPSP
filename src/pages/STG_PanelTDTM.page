@@ -1,13 +1,12 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="System" subtitle="Trigger Configuration" >
-            <apex:pageMessage summary="These triggers control Cumulus, and if you mess it up, we will be very unhappy!" severity="warning" strength="1" />
-        </apex:sectionHeader>
+        <apex:sectionHeader title="System" subtitle="Trigger Configuration" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
             <h3 class="sectionBar" >Trigger Handlers</h3>            
+                <apex:pageMessage summary="These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them." severity="warning" strength="1" /><br/>
                 <apex:pageBlockTable value="{!listTH}" var="th" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteTh}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >

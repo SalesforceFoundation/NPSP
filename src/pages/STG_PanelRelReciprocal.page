@@ -1,13 +1,12 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Relationship Settings" subtitle="Reciprocal Relationships" >
-            <apex:outputText value="{!$Label.npe4__RelationshipsLookupDescription}" styleClass="sectionHelp" />            
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Connections" subtitle="Reciprocal Relationships" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >Reciprocal Relationships</h3>            
+            <h3 class="sectionBar" >Reciprocal Relationships</h3>    
+                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe4__RelationshipsLookupDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!listRelLookup}" var="rl" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteRl}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >

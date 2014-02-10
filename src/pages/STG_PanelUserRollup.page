@@ -1,17 +1,12 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" action="{!checkSettings}" >
 
     <apex:form id="form">  
-        <apex:sectionHeader title="Donations" subtitle="User Defined Rollups">
-            <description>
-                <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                    {!$Label.npo02__UDRDescription}<br/><br/>
-                </apex:outputPanel>
-            </description>  
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Donations" subtitle="User Defined Rollups" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
  
             <h3 class="sectionBar" >Current User Defined Rollups</h3>
+                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <!-- edit has some problems with current ui.  not worth supporting?
