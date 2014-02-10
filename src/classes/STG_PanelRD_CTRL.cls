@@ -5,8 +5,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     //holds value to evaluate change in forecast months
     private integer originalForecastMonths;
     
-    public STG_PanelRD_CTRL() {
-    	originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
+    public STG_PanelRD_CTRL() {}
+    
+    public void init(){
+        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
     }
     
     public override PageReference saveSettings() { 
