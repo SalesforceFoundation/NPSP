@@ -47,7 +47,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
 
     public string getStrSoql() {    
         string strSoql = 'select Id, Context_Type__c, Datetime__c, Error_Type__c, Full_Message__c, ' +
-                    ' Module_Type__c, Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c ';
+                    'Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c ';
         if (ctrlSoqlListView.strAlphaFilter != null && ctrlSoqlListView.sortItemField != 'Datetime__c' && ctrlSoqlListView.strAlphaFilter != '%') {
             strSoql += ' Where ' + ctrlSoqlListView.sortItemField + ' like \'' + ctrlSoqlListView.strAlphaFilter + '%\'';
         } 
@@ -58,7 +58,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     public list<string> getstrFields()
         { 
     	   return new list<string> { 'Context_Type__c', 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
-                    'Module_Type__c', 'Object_Type__c', 'Record_URL__c', 'Stack_Trace__c' };  // can't include  ', CreatedBy.Name'  unfortunately!
+                    'Object_Type__c', 'Record_URL__c', 'Stack_Trace__c' };  // can't include  ', CreatedBy.Name'  unfortunately!
         } 
     
     public string getstrNameField(){ return 'Datetime__c';  }
@@ -81,7 +81,7 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
             if (listError == null) {
                 listError = new list<Error__c>();
                 listError = [select Id, Context_Type__c, Datetime__c, Error_Type__c, Full_Message__c, 
-                    Module_Type__c, Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c order by Datetime__c desc limit 50];
+                    Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c order by Datetime__c desc limit 50];
             } 
             return listError;           
         }
