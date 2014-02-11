@@ -564,7 +564,7 @@ private class REL_Relationships_TEST {
     static testMethod void testErrorRecordCreation(){
     	if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
     	
-    	insert new Error_Settings__c(Store_Errors__c = true);
+    	insert new Error_Settings__c(Store_Errors_On__c = true);
     	
         setupRelationshipTestData(null);
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{

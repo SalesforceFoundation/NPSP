@@ -1,8 +1,8 @@
 <apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0" >
 
 <!-- We need jQuery - use CDNs to save user from re-downloading it if possible -->
-<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" />
-
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
+    
 <apex:includeScript value="{!$Resource.CollapsibleListJS}" />
 
 <style> 
@@ -276,6 +276,7 @@
                     <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
                     <ul>
                     <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">Error Log</a></li>
+                    <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">Error Notifications</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
                     <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Donations Batch</a></li>
                     <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
@@ -384,6 +385,10 @@
 
                         <div class="panel" id="idPanelTDTM" style="display:none" >
                             <apex:include pageName="STG_PanelTDTM" />
+                        </div>
+                        
+                        <div class="panel" id="idPanelErrorNotif" style="display:none" >
+                            <apex:include pageName="STG_PanelERR" />
                         </div>
                 </div>
             </td>

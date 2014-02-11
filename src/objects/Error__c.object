@@ -58,6 +58,15 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>Email_Sent__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates whether an email notification has been sent regarding this error.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether an email notification has been sent regarding this error.</inlineHelpText>
+        <label>Email Sent</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Error_Type__c</fullName>
         <description>Type of error that occurred</description>
         <externalId>false</externalId>
@@ -77,15 +86,6 @@
         <visibleLines>5</visibleLines>
     </fields>
     <fields>
-        <fullName>Module_Type__c</fullName>
-        <description>Module that generated the error, if known.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Module that generated the error, if known.</inlineHelpText>
-        <label>Module Type</label>
-        <required>false</required>
-        <type>TextArea</type>
-    </fields>
-    <fields>
         <fullName>Object_Type__c</fullName>
         <description>Type of object on which the error occurred, if known.</description>
         <externalId>false</externalId>
@@ -93,6 +93,15 @@
         <label>Object Type</label>
         <required>false</required>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Posted_in_Chatter__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates whether the error has been posted in Chatter.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the error has been posted in Chatter.</inlineHelpText>
+        <label>Posted in Chatter</label>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Record_URL__c</fullName>
