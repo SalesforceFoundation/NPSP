@@ -21,7 +21,22 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
 	        return listSOGenderFieldOptions;
         }
         private set;
+    }
+    
+    public string strGenderFieldLabel {
+    	get {
+    		return getFieldLabel('Contact', STG_Panel.stgService.stgRel.npe4__Gender_Field__c);
+    	}
     }  
     
+    // cover over describe call to handle fields that no longer exist.
+    private string getFieldLabel(string strObj, string strField) {
+        try {
+            return UTIL_Describe.getFieldLabel(strObj, strField);                   
+        } catch (Exception e) {
+            return strField;
+        }       
+    }
+        
     
 }

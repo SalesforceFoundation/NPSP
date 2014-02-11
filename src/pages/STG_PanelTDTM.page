@@ -1,13 +1,12 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="System" subtitle="Trigger Configuration" >
-            <apex:pageMessage summary="These triggers control Cumulus, and if you mess it up, we will be very unhappy!" severity="warning" strength="1" />
-        </apex:sectionHeader>
+        <apex:sectionHeader title="System" subtitle="Trigger Configuration" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
             <h3 class="sectionBar" >Trigger Handlers</h3>            
+                <apex:pageMessage summary="These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them." severity="warning" strength="1" /><br/>
                 <apex:pageBlockTable value="{!listTH}" var="th" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteTh}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
@@ -26,28 +25,28 @@
                 <h3 class="sectionBar" >New Trigger Handler</h3>
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewAc" >
      
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}"/>
-                    <apex:inputField value="{!thNew.Object__c}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" />
+                    <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}"/>
-                    <apex:inputField value="{!thNew.Class__c}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" />
+                    <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}"/>
-                    <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" />
+                    <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.InlineHelpText}"/>
                     
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}"/>
                     <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.InlineHelpText}"/>
                                                                             
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}"/>
-                    <apex:inputField value="{!thNew.Active__c}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" />
+                    <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}"/>
-                    <apex:inputField value="{!thNew.Asynchronous__c}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" />
+                    <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" />
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.InlineHelpText}"/>
                     
                 </apex:panelGrid>
