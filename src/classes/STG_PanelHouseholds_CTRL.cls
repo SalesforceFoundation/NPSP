@@ -22,4 +22,18 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return null;
     }
 
+    static public string strMailingReport {
+        get {
+            if (strMailingReport == null) {
+            	ID id = STG_Panel.stgService.stgHH.npo02__Household_Mailing_List_ID__c;
+            	if (id != null) {
+	                list<Report> listRpt = [select Id, Name from Report where id = :id];
+	                if (listRpt.size() > 0)
+	                   strMailingReport = listRpt[0].Name;
+            	}
+            }
+            return strMailingReport;
+        }
+        private set;
+    }
 }

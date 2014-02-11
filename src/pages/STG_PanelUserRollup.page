@@ -1,17 +1,12 @@
-<apex:page controller="STG_PanelUserRollup_CTRL" action="{!checkSettings}" >
+<apex:page controller="STG_PanelUserRollup_CTRL" >
 
     <apex:form id="form">  
-        <apex:sectionHeader title="Donations" subtitle="User Defined Rollups">
-            <description>
-                <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                    {!$Label.npo02__UDRDescription}<br/><br/>
-                </apex:outputPanel>
-            </description>  
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Donations" subtitle="User Defined Rollups" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
  
             <h3 class="sectionBar" >Current User Defined Rollups</h3>
+                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <!-- edit has some problems with current ui.  not worth supporting?
@@ -44,30 +39,30 @@
 	            <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Opportunity field to be mapped, and the Payment field it maps to.<br/><br/></apex:outputPanel>
 	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
 	 
-	                <apex:outputLabel value="Opportunity Field to Rollup" />
-	                <apex:selectList value="{!activeUDR.SourceField}" rendered="{!!ISNULL(sourcefields)}" multiselect="false" size="5">
+	                <apex:outputLabel value="Opportunity Field to Rollup" for="slSF" />
+	                <apex:selectList value="{!activeUDR.SourceField}" rendered="{!!ISNULL(sourcefields)}" multiselect="false" size="5" id="slSF" >
 	                    <apex:selectOptions value="{!sourcefields}"/>
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForSourceField}"/>                       
 	                </apex:selectList>                                  
 	                <apex:outputText rendered="{!ISNULL(sourcefields)}">No valid Opportunity fields found.</apex:outputText>
 	                <apex:outputLabel value="Select the Opportunity field you wish to rollup"/>
 	                                
-	                <apex:outputlabel value="Rollup Type"/>
-	                <apex:selectList title="Supported Operations" value="{!activeUDR.Operation}" multiselect="false"  size="4">
+	                <apex:outputlabel value="Rollup Type" for="slSO" />
+	                <apex:selectList title="Supported Operations" value="{!activeUDR.Operation}" multiselect="false"  size="4" id="slSO" >
 	                    <apex:selectOptions value="{!validoperators}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForOperation}"/>
 	                </apex:selectList>                
 	                <apex:outputLabel value="Select the valid rollup operation for this field"/>
 	
-	                <apex:outputlabel value="Target Object"/>
-	                <apex:selectList value="{!activeUDR.TargetObject}" multiselect="false"  size="3">
+	                <apex:outputlabel value="Target Object" for="slTO" />
+	                <apex:selectList value="{!activeUDR.TargetObject}" multiselect="false"  size="3" id="slTO" >
 	                    <apex:selectOptions value="{!targetobjects}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForTargetObject}"/>
 	                </apex:selectList>
 	                <apex:outputLabel value="Select the object you wish to rollup to"/>
 	
-	                <apex:outputlabel value="Target Field"/>
-	                <apex:selectList title="Supported Operations" value="{!activeUDR.TargetField}" multiselect="false"  size="5">
+	                <apex:outputlabel value="Target Field" for="slSOp" />
+	                <apex:selectList title="Supported Operations" value="{!activeUDR.TargetField}" multiselect="false"  size="5" id="slSOp" >
 	                    <apex:selectOptions value="{!targetfields}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate"/>
 	                </apex:selectList>

@@ -8,12 +8,12 @@
             <h3 class="sectionBar" >Batch Data Entry Settings</h3>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}"/>
-                <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" />
+                <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.InlineHelpText}"/>
 
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}"/>
-                <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" />
+                <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.InlineHelpText}"/>
                                                           
             </apex:panelGrid>
