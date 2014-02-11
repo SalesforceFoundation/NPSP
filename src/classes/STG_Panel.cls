@@ -221,7 +221,7 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-
+       
     static public string strHHAccountRecordTypeLabel {
     	get {
     		if (strHHAccountRecordTypeLabel == null) {
@@ -240,6 +240,5 @@ public with sharing virtual class STG_Panel {
             return strOneToOneRecordTypeLabel;
         }
         private set;
-    }
-      
+    }       
 }
