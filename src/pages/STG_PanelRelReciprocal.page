@@ -1,13 +1,12 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Relationship Settings" subtitle="Reciprocal Relationships" >
-            <apex:outputText value="{!$Label.npe4__RelationshipsLookupDescription}" styleClass="sectionHelp" />            
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Connections" subtitle="Reciprocal Relationships" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >Reciprocal Relationships</h3>            
+            <h3 class="sectionBar" >Reciprocal Relationships</h3>    
+                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe4__RelationshipsLookupDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!listRelLookup}" var="rl" >
                     <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteRl}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
@@ -24,20 +23,20 @@
                 <h3 class="sectionBar" >New Reciprocal Relationship</h3>
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewRl" >
      
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}"/>
-                    <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}" for="tbxN" />
+                    <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" />
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}"/>
-                    <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}" for="tbxM" />
+                    <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" id="tbxM" />
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}"/>
-                    <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}" for="tbxF" />
+                    <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" id="tbxF" />
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.InlineHelpText}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}"/>
-                    <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}" for="tbxNe" />
+                    <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" id="tbxNe" />
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.InlineHelpText}"/>
                                                         
                 </apex:panelGrid>

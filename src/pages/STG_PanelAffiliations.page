@@ -8,9 +8,9 @@
             <h3 class="sectionBar" >Affiliation Settings</h3>            
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" />
+                <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" disabled="{!isReadOnlyMode}" id="cbxAACTO" />
+                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.InlineHelpText}" />
                                 
             </apex:panelGrid>
  

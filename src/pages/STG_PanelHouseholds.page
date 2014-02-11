@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="NPSP Settings" subtitle="Household Settings" />        
+        <apex:sectionHeader title="Households" subtitle="Household Settings" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbHH" mode="maindetail">
  
@@ -9,41 +9,43 @@
             <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</apex:outputPanel>
             <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}"/>
-                <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" />
+                <apex:outputField value="{!stgService.stgHH.npo02__Household_Rules__c}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgHH.npo02__Household_Rules__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHR" >
                     <apex:selectOptions value="{!listSOHHRules}"/>
                 </apex:selectList>
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.InlineHelpText}" />
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.Label}"/>
                 <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_Creation_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Creation_Excluded_Recordtypes__c.InlineHelpText}" />
 
             </apex:panelGrid>
 
             <h3 class="sectionBar" >General Settings</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}"/>
-                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" disabled="{!isReadOnlyMode}">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" />
+                <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" >
                     <apex:selectOptions value="{!listSOMailingReportIds}"/>
                 </apex:selectList>
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.InlineHelpText}" />
 
             </apex:panelGrid>
 
             <h3 class="sectionBar" >Household Name Settings</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}"/>
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" />
                 <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" 
-                    rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" />
-                <apex:outputText value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.InlineHelpText}" 
+                    rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" id="cbxAHN" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.InlineHelpText}" 
                     rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" />
 
                 <apex:commandbutton value="Activate Advanced Household Naming" action="{!activateHouseholdNaming}" rerender="pbHH" 
                     rendered="{! isEditMode && !stgService.stgHH.npo02__Advanced_Household_Naming__c}" />
-                <apex:outputtext value="Clicking this button will activate advanced household naming, and populate your existing formal greeting, informal greeting and household name fields with new names. THIS IS AN IRREVERSIBLE PROCESS. 
+                <apex:outputLabel value="Clicking this button will activate advanced household naming, and populate your existing formal greeting, informal greeting and household name fields with new names. THIS IS AN IRREVERSIBLE PROCESS. 
                     While you can deactive household naming, the newly populated names will remain.  
                     Toggling on, off, then on again may have unpredictable results.  
                     DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING. 

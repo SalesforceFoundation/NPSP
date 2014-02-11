@@ -123,11 +123,12 @@
     }
     
     .propEdit select:disabled {
-        color: black;   // on Windows, disabled was too washed out.  On Mac, this color gets ignored!
+        color: black;   <!-- on Windows, disabled was too washed out.  On Mac, this color gets ignored! -->
     }
     
     table .propHelpText {
-        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
+        color: gray; 
+        padding-bottom: 6px;
     }
     
     .sub-nav-item {
@@ -142,11 +143,28 @@
         margin-top: 10px;    
     }
     
-    .sectionHelp {
-        color: gray; // a font color that appears dark, but non-black, on both Windows and Mac!
-        padding: 20px;    
+    .sectionBar {
+        display: block;
+        background: #E5F2F6;
+        text-indent: 10px;
+        padding: 5px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: lightblue;
     }
     
+    .sectionHelp {
+        color: gray; 
+        padding: 5px 5px 5px 10px;
+        margin-top: -11px;
+        margin-bottom: 10px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: lightblue;
+    }
+  
     .clsLoading {
         z-index: 99;
         position: fixed;
@@ -156,15 +174,6 @@
         width: 400px;
         height: 40px;       
     }   
-    
-    .sectionBar {
-        display: block;
-        background: #E5F2F6;
-        text-indent: 10px;
-        padding: 5px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
     
     .stgForm {
         width: 100%;
@@ -180,7 +189,10 @@
     // page init function
     j$(function () {        
         ShowPanel(idPanelCurrent);
-        j$('#mynavbar').collapsibleList('.header', {search: false, animate: false});
+        var cl = j$('#mynavbar').collapsibleList('.header', {search: false, animate: false});
+        // start with navbar all collapsed.  couldn't figure out how to call collapseAllHeaders(),
+        // but submitting the click on all li's does the trick!
+        j$('li',cl).trigger('click');
     });
         
     function ShowPanel(idPanel) {            
@@ -195,6 +207,9 @@
         idPanelCurrent = idPanel;
         node = document.getElementById(idPanelCurrent + 'Nav');
         if (node != null) node.classList.add('nav-selected');
+        
+        // scroll the panel into view
+        j$('body').scrollTop(0);
         
         // save current panel to server?
         // or assume panels maintain this?
@@ -262,7 +277,7 @@
                     <ul>
                     <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">Error Log</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
-                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Nightly Batch</a></li>
+                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Donations Batch</a></li>
                     <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
                     </ul>
                     </ul>

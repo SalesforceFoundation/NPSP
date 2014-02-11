@@ -1,9 +1,7 @@
-<apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0" action="{!getSettingsFirstTime}" >
+<apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0"  >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Recurring Donation Settings" subtitle="Custom Installment Periods" >
-            
-        </apex:sectionHeader>
+        <apex:sectionHeader title="Donations" subtitle="Recurring Donation Custom Installment Periods" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
@@ -23,16 +21,16 @@
 	            <h3 class="sectionBar" >New Installment Period</h3>
 	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
 	 
-	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}"/>
-	                <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" />
+	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" />
+	                <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" />
 	                <apex:outputLabel value="(need helptext added to all fields in custom setting npe03__Custom_Installment_Settings__c!)"/>
 	                
-	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}"/>
-	                <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" />
+	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" />
+	                <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" />
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.InlineHelpText}"/>
 	                
-	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}"/>
-	                <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" >
+	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" />
+	                <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slI" >
 	                    <apex:selectOptions value="{!listSORDCustomPeriod}"/>
 	                </apex:selectList>
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.InlineHelpText}"/>

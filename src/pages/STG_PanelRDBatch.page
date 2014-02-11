@@ -31,7 +31,7 @@
             </apex:outputPanel>
 
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Run Batch Update" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRDBatch" />
+                <apex:commandButton value="Run Batch" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRDBatch" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>
