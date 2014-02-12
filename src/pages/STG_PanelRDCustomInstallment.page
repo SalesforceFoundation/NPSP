@@ -23,7 +23,7 @@
 	 
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" />
 	                <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" />
-	                <apex:outputLabel value="(need helptext added to all fields in custom setting npe03__Custom_Installment_Settings__c!)"/>
+	                <apex:outputLabel value="The name of the new Custom Installment Period"/>
 	                
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" />
 	                <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" />

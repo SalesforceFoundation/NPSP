@@ -172,7 +172,8 @@
         left: 30%;
         background: lightyellow;
         width: 400px;
-        height: 40px;       
+        height: 40px; 
+        border-radius: 3px;      
     }   
     
     .stgForm {
