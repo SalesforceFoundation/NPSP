@@ -34,8 +34,14 @@ public with sharing class ERR_Handler_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
     
+    private static Id chatterGroupId;
+    
     private static void setup() {
-    	insert new Error_Settings__c(Store_Errors__c = true);
+    	CollaborationGroup chatterGroup = new CollaborationGroup(Name = 'ChatterTestGroup', CollaborationType = 'Private');
+    	insert chatterGroup;
+    	chatterGroupId = chatterGroup.Id;
+    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
+    	                               Error_Notifications_To__c = chatterGroup.Id);
     }
     
     /*** We need to use Database.insert because otherwise the code does not pass the contacts insert
@@ -69,8 +75,8 @@ public with sharing class ERR_Handler_TEST {
 	    LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
         
-        //If a non-dml error occurs we rolled the whole thing back, and flag all message as having errors.
-        //(Unfortunately we cannot check (and assert) the error messages added.)
+        //Database.insert will roll everything back if there is an error, and then run again only with the records that
+        //don't produce exceptions
         System.assertEquals(true, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
         System.assertEquals(true, results[2].isSuccess()); 
@@ -81,7 +87,12 @@ public with sharing class ERR_Handler_TEST {
         
         //Verify error record was created
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
-        System.assertEquals(1, errors.size()); 
+        System.assertEquals(1, errors.size());
+        
+        //Verify error was posted to chatter group
+        List<FeedItem> chatterPosts = [select Title from FeedItem where ParentId = :chatterGroupId];
+        System.assertEquals(1, chatterPosts.size());
+        System.assertEquals('NPSP Error', chatterPosts[0].Title);
     }
     
     /** To prove that there are different types of null pointer exceptions. In this case the account
@@ -115,8 +126,8 @@ public with sharing class ERR_Handler_TEST {
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
         
-        //If a non-dml error occurs we rolled the whole thing back, and flag all message as having errors.
-        //(Unfortunately we cannot check (and assert) the error messages added.)
+        //Database.insert will roll everything back if there is an error, and then run again only with the records that
+        //don't produce exceptions
         System.assertEquals(true, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
         System.assertEquals(true, results[2].isSuccess());
@@ -158,8 +169,8 @@ public with sharing class ERR_Handler_TEST {
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
         
-        //If a non-dml error occurs we rolled the whole thing back, and flag all message as having errors.
-        //(Unfortunately we cannot check (and assert) the error messages added.)
+        //Database.insert will roll everything back if there is an error, and then run again only with the records that
+        //don't produce exceptions
         System.assertEquals(true, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
         System.assertEquals(true, results[2].isSuccess()); 
@@ -170,6 +181,7 @@ public with sharing class ERR_Handler_TEST {
         
         //Verify error record was created -> Nope. Since we are using Database insert the operation
         //gets rolled back and then run again only with records that succeed. No error is saved.
+        //**Note that we have not created a Trigger_Handler__c record with the test class that would throw an exception**
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
         System.assertEquals(0, errors.size());                                    
     }

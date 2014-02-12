@@ -80,6 +80,14 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    public Error_Settings__c stgErr {
+        get {
+            if (stgErr == null) stgErr = ERR_Notifier.getOrgSettings();
+            return stgErr;
+        }
+        private set;
+    }
+    
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
             if (stgBDE == null) stgBDE = Batch_Data_Entry_Settings__c.getOrgDefaults();
@@ -134,12 +142,14 @@ public with sharing class STG_SettingsService {
     
     public void saveAll() {
     	system.debug('stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
-    	   ' stgRD: ' + stgRD + + ' stgRel: ' + stgRel + ' stgAffl: ' + stgAffl + ' stgBDE: ' + stgBDE);
+    	   ' stgRD: ' + stgRD + + ' stgRel: ' + stgRel + ' stgAffl: ' + stgAffl + ' stgBDE: ' + stgBDE + 
+    	   ' stgERR: ' + stgErr);
         upsert stgCon;
         upsert stgHH;
         upsert stgRD;
         upsert stgRel;
-        upsert stgAffl; 
-        upsert stgBDE;  	
+        upsert stgAffl;
+        upsert stgBDE;
+        upsert stgErr; 	
     }
 }

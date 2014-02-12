@@ -1,0 +1,72 @@
+<apex:page controller="STG_PanelERR_CTRL">
+
+    <script>
+        jerr$ = jQuery.noConflict();
+        
+        jerr$(document).ready(function() {     
+            jerr$('span[id$=chatterGroupBox]').hide();
+        });
+        
+        jerr$(document).on('change', 'select[id$=notificationOption]', function() {         
+            if(jerr$('select[id$=notificationOption]').find(':selected').text() == 'Chatter Group') {
+                jerr$('span[id$=chatterGroupBox]').show();
+            } else {
+                jerr$('span[id$=chatterGroupBox]').hide();
+            }
+        });
+        
+        jerr$(document).on('click', 'input[id$=saveNotif]', function() { 
+            jerr$('span[id$=chatterGroupBox]').hide();
+        });
+        
+        jerr$(document).on('click', 'input[id$=cancelNotif]', function() { 
+            jerr$('span[id$=chatterGroupBox]').hide();
+        });
+    </script>
+    
+    <apex:form id="form">   
+        <apex:sectionHeader title="System" subtitle="Error Notifications" />        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock mode="maindetail">
+ 
+            <h3 class="sectionBar" >Error Notification Settings</h3>        
+            <apex:panelGrid id="fields" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.InlineHelpText}" />
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" />
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.InlineHelpText}" />
+                
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}"/>
+                <apex:outputText value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}">
+                    <apex:selectOptions value="{!listSOERRNotifOptions}" />
+                </apex:selectList>
+                <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.InlineHelpText}" />
+            </apex:panelGrid>
+             
+            <apex:outputPanel id="chatterGroupBox">
+                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+                    <apex:outputLabel value="Select Chatter Group"/>
+                    <c:UTIL_Typeahead searchBoxId="chatterGroupSearchBox" object="CollaborationGroup" primaryField="Name" searchScope="NAME"
+                        placeholder="Type something..." minSearchLength="2" destinationForSelectedId="groupId" stealFocus="false" style="width:80%;" /> 
+                    <apex:outputText value="Chatter group where error notifications will be posted."/>
+                 </apex:panelGrid>
+                 <apex:inputHidden id="groupId" value="{!groupId}" />
+            </apex:outputPanel>    
+            <br/>      
+            <apex:pageBlockButtons location="bottom" >
+                <apex:outputPanel id="commandButtons">
+	                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons" />
+	                <apex:commandButton id="saveNotif" value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons" />
+	                <apex:commandButton id="cancelNotif" value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons" />
+	            </apex:outputPanel>
+            </apex:pageBlockButtons>
+     
+        </apex:pageBlock>
+    </apex:form>
+     
+</apex:page>
