@@ -25,6 +25,8 @@
     <members>ERR_Handler</members>
     <members>ERR_Handler_CTRL_TEST</members>
     <members>ERR_Handler_TEST</members>
+    <members>ERR_Notifier</members>
+    <members>ERR_Notifier_TEST</members>
     <members>ERR_ParentAccountUpdater2_TEST</members>
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -83,6 +85,7 @@
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
     <members>STG_PanelContacts_CTRL</members>
+    <members>STG_PanelERR_CTRL</members>
     <members>STG_PanelErrorLog_CTRL</members>
     <members>STG_PanelHouseholds_CTRL</members>
     <members>STG_PanelLeads_CTRL</members>
@@ -120,6 +123,8 @@
     <members>UTIL_RecordTypes</members>
     <members>UTIL_RecordTypes_TEST</members>
     <members>UTIL_SoqlListView_CTRL</members>
+    <members>UTIL_Typeahead</members>
+    <members>UTIL_Typeahead_TEST</members>
     <members>UTIL_UnitTestData_TEST</members>
     <members>UTIL_iSoqlListViewConsumer</members>
     <name>ApexClass</name>
@@ -128,6 +133,7 @@
     <members>STG_DataBoundMultiSelect</members>
     <members>UTIL_JobProgress</members>
     <members>UTIL_SoqlListView</members>
+    <members>UTIL_Typeahead</members>
     <name>ApexComponent</name>
   </types>
   <types>
@@ -147,6 +153,7 @@
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
     <members>STG_PanelContacts</members>
+    <members>STG_PanelERR</members>
     <members>STG_PanelErrorLog</members>
     <members>STG_PanelHome</members>
     <members>STG_PanelHouseholds</members>
@@ -194,15 +201,16 @@
     <members>Contact.Batch__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
-    <members>Error_Settings__c.Email_List__c</members>
-    <members>Error_Settings__c.Email_Notifications__c</members>
-    <members>Error_Settings__c.Store_Errors__c</members>
+    <members>Error_Settings__c.Error_Notifications_On__c</members>
+    <members>Error_Settings__c.Error_Notifications_To__c</members>
+    <members>Error_Settings__c.Store_Errors_On__c</members>
     <members>Error__c.Context_Type__c</members>
     <members>Error__c.Datetime__c</members>
+    <members>Error__c.Email_Sent__c</members>
     <members>Error__c.Error_Type__c</members>
     <members>Error__c.Full_Message__c</members>
-    <members>Error__c.Module_Type__c</members>
     <members>Error__c.Object_Type__c</members>
+    <members>Error__c.Posted_in_Chatter__c</members>
     <members>Error__c.Record_URL__c</members>
     <members>Error__c.Stack_Trace__c</members>
     <members>Lead.Batch__c</members>
@@ -280,6 +288,7 @@
     <members>CollapsibleListJS</members>
     <members>ManageHouseholdcss</members>
     <members>ManageHouseholdjs</members>
+    <members>Typeahead</members>
     <name>StaticResource</name>
   </types>
   <version>29.0</version>
