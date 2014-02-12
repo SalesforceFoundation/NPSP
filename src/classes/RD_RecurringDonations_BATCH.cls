@@ -68,8 +68,8 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         rds.npe03__Number_of_Failures__c = errorcount;
         update rds;                            
         
-        //if needed, send messages from the error queue
-        ERR_Notifier.sendErrorQueueEmailNotification(new String[]{ERR_Notifier.getOrgSettings().Error_Notifications_To__c});        
+        //if needed, send error notifications
+        ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.RD);       
     }
     
     

@@ -32,7 +32,7 @@ public with sharing class ERR_Notifier {
         }
     }
     
-    public static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
+    private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
         if(context != null && context == ERR_Handler.Context.RD) {
             if (!system.isBatch() && !system.isFuture()) {
                 sendErrorQueueEmailNotificationFuture(sendList);
@@ -43,11 +43,11 @@ public with sharing class ERR_Notifier {
     }
     
     @future
-    public static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
+    private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
     	sendErrorQueueEmailNotification(sendList); 
     }
     
-    public static void sendErrorQueueEmailNotification(List<String> sendList) {
+    private static void sendErrorQueueEmailNotification(List<String> sendList) {
         List<Error__c> errors = [select Id, Record_URL__c, Full_Message__c from Error__c where Email_Sent__c = false];
         
         if (!errors.isEmpty()) {
