@@ -11,7 +11,7 @@ public with sharing class ERR_Notifier {
     public static void sendErrorNotifications(ERR_Handler.Context context) {
     	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
             
-        if (errorNotifRecipient != null) {
+        if (Error_Settings__c.getOrgDefaults().Error_Notifications_On__c == true && errorNotifRecipient != null) {
         	//We will post to chatter, if enabled
         	if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
         	&& Schema.SObjectType.User.isFeedEnabled()) {
@@ -80,8 +80,8 @@ public with sharing class ERR_Notifier {
     	
     	if(chatterGroupId instanceof Id) {
 	    	SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
-	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c from Error__c 
-	                                   where Posted_in_Chatter__c = false];    
+	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
+	                                    Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
 	        
 	        if (!errors.isEmpty()) {
 	        	List<SObject> postsToInsert = new List<SObject>();
@@ -90,8 +90,12 @@ public with sharing class ERR_Notifier {
 	        		post.put('Title', 'NPSP Error');
 	        		String body = '\nError Type: ' + error.Error_Type__c;
 	        		body += '\nError Date: ' + error.Datetime__c;
-	        		body += '\n' + error.Full_Message__c;
-	        		body += '\n' + error.Record_URL__c;
+	        		body += '\nMessage: "' + error.Full_Message__c + '"';
+	        		if(error.Record_URL__c != null)
+	        		    body += '\n' + error.Record_URL__c;
+	        		if(error.Context_Type__c != null)
+	        		    body += '\nContext: ' + error.Context_Type__c;
+	        		body += '\nStack Trace:\n ' + error.Stack_Trace__c;
 	        		post.put('Body', body);
 	        		post.put('ParentId', collaborationGroup.Id);
 	        		postsToInsert.add(post);
