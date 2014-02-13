@@ -11,7 +11,8 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
             if (listSOERRNotifOptions == null) {
                 listSOERRNotifOptions = new list<SelectOption>();
                 listSOERRNotifOptions.add(new SelectOption('None', 'None'));
-                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.chatterGroup, 'Chatter Group'));
+                if(Schema.SObjectType.User.isFeedEnabled())
+                    listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.chatterGroup, 'Chatter Group'));
                 listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.sysAdmins, 'All Sys Admins'));
                 for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
                     listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
@@ -28,11 +29,11 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
         	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c; 
         	
             if (errorNotifRecipient != null) {
-                if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
+                if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
                    strErrorNotifDisplayName = 'Group: ';
-                   List<CollaborationGroup> chatterGroupsNotif = [select Id, Name from CollaborationGroup where id = :errorNotifRecipient];
+                   List<SObject> chatterGroupsNotif = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
                    if(chatterGroupsNotif.size() > 0) 
-                       strErrorNotifDisplayName += chatterGroupsNotif[0].Name;
+                       strErrorNotifDisplayName += chatterGroupsNotif[0].get('Name');
                 } else if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.user)) {
                    strErrorNotifDisplayName = 'User: ';
                    List<User> usersNotif = [select Name from User where id = :errorNotifRecipient];
