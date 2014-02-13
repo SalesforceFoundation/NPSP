@@ -33,13 +33,11 @@ public with sharing class ERR_Notifier {
     }
     
     private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
-    	/* Turning off sending emails in a future call. Some tests were failing because of this (they seem to be tests that
-    	perform multiple operations in one test).
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             sendErrorQueueEmailNotificationFuture(sendList);
-        } else if (system.isFuture()){*/
+        } else if (system.isFuture()) {
             sendErrorQueueEmailNotification(sendList);
-        //}
+        }
     }
     
     @future

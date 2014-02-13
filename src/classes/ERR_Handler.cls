@@ -70,7 +70,7 @@ public with sharing class ERR_Handler {
     	
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
-    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c)
+    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c && errorsExist)
            ERR_Notifier.sendErrorNotifications(context);
            
     	return ErrorsExist;
