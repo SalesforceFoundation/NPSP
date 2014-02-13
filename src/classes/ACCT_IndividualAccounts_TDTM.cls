@@ -632,42 +632,42 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     // returns whether changes in the contact require an update to the 1:1 account   
     private boolean needsOne2OneAccountUpdate(Contact conNew, Contact conOld) {
        return (conNew.AccountId != conOld.AccountId ||
-                conNew.FirstName != conOld.FirstName ||
-                conNew.LastName != conOld.LastName ||
-                conNew.MailingStreet != conOld.MailingStreet ||
-                conNew.MailingCity != conOld.MailingCity ||
-                conNew.MailingState != conOld.MailingState ||
+                !(conNew.FirstName.equals(conOld.FirstName)) ||
+                !(conNew.LastName.equals(conOld.LastName)) ||
+                !(conNew.MailingStreet.equals(conOld.MailingStreet)) ||
+                !(conNew.MailingCity.equals(conOld.MailingCity)) ||
+                !(conNew.MailingState.equals(conOld.MailingState)) ||
                 conNew.MailingPostalCode != conOld.MailingPostalCode ||
-                conNew.MailingCountry != conOld.MailingCountry ||
-                conNew.OtherStreet != conOld.OtherStreet ||
-                conNew.OtherCity != conOld.OtherCity ||
-                conNew.OtherState != conOld.OtherState ||
+                !(conNew.MailingCountry.equals(conOld.MailingCountry)) ||
+                !(conNew.OtherStreet.equals(conOld.OtherStreet)) ||
+                !(conNew.OtherCity.equals(conOld.OtherCity)) ||
+                !(conNew.OtherState.equals(conOld.OtherState)) ||
                 conNew.OtherPostalCode != conOld.OtherPostalCode ||
-                conNew.OtherCountry != conOld.OtherCountry ||
+                !(conNew.OtherCountry.equals(conOld.OtherCountry)) ||
                 conNew.Phone != conOld.Phone ||
                 conNew.Fax != conOld.Fax);
     }
  
     // returns whether changes in the contact require a rename of a HH Account   
     private boolean needsHHAccountRename(Contact conNew, Contact conOld) {
-        return (conNew.Firstname != conOld.Firstname ||
-                conNew.Lastname != conOld.Lastname ||
-                conNew.Salutation != conOld.Salutation ||
+        return (!(conNew.Firstname.equals(conOld.Firstname)) ||
+                !(conNew.Lastname.equals(conOld.Lastname)) ||
+                !(conNew.Salutation.equals(conOld.Salutation)) ||
                 conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c);
     }   
     
     // returns whether changes in the contact require an address change in the HH Account
     private boolean needsHHAccountAddressUpdate(Contact conNew, Contact conOld) {
-       return ( conNew.MailingStreet != conOld.MailingStreet ||
-                conNew.MailingCity != conOld.MailingCity ||
-                conNew.MailingState != conOld.MailingState ||
+       return (!(conNew.MailingStreet.equals(conOld.MailingStreet)) ||
+                !(conNew.MailingCity.equals(conOld.MailingCity)) ||
+                !(conNew.MailingState.equals(conOld.MailingState)) ||
                 conNew.MailingPostalCode != conOld.MailingPostalCode ||
-                conNew.MailingCountry != conOld.MailingCountry ||
-                conNew.OtherStreet != conOld.OtherStreet ||
-                conNew.OtherCity != conOld.OtherCity ||
-                conNew.OtherState != conOld.OtherState ||
+                !(conNew.MailingCountry.equals(conOld.MailingCountry)) ||
+                !(conNew.OtherStreet.equals(conOld.OtherStreet)) ||
+                !(conNew.OtherCity.equals(conOld.OtherCity)) ||
+                !(conNew.OtherState.equals(conOld.OtherState)) ||
                 conNew.OtherPostalCode != conOld.OtherPostalCode ||
-                conNew.OtherCountry != conOld.OtherCountry);
+                !(conNew.OtherCountry.equals(conOld.OtherCountry)));
     }
 
     // the default name for a new HH Account
