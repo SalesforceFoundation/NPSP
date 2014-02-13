@@ -59,29 +59,23 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         }    
     }
     global void finish(Database.BatchableContext bc) {
-    	Savepoint sp = Database.setSavepoint();
-        try {
-	        //update our settings
-	        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
-	        
-	        AsyncApexJob a = [select Id, Status, NumberOfErrors, JobItemsProcessed,
-	                            TotalJobItems, CompletedDate
-	                            from AsyncApexJob 
-	                            where Id = :BC.getJobId()];
-	        integer errorcount = 0;
-	        errorcount = [select count() from Error__c];                             
-	                            
-	        rds.npe03__Last_Batch_Run__c = a.CompletedDate;
-	        rds.npe03__Number_of_Successes__c = recCount - errorcount;
-	        rds.npe03__Number_of_Failures__c = errorcount;
-	        update rds;                            
-	        
-	        //if needed, send error notifications
-	        ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.RD);
-	    } catch(Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.RD);
-        }        
+        //update our settings
+        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        
+        AsyncApexJob a = [select Id, Status, NumberOfErrors, JobItemsProcessed,
+                            TotalJobItems, CompletedDate
+                            from AsyncApexJob 
+                            where Id = :BC.getJobId()];
+        
+        integer errorcount = [select count() from Error__c];                             
+                            
+        rds.npe03__Last_Batch_Run__c = a.CompletedDate;
+        rds.npe03__Number_of_Successes__c = recCount - errorcount;
+        rds.npe03__Number_of_Failures__c = errorcount;
+        update rds;                            
+        
+        //if needed, send error notifications
+        ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.RD);        
     }
     
     
