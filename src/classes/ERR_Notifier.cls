@@ -12,8 +12,9 @@ public with sharing class ERR_Notifier {
     	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
             
         if (errorNotifRecipient != null) {
-        	//We will post to chatter
-        	if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup)) {
+        	//We will post to chatter, if enabled
+        	if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
+        	&& Schema.SObjectType.User.isFeedEnabled()) {
         		postErrorsToChatter(errorNotifRecipient);
         	//We will send email
         	} else {
@@ -78,21 +79,21 @@ public with sharing class ERR_Notifier {
     public static void postErrorsToChatter(String chatterGroupId) {
     	
     	if(chatterGroupId instanceof Id) {
-	    	CollaborationGroup collaborationGroup = [select Id, Name from CollaborationGroup where id = :chatterGroupId];
+	    	SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
 	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c from Error__c 
 	                                   where Posted_in_Chatter__c = false];    
 	        
 	        if (!errors.isEmpty()) {
-	        	List<FeedItem> postsToInsert = new List<FeedItem>();
+	        	List<SObject> postsToInsert = new List<SObject>();
 	        	for(Error__c error : errors) {
-	        		FeedItem post = new FeedItem();
-	        		post.Title = 'NPSP Error';
+	        		SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
+	        		post.put('Title', 'NPSP Error');
 	        		String body = '\nError Type: ' + error.Error_Type__c;
 	        		body += '\nError Date: ' + error.Datetime__c;
 	        		body += '\n' + error.Full_Message__c;
 	        		body += '\n' + error.Record_URL__c;
-	        		post.Body = body;
-	        		post.ParentId = collaborationGroup.Id;
+	        		post.put('Body', body);
+	        		post.put('ParentId', collaborationGroup.Id);
 	        		postsToInsert.add(post);
 	        		error.Posted_in_Chatter__c = true;
 	        	}
