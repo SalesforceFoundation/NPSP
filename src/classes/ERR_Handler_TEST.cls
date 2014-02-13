@@ -37,11 +37,17 @@ public with sharing class ERR_Handler_TEST {
     private static Id chatterGroupId;
     
     private static void setup() {
-    	CollaborationGroup chatterGroup = new CollaborationGroup(Name = 'ChatterTestGroup', CollaborationType = 'Private');
-    	insert chatterGroup;
-    	chatterGroupId = chatterGroup.Id;
-    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
-    	                               Error_Notifications_To__c = chatterGroup.Id);
+    	if(Schema.SObjectType.User.isFeedEnabled()) {
+	    	SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
+	    	chatterGroup.put('Name', 'ChatterTestGroup');
+	    	chatterGroup.put('CollaborationType', 'Private');
+	    	insert chatterGroup;
+	    	chatterGroupId = chatterGroup.Id;
+	    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
+	    	                               Error_Notifications_To__c = chatterGroup.Id);
+    	} else {
+    		insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true);
+    	}
     }
     
     /*** We need to use Database.insert because otherwise the code does not pass the contacts insert
@@ -90,9 +96,11 @@ public with sharing class ERR_Handler_TEST {
         System.assertEquals(1, errors.size());
         
         //Verify error was posted to chatter group
-        List<FeedItem> chatterPosts = [select Title from FeedItem where ParentId = :chatterGroupId];
-        System.assertEquals(1, chatterPosts.size());
-        System.assertEquals('NPSP Error', chatterPosts[0].Title);
+        if(Schema.SObjectType.User.isFeedEnabled()) {
+	        List<SObject> chatterPosts = Database.query('select Title from FeedItem where ParentId = :chatterGroupId');
+	        System.assertEquals(1, chatterPosts.size());
+	        System.assertEquals('NPSP Error', chatterPosts[0].get('Title'));
+        }
     }
     
     /** To prove that there are different types of null pointer exceptions. In this case the account
