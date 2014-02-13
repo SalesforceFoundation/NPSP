@@ -11,7 +11,7 @@ public with sharing class ERR_Notifier {
     public static void sendErrorNotifications(ERR_Handler.Context context) {
     	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
             
-        if (errorNotifRecipient != null) {
+        if (Error_Settings__c.getOrgDefaults().Error_Notifications_On__c == true && errorNotifRecipient != null) {
         	//We will post to chatter, if enabled
         	if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
         	&& Schema.SObjectType.User.isFeedEnabled()) {
@@ -32,23 +32,22 @@ public with sharing class ERR_Notifier {
         }
     }
     
-    public static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
-        if(context != null && context == ERR_Handler.Context.RD) {
-            if (!system.isBatch() && !system.isFuture()) {
-                sendErrorQueueEmailNotificationFuture(sendList);
-            } else if (system.isFuture()){
-                sendErrorQueueEmailNotification(sendList);
-            }  
-        }   
+    private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
+        if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+            sendErrorQueueEmailNotificationFuture(sendList);
+        } else if (system.isFuture()) {
+            sendErrorQueueEmailNotification(sendList);
+        }
     }
     
     @future
-    public static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
+    private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
     	sendErrorQueueEmailNotification(sendList); 
     }
     
-    public static void sendErrorQueueEmailNotification(List<String> sendList) {
-        List<Error__c> errors = [select Id, Record_URL__c, Full_Message__c from Error__c where Email_Sent__c = false];
+    private static void sendErrorQueueEmailNotification(List<String> sendList) {
+        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
+                                        Stack_Trace__c from Error__c where Email_Sent__c = false];
         
         if (!errors.isEmpty()) {
             Messaging.SingleEmailMessage sme = createEmailMessage(errors, sendList);
@@ -67,9 +66,10 @@ public with sharing class ERR_Notifier {
         string bodyString = '';
         bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
+        Integer i = 1;
         for (Error__c rdeq : rdeqlist){
-            bodyString += '\n' + rdeq.Record_URL__c;
-            bodystring += ' Error Message: ' + rdeq.Full_Message__c;           
+            bodystring += '\n\n----------\n Error #' + i + ': \n' + getErrorMessageBody(rdeq);
+            i++;           
         }        
         mail.setPlainTextBody(bodyString);      
         mail.setToAddresses(sendList);         
@@ -80,18 +80,15 @@ public with sharing class ERR_Notifier {
     	
     	if(chatterGroupId instanceof Id) {
 	    	SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
-	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c from Error__c 
-	                                   where Posted_in_Chatter__c = false];    
+	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
+	                                    Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
 	        
 	        if (!errors.isEmpty()) {
 	        	List<SObject> postsToInsert = new List<SObject>();
 	        	for(Error__c error : errors) {
 	        		SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
 	        		post.put('Title', 'NPSP Error');
-	        		String body = '\nError Type: ' + error.Error_Type__c;
-	        		body += '\nError Date: ' + error.Datetime__c;
-	        		body += '\n' + error.Full_Message__c;
-	        		body += '\n' + error.Record_URL__c;
+	        		String body = getErrorMessageBody(error);
 	        		post.put('Body', body);
 	        		post.put('ParentId', collaborationGroup.Id);
 	        		postsToInsert.add(post);
@@ -101,6 +98,18 @@ public with sharing class ERR_Notifier {
 	        	update errors; //we don't want to post the same errors again	
 	        }  
     	}
+    }
+    
+    private static String getErrorMessageBody(Error__c error) {
+    	String body = '\nError Type: ' + error.Error_Type__c;
+	    body += '\nError Date: ' + error.Datetime__c;
+	    body += '\nMessage: "' + error.Full_Message__c + '"';
+	    if(error.Record_URL__c != null)
+	        body += '\n' + error.Record_URL__c;
+	    if(error.Context_Type__c != null)
+	        body += '\nContext: ' + error.Context_Type__c;
+	    body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
+	    return body;
     }
     
     public static Error_Settings__c getOrgSettings() {
