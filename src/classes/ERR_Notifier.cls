@@ -33,7 +33,7 @@ public with sharing class ERR_Notifier {
     }
     
     private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
-        if (!system.isBatch() && !system.isFuture()) {
+        if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             sendErrorQueueEmailNotificationFuture(sendList);
         } else if (system.isFuture()){
             sendErrorQueueEmailNotification(sendList);
