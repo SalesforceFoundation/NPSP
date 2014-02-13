@@ -4,28 +4,28 @@
     <description>This is a generic template for Visualforce Component.  With this template, you may adjust the default elements and values and add new elements and values.</description>
     <label>UTIL_Typeahead</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>95</minorNumber>
         <namespace>npe01</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>92</minorNumber>
-        <namespace>npe03</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>91</minorNumber>
-        <namespace>npe4</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>92</minorNumber>
-        <namespace>npe5</namespace>
-    </packageVersions>
-    <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>96</minorNumber>
+    </packageVersions>
+    <packageVersions>
+        <namespace>npe03</namespace>
+        <majorNumber>2</majorNumber>
+        <minorNumber>92</minorNumber>
+    </packageVersions>
+    <packageVersions>
+        <namespace>npe4</namespace>
+        <majorNumber>2</majorNumber>
+        <minorNumber>91</minorNumber>
+    </packageVersions>
+    <packageVersions>
+        <namespace>npe5</namespace>
+        <majorNumber>1</majorNumber>
+        <minorNumber>92</minorNumber>
+    </packageVersions>
+    <packageVersions>
         <namespace>npo02</namespace>
+        <majorNumber>2</majorNumber>
+        <minorNumber>98</minorNumber>
     </packageVersions>
 </ApexComponent>
