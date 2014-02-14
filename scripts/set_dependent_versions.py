@@ -61,9 +61,6 @@ def update_meta_files(files):
                 if len(namespace_lines) == 3:
                     # We have a namespace, major, and minor version number, output it
 
-                    # Namespace line is unchanged
-                    output.append(namespace_lines['namespace']['line'])
-
                     # Check if major needs changed and if so, change it
                     major = str(int(namespace_lines['major']['value']))
                     cfg_major = str(config.getint(namespace, 'major'))
@@ -83,6 +80,9 @@ def update_meta_files(files):
                         output.append(namespace_lines['minor']['line'].replace(minor, cfg_minor))
                     else:
                         output.append(namespace_lines['minor']['line'])
+
+                    # Namespace line is unchanged
+                    output.append(namespace_lines['namespace']['line'])
 
                     namespace = None
                     namespace_lines = {}
