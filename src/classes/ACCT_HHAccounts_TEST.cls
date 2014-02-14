@@ -812,7 +812,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         list<Opportunity> listOpp2 = [select Id, AccountId, Amount from Opportunity where IsClosed = false];
         system.assertEquals(5, listOpp2.size());
         for (Opportunity opp : listOpp2) {
-            system.assert(opp.AccountId != listOpp[6].AccountId && opp.AccountId != listOpp[8].AccountId);
+            system.assertNotEquals(opp.AccountId, listOpp[6].AccountId);
+            system.assertNotEquals(opp.AccountId, listOpp[8].AccountId);
         }  
             
     }
