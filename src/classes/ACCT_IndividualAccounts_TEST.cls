@@ -169,6 +169,12 @@ private class ACCT_IndividualAccounts_TEST {
     static testMethod void insertUpdateOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOne') return;
     	insertUpdateOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    
+    /// <name> insertUpdateOneToOne </name>
+    /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
+    static testMethod void insertUpdateOneToOneHouseholds() {
+        if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOneHouseholds') return;
         insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     

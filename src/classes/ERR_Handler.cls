@@ -70,8 +70,10 @@ public with sharing class ERR_Handler {
     	
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
-    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c && errorsExist)
+    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c && errorsExist) {
+           System.debug('****Errors exist - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
+    	}
            
     	return ErrorsExist;
     }
@@ -138,8 +140,10 @@ public with sharing class ERR_Handler {
            }
     	}
     	
-    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c)
+    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c) {
+    	   System.debug('****Processing error - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
+    	}
     }
     
     private static void addErrorMessage(SObject record, String defaultMessage) {
