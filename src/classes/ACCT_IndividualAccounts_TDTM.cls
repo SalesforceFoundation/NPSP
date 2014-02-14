@@ -631,8 +631,15 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     // returns whether changes in the contact require an update to the 1:1 account   
     private boolean needsOne2OneAccountUpdate(Contact conNew, Contact conOld) {      
+        if(conNew == null && conOld != null)
+            return true;
+        if(conNew != null && conOld == null)
+            return true;
+        if(conNew.FirstName == null) conNew.FirstName = '';
+        if(conNew.LastName == null) conNew.LastName = '';
+        
         return (conNew.AccountId != conOld.AccountId ||
-                conNew.FirstName != conOld.FirstName ||
+                !conNew.FirstName.equals(conOld.FirstName) ||
                 !conNew.LastName.equals(conOld.LastName) ||
                 conNew.MailingStreet != conOld.MailingStreet ||
                 conNew.MailingCity != conOld.MailingCity ||
@@ -650,6 +657,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
  
     // returns whether changes in the contact require a rename of a HH Account   
     private boolean needsHHAccountRename(Contact conNew, Contact conOld) {          
+        if(conNew == null && conOld != null)
+            return true;
+        if(conNew != null && conOld == null)
+            return true;
+        if(conNew.FirstName == null) conNew.FirstName = '';
+        if(conNew.LastName == null) conNew.LastName = '';
+        
         return (!conNew.Firstname.equals(conOld.Firstname) ||
                 !conNew.Lastname.equals(conOld.Lastname) ||
                 conNew.Salutation != conOld.Salutation ||
