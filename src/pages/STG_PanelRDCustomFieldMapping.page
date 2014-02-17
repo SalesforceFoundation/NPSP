@@ -26,8 +26,7 @@
                     <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slRDF" >
                         <apex:selectOptions value="{!listSORDFields}"  />
                     </apex:selectList>
-                    <apex:outputLabel value="(need inlinehelptext set on npe03__Custom_Field_Mapping__c fields)" />
-                    <!-- <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.InlineHelpText}"/> -->
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.InlineHelpText}"/>
                                     
                     <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.Label}" for="slOF" />
                     <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOF" >

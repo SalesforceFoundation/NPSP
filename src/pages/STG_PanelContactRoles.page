@@ -1,53 +1,49 @@
 <apex:page controller="STG_PanelContactRoles_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$ObjectType.Contact.LabelPlural}" subtitle="Contact Roles" />        
+        <apex:sectionHeader title="{!$Label.stgNavContacts}" subtitle="{!$Label.stgNavContactRoles}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
 
 
-            <h3 class="sectionBar" >Automatic Contact Roles</h3>            
+            <h3 class="sectionBar" >{!$Label.stgLabelAutoContactRoles}</h3>            
             <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe01__Contacts_Settings_Contact_Roles_Help_Text}</apex:outputPanel>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Enable_Opportunity_Contact_Role_Trigger__c.Label}" for="cbxOCRT" />
-                <apex:inputCheckbox value="{!stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c}" disabled="{!isReadOnlyMode}" id="cbxOCRT" />
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Enable_Opportunity_Contact_Role_Trigger__c.InlineHelpText}" />
-                
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" />
                 <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" />
                 <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" >
                     <apex:selectOptions value="{!listSOContactRoles}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpOCRDefaultRole}" />
                 
             </apex:panelGrid>
  
-            <h3 class="sectionBar" >Household Opportunity Contact Roles</h3>            
+            <h3 class="sectionBar" >{!$Label.stgLabelHHOCR}</h3>            
             <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__Household_Contact_Roles_Help_Text}</apex:outputPanel>
             <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" />
                 <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" disabled="{!isReadOnlyMode}" id="cbxHCRO" />
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpHHOCROn}" />
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" />
                 <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
                 <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" >
                     <apex:selectOptions value="{!listSOOppContactRoles}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpOCRRoleForHH}" />
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}"/>
                 <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpContactRTExcluded}" />
 
             </apex:panelGrid>
  
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
      
         </apex:pageBlock>

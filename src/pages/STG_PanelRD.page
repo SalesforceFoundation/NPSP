@@ -6,6 +6,7 @@
         <apex:pageBlock mode="maindetail">
   
             <h3 class="sectionBar" >Recurring Donation Settings</h3>
+            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe03__RecurringDonationSettingsDescription}</apex:outputPanel>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.Label}" for="tbxOFM" />

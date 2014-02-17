@@ -1,27 +1,27 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="Nonprofit Starter Pack Settings" subtitle="Batch Data Entry Settings" />        
+        <apex:sectionHeader title="{!$Label.stgNavBDE}" subtitle="{!$Label.stgNavBDE}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <h3 class="sectionBar" >Batch Data Entry Settings</h3>
+            <h3 class="sectionBar" >{!$Label.stgLabelBDESettings}</h3>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" />
                 <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpBDEOppNaming}"/>
 
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" />
                 <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpBDEAllowBlankOppNames}"/>
                                                           
             </apex:panelGrid>
 
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>

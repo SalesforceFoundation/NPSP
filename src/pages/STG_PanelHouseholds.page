@@ -40,7 +40,7 @@
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" />
                 <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" 
                     rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" id="cbxAHN" />
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.InlineHelpText}" 
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.InlineHelpText}"
                     rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" />
 
                 <apex:commandbutton value="Activate Advanced Household Naming" action="{!activateHouseholdNaming}" rerender="pbHH" 
