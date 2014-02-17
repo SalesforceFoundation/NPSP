@@ -85,6 +85,9 @@ public with sharing class ERR_AddError_TEST {
     }
     
     public testmethod static void databaseDml() {
+    	Error_Settings__c errorSettings = ERR_Notifier.getOrgSettings();
+    	delete errorSettings;
+    	
         Account acc1 = new Account(Name='testAcc1');
         Account acc2 = new Account(Name='testAcc2');
         Account acc3 = new Account(Name='testAcc3');
