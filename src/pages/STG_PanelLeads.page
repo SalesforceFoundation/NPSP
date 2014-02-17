@@ -12,7 +12,7 @@
                 <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" id="cbxDOC" />
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.InlineHelpText}" />
                                                           
-            </apex:panelGrid> 
+            </apex:panelGrid>
             
             <apex:pageBlockButtons location="bottom" >
                 <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />

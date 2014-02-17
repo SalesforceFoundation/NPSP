@@ -3,7 +3,7 @@
     <apiVersion>29.0</apiVersion>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>92</minorNumber>
+        <minorNumber>93</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <status>Active</status>

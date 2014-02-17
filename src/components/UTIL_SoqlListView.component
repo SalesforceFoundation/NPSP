@@ -12,15 +12,6 @@
             padding: 0 5px; 
         }
         
-        .clsLoading {
-            z-index: 99;
-            position: fixed;
-            top: 50%;
-            left: 30%;
-            background: lightyellow;
-            width: 400px;
-            height: 40px;       
-        }   
     </style>
     
     <script type="text/javascript">

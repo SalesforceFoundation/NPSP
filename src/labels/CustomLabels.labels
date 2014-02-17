@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
-        <fullName>NPSP_Settings_title</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>NPSP Settings title</shortDescription>
-        <value>Nonprofit Starter Pack Settings</value>
-    </labels>
-    <labels>
         <fullName>labelListViewFirst</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>
@@ -63,5 +55,421 @@
         <protected>false</protected>
         <shortDescription>label for Show More on list views</shortDescription>
         <value>Show more</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCancel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnClearErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnClearErrorLog</shortDescription>
+        <value>Clear Error Log</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnEdit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnEdit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnSave</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnSave</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAccountModel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAccountModel</shortDescription>
+        <value>Setting for the Account model. Should be &quot;Household Account&quot;, &quot;One-to-One&quot;, or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c. &quot;Household Account&quot; is the recommended model.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAutoAffil</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAutoAffil</shortDescription>
+        <value>Create or update Affiliations for Contacts connected to Organization Accounts when their Organization field or Primary Affiliation field is changed.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBDEAllowBlankOppNames</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBDEAllowBlankOppNames</shortDescription>
+        <value>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBDEOppNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBDEOppNaming</shortDescription>
+        <value>This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpChatterGroup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpChatterGroup</shortDescription>
+        <value>Chatter group where error notifications will be posted.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpContactRTExcluded</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpContactRTExcluded</shortDescription>
+        <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpErrorNotifyOn</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpErrorNotifyOn</shortDescription>
+        <value>Check this if you&apos;d like the system to post notifications for certain type of errors.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpErrorNotifyTo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpErrorNotifyTo</shortDescription>
+        <value>Select the type of user to send notifications to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHAccountRTID</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHAccountRTID</shortDescription>
+        <value>The ID of the Account Record Type to be used for Household Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHOCROn</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHOCROn</shortDescription>
+        <value>Check this field to create automatic Contact Roles for Household members of the Primary Contact</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOCRDefaultRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOCRDefaultRole</shortDescription>
+        <value>The default role for the primary Opportunity Contact Role that gets automatically created.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOCRRoleForHH</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOCRRoleForHH</shortDescription>
+        <value>Select the Contact Role for Household Members</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOneToOneRTID</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOneToOneRTID</shortDescription>
+        <value>The ID of the Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpStoreErrorsOn</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpStoreErrorsOn</shortDescription>
+        <value>Check this if you&apos;d like errors to be stored in the database.</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAfflSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAfflSettings</shortDescription>
+        <value>Affiliations Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAutoContactRoles</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAutoContactRoles</shortDescription>
+        <value>Automatic Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBDESettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBDESettings</shortDescription>
+        <value>Batch Data Entry Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelErrorNotify</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelErrorNotify</shortDescription>
+        <value>Error Notification Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHOCR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHOCR</shortDescription>
+        <value>Household Opportunity Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelSelectChatterGroup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelSelectChatterGroup</shortDescription>
+        <value>Select Chatter Group</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelTypeAhead</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelTypeAhead</shortDescription>
+        <value>Type something...</value>
+    </labels>
+    <labels>
+        <fullName>stgNPSPSettingsTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNPSPSettingsTitle</shortDescription>
+        <value>Nonprofit Starter Pack Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgNavAccountModel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavAccountModel</shortDescription>
+        <value>Account Model</value>
+    </labels>
+    <labels>
+        <fullName>stgNavAffiliations</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavAffiliations</shortDescription>
+        <value>Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBDE</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBDE</shortDescription>
+        <value>Batch Data Entry</value>
+    </labels>
+    <labels>
+        <fullName>stgNavConnections</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavConnections</shortDescription>
+        <value>Connections</value>
+    </labels>
+    <labels>
+        <fullName>stgNavContactRoles</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavContactRoles</shortDescription>
+        <value>Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgNavContacts</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavContacts</shortDescription>
+        <value>Contacts</value>
+    </labels>
+    <labels>
+        <fullName>stgNavDonations</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavDonations</shortDescription>
+        <value>Donations &amp; Money</value>
+    </labels>
+    <labels>
+        <fullName>stgNavDonorStatistics</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavDonorStatistics</shortDescription>
+        <value>Donor Statistics</value>
+    </labels>
+    <labels>
+        <fullName>stgNavErrorLog</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavErrorLog</shortDescription>
+        <value>Error Log</value>
+    </labels>
+    <labels>
+        <fullName>stgNavErrorNotify</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavErrorNotify</shortDescription>
+        <value>Error Notifications</value>
+    </labels>
+    <labels>
+        <fullName>stgNavHouseholds</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavHouseholds</shortDescription>
+        <value>Households</value>
+    </labels>
+    <labels>
+        <fullName>stgNavLeads</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavLeads</shortDescription>
+        <value>Leads</value>
+    </labels>
+    <labels>
+        <fullName>stgNavMembership</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavMembership</shortDescription>
+        <value>Membership</value>
+    </labels>
+    <labels>
+        <fullName>stgNavPaymentMappings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavPaymentMappings</shortDescription>
+        <value>Payment Mappings</value>
+    </labels>
+    <labels>
+        <fullName>stgNavPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavPayments</shortDescription>
+        <value>Payments</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRDBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRDBatch</shortDescription>
+        <value>Recurring Donations Batch</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRDFieldMap</shortDescription>
+        <value>Recurring Donation Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRDInstallmentPeriods</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRDInstallmentPeriods</shortDescription>
+        <value>Recurring Donation Installment Periods</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRecurringDonations</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRecurringDonations</shortDescription>
+        <value>Recurring Donations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRelAutoCreate</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRelAutoCreate</shortDescription>
+        <value>Relationships Autocreation</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRelReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRelReciprocal</shortDescription>
+        <value>Relationship Reciprocal Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRelationships</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRelationships</shortDescription>
+        <value>Relationships</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRollupBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRollupBatch</shortDescription>
+        <value>Rollup Donations Batch</value>
+    </labels>
+    <labels>
+        <fullName>stgNavSystem</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavSystem</shortDescription>
+        <value>System</value>
+    </labels>
+    <labels>
+        <fullName>stgNavTriggerConfig</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavTriggerConfig</shortDescription>
+        <value>Trigger Configuration</value>
+    </labels>
+    <labels>
+        <fullName>stgNavUserDefinedRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavUserDefinedRollups</shortDescription>
+        <value>User Defined Rollups</value>
     </labels>
 </CustomLabels>

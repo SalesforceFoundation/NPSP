@@ -1,10 +1,13 @@
 <apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0" >
 
-<!-- We need jQuery - use CDNs to save user from re-downloading it if possible -->
-<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
-    
-<apex:includeScript value="{!$Resource.CollapsibleListJS}" />
+<head>
+    <script type="text/javascript">
+            window.jQuery || document.write('<script src="{!URLFOR($Resource.Bootstrap, 'js/jquery-1.10.2.min.js')}"><\/script>');
+    </script>
 
+    <script src="{!URLFOR($Resource.CollapsibleListJS)}" />
+</head>
+    
 <style> 
        
 	.sidebar {
@@ -122,10 +125,6 @@
         padding-left: 15px;
     }
     
-    .propEdit select:disabled {
-        color: black;   <!-- on Windows, disabled was too washed out.  On Mac, this color gets ignored! -->
-    }
-    
     table .propHelpText {
         color: gray; 
         padding-bottom: 6px;
@@ -172,7 +171,8 @@
         left: 30%;
         background: lightyellow;
         width: 400px;
-        height: 40px;       
+        height: 40px; 
+        border-radius: 3px;      
     }   
     
     .stgForm {
@@ -234,52 +234,52 @@
             <div class="navbar" >
                 <nav role="navigation">
                     <ul id="mynavbar" >
-                    <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">Nonprofit Starter Pack Settings</a></li>
+                    <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">{!$Label.stgNPSPSettingsTitle}</a></li>
 
-                    <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">Contacts<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavContacts}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">Account Model</a></li>
-                    <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">Contact Roles</a></li>
-                    <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">Leads</a></li>
+                    <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAccountModel}</a></li>
+                    <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
+                    <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">{!$Label.stgNavLeads}</a></li>
                     </ul>
                     
-                    <li class="header" id="idPanelHHHomeNav"><a class="nav-item nav-section-title">Households<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelHHHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavHouseholds}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">Households</a></li>
+                    <li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHouseholds}</a></li>
                     </ul>
                     
-                    <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">Connections<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">{!$Label.stgNavConnections}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">Affiliations</a></li>
-                    <li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">Relationships</a></li>
-                    <li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">Relationship Reciprocal Settings</a></li>
-                    <li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">Relationships Autocreation</a></li>
+                    <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAffiliations}</a></li>
+                    <li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelationships}</a></li>
+                    <li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
+                    <li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
                     </ul>
                     
-                    <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">Donations &amp; Money<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavDonations}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">Membership</a></li>
-                    <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">Payments</a></li>
-                    <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">Payment Mappings</a></li>
-                    <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">Donor Statistics</a></li>
-                    <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">User Defined Rollups</a></li>
-                    <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">Recurring Donations</a></li>
-                    <li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">Recurring Donation Installment Periods</a></li>
-                    <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">Recurring Donation Field Mappings</a></li>
+                    <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
+                    <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
+                    <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
+                    <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
+                    <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
+                    <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
+                    <li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDInstallmentPeriods}</a></li>
+                    <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDFieldMap}</a></li>
                     </ul>
 
-                    <li class="header" id="idPanelBDEHomeNav"><a class="nav-item nav-section-title">Batch Data Entry<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelBDEHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavBDE}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">Batch Data Entry</a></li>
+                    <li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
                     </ul>
                     
-                    <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">System<span class="caret"></span></a></li>
+                    <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">{!$Label.stgNavSystem}<span class="caret"></span></a></li>
                     <ul>
-                    <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">Error Log</a></li>
-                    <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">Error Notifications</a></li>
-                    <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">Trigger Configuration</a></li>
-                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">Rollup Donations Batch</a></li>
-                    <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">Recurring Donations Batch</a></li>
+                    <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
+                    <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
+                    <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
+                    <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
+                    <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
                     </ul>
                     </ul>
                 </nav>
