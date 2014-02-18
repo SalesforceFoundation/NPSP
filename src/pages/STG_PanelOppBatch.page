@@ -1,24 +1,22 @@
 <apex:page controller="STG_PanelOppBatch_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="System" subtitle="Rollup Donations Batch" />        
+        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavRollupBatch}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbRelBatch" mode="maindetail">
   
-            <h3 class="sectionBar" >Batch Status</h3>
+            <h3 class="sectionBar" >{!$Label.stgLabelBatchStatus}</h3>
             <apex:outputPanel layout="block" styleClass="sectionHelp">
-	                Use this page to rollup totals for all closed opportunities, saving the results in
-	                contact, household, and organization records. The process may take some time; you can
-	                close this page and the process will continue in the background.
+	                {!$Label.stgHelpBatchOppRollup}
             </apex:outputPanel>
             
             <apex:outputPanel rendered="{!isRunningBatch}">
                 <br/><br/>
-                <c:UTIL_JobProgress strBatchComponentLabel="Rollup Donations Batch Progress" cNumberOfJobs="4" bRerenderOnComplete="true" />
+                <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppBatchProgress}" cNumberOfJobs="4" bRerenderOnComplete="true" />
             </apex:outputPanel>
 
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Run Batch" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRelBatch" />
+                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRelBatch" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>

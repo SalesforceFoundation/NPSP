@@ -104,7 +104,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return targetfields;    
     }
     
-    private static string strNoValidField = 'NO VALID FIELD AVAILABLE';
+    private static string strNoValidField = System.Label.stgLabelPaymentMapNoValidFields;
     
     //retrieve valid source fields from opportunity object
     public list<SelectOption> getSourceFields(){
