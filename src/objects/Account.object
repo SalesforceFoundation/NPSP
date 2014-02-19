@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionOverrides>
+        <actionName>CallHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>Delete</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -11,7 +19,15 @@
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>EmailHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>EnableCustomerPortalUser</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
@@ -23,11 +39,23 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>MapHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>New</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>NewsHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>RequestUpdate</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
@@ -44,7 +72,23 @@
         <actionName>ViewCustomerPortalUser</actionName>
         <type>Default</type>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>WebsiteHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>Account_Compact_Layout</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>Account_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>RecordTypeId</fields>
+        <fields>npo02__NumberOfClosedOpps__c</fields>
+        <fields>npo02__TotalOppAmount__c</fields>
+        <fields>npo02__LastCloseDate__c</fields>
+        <fields>npo02__LastOppAmount__c</fields>
+        <label>Account Compact Layout</label>
+    </compactLayouts>
     <enableFeeds>true</enableFeeds>
+    <enableHistory>false</enableHistory>
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
         <description>Batch Data Entry</description>
@@ -236,7 +280,7 @@
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Not For Profit</fullName>
+                <fullName>Nonprofit</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
@@ -269,6 +313,10 @@
             </picklistValues>
             <picklistValues>
                 <fullName>Utilities</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Household</fullName>
                 <default>false</default>
             </picklistValues>
             <sorted>false</sorted>
@@ -329,23 +377,7 @@
         <fullName>Type</fullName>
         <picklist>
             <picklistValues>
-                <fullName>Analyst</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Competitor</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
                 <fullName>Customer</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Integrator</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Investor</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
@@ -361,7 +393,15 @@
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Reseller</fullName>
+                <fullName>Donor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Supporter</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Ally</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
@@ -868,33 +908,46 @@
     <listViews>
         <fullName>AllAccounts</fullName>
         <columns>ACCOUNT.NAME</columns>
-        <columns>ACCOUNT.SITE</columns>
         <columns>ACCOUNT.ADDRESS1_STATE</columns>
         <columns>ACCOUNT.PHONE1</columns>
         <columns>ACCOUNT.TYPE</columns>
-        <columns>CORE.USERS.ALIAS</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__OppAmountLastNDays__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Accounts</label>
     </listViews>
     <listViews>
-        <fullName>HH_Accounts</fullName>
+        <fullName>Household_Accounts</fullName>
         <columns>ACCOUNT.NAME</columns>
-        <columns>ACCOUNT.TYPE</columns>
-        <columns>npe01__SYSTEM_AccountType__c</columns>
+        <columns>npo02__Formal_Greeting__c</columns>
+        <columns>npo02__Informal_Greeting__c</columns>
         <columns>npo02__TotalOppAmount__c</columns>
-        <columns>npo02__NumberOfClosedOpps__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>npo02__Best_Gift_Year__c</columns>
+        <columns>npo02__HouseholdPhone__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
-            <field>npe01__SYSTEM_AccountType__c</field>
+            <field>ACCOUNT.RECORDTYPE</field>
             <operation>equals</operation>
-            <value>HH Account</value>
+            <value>Account.HH_Account</value>
         </filters>
-        <label>HH Accounts</label>
+        <label>Household Accounts</label>
     </listViews>
     <listViews>
         <fullName>MyAccounts</fullName>
         <filterScope>Mine</filterScope>
         <label>My Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>NewLastWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>LAST_WEEK</value>
+        </filters>
+        <label>New Last Week</label>
     </listViews>
     <listViews>
         <fullName>NewThisWeek</fullName>
@@ -912,11 +965,28 @@
         </filters>
         <label>New This Week</label>
     </listViews>
+    <listViews>
+        <fullName>Organization_Accounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>ACCOUNT.PHONE1</columns>
+        <columns>ACCOUNT.TYPE</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__LastCloseDate__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.Organization</value>
+        </filters>
+        <label>Organization Accounts</label>
+    </listViews>
     <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
-        <fullName>Default</fullName>
+        <fullName>HH_Account</fullName>
         <active>true</active>
-        <label>Default</label>
+        <compactLayoutAssignment>Account_Compact_Layout</compactLayoutAssignment>
+        <description>An Account representing a Household containing one or more individuals</description>
+        <label>Household Account</label>
         <picklistValues>
             <picklist>Industry</picklist>
             <values>
@@ -996,6 +1066,10 @@
                 <default>false</default>
             </values>
             <values>
+                <fullName>Household</fullName>
+                <default>false</default>
+            </values>
+            <values>
                 <fullName>Insurance</fullName>
                 <default>false</default>
             </values>
@@ -1012,7 +1086,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Not For Profit</fullName>
+                <fullName>Nonprofit</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1085,11 +1159,7 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Analyst</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Competitor</fullName>
+                <fullName>Ally</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1097,11 +1167,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Integrator</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Investor</fullName>
+                <fullName>Donor</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1121,7 +1187,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Reseller</fullName>
+                <fullName>Supporter</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -1142,9 +1208,11 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>HH_Account</fullName>
+        <fullName>Organization</fullName>
         <active>true</active>
-        <label>HH Account</label>
+        <compactLayoutAssignment>Account_Compact_Layout</compactLayoutAssignment>
+        <description>An Account representing an organized body of people with a particular purpose (e.g. a business, nonprofit, association, etc.)</description>
+        <label>Organization</label>
         <picklistValues>
             <picklist>Industry</picklist>
             <values>
@@ -1240,7 +1308,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Not For Profit</fullName>
+                <fullName>Nonprofit</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1313,11 +1381,7 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Analyst</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Competitor</fullName>
+                <fullName>Ally</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1325,11 +1389,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Integrator</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Investor</fullName>
+                <fullName>Donor</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -1349,7 +1409,7 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Reseller</fullName>
+                <fullName>Supporter</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -1371,12 +1431,12 @@
     </recordTypes>
     <searchLayouts>
         <customTabListAdditionalFields>ACCOUNT.NAME</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ACCOUNT.ADDRESS1_CITY</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ACCOUNT.PHONE1</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ACCOUNT.RECORDTYPE</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npo02__LastOppAmount__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npo02__LastCloseDate__c</customTabListAdditionalFields>
         <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ACCOUNT.SITE</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>CORE.USERS.ALIAS</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ACCOUNT.TYPE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ACCOUNT.RECORDTYPE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npo02__Informal_Greeting__c</lookupDialogsAdditionalFields>
         <lookupPhoneDialogsAdditionalFields>ACCOUNT.NAME</lookupPhoneDialogsAdditionalFields>
         <lookupPhoneDialogsAdditionalFields>ACCOUNT.SITE</lookupPhoneDialogsAdditionalFields>
         <lookupPhoneDialogsAdditionalFields>CORE.USERS.ALIAS</lookupPhoneDialogsAdditionalFields>
@@ -1387,25 +1447,6 @@
         <searchResultsAdditionalFields>ACCOUNT.PHONE1</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
     </searchLayouts>
-    <webLinks>
-        <fullName>AltavistaNews</fullName>
-        <availability>online</availability>
-        <displayType>link</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <hasMenubar>true</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>true</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>url</linkType>
-        <masterLabel>Altavista News</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>true</showsLocation>
-        <showsStatus>true</showsStatus>
-        <url>http://news.altavista.com/search?nc=0&amp;q={!Account_Name}</url>
-    </webLinks>
     <webLinks>
         <fullName>GoogleMaps</fullName>
         <availability>online</availability>
@@ -1423,7 +1464,7 @@
         <protected>false</protected>
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
-        <url>http://maps.google.com/maps?f=q&amp;hl=en&amp;q={!Account_BillingStreet}+{!Account_BillingCity}+{!Account_BillingState}&amp;om=1</url>
+        <url>http://maps.google.com/maps?f=q&amp;hl=en&amp;q={!Account.BillingStreet}+{!Account.BillingCity}+{!Account.BillingState}&amp;om=1</url>
     </webLinks>
     <webLinks>
         <fullName>GoogleNews</fullName>
@@ -1442,7 +1483,7 @@
         <protected>false</protected>
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
-        <url>http://www.google.com/news?&amp;q={!Account_Name}&amp;btnG=Search+News</url>
+        <url>http://www.google.com/news?&amp;q={!Account.Name}&amp;btnG=Search+News</url>
     </webLinks>
     <webLinks>
         <fullName>GoogleSearch</fullName>
@@ -1461,44 +1502,6 @@
         <protected>false</protected>
         <showsLocation>false</showsLocation>
         <showsStatus>false</showsStatus>
-        <url>http://www.google.com/search?q={!Account_Name}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>HooversProfile</fullName>
-        <availability>online</availability>
-        <displayType>link</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <hasMenubar>false</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>false</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>url</linkType>
-        <masterLabel>Hoovers Profile</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>false</showsLocation>
-        <showsStatus>false</showsStatus>
-        <url>http://search.hoovers.com/cgi-bin/hol_search?which=company&amp;query_string={!Account_Name}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>YahooMaps</fullName>
-        <availability>online</availability>
-        <displayType>link</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <hasMenubar>true</hasMenubar>
-        <hasScrollbars>true</hasScrollbars>
-        <hasToolbar>true</hasToolbar>
-        <height>600</height>
-        <isResizable>true</isResizable>
-        <linkType>url</linkType>
-        <masterLabel>Yahoo Maps</masterLabel>
-        <openType>newWindow</openType>
-        <position>none</position>
-        <protected>false</protected>
-        <showsLocation>true</showsLocation>
-        <showsStatus>true</showsStatus>
-        <url>http://maps.yahoo.com/py/maps.py?cn={!Account_BillingCountry}&amp;csz={!Account_BillingCity}+{!Account_BillingState}+{!Account_BillingPostalCode}+&amp;addr={!Account_BillingAddress}</url>
+        <url>http://www.google.com/search?q={!Account.Name}</url>
     </webLinks>
 </CustomObject>

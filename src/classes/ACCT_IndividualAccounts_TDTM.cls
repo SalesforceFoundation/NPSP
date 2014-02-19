@@ -465,7 +465,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (rtById != null) {                
                     a.put('RecordTypeID', rtByID.getRecordTypeID());
-                }
+                }                
+                a.Type = CAO_Constants.isHHAccountModel() ? 'Household' : '';
                 a.npe01__SYSTEMISINDIVIDUAL__c = true;
                 accountInserts.add(a);
                 listContactNewAcct.add(c);
