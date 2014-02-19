@@ -8,13 +8,13 @@
     <xsl:template match="sf:CustomObject">
         <types>
         <xsl:for-each select="sf:fields">
-          <xsl:if test="substring(sf:fullName, string-length(sf:fullName) - 2) = '__c'">
+          <!--<xsl:if test="substring(sf:fullName, string-length(sf:fullName) - 2) = '__c'">-->
           <xsl:if test="not(contains(substring(sf:fullName, 0, string-length(sf:fullName) - 2), '__'))">
           <xsl:if test="not(contains($whitelist, concat(',', sf:fullName, ',')))">
             <members><xsl:copy-of select="sf:fullName/text()"/></members>
           </xsl:if>
           </xsl:if>
-          </xsl:if>
+          <!--</xsl:if>-->
         </xsl:for-each>
         </types>
     </xsl:template>
