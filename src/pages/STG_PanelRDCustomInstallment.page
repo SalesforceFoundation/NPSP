@@ -1,14 +1,14 @@
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0"  >
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="Donations" subtitle="Recurring Donation Custom Installment Periods" />
+        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavRDInstallmentPeriods}" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >Custom Installment Periods</h3>            
+            <h3 class="sectionBar" >{!$Label.stgLabelRDPeriod}</h3>            
                 <apex:pageBlockTable value="{!stgService.listRDCustomInstallment}" var="ci" >
-                    <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteCi}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
+                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
+                        <apex:commandLink action="{!deleteCi}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                             <apex:param assignTo="{!ciIdDelete}" name="idDeleteCi" value="{!ci.Id}" /> 
                         </apex:commandLink>
                     </apex:column>
@@ -18,30 +18,30 @@
                 </apex:pageBlockTable> 
             
             <apex:outputPanel rendered="{!isEditMode}" >
-	            <h3 class="sectionBar" >New Installment Period</h3>
+	            <h3 class="sectionBar" >{!$Label.stgLabelRDNewPeriod}</h3>
 	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
 	 
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" />
 	                <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" />
-	                <apex:outputLabel value="The name of the new Custom Installment Period"/>
+	                <apex:outputLabel value="{!$Label.stgHelpRDPeriodName}"/>
 	                
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" />
 	                <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" />
-	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.InlineHelpText}"/>
+	                <apex:outputLabel value="{!$Label.stgHelpRDPeriodFrequency}"/>
 	                
 	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" />
 	                <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slI" >
 	                    <apex:selectOptions value="{!listSORDCustomPeriod}"/>
 	                </apex:selectList>
-	                <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.InlineHelpText}"/>
+	                <apex:outputLabel value="{!$Label.stgHelpRDPeriodType}"/>
 	                                
 	            </apex:panelGrid>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="New Installment Period" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Create Installment Period" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnNewRDPeriod}" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCreateRDPeriod}" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
  
         </apex:pageBlock> 

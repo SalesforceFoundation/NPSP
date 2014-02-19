@@ -73,12 +73,140 @@
         <value>Clear Error Log</value>
     </labels>
     <labels>
+        <fullName>stgBtnCreateAutoRel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateAutoRel</shortDescription>
+        <value>Create Automatic Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCreateMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateMapping</shortDescription>
+        <value>Create Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCreateRDPeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateRDPeriod</shortDescription>
+        <value>Create Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCreateRelReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateRelReciprocal</shortDescription>
+        <value>Create Reciprocal Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCreateTH</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateTH</shortDescription>
+        <value>Create Trigger Handler</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnCreateUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnCreateUDR</shortDescription>
+        <value>Create Rollup</value>
+    </labels>
+    <labels>
         <fullName>stgBtnEdit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnEdit</shortDescription>
         <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnHHAutoName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnHHAutoName</shortDescription>
+        <value>Activate Automatic Household Naming</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewAutoRel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewAutoRel</shortDescription>
+        <value>New Automatic Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewPaymentMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewPaymentMap</shortDescription>
+        <value>New Payment Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewRDFieldMap</shortDescription>
+        <value>New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewRDPeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewRDPeriod</shortDescription>
+        <value>New Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewRelReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewRelReciprocal</shortDescription>
+        <value>New Reciprocal Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewTH</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewTH</shortDescription>
+        <value>New Trigger Handler</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnNewUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewUDR</shortDescription>
+        <value>New User Defined Rollup</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnRDCreateNewMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRDCreateNewMap</shortDescription>
+        <value>Create Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnRunBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRunBatch</shortDescription>
+        <value>Run Batch</value>
     </labels>
     <labels>
         <fullName>stgBtnSave</fullName>
@@ -105,6 +233,38 @@
         <value>Create or update Affiliations for Contacts connected to Organization Accounts when their Organization field or Primary Affiliation field is changed.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAutoRelCampaignRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAutoRelCampaignRT</shortDescription>
+        <value>List of eligible Campaign types for this Campaign Member auto-create. (Will be blank for Contact auto-create)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAutoRelField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAutoRelField</shortDescription>
+        <value>The field insert or update that triggers the creation of this Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAutoRelObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAutoRelObject</shortDescription>
+        <value>The object this Auto-Relationship is associated with</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAutoRelType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAutoRelType</shortDescription>
+        <value>The Relationship type to be created between the base object and the lookup object. The lookup object will receive the reciprocal Relationship, if one is available.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpBDEAllowBlankOppNames</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -119,6 +279,22 @@
         <protected>false</protected>
         <shortDescription>stgHelpBDEOppNaming</shortDescription>
         <value>This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBatchOppRollup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBatchOppRollup</shortDescription>
+        <value>Use this page to rollup totals for all closed Opportunities, saving the results in Contact, Household, and Organization records.  The process may take some time; you can close this page and the process will continue in the background.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBtnHHNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBtnHHNaming</shortDescription>
+        <value>Clicking this button will activate Automatic Household Naming, and populate your existing Formal Greeting, Informal Greeting and Household Name fields with new names.  THIS IS AN IRREVERSIBLE PROCESS.  While you can deactivate Automatic Household Naming, the newly populated names will remain.  Toggling on, off, then on again may have unpredictable results.  DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.  Once complete (100%), you may safely leave or refresh the page.</value>
     </labels>
     <labels>
         <fullName>stgHelpChatterGroup</fullName>
@@ -137,6 +313,14 @@
         <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
     </labels>
     <labels>
+        <fullName>stgHelpEnableSoftCreditRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpEnableSoftCreditRollups</shortDescription>
+        <value>Allows you to rollup closed Opportunity totals based on Opportunity Contact Role Roles. Soft credit rollups happen only in the nightly batch job, and not on triggers. They can be manually run using the Rollup Donations Batch tab.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpErrorNotifyOn</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -153,6 +337,14 @@
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpFiscalYearRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpFiscalYearRollups</shortDescription>
+        <value>Checking this box will cause Opportunity rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpHHAccountRTID</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -161,12 +353,100 @@
         <value>The ID of the Account Record Type to be used for Household Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
     </labels>
     <labels>
+        <fullName>stgHelpHHExcludedRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHExcludedRT</shortDescription>
+        <value>Contact Record Types excluded from Household creation. This setting is ignored if you are using the Household Account model.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHMailingListReport</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHMailingListReport</shortDescription>
+        <value>The report ID of the Household Mailing List Report used for Household-deduplicated Campaign mailing lists. Report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHNaming</shortDescription>
+        <value>If checked, the system will provide automatic naming for Household Names, Informal and Formal Greetings.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpHHOCROn</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHOCROn</shortDescription>
         <value>Check this field to create automatic Contact Roles for Household members of the Primary Contact</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHObjectOverview</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHObjectOverview</shortDescription>
+        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHRules</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHRules</shortDescription>
+        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpLeadConvert</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpLeadConvert</shortDescription>
+        <value>Specifies whether to create an Opportunity during Lead conversion.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpMembershipGracePeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpMembershipGracePeriod</shortDescription>
+        <value>The length of the grace period (in days) after a membership expires (last end date) before the status moves from &apos;Grace Period&apos; to &apos;Expired&apos;. Defaults to 30 days.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpMembershipRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpMembershipRT</shortDescription>
+        <value>Names of Opportunity Record Types, such as Membership, that you want to roll up separately from other Opportunity Record Types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNewRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNewRDFieldMap</shortDescription>
+        <value>Select the Recurring Donation field to be mapped, and the Opportunity field it maps to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNewUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNewUDR</shortDescription>
+        <value>Select the Opportunity field to be mapped, and the Payment field it maps to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNoUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNoUDR</shortDescription>
+        <value>No User Defined Rollups Have Been Defined</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRDefaultRole</fullName>
@@ -193,6 +473,294 @@
         <value>The ID of the Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
     </labels>
     <labels>
+        <fullName>stgHelpPaymentMapOppField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPaymentMapOppField</shortDescription>
+        <value>The Opportunity field to map to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPaymentMapPaymentField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPaymentMapPaymentField</shortDescription>
+        <value>The Payment field to copy from.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPaymentMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPaymentMapping</shortDescription>
+        <value>Select the Opportunity field to be mapped, and the Payment field it maps to.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPaymentMappings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPaymentMappings</shortDescription>
+        <value>Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPaymentsEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPaymentsEnabled</shortDescription>
+        <value>Enables automatic Payments created for new Opportunities/Donations.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDAddCampaign</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDAddCampaign</shortDescription>
+        <value>If selected, all Opportunities for Recurring Donations will use the Campaign on the Recurring Donation. Otherwise, only the first Opportunity will have the Campaign.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDDisableScheduling</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDDisableScheduling</shortDescription>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations. Any existing scheduled job will need to be removed through Setup-&gt;Monitoring-&gt;Scheduled Jobs</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDFailures</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFailures</shortDescription>
+        <value>Number of Recurring Donations unsuccessfully updated in the last batch operation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFieldMap</shortDescription>
+        <value>Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDFieldMapOppField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFieldMapOppField</shortDescription>
+        <value>The Opportunity field to receive the value from the Recurring Donation field. Note that these fields must have the same data type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDFieldMapRDField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFieldMapRDField</shortDescription>
+        <value>The Recurring Donation field to copy to the Opportunity field. Note that these fields must have the same data type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDLastRun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDLastRun</shortDescription>
+        <value>The date and time of the last batch update of Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDMaxDonations</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDMaxDonations</shortDescription>
+        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50. Larger values may result in DML errors.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDOpenOppBehavior</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDOpenOppBehavior</shortDescription>
+        <value>Determines the behavior of any remaining open Opportunities when an open-ended Recurring Donation is moved to a closed status.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDOppForecastMonths</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
+        <value>Number of months from today worth of open Opportunities to be created when using open-ended Recurring Donations. WARNING: Reducing this value will result in extra Opportunities being deleted. Increasing it will launch a batch process to add Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDOppRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDOppRT</shortDescription>
+        <value>Opportunity Record Type used when Recurring Donation Opportunities are created.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDPeriodFrequency</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDPeriodFrequency</shortDescription>
+        <value>The amount of time the Custom Installment Period covers.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDPeriodName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDPeriodName</shortDescription>
+        <value>The name of the new Custom Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDPeriodType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDPeriodType</shortDescription>
+        <value>The type of time period the Custom Installment Period covers.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDSuccesses</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDSuccesses</shortDescription>
+        <value>Number of Recurring Donations successfully updated in the last batch run.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelAutoCreatedDup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelAutoCreatedDup</shortDescription>
+        <value>Auto-created Relationships are auto-deduplicated to prevent duplicate Relationship records from being created between two Contacts. Check this box to disable this behavior &amp; allow multiple Relationships of the same Type to be created between two Contacts</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelGenderField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelGenderField</shortDescription>
+        <value>The custom field used to define the gender of a Contact for determining reciprocal relationships</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelReciprocalFemale</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelReciprocalFemale</shortDescription>
+        <value>The value used if the Contact&apos;s gender field matches the values in the Female Custom Label or the Contact&apos;s salutation indicates gender.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelReciprocalMale</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelReciprocalMale</shortDescription>
+        <value>The value used if the Contact&apos;s gender field matches the values in the Male Custom Label or the Contact&apos;s Salutation indicates gender.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelReciprocalMethod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelReciprocalMethod</shortDescription>
+        <value>Determines method used to generate the reciprocal relationship. Either List Setting which uses custom settings by gender (see Reciprocal Relationships tab), or Value Inversion, which inverts the type if appropriate (&quot;Parent-Child&quot; to &quot;Child-Parent&quot;)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelReciprocalName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelReciprocalName</shortDescription>
+        <value>The Name of the Reciprocal Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRelReciprocalNeutral</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRelReciprocalNeutral</shortDescription>
+        <value>The value used if the Contact&apos;s gender field does not match either the Male or Female Custom Labels, and the Contact&apos;s salutation does not infer gender.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupBatchSize</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupBatchSize</shortDescription>
+        <value>The number of records processed at a time when calculating donor statistics. The default size is 200. Reduce to a smaller number if the Opportunity Rollups are failing due to system limits.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupExcludeAccountOppRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeAccountOppRT</shortDescription>
+        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Account Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupExcludeAccountOppType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeAccountOppType</shortDescription>
+        <value>Values for the Opportunity Type field to exclude from statistics when rolling up Account Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupExcludeContactOppRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeContactOppRT</shortDescription>
+        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Contact Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupExcludeContactOppType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeContactOppType</shortDescription>
+        <value>Values for the Opportunity Type field to exclude from statistics when rolling up Contact Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupNDayValue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupNDayValue</shortDescription>
+        <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupOppsTrigger</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupOppsTrigger</shortDescription>
+        <value>Check this box to update Opportunity statistics whenever Opportunities are inserted or updated (as long as capacity allows). If unchecked, you should schedule regular Opportunity Rollups to keep your statistics up to date.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupPrimaryContact</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupPrimaryContact</shortDescription>
+        <value>Always rollup donor statistics to the primary contact, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpSoftCreditRoles</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpSoftCreditRoles</shortDescription>
+        <value>List of Opportunity Contact Role roles to include in soft credit rollups.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpStoreErrorsOn</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -201,12 +769,124 @@
         <value>Check this if you&apos;d like errors to be stored in the database.</value>
     </labels>
     <labels>
+        <fullName>stgHelpTHActive</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHActive</shortDescription>
+        <value>Indicates that this module is active</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHActve</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHActve</shortDescription>
+        <value>Indicates that this module is active</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHAsync</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHAsync</shortDescription>
+        <value>Indicates that this module should be run asynchronously in this transaction</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHClass</shortDescription>
+        <value>Name of the class to be run</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHLoadOrder</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHLoadOrder</shortDescription>
+        <value>Order in which this module should be run, helps maintain dependencies in the modules and data.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHObject</shortDescription>
+        <value>Name of the object this handler should be run for</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTHTriggerAction</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTHTriggerAction</shortDescription>
+        <value>Trigger Action in which this module should fire</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTriggerHandlers</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTriggerHandlers</shortDescription>
+        <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpUDROperation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUDROperation</shortDescription>
+        <value>Select the valid rollup operation for this field</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpUDROppField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUDROppField</shortDescription>
+        <value>Select the Opportunity field you wish to rollup</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpUDRTargetField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUDRTargetField</shortDescription>
+        <value>Select the field on the target field to place your result</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpUDRTargetObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUDRTargetObject</shortDescription>
+        <value>Select the object you wish to rollup to</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelActionColumn</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelActionColumn</shortDescription>
+        <value>Action</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAfflSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAfflSettings</shortDescription>
         <value>Affiliations Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAreYouSure</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAreYouSure</shortDescription>
+        <value>Are you sure?</value>
     </labels>
     <labels>
         <fullName>stgLabelAutoContactRoles</fullName>
@@ -225,12 +905,52 @@
         <value>Batch Data Entry Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelBatchStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchStatus</shortDescription>
+        <value>Batch Status</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelCurrentUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelCurrentUDR</shortDescription>
+        <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
         <fullName>stgLabelErrorNotify</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelErrorNotify</shortDescription>
         <value>Error Notification Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHGeneral</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHGeneral</shortDescription>
+        <value>General Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHNaming</shortDescription>
+        <value>Household Name Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHNamingProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHNamingProgress</shortDescription>
+        <value>Naming Activation Progress</value>
     </labels>
     <labels>
         <fullName>stgLabelHHOCR</fullName>
@@ -241,6 +961,182 @@
         <value>Household Opportunity Contact Roles</value>
     </labels>
     <labels>
+        <fullName>stgLabelHHObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHObject</shortDescription>
+        <value>Household Object</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHRules</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHRules</shortDescription>
+        <value>Household Rules</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHSettings</shortDescription>
+        <value>Household Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelLeadSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelLeadSettings</shortDescription>
+        <value>Lead Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelMembershipSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelMembershipSettings</shortDescription>
+        <value>Membership Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewAutoRel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewAutoRel</shortDescription>
+        <value>New Automatic Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewPaymentMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewPaymentMapping</shortDescription>
+        <value>New Payment Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewRDFieldMap</shortDescription>
+        <value>New Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewRelReciprocal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewRelReciprocal</shortDescription>
+        <value>New Reciprocal Relationship</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewTH</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewTH</shortDescription>
+        <value>New Trigger Handler</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelNewUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelNewUDR</shortDescription>
+        <value>New User Defined Rollup</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppBatchProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppBatchProgress</shortDescription>
+        <value>Rollup Donations Batch Progress</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppRollupRT</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppRollupRT</shortDescription>
+        <value>Opportunity Rollup Record Types</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppRollups</shortDescription>
+        <value>Opportunity Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelPaymentMapNoValidFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelPaymentMapNoValidFields</shortDescription>
+        <value>No Valid Field Available</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelPaymentSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelPaymentSettings</shortDescription>
+        <value>Payment Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDFieldMap</shortDescription>
+        <value>Custom Field Mappings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDNewPeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDNewPeriod</shortDescription>
+        <value>New Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDPeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDPeriod</shortDescription>
+        <value>Custom Installment Periods</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDSettings</shortDescription>
+        <value>Recurring Donation Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDStatus</shortDescription>
+        <value>Updating Recurring Donation Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRelSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRelSettings</shortDescription>
+        <value>General Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -249,12 +1145,76 @@
         <value>Select Chatter Group</value>
     </labels>
     <labels>
+        <fullName>stgLabelSoftCredit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelSoftCredit</shortDescription>
+        <value>Soft Credit Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelTriggerHandlers</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelTriggerHandlers</shortDescription>
+        <value>Trigger Handlers</value>
+    </labels>
+    <labels>
         <fullName>stgLabelTypeAhead</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelTypeAhead</shortDescription>
         <value>Type something...</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelUDRNoOppFields</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelUDRNoOppFields</shortDescription>
+        <value>No valid Opportunity fields found.</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelUDROp</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelUDROp</shortDescription>
+        <value>Rollup Operation</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelUDROppField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelUDROppField</shortDescription>
+        <value>Opportunity Field</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelUDRTargetField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelUDRTargetField</shortDescription>
+        <value>Target Field</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelUDRTargetObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelUDRTargetObject</shortDescription>
+        <value>Target Object</value>
+    </labels>
+    <labels>
+        <fullName>stgLinkDelete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLinkDelete</shortDescription>
+        <value>Del</value>
     </labels>
     <labels>
         <fullName>stgNPSPSettingsTitle</fullName>

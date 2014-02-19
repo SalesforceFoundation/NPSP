@@ -1,11 +1,11 @@
 <apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0">
 
     <apex:form id="form">   
-        <apex:sectionHeader title="Donations" subtitle="Membership Settings"  />        
+        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavMembership}"  />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <h3 class="sectionBar" >Membership Settings</h3>                        
+            <h3 class="sectionBar" >{!$Label.stgLabelMembershipSettings}</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" />
@@ -13,19 +13,19 @@
                 <apex:selectList value="{!stgService.stgHH.npo02__Membership_Record_Types__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMRT" >
                     <apex:selectOptions value="{!listSOOppRecTypes}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpMembershipRT}" />
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.Label}" for="tbxMGP" />
                 <apex:outputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" rendered="{!isReadOnlyMode}" />                          
                 <apex:inputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" type="number" rendered="{!isEditMode}" id="tbxMGP" />                          
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpMembershipGracePeriod}" />
                                                           
             </apex:panelGrid>             
             
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>

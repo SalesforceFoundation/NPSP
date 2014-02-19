@@ -1,23 +1,23 @@
 <apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
 
     <apex:form id="form">   
-        <apex:sectionHeader title="Donations" subtitle="Payment Settings" />        
+        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavPayments}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <h3 class="sectionBar" >Payment Settings</h3>                        
+            <h3 class="sectionBar" >{!$Label.stgLabelPaymentSettings}</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" />
                 <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" />
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpPaymentsEnabled}" />
                              
             </apex:panelGrid> 
             
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>
