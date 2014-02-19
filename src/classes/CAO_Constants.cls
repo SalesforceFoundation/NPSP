@@ -75,33 +75,7 @@ global with sharing class CAO_Constants {
             //system.debug(npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults());
             
             if (ContactsSettings.Id == null) { 
-                //get the model they used to be in 
-                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npe01__SystemAccountProcessor__c; 
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                
-                for(Schema.PicklistEntry pe : P) {
-                    if (pe.isDefaultValue()) {
-                        if (pe.getValue()==CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-                            usedToBeOneToOne = true;
-                            break;
-                        }
-                        if (pe.getValue()==CAO_Constants.BUCKET_PROCESSOR) {
-                            usedToBeBucket = true;
-                            break;
-                        }                        
-                    }
-                }
-
-                //ContactsSettings = new npe01__Contacts_and_Orgs_Settings__c();
-
-                //set them up with their old setting in the new settings object
-                if (usedToBeOneToOne) {
-                    ContactsSettings.npe01__Account_Processor__c = ONE_TO_ONE_PROCESSOR;
-                } else if (usedToBeBucket) {
-                    ContactsSettings.npe01__Account_Processor__c = BUCKET_PROCESSOR;
-                } else {
-                    ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                	
-                }
+                ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                	
                 
                 //set the other settings to reasonable defaults
                 ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
