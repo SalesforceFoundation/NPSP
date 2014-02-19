@@ -1,37 +1,37 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="System" subtitle="Recurring Donations Batch Status" />        
+        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavRDBatch}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbRDBatch" mode="maindetail">
   
-            <h3 class="sectionBar" >Batch Status</h3>
+            <h3 class="sectionBar" >{!$Label.stgLabelBatchStatus}</h3>
             <apex:panelGrid id="panelStats" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}"/>
                 <apex:outputField value="{!stgService.stgRD.npe03__Last_Batch_Run__c}" />
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpRDLastRun}"/>
             
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.Label}"/>
                 <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Failures__c}" />
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpRDFailures}"/>
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.Label}"/>
                 <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Successes__c}" />
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpRDSuccesses}"/>
 
             </apex:panelGrid> 
 
             <apex:outputPanel rendered="{!isRunningBatch}">
                 <br/><br/>
-                <c:UTIL_JobProgress strBatchComponentLabel="Updating Recurring Donation Opportunities" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelRDStatus}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                 
                 <!--  bRerenderOnComplete doesn't actually work, so we have to refresh our page ourselves -->
                 <apex:actionPoller rerender="panelStats" interval="5" />                
             </apex:outputPanel>
 
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Run Batch" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRDBatch" />
+                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRDBatch" />
             </apex:pageBlockButtons>
             
         </apex:pageBlock>

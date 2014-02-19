@@ -1,17 +1,17 @@
 <apex:page controller="STG_PanelPaymentMapping_CTRL" >
 
     <apex:form id="form">  
-	    <apex:sectionHeader title="Donations" subtitle="Payment Field Mappings" />
+	    <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavPaymentMappings}" />
 	    <apex:pageMessages />
 	    <apex:pageBlock mode="maindetail">
 
-	        <h3 class="sectionBar" >Payment Mappings</h3>
+	        <h3 class="sectionBar" >{!$Label.stgNavPaymentMappings}</h3>
             <apex:outputPanel layout="block" styleClass="sectionHelp" >
-                Map fields from Opportunity to Payment.  This will copy Opportunity values to the Payment when inserted via the automatic payment creation or payment scheduler.
+                {!$Label.stgHelpPaymentMappings}
             </apex:outputPanel>
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
-	                <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
-	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
+	                <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
+	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
 	                        <apex:param assignTo="{!pfmIdDelete}" name="idDeletePfm" value="{!pfm.Id}" /> 
 	                    </apex:commandLink>
 	                </apex:column>
@@ -20,8 +20,8 @@
 	            </apex:pageBlockTable> 
 	        
             <apex:outputPanel rendered="{!isEditMode}" >
-            <h3 class="sectionBar" >New Payment Field Mapping</h3>
-            <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Opportunity field to be mapped, and the Payment field it maps to.</apex:outputPanel>
+            <h3 class="sectionBar" >{!$Label.stgLabelNewPaymentMapping}</h3>
+            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpPaymentMapping}</apex:outputPanel>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
  
                 <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" />
@@ -29,21 +29,21 @@
                     <apex:selectOptions value="{!sourcefields}"  />
                     <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
                 </apex:selectList>
-                <apex:outputLabel value="{!'(need inline help text added to npe01 setting)' /* $ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.InlineHelpText */ }"/>
+                <apex:outputLabel value="{!$Label.stgHelpPaymentMapOppField}"/>
                 
                 <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" />
                 <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="1" >
                     <apex:selectOptions value="{!targetfields}"  />
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.InlineHelpText}"/>
+                <apex:outputLabel value="{!$Label.stgHelpPaymentMapPaymentField}"/>
                 
             </apex:panelGrid>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="New Payment Field Mapping" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Create Mapping" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
  
         </apex:pageBlock> 

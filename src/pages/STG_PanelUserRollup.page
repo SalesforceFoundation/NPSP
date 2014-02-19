@@ -1,80 +1,80 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" >
 
     <apex:form id="form">  
-        <apex:sectionHeader title="Donations" subtitle="User Defined Rollups" />
+        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavUserDefinedRollups}" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
  
-            <h3 class="sectionBar" >Current User Defined Rollups</h3>
+            <h3 class="sectionBar" >{!$Label.stgLabelCurrentUDR}</h3>
                 <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
-                    <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
+                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                         <!-- edit has some problems with current ui.  not worth supporting?
                         <apex:commandLink value="Edit" action="{!udr.loadMe}" styleClass="actionLink" status="statusLoad" immediate="true" rerender="form"/>
                         &nbsp;|&nbsp;
                           -->
-                        <apex:commandLink action="{!udr.deleteMe}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" />
+                        <apex:commandLink action="{!udr.deleteMe}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
                     </apex:column>
                     <apex:column >                    
-                        <apex:facet name="header">Opportunity Field</apex:facet>
+                        <apex:facet name="header">{!$Label.stgLabelUDROppField}</apex:facet>
                         {!udr.SourceFieldLabel}
                     </apex:column>
                     <apex:column >
-                        <apex:facet name="header">Rollup Operation</apex:facet>
+                        <apex:facet name="header">{!$Label.stgLabelUDROp}</apex:facet>
                         {!udr.Operation}
                     </apex:column>                    
                     <apex:column >
-                        <apex:facet name="header">Target Object</apex:facet>
+                        <apex:facet name="header">{!$Label.stgLabelUDRTargetObject}</apex:facet>
                         {!udr.TargetObject}
                     </apex:column>                    
                     <apex:column >
-                        <apex:facet name="header">Target Field</apex:facet>
+                        <apex:facet name="header">{!$Label.stgLabelUDRTargetField}</apex:facet>
                         {!udr.TargetFieldLabel}
                     </apex:column>
                 </apex:pageBlockTable> 
-                <apex:outputtext value="No User Defined Rollups Have Been Defined" rendered="{!OR(ISNULL(udrlist), udrlist.size < 1)}"/> 
+                <apex:outputtext value="{!$Label.stgHelpNoUDR}" rendered="{!OR(ISNULL(udrlist), udrlist.size < 1)}"/> 
 
             <apex:outputPanel rendered="{!isEditMode}" id="udrpageblock" >
-                <h3 class="sectionBar" >New User Defined Rollup</h3>
-	            <apex:outputPanel layout="block" styleClass="sectionHelp">Select the Opportunity field to be mapped, and the Payment field it maps to.<br/><br/></apex:outputPanel>
+                <h3 class="sectionBar" >{!$Label.stgLabelNewUDR}</h3>
+	            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpNewUDR}<br/><br/></apex:outputPanel>
 	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
 	 
-	                <apex:outputLabel value="Opportunity Field to Rollup" for="slSF" />
+	                <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" />
 	                <apex:selectList value="{!activeUDR.SourceField}" rendered="{!!ISNULL(sourcefields)}" multiselect="false" size="5" id="slSF" >
 	                    <apex:selectOptions value="{!sourcefields}"/>
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForSourceField}"/>                       
 	                </apex:selectList>                                  
-	                <apex:outputText rendered="{!ISNULL(sourcefields)}">No valid Opportunity fields found.</apex:outputText>
-	                <apex:outputLabel value="Select the Opportunity field you wish to rollup"/>
+	                <apex:outputText rendered="{!ISNULL(sourcefields)}">{!$Label.stgLabelUDRNoOppFields}</apex:outputText>
+	                <apex:outputLabel value="{!$Label.stgHelpUDROppField}"/>
 	                                
-	                <apex:outputlabel value="Rollup Type" for="slSO" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDROp}" for="slSO" />
 	                <apex:selectList title="Supported Operations" value="{!activeUDR.Operation}" multiselect="false"  size="4" id="slSO" >
 	                    <apex:selectOptions value="{!validoperators}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForOperation}"/>
 	                </apex:selectList>                
-	                <apex:outputLabel value="Select the valid rollup operation for this field"/>
+	                <apex:outputLabel value="{!$Label.stgHelpUDROperation}"/>
 	
-	                <apex:outputlabel value="Target Object" for="slTO" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetObject}" for="slTO" />
 	                <apex:selectList value="{!activeUDR.TargetObject}" multiselect="false"  size="3" id="slTO" >
 	                    <apex:selectOptions value="{!targetobjects}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForTargetObject}"/>
 	                </apex:selectList>
-	                <apex:outputLabel value="Select the object you wish to rollup to"/>
+	                <apex:outputLabel value="{!$Label.stgHelpUDRTargetObject}"/>
 	
-	                <apex:outputlabel value="Target Field" for="slSOp" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetField}" for="slSOp" />
 	                <apex:selectList title="Supported Operations" value="{!activeUDR.TargetField}" multiselect="false"  size="5" id="slSOp" >
 	                    <apex:selectOptions value="{!targetfields}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate"/>
 	                </apex:selectList>
-	                <apex:outputLabel value="Select the field on the target object to place your result"/>
+	                <apex:outputLabel value="{!$Label.stgLabelUDRTargetField}"/>
 	
 	            </apex:panelGrid>
             </apex:outputPanel>
                                     
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="New User Defined Rollup" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton id="btnCreate" value="Create Rollup" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" />
-                <apex:commandbutton value="Cancel" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />                
+                <apex:commandButton value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" />
+                <apex:commandbutton value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />                
             </apex:pageBlockButtons>
                  
         </apex:pageBlock> 
