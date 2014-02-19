@@ -1,11 +1,11 @@
 <apex:page controller="STG_PanelContacts_CTRL" >
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$ObjectType.Contact.LabelPlural}" subtitle="Account Model" />        
+        <apex:sectionHeader title="{!$Label.stgNavContacts}" subtitle="{!$Label.stgNavAccountModel}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  
-            <h3 class="sectionBar" >Account Model</h3>            
+            <h3 class="sectionBar" >{!$Label.stgNavAccountModel}</h3>            
             <apex:pageMessage summary="{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}" severity="info" strength="1" />
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
@@ -14,28 +14,28 @@
                 <apex:selectList value="{!stgService.stgCon.npe01__Account_Processor__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slAP" >
                     <apex:selectOptions value="{!listSOAccountModels}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Account_Processor__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpAccountModel}" />
 
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__HH_Account_RecordTypeID__c.Label}" for="slHHAR" />
                 <apex:outputText value="{!strHHAccountRecordTypeLabel}" rendered="{!isReadOnlyMode}" />
                 <apex:selectList value="{!stgService.stgCon.npe01__HH_Account_RecordTypeID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHHAR" >
                     <apex:selectOptions value="{!listSOAccountRecTypeIds}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__HH_Account_RecordTypeID__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpHHAccountRTID}" />
 
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__One_to_One_RecordTypeID__c.Label}" for="slOORT" />
                 <apex:outputText value="{!strOneToOneRecordTypeLabel}" rendered="{!isReadOnlyMode}" />
                 <apex:selectList value="{!stgService.stgCon.npe01__One_to_One_RecordTypeID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOORT" >
                     <apex:selectOptions value="{!listSOAccountRecTypeIds}"/>
                 </apex:selectList>
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__One_to_One_RecordTypeID__c.InlineHelpText}" />
+                <apex:outputLabel value="{!$Label.stgHelpOneToOneRTID}" />
 
             </apex:panelGrid>
  
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Edit" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Save" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
      
         </apex:pageBlock>

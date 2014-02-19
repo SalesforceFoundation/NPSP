@@ -169,6 +169,12 @@ private class ACCT_IndividualAccounts_TEST {
     static testMethod void insertUpdateOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOne') return;
     	insertUpdateOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    
+    /// <name> insertUpdateOneToOne </name>
+    /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
+    static testMethod void insertUpdateOneToOneHouseholds() {
+        if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOneHouseholds') return;
         insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     
@@ -444,6 +450,12 @@ private class ACCT_IndividualAccounts_TEST {
     static testMethod void detachFromNormalAccountToBucket() {
     	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucket') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    
+    /// <name> detachFromNormalAccountToBucket </name>
+    /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
+    static testMethod void detachFromNormalAccountToBucketAccountProcessor() {
+        if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucketAccountProcessor') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
@@ -622,6 +634,12 @@ private class ACCT_IndividualAccounts_TEST {
     static testMethod void detachFromNormalAccountToOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOne') return;
     	detachFromNormalAccountToOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    
+    /// <name> detachFromNormalAccountToOneToOne </name>
+    /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
+    static testMethod void detachFromNormalAccountToOneToOneHousehold() {
+        if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOneHousehold') return;
         detachFromNormalAccountToOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
@@ -756,9 +774,13 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(1,missingAccount.size());
     }
     
-    public static testMethod void deleteContactNormalAccount() {
-    	if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccount') return;
+    public static testMethod void deleteContactNormalAccountOneToOne() {
+    	if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountOneToOne') return;
         deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    
+    public static testMethod void deleteContactNormalAccountHouseholdAcc() {
+        if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountHouseholdAcc') return;
         deleteContactNormalAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     

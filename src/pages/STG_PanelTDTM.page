@@ -1,15 +1,15 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="System" subtitle="Trigger Configuration" />
+        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavTriggerConfig}" />
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >Trigger Handlers</h3>            
-                <apex:pageMessage summary="These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them." severity="warning" strength="1" /><br/>
+            <h3 class="sectionBar" >{!$Label.stgLabelTriggerHandlers}</h3>            
+                <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" /><br/>
                 <apex:pageBlockTable value="{!listTH}" var="th" >
-                    <apex:column headerValue="Action" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteTh}" styleClass="actionLink" status="statusLoad" value="Del" onclick="if (confirm('Are you sure?')==false) { return false;}" rerender="form" >
+                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
+                        <apex:commandLink action="{!deleteTh}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                             <apex:param assignTo="{!thIdDelete}" name="idDeleteTh" value="{!th.Id}" /> 
                         </apex:commandLink>
                     </apex:column>
@@ -22,40 +22,40 @@
                 </apex:pageBlockTable> 
             
             <apex:outputPanel rendered="{!isEditMode}" >
-                <h3 class="sectionBar" >New Trigger Handler</h3>
+                <h3 class="sectionBar" >{!$Label.stgLabelNewTH}</h3>
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewAc" >
      
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" />
                     <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHObject}"/>
                     
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" />
                     <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHClass}"/>
                     
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" />
                     <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHLoadOrder}"/>
                     
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}"/>
                     <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHTriggerAction}"/> 
                                                                             
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" />
                     <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHActive}"/>
                     
                     <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" />
                     <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" />
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.InlineHelpText}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpTHAsync}"/>
                     
                 </apex:panelGrid>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="New Trigger Handler" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="Create Trigger Handler" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="Cancel" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>
  
         </apex:pageBlock> 

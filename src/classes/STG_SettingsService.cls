@@ -141,7 +141,7 @@ public with sharing class STG_SettingsService {
     }
     
     public void saveAll() {
-    	system.debug('stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
+    	system.debug('****stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
     	   ' stgRD: ' + stgRD + + ' stgRel: ' + stgRel + ' stgAffl: ' + stgAffl + ' stgBDE: ' + stgBDE + 
     	   ' stgERR: ' + stgErr);
         upsert stgCon;

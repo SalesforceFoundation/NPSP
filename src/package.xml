@@ -26,7 +26,6 @@
     <members>ERR_Handler_CTRL_TEST</members>
     <members>ERR_Handler_TEST</members>
     <members>ERR_Notifier</members>
-    <members>ERR_Notifier_TEST</members>
     <members>ERR_ParentAccountUpdater2_TEST</members>
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -186,6 +185,17 @@
     <name>ApexTrigger</name>
   </types>
   <types>
+    <members>Opportunity.dummyBP</members>
+    <name>BusinessProcess</name>
+  </types>
+  <types>
+    <members>Account.Account_Compact_Layout</members>
+    <members>Contact.Contact_Compact_Layout</members>
+    <members>Opportunity.Donation_Compact_Layout</members>
+    <members>Opportunity.Membership_Compact_Layout</members>
+    <name>CompactLayout</name>
+  </types>
+  <types>
     <members>Cumulus</members>
     <members>Nonprofit_CRM</members>
     <name>CustomApplication</name>
@@ -215,6 +225,7 @@
     <members>Error__c.Stack_Trace__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
+    <members>Opportunity.Type</members>
     <members>Trigger_Handler__c.Active__c</members>
     <members>Trigger_Handler__c.Asynchronous__c</members>
     <members>Trigger_Handler__c.Class__c</members>
@@ -224,7 +235,6 @@
     <name>CustomField</name>
   </types>
   <types>
-    <members>NPSP_Settings_title</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -232,6 +242,178 @@
     <members>labelListViewPrevious</members>
     <members>labelMessageLoading</members>
     <members>labelShowMore</members>
+    <members>stgBtnCancel</members>
+    <members>stgBtnClearErrorLog</members>
+    <members>stgBtnCreateAutoRel</members>
+    <members>stgBtnCreateMapping</members>
+    <members>stgBtnCreateRDPeriod</members>
+    <members>stgBtnCreateRelReciprocal</members>
+    <members>stgBtnCreateTH</members>
+    <members>stgBtnCreateUDR</members>
+    <members>stgBtnEdit</members>
+    <members>stgBtnHHAutoName</members>
+    <members>stgBtnNewAutoRel</members>
+    <members>stgBtnNewPaymentMap</members>
+    <members>stgBtnNewRDFieldMap</members>
+    <members>stgBtnNewRDPeriod</members>
+    <members>stgBtnNewRelReciprocal</members>
+    <members>stgBtnNewTH</members>
+    <members>stgBtnNewUDR</members>
+    <members>stgBtnRDCreateNewMap</members>
+    <members>stgBtnRunBatch</members>
+    <members>stgBtnSave</members>
+    <members>stgHelpAccountModel</members>
+    <members>stgHelpAutoAffil</members>
+    <members>stgHelpAutoRelCampaignRT</members>
+    <members>stgHelpAutoRelField</members>
+    <members>stgHelpAutoRelObject</members>
+    <members>stgHelpAutoRelType</members>
+    <members>stgHelpBDEAllowBlankOppNames</members>
+    <members>stgHelpBDEOppNaming</members>
+    <members>stgHelpBatchOppRollup</members>
+    <members>stgHelpBtnHHNaming</members>
+    <members>stgHelpChatterGroup</members>
+    <members>stgHelpContactRTExcluded</members>
+    <members>stgHelpEnableSoftCreditRollups</members>
+    <members>stgHelpErrorNotifyOn</members>
+    <members>stgHelpErrorNotifyTo</members>
+    <members>stgHelpFiscalYearRollups</members>
+    <members>stgHelpHHAccountRTID</members>
+    <members>stgHelpHHExcludedRT</members>
+    <members>stgHelpHHMailingListReport</members>
+    <members>stgHelpHHNaming</members>
+    <members>stgHelpHHOCROn</members>
+    <members>stgHelpHHObjectOverview</members>
+    <members>stgHelpHHRules</members>
+    <members>stgHelpLeadConvert</members>
+    <members>stgHelpMembershipGracePeriod</members>
+    <members>stgHelpMembershipRT</members>
+    <members>stgHelpNewRDFieldMap</members>
+    <members>stgHelpNewUDR</members>
+    <members>stgHelpNoUDR</members>
+    <members>stgHelpOCRDefaultRole</members>
+    <members>stgHelpOCRRoleForHH</members>
+    <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpPaymentMapOppField</members>
+    <members>stgHelpPaymentMapPaymentField</members>
+    <members>stgHelpPaymentMapping</members>
+    <members>stgHelpPaymentMappings</members>
+    <members>stgHelpPaymentsEnabled</members>
+    <members>stgHelpRDAddCampaign</members>
+    <members>stgHelpRDDisableScheduling</members>
+    <members>stgHelpRDFailures</members>
+    <members>stgHelpRDFieldMap</members>
+    <members>stgHelpRDFieldMapOppField</members>
+    <members>stgHelpRDFieldMapRDField</members>
+    <members>stgHelpRDLastRun</members>
+    <members>stgHelpRDMaxDonations</members>
+    <members>stgHelpRDOpenOppBehavior</members>
+    <members>stgHelpRDOppForecastMonths</members>
+    <members>stgHelpRDOppRT</members>
+    <members>stgHelpRDPeriodFrequency</members>
+    <members>stgHelpRDPeriodName</members>
+    <members>stgHelpRDPeriodType</members>
+    <members>stgHelpRDSuccesses</members>
+    <members>stgHelpRelAutoCreatedDup</members>
+    <members>stgHelpRelGenderField</members>
+    <members>stgHelpRelReciprocalFemale</members>
+    <members>stgHelpRelReciprocalMale</members>
+    <members>stgHelpRelReciprocalMethod</members>
+    <members>stgHelpRelReciprocalName</members>
+    <members>stgHelpRelReciprocalNeutral</members>
+    <members>stgHelpRollupBatchSize</members>
+    <members>stgHelpRollupExcludeAccountOppRT</members>
+    <members>stgHelpRollupExcludeAccountOppType</members>
+    <members>stgHelpRollupExcludeContactOppRT</members>
+    <members>stgHelpRollupExcludeContactOppType</members>
+    <members>stgHelpRollupNDayValue</members>
+    <members>stgHelpRollupOppsTrigger</members>
+    <members>stgHelpRollupPrimaryContact</members>
+    <members>stgHelpSoftCreditRoles</members>
+    <members>stgHelpStoreErrorsOn</members>
+    <members>stgHelpTHActive</members>
+    <members>stgHelpTHActve</members>
+    <members>stgHelpTHAsync</members>
+    <members>stgHelpTHClass</members>
+    <members>stgHelpTHLoadOrder</members>
+    <members>stgHelpTHObject</members>
+    <members>stgHelpTHTriggerAction</members>
+    <members>stgHelpTriggerHandlers</members>
+    <members>stgHelpUDROperation</members>
+    <members>stgHelpUDROppField</members>
+    <members>stgHelpUDRTargetField</members>
+    <members>stgHelpUDRTargetObject</members>
+    <members>stgLabelActionColumn</members>
+    <members>stgLabelAfflSettings</members>
+    <members>stgLabelAreYouSure</members>
+    <members>stgLabelAutoContactRoles</members>
+    <members>stgLabelBDESettings</members>
+    <members>stgLabelBatchStatus</members>
+    <members>stgLabelCurrentUDR</members>
+    <members>stgLabelErrorNotify</members>
+    <members>stgLabelHHGeneral</members>
+    <members>stgLabelHHNaming</members>
+    <members>stgLabelHHNamingProgress</members>
+    <members>stgLabelHHOCR</members>
+    <members>stgLabelHHObject</members>
+    <members>stgLabelHHRules</members>
+    <members>stgLabelHHSettings</members>
+    <members>stgLabelLeadSettings</members>
+    <members>stgLabelMembershipSettings</members>
+    <members>stgLabelNewAutoRel</members>
+    <members>stgLabelNewPaymentMapping</members>
+    <members>stgLabelNewRDFieldMap</members>
+    <members>stgLabelNewRelReciprocal</members>
+    <members>stgLabelNewTH</members>
+    <members>stgLabelNewUDR</members>
+    <members>stgLabelOppBatchProgress</members>
+    <members>stgLabelOppRollupRT</members>
+    <members>stgLabelOppRollups</members>
+    <members>stgLabelPaymentMapNoValidFields</members>
+    <members>stgLabelPaymentSettings</members>
+    <members>stgLabelRDFieldMap</members>
+    <members>stgLabelRDNewPeriod</members>
+    <members>stgLabelRDPeriod</members>
+    <members>stgLabelRDSettings</members>
+    <members>stgLabelRDStatus</members>
+    <members>stgLabelRelSettings</members>
+    <members>stgLabelSelectChatterGroup</members>
+    <members>stgLabelSoftCredit</members>
+    <members>stgLabelTriggerHandlers</members>
+    <members>stgLabelTypeAhead</members>
+    <members>stgLabelUDRNoOppFields</members>
+    <members>stgLabelUDROp</members>
+    <members>stgLabelUDROppField</members>
+    <members>stgLabelUDRTargetField</members>
+    <members>stgLabelUDRTargetObject</members>
+    <members>stgLinkDelete</members>
+    <members>stgNPSPSettingsTitle</members>
+    <members>stgNavAccountModel</members>
+    <members>stgNavAffiliations</members>
+    <members>stgNavBDE</members>
+    <members>stgNavConnections</members>
+    <members>stgNavContactRoles</members>
+    <members>stgNavContacts</members>
+    <members>stgNavDonations</members>
+    <members>stgNavDonorStatistics</members>
+    <members>stgNavErrorLog</members>
+    <members>stgNavErrorNotify</members>
+    <members>stgNavHouseholds</members>
+    <members>stgNavLeads</members>
+    <members>stgNavMembership</members>
+    <members>stgNavPaymentMappings</members>
+    <members>stgNavPayments</members>
+    <members>stgNavRDBatch</members>
+    <members>stgNavRDFieldMap</members>
+    <members>stgNavRDInstallmentPeriods</members>
+    <members>stgNavRecurringDonations</members>
+    <members>stgNavRelAutoCreate</members>
+    <members>stgNavRelReciprocal</members>
+    <members>stgNavRelationships</members>
+    <members>stgNavRollupBatch</members>
+    <members>stgNavSystem</members>
+    <members>stgNavTriggerConfig</members>
+    <members>stgNavUserDefinedRollups</members>
     <name>CustomLabel</name>
   </types>
   <types>
@@ -270,7 +452,9 @@
     <name>FieldSet</name>
   </types>
   <types>
-    <members>Account.HH_Accounts</members>
+    <members>Account.AllAccounts</members>
+    <members>Account.Household_Accounts</members>
+    <members>Account.Organization_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
@@ -279,6 +463,13 @@
   </types>
   <types>
     <members>Account.HH_Account</members>
+    <members>Account.Organization</members>
+    <members>Opportunity.Donation</members>
+    <members>Opportunity.Grant</members>
+    <members>Opportunity.MajorGift</members>
+    <members>Opportunity.MatchingDonation</members>
+    <members>Opportunity.dummyRT</members>
+    <members>Opportunity.membership</members>
     <name>RecordType</name>
   </types>
   <types>

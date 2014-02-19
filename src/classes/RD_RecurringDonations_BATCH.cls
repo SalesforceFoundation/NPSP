@@ -48,9 +48,15 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         return Database.getQueryLocator(query);      
     }
     global void execute(Database.BatchableContext bc, Sobject[] result){
-        RD_ProcessControl.batchButton = true;
-        recCount += result.size();
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);    
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        RD_ProcessControl.batchButton = true;
+	        recCount += result.size();
+	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+	     } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, result, ERR_Handler.Context.RD);
+        }    
     }
     global void finish(Database.BatchableContext bc) {
         //update our settings
@@ -60,16 +66,16 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
                             TotalJobItems, CompletedDate
                             from AsyncApexJob 
                             where Id = :BC.getJobId()];
-        integer errorcount = 0;
-        errorcount = [select count() from Error__c];                             
+        
+        integer errorcount = [select count() from Error__c];                             
                             
         rds.npe03__Last_Batch_Run__c = a.CompletedDate;
         rds.npe03__Number_of_Successes__c = recCount - errorcount;
         rds.npe03__Number_of_Failures__c = errorcount;
         update rds;                            
         
-        //if needed, send messages from the error queue
-        ERR_Notifier.sendErrorQueueEmailNotification(new String[]{ERR_Notifier.getOrgSettings().Error_Notifications_To__c});        
+        //if needed, send error notifications
+        ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.RD);        
     }
     
     

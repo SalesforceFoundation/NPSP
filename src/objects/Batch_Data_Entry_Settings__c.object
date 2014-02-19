@@ -6,8 +6,9 @@
     <fields>
         <fullName>Allow_Blank_Opportunity_Names__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).</description>
         <externalId>false</externalId>
-        <inlineHelpText>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on page).</inlineHelpText>
+        <inlineHelpText>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).</inlineHelpText>
         <label>Allow Blank Opportunity Names</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
