@@ -19,7 +19,12 @@ global class STTG_InstallScript implements InstallHandler {
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
         
         //set default settings
-        
+        CAO_Constants.getContactsSettings();
+        HH_Households.getHouseholdsSettings();
+        RD_RecurringDonations.getRecurringDonationsSettings();
+        REL_Utils.getRelationshipSettings();
+        AFFL_Affiliations_UTIL.getAffiliationsSettings();
+        ERR_Notifier.getOrgSettings();
         
         //schedule cron jobs
         UTIL_JobScheduler.scheduleJobIfNotScheduled('Recurring Donation Updates', '17 11 3 * * ?', 'RD_RecurringDonations_SCHED');
