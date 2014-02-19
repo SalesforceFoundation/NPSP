@@ -429,7 +429,6 @@
   <types>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
-    <members>Cumulus_Settings</members>
     <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>
