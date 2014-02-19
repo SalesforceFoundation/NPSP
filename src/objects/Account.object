@@ -243,10 +243,6 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Household</fullName>
-                <default>false</default>
-            </values>
-            <values>
                 <fullName>Insurance</fullName>
                 <default>false</default>
             </values>
@@ -260,10 +256,6 @@
             </values>
             <values>
                 <fullName>Media</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Nonprofit</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -336,15 +328,7 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Ally</fullName>
-                <default>false</default>
-            </values>
-            <values>
                 <fullName>Customer</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Donor</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -361,10 +345,6 @@
             </values>
             <values>
                 <fullName>Prospect</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Supporter</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -485,10 +465,6 @@
                 <default>false</default>
             </values>
             <values>
-                <fullName>Nonprofit</fullName>
-                <default>false</default>
-            </values>
-            <values>
                 <fullName>Other</fullName>
                 <default>false</default>
             </values>
@@ -558,15 +534,7 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Ally</fullName>
-                <default>false</default>
-            </values>
-            <values>
                 <fullName>Customer</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Donor</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -583,10 +551,6 @@
             </values>
             <values>
                 <fullName>Prospect</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Supporter</fullName>
                 <default>false</default>
             </values>
         </picklistValues>

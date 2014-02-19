@@ -225,7 +225,6 @@
     <members>Error__c.Stack_Trace__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
-    <members>Opportunity.Type</members>
     <members>Trigger_Handler__c.Active__c</members>
     <members>Trigger_Handler__c.Asynchronous__c</members>
     <members>Trigger_Handler__c.Class__c</members>

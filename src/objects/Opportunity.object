@@ -138,22 +138,6 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <fields>
-        <fullName>Type</fullName>
-        <picklist>
-            <picklistValues>
-                <fullName>Unrestricted Funding</fullName>
-                <default>true</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-    </fields>
     <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
         <fullName>Donation</fullName>
@@ -186,14 +170,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -283,14 +259,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -380,14 +348,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -477,14 +437,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -574,14 +526,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -671,14 +615,6 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
-            <values>
-                <fullName>Restricted Funding</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Unrestricted Funding</fullName>
-                <default>false</default>
-            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
