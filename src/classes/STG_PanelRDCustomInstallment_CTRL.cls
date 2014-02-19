@@ -122,7 +122,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         return null;
     }  **/      
     
-    /** @TODO: do we still need this method? Should be remove it?
+    /** @DavidHabib: also comment back in line 335 in STG_SettingsManager_TEST when you
+        comment the method below back in.
+    
     // test an opp insert as done in the class and provide a warning if it fails
     private void testPackageIntegrity(){
         
