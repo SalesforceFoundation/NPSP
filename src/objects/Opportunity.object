@@ -165,17 +165,6 @@
             </values>
         </picklistValues>
         <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
             <values>
                 <fullName>Bronze</fullName>
@@ -258,17 +247,6 @@
             </values>
             <values>
                 <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -359,17 +337,6 @@
             </values>
         </picklistValues>
         <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
             <values>
                 <fullName>Bronze</fullName>
@@ -452,17 +419,6 @@
             </values>
             <values>
                 <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -553,17 +509,6 @@
             </values>
         </picklistValues>
         <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
             <values>
                 <fullName>Bronze</fullName>
@@ -646,17 +591,6 @@
             </values>
             <values>
                 <fullName>Pipeline</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Existing Business</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Business</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
