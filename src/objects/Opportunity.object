@@ -44,7 +44,6 @@
             <default>false</default>
         </values>
     </businessProcesses>
-    <compactLayoutAssignment>Donation_Compact_Layout</compactLayoutAssignment>
     <compactLayouts>
         <fullName>Donation_Compact_Layout</fullName>
         <fields>AccountId</fields>
@@ -63,8 +62,6 @@
         <fields>npe01__Member_Level__c</fields>
         <label>Membership Compact Layout</label>
     </compactLayouts>
-    <enableFeeds>true</enableFeeds>
-    <enableHistory>false</enableHistory>
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
         <description>Batch Data Entry</description>
@@ -138,7 +135,6 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
         <fullName>Donation</fullName>
         <active>true</active>
@@ -170,6 +166,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -259,6 +263,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -348,6 +360,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -437,6 +457,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -526,6 +554,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>
@@ -615,6 +651,14 @@
         </picklistValues>
         <picklistValues>
             <picklist>Type</picklist>
+            <values>
+                <fullName>Existing Business</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Business</fullName>
+                <default>false</default>
+            </values>
         </picklistValues>
         <picklistValues>
             <picklist>npe01__Member_Level__c</picklist>

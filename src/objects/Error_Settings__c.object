@@ -21,6 +21,7 @@
         <inlineHelpText>Select the type of user to send notifications to.</inlineHelpText>
         <label>Error Notification Recipients</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>

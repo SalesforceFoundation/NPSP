@@ -331,7 +331,6 @@
     <members>stgHelpSoftCreditRoles</members>
     <members>stgHelpStoreErrorsOn</members>
     <members>stgHelpTHActive</members>
-    <members>stgHelpTHActve</members>
     <members>stgHelpTHAsync</members>
     <members>stgHelpTHClass</members>
     <members>stgHelpTHLoadOrder</members>
@@ -340,7 +339,6 @@
     <members>stgHelpTriggerHandlers</members>
     <members>stgHelpUDROperation</members>
     <members>stgHelpUDROppField</members>
-    <members>stgHelpUDRTargetField</members>
     <members>stgHelpUDRTargetObject</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAfflSettings</members>
@@ -355,7 +353,6 @@
     <members>stgLabelHHNamingProgress</members>
     <members>stgLabelHHOCR</members>
     <members>stgLabelHHObject</members>
-    <members>stgLabelHHRules</members>
     <members>stgLabelHHSettings</members>
     <members>stgLabelLeadSettings</members>
     <members>stgLabelMembershipSettings</members>

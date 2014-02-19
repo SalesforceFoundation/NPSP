@@ -79,6 +79,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether an email notification has been sent regarding this error.</inlineHelpText>
         <label>Email Sent</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -119,6 +120,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the error has been posted in Chatter.</inlineHelpText>
         <label>Posted in Chatter</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
