@@ -175,18 +175,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- Cumulus Utility Build Targets -->
 
-    <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
+
+    <!-- uninstallCumulus: Removes all metadata from the Cumulus package for types used in Cumulus -->
     <target name="uninstallCumulus">
-      <!-- Delete unpackaged metadata -->
-      <retrieveUnpackaged dir="uninstallsrc" />
-      <deleteWhitelistedMetadata dir="uninstallsrc/unpackaged" />
-      <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
-
-      <!-- Delete metadata from the Cumulus package -->
       <retrievePackaged dir="uninstallsrc" package="Cumulus" />
       <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
@@ -194,6 +187,18 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete dir="uninstall" />
     </target>
 
+    <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
+    <target name="uninstallCumulusUnpackaged">
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+      <retrieveUnpackaged dir="uninstallsrc" />
+      <deleteWhitelistedMetadata dir="uninstallsrc/unpackaged" />
+      <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+    </target>
 
     <!-- updateDependendentPackages: Ensures all dependent packages are the correct version -->
     <target name="updateDependentPackages">
@@ -229,5 +234,4 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
       <updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
     </target>
-
 </project>
