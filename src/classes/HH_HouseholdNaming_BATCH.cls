@@ -32,7 +32,7 @@
 * @date 2011 (2.3)
 * @description Class provides a batchable wrapper for Household naming functionality. Generally called only on initial activation.
 */
-global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
+public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
 // batch apex class to name households in existing orgs
     
     public String query {get; set;}
@@ -49,11 +49,11 @@ global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         isActivation = false;       
     }    
     /** @description Start method of batch class */
-    global database.Querylocator start(Database.BatchableContext bc) {
+    public database.Querylocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(query);      
     }
     /** @description The execution logic for the batch. Includes seperate paths for initial activations */
-    global void execute(Database.BatchableContext bc, Sobject[] result) {
+    public void execute(Database.BatchableContext bc, Sobject[] result) {
         // run rollups for this batch  
         HH_ProcessControl.inFutureContext = true;     
         
@@ -142,7 +142,7 @@ global class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         hn.UpdateNames(hhidlist);
     }
     /** @description Finish method for the batchable class. */
-    global void finish(Database.BatchableContext bc) {
+    public void finish(Database.BatchableContext bc) {
     }
     
 }
