@@ -190,12 +190,15 @@ public with sharing class STTG_InstallScript_TEST {
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
         System.assertEquals(false, npe01Settings.npe01__Enable_Opportunity_Contact_Role_Trigger__c);
-        System.assertEquals(true, npe01Settings.npe01__Payments_Enabled__c);
+        System.assertEquals(true, npe01Settings.npe01__Payments_Enabled__c);     
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('HH_Account');
+        Id householdAccountId = (householdAccount == null ? null : householdAccount.getRecordTypeId());
+        System.assertEquals(householdAccountId, npe01Settings.npe01__HH_Account_RecordTypeID__c);
         
         System.assertEquals(HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02Settings.npo02__Household_Rules__c);
         System.assertEquals(label.npo02.Household_Member_Contact_Role, npo02Settings.npo02__Household_Member_Contact_Role__c);
         System.assertEquals(false, npo02Settings.npo02__Always_Rollup_to_Primary_Contact__c);
-        System.assertEquals(false, npo02Settings.npo02__Enable_Opp_Rollup_Triggers__c);
+        System.assertEquals(true, npo02Settings.npo02__Enable_Opp_Rollup_Triggers__c);
         System.assertEquals(null, npo02Settings.npo02__Excluded_Account_Opp_Rectypes__c);
         System.assertEquals(null, npo02Settings.npo02__Excluded_Account_Opp_Types__c);
         System.assertEquals(null, npo02Settings.npo02__Excluded_Contact_Opp_Rectypes__c);
@@ -203,13 +206,16 @@ public with sharing class STTG_InstallScript_TEST {
         System.assertEquals(null, npo02Settings.npo02__Membership_Record_Types__c);
         System.assertEquals(365, npo02Settings.npo02__Rollup_N_Day_Value__c);
         System.assertEquals(30, npo02Settings.npo02__Membership_Grace_Period__c);
-        System.assertEquals(false, npo02Settings.npo02__Advanced_Household_Naming__c);
+        System.assertEquals(true, npo02Settings.npo02__Advanced_Household_Naming__c);
         System.assertEquals(false, npo02Settings.npo02__Async_Household_Naming__c);
         System.assertEquals(UserInfo.getOrganizationId(), npo02Settings.Setupownerid);
         System.assertEquals(25, npo02Settings.npo02__Schedule_Job_Limit__c);
         System.assertEquals(null, npo02Settings.npo02__Household_OCR_Excluded_Recordtypes__c);
         System.assertEquals(null, npo02Settings.npo02__Household_Creation_Excluded_Recordtypes__c);
         System.assertEquals(HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02Settings.npo02__Household_Rules__c);
+        System.assertEquals(true, npo02Settings.npo02__Enable_Soft_Credit_Rollups__c);
+        System.assertEquals('Soft Credit; Household Member;', npo02Settings.npo02__Soft_Credit_Roles__c);
+        System.assertEquals(true, npo02Settings.npo02__Household_Contact_Roles_On__c);
         
         System.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), npe03Settings.npe03__Open_Opportunity_Behavior__c);
         System.assertEquals(true, npe03Settings.npe03__Add_Campaign_to_All_Opportunites__c);
