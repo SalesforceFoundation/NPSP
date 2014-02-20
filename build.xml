@@ -130,12 +130,12 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="uninstallCumulus" />
       
       <!-- Get the latest beta release tag name -->
-      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
       <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
       <delete file="${basedir}/managed_uat_tag" />
 
       <!-- Fetch the version.properties file for the release from GitHub -->
-      <get src="https://raw.github.com/SalesforceFoundation/Cumulus/${managed_uat_tag}/version.properties" dest="${basedir}/managed/version.properties.uat" />
+      <get src="https://raw.github.com/SalesforceFoundation/Cumulus/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
 
       <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.uat file -->
       <var name="version.npe01" unset="true" />
@@ -147,7 +147,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete file="${basedir}/version.properties.uat" />
 
       <!-- Get the latest beta release version number -->
-      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta" dest="${basedir}/version_uat" />
+      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
       <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
       <var name="version.npsp" value="${version.npsp.uat}" />
       <delete file="${basedir}/version_uat" />
