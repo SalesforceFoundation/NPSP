@@ -97,6 +97,8 @@ global without sharing class HH_Households {
                 householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Enable_Soft_Credit_Rollups__c = true;
+                householdsSettings.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+				householdsSettings.npo02__Household_Contact_Roles_On__c = true;
                 
                 // new HH Account model overrides having HH objects
                 if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
