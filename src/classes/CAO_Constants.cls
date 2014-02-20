@@ -32,38 +32,38 @@
 * @date 2011 (1.x)
 * @description Constants and helper methods used for common settings in npe01: account model, default contact role, etc. 
 */
-global with sharing class CAO_Constants {
+public with sharing class CAO_Constants {
     //One-to-One value for system processor field
-    global static final String ONE_TO_ONE_PROCESSOR = 'One-to-One';
+    public static final String ONE_TO_ONE_PROCESSOR = 'One-to-One';
     //One-to-One org type value
-    global static final String ONE_TO_ONE_ORGANIZATION_TYPE = 'One-to-One Individual';
+    public static final String ONE_TO_ONE_ORGANIZATION_TYPE = 'One-to-One Individual';
 
     //Bucket value for system processor field
-    global static final String BUCKET_PROCESSOR = 'Individual';
+    public static final String BUCKET_PROCESSOR = 'Individual';
     //Buck org type value
-    global static final String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
+    public static final String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
-    global static  String BUCKET_ACCOUNT_NAME = 'Individual';
+    public static  String BUCKET_ACCOUNT_NAME = 'Individual';
 
     //HH_Account value for system processor field
-    global static final String HH_ACCOUNT_PROCESSOR = 'HH Account';
+    public static final String HH_ACCOUNT_PROCESSOR = 'HH Account';
     //HH_Account type value
-    global static final String HH_ACCOUNT_TYPE = 'HH Account';
+    public static final String HH_ACCOUNT_TYPE = 'HH Account';
 
-    global static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
+    public static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
 
-    global static  string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
-    global static  string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
+    public static  string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
+    public static  string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
 
-    global static  string CONTACT_EMAIL_FOR_TESTS = 'junk@test.net';
-    global static  string CONTACT_PREFERRED_EMAIL_FOR_TESTS = 'Work';
-    global static  string CONTACT_PHONE_FOR_TESTS = '206-777-8888';
-    global static  string CONTACT_PREFERRED_PHONE_FOR_TESTS = 'Work';
+    public static  string CONTACT_EMAIL_FOR_TESTS = 'junk@test.net';
+    public static  string CONTACT_PREFERRED_EMAIL_FOR_TESTS = 'Work';
+    public static  string CONTACT_PHONE_FOR_TESTS = '206-777-8888';
+    public static  string CONTACT_PREFERRED_PHONE_FOR_TESTS = 'Work';
     
-    global static  string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
+    public static  string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
 
     //get the settings. handles the case where the managed value doesn't exist yet
-    global static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
+    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
         boolean usedToBeOneToOne = false;
         boolean usedToBeBucket = false;
         //if no settings exist, create defaults
@@ -92,7 +92,7 @@ global with sharing class CAO_Constants {
         return ContactsSettings;
     }
 
-    global static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
+    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
 
         //clear out whatever settings exist
         delete [select id from npe01__Contacts_and_Orgs_Settings__c];
@@ -111,7 +111,7 @@ global with sharing class CAO_Constants {
         return ContactsSettings;
     }
 
-    global static boolean isOneToOne() {
+    public static boolean isOneToOne() {
         //if no settings exist, create defaults
         if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
             return true;
@@ -120,11 +120,11 @@ global with sharing class CAO_Constants {
         }
     }
 
-    global static boolean isBucketModel() {
+    public static boolean isBucketModel() {
         return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
     }
 
-    global static boolean isHHAccountModel() {
+    public static boolean isHHAccountModel() {
         return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
     }
     
@@ -137,7 +137,7 @@ global with sharing class CAO_Constants {
     //variable for Account Name
     private static String IndividualAccountName = CAO_Constants.BUCKET_ACCOUNT_NAME;
 
-    global static id getIndividualAccountId () {
+    public static id getIndividualAccountId () {
     
         // look up the ID if we haven't already done it
         if ( IndividualAccountId == null ) {
@@ -154,7 +154,7 @@ global with sharing class CAO_Constants {
         return IndividualAccountId;
     }
 
-    global static Id setIndividualAccountForTests(String accountName) {
+    public static Id setIndividualAccountForTests(String accountName) {
         //create a fake Individual Account for tests
 
         Account individualAccountForTests = new Account(

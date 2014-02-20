@@ -32,7 +32,7 @@
 * @date 2012 (2.0)
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-global without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful{
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful{
     public String query { get; set; } 
     public integer recCount;
     // constructors
@@ -42,12 +42,12 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         recCount = 0;
     }
     
-    global database.Querylocator start(Database.BatchableContext bc){
+    public database.Querylocator start(Database.BatchableContext bc){
         //clear any existing errors from the queue
         delete [select id from Error__c where Context_Type__c = 'RD'];
         return Database.getQueryLocator(query);      
     }
-    global void execute(Database.BatchableContext bc, Sobject[] result){
+    public void execute(Database.BatchableContext bc, Sobject[] result){
     	Savepoint sp = Database.setSavepoint();
         try {
 	        RD_ProcessControl.batchButton = true;
@@ -58,7 +58,7 @@ global without sharing class RD_RecurringDonations_BATCH implements Database.Bat
             ERR_Handler.processError(e, result, ERR_Handler.Context.RD);
         }    
     }
-    global void finish(Database.BatchableContext bc) {
+    public void finish(Database.BatchableContext bc) {
         //update our settings
         npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
         

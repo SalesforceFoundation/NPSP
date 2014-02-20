@@ -4,7 +4,7 @@
 * @description Provides recordtype wrapper for easy access in other codeblocks 
 */
 
-global class UTIL_RecordTypes {
+public class UTIL_RecordTypes {
 /*-----------------------------------------------------------------------------------------------
 * Written by Evan Callahan, copyright (c) 2010 Groundwire
 * This program is released under the GNU General Public License. http://www.gnu.org/licenses/
@@ -22,8 +22,8 @@ global class UTIL_RecordTypes {
     private static Map<String,Map<Id,Schema.RecordTypeInfo>> recordTypesById = new Map<String,Map<Id,Schema.RecordTypeInfo>>();
     private static Map<String,Map<String,Schema.RecordTypeInfo>> recordTypesByName = new Map<String,Map<String,Schema.RecordTypeInfo>>();
     private static List<Schema.Recordtypeinfo> recordTypesList = New List<Schema.Recordtypeinfo>();
-    global static String giftRecordTypeNameForTests;
-    global static String membershipRecordTypeNameForTests;    
+    public static String giftRecordTypeNameForTests;
+    public static String membershipRecordTypeNameForTests;    
         
     /*******************************************
     * Gets record type maps for a new object
@@ -49,7 +49,7 @@ global class UTIL_RecordTypes {
     /*******************************************
     * Gives record type Id from a given record type name
     ********************************************/
-    global static Id GetRecordTypeId(String objectName, String RecordTypeName) {
+    public static Id GetRecordTypeId(String objectName, String RecordTypeName) {
         // make sure we have this object's record types mapped
         if (!recordTypesByName.containsKey(objectName)) 
             fillMapsForObject(objectName);
@@ -63,7 +63,7 @@ global class UTIL_RecordTypes {
         }
     }
     
-    global static string getRecordTypeNameForGiftsTests(String objectName){  
+    public static string getRecordTypeNameForGiftsTests(String objectName){  
 
         if (giftRecordTypeNameForTests == null){
              // make sure we have this object's record types mapped
@@ -80,7 +80,7 @@ global class UTIL_RecordTypes {
         return giftRecordTypeNameForTests;
     }
     
-    global static string getRecordTypeNameForMembershipTests(String objectName){      
+    public static string getRecordTypeNameForMembershipTests(String objectName){      
         if (membershipRecordTypeNameForTests == null){        
             // make sure we have this object's record types mapped
             if (!recordTypesByName.containsKey(objectName)) 
@@ -100,7 +100,7 @@ global class UTIL_RecordTypes {
     /*******************************************
     * Gives record type Name from a given record type Id
     ********************************************/
-    global static String GetRecordTypeName(String objectName, Id RecordTypeId) {
+    public static String GetRecordTypeName(String objectName, Id RecordTypeId) {
         // make sure we have this object's record types mapped
         if (!recordTypesById.containsKey(objectName)) 
             fillMapsForObject(objectName);
@@ -117,7 +117,7 @@ global class UTIL_RecordTypes {
     /*******************************************
     * Gives a set of record type Ids from a given set of names
     ********************************************/
-    global static set<Id> GetRecordTypeIdSet(String objectName, set<string> RecordTypeNameSet) {
+    public static set<Id> GetRecordTypeIdSet(String objectName, set<string> RecordTypeNameSet) {
         set<Id> recordTypeIds = new set<Id>();
 
         // make sure we have this object's record types mapped
@@ -139,7 +139,7 @@ global class UTIL_RecordTypes {
     /*******************************************
     * Gives a set of record type Ids from a given set of names
     ********************************************/
-    global static Map<String, Id> GetRecordTypeIdMap(String objectName) {
+    public static Map<String, Id> GetRecordTypeIdMap(String objectName) {
         Map<String, Id> recordTypeMap = new Map<String, Id>();  
         // make sure we have this object's record types mapped
         if (!recordTypesByName.containsKey(objectName)) 
@@ -160,7 +160,7 @@ global class UTIL_RecordTypes {
     /*******************************************
     * Gets record type naming suffix from record type name
     ********************************************/
-    global static String GetOppNamingSuffix(String RecordTypeName){
+    public static String GetOppNamingSuffix(String RecordTypeName){
         Map<String,String> OpportunitySufix =  new Map<String,String>();
 
         //add overrides for naming suffixes
@@ -174,7 +174,7 @@ global class UTIL_RecordTypes {
     /****************************************************************
     * function to get a list of select options for a Visualforce picklist of record types. 
     *****************************************************************/
-    global static List<SelectOption> getRecordTypesForSelectList(String objectName) {
+    public static List<SelectOption> getRecordTypesForSelectList(String objectName) {
         
         List<SelectOption> recordTypesOptions = new List<SelectOption>();
         
@@ -187,7 +187,7 @@ global class UTIL_RecordTypes {
         return recordTypesOptions;
     }
     
-    global static List<SelectOption> getStringRecordTypesForSelectList(String objectName) {
+    public static List<SelectOption> getStringRecordTypesForSelectList(String objectName) {
         
         List<SelectOption> recordTypesOptions = new List<SelectOption>();
         Map<String,Id> availRecordTypes = getRecordTypeIdMap(objectName);

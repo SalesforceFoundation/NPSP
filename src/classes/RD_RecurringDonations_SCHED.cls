@@ -32,9 +32,9 @@
 * @date 2012 (2.0)
 * @description Supports the automatic scheduling of recurring donation updates  
 */ 
-global class RD_RecurringDonations_SCHED implements Schedulable {
+public class RD_RecurringDonations_SCHED implements Schedulable {
 
-    global void execute(SchedulableContext SC) { 
+    public void execute(SchedulableContext SC) { 
         string queryRCD = RD_RecurringDonations.strQueryRDNoWhere();
         queryRCD += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
         

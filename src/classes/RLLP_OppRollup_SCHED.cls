@@ -32,9 +32,9 @@
 * @date 2011 (2.0)
 * @description Supports the automatic scheduling of opportunity rollups  
 */
-global class RLLP_OppRollup_SCHED implements Schedulable {
+public class RLLP_OppRollup_SCHED implements Schedulable {
 
-    global void execute(SchedulableContext SC) { 
+    public void execute(SchedulableContext SC) { 
         RLLP_OppRollup rg = new RLLP_OppRollup();
         rg.rollupAll();    
     }  

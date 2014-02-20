@@ -32,7 +32,7 @@
 * @date 2011 (2.0) 
 * @description Resposible for rollups of all opportunities to the requisite Account/Household/Contact 
 */
-global virtual without sharing class RLLP_OppRollup{
+public without sharing class RLLP_OppRollup{
 
     /*** Constructor ***/
     public RLLP_OppRollup(){

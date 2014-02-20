@@ -223,7 +223,7 @@ public class HH_HouseholdNaming_TEST {
         hn.UpdateNames(newhhids);
         
         //take teh list of contacts in each of the households in newhhids, and run them
-        //back through the global string calls to test them - this never quite worked -
+        //back through the public string calls to test them - this never quite worked -
         // i think something about how HHs are created, with the contact re-update is causing
         //an issue in testing
        /* 

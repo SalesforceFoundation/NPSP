@@ -34,22 +34,22 @@
 * NOTE: This class handles both household naming for the Household__c object
 * as well as for HH Account objects. 
 */
-global virtual without sharing class HH_HouseholdNaming {
+public  without sharing class HH_HouseholdNaming {
       
     @future  
-    global static void FutureUpdateNames(list<id> hhids){       
+    public static void FutureUpdateNames(list<id> hhids){       
         //set our process control to avoid recursive updating on household records
         HH_ProcessControl.inFutureContext = true;
         
         //create a new instance of the HH_HouseholdNaming class -
         //and pass in our param
-        //this is b/c of the global visibility
+        //this is b/c of the public visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         hn.UpdateNames(hhids);      
         HH_ProcessControl.inFutureContext = false;    
     }
-    global virtual string getOtherName(list<Contact> ContactList){return null;}
-    global virtual void UpdateNames(list<id> hhids){
+    public  string getOtherName(list<Contact> ContactList){return null;}
+    public  void UpdateNames(list<id> hhids){
         
         //we need this turned on to prevent recursive triggering on household creation        
         HH_ProcessControl.inFutureContext = true;    
@@ -105,7 +105,7 @@ global virtual without sharing class HH_HouseholdNaming {
     }
     
     //get generic household name 
-    global virtual string getHHName(list<Contact> ContactList){
+    public  string getHHName(list<Contact> ContactList){
         string householdname = '';
         
         if(ContactList != null){
@@ -158,7 +158,7 @@ global virtual without sharing class HH_HouseholdNaming {
     
     
     //just pile up first names for qualifying contacts
-    global virtual string getInformalName(list<Contact> ContactList){
+    public  string getInformalName(list<Contact> ContactList){
         string informalname = ''; 
        
         list<Contact> contactnames = new list<Contact>();
@@ -207,7 +207,7 @@ global virtual without sharing class HH_HouseholdNaming {
         return informalname;
     }
     
-    global virtual string getFormalName(list<Contact> ContactList){
+    public  string getFormalName(list<Contact> ContactList){
         string formalname = ''; 
        
         list<Contact> contactnames = new list<Contact>();

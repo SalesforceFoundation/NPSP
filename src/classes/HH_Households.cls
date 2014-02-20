@@ -32,7 +32,7 @@
 * @date 2011 (2.0)
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
-global without sharing class HH_Households { 
+public without sharing class HH_Households { 
     
     //One-to-One value for system processor field
     public static String ALL_PROCESSOR = 'All New or Edited Contacts';
