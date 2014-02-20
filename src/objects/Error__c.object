@@ -5,6 +5,10 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>Clone</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -17,11 +21,19 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
@@ -32,6 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Contains errors generated from the NPSP package during normal operations.</description>
     <enableActivities>false</enableActivities>
@@ -45,6 +58,7 @@
         <inlineHelpText>Context that generated the error, if known.</inlineHelpText>
         <label>Context Type</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>
@@ -55,6 +69,7 @@
         <inlineHelpText>Date &amp; time the error occurred</inlineHelpText>
         <label>Datetime</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>DateTime</type>
     </fields>
     <fields>
@@ -64,6 +79,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether an email notification has been sent regarding this error.</inlineHelpText>
         <label>Email Sent</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -73,6 +89,7 @@
         <inlineHelpText>Type of error that occurred</inlineHelpText>
         <label>Error Type</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>
@@ -82,6 +99,7 @@
         <inlineHelpText>Full text of the error message</inlineHelpText>
         <label>Full Message</label>
         <length>32768</length>
+        <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>5</visibleLines>
     </fields>
@@ -92,6 +110,7 @@
         <inlineHelpText>Type of object on which the error occurred, if known.</inlineHelpText>
         <label>Object Type</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>
@@ -101,6 +120,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the error has been posted in Chatter.</inlineHelpText>
         <label>Posted in Chatter</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -110,6 +130,7 @@
         <inlineHelpText>A link to the record which caused the error, if available.</inlineHelpText>
         <label>Record URL</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
     <fields>
@@ -119,6 +140,7 @@
         <inlineHelpText>Stack trace for the thrown error, if available at runtime.</inlineHelpText>
         <label>Stack Trace</label>
         <length>32768</length>
+        <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>10</visibleLines>
     </fields>

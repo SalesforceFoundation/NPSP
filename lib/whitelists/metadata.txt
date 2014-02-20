@@ -6,6 +6,10 @@ SiteFooter.component
 SitePoweredBy.component
 SiteLogin.component
 SiteHeader.component
+Account.object
+Contact.object
+Lead.object
+Opportunity.object
 AnswersHome.page
 BandwidthExceeded.page
 Exception.page
