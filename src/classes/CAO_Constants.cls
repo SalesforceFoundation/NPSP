@@ -75,8 +75,8 @@ global with sharing class CAO_Constants {
             if (ContactsSettings.Id == null) { 
                 ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                	
                 
-                //set the other settings to reasonable defaults
-                ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
+                //this setting does nothing, but needs to be extracted from the tests before removing
+                ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
                 ContactsSettings.npe01__Payments_Enabled__c  = true;
                 ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
                 ContactsSettings.Setupownerid = UserInfo.getOrganizationId();
