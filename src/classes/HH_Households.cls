@@ -82,7 +82,7 @@ global without sharing class HH_Households {
  
                 householdsSettings.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
                 householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c = false;
-                householdsSettings.npo02__Enable_Opp_Rollup_Triggers__c = false;
+                householdsSettings.npo02__Enable_Opp_Rollup_Triggers__c = true;
                 householdsSettings.npo02__Excluded_Account_Opp_Rectypes__c = null;
                 householdsSettings.npo02__Excluded_Account_Opp_Types__c = null;
                 householdsSettings.npo02__Excluded_Contact_Opp_Rectypes__c = null;
@@ -90,12 +90,15 @@ global without sharing class HH_Households {
                 householdsSettings.npo02__Membership_Record_Types__c = null;
                 householdsSettings.npo02__Rollup_N_Day_Value__c = 365;
                 householdsSettings.npo02__Membership_Grace_Period__c = 30;
-                householdsSettings.npo02__Advanced_Household_Naming__c = false;
+                householdsSettings.npo02__Advanced_Household_Naming__c = true;
                 householdsSettings.npo02__Async_Household_Naming__c = false;
                 householdsSettings.Setupownerid = UserInfo.getOrganizationId();
                 householdsSettings.npo02__Schedule_Job_Limit__c = 25;
                 householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
+                householdsSettings.npo02__Enable_Soft_Credit_Rollups__c = true;
+                householdsSettings.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+				householdsSettings.npo02__Household_Contact_Roles_On__c = true;
                 
                 // new HH Account model overrides having HH objects
                 if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
