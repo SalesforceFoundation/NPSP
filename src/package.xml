@@ -117,6 +117,8 @@
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_JobProgress_CTRL</members>
+    <members>UTIL_JobScheduler</members>
+    <members>UTIL_JobScheduler_TEST</members>
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
@@ -196,7 +198,6 @@
     <name>CompactLayout</name>
   </types>
   <types>
-    <members>Cumulus</members>
     <members>Nonprofit_CRM</members>
     <name>CustomApplication</name>
   </types>
@@ -430,7 +431,6 @@
   <types>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
-    <members>Cumulus_Settings</members>
     <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>

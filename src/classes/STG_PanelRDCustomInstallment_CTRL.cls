@@ -114,59 +114,16 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         private set;
     }
 
+    /** @TODO: do we still need this method? Should be remove it? 
     // action method called when the page first loads 
     public PageReference getSettingsFirstTime() {        
         scheduleRecurringDonationsUpdate();
         testPackageIntegrity();
         return null;
-    }        
+    }  **/      
     
-    // checks whether night batches should be enabled and set up
-    private PageReference scheduleRecurringDonationsUpdate() {
-        PageReference pr = null;
-        
-        if (!STG_Panel.stgService.stgRD.npe03__Disable_Nightly_Job__c) {
-            Integer scheduledJobLimit = 25;
-            boolean alreadyScheduled = false;            
-            
-            List<cronTrigger> scheduledUpdates = [SELECT Id FROM cronTrigger limit :scheduledJobLimit];
-            
-            if (STG_Panel.stgService.stgRD.npe03__Nightly_Update_ID__c != null) {
-                for (cronTrigger thisScheduledJob : scheduledUpdates) { 
-                    if (thisScheduledJob.id == STG_Panel.stgService.stgRD.npe03__Nightly_Update_ID__c) {
-                        alreadyScheduled = true;
-                        break;
-                    }
-                }
-            }
-                        
-            if (!alreadyScheduled) {
-                if (scheduledUpdates.size() < scheduledJobLimit) {     
-                    
-                    RD_RecurringDonations_SCHED nightlyJob = new RD_RecurringDonations_SCHED(); 
-                    //need to check for already scheduled job
-                    String sch='17 11 3 * * ?'; 
-                    scheduledUpdates.clear();
-                    scheduledUpdates = [SELECT Id FROM cronTrigger where cronExpression = :sch];
-                    if (scheduledUpdates.size()==0) {
-                        String jobId = system.schedule('Recurring Donation Updates', sch ,nightlyJob);
-                        STG_Panel.stgService.stgRD.npe03__Nightly_Update_ID__c = jobId;
-                    }
-                    else {
-                        STG_Panel.stgService.stgRD.npe03__Nightly_Update_ID__c = scheduledUpdates[0].Id;
-                    }
-                    //if we update page settings, we need to call a redirect
-                    update STG_Panel.stgService.stgRD;
-                    pr = ApexPages.currentPage();                    
-                } 
-                else{
-                    ApexPages.Message myMsg = new ApexPages.Message(ApexPages.Severity.FATAL, system.label.npe03.RecurringDonationSchedulingError);
-                    ApexPages.addMessage(myMsg);                    
-                }
-            }    
-        }
-        return pr;
-    }
+    /** @DavidHabib: also comment back in line 335 in STG_SettingsManager_TEST when you
+        comment the method below back in.
     
     // test an opp insert as done in the class and provide a warning if it fails
     private void testPackageIntegrity(){
@@ -232,6 +189,6 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         if (myMsg != null){
             ApexPages.addMessage(myMsg);
         }
-    }    
+    }  **/   
 
 }

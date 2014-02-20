@@ -332,7 +332,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, STG_Panel.stgService.listRDCustomInstallment);
         system.assertEquals(1, STG_Panel.stgService.listRDCustomInstallment.size());
-        system.assertEquals(null, panel.getSettingsFirstTime());
+        //system.assertEquals(null, panel.getSettingsFirstTime());
         panel.ciIdDelete = 'not a valid id';
         system.assertEquals(null, panel.deleteCi());
         panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;

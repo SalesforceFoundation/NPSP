@@ -40,7 +40,7 @@ public with sharing class STG_SettingsService {
     	system.debug('***** STG_SettingsService constructor');
     }
     
-    public npe01__Contacts_and_Orgs_Settings__c stgCon {
+    public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
             if (stgCon == null) stgCon = CAO_Constants.getContactsSettings();
             return stgCon;
