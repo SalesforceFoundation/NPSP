@@ -5,6 +5,10 @@
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>Clone</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -19,6 +23,10 @@
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>List</actionName>
         <type>Default</type>
     </actionOverrides>
@@ -27,6 +35,10 @@
         <content>BDE_BatchEntry</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Tab</actionName>
@@ -38,6 +50,7 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>The holding object for batch entry. Interaction with this object should occur only through the Batch Data Entry tab.</description>
     <enableActivities>false</enableActivities>
@@ -85,6 +98,7 @@
             <sorted>false</sorted>
         </picklist>
         <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
     <fields>
@@ -93,6 +107,7 @@
         <label>Description</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>
@@ -103,6 +118,7 @@
         <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
     </fields>
@@ -115,6 +131,7 @@
         <length>100</length>
         <required>true</required>
         <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
@@ -169,9 +186,9 @@
     </nameField>
     <pluralLabel>Batches</pluralLabel>
     <searchLayouts>
-        <excludedStandardButtons>New</excludedStandardButtons>
-        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>

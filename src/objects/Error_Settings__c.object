@@ -11,6 +11,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Check this if you&apos;d like the system to post notifications for certain type of errors.</inlineHelpText>
         <label>Email Notifications</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
@@ -20,6 +21,7 @@
         <inlineHelpText>Select the type of user to send notifications to.</inlineHelpText>
         <label>Error Notification Recipients</label>
         <required>false</required>
+        <trackTrending>false</trackTrending>
         <type>TextArea</type>
     </fields>
     <fields>
@@ -29,6 +31,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Check this if you&apos;d like errors to be stored in the database.</inlineHelpText>
         <label>Store Errors</label>
+        <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <label>Error Settings</label>

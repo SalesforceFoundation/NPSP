@@ -1,9 +1,5 @@
 <project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
-<!--
-    <taskdef uri="antlib:com.salesforce"
-         resource="com/salesforce/antlib.xml"
-         classpath="${basedir}/lib/ant-salesforce.jar" />
--->
+
     <include file="${basedir}/lib/ant-salesforce.xml" />
 
     <taskdef 
@@ -134,7 +130,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="uninstallCumulus" />
       
       <!-- Get the latest beta release tag name -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
       <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
       <delete file="${basedir}/managed_uat_tag" />
 
@@ -151,7 +147,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete file="${basedir}/version.properties.uat" />
 
       <!-- Get the latest beta release version number -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
+      <get src="http://guarded-hamlet-8069.herokuapp.com/mrbelvedere/repo/Cumulus/version/beta" dest="${basedir}/version_uat" />
       <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
       <var name="version.npsp" value="${version.npsp.uat}" />
       <delete file="${basedir}/version_uat" />
@@ -181,25 +177,57 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
     <target name="uninstallCumulus">
+      <!-- Delete unpackaged metadata -->
       <retrieveUnpackaged dir="uninstallsrc" />
-      <buildDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
+      <deleteWhitelistedMetadata dir="uninstallsrc/unpackaged" />
+      <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="200" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+
+      <!-- Delete metadata from the Cumulus package -->
+      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
+      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
     </target>
 
 
-    <!--   updateDependendentPackages: Ensures all dependent packages are the correct version -->
+    <!-- updateDependendentPackages: Ensures all dependent packages are the correct version -->
     <target name="updateDependentPackages">
       <updateDependentPackages />
     </target>
 
+    <!-- Developer focused build targets -->
 
+    <!-- retrieveUnpackaged: Retrieves all unpackaged metadata from target org into the unpackaged directory -->
     <target name="retrieveUnpackaged">
       <retrieveUnpackaged dir="unpackaged" /> 
     </target>
 
+    <!-- retrievePackaged: Retrieves all metadata from the Cumulus package in the target org into the packaged directory -->
+    <target name="retrievePackaged">
+      <retrievePackaged dir="packaged" package="Cumulus" /> 
+    </target>
+
+    <!-- runAllTests: Uses an empty package manifest to trigger execution of all tests in the target org without deploying any actual code changes -->
     <target name="runAllTests">
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="lib/empty" runAllTests="true" maxPoll="200" />
+    </target>
+
+    <!-- updatePackageXml: Builds a new package.xml based upon the metadata in the src directory -->
+    <target name="updatePackageXml">
+      <buildPackageXml package="Cumulus" version="29.0" />
+    </target>
+
+    <target name="updateMetaXml">
+      <updateMetaXml dir="${basedir}/src" namespace="npe01" version="${version.npe01}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npo02" version="${version.npo02}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
+      <updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
     </target>
 
 </project>

@@ -777,14 +777,6 @@
         <value>Indicates that this module is active</value>
     </labels>
     <labels>
-        <fullName>stgHelpTHActve</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpTHActve</shortDescription>
-        <value>Indicates that this module is active</value>
-    </labels>
-    <labels>
         <fullName>stgHelpTHAsync</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -847,14 +839,6 @@
         <protected>false</protected>
         <shortDescription>stgHelpUDROppField</shortDescription>
         <value>Select the Opportunity field you wish to rollup</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpUDRTargetField</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpUDRTargetField</shortDescription>
-        <value>Select the field on the target field to place your result</value>
     </labels>
     <labels>
         <fullName>stgHelpUDRTargetObject</fullName>
@@ -967,14 +951,6 @@
         <protected>false</protected>
         <shortDescription>stgLabelHHObject</shortDescription>
         <value>Household Object</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelHHRules</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelHHRules</shortDescription>
-        <value>Household Rules</value>
     </labels>
     <labels>
         <fullName>stgLabelHHSettings</fullName>
