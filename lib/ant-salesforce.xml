@@ -239,6 +239,9 @@
             <case value="labels">
               <property name="typename" value="CustomLabel" />
             </case>
+            <case value="layouts">
+              <property name="typename" value="Layout" />
+            </case>
             <case value="objects">
               <property name="typename" value="CustomObject" />
             </case>
@@ -261,7 +264,7 @@
             <isset property="typename" />
             <then>
 
-              <!-- Write a new <types/> section for the metadata type -->
+              <!-- Write a new <types/> section for the meta type -->
               <echo file="@{xmlfile}" append="true">  &lt;types&gt;${line.separator}</echo>
 
               <!-- Loop through files in the type's dir and add <members /> element for each file -->
@@ -281,11 +284,12 @@
                       <!-- Write the <members/> element -->
                       <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component}&lt;/members&gt;${line.separator}</echo>
     
-                      <!-- Unset basename properties for next execution since we're using basename and propertyregex which will not overwrite a property -->
-                      <var name="component" unset="true" />
-                      <var name="component_file" unset="true" />
                     </then>
                   </if>
+
+                  <!-- Unset basename properties for next execution since we're using basename and propertyregex which will not overwrite a property -->
+                  <var name="component" unset="true" />
+                  <var name="component_file" unset="true" />
                 </sequential>
               </for>
 
@@ -294,6 +298,9 @@
               <echo file="@{xmlfile}" append="true">  &lt;/types&gt;${line.separator}</echo>
 
             </then>
+            <else>
+              <echo>Skipping unmapped metadata type ${metatype}</echo>
+            </else>
           </if>
 
           <!-- Unset the metatype so basename can set it on next iteration through loop -->

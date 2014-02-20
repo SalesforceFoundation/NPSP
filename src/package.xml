@@ -448,6 +448,17 @@
     <name>FieldSet</name>
   </types>
   <types>
+    <members>Account-Household Layout</members>
+    <members>Account-Organization Layout</members>
+    <members>Batch__c-Batch Layout</members>
+    <members>Contact-Contact Layout</members>
+    <members>Error__c-Error Layout</members>
+    <members>Opportunity-Donation Layout</members>
+    <members>Opportunity-Membership Layout</members>
+    <members>Trigger_Handler__c-Trigger Handler Layout</members>
+    <name>Layout</name>
+  </types>
+  <types>
     <members>Account.AllAccounts</members>
     <members>Account.Household_Accounts</members>
     <members>Account.Organization_Accounts</members>
