@@ -17,6 +17,13 @@ global class STTG_InstallScript implements InstallHandler {
         Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
         //Setup the new configuration
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
+        
+        //set default settings
+        
+        
+        //schedule cron jobs
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('Recurring Donation Updates', '17 11 3 * * ?', 'RD_RecurringDonations_SCHED');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('Opportunity Rollups', '0 15 23 * * ?', 'RLLP_OppRollup_SCHED');
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
