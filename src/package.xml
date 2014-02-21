@@ -18,6 +18,10 @@
     <members>BDE_DescribeHelper_TEST</members>
     <members>BDE_DescribeHelper_UTIL</members>
     <members>CAO_Constants</members>
+    <members>CONV_Account_Conversion_BATCH</members>
+    <members>CONV_Account_Conversion_BATCH_TEST</members>
+    <members>CONV_Account_Conversion_CTRL</members>
+    <members>CONV_Account_Conversion_CTRL_TEST</members>
     <members>CON_ContactMerge</members>
     <members>CON_ContactMerge_CTRL</members>
     <members>CON_ContactMerge_TEST</members>
@@ -140,6 +144,7 @@
   <types>
     <members>ACCT_ViewOverride</members>
     <members>BDE_BatchEntry</members>
+    <members>CONV_Account_Conversion</members>
     <members>CON_ContactMerge</members>
     <members>HH_CampaignDedupeBTN</members>
     <members>HH_ManageHHAccount</members>
