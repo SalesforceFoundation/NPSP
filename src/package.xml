@@ -226,6 +226,8 @@
     <members>Error__c.Stack_Trace__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
+    <members>Schedulable__c.Active__c</members>
+    <members>Schedulable__c.Class_Name__c</members>
     <members>Trigger_Handler__c.Active__c</members>
     <members>Trigger_Handler__c.Asynchronous__c</members>
     <members>Trigger_Handler__c.Class__c</members>
@@ -425,6 +427,7 @@
     <members>Error__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
+    <members>Schedulable__c</members>
     <members>Trigger_Handler__c</members>
     <name>CustomObject</name>
   </types>
