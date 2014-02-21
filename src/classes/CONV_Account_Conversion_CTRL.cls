@@ -40,6 +40,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
 
     // constructor
     public CONV_Account_Conversion_CTRL() {
+        batching = true;
         batchRunning = false;
     }
 
