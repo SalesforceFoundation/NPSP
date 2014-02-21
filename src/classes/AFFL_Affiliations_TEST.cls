@@ -53,8 +53,12 @@ public class AFFL_Affiliations_TEST {
         
         Account acc2 = new Account(Name='test88');
         insert acc2;
+        
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         contact.AccountId = acc2.id;
         update contact;
+        Test.stopTest();
             
         npe5__Affiliation__c[] createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
@@ -185,6 +189,7 @@ public class AFFL_Affiliations_TEST {
         
         con.AccountId = acc2.id;
         Test.startTest();      
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         update con;
         Test.stopTest();
           
@@ -312,10 +317,13 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
         System.assertEquals(2, listAffl.size());
 
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         // now update our contacts with a Primary Affiliation
         for (Contact con : listCon) 
             con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
         update listCon;            
+        Test.stopTest();
         
         listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
@@ -372,12 +380,15 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
         System.assertEquals(2, listAffl.size());
 
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         // now update our contacts with a Primary Affiliation and a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[4].Id; // Org1  
             con.Primary_Affiliation__c = listAcc[4].Id; // Org1
         }  
         update listCon;            
+        Test.stopTest();
         
         listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
@@ -440,11 +451,14 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
         System.assertEquals(9, listAffl.size());
 
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         // now update our contacts to a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[5].Id; // Org2  
         }  
         update listCon;            
+        Test.stopTest();
         
         listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
@@ -514,11 +528,14 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];       
         System.assertEquals(9, listAffl.size());
 
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         // now clear our primary affilation
         for (Contact con : listCon) {
             con.Primary_Affiliation__c = null; 
         }  
-        update listCon;            
+        update listCon;
+        Test.stopTest();
         
         listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
@@ -582,7 +599,7 @@ public class AFFL_Affiliations_TEST {
         	listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         insert listAffl;
         
         // make sure primary affiliation set on Contacts
@@ -597,7 +614,7 @@ public class AFFL_Affiliations_TEST {
         	affl.npe5__Primary__c = false;
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         update listAffl;
         
         // make sure cleared on the contacts
@@ -644,6 +661,7 @@ public class AFFL_Affiliations_TEST {
         listCon[7].AccountId = listAcc[6].Id;   // Bucket account        
         insert listCon;
         
+        //Which ones cause an affiliation to be created? Is it listAcc[4] and listAcc[5]? 
         npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
         System.assertEquals(2, listAffl.size());
@@ -660,7 +678,7 @@ public class AFFL_Affiliations_TEST {
             listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         insert listAffl;
         
         // make sure primary affiliation set on Contacts
@@ -682,7 +700,8 @@ public class AFFL_Affiliations_TEST {
             listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
-        AFFL_Affiliations_TDTM.hasRanAfflTriggerHandler = false;
+        AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         insert listAffl;
                 
         // make sure primary affiliation set on Contacts
