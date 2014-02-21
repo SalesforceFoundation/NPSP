@@ -1,6 +1,6 @@
 @isTest
 public with sharing class CONV_Account_Conversion_CTRL_TEST {
-    public static void testConversionCtrl() {
+    public static testmethod void testConversionCtrl() {
 
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
