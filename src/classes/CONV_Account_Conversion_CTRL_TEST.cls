@@ -19,7 +19,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         Test.startTest();
 
         // create the page 
-        PageReference pageRef=Page.RLLP_OppRollup; 
+        PageReference pageRef=Page.CONV_Account_Conversion; 
         Test.setCurrentPage(pageRef); 
 
         // instantiate the controller
