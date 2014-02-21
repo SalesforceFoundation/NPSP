@@ -87,8 +87,11 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             npo02__LargestAmount__c = hh.npo02__LargestAmount__c, npo02__Informal_Greeting__c = hh.npo02__Informal_Greeting__c,
             npo02__HouseholdPhone__c = hh.npo02__HouseholdPhone__c, npo02__Formal_Greeting__c = hh.npo02__Formal_Greeting__c,
             npo02__FirstCloseDate__c = hh.npo02__FirstCloseDate__c, npo02__Best_Gift_Year__c = hh.npo02__Best_Gift_Year__c,
-            npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c);
-        
+            npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c, Type = 'Household', npe01__SYSTEM_AccountType__c = 'HH Account');
+
+            if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
+                a.RecordTypeId = CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+
             hh2Account.put(hh.id, a);
         }
 
