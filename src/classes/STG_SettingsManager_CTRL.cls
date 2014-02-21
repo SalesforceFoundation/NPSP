@@ -36,6 +36,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 	
 	public STG_SettingsManager_CTRL() {
 		idPanelCurrent = 'idPanelHome';
+		System.schedule('Global Scheduler', '0 15 23 * * ?', new UTIL_JobScheduler());
 	}
 
 
