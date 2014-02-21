@@ -1,0 +1,31 @@
+<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c">
+
+    <style>
+        ul.err li {
+        list-style-type: none;
+        color: #cc0000;
+        font-weight: bold; 
+        }
+    </style>
+
+    <apex:pageMessages />
+    <apex:sectionHeader title="Account Model Conversion Utility" />
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons rendered="{!batching}">
+                <apex:commandButton action="{!convert}" value="Convert"
+                    disabled="{!batchRunning}" />
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+            </apex:pageBlockButtons>
+            <apex:messages styleClass="err" />
+            <apex:outputText rendered="{!batching}">
+                This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.
+                This particular area should include a TON more warning and explanation text, but this will have to do for now.
+            </apex:outputText>
+        </apex:pageBlock>
+        <apex:outputPanel rendered="{!batchRunning}">
+            <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress"
+                cNumberOfJobs="1" />
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
