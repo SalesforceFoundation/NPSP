@@ -24,8 +24,7 @@
 public with sharing class AFFL_BulkTests_TEST {
 
     static testMethod void newContactOnOrgAccount() {
-    	//AFFL_Affiliations_TEST.setupTDTM();
-    	
+    	    	
         Account acc = new Account(Name='test77');
         insert acc;
         
@@ -43,7 +42,7 @@ public with sharing class AFFL_BulkTests_TEST {
             );
             cons.add(con);
         }
-        Test.startTest();
+        
         insert cons;
         
         Id firstAffiliationId;
@@ -61,11 +60,14 @@ public with sharing class AFFL_BulkTests_TEST {
         Account acc2 = new Account(Name='test88');
         insert acc2;
         
+        Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         for(Contact thisContact : cons){    
             thisContact.AccountId = acc2.id;
         }
         update cons;
         Test.stopTest();
+        
         npe5__Affiliation__c[] createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c IN :cons AND npe5__Organization__c = :acc2.id];
         
         system.assertEquals(conCount,createdAffiliations2.size());
@@ -174,7 +176,6 @@ public with sharing class AFFL_BulkTests_TEST {
     
     //Modifying the test above to have only two DMLs, one before StartTest and one after
     static testMethod void contactWithMultipleAffiliations_v2() {
-        //AFFL_Affiliations_TEST.setupTDTM();
         
         Account acc = new Account(Name='test77');
         insert acc;
@@ -206,6 +207,7 @@ public with sharing class AFFL_BulkTests_TEST {
         }
         
         Test.startTest();
+        AFFL_Affiliations_TDTM.hasRunForContacts = false;
         update cons;
         Test.stopTest();
                 

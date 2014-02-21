@@ -32,7 +32,7 @@
 * @date 2011
 * @description Class provides a batchable wrapper for Opportunity Rollup functionality
 */
-global class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
+public class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
 // batch apex class to rollup opportunities
     
     public String query { get; set; }
@@ -48,11 +48,11 @@ global class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
         this(q, BATCH_TYPE.ContactType);        
     }
     
-    global database.Querylocator start(Database.BatchableContext bc){       
+    public database.Querylocator start(Database.BatchableContext bc){       
         return Database.getQueryLocator(query);      
     }
     
-    global void execute(Database.BatchableContext bc, Sobject[] result) {
+    public void execute(Database.BatchableContext bc, Sobject[] result) {
         
         // run rollups for this batch       
         RLLP_OppRollup rg = new RLLP_OppRollup();
@@ -75,7 +75,7 @@ global class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
         }       
     }
 
-    global void finish(Database.BatchableContext bc) {
+    public void finish(Database.BatchableContext bc) {
     }   
     
     public class NPSPBatchException extends Exception{} 

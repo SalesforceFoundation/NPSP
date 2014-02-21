@@ -32,7 +32,7 @@
 * @date 2011 (2.0)
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
-global without sharing class HH_Households_TDTM extends TDTM_Runnable { 
+public without sharing class HH_Households_TDTM extends TDTM_Runnable { 
         
     /// <name> HH_Households_TDTM </name>
     /// <summary> Overloads the HH_Households_TDTM object constructor to handle Household processing </summary>
