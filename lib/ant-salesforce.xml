@@ -451,6 +451,92 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="buildDestroyStaleMetadata" description="Constructs a destructiveChanges.xml which deletes any metadata from one directory which does not exist in another">
+    <attribute name="srcdir" description="Source directory, usually containing metadata from target org fetched via retrievePackaged" />
+    <attribute name="commdir" description="The directory whose metadata should be compared to srcdir.  Any metadata not in this directory's package.xml but in srcdir's package.xml will be added to destructiveChanges.xml" />
+    <attribute name="dir" description="Target directory to create the destructiveChanges.xml package" />
+    <sequential>
+      <!-- Run xslt against package.xml files to generate a text file containing TYPE::MEMBER lines for each member for easier comparison later -->
+      <xslt in="@{srcdir}/package.xml" out="@{srcdir}/package.xml.members" style="lib/diff_package_xml.xsl" />
+      <xslt in="@{commdir}/package.xml" out="@{commdir}/package.xml.members" style="lib/diff_package_xml.xsl" />
+      <loadfile property="src.package.xml.members" srcfile="@{srcdir}/package.xml.members" />
+      <loadfile property="comm.package.xml.members" srcfile="@{commdir}/package.xml.members" />
+
+      <delete dir="@{dir}" />
+      <mkdir dir="@{dir}" />
+
+      <!-- Create the package.xml to accompany the destructiveChanges.xml -->
+      <echo file="@{dir}/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<version>29.0</version>
+</Package>]]></echo>
+
+      <!-- initialize the destructiveChanges.xml file -->
+      <echo file="@{dir}/destructiveChanges.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;${line.separator}</echo>
+      <echo file="@{dir}/destructiveChanges.xml" append="true">&lt;Package xmlns="http://soap.sforce.com/2006/04/metadata"&gt;${line.separator}</echo>
+
+      <var name="dest.types.xml" value="" />
+      <var name="prev.type" value="" />
+
+      <for delimiter="${line.separator}" list="${src.package.xml.members}" param="line" trim="true">
+        <sequential>
+          <if>
+            <!-- Only process lines which contain ::, the delimiter added by the xslt template between type and member name -->
+            <contains string="@{line}" substring="::" />
+            <then>
+              <if>
+                <and>
+                  <not><contains string="${comm.package.xml.members}" substring="@{line}" /></not>
+                  <!-- Skip CustomLabels since individual custom labels are deleted via CustomLabel -->
+                  <not><contains string="@{line}" substring="CustomLabels::" /></not>
+                </and>
+                <then>
+                  <!-- Parse type and member name from string in format TYPE::MEMBERNAME -->
+                  <propertyregex property="line.type" override="true" input="@{line}" regexp="(.*)\::(.*)" replace="\1" />
+                  <propertyregex property="line.member" override="true" input="@{line}" regexp="(.*)\::(.*)" replace="\2" />
+                  <if>
+                    <not><equals arg1="${prev.type}" arg2="" /></not>
+                    <then>
+                      <if>
+                        <not><equals arg1="${prev.type}" arg2="${line.type}" /></not>
+                        <then>
+                          <var name="dest.types.xml" value="${dest.types.xml}    &lt;name>${prev.type}&lt;/name>${line.separator}  &lt;/types>${line.separator}  &lt;types>${line.separator}" />
+                          <var name="prev.type" value="${line.type}" />
+                        </then>
+                        <else>
+                        </else>
+                      </if>
+                    </then>
+                    <else>
+                      <var name="dest.types.xml" value="${dest.types.xml}  &lt;types>${line.separator}" />
+                      <var name="prev.type" value="${line.type}" />
+                    </else>
+                  </if>
+                  <var name="dest.types.xml" value="${dest.types.xml}    &lt;members>${line.member}&lt;/members>${line.separator}" />
+                </then>
+              </if>
+            </then>
+          </if>
+        </sequential>
+      </for>
+      <if>
+        <not><equals arg1="${prev.type}" arg2="" /></not>
+        <then>
+          <var name="dest.types.xml" value="${dest.types.xml}    &lt;name>${line.type}&lt;/name>${line.separator}  &lt;/types>${line.separator}" />
+        </then>
+      </if>
+
+      <!-- Finalize the destructiveChanges.xml file -->
+      <echo file="@{dir}/destructiveChanges.xml" append="true">${dest.types.xml}</echo>
+      <echo file="@{dir}/destructiveChanges.xml" append="true">  &lt;version&gt;29.0&lt;/version&gt;${line.separator}</echo>
+      <echo file="@{dir}/destructiveChanges.xml" append="true">&lt;/Package&gt;</echo>
+
+      <!-- clean up -->
+      <delete file="@{srcdir}/package.xml.members" />
+      <delete file="@{commdir}/package.xml.members" />
+    </sequential>
+  </macrodef>
+
   <macrodef name="buildPackagedDestructiveChanges" description="Constructs a destructiveChanges.xml file which deletes all metadata from a package">
     <attribute name="package" description="The package name" />
     <attribute name="srcdir" description="Source directory containing the retrieved standard object and unpackaged metadata for the org.  This directory should be created by retrieveUnpackaged" />
