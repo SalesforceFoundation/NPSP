@@ -1,5 +1,7 @@
+.externalToolBuilders
 .project
 .settings
+build.properties
 salesforce.schema
 Referenced Packages
 /uninstall
