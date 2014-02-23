@@ -132,15 +132,15 @@ public class UTIL_UnitTestData_TEST {
         return ContactsToAdd;
     }
     */
-    Public static list<Opportunity> OppsForContactList (list<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
-     
-        // given a list of Contacts,
-        // add one Opp per contact w/ the specified data
-        // TBD should allow specifying rectype (optional)
-    
-        list<Opportunity> OppsToAdd = new list<Opportunity> ();
-        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
-        system.debug('recordtypeintest: ' + rtid);
+
+    // given a list of Contacts, add one Opp per contact w/ the specified data
+    public static List<Opportunity> oppsForContactList (List<Contact> cons, Id campId, String stage, Date close, Double amt, String rectype, String oppType) {
+
+        List<Opportunity> oppsToAdd = new List<Opportunity> ();
+        Id rtid;
+        if (rectype != null)
+            rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ' + thisCon.FirstName + thisCon.LastName,
@@ -149,23 +149,21 @@ public class UTIL_UnitTestData_TEST {
                 StageName = Stage,
                 CampaignId = CampId,
                 npe01__Contact_Id_for_Role__c = thisCon.Id,
-                type = oppType                
-            );  
+                type = oppType
+            );
             if(rtid != null){
                 newOpp.put('RecordTypeId',rtid);
             }
-            OppsToAdd.add (newOpp);
+            oppsToAdd.add (newOpp);
         }
-        
-        return OppsToAdd;
-        
+        return oppsToAdd;
     }
-    
-    Public static list<Account> CreateMultipleTestAccounts (integer n, string strType) {
-        
-        list<Account> AcctsToAdd = New list<Account> ();
-        
-        for (integer i=0;i<n;i++) {
+
+    public static List<Account> createMultipleTestAccounts (Integer n, String strType) {
+
+        List<Account> AcctsToAdd = new List<Account> ();
+
+        for (Integer i=0;i<n;i++) {
             Account newAcct = New Account (
                 Name = 'Yet Another Org ' + i,
                 npe01__SYSTEM_AccountType__c = strType
