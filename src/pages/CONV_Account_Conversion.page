@@ -19,9 +19,22 @@
             </apex:pageBlockButtons>
             <apex:messages styleClass="err" />
             <apex:outputText rendered="{!batching}">
+                <p>
                 This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.
-                This particular area should include a TON more warning and explanation text, but this will have to do for now.
-            </apex:outputText>
+                This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
+                functionality will be temporarily disabled to 
+                avoid accidentally modifying existing data.  
+                Before beginning this process, please make sure to go through the following checklist:</p>
+                <ul>
+                    <li>Backup your data by going to Setup | Data Management | Export Data</li>
+                    <li>Test this process in your sandbox first.  More information on using sandboxes can be found here.</li>
+                    <li>Disable all workflow and any custom validation rules or required fields.</li>
+                    <li>Do something else</li>
+                    
+                    
+                </ul>
+                
+            </apex:outputText> 
         </apex:pageBlock>
         <apex:outputPanel rendered="{!batchRunning}">
             <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress"
