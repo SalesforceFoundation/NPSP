@@ -41,7 +41,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         query = q;
     }
 
-    /** @description Start method of batch class */
     global database.Querylocator start(Database.BatchableContext bc) {
         
         //turn off all existing TDTM-related trigger operations to avoid duplicative processing
@@ -55,7 +54,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         return Database.getQueryLocator(query); 
     }
 
-    /** @description The execution logic for the batch */
     global void execute(Database.BatchableContext bc, Sobject[] result) {
 
         List<Contact> consForUpdate = new List<Contact>();
@@ -95,7 +93,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             hh2Account.put(hh.id, a);
         }
 
-        List<Database.SaveResult> sr = Database.insert(hh2Account.values());
+        insert hh2Account.values();
 
         //attached current Household members to the new Household Account
         for (Contact c : consForUpdate){
@@ -103,7 +101,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             c.AccountId = a.Id;
             con2account.put(c.Id, a.Id);
         }
-        Database.update(consForUpdate);
+        update consForUpdate;
 
         //port all existing opportunities to the new hh accounts
         for (OpportunityContactRole ocr : ocrsForUpdate) {
@@ -112,7 +110,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             oppsForUpdate.add(o);
         }
         if (!oppsForUpdate.isEmpty())
-            Database.update(oppsForUpdate);
+            update oppsForUpdate;
 
         //finally, get any activities and tasks from the Household object and move them to the Account
         List<Task> tasksForUpdate = new List<Task>();
@@ -121,7 +119,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         for (Task t : tasksForUpdate)
             t.WhatId = hh2Account.get(t.WhatId).Id; 
 
-        Database.update(tasksForUpdate);
+        update tasksForUpdate;
     }
     /** @description Finish method for the batchable class. */
     global void finish(Database.BatchableContext bc) {
