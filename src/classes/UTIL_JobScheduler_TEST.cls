@@ -12,7 +12,7 @@ public with sharing class UTIL_JobScheduler_TEST {
         //Schedule a job
         String jobName = 'Global Scheduler'; 
         String fireTime = '0 15 23 * * ?';
-        System.schedule(jobName, fireTime, new UTIL_JobScheduler());
+        System.schedule(jobName, fireTime, new UTIL_GlobalSchedulable());
         
         List<CronTrigger> triggers = [select Id, CronExpression, TimesTriggered from CronTrigger 
                             where CronJobDetail.Name = :jobName and CronJobDetail.JobType = '7'];

@@ -32,7 +32,7 @@
 * @date 2012 (2.0)
 * @description Supports the automatic scheduling of recurring donation updates  
 */ 
-public class RD_RecurringDonations_SCHED implements UTIL_JobScheduler.IScheduled {
+public class RD_RecurringDonations_SCHED implements UTIL_GlobalSchedulable.IScheduled {
 
     public void execute(SchedulableContext SC) { 
         string queryRCD = RD_RecurringDonations.strQueryRDNoWhere();
