@@ -28,6 +28,6 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         
         Test.stopTest();  
         
-        //@TODO: Should we verify that the same Schedulable__c is not going to be called more than once by UTIL_JobScheduler? How?                
+        //@TODO: Should we verify that the same Schedulable__c record is not going to be called more than once?              
     }
 }

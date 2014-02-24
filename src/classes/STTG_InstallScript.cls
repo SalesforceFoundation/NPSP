@@ -27,7 +27,8 @@ global class STTG_InstallScript implements InstallHandler {
         ERR_Notifier.getOrgSettings();
         
         //schedule cron jobs
-        System.schedule('Global Scheduler', '0 15 23 * * ?', new UTIL_GlobalSchedulable());  
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 15 * * * ?', 'UTIL_GlobalSchedulable');
+        
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
