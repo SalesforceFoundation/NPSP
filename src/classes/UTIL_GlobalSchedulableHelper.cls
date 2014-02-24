@@ -4,7 +4,7 @@ public with sharing class UTIL_GlobalSchedulableHelper {
     
     public static void runJobs(SchedulableContext context) {
     	
-    	List<Schedulable__c> jobs = [select Name, Class_Name__c from Schedulable__c where Active__c = true];
+    	List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
         if(jobs.size() == 0) {
             jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true));
             jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', Active__c = true));
