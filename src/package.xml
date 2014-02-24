@@ -117,9 +117,9 @@
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
+    <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_JobScheduler</members>
-    <members>UTIL_JobScheduler_TEST</members>
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>

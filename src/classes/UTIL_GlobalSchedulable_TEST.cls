@@ -1,6 +1,6 @@
 @isTest
-public with sharing class UTIL_JobScheduler_TEST {
-   
+public with sharing class UTIL_GlobalSchedulable_TEST {
+
     public static testmethod void scheduleJob() {
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();
