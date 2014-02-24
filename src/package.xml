@@ -229,6 +229,8 @@
     <members>Opportunity.Batch__c</members>
     <members>Schedulable__c.Active__c</members>
     <members>Schedulable__c.Class_Name__c</members>
+    <members>Schedulable__c.Frequency__c</members>
+    <members>Schedulable__c.Last_Time_Run__c</members>
     <members>Trigger_Handler__c.Active__c</members>
     <members>Trigger_Handler__c.Asynchronous__c</members>
     <members>Trigger_Handler__c.Class__c</members>

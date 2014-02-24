@@ -73,6 +73,48 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Frequency__c</fullName>
+        <description>How ofter to run the job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How ofter to run the job.</inlineHelpText>
+        <label>Frequency</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Hourly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Daily</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Quarterly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Last_Time_Run__c</fullName>
+        <description>Last time the job was run.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Last time the job was run.</inlineHelpText>
+        <label>Last Time Run</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
     <label>Schedulable</label>
     <nameField>
         <label>Job Name</label>
