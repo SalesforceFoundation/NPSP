@@ -8,7 +8,10 @@
             <h3 class="sectionBar" >{!$Label.stgLabelRDPeriod}</h3>            
                 <apex:pageBlockTable value="{!stgService.listRDCustomInstallment}" var="ci" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteCi}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                        <apex:commandLink action="{!deleteCi}" 
+                            title="{!$Label.stgLinkDelete} {!ci.Name}"                            
+                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                             <apex:param assignTo="{!ciIdDelete}" name="idDeleteCi" value="{!ci.Id}" /> 
                         </apex:commandLink>
                     </apex:column>

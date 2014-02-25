@@ -9,7 +9,10 @@
                 <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npe4__RelationshipsAutoDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!listRelAutoCreate}" var="ac" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteAc}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                        <apex:commandLink action="{!deleteAc}" 
+                            title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}"                            
+                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                             <apex:param assignTo="{!acIdDelete}" name="idDeleteAc" value="{!ac.Id}" /> 
                         </apex:commandLink>
                     </apex:column>
@@ -44,7 +47,7 @@
                     </apex:selectList>                                  
                     <apex:outputLabel value="{!$Label.stgHelpAutoRelType}"/>
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}"/>
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" />
                     <c:STG_DataBoundMultiSelect settingObject="{!acNew}" fieldname="npe4__Campaign_Types__c" listSO="{!listSOCampaignTypes}" inEditMode="{!isEditMode}" 
                         inDisabledMode="{!acNew.npe4__Object__c != 'CampaignMember'}" />
                     <apex:outputLabel value="{!$Label.stgHelpAutoRelCampaignRT}"/>
