@@ -38,10 +38,14 @@ public with sharing class UTIL_GlobalSchedulableHelper {
                if(instance instanceof UTIL_GlobalSchedulable.IScheduled)
                    //@TODO: do we need to check for the max number of jobs that can be scheduled and make 
                    //sure we don't go over the limit?
-                   ((UTIL_GlobalSchedulable.IScheduled)instance).execute(context);
-                   //Update last time run
-                   job.Last_Time_Run__c = System.now();
-                   jobsToUpdate.add(job);
+                   try {
+	                   ((UTIL_GlobalSchedulable.IScheduled)instance).execute(context);
+	                   //Update last time run
+	                   job.Last_Time_Run__c = System.now();
+	                   jobsToUpdate.add(job);
+                   } catch (Exception e) {
+                        ERR_Handler.processError(e, ERR_Handler.Context.SCH);
+                   }
             }
         }
         update jobsToUpdate;
