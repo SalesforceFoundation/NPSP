@@ -86,15 +86,34 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // note that householdId can be either a Household__c or a HH Account.
             Map<id,List<Contact>> householdIdToContact = new Map<id, List<Contact>>();           
             
+            // query for OppConRoles where primary=true and OppID in arg set
+            map<String,Id> contactOppToContactRole = new map<String,Id>();
+            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppsForContactRoles.values() ];
+            //system.debug('DJH***** conRoles: ' + conRoles);
+            String uniqueConRole = '';
+            // now loop through the results and build the map
+            for (OpportunityContactRole thisCR : conRoles) {
+                contactIds.add(thisCR.ContactId);
+                if (contactIdToOpps.get(thisCR.ContactId) == null)
+                    contactIdToOpps.put(thisCR.ContactId, new List<Opportunity>());
+                contactIdToOpps.get(thisCR.ContactId).add(oppsForContactRoles.get(thisCR.OpportunityId));    
+                uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
+                contactOppToContactRole.put(uniqueConRole , thisCR.Id);
+                
+                // now remove any npe01__Contact_Id_for_role__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
+                oppsForContactRoles.get(thisCR.OpportunityId).npe01__Contact_Id_for_role__c = null;
+                oppsForContactRoles.get(thisCR.OpportunityId).account.npe01__One2OneContact__c = null;
+            }
+
             // loop throught the Opportunities
             for (Opportunity thisOpp : oppsForContactRoles.values()) { 
 
                 // grab all the contacts off the Accounts or via the role lookup
                 if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
                     contactIds.add(thisOpp.account.npe01__One2OneContact__c);
-                else if (thisOpp.npe01__Contact_Id_for_Role__c != null)
+                else if (thisOpp.npe01__Contact_Id_for_Role__c != null) 
                     contactIds.add(thisOpp.npe01__Contact_Id_for_Role__c);
-                    
+                                    
                 // create the map of contacts to opps
                 if (contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c) == null && contactIdToOpps.get(thisOpp.npe01__Contact_Id_for_Role__c) == null) {
                     if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
@@ -110,20 +129,6 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             }            
             
         
-            // query for OppConRoles where primary=true and OppID in arg set
-            map<String,Id> contactOppToContactRole = new map<String,Id>();
-            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppsForContactRoles.values() ];
-            //system.debug('DJH***** conRoles: ' + conRoles);
-            String uniqueConRole = '';
-            // now loop through the results and build the map
-            for (OpportunityContactRole thisCR : conRoles) {
-                contactIds.add(thisCR.ContactId);
-                if (contactIdToOpps.get(thisCR.ContactId) == null)
-                    contactIdToOpps.put(thisCR.ContactId, new List<Opportunity>());
-                contactIdToOpps.get(thisCR.ContactId).add(oppsForContactRoles.get(thisCR.OpportunityId));    
-                uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
-                contactOppToContactRole.put(uniqueConRole , thisCR.Id);
-            }
 
             // map for contacts to their households because we can't get a query with Opp Id, Contact Id, and Household Id
             map<Id,Id> contactIdToHouseholdId = new map<Id,Id>();
