@@ -819,6 +819,44 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
+    operation:
+        add a contact to an exiting HH Account that has a Primary Contact
+    verify:
+        the Account's Primary Contact doesn't change
+    **********************************************************************************************************/            
+    static testMethod void addContactCheckAccountPrimaryContact() {
+        if (strTestOnly != '*' && strTestOnly != 'addContactCheckAccountPrimaryContact') return;
+
+       npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+        
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        system.assertEquals(null, listCon[0].AccountId);
+        insert listCon;
+        listCon = [select Id, AccountId, Account.npe01__One2OneContact__c from Contact];
+        for (integer i = 0; i < 6; i++) {
+            system.assertNotEquals(null, listCon[i].AccountId);        
+            system.assertNotEquals(null, listCon[i].Account.npe01__One2OneContact__c);        
+        } 
+        
+        list<Contact> listCon2 = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        system.assertEquals(null, listCon2[0].AccountId);
+        for (integer i = 0; i < 6; i++) {
+            listCon2[i].AccountId = listCon[i].AccountId;
+        }
+        insert listCon2;        
+        listCon2 = [select Id, AccountId, Account.npe01__One2OneContact__c from Contact where Id in :listCon2];
+        for (integer i = 0; i < 6; i++) {
+            system.assertEquals(listCon2[i].AccountId, listCon[i].AccountId);        
+            system.assertEquals(listCon2[i].Account.npe01__One2OneContact__c, listCon[i].Account.npe01__One2OneContact__c);        
+        } 
+    }
+        
+
+    /*********************************************************************************************************
     WHAT IS NOT TESTED:
         updating existing contacts from HH Accounts to 1:1 and bucket
         deleting a mixture of 1:1, bucket, and HH Accounts
