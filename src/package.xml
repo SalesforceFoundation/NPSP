@@ -79,6 +79,8 @@
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_UTIL</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
+    <members>STG_InstallScript</members>
+    <members>STG_InstallScript_TEST</members>
     <members>STG_Panel</members>
     <members>STG_PanelAffiliations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
@@ -105,8 +107,6 @@
     <members>STG_SettingsManager_CTRL</members>
     <members>STG_SettingsManager_TEST</members>
     <members>STG_SettingsService</members>
-    <members>STTG_InstallScript</members>
-    <members>STTG_InstallScript_TEST</members>
     <members>TDTM_DefaultConfig</members>
     <members>TDTM_ObjectDataGateway</members>
     <members>TDTM_Runnable</members>
