@@ -36,7 +36,6 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 	
 	public STG_SettingsManager_CTRL() {
 		idPanelCurrent = 'idPanelHome';
-		UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 15 * * * ?', 'UTIL_GlobalSchedulable');
 	}
 
 
