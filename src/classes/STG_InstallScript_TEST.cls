@@ -1,5 +1,5 @@
 @isTest
-public with sharing class STTG_InstallScript_TEST {
+public with sharing class STG_InstallScript_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
@@ -11,7 +11,7 @@ public with sharing class STTG_InstallScript_TEST {
                
         //Don't create NPSP custom settings
         
-        Test.testInstall(new STTG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);
         
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
@@ -28,7 +28,7 @@ public with sharing class STTG_InstallScript_TEST {
         //Create NPSP custom settings with all disable flags off
         setAllNpspFlags(false);
                
-        Test.testInstall(new STTG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);
         
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
@@ -39,10 +39,10 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
-    	afterScriptConfig.sort();
-    	defaultConfig.sort();
-    	
-    	System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
+        afterScriptConfig.sort();
+        defaultConfig.sort();
+        
+        System.assertEquals(afterScriptConfig.size(), defaultConfig.size());
         for(Integer i = 0; i < defaultConfig.size(); i++) {
             System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
             System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
@@ -56,19 +56,19 @@ public with sharing class STTG_InstallScript_TEST {
     /** NPSP to TDTM test - If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
     public testmethod static void mappingsTest_runScriptCustomConfigOnInstallAllFlags() {
         if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptCustomConfigOnInstallAllFlags') return;
-    	
+        
         //Create NPSP custom settings with all disable flags on
-    	setAllNpspFlags(true);
+        setAllNpspFlags(true);
 
-        Test.testInstall(new STTG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);
         
         //Get the TDTM classes that map to the NPSP flags
         List<String> tdtmClasses = TDTM_DefaultConfig.getNpspToCumulusMap().values();
         //Remove empty values
         List<String> tdtmClassesWithValues = new List<String>();
         for(String tdtmClass : tdtmClasses) {
-        	if(!String.isBlank(tdtmClass))
-        	   tdtmClassesWithValues.add(tdtmClass);
+            if(!String.isBlank(tdtmClass))
+               tdtmClassesWithValues.add(tdtmClass);
         }
         
         //Verify that all the TDTM classes have been deactivated (since all the NPSP disable flags were on)
@@ -77,8 +77,8 @@ public with sharing class STTG_InstallScript_TEST {
         //npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class (OPP_OpportunityContactRoles_TDTM)
         System.assertEquals(tdtmClassesWithValues.size() - 1, afterScriptConfig.size());     
         for(Trigger_Handler__c handler : afterScriptConfig) {
-        	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
-        	System.assertEquals(false, handler.Active__c);
+            System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
+            System.assertEquals(false, handler.Active__c);
         }
         
         //Assert old flags have been properly disabled
@@ -102,14 +102,14 @@ public with sharing class STTG_InstallScript_TEST {
         settingsToInsert.add(npo02Settings); 
         insert settingsToInsert;
 
-        Test.testInstall(new STTG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);
         
         //Verify that the right TDTM classes have been deactivated
         List<String> mappedTdtmClasses = new String[] {'ACCT_IndividualAccounts_TDTM', 'OPP_OpportunityContactRoles_TDTM', 
                                                                'HH_OppContactRoles_TDTM'};
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :mappedTdtmClasses];
         for(Trigger_Handler__c handler : afterScriptConfig) {
-        	System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
+            System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
             System.assertEquals(false, handler.Active__c);
         }
         
@@ -118,7 +118,7 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     private static void setAllNpspFlags(Boolean flagValue) {
-    	List<SObject> settingsToInsert = new List<SObject>();
+        List<SObject> settingsToInsert = new List<SObject>();
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
@@ -149,7 +149,7 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     private static void assertNpspFlagsDeactivated() {
-    	npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         System.assertEquals(false, npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c);
@@ -173,12 +173,12 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     public static testmethod void defaultSettingsCreated() {
-    	if (strTestOnly != '*' && strTestOnly != 'defaultSettingsCreated') return;
+        if (strTestOnly != '*' && strTestOnly != 'defaultSettingsCreated') return;
         
         //Clear all custom settings
         deleteAllCustomSettings();
                        
-        Test.testInstall(new STTG_InstallScript(), null);
+        Test.testInstall(new STG_InstallScript(), null);
         
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
@@ -235,7 +235,7 @@ public with sharing class STTG_InstallScript_TEST {
     }
     
     public static void deleteAllCustomSettings() {
-    	npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
