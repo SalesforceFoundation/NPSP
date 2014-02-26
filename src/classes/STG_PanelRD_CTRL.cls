@@ -4,13 +4,13 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
  
     //holds value to evaluate change in forecast months
     private integer originalForecastMonths;
-    Schedulable__c rdSched;
+    public Schedulable__c rdSched { public get; public set; }
     
     public STG_PanelRD_CTRL() { }
     
     public void init(){
         originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
-        Schedulable__c rdSched = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
+        rdSched = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
     }
     
     public override PageReference saveSettings() { 
