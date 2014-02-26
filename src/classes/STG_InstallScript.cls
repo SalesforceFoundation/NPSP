@@ -27,14 +27,16 @@ global class STG_InstallScript implements InstallHandler {
         ERR_Notifier.getOrgSettings();
         
         //schedule cron job
-        List<Schedulable__c> jobs = new List<Schedulable__c>();
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
-                    Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
-                Active__c = true, Frequency__c = 'Daily'));
-        insert jobs;
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 45 23 * * ?', 'UTIL_GlobalSchedulable');
-        
+        Integer numOfJobs = [select count() from Schedulable__c];
+        if(numOfJobs == 0) {
+        	List<Schedulable__c> jobs = new List<Schedulable__c>();
+	        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+	                    Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+	                Active__c = true, Frequency__c = 'Daily'));
+	        insert jobs;
+        }
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
