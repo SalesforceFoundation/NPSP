@@ -252,13 +252,20 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     public static testMethod void testPanelRD() {
+    	insert new Schedulable__c(Name = 'Recurring Donation Updates', 
+            Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true, Frequency__c = 'Daily');
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
+        panel.init();
+        system.assertEquals(true, panel.rdSched.Active__c);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
+        panel.rdSched.Active__c = false;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
+        system.assertEquals(false, [select Active__c from Schedulable__c
+            where Class_Name__c = 'RD_RecurringDonations_SCHED'][0].Active__c);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 5;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(5, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);

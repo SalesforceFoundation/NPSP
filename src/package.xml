@@ -79,6 +79,8 @@
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_UTIL</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
+    <members>STG_InstallScript</members>
+    <members>STG_InstallScript_TEST</members>
     <members>STG_Panel</members>
     <members>STG_PanelAffiliations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
@@ -105,8 +107,6 @@
     <members>STG_SettingsManager_CTRL</members>
     <members>STG_SettingsManager_TEST</members>
     <members>STG_SettingsService</members>
-    <members>STTG_InstallScript</members>
-    <members>STTG_InstallScript_TEST</members>
     <members>TDTM_DefaultConfig</members>
     <members>TDTM_ObjectDataGateway</members>
     <members>TDTM_Runnable</members>
@@ -116,6 +116,8 @@
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
+    <members>UTIL_GlobalSchedulable</members>
+    <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
@@ -226,6 +228,10 @@
     <members>Error__c.Stack_Trace__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
+    <members>Schedulable__c.Active__c</members>
+    <members>Schedulable__c.Class_Name__c</members>
+    <members>Schedulable__c.Frequency__c</members>
+    <members>Schedulable__c.Last_Time_Run__c</members>
     <members>Trigger_Handler__c.Active__c</members>
     <members>Trigger_Handler__c.Asynchronous__c</members>
     <members>Trigger_Handler__c.Class__c</members>
@@ -425,6 +431,7 @@
     <members>Error__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
+    <members>Schedulable__c</members>
     <members>Trigger_Handler__c</members>
     <name>CustomObject</name>
   </types>
