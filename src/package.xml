@@ -189,10 +189,6 @@
     <name>ApexTrigger</name>
   </types>
   <types>
-    <members>Opportunity.dummyBP</members>
-    <name>BusinessProcess</name>
-  </types>
-  <types>
     <members>Account.Account_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
     <members>Opportunity.Donation_Compact_Layout</members>
@@ -478,12 +474,6 @@
   <types>
     <members>Account.HH_Account</members>
     <members>Account.Organization</members>
-    <members>Opportunity.Donation</members>
-    <members>Opportunity.Grant</members>
-    <members>Opportunity.MajorGift</members>
-    <members>Opportunity.MatchingDonation</members>
-    <members>Opportunity.dummyRT</members>
-    <members>Opportunity.membership</members>
     <name>RecordType</name>
   </types>
   <types>
