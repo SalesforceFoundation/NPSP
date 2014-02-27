@@ -11,7 +11,9 @@
             </apex:outputPanel>
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
 	                <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-	                    <apex:commandLink action="{!deletePfm}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+	                    <apex:commandLink action="{!deletePfm}" title="{!$Label.stgLinkDelete} {!pfm.npe01__Opportunity_Field__c} - {!pfm.npe01__Payment_Field__c}" 
+	                       styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+	                       onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
 	                        <apex:param assignTo="{!pfmIdDelete}" name="idDeletePfm" value="{!pfm.Id}" /> 
 	                    </apex:commandLink>
 	                </apex:column>

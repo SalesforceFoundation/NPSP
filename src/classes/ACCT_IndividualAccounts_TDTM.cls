@@ -140,7 +140,10 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             2. The Contact is flagged as an individual
                             3. The one-to-one or HH Account model is chosen in the npe01__SystemAccountProcessor__c
                         */
-                        if (c.AccountId != null && c.npe01__Private__c != true && c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && c.Account.npe01__SYSTEMIsIndividual__c) {
+                        if (c.AccountId != null && c.npe01__Private__c != true && 
+                            c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && 
+                            c.Account.npe01__SYSTEMIsIndividual__c &&
+                            c.Account.npe01__One2OneContact__c == null) { 
                             // contacts are connected to Accounts, make the connection in the other direction
                             mapAccountIdContactId.put(c.AccountId, c.Id);
                         }

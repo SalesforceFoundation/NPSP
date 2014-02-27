@@ -1,15 +1,16 @@
 @isTest
 public with sharing class UTIL_JobScheduler_TEST {
    
-    public static testmethod void scheduleJob() {
-    	
-    	String fireTime = '0 15 23 * * ?';
+    public static testmethod void scheduleJobOnce() {
+        
+        String fireTime = '0 15 23 * * ?';
         String jobName = 'testJob';
-        String className = 'RLLP_OppRollup_SCHED';
+        String className = 'UTIL_GlobalSchedulable';
     
         Test.startTest();
         //Schedule a job
         String jobId1 = UTIL_JobScheduler.scheduleJobIfNotScheduled(jobName, fireTime, className);
+        Test.stopTest();
         
         List<CronTrigger> triggers = [select Id, CronExpression, TimesTriggered from CronTrigger 
                             where CronJobDetail.Name = :jobName and CronJobDetail.JobType = '7'];
@@ -18,21 +19,28 @@ public with sharing class UTIL_JobScheduler_TEST {
         System.assertEquals(1, triggers.size());
         
         //Verify the expressions are the same
-        System.assertEquals(fireTime, triggers[0].CronExpression);  
+        System.assertEquals(fireTime, triggers[0].CronExpression);               
+    }
+    
+    public static testmethod void scheduleJobOnceTwice() {
         
-        // Verify the job has not run
-        System.assertEquals(0, triggers[0].TimesTriggered);
+        String fireTime = '0 15 23 * * ?';
+        String jobName = 'testJob';
+        String className = 'UTIL_GlobalSchedulable';
+    
+        //Schedule a job
+        String jobId1 = UTIL_JobScheduler.scheduleJobIfNotScheduled(jobName, fireTime, className);
         
+        Test.startTest();
         //Try scheduling the same job again
         String jobId2 = UTIL_JobScheduler.scheduleJobIfNotScheduled(jobName, fireTime, className);
+        Test.stopTest();
         
-        triggers = [select Id, CronExpression, TimesTriggered from CronTrigger 
+        List<CronTrigger> triggers = [select Id, CronExpression, TimesTriggered from CronTrigger 
                     where CronJobDetail.Name = :jobName and CronJobDetail.JobType = '7'];
                             
-        //Verify it was NOT added to the queue. Size is still 1 and no exception was thrown                    
+        //Verify it was NOT added to the queue. Size is 1 and no exception was thrown                    
         System.assertEquals(1, triggers.size());
-        System.assertEquals(null, jobId2);
-        
-        Test.stopTest();                  
+        System.assertEquals(null, jobId2);                 
     }
 }

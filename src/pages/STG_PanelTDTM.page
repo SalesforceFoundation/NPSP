@@ -9,7 +9,10 @@
                 <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" /><br/>
                 <apex:pageBlockTable value="{!listTH}" var="th" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
-                        <apex:commandLink action="{!deleteTh}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                        <apex:commandLink action="{!deleteTh}" 
+                            title="{!$Label.stgLinkDelete} {!th.Object__c} - {!th.Class__c}"                                                    
+                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                             <apex:param assignTo="{!thIdDelete}" name="idDeleteTh" value="{!th.Id}" /> 
                         </apex:commandLink>
                     </apex:column>

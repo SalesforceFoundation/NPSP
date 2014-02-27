@@ -139,6 +139,7 @@ public without sharing class HH_Households {
             npo02__Soft_Credit_Roles__c = mySettings.npo02__Soft_Credit_Roles__c,        
             npo02__Household_OCR_Excluded_Recordtypes__c = mySettings.npo02__Household_OCR_Excluded_Recordtypes__c, 
             npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c,
+            npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c,
             npo02__Schedule_Job_Limit__c = 25
             );
         insert householdsSettings;

@@ -13,7 +13,10 @@
                         <apex:commandLink value="Edit" action="{!udr.loadMe}" styleClass="actionLink" status="statusLoad" immediate="true" rerender="form"/>
                         &nbsp;|&nbsp;
                           -->
-                        <apex:commandLink action="{!udr.deleteMe}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
+                        <apex:commandLink action="{!udr.deleteMe}" 
+                            title="{!$Label.stgLinkDelete} {!udr.SourceFieldLabel} - {!udr.Operation}"                                                    
+                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                            onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" />
                     </apex:column>
                     <apex:column >                    
                         <apex:facet name="header">{!$Label.stgLabelUDROppField}</apex:facet>

@@ -32,28 +32,28 @@
             <h3 class="sectionBar" >{!$Label.stgLabelErrorNotify}</h3>        
             <apex:panelGrid id="fields" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$Label.stgHelpStoreErrorsOn}" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" id="cbxSEO" />
+                <apex:outputLabel value="{!$Label.stgHelpStoreErrorsOn}" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" />
-                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputText value="{!$Label.stgHelpErrorNotifyOn}" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" />
+                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" id="cbxENO" />
+                <apex:outputLabel value="{!$Label.stgHelpErrorNotifyOn}" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}"/>
-                <apex:outputText value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}">
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" />
+                <apex:outputLabel value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
+                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}" >
                     <apex:selectOptions value="{!listSOERRNotifOptions}" />
                 </apex:selectList>
-                <apex:outputText value="{!$Label.stgHelpErrorNotifyTo}" />
+                <apex:outputLabel value="{!$Label.stgHelpErrorNotifyTo}" />
             </apex:panelGrid>
              
             <apex:outputPanel id="chatterGroupBox">
                  <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
-                    <apex:outputLabel value="{!$Label.stgLabelSelectChatterGroup}"/>
+                    <apex:outputLabel value="{!$Label.stgLabelSelectChatterGroup}" for="chatterGroupSearchBox" />
                     <c:UTIL_Typeahead searchBoxId="chatterGroupSearchBox" object="CollaborationGroup" primaryField="Name" searchScope="NAME"
                         placeholder="{!$Label.stgLabelTypeAhead}" minSearchLength="2" destinationForSelectedId="groupId" stealFocus="false" style="width:80%;" /> 
-                    <apex:outputText value="{!$Label.stgHelpChatterGroup}"/>
+                    <apex:outputLabel value="{!$Label.stgHelpChatterGroup}"/>
                  </apex:panelGrid>
                  <apex:inputHidden id="groupId" value="{!groupId}" />
             </apex:outputPanel>    

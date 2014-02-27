@@ -38,7 +38,7 @@
                 <apex:outputLabel value="{!$Label.stgHelpRDOppRT}"/>
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}" for="cbxDNJ" />
-                <apex:inputCheckbox value="{!stgService.stgRD.npe03__Disable_Nightly_Job__c}" disabled="{!isReadOnlyMode}" id="cbxDNJ" />
+                <apex:inputCheckbox value="{!rdSched.Active__c}" disabled="{!isReadOnlyMode}" id="cbxDNJ" />
                 <apex:outputLabel value="{!$Label.stgHelpRDDisableScheduling}"/>
 
             </apex:panelGrid> 

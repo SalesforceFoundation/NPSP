@@ -32,7 +32,7 @@
 * @date 2011 (2.3)
 * @description test class for the campaign dedupe button from the campaign record 
 */
-@isTest(SeeAllData=true)
+@isTest
 private class HH_CampaignDedupeBTN_TEST {  
   
   public static testMethod void testCampaignHHReport(){
@@ -48,13 +48,8 @@ private class HH_CampaignDedupeBTN_TEST {
                     npo02__Membership_Record_Types__c = null,                     
                     npo02__Use_Fiscal_Year_for_Rollups__c = true, 
                     npo02__Rollup_N_Day_Value__c = 10,
-                    npo02__Household_Mailing_List_ID__c = null                    
+                    npo02__Household_Mailing_List_ID__c = '0000000'                    
                 ));
-    
-    //Since test is using "seeAllData=true" we delete all trigger handlers and re-create them
-    delete [select Class__c from Trigger_Handler__c];    
-    List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-    insert defaultConfig;
             
     // create test data
     Account acct = new Account (
@@ -92,22 +87,32 @@ private class HH_CampaignDedupeBTN_TEST {
     
     CampaignMember campm1 = new CampaignMember(
       CampaignID = camp.id,
-      ContactID = con.id      
+      ContactID = con.id,
+      Status = 'Sent'      
     );
     insert campm1;
     
     CampaignMember campm2 = new CampaignMember(
       CampaignID = camp.id,
-      ContactID = con2.id      
+      ContactID = con2.id,
+      Status = 'Sent'       
     );
     insert campm2;
         
     //now run our report
+    Test.startTest();
     ApexPages.StandardController sc = new ApexPages.StandardController(camp);
     HH_CampaignDedupeBTN_CTRL deduper = new HH_CampaignDedupeBTN_CTRL(sc);
     PageReference pr = deduper.runReport();
+    Test.stopTest();
     
-    system.assertEquals([select Status from CampaignMember where id = :campm1.id].Status + ' - Household Duplicate', [select Status from CampaignMember where id = :campm2.Id].Status);    
+    String campm1Status = [select Status from CampaignMember where id = :campm1.id].Status;
+    String campm2Status = [select Status from CampaignMember where id = :campm2.id].Status;
+    
+    system.assertEquals('Sent', campm1Status);
+    //We cannot test for "Sent -  Household duplicate", which should be the actual status that
+    //this campaign member gets, because that status is not visible without seealldata=true
+    system.assertEquals('Responded', campm2Status);  
   
   }
 }

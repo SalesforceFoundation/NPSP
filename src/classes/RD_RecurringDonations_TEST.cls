@@ -1723,8 +1723,8 @@ public class RD_RecurringDonations_TEST {
         Test.startTest(); 
         
         //Schedule the test job 
-        String jobId = System.schedule('test rd Sched', 
-        '0 0 0 3 9 ? 2022',new RD_RecurringDonations_SCHED()); 
+        insert new Schedulable__c(Name = 'test rd Sched', Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true);
+        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_GlobalSchedulable()); 
 
         CronTrigger ct =[SELECT id,CronExpression,TimesTriggered,NextFireTime 
         FROM CronTrigger WHERE id=:jobId]; 

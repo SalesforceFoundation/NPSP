@@ -8,15 +8,15 @@ public with sharing class UTIL_JobScheduler {
                     where CronJobDetail.Name = :JobName and CronJobDetail.JobType = '7'];
         
         if(scheduledJobs.size() == 0) {
-        	Type classType = Type.forName(className);
+            Type classType = Type.forName(className);
             
             if(classType != null) {     
                Object instance = classType.newInstance();
                if(instance instanceof Schedulable)
-        	       return System.schedule(JobName, frequency, (Schedulable)instance);
+                   return System.schedule(JobName, frequency, (Schedulable)instance);
             }
         }
         return null;
     }
-
+    
 }

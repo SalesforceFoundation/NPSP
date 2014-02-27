@@ -6,6 +6,17 @@
          resource="net/sf/antcontrib/antlib.xml"
          classpath="${basedir}/lib/ant-contrib-1.0b2.jar" />
 
+    <!-- If no propertyfile was passed in command line, attempt to load a build.properties if it exists -->
+    <if>
+      <and>
+        <not><isset property="sf:username" /></not>
+        <available file="${basedir}/build.properties" />
+      </and>
+      <then>
+        <loadproperties srcFile="${basedir}/build.properties"/>
+      </then>
+    </if>
+
     <!-- Load up the version.properties file to get desired versions -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 
@@ -123,12 +134,23 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="deploy" />
     </target>
 
+    <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstallCumulus.
+         There are a few assumptions.  We never downgrade a dependent managed package in the packaging org.  This removes the need to completely remove
+         all metadata to allow a package downgrade.  In the package org, we can't delete all metadata once a production managed release is cut so this approach is required -->
+    <target name="deployCIPackageOrg">
+      <!-- First, delete any metadata from the org which is not in the repo -->
+      <antcall target="destroyStaleMetadata" />
+
+      <!-- Update any managed packages which are not at the right version -->
+      <antcall target="updateDependentPackages" />
+
+      <!-- Finally, do a deploy with all tests -->
+      <antcall target="deploy" />
+    </target>
+
     <!-- Deploys the latest managed beta (UAT) release to an org -->
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployManagedUAT">
-      <!-- In case the unpackaged code was deployed previously, clean the unpackaged metadata from the target org -->
-      <antcall target="uninstallCumulus" />
-      
       <!-- Get the latest beta release tag name -->
       <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
       <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
@@ -175,6 +197,22 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- Cumulus Utility Build Targets -->
 
+    <target name="destroyStaleMetadata">
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+
+      <!-- Fetch all metadata in the Cumulus package from target org -->
+      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
+
+      <!-- Build a destructiveChanges.xml pacckage to delete metadata in org but not in repo -->
+      <buildDestroyStaleMetadata srcdir="uninstallsrc" commdir="src" dir="uninstall" />
+
+      <!-- deploy the destructiveChanges.xml package -->
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+
+      <delete dir="uninstallsrc" />
+      <delete dir="uninstall" />
+    </target>
 
     <!-- uninstallCumulus: Removes all metadata from the Cumulus package for types used in Cumulus -->
     <target name="uninstallCumulus">
@@ -233,5 +271,10 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
       <updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
       <updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
+    </target>
+
+    <target name="testXml">
+      <xmlproperty file="src/package.xml" />
+      <echoproperties />
     </target>
 </project>
