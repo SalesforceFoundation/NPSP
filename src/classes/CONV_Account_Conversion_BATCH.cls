@@ -64,7 +64,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         Map<Id, Id> con2account = new Map<Id, Id>();
         
         List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
-        consForUpdate = [select AccountId, Name, npo02__Household__c from Contact where npo02__Household__c IN :hhscope];
+        consForUpdate = [select AccountId, Name, npo02__Household__c, npo02__TotalOppAmount__c from Contact where npo02__Household__c IN :hhscope];
         ocrsForUpdate = [select Opportunity.AccountId, Contact.npo02__Household__c, Opportunity.Id from OpportunityContactRole where isPrimary = true and ContactId IN :consForUpdate and Opportunity.npe01__Is_Opp_From_Individual__c = 'true'];
 
         //generate new Household Account for each Household in scope
@@ -95,13 +95,21 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         insert hh2Account.values();
 
+        //save the contact giving amount to determine the primary contact
+        Map<Id, Double> conGiving = new Map<Id, Double>();
+
         //attached current Household members to the new Household Account
         for (Contact c : consForUpdate){
-        	Account a = hh2Account.get(c.npo02__Household__c);
+            Account a = hh2Account.get(c.npo02__Household__c);
             c.AccountId = a.Id;
+            if (!conGiving.containsKey(a.Id) || (conGiving.containsKey(a.Id) && c.npo02__TotalOppAmount__c > conGiving.get(a.Id))){
+                a.npe01__One2OneContact__c = c.Id;
+                conGiving.put(a.Id, c.npo02__TotalOppAmount__c);
+            }
             con2account.put(c.Id, a.Id);
         }
         update consForUpdate;
+        update hh2Account.values();
 
         //port all existing opportunities to the new hh accounts
         for (OpportunityContactRole ocr : ocrsForUpdate) {

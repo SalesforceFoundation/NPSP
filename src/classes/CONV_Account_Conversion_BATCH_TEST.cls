@@ -78,13 +78,17 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(150, newHHAccounts.size());
         //total gifts should be the same for any of the 149
         system.assertEquals(newHHAccounts[64].npo02__TotalOppAmount__c, 100.00);
-        //our two-person household was also successfully converted
-        Id twoConHH = [select AccountId from Contact where Id = :c.Id].AccountId;
-        system.assertEquals(2, [select count() from Contact where AccountId = :twoConHH]);
+        //our two-person household was also successfully converted and set the correct primary contact
+        Contact c2 = [select AccountId, Account.npe01__One2OneContact__c from Contact where Id = :c.Id];
+        //the primary was set
+        system.assertNotEquals(null, Account.npe01__One2OneContact__c);
+        //the primary is the contact w/ a total opp amount
+        system.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
+        system.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
         //assert all opptys have been moved over
         system.assertEquals(150, [select count() from Opportunity where AccountId IN :newHHAccounts]);
         //assert the task was ported as well
-        system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, twoConHH);
+        system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
     }
 
     public testmethod static void testAccountConversionBucket(){
@@ -127,6 +131,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
     }
 
+    public testMethod static void testPrimaryContactAssignmentForAccountConversion(){
+        
+        
+    }
     /* Utility methods for setting up and tearing down data and settings */
 
     public static void setPreHHAccountModel(boolean isOne2One){
