@@ -139,9 +139,13 @@ public with sharing class CON_ContactMerge_CTRL {
                 this.selectedRecordsCount++;
             }
         }
-        contactIdFilter = contactIdFilter.substring(0, contactIdFilter.length() - 1);
         
-        // Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error. 
+        //To avoid out of bounds error if no contact is selected
+        if(contactIdFilter.length() > 0) {
+            contactIdFilter = contactIdFilter.substring(0, contactIdFilter.length() - 1);
+        }
+        
+        // Check we have at least 2 and not more than 3 records selected for merge. If not throw an error. 
         if (this.selectedRecordsCount <=1) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Too_Few_Contacts));
             return;
@@ -370,8 +374,8 @@ public with sharing class CON_ContactMerge_CTRL {
     {
         searchResults.clear();    
         
-        //build the SOSL query and execute
-        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + '\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
+        //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
+        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + '*\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
         //System.debug('Search Query: ' + searchquery);
         
         return search.query(searchquery);
