@@ -458,6 +458,7 @@
     <members>Error__c-Error Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
+    <members>Schedulable__c-Schedulable Layout</members>
     <members>Trigger_Handler__c-Trigger Handler Layout</members>
     <name>Layout</name>
   </types>
