@@ -410,10 +410,8 @@ public with sharing class CON_ContactMerge_CTRL {
         SObject master;
         // Find the master record based the selected value of the Master FieldRow
         for (FieldRow row : fieldRows) {
-            if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {                
-               
-                master = new Contact(id = row.selectedValue);
-               
+            if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
+                master = new Contact(id = row.selectedValue);             
                 break;
             }
         }
@@ -447,10 +445,7 @@ public with sharing class CON_ContactMerge_CTRL {
                     losers.add(c);
                 }   
             }
-            
-            // Now merge the contacts
-            CON_ContactMerge merger = new CON_ContactMerge((Contact)master, losers);
-            
+        
             // before proceeding further first lock the records for change
             List<Contact> allContacts = new List<Contact>();
             allContacts.add((Contact)master);
@@ -464,14 +459,10 @@ public with sharing class CON_ContactMerge_CTRL {
             
             System.SavePoint sp = Database.setSavepoint();
             try {
-                // Update the master with the selected values before calling merge.
-                if(merger.mergeContacts()) {
-                    update master; 
-                    return new PageReference('/' + master.id);
-                } else {
-                    Database.rollback(sp);
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry));
-                }
+            	update master;
+            	CON_ContactMerge.mergeContacts((Contact)master, losers);
+            	// Update the master with the selected values
+            	return new PageReference('/' + master.id);
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler.Context.CON);
