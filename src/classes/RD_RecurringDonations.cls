@@ -317,16 +317,17 @@ public with sharing class RD_RecurringDonations {
                     oName += ') ';
                     oName += opp.CloseDate.format();
                     opp.Name = oName;
-                
+
                     opp.StageName = system.label.npe03.RecurringDonationStageName;
                     opp.npe03__Recurring_Donation__c = r.Id;
                     if (r.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || j < 1)){
                        opp.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
-                    }                                        
+                    }
                     if (rds.npe03__Record_Type__c != null){
-                        opp.RecordTypeID = rds.npe03__Record_Type__c;
-                    }                    
-                    
+                        opp.put('RecordTypeId', rds.npe03__Record_Type__c);
+                        //opp.RecordTypeID = rds.npe03__Record_Type__c;
+                    }
+
                     //evaluate any custom field mappings
                     for (string s : customFieldMappingSettings.keySet()){
                         npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
@@ -397,16 +398,17 @@ public with sharing class RD_RecurringDonations {
                         oName += ') ';
                         oName += o.CloseDate.format();
                         o.Name = oName;
-                        
+
                         if (rds.npe03__Record_Type__c != null){
-                            o.RecordTypeID = rds.npe03__Record_Type__c;
-                        }                
+                            o.put('RecordTypeId', rds.npe03__Record_Type__c);
+                            //o.RecordTypeID = rds.npe03__Record_Type__c;
+                        }
                         o.StageName = system.label.npe03.RecurringDonationStageName;
                         o.npe03__Recurring_Donation__c = r.Id;
                         if (r.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || rdcounter == 1)){
                             o.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
-                        }   
-                        
+                        }
+
                         //evaluate any custom field mappings
                         for (string s : customFieldMappingSettings.keySet()){
                             npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
