@@ -310,29 +310,6 @@
             </values>
         </picklistValues>
         <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Customer</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Press</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Prospect</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
             <picklist>npo02__SYSTEM_CUSTOM_NAMING__c</picklist>
             <values>
                 <fullName>Formal_Greeting%5F%5Fc</fullName>
@@ -512,29 +489,6 @@
             </values>
             <values>
                 <fullName>Warm</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Type</picklist>
-            <values>
-                <fullName>Customer</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Other</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Partner</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Press</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Prospect</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
