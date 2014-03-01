@@ -995,4 +995,58 @@ private class CON_ContactMerge_TEST {
         
     }
   
+    public static testmethod  void householdDifferentFromMaster() {
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
+        insert new Contact[] {con, con2};
+        
+        Id hh1Id = [select npo02__Household__c from Contact where Id = :con.Id].npo02__Household__c;
+        Id hh2Id = [select npo02__Household__c from Contact where Id = :con2.Id].npo02__Household__c;
+        System.assertNotEquals(null, hh1Id);
+        System.assertNotEquals(null, hh2Id);
+         
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        //Select the household of the one that is not the one we selected as master
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+        	if(row.fieldName == 'npo02__household__c') {
+                row.selectedValue = String.valueOf(con2.id);
+                break;
+        	}
+        }
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //Merged contact should reference the second contact's household
+        System.assertEquals(hh2Id, [select npo02__Household__c from Contact where id=:con.id].npo02__Household__c);
+    }  
 }
