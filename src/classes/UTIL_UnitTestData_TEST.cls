@@ -6,9 +6,9 @@
     modification, are permitted provided that the following conditions are met:
     
     * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+      notice, this List of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
+      notice, this List of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
@@ -83,9 +83,22 @@ public class UTIL_UnitTestData_TEST {
         return openStage;
     }
     
-    Public static list<Contact> CreateMultipleTestContacts (integer n) {
+    public static Contact getContact() {
+    	return new Contact (
+                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+                npe01__Private__c = false,
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS,
+                OtherCity = 'Seattle'
+            );
+    }
+    
+    public static List<Contact> CreateMultipleTestContacts (integer n) {
         
-        list<contact> ContactsToAdd = New list<contact> ();
+        List<contact> ContactsToAdd = New List<contact> ();
         
         for (integer i=0;i<n;i++) {
             Contact newCon = New Contact (
@@ -107,9 +120,9 @@ public class UTIL_UnitTestData_TEST {
         return ContactsToAdd;
     }
     /*
-    Public static list<Contact> CreateMultipleTestContactsInHouseholds (List<Contact> firstContactList) {
+    public static List<Contact> CreateMultipleTestContactsInHouseholds (List<Contact> firstContactList) {
         
-        list<contact> ContactsToAdd = New list<contact> ();
+        List<contact> ContactsToAdd = New List<contact> ();
         
         for (integer i=0;i<firstContactList.size();i++) {
             Contact newCon = New Contact (
@@ -132,13 +145,13 @@ public class UTIL_UnitTestData_TEST {
         return ContactsToAdd;
     }
     */
-    Public static list<Opportunity> OppsForContactList (list<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+    public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
      
-        // given a list of Contacts,
+        // given a List of Contacts,
         // add one Opp per contact w/ the specified data
         // TBD should allow specifying rectype (optional)
     
-        list<Opportunity> OppsToAdd = new list<Opportunity> ();
+        List<Opportunity> OppsToAdd = new List<Opportunity> ();
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         system.debug('recordtypeintest: ' + rtid);
         for ( Contact thisCon : Cons ) {
@@ -161,9 +174,9 @@ public class UTIL_UnitTestData_TEST {
         
     }
     
-    Public static list<Account> CreateMultipleTestAccounts (integer n, string strType) {
+    public static List<Account> CreateMultipleTestAccounts (integer n, string strType) {
         
-        list<Account> AcctsToAdd = New list<Account> ();
+        List<Account> AcctsToAdd = New List<Account> ();
         
         for (integer i=0;i<n;i++) {
             Account newAcct = New Account (
@@ -203,12 +216,12 @@ public class UTIL_UnitTestData_TEST {
     
     
 /*
-        Public static list<Opportunity> OppsForAccountList (list<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
+        public static List<Opportunity> OppsForAccountList (List<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
     
-        // given a list of accounts,
+        // given a List of accounts,
         // add one Opp per acct w/ the specified data
     
-        list<Opportunity> OppsToAdd = new list<Opportunity> ();
+        List<Opportunity> OppsToAdd = new List<Opportunity> ();
         
         // look up the id for the specified rectype
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
@@ -233,7 +246,7 @@ public class UTIL_UnitTestData_TEST {
     
     
   /*  
-    Public Static CampaignMember CreateCampaignMember (id CampId, id ConId, string CMStatus) {
+    public Static CampaignMember CreateCampaignMember (id CampId, id ConId, string CMStatus) {
     
         CampaignMember newCM = new CampaignMember (
             CampaignId = CampId,
