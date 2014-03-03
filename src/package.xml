@@ -7,6 +7,8 @@
     <members>ACCT_IndividualAccounts_TEST</members>
     <members>ACCT_ViewOverride_CTRL</members>
     <members>ACCT_ViewOverride_TEST</members>
+    <members>ADDR_Addresses_TDTM</members>
+    <members>ADDR_Addresses_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -420,6 +422,7 @@
   </types>
   <types>
     <members>Account</members>
+    <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
@@ -453,6 +456,7 @@
   <types>
     <members>Account-Household Layout</members>
     <members>Account-Organization Layout</members>
+    <members>Address__c-Address Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
     <members>Error__c-Error Layout</members>
