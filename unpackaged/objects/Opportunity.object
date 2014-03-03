@@ -49,7 +49,6 @@
         <fullName>NPSP_Default</fullName>
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
-        <compactLayoutAssignment>Donation_Compact_Layout</compactLayoutAssignment>
         <label>NPSP Default</label>
     </recordTypes>
 </CustomObject>
