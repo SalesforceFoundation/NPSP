@@ -142,6 +142,18 @@
         </filters>
         <label>Organization Accounts</label>
     </listViews>
+    <namedFilters>
+        <fullName>nf_01IG0000002atS9MAI_00NG000000DCJrtMAH</fullName>
+        <active>true</active>
+        <field>Address__c.Household_Account__c</field>
+        <filterItems>
+            <field>Account.npe01__SYSTEM_AccountType__c</field>
+            <operation>equals</operation>
+            <value>&apos;HH Account&apos;</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+        <name>Address_Household Account</name>
+    </namedFilters>
     <recordTypes>
         <fullName>HH_Account</fullName>
         <active>true</active>

@@ -102,6 +102,11 @@ public with sharing class TDTM_DefaultConfig {
               Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
               Trigger_Action__c = 'BeforeInsert;AfterInsert'));
           
+        //Addresses on Address object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ADDR_Addresses_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+                    
         return handlers;
     }
     
