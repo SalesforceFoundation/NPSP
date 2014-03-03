@@ -48,55 +48,21 @@ private class CON_ContactMerge_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String newContactMailingStreet = '123 Elm St';
-        String workphone = '5554567890';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = workphone,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        String homephone = '1234567890';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            HomePhone = homephone,
-            npe01__PreferredPhone__c = 'Home',
-            MailingStreet = secondContactMailingStreet
-        );
+        Contact con3 = UTIL_UnitTestData_TEST.getContact();
+        con3.LastName = '3Contact_forTests_Merge';
         
-        String thirdContactfirstName = 'test';
-        String thirdContactLastName = '3Contact_forTests_Merge';
-        String thirdContactMailingStreet = '123 Elm St';
-        Contact con3 = new Contact(
-            FirstName=thirdContactfirstName,
-            LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
         insert new Contact[]{con, con2, con3};
         
-        Test.startTest();
-        
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));  
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
-
         controller.searchText = 'test';
         
+        Test.startTest();
         controller.search();
         
         //Since we didn't index the results yet, search results should be empty and should not be displayed
@@ -110,7 +76,6 @@ private class CON_ContactMerge_TEST {
         Test.setFixedSearchResults(fixedSearchResults); 
         
         //call the search method, which will return the bogus SOSL results
-        
         controller.search();
         
         //search results should be displayed
@@ -135,6 +100,8 @@ private class CON_ContactMerge_TEST {
         String record1Id = controller.searchResults[1].con.id;
         
         controller.nextStep();
+        
+        Test.stopTest(); 
         
         System.assertEquals(2, controller.step); // We are on to next step now
         
@@ -165,9 +132,6 @@ private class CON_ContactMerge_TEST {
                 System.assertEquals(record1Id, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
             }
         }
-        
-        Test.stopTest();
-        
     }
     
     static testMethod void failNextStepWithDeletedRecordSelectedOne2One(){
@@ -181,39 +145,16 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        //set up 3 contacts for the merge interface to work with
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        //set up 2 contacts for the merge interface to work with
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
         
         insert new Contact[]{con, con2};
-        
-        Test.startTest();
-        
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
+ 
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge')); 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
-
         controller.searchText = 'test';
         
         Id[] fixedSearchResults=new Id[2]; 
@@ -222,8 +163,8 @@ private class CON_ContactMerge_TEST {
         
         Test.setFixedSearchResults(fixedSearchResults); 
         
+        Test.startTest();
         //call the search method, which will return the bogus SOSL results
-        
         controller.search();
         
         //there should be 2 Contacts returned
@@ -243,8 +184,7 @@ private class CON_ContactMerge_TEST {
         System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
         System.assertEquals(1, controller.step); // We should still be on step 1
         
-        Test.stopTest();
-        
+        Test.stopTest(); 
     }
     
     static testMethod void failMergeWithDeletedRecordSelectedOne2One(){
@@ -258,30 +198,11 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        //set up 3 contacts for the merge interface to work with
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        //set up 2 contacts for the merge interface to work with
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
         
         insert new Contact[]{con, con2};
         
@@ -335,23 +256,12 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        //set up 3 contacts for the merge interface to work with
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        //set up 1 contact for the merge interface to work with
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
-        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));   
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();     
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value      
         Id[] fixedSearchResults=new Id[1]; 
@@ -382,62 +292,22 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        //set up 3 contacts for the merge interface to work with
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        //set up 4 contacts for the merge interface to work with
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
         
-        String thirdContactfirstName = 'test';
-        String thirdContactLastName = '3Contact_forTests_Merge';
-        String thirdContactMailingStreet = '123 Elm St';
-        Contact con3 = new Contact(
-            FirstName=thirdContactfirstName,
-            LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con3 = UTIL_UnitTestData_TEST.getContact();
+        con3.LastName = '3Contact_forTests_Merge';
         
-        String fourthContactfirstName = 'test';
-        String fourthContactLastName = '4Contact_forTests_Merge';
-        String fourthContactMailingStreet = '123 Elm St';
-        Contact con4 = new Contact(
-            FirstName=fourthContactfirstName,
-            LastName=fourthContactLastName,
-            MailingStreet = fourthContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con4 = UTIL_UnitTestData_TEST.getContact();
+        con4.LastName = '4Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2, con3, con4};
         
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
-        
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));     
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();     
         controller.searchText = 'test';
         
         Id[] fixedSearchResults=new Id[4]; 
@@ -483,29 +353,11 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+		Contact con2 = UTIL_UnitTestData_TEST.getContact();
+		con2.LastName = '2Contact_forTests_Merge';
+		
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -559,28 +411,11 @@ private class CON_ContactMerge_TEST {
         CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -651,31 +486,13 @@ private class CON_ContactMerge_TEST {
         );
         insert new Account[]{acc, acc2};
 
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            AccountId = acc.id,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.AccountId = acc.Id;
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            AccountId = acc2.id,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.AccountId = acc2.Id;
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -727,31 +544,13 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__Private__c = true,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.npe01__Private__c = true;
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__Private__c = true,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.npe01__Private__c = true;
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -800,29 +599,11 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -868,21 +649,11 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests2_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -928,23 +699,11 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests2_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            
-            npe01__SystemAccountProcessor__c = strProcessor
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -1003,30 +762,12 @@ private class CON_ContactMerge_TEST {
         );
         insert acc;
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            AccountId = acc.id,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.AccountId = acc.Id;
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -1076,42 +817,14 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
         
-        String thirdContactfirstName = 'test';
-        String thirdContactLastName = '3Contact_forTests_Merge';
-        String thirdContactMailingStreet = '123 Elm St';
-        Contact con3 = new Contact(
-            FirstName=thirdContactfirstName,
-            LastName=thirdContactLastName,
-            MailingStreet = thirdContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con3 = UTIL_UnitTestData_TEST.getContact();
+        con3.LastName = '3Contact_forTests_Merge';
+        
         insert new Contact[]{con, con2, con3};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -1169,33 +882,15 @@ private class CON_ContactMerge_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
         Id conAccountId = [select accountId from Contact where id=:con.id].accountId;
         
-        String secondContactfirstName = 'test';
-        String secondContactLastName = '2Contact_forTests_Merge';
-        String secondContactMailingStreet = '123 Elm St';
-        Contact con2 = new Contact(
-            FirstName=secondContactfirstName,
-            LastName=secondContactLastName,
-            MailingStreet = secondContactMailingStreet,
-            AccountId = conAccountId,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.AccountId = conAccountId;
+        
         insert con2;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -1243,7 +938,6 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
     
-    
     static testMethod void ghIssue6One2One(){
         ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -1253,27 +947,13 @@ private class CON_ContactMerge_TEST {
     static void ghIssue6(string strProcessor){
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+                
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.LastName = 'O\'Sullivan';
         
-        String newContactMailingStreet = '123 Elm St';
-
-        Contact con = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName='O\'Sullivan',
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );        
-        Contact con2 = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName='O\'Sullivan',
-            MailingStreet = newContactMailingStreet,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-        );        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = 'O\'Sullivan';
+        
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
@@ -1315,4 +995,58 @@ private class CON_ContactMerge_TEST {
         
     }
   
+    public static testmethod  void householdDifferentFromMaster() {
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
+        insert new Contact[] {con, con2};
+        
+        Id hh1Id = [select npo02__Household__c from Contact where Id = :con.Id].npo02__Household__c;
+        Id hh2Id = [select npo02__Household__c from Contact where Id = :con2.Id].npo02__Household__c;
+        System.assertNotEquals(null, hh1Id);
+        System.assertNotEquals(null, hh2Id);
+         
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=con.Id; 
+        fixedSearchResults[1]=con2.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        controller.nextStep();
+        
+        selectMasterRecord(controller, con.id);
+        //Select the household of the one that is not the one we selected as master
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+        	if(row.fieldName == 'npo02__household__c') {
+                row.selectedValue = String.valueOf(con2.id);
+                break;
+        	}
+        }
+        
+        //merge them
+        controller.mergeContacts();
+        
+        //Merged contact should reference the second contact's household
+        System.assertEquals(hh2Id, [select npo02__Household__c from Contact where id=:con.id].npo02__Household__c);
+    }  
 }
