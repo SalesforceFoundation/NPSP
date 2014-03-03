@@ -254,4 +254,49 @@ private with sharing class ADDR_Addresses_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    operation:
+        insert new default addresses to HH w/ existing default addresses  
+    verify:
+        contact's && hh address matches new default
+        old default addresses no longer marked default
+    **********************************************************************************************************/            
+    static testMethod void insertNewDefaultAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(3, 3);
+        
+        // create additional addresses
+        initTestAddr(3);
+        for (integer i = 0; i < 3; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = true;
+            listAddrT[i].MailingStreet__c = 'New Default Street' + i;
+            listAddrT[i].MailingCity__c = 'New Default City' + i;
+        }
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // verify that the HH and Contacts share the same address and it's new!
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        system.assertEquals(9, listCon.size());
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('New Default Street'));
+            system.assert(con.MailingCity.contains('New Default City'));
+        }
+        
+        // verify the previous addresses got Default cleared.
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(6, listAddr.size());
+        for (Address__c addr : listAddr) {
+        	boolean fNewDefault = (addr.MailingStreet__c.contains('New Default Street'));
+       		system.assertEquals(fNewDefault, addr.Default_Address__c);
+        }        
+    }
+    
 }
