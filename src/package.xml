@@ -7,8 +7,10 @@
     <members>ACCT_IndividualAccounts_TEST</members>
     <members>ACCT_ViewOverride_CTRL</members>
     <members>ACCT_ViewOverride_TEST</members>
+    <members>ADDR_Account_TDTM</members>
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
+    <members>ADDR_Contact_TDTM</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -183,6 +185,7 @@
   <types>
     <members>REL_RelationshipCampaignMembers</members>
     <members>REL_Relationships</members>
+    <members>TDTM_Account</members>
     <members>TDTM_Address</members>
     <members>TDTM_Affiliation</members>
     <members>TDTM_Contact</members>
