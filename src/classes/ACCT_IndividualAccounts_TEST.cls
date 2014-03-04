@@ -237,10 +237,11 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(updatedContacts[0].id,updatedContacts[0].Account.npe01__One2OneContact__c);
         //addresses should be sync'd
         system.assertEquals(newContactMailingStreet,updatedContacts[0].MailingStreet);
-        system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
-        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
-        system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
-        
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {        
+	        system.assertEquals(updatedOtherCity,updatedContacts[0].Account.ShippingCity);
+	        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+	        system.assertEquals(updatedContacts[0].OtherCity,updatedContacts[0].Account.ShippingCity);
+        }        
     }
     /*
     static testMethod void testDefault()
@@ -357,8 +358,10 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(updatedContacts[0].LastName + ' Household',updatedContacts[0].Account.Name);
         
         //addresses should be sync'd
-        system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
-        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet); 
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {           
+	        system.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
+	        system.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
+        } 
     }
 
     /// <name> attachToIndividualAccount </name>
