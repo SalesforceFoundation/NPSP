@@ -107,6 +107,16 @@ public with sharing class TDTM_DefaultConfig {
               Class__c = 'ADDR_Addresses_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
                     
+        //Addresses on Contact object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ADDR_Contact_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
+        
+        //Addresses on Account object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ADDR_Account_TDTM', Load_Order__c = 1, Object__c = 'Account', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
+        
         return handlers;
     }
     
