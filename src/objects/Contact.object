@@ -95,6 +95,19 @@
         <label>BDE List FS</label>
     </fieldSets>
     <fields>
+        <fullName>Address_Override__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>The Address to always use for this contact, regardless of the default address specified on their Household Account.</inlineHelpText>
+        <label>Address Override</label>
+        <referenceTo>Address__c</referenceTo>
+        <relationshipLabel>Contacts</relationshipLabel>
+        <relationshipName>Contacts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>

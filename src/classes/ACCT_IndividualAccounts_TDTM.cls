@@ -201,10 +201,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             listContactNeedAccountUpdate.add(c);                                
                         }
                         
+                        /************* NO MORE, since we now support Address__c objects on HH Accounts, 
+                                        we don't want contact address updates to push to the account directly.
                         // handle address changes for HH Accounts
                         if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountAddressUpdate(c, oldContacts[i])) {
                             listContactNeedAccountUpdate.add(c);                               
                         }
+                        *************/
                         
                         // if the account (any type) has changed
                         if (c.AccountId != oldContacts[i].AccountId) {

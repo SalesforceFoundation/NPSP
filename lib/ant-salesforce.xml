@@ -445,6 +445,7 @@
       <addMetadataSubType dir="${basedir}/src/labels" suffix="labels" xmlfile="${basedir}/src/package.xml.new" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="FieldSet" element="fieldSets" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="ListView" element="listViews" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="NamedFilter" element="namedFilters" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="RecordType" element="recordTypes" />
 
       <move file="${basedir}/src/package.xml.new" tofile="${basedir}/src/package.xml" />
@@ -563,12 +564,14 @@
       <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist} CustomLabels.labels" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CompactLayout" element="compactLayouts" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
       <addMetadataSubType dir="@{srcdir}/labels" suffix="labels" xmlfile="@{dir}/destructiveChanges.xml" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
-      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+
     </sequential>
   </macrodef>
 
@@ -618,10 +621,12 @@
 
       <!-- Add sub metadata types which can be deleted to destructiveChanges.xml.  Currently this only handles custom fields and fieldsets. -->
 
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CompactLayout" element="compactLayout" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomField" element="fields" xslt="lib/extract_obj_fields.xsl" />
       <addMetadataSubType dir="@{srcdir}/unpackaged/labels" suffix="labels" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="CustomLabel" element="labels" parentelement="CustomLabels" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="FieldSet" element="fieldSets" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
 
     </sequential>

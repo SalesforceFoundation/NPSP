@@ -12,7 +12,7 @@ try {
 	pgController = HH_ManageHousehold_EXT;
 	fldPfx = 'npo02__';
 } catch (err) {
-	pgController = ManageHousehold_EXT;
+	pgController = HH_ManageHousehold_EXT;
 	fldPfx = ''; //set to blank for unmanaged package
 }
 function fldNm (str) {
