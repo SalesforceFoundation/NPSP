@@ -191,7 +191,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
         System.assertEquals(false, npe01Settings.npe01__Enable_Opportunity_Contact_Role_Trigger__c);
         System.assertEquals(true, npe01Settings.npe01__Payments_Enabled__c);     
-        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('HH_Account');
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
         Id householdAccountId = (householdAccount == null ? null : householdAccount.getRecordTypeId());
         System.assertEquals(householdAccountId, npe01Settings.npe01__HH_Account_RecordTypeID__c);
         
