@@ -38,7 +38,7 @@ private with sharing class ADDR_Addresses_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
+    private static string strTestOnly = 'newAddrNotHHAccount';
     static integer cHH = 2;
     static integer cCon = 2;    
 
@@ -64,6 +64,7 @@ private with sharing class ADDR_Addresses_TEST {
         		listConT[ (i * cHHT) + j].AccountId = listAccT[i].Id;
         	}
         }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listConT;    	
 
         initTestAddr(cHHT);
@@ -221,6 +222,7 @@ private with sharing class ADDR_Addresses_TEST {
         addrNew.MailingCity__c = 'city override';
         addrNew.Default_Address__c = false;
         addrNew.Household_Account__c = listAccT[0].Id;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert addrNew;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -235,6 +237,7 @@ private with sharing class ADDR_Addresses_TEST {
             addr.MailingStreet__c = 'New Street' + i;
             addr.MailingCity__c = 'New City' + i;
         }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAddrT;
         
         // verify that the HH and Contacts share the same address and it's new!
@@ -323,6 +326,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].MailingStreet__c = 'override' + i;
             listAddrT[i].MailingCity__c = 'override' + i;
         }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -333,6 +337,7 @@ private with sharing class ADDR_Addresses_TEST {
             con.Address_Override__c = listAddrT[i].Id;
             listCon.add(con);
         }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
         
         // verify that the HH and Contacts share the same address
@@ -374,6 +379,7 @@ private with sharing class ADDR_Addresses_TEST {
             con.MailingCity = 'Direct City Edit';
             listCon.add(con);
         }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
         
         // verify that the HH and Contacts share the same address
@@ -398,4 +404,96 @@ private with sharing class ADDR_Addresses_TEST {
         
     }
 
+    /*********************************************************************************************************
+    operation:
+        update accounts' billing address to cause creation of new default Address object  
+    verify:
+        new Default Address created
+        HH and Contacts get new Address
+    **********************************************************************************************************/            
+    static testMethod void updateAccAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the account addresses directly
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'Direct Street Edit';
+            acc.BillingCity = 'Direct City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(acc.BillingStreet.contains('Direct Street Edit'));
+            system.assert(con.MailingStreet.contains('Direct Street Edit')); 
+        }
+ 
+         // verify the previous addresses got Default cleared.
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH * 2, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean fNewDefault = (addr.MailingStreet__c.contains('Direct Street Edit'));
+            system.assertEquals(fNewDefault, addr.Default_Address__c);
+        }        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create an Address without no Account 
+    verify:
+        runtime error
+    **********************************************************************************************************/            
+    static testMethod void newAddrNoAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'newAddrNoAccount') return;
+        
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+        	system.assertEquals(null, listAddrT[i].Household_Account__c);
+        }
+        
+        try {
+        	insert listAddrT;
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains('REQUIRED_FIELD_MISSING'));
+            return;
+        }
+        system.assert(false); //we shouldn't get here!
+    }
+
+
+    /*********************************************************************************************************
+    operation:
+        create an Address without a Household Account 
+    verify:
+        runtime error
+    **********************************************************************************************************/            
+    static testMethod void newAddrNotHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'newAddrNotHHAccount') return;
+        
+        listAccT = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cHH, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+        insert listAccT;
+ 
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            system.assertEquals(null, listAddrT[i].Household_Account__c);
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+        }
+        
+        try {
+            insert listAddrT;
+        } catch (Exception ex) {
+            system.assertEquals(label.addrHHAccountOnly, ex.getMessage());
+            return;
+        }
+        system.assert(false); //we shouldn't get here!
+    }
 }

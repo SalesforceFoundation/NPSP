@@ -57,8 +57,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         	system.debug('**** stop Addr Trigger recursion');
             return null;
         }
-        hasRunAddrTrigger = true;
 
+        // BEFORE INSERT & BEFORE UPDATE
+        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert ||
+           triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+            // enforce only HH Accounts are being used
+            verifyAddrHHAccOnly((list<Address__c>)listNew);
+            return null;    
+        }
+
+
+        hasRunAddrTrigger = true;
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
@@ -89,6 +98,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             
         i++;            
         }
+
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         system.debug('DJH**** mapAddrIdAccId: ' + mapAddrIdAccId);
         system.debug('DJH**** setAccIdConOverrideOnly: ' + setAccIdConOverrideOnly);
@@ -196,4 +206,30 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            addrNew.MailingCountry__c != addrOld.MailingCountry__c ||
            addrNew.Address_Type__c != addrOld.Address_Type__c);
     }
+    
+    // verify that the account for each Address is a HH account
+    private void verifyAddrHHAccOnly(list<Address__c> listAddr) {
+    	
+    	set<Id> setAccId = new set<Id>();
+    	for (Address__c addr : listAddr) {
+    		if (addr.Household_Account__c != null) {
+    			setAccId.add(addr.Household_Account__c);
+    		}
+    	}
+    	
+    	map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c from Account where Id in :setAccId]);
+        for (Address__c addr : listAddr) {
+            if (addr.Household_Account__c == null) {
+                throw(new MyException(Label.addrHHAccountOnly));
+            } else {
+                Account acc = mapAccIdAcc.get(addr.Household_Account__c);
+                if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                	throw(new MyException(Label.addrHHAccountOnly));
+                }
+            }
+        }
+    	
+    }
+    
+    private class MyException extends Exception {} 
 }
