@@ -57,8 +57,9 @@ public with sharing class TDTM_TriggerHandler {
 	        }
 	        
 	        //Get the classes to run
-	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getName(), thisAction);
-	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getName() + ': ' + JSON.serializePretty(classesToCall));
+            // note that we are using the local object name, so it works for objects from Cumulus both in the package and unmanaged dev orgs.
+	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
+	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 	        
 	        if(classesToCall != null && classesToCall.size() > 0) {
 	            //Run the relevant classes
