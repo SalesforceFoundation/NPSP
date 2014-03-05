@@ -121,11 +121,19 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
     </target>
 
+    <!-- deployUnpackaged: Deploy the unpackaged directory containing metadata used in builds but not included in the Cumulus managed package -->
+    <target name="deployUnpackaged">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged" runAllTests="false" maxPoll="200" />
+    </target>
+
     <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying Cumulus with all tests --> 
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployCI">
       <!-- First, uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
       <antcall target="uninstallCumulus" />
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
 
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
@@ -140,6 +148,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     <target name="deployCIPackageOrg">
       <!-- First, delete any metadata from the org which is not in the repo -->
       <antcall target="destroyStaleMetadata" />
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
 
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
@@ -187,6 +198,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
           <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />    
         </then>
       </if>
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
 
       <antcall target="updateDependentPackages" />
 
@@ -247,7 +261,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- retrieveUnpackaged: Retrieves all unpackaged metadata from target org into the unpackaged directory -->
     <target name="retrieveUnpackaged">
-      <retrieveUnpackaged dir="unpackaged" /> 
+      <retrieveUnpackaged dir="org_unpackaged" /> 
     </target>
 
     <!-- retrievePackaged: Retrieves all metadata from the Cumulus package in the target org into the packaged directory -->

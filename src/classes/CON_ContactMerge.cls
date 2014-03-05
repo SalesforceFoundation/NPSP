@@ -51,7 +51,7 @@ public class CON_ContactMerge {
         
         
     //method to merge the winner and losers
-    public boolean mergeContacts() {
+    public static Boolean mergeContacts(Contact winner, List<Contact> losers) {
         boolean successfulMerge = false;
         
         List<Account> winnerAccount = new List<Account>();
@@ -147,12 +147,5 @@ public class CON_ContactMerge {
         }
         successfulMerge = true;
         return successfulMerge;
-    }
-        
-    //constructor for mergeSet class
-    public CON_ContactMerge(Contact winner, List<Contact> losers) {
-        this.losers = losers;
-        this.winner = winner;
-    }        
-    
+    }   
 }
