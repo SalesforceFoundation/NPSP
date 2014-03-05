@@ -81,7 +81,7 @@ public with sharing class CAO_Constants {
                 ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
                 ContactsSettings.Setupownerid = UserInfo.getOrganizationId();
                 
-                Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('HH_Account');
+                Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
                 if(householdAccount != null)
                     ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
                 
