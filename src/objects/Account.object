@@ -127,21 +127,6 @@
         </filters>
         <label>Household Accounts</label>
     </listViews>
-    <listViews>
-        <fullName>Organization_Accounts</fullName>
-        <columns>ACCOUNT.NAME</columns>
-        <columns>ACCOUNT.PHONE1</columns>
-        <columns>ACCOUNT.TYPE</columns>
-        <columns>npo02__TotalOppAmount__c</columns>
-        <columns>npo02__LastCloseDate__c</columns>
-        <filterScope>Everything</filterScope>
-        <filters>
-            <field>ACCOUNT.RECORDTYPE</field>
-            <operation>equals</operation>
-            <value>Account.Organization</value>
-        </filters>
-        <label>Organization Accounts</label>
-    </listViews>
     <namedFilters>
         <fullName>nf_01IG0000002atS9MAI_00NG000000DCJrtMAH</fullName>
         <active>true</active>
