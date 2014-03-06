@@ -220,11 +220,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c from Account where Id in :setAccId]);
         for (Address__c addr : listAddr) {
             if (addr.Household_Account__c == null) {
-                throw(new MyException(Label.addrHHAccountOnly));
+            	//system.debug('DJH**** addr.HHAccount is null');
+                //throw(new MyException(Label.addrHHAccountOnly));
+                // had to use addError, or Salesforce would not stop its DML.
+                addr.addError(Label.addrHHAccountOnly);
             } else {
                 Account acc = mapAccIdAcc.get(addr.Household_Account__c);
                 if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                	throw(new MyException(Label.addrHHAccountOnly));
+                    //system.debug('DJH**** addr.HHAccount not an HH account');
+                	//throw(new MyException(Label.addrHHAccountOnly));
+                	// had to use addError, or Salesforce would not stop its DML.
+                    addr.addError(Label.addrHHAccountOnly);
                 }
             }
         }

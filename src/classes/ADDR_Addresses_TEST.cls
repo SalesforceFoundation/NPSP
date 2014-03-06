@@ -38,7 +38,7 @@ private with sharing class ADDR_Addresses_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'newAddrNotHHAccount';
+    private static string strTestOnly = '*';
     static integer cHH = 2;
     static integer cCon = 2;    
 
@@ -448,7 +448,7 @@ private with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     operation:
-        create an Address without no Account 
+        create an Address with no Account 
     verify:
         runtime error
     **********************************************************************************************************/            
@@ -463,7 +463,7 @@ private with sharing class ADDR_Addresses_TEST {
         try {
         	insert listAddrT;
         } catch (Exception ex) {
-            system.assert(ex.getMessage().contains('REQUIRED_FIELD_MISSING'));
+            system.assert(ex.getMessage().contains(Label.addrHHAccountOnly));
             return;
         }
         system.assert(false); //we shouldn't get here!
@@ -472,7 +472,7 @@ private with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     operation:
-        create an Address without a Household Account 
+        create an Address with a NON-Household Account 
     verify:
         runtime error
     **********************************************************************************************************/            
@@ -491,7 +491,7 @@ private with sharing class ADDR_Addresses_TEST {
         try {
             insert listAddrT;
         } catch (Exception ex) {
-            system.assertEquals(label.addrHHAccountOnly, ex.getMessage());
+            system.assert(ex.getMessage().contains(Label.addrHHAccountOnly));
             return;
         }
         system.assert(false); //we shouldn't get here!
