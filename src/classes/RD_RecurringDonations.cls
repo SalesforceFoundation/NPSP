@@ -673,8 +673,8 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
-
-    public static void evaluateRecurringDonationsForNewOppInsert(list<npe03__Recurring_Donation__c> recurringDonationsToEvaluate){
+    /** Returns the number of records that failed to be processed. **/
+    public static Integer evaluateRecurringDonationsForNewOppInsert(list<npe03__Recurring_Donation__c> recurringDonationsToEvaluate){
         
         npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
     
@@ -780,21 +780,14 @@ public with sharing class RD_RecurringDonations {
         if (!reRollRDs.isEmpty())
             insertOppsOnRecurringDonationInsert(reRollRDs);
        
-        set<id> RDID = new set<id>();  
+        set<id> RDID = new set<id>(); 
+        list<Database.SaveResult> badSRs = new list<Database.SaveResult>(); 
         if(!oppInsertList.isEmpty())
-        {
-            Database.SaveResult[] lsr;
-            list<Database.SaveResult> badSRs = new list<Database.SaveResult>();
+        {          
             list<Opportunity> badOpps = new list<Opportunity>();
-            set<id> createdOppIds = new set<id>();  
+            set<id> createdOppIds = new set<id>();   
             
-            //we're probably coming from the UI if we're only updating one RD, so lets 
-            //let the error bubble up to the top
-            if (RDID.size() == 1)
-                lsr = Database.insert(oppInsertList, true);
-            //otherwise, this is a bulk operation so fail to the error handler 
-            else
-                lsr = Database.insert(oppInsertList, false);        
+            Database.SaveResult[] lsr = Database.insert(oppInsertList, false);        
                     
             integer i = 0;                          
             for (Database.SaveResult s : lsr){
@@ -830,6 +823,7 @@ public with sharing class RD_RecurringDonations {
         else{
             updateRecurringDonationOnOppChangeFuture(RDID); 
         }   
+        return badSRs.size();
     }
   
     /// <name> approveDeleteRecDonations </name>
