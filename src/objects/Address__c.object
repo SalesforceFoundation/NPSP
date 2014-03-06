@@ -65,7 +65,7 @@
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Seasonal</fullName>
+                <fullName>Vacation Residence</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
@@ -85,15 +85,6 @@
         <label>Default Address</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>End_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>The ending date that this Address is valid for this Household.</inlineHelpText>
-        <label>End Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
     </fields>
     <fields>
         <fullName>Formula_MailingAddress__c</fullName>
@@ -121,6 +112,24 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Latest_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent ending date that this Address was used for this Household.</inlineHelpText>
+        <label>Latest End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Latest_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent starting date that this Address was used for this Household.</inlineHelpText>
+        <label>Latest Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
     </fields>
     <fields>
         <fullName>MailingCity__c</fullName>
@@ -219,15 +228,6 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Start_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>The starting date that this Address is valid for this Household.</inlineHelpText>
-        <label>Start Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
     </fields>
     <label>Address</label>
     <nameField>

@@ -57,18 +57,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         	system.debug('**** stop Addr Trigger recursion');
             return null;
         }
-
-        // BEFORE INSERT & BEFORE UPDATE
-        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert ||
-           triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
-            // enforce only HH Accounts are being used
-            verifyAddrHHAccOnly((list<Address__c>)listNew);
-            return null;    
-        }
-
-
-        hasRunAddrTrigger = true;
-        DmlWrapper dmlWrapper = new DmlWrapper();        
         
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
         map<Id, Id> mapAddrIdAccId = new map<Id, Id>(); // map of HH Account Id's we must consider
@@ -76,17 +64,36 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         integer i = 0;        
         for (SObject so : listNew) {
             Address__c addr = (Address__c)so;
+            Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
+            
+            // BEFORE INSERT
+	        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+	           if (addr.Default_Address__c) { 
+	               addr.Latest_Start_Date__c = system.today();
+	               addr.Latest_End_Date__c = null;
+	           }
+	        }
+	        
+            // BEFORE UPDATE
+            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+                if (addr.Default_Address__c != addrOld.Default_Address__c) {
+                    if (addr.Default_Address__c) {
+	                   addr.Latest_Start_Date__c = system.today();
+	                   addr.Latest_End_Date__c = null;
+                    } else {
+                       addr.Latest_End_Date__c = system.today();                    	
+                    }
+                }
+            }
 
             // AFTER INSERT
             if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
-                if (addr.Default_Address__c && addr.Household_Account__c != null) {
+                if (addr.Default_Address__c && addr.Household_Account__c != null) 
                     mapAddrIdAccId.put(addr.Id, addr.Household_Account__c);
-                }        
             }
             
             // AFTER UPDATE
             if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-                Address__c addrOld = (Address__c)listOld[i];
                 if (addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c)) {
                     mapAddrIdAccId.put(addr.Id, addr.Household_Account__c);
                 } else if (isAddressChanged(addr, addrOld)) {
@@ -99,6 +106,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         i++;            
         }
 
+        // BEFORE INSERT & BEFORE UPDATE
+        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert ||
+           triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+            // enforce only HH Accounts are being used
+            verifyAddrHHAccOnly((list<Address__c>)listNew);
+            return null;    
+        }
+
+        // AFTER INSERT & AFTER UPDATE
+        hasRunAddrTrigger = true;
+        DmlWrapper dmlWrapper = new DmlWrapper();        
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         system.debug('DJH**** mapAddrIdAccId: ' + mapAddrIdAccId);
         system.debug('DJH**** setAccIdConOverrideOnly: ' + setAccIdConOverrideOnly);
@@ -158,6 +176,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	                        continue;
 	                    if (addrHH.Default_Address__c) {
 	                    	addrHH.Default_Address__c = false;
+	                    	addrHH.Latest_End_Date__c = system.today();
 	                    	listAddrUpdate.add(addrHH);
 	                    }	
 	                }

@@ -298,11 +298,18 @@ private with sharing class ADDR_Addresses_TEST {
         }
         
         // verify the previous addresses got Default cleared.
-        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        // and verify latest start date and latest end date appropriately set.
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
         system.assertEquals(cHH * 2, listAddr.size());
         for (Address__c addr : listAddr) {
         	boolean fNewDefault = (addr.MailingStreet__c.contains('New Default Street'));
        		system.assertEquals(fNewDefault, addr.Default_Address__c);
+       		if (fNewDefault) {
+       		   system.assertEquals(system.today(), addr.Latest_Start_Date__c);
+       		   system.assertEquals(null, addr.Latest_End_Date__c);
+       		} else {
+               system.assertEquals(system.today(), addr.Latest_End_Date__c);       			
+       		}
         }        
     }
     
@@ -356,6 +363,14 @@ private with sharing class ADDR_Addresses_TEST {
                 system.assert(con.MailingCity.contains('City'));
             }
         }
+
+        // verify address overrides have latest start date and latest end date appropriately set.
+        list<Address__c> listAddr = [select Id, Latest_Start_Date__c, Latest_End_Date__c from Address__c where Id in :listAddrT];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+           system.assertEquals(system.today(), addr.Latest_Start_Date__c);
+           system.assertEquals(null, addr.Latest_End_Date__c);
+        }        
     }
         
     /*********************************************************************************************************

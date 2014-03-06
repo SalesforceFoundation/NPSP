@@ -41,6 +41,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper = new DmlWrapper();        
         list<Contact> listConAddrSet = new list<Contact>(); 
         list<Contact> listConCreateAddr = new list<Contact>();
+        map<Id, boolean> mapAddrIdIsOverride = new map<Id, boolean>();
        
         integer i = 0;        
         for (SObject so : listNew) {
@@ -48,15 +49,23 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
             // BEFORE INSERT
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
-            	if (con.Address_Override__c != null)
-            	   listConAddrSet.add(con);
+                if (con.Address_Override__c != null) {
+                    listConAddrSet.add(con);
+                    mapAddrIdIsOverride.put(con.Address_Override__c, true);
+                }
             }
             
             // BEFORE UPDATE
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
             	Contact conOld = (Contact)listOld[i];
-                if (con.Address_Override__c != null && con.Address_Override__c != conOld.Address_Override__c) 
-                    listConAddrSet.add(con);
+                if (con.Address_Override__c != conOld.Address_Override__c) {
+                	if (con.Address_Override__c != null) {
+                        listConAddrSet.add(con);
+                        mapAddrIdIsOverride.put(con.Address_Override__c, true);
+                	}
+                	if (conOld.Address_Override__c != null)
+                        mapAddrIdIsOverride.put(conOld.Address_Override__c, false);                        
+                }
             }
             
             // AFTER INSERT
@@ -86,6 +95,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             // to avoid pushing these address changes to the HH.
             ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
         }
+        
+        // update the Latest date fields on any address overrides
+        if (mapAddrIdIsOverride.size() > 0) 
+            updateAddrIsOverride(mapAddrIdIsOverride, dmlWrapper);
             
         // create any new Address objects
         if (listConCreateAddr.size() > 0)
@@ -140,6 +153,8 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	Address__c addr = new Address__c();
         	addr.Household_Account__c = con.AccountId;
         	addr.Default_Address__c = true;
+        	addr.Latest_Start_Date__c = system.today();
+        	addr.Latest_End_Date__c = null;
         	addr.MailingStreet__c = con.MailingStreet;
         	addr.MailingCity__c = con.MailingCity;
         	addr.MailingState__c = con.MailingState;
@@ -150,6 +165,22 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	dmlWrapper.objectsToInsert.add(addr);
         }
         system.debug('DJH**** addr to insert: ' + dmlWrapper.objectsToInsert);
+    }
+
+    // update the Latest date fields on any address overrides
+    private void updateAddrIsOverride(Map<Id, boolean> mapAddrIdIsOverride, DmlWrapper dmlWrapper) {
+
+        for (ID id : mapAddrIdIsOverride.keySet()) {
+            Address__c addr = new Address__c();
+            addr.Id = id;
+            if (mapAddrIdIsOverride.get(id) == true) {
+            	addr.Latest_Start_Date__c = system.today();
+            	addr.Latest_End_Date__c = null;
+            } else {
+                addr.Latest_End_Date__c = system.today();
+            }
+            dmlWrapper.objectsToUpdate.put(id, addr);
+        }        
     }
 
 }
