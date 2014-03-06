@@ -489,7 +489,6 @@
   <types>
     <members>Account.AllAccounts</members>
     <members>Account.Household_Accounts</members>
-    <members>Account.Organization_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
@@ -503,7 +502,6 @@
   </types>
   <types>
     <members>Account.HH_Account</members>
-    <members>Account.Organization</members>
     <name>RecordType</name>
   </types>
   <types>
