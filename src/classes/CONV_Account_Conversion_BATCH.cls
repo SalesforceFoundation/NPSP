@@ -51,7 +51,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
         update updateTriggerHandlers;
 
-        return Database.getQueryLocator(query); 
+        return Database.getQueryLocator(query);
     }
 
     global void execute(Database.BatchableContext bc, Sobject[] result) {
@@ -59,15 +59,18 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         List<Contact> consForUpdate = new List<Contact>();
         List<OpportunityContactRole> ocrsForUpdate = new List<OpportunityContactRole>();
         List<Opportunity> oppsForUpdate = new List<Opportunity>();
-        
+
         Map<Id, Account> hh2account = new Map<Id, Account>();
-        Map<Id, Id> con2account = new Map<Id, Id>();
-        
+        Map<Id, Account> con2account = new Map<Id, Account>();
+
         List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
-        consForUpdate = [select AccountId, Name, npo02__Household__c, npo02__TotalOppAmount__c from Contact where npo02__Household__c IN :hhscope];
+        consForUpdate = [select AccountId, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
         ocrsForUpdate = [select Opportunity.AccountId, Contact.npo02__Household__c, Opportunity.Id from OpportunityContactRole where isPrimary = true and ContactId IN :consForUpdate and Opportunity.npe01__Is_Opp_From_Individual__c = 'true'];
 
-        //generate new Household Account for each Household in scope
+        /********************************************************************/
+        /** Generating a new Household Account for each Household in scope **/
+        /********************************************************************/
+
         for (npo02__Household__c hh : hhscope){
             Account a = new Account(
             Name = hh.Name, npo02__TotalOppAmount__c = hh.npo02__TotalOppAmount__c,
@@ -97,8 +100,15 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         //save the contact giving amount to determine the primary contact
         Map<Id, Double> conGiving = new Map<Id, Double>();
+        //Map of the Account back to the all of the new Household members
+        Map<Id, List<Contact>> consWithNewHousehold = new Map<Id, List<Contact>>();
 
-        //attached current Household members to the new Household Account
+        Map<Id, Map<Id,ContactAddress>> addressMap = new Map<Id, Map<Id,ContactAddress>>();
+
+        /***********************************************************************/
+        /** Attaching current Household members to the new Household Account  **/
+        /***********************************************************************/
+
         for (Contact c : consForUpdate){
             Account a = hh2Account.get(c.npo02__Household__c);
             c.AccountId = a.Id;
@@ -106,21 +116,35 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 a.npe01__One2OneContact__c = c.Id;
                 conGiving.put(a.Id, c.npo02__TotalOppAmount__c);
             }
-            con2account.put(c.Id, a.Id);
+            con2account.put(c.Id, a);
+
+            //build a map of cons with the new household to use later for address
+            if (consWithNewHousehold.containsKey(a.Id)){
+                consWithNewHousehold.get(a.Id).add(c);
+            }
+            else{
+                consWithNewHousehold.put(a.Id, new List<Contact>{c});
+            }
         }
         update consForUpdate;
         update hh2Account.values();
 
-        //port all existing opportunities to the new hh accounts
+        /***************************************************************/
+        /** Porting all existing opportunities to the new hh accounts **/
+        /***************************************************************/
+
         for (OpportunityContactRole ocr : ocrsForUpdate) {
             Opportunity o = new Opportunity (id = ocr.OpportunityId);
-            o.AccountId = con2Account.get(ocr.ContactId);
+            o.AccountId = con2Account.get(ocr.ContactId).Id;
             oppsForUpdate.add(o);
         }
         if (!oppsForUpdate.isEmpty())
             update oppsForUpdate;
 
-        //finally, get any activities and tasks from the Household object and move them to the Account
+        /******************************************************************************/
+        /** Moving any activities and tasks from the Household object to the Account **/
+        /******************************************************************************/
+
         List<Task> tasksForUpdate = new List<Task>();
         tasksForUpdate = [select WhatId from Task where WhatId IN :hhscope];
 
@@ -128,7 +152,72 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             t.WhatId = hh2Account.get(t.WhatId).Id; 
 
         update tasksForUpdate;
+
+        /**********************************************************************/
+        /** Address Mapping from existing Contacts to new Household Accounts **/
+        /**********************************************************************/
+
+        consForUpdate.clear();
+        List<Address__c> addressesForInsert = new List<Address__c>();
+        List<Account> hhAccountsForUpdate = new List<Account>();
+
+        for (Id accountId : consWithNewHousehold.keySet()){
+            List<Contact> conList = consWithNewHousehold.get(accountId);
+
+            //if its the only Contact and it has an address recorded, just use that address
+            if (conList.size() == 1){
+                ContactAddress cadd = new ContactAddress(conList[0]);
+                if (cadd.hasAddress()){
+                    addressesForInsert.add(new Address__c(
+                    MailingStreet__c = cadd.MailingStreet,
+                    MailingState__c = cadd.MailingState,
+                    MailingPostalCode__c = cadd.MailingZip,
+                    MailingCountry__c = cadd.MailingCountry,
+                    MailingCity__c = cadd.MailingCity,
+                    Default_Address__c = true,
+                    Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                    Household_Account__c = accountId
+                    ));
+
+                    Account myHHAccount = con2Account.get(conList[0].Id);
+                    myHHAccount.ShippingStreet = cadd.MailingStreet;
+                    myHHAccount.ShippingState = cadd.MailingState;
+                    myHHAccount.ShippingPostalCode = cadd.MailingZip;
+                    myHHAccount.ShippingCountry = cadd.MailingCountry;
+                    myHHAccount.ShippingCity = cadd.MailingCity;
+                    hhAccountsForUpdate.add(myHHAccount);
+                }
+            }
+
+            //multiple contacts
+            else{
+                
+                for (Contact c : conList){
+                    ContactAddress cadd;
+                }
+            
+            }
+        }
+        if (consForUpdate.size() > 1) update consForUpdate;
+        if (addressesForInsert.size() > 1) insert addressesForInsert;
+        if (hhAccountsForUpdate.size() > 1) update hhAccountsForUpdate;
+
+/*
+            //deal with addresses using hte map compiled previously
+
+            //if we don't already have an address associated w/ this HH
+            if (!addressMap.containsKey(a.Id)){
+                addressMap.put(a.Id, new Map<Id, ContactAddress>{c.Id => new ContactAddress(c)});
+            }
+            //if this household already has some members that have addresses and they match the existing members
+            else if (addressMap.containsKey(a.Id) && addressMap.get(a.Id).get(c.Id).compare(new ContactAddress(c))){
+                
+            }
+            */
+
     }
+
+
     /** @description Finish method for the batchable class. */
     global void finish(Database.BatchableContext bc) {
         //restore the trigger handlers
@@ -138,5 +227,44 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             updateTriggerHandlers.add(t);
         }
         update updateTriggerHandlers;
+    }
+
+    public class ContactAddress{
+
+        public ContactAddress(Contact c){
+            this.MailingStreet = c.MailingStreet;
+            this.MailingCity = c.MailingCity;
+            this.MailingState = c.MailingState;
+            this.MailingZip = c.MailingPostalCode;
+            this.MailingCountry = c.MailingCountry;
+        }
+
+        public String MailingStreet;
+        public String MailingCity;
+        public String MailingState;
+        public String MailingZip;
+        public String MailingCountry;
+
+        public Boolean isSameAddress(CONV_Account_Conversion_BATCH.ContactAddress ca){
+            if(this.MailingStreet == ca.MailingStreet && 
+               this.MailingCity == ca.MailingCity && 
+               this.MailingState == ca.MailingState &&
+               this.MailingZip == ca.MailingZip &&
+               this.MailingCountry == ca.MailingCountry)
+                return true;
+            else
+                return false;
+        }
+
+        public Boolean hasAddress(){
+            if(MailingStreet != null ||
+               MailingCity != null ||
+               MailingState != null ||
+               MailingZip != null ||
+               MailingCountry != null)
+                return true;
+            else
+                return false;
+        }
     }
 }
