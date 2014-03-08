@@ -34,7 +34,9 @@
 */
 public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful{
     public String query { get; set; } 
-    public integer recCount;
+    public Integer recCount;
+    public Integer failuresCount = 0;
+    
     // constructors
     public RD_RecurringDonations_BATCH(string q) {
         RD_ProcessControl.batchButton = true;
@@ -52,7 +54,7 @@ public without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         try {
 	        RD_ProcessControl.batchButton = true;
 	        recCount += result.size();
-	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
 	     } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, result, ERR_Handler.Context.RD);
@@ -62,16 +64,11 @@ public without sharing class RD_RecurringDonations_BATCH implements Database.Bat
         //update our settings
         npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
         
-        AsyncApexJob a = [select Id, Status, NumberOfErrors, JobItemsProcessed,
-                            TotalJobItems, CompletedDate
-                            from AsyncApexJob 
-                            where Id = :BC.getJobId()];
-        
-        integer errorcount = [select count() from Error__c];                             
-                            
+        AsyncApexJob a = [select CompletedDate from AsyncApexJob where Id = :BC.getJobId()];
+                                    
         rds.npe03__Last_Batch_Run__c = a.CompletedDate;
-        rds.npe03__Number_of_Successes__c = recCount - errorcount;
-        rds.npe03__Number_of_Failures__c = errorcount;
+        rds.npe03__Number_of_Successes__c = recCount - failuresCount;
+        rds.npe03__Number_of_Failures__c = failuresCount;
         update rds;                            
         
         //if needed, send error notifications
