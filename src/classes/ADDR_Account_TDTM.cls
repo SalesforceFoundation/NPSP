@@ -72,6 +72,9 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 if (isAccountAddressChanged(acc, accOld)) 
                     listAccCreateAddr.add(acc);
             }    
+            
+            // moving to the next item
+            i++;
         }
 
         // create any new Address objects
@@ -100,6 +103,8 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             Address__c addr = new Address__c();
             addr.Household_Account__c = acc.Id;
             addr.Default_Address__c = true;
+            addr.Latest_Start_Date__c = system.today();
+            addr.Latest_End_Date__c = null;
             addr.MailingStreet__c = acc.BillingStreet;
             addr.MailingCity__c = acc.BillingCity;
             addr.MailingState__c = acc.BillingState;

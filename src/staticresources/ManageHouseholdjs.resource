@@ -5,18 +5,24 @@
 var j$ = jQuery.noConflict();
 var pgController;
 var fldPfx;
+var fldPfxNpsp;
 
 // Set the controller for APEX Remoting methods to handle managed/unmanaged
 // todo: replace this and pgController throughout with Wes Nolte's cleaner code: http://th3silverlining.com/2012/02/26/salesforce-javascript-remoting-and-managed-packages/
 try {
-	pgController = HH_ManageHousehold_EXT;
+	pgController = npsp__HH_ManageHousehold_EXT;
 	fldPfx = 'npo02__';
+    fldPfxNpsp = 'npsp__';
 } catch (err) {
 	pgController = HH_ManageHousehold_EXT;
-	fldPfx = ''; //set to blank for unmanaged package
+    fldPfx = 'npo02__';
+	fldPfxNpsp = ''; //set to blank for unmanaged package
 }
 function fldNm (str) {
 	return fldPfx+str;
+}
+function fldNmNpsp (str) {
+    return fldPfxNpsp+str;
 }
 
 j$(function () {
@@ -72,7 +78,7 @@ j$(function () {
     	var linode = j$( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
     	
     	// If the contact is in a household add a visual indicator
-    	if (item.contact[fldNm('HHId__c')] != null) {
+    	if (item.contact[fldNmNpsp('HHId__c')] != null) {
     		linode.find('.hhSearch-item-address').after('<span class="hhSearch-item-hh">' + gwManageHH.lblExistingHH + '</span>');
     	}
     	
@@ -400,7 +406,7 @@ gwManageHH.dialogAddMember = function(event) {
 	var linode = j$(this).closest('.hhSearch-item');
 	var contact = linode.data('item.autocomplete').contact;
 	
-	if (contact[fldNm('HHId__c')] != null) {
+	if (contact[fldNmNpsp('HHId__c')] != null) {
 		var dialog = j$('#dialog-addmember');
 		dialog.data('contact',contact);
 		

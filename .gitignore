@@ -8,3 +8,6 @@ Referenced Packages
 /uninstallsrc
 /installdeploy
 /installedPackages
+src/quickActions/LogACall.quickAction
+src/quickActions/NewNote.quickAction
+src/quickActions/NewTask.quickAction
