@@ -86,7 +86,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // if the address changed, remember the contact we want to add a new address for    
                 if (isContactAddressChanged(con, conOld)) 
                     listConCreateAddr.add(con);
-            }    
+            }  
+           
+            // moving to the next item
+            i++;  
         }
         
         // set the mailing address for contacts who specify an address override

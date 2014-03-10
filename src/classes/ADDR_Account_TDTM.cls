@@ -72,6 +72,9 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 if (isAccountAddressChanged(acc, accOld)) 
                     listAccCreateAddr.add(acc);
             }    
+            
+            // moving to the next item
+            i++;
         }
 
         // create any new Address objects

@@ -111,7 +111,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 } 
             }
             
-        i++;            
+            // moving to the next item
+            i++;            
         }
 
         // BEFORE INSERT & BEFORE UPDATE
@@ -140,7 +141,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     // the main routine for finding the appropriate address to currently use for the
     // household and its contacts.  Looks for the Default address, as well as checking
     // to see if there is a seasonal address that should be used instead.
-    public void refreshCurrentHHAddress(list<Id> listAccId, DmlWrapper dmlWrapper) {
+    public static void refreshCurrentHHAddress(list<Id> listAccId, DmlWrapper dmlWrapper) {
     	
     	// assumptions:
     	// called after all modifications saved to db
@@ -360,5 +361,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }    	
     }
     
-    private class MyException extends Exception {} 
+    private class MyException extends Exception {}
+    
+    // routine the scheduled batch job calls to update households with the specified Seasonal addresses
+    public static void batchSeasonalUpdate(list<Address__c> listAddr) {
+        if (listAddr == null || listAddr.size() == 0) return;
+        
+        list<Id> listAccId = new list<Id>();
+        for (Address__c addr : listAddr) 
+            listAccId.add(addr.Household_Account__c);
+        
+        // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = true;       
+
+        Dmlwrapper dmlWrapper = new Dmlwrapper();
+        refreshCurrentHHAddress(listAccId, dmlWrapper);
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+    }
 }
