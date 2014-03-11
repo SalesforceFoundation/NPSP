@@ -498,7 +498,6 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Account.nf_01IG0000002atS9MAI_00NG000000DCJrtMAH</members>
     <members>Address__c.Contact_00NG000000DCNRfMAP</members>
     <name>NamedFilter</name>
   </types>
