@@ -204,6 +204,11 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Address_Verification_Settings__c.Auto_Update_Addresses__c</members>
+    <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
+    <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+    <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
+    <members>Address_Verification_Settings__c.Verify_Addresses__c</members>
     <members>Address__c.Address_Type__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.End_Date__c</members>
@@ -439,6 +444,7 @@
   </types>
   <types>
     <members>Account</members>
+    <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
