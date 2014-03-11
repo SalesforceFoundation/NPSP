@@ -416,6 +416,12 @@ h3 {
 	text-decoration: line-through;
 }
 
+.gwAddressOverride {
+    font-style: italic;
+    color: darkblue;
+}
+
+
 .gwUIDisabled {
 	
 }

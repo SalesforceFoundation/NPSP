@@ -11,6 +11,7 @@
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
     <members>ADDR_Contact_TDTM</members>
+    <members>ADDR_Seasonal_SCHED</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -209,9 +210,10 @@
     <members>Account.Batch__c</members>
     <members>Address__c.Address_Type__c</members>
     <members>Address__c.Default_Address__c</members>
-    <members>Address__c.End_Date__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
     <members>Address__c.Household_Account__c</members>
+    <members>Address__c.Latest_End_Date__c</members>
+    <members>Address__c.Latest_Start_Date__c</members>
     <members>Address__c.MailingCity__c</members>
     <members>Address__c.MailingCountry__c</members>
     <members>Address__c.MailingPostalCode__c</members>
@@ -221,7 +223,6 @@
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
-    <members>Address__c.Start_Date__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -259,6 +260,8 @@
     <name>CustomField</name>
   </types>
   <types>
+    <members>addrHHAccountOnly</members>
+    <members>addrHHAddressAlwaysDefault</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -496,7 +499,6 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Account.nf_01IG0000002atS9MAI_00NG000000DCJrtMAH</members>
     <members>Address__c.Contact_00NG000000DCNRfMAP</members>
     <name>NamedFilter</name>
   </types>
