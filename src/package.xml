@@ -204,6 +204,10 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Address_Authentication_Settings__c.Auth_ID__c</members>
+    <members>Address_Authentication_Settings__c.Auth_Token__c</members>
+    <members>Address_Authentication_Settings__c.HTML_Key__c</members>
+    <members>Address_Authentication_Settings__c.Timeout__c</members>
     <members>Address_Verification_Settings__c.Auto_Update_Addresses__c</members>
     <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
     <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
@@ -444,6 +448,7 @@
   </types>
   <types>
     <members>Account</members>
+    <members>Address_Authentication_Settings__c</members>
     <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
