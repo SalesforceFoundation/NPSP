@@ -99,6 +99,7 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     // for each Account, create a new default address and add it to dmlWrapper
     private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
+        list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {
             Address__c addr = new Address__c();
             addr.Household_Account__c = acc.Id;
@@ -110,10 +111,9 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.MailingState__c = acc.BillingState;
             addr.MailingPostalCode__c = acc.BillingPostalCode;
             addr.MailingCountry__c = acc.BillingCountry;
-            
-            dmlWrapper.objectsToInsert.add(addr);
+            listAddr.add(addr);         
         }
-        system.debug('DJH**** addr to insert: ' + dmlWrapper.objectsToInsert);
+        ADDR_Addresses_TDTM.createNonDuplicateDefaultAddresses(listAddr, dmlWrapper);
     }
 
 }

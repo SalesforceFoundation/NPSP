@@ -152,6 +152,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
     // for each contact, create a new default address and add it to dmlWrapper
     private void createAddrFromCon(list<Contact> listCon, DmlWrapper dmlWrapper) {
+    	list<Address__c> listAddr = new list<Address__c>();
         for (Contact con : listCon) {
         	Address__c addr = new Address__c();
         	addr.Household_Account__c = con.AccountId;
@@ -164,10 +165,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	addr.MailingPostalCode__c = con.MailingPostalCode;
         	addr.MailingCountry__c = con.MailingCountry;
         	addr.Address_Type__c = con.npe01__Primary_Address_Type__c;
-        	
-        	dmlWrapper.objectsToInsert.add(addr);
+            listAddr.add(addr);        	
         }
-        system.debug('DJH**** addr to insert: ' + dmlWrapper.objectsToInsert);
+        ADDR_Addresses_TDTM.createNonDuplicateDefaultAddresses(listAddr, dmlWrapper);
     }
 
     // update the Latest date fields on any address overrides

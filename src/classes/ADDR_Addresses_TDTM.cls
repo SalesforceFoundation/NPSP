@@ -103,7 +103,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     // any seasonal address also need to be considered
                     || isSeasonalChanged(addr, addrOld)) {
                     mapAccIdAddr.put(addr.Household_Account__c, addr);
-                } else if (isAddressChanged(addr, addrOld)) {
+                } else if (isAddressChanged(addr, addrOld, true)) {
                     if (addr.Default_Address__c)
                         mapAccIdAddr.put(addr.Household_Account__c, addr);
                     else    // address changed, but not default, still need to update any contacts using it as an override
@@ -158,20 +158,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         //
 
         // get all Addresses by HH, that might need updating
-        map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
-        list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
-            MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
-            Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
-            from Address__c 
-            where Household_Account__c in :mapAccIdAddr.keySet()];
-        for (Address__c addr : listAddrOther) {
-            list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
-            if (listAddrHH == null) {
-                listAddrHH = new list<Address__c>();
-                mapAccIdListAddrHH.put(addr.Household_Account__c, listAddrHH);
-            }
-            listAddrHH.add(addr);
-        }
+        list<Id> listAccId = new list<Id>(mapAccIdAddr.keySet());
+        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
        
         // get all Contacts by HH, that might need updating
         map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
@@ -187,7 +175,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         
         // for each hh, find the current address to use (seasonal vs default)
         map<Id, HHInfo> mapAccIdHHInfo = new map<Id, HHInfo>();
-        for (Id accId : mapAccIdAddr.keySet()) {
+        for (Id accId : listAccId) {
             // create a HHInfo for each household        
             HHInfo hhinfo = new HHInfo();
             hhinfo.accId = accId;
@@ -233,7 +221,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         list<Contact> listConUpdate = new list<Contact>();
         
         // now go through each HH, and do all the work!
-        for (Id accId : mapAccIdAddr.keySet()) {
+        for (Id accId : listAccId) {
         	
         	// pick the address to use
         	HHInfo hhinfo = mapAccIdHHInfo.get(accId);
@@ -318,6 +306,25 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	}
     }
     
+    // utility to create a map of HH Account Id to a list of Addresses in that HH, given a list of HH Account Id.
+    private static map<Id, list<Address__c>> getMapAccIdListAddrHH(list<Id> listAccId) {
+        map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
+        list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
+            MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
+            Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
+            from Address__c 
+            where Household_Account__c in :listAccId];
+        for (Address__c addr : listAddrOther) {
+            list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
+            if (listAddrHH == null) {
+                listAddrHH = new list<Address__c>();
+                mapAccIdListAddrHH.put(addr.Household_Account__c, listAddrHH);
+            }
+            listAddrHH.add(addr);
+        }
+        return mapAccIdListAddrHH;
+    }
+ 
     // utility to compare two address objects seasonal fields
     private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
     	if (addrNew == null || addrOld == null) 
@@ -330,7 +337,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
     
     // utility to compare two address objects address fields
-    private boolean isAddressChanged(Address__c addrNew, Address__c addrOld) {
+    private static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;        
         return (
@@ -339,7 +346,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            addrNew.MailingState__c != addrOld.MailingState__c ||
            addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
            addrNew.MailingCountry__c != addrOld.MailingCountry__c ||
-           addrNew.Address_Type__c != addrOld.Address_Type__c);
+           (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
     }
 
     // verify that the account for each Address is a HH account
@@ -384,4 +391,33 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper);
         TDTM_TriggerHandler.processDML(dmlWrapper);
     }
+    
+    // create only unique addresses from their respective household, and mark any existing matches as Default.
+    public static void createNonDuplicateDefaultAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper) {   	
+    	// for each address, create a map of HHId to lists of Addresses
+    	list<Id> listAccId = new list<Id>();
+    	for (Address__c addr : listAddr)
+    	   listAccId.add(addr.Household_Account__c);
+        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        
+        // now compare our Addresses to the existing Addresses
+        for (Address__c addr : listAddr) {
+            list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
+            boolean hasMatch = false;
+            for (Address__c addrHH : listAddrHH) {
+            	if (!isAddressChanged(addr, addrHH, false)) {
+            	   // found match, make sure it is Default, and then bail out
+            	   hasMatch = true;
+            	   if (!addrHH.Default_Address__c) {
+            	       addrHH.Default_Address__c = true;
+            	       dmlWrapper.objectsToUpdate.put(addrHH.Id, addrHH);
+            	   }
+            	   break;
+            	}
+            }
+            if (!hasMatch)
+                dmlWrapper.objectsToInsert.add(addr);
+        }    	    	
+    }
+    
 }

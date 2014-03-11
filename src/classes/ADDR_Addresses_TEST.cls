@@ -807,5 +807,183 @@ private with sharing class ADDR_Addresses_TEST {
         }        
     }
 
+    /*********************************************************************************************************
+    operation:
+        create N new duplicate Addresses from Account  
+    verify:
+        duplicates not created
+    **********************************************************************************************************/            
+    static testMethod void newDupeAccountAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
 
+        // create additional addresses thru the account.
+        for (integer i = 0; i < cHH; i++) {
+        	listAccT[i].BillingStreet = listAddrT[i].MailingStreet__c;
+            listAccT[i].BillingCity = listAddrT[i].MailingCity__c;
+            listAccT[i].BillingState = listAddrT[i].MailingState__c;
+            listAccT[i].BillingPostalCode = listAddrT[i].MailingPostalCode__c;
+            listAccT[i].BillingCountry = listAddrT[i].MailingCountry__c;
+        }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        Test.stopTest();
+        
+        // verify that we don't have new Addresses
+        list<Address__c> listAddr = [select Id from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create N new duplicate Addresses from Contact  
+    verify:
+        duplicates not created
+    **********************************************************************************************************/            
+    static testMethod void newDupeContactAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // create additional addresses thru the contact.
+        for (integer i = 0; i < cHH; i++) {
+        	for (integer j = 0; j < cCon; j++) {
+	            listConT[(i * cHH) + j].MailingStreet = listAddrT[i].MailingStreet__c;
+	            listConT[(i * cHH) + j].MailingCity = listAddrT[i].MailingCity__c;
+	            listConT[(i * cHH) + j].MailingState = listAddrT[i].MailingState__c;
+	            listConT[(i * cHH) + j].MailingPostalCode = listAddrT[i].MailingPostalCode__c;
+	            listConT[(i * cHH) + j].MailingCountry = listAddrT[i].MailingCountry__c;
+        	}
+        }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listConT;
+        Test.stopTest();
+        
+        // verify that we don't have new Addresses
+        list<Address__c> listAddr = [select Id from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create N new duplicate Addresses from Account, with non-default existing  
+    verify:
+        duplicates not created
+        found match becomes Default
+    **********************************************************************************************************/            
+    static testMethod void newDupeAccountAddrNonDefault() {
+        if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddrNonDefault') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+         // create additional non-default addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Street' + i;
+            listAddrT[i].MailingCity__c = 'New City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+ 
+        // create additional addresses thru the account.
+        for (integer i = 0; i < cHH; i++) {
+            listAccT[i].BillingStreet = listAddrT[i].MailingStreet__c;
+            listAccT[i].BillingCity = listAddrT[i].MailingCity__c;
+            listAccT[i].BillingState = listAddrT[i].MailingState__c;
+            listAccT[i].BillingPostalCode = listAddrT[i].MailingPostalCode__c;
+            listAccT[i].BillingCountry = listAddrT[i].MailingCountry__c;
+        }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address and it's new!
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        system.assertEquals(cHH * cCon, listCon.size());
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('New Street'));
+            system.assert(con.MailingCity.contains('New City'));
+        }
+        
+        // verify the new addresses still are Default and we don't have too many
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
+        system.assertEquals(cHH * 2, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean isNew = (addr.MailingStreet__c.contains('New Street'));
+            system.assertEquals(isNew, addr.Default_Address__c);
+        }        
+ 
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create N new duplicate Addresses from Contact, with non-default existing  
+    verify:
+        duplicates not created
+        found match becomes Default
+    **********************************************************************************************************/            
+    static testMethod void newDupeContactAddrNonDefault() {
+        if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddrNonDefault') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+         // create additional non-default addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Street' + i;
+            listAddrT[i].MailingCity__c = 'New City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+ 
+        // create additional addresses thru the contact.
+        for (integer i = 0; i < cHH; i++) {
+            for (integer j = 0; j < cCon; j++) {
+                listConT[(i * cHH) + j].MailingStreet = listAddrT[i].MailingStreet__c;
+                listConT[(i * cHH) + j].MailingCity = listAddrT[i].MailingCity__c;
+                listConT[(i * cHH) + j].MailingState = listAddrT[i].MailingState__c;
+                listConT[(i * cHH) + j].MailingPostalCode = listAddrT[i].MailingPostalCode__c;
+                listConT[(i * cHH) + j].MailingCountry = listAddrT[i].MailingCountry__c;
+            }
+        }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listConT;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address and it's new!
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        system.assertEquals(cHH * cCon, listCon.size());
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('New Street'));
+            system.assert(con.MailingCity.contains('New City'));
+        }
+        
+        // verify the new addresses still are Default and we don't have too many
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
+        system.assertEquals(cHH * 2, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean isNew = (addr.MailingStreet__c.contains('New Street'));
+            system.assertEquals(isNew, addr.Default_Address__c);
+        }        
+ 
+    }
 }
