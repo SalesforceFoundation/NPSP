@@ -59,7 +59,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
-        list<Id> listAccId = new list<Id>();    // list of Household Accounts we must update addresses on
+        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>(); // map of HH Accounts, and their default Address 
         map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.     
 
         integer i = 0;        
@@ -93,7 +93,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
             	// a new address that is marked default or seasonal needs to propogate to the household
                 if (addr.Default_Address__c || isSeasonalAddr(addr)) 
-                    listAccId.add(addr.Household_Account__c);
+                    mapAccIdAddr.put(addr.Household_Account__c, addr);
             }
             
             // AFTER UPDATE
@@ -102,10 +102,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 if ((addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c)) 
                     // any seasonal address also need to be considered
                     || isSeasonalChanged(addr, addrOld)) {
-                    listAccId.add(addr.Household_Account__c);
+                    mapAccIdAddr.put(addr.Household_Account__c, addr);
                 } else if (isAddressChanged(addr, addrOld)) {
                     if (addr.Default_Address__c)
-                        listAccId.add(addr.Household_Account__c);
+                        mapAccIdAddr.put(addr.Household_Account__c, addr);
                     else    // address changed, but not default, still need to update any contacts using it as an override
                         mapAddrIdAddr.put(addr.Id, addr);      
                 } 
@@ -128,8 +128,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         hasRunAddrTrigger = true;
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
-        if (listAccId.size() > 0)        
-            refreshCurrentHHAddress(listAccId, dmlWrapper);
+        if (mapAccIdAddr.size() > 0)        
+            refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper);
        
         if (mapAddrIdAddr.size() > 0) 
             updateAddrOverrides(mapAddrIdAddr, dmlWrapper);        
@@ -139,9 +139,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
     
     // the main routine for finding the appropriate address to currently use for the
-    // household and its contacts.  Looks for the Default address, as well as checking
-    // to see if there is a seasonal address that should be used instead.
-    public static void refreshCurrentHHAddress(list<Id> listAccId, DmlWrapper dmlWrapper) {
+    // household and its contacts.  Prioritizes the Optional mapped Address as the Default
+    // address, as well as checking to see if there is a seasonal address that should be used instead.
+    public static void refreshCurrentHHAddress(map<Id, Address__c> mapAccIdAddr, DmlWrapper dmlWrapper) {
     	
     	// assumptions:
     	// called after all modifications saved to db
@@ -163,7 +163,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
             Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
             from Address__c 
-            where Household_Account__c in :listAccId];
+            where Household_Account__c in :mapAccIdAddr.keySet()];
         for (Address__c addr : listAddrOther) {
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             if (listAddrHH == null) {
@@ -175,7 +175,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
        
         // get all Contacts by HH, that might need updating
         map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
-        list<Contact> listCon = [select Id, Address_Override__c, AccountId from Contact where AccountId in :listAccId];
+        list<Contact> listCon = [select Id, Address_Override__c, AccountId from Contact where AccountId in :mapAccIdAddr.keySet()];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
@@ -187,15 +187,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         
         // for each hh, find the current address to use (seasonal vs default)
         map<Id, HHInfo> mapAccIdHHInfo = new map<Id, HHInfo>();
-        for (Id accId : listAccId) {
+        for (Id accId : mapAccIdAddr.keySet()) {
             // create a HHInfo for each household        
             HHInfo hhinfo = new HHInfo();
             hhinfo.accId = accId;
             mapAccIdHHInfo.put(accId, hhinfo);
 
+            // if there is a provided Default address, use it over all other defaults.
+            Address__c addr = mapAccIdAddr.get(accId);
+            if (addr != null && addr.Default_Address__c) 
+                hhinfo.addrDefault = addr;
+
             // go through the hh addresses storing the default and any seasonal            
             for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) { 
-            	if (addrHH.Default_Address__c)
+            	
+            	if (hhinfo.addrDefault == null && addrHH.Default_Address__c)
             	   hhinfo.addrDefault = addrHH;
             	
             	if (addrHH.Seasonal_Start_Month__c != null && addrHH.Seasonal_Start_Day__c != null &&      
@@ -227,7 +233,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         list<Contact> listConUpdate = new list<Contact>();
         
         // now go through each HH, and do all the work!
-        for (Id accId : listAccId) {
+        for (Id accId : mapAccIdAddr.keySet()) {
         	
         	// pick the address to use
         	HHInfo hhinfo = mapAccIdHHInfo.get(accId);
@@ -367,15 +373,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     public static void batchSeasonalUpdate(list<Address__c> listAddr) {
         if (listAddr == null || listAddr.size() == 0) return;
         
-        list<Id> listAccId = new list<Id>();
+        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
         for (Address__c addr : listAddr) 
-            listAccId.add(addr.Household_Account__c);
+            mapAccIdAddr.put(addr.Household_Account__c, addr);
         
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
         ADDR_Addresses_TDTM.hasRunAddrTrigger = true;       
 
         Dmlwrapper dmlWrapper = new Dmlwrapper();
-        refreshCurrentHHAddress(listAccId, dmlWrapper);
+        refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper);
         TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 }

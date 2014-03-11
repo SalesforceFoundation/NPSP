@@ -287,9 +287,9 @@ private with sharing class ADDR_Addresses_TEST {
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
         Test.stopTest();
-        
+
         // verify that the HH and Contacts share the same address and it's new!
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
         list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
@@ -318,6 +318,72 @@ private with sharing class ADDR_Addresses_TEST {
         }        
     }
     
+    /*********************************************************************************************************
+    operation:
+        insert new default addresses to HH w/ existing default addresses, and then go back  
+    verify:
+        contact's && hh address matches original default
+        new default addresses no longer marked default
+    **********************************************************************************************************/            
+    static testMethod void insertNewDefaultAddrAndReset() {
+        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultAddrAndReset') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        list<Address__c> listAddrOriginal = listAddrT;
+        
+        // create additional addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = true;
+            listAddrT[i].MailingStreet__c = 'New Default Street' + i;
+            listAddrT[i].MailingCity__c = 'New Default City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // go back to original default addresses
+        // added this extra set to test fix where we didn't use the correct default
+        for (integer i = 0; i < cHH; i++) {
+            listAddrOriginal[i].Default_Address__c = true;
+            listAddrOriginal[i].MailingStreet__c = 'Original Default Street' + i;
+            listAddrOriginal[i].MailingCity__c = 'Original Default City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAddrOriginal;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.stopTest();
+
+        // verify that the HH and Contacts share the same address and it's new!
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        system.assertEquals(cHH * cCon, listCon.size());
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('Original Default Street'));
+            system.assert(con.MailingCity.contains('Original Default City'));
+        }
+        
+        // verify the previous addresses got Default cleared.
+        // and verify latest start date and latest end date appropriately set.
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
+        system.assertEquals(cHH * 2, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean fNewDefault = (addr.MailingStreet__c.contains('Original Default Street'));
+            system.assertEquals(fNewDefault, addr.Default_Address__c);
+            if (fNewDefault) {
+               system.assertEquals(system.today(), addr.Latest_Start_Date__c);
+               system.assertEquals(null, addr.Latest_End_Date__c);
+            } else {
+               system.assertEquals(system.today(), addr.Latest_End_Date__c);                
+            }
+        }        
+    }
+
     /*********************************************************************************************************
     operation:
         update contacts' Address Override  
