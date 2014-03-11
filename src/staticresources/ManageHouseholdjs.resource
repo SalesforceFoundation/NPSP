@@ -695,10 +695,14 @@ gwManageHH.renderMembers = function() {
 		var cid = j$(this).attr('id');
 		
 		// Check to see if the address is different from the active address
-		if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true)
+        var ct = gwManageHH.state.activeContacts[cid];
+        if (ct.Address_Override__c != null) {
+            j$(this).find('.hhCard-details-address').addClass('gwAddressOverride');        
+		 } else if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true) {
 			j$(this).find('.hhCard-details-address').removeClass('gwModified');
-		else
+		} else {
 			j$(this).find('.hhCard-details-address').addClass('gwModified');
+	    }
 
 		
 		// Cleanup any cards that were removed
@@ -879,6 +883,9 @@ gwManageHH.addressStringify = function(contact) {
 	
 	var address = new String();
 	
+	if (contact.Address_Override__c != null) {
+	   address = 'using Address Override: <br/>';
+	}	
 	
 	if (contact.MailingStreet != null && contact.MailingStreet != '') {
 		var strt = contact.MailingStreet.replace(/(\r\n|\n|\r)/gm, '<br />');
