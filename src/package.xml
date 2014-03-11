@@ -261,6 +261,7 @@
   </types>
   <types>
     <members>addrHHAccountOnly</members>
+    <members>addrHHAddressAlwaysDefault</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
