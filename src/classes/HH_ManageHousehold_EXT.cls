@@ -141,8 +141,8 @@ global with sharing class HH_ManageHousehold_EXT {
     public String originalState {get;set;}
     public String redirectTo {get;set;}
     
-    // update contact addresses to match household address - default to false for NPSP? 
-    public boolean useAddress = true;
+    // update contact addresses to match household address 
+    public boolean useAddress;
     public string activeAddressKey;
     public string activeStreet;
     public string activeCity;
@@ -200,6 +200,7 @@ global with sharing class HH_ManageHousehold_EXT {
         
         // remember whether we are dealing with HH Accounts or HH Objects
         isHHAccount = hh.getSObjectType() == Account.sObjectType;
+        useAddress = isHHAccount;
         
         //Get the contact id from the query if present - ensure it is sanitised
         try {
@@ -755,7 +756,7 @@ global with sharing class HH_ManageHousehold_EXT {
             hhO.npo02__MailingState__c = activeState;
             hhO.npo02__MailingPostalCode__c = activePostalCode;
             hhO.npo02__MailingCountry__c = activeCountry;
-        } else if (hh.id == null && isHHAccount) { 
+        } else if (hh.id == null && isHHAccount) {        	 
             hhA.BillingStreet = activeStreet;
             hhA.BillingCity = activeCity;
             hhA.BillingState = activeState;
@@ -776,7 +777,7 @@ global with sharing class HH_ManageHousehold_EXT {
             	}
                 
                 // Set Addresses on new Contacts
-                if (useAddress == true && !isHHAccount) {
+                if (useAddress == true) {
                     con.MailingStreet = activeStreet;
                     con.MailingCity = activeCity;
                     con.MailingState = activeState;
@@ -793,7 +794,7 @@ global with sharing class HH_ManageHousehold_EXT {
             for (Contact con : activeContacts.values()) {
                 
                 // Set Addresses on active Contacts
-                if (useAddress == true && !isHHAccount) {
+                if (useAddress == true && con.Address_Override__c == null) {
                     con.MailingStreet = activeStreet;
                     con.MailingCity = activeCity;
                     con.MailingState = activeState;

@@ -404,16 +404,18 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         for (Address__c addr : listAddr) {
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             boolean hasMatch = false;
-            for (Address__c addrHH : listAddrHH) {
-            	if (!isAddressChanged(addr, addrHH, false)) {
-            	   // found match, make sure it is Default, and then bail out
-            	   hasMatch = true;
-            	   if (!addrHH.Default_Address__c) {
-            	       addrHH.Default_Address__c = true;
-            	       dmlWrapper.objectsToUpdate.put(addrHH.Id, addrHH);
-            	   }
-            	   break;
-            	}
+            if (listAddrHH != null) {
+	            for (Address__c addrHH : listAddrHH) {
+	            	if (!isAddressChanged(addr, addrHH, false)) {
+	            	   // found match, make sure it is Default, and then bail out
+	            	   hasMatch = true;
+	            	   if (!addrHH.Default_Address__c) {
+	            	       addrHH.Default_Address__c = true;
+	            	       dmlWrapper.objectsToUpdate.put(addrHH.Id, addrHH);
+	            	   }
+	            	   break;
+	            	}
+	            }
             }
             if (!hasMatch)
                 dmlWrapper.objectsToInsert.add(addr);
