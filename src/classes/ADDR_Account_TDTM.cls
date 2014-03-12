@@ -72,6 +72,9 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 if (isAccountAddressChanged(acc, accOld)) 
                     listAccCreateAddr.add(acc);
             }    
+            
+            // moving to the next item
+            i++;
         }
 
         // create any new Address objects
@@ -96,19 +99,21 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     // for each Account, create a new default address and add it to dmlWrapper
     private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
+        list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {
             Address__c addr = new Address__c();
             addr.Household_Account__c = acc.Id;
             addr.Default_Address__c = true;
+            addr.Latest_Start_Date__c = system.today();
+            addr.Latest_End_Date__c = null;
             addr.MailingStreet__c = acc.BillingStreet;
             addr.MailingCity__c = acc.BillingCity;
             addr.MailingState__c = acc.BillingState;
             addr.MailingPostalCode__c = acc.BillingPostalCode;
             addr.MailingCountry__c = acc.BillingCountry;
-            
-            dmlWrapper.objectsToInsert.add(addr);
+            listAddr.add(addr);         
         }
-        system.debug('DJH**** addr to insert: ' + dmlWrapper.objectsToInsert);
+        ADDR_Addresses_TDTM.createNonDuplicateDefaultAddresses(listAddr, dmlWrapper);
     }
 
 }

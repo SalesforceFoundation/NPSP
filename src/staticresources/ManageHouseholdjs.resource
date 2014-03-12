@@ -5,18 +5,24 @@
 var j$ = jQuery.noConflict();
 var pgController;
 var fldPfx;
+var fldPfxNpsp;
 
 // Set the controller for APEX Remoting methods to handle managed/unmanaged
 // todo: replace this and pgController throughout with Wes Nolte's cleaner code: http://th3silverlining.com/2012/02/26/salesforce-javascript-remoting-and-managed-packages/
 try {
-	pgController = HH_ManageHousehold_EXT;
+	pgController = npsp__HH_ManageHousehold_EXT;
 	fldPfx = 'npo02__';
+    fldPfxNpsp = 'npsp__';
 } catch (err) {
 	pgController = HH_ManageHousehold_EXT;
-	fldPfx = ''; //set to blank for unmanaged package
+    fldPfx = 'npo02__';
+	fldPfxNpsp = ''; //set to blank for unmanaged package
 }
 function fldNm (str) {
 	return fldPfx+str;
+}
+function fldNmNpsp (str) {
+    return fldPfxNpsp+str;
 }
 
 j$(function () {
@@ -72,7 +78,7 @@ j$(function () {
     	var linode = j$( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
     	
     	// If the contact is in a household add a visual indicator
-    	if (item.contact[fldNm('HHId__c')] != null) {
+    	if (item.contact[fldNmNpsp('HHId__c')] != null) {
     		linode.find('.hhSearch-item-address').after('<span class="hhSearch-item-hh">' + gwManageHH.lblExistingHH + '</span>');
     	}
     	
@@ -400,7 +406,7 @@ gwManageHH.dialogAddMember = function(event) {
 	var linode = j$(this).closest('.hhSearch-item');
 	var contact = linode.data('item.autocomplete').contact;
 	
-	if (contact[fldNm('HHId__c')] != null) {
+	if (contact[fldNmNpsp('HHId__c')] != null) {
 		var dialog = j$('#dialog-addmember');
 		dialog.data('contact',contact);
 		
@@ -689,10 +695,14 @@ gwManageHH.renderMembers = function() {
 		var cid = j$(this).attr('id');
 		
 		// Check to see if the address is different from the active address
-		if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true)
+        var ct = gwManageHH.state.activeContacts[cid];
+        if (ct.Address_Override__c != null) {
+            j$(this).find('.hhCard-details-address').addClass('gwAddressOverride');        
+		 } else if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true) {
 			j$(this).find('.hhCard-details-address').removeClass('gwModified');
-		else
+		} else {
 			j$(this).find('.hhCard-details-address').addClass('gwModified');
+	    }
 
 		
 		// Cleanup any cards that were removed
@@ -873,6 +883,9 @@ gwManageHH.addressStringify = function(contact) {
 	
 	var address = new String();
 	
+	if (contact.Address_Override__c != null) {
+	   address = 'using Address Override: <br/>';
+	}	
 	
 	if (contact.MailingStreet != null && contact.MailingStreet != '') {
 		var strt = contact.MailingStreet.replace(/(\r\n|\n|\r)/gm, '<br />');

@@ -34,6 +34,8 @@ global class STG_InstallScript implements InstallHandler {
 	                    Active__c = true, Frequency__c = 'Daily'));
 	        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
 	                Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED', 
+                    Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
         }
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
