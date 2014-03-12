@@ -65,7 +65,7 @@
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Seasonal</fullName>
+                <fullName>Vacation Residence</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
@@ -85,15 +85,6 @@
         <label>Default Address</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>End_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>The ending date that this Address is valid for this Household.</inlineHelpText>
-        <label>End Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
     </fields>
     <fields>
         <fullName>Formula_MailingAddress__c</fullName>
@@ -120,7 +111,25 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <reparentableMasterDetail>true</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+        <writeRequiresMasterRead>true</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Latest_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent ending date that this Address was used for this Household.</inlineHelpText>
+        <label>Latest End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Latest_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent starting date that this Address was used for this Household.</inlineHelpText>
+        <label>Latest Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
     </fields>
     <fields>
         <fullName>MailingCity__c</fullName>
@@ -177,57 +186,388 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <externalId>false</externalId>
         <inlineHelpText>The day of the month when this address no longer replaces the default address.</inlineHelpText>
         <label>Seasonal End Day</label>
-        <precision>2</precision>
-        <required>false</required>
-        <scale>0</scale>
+        <picklist>
+            <picklistValues>
+                <fullName>1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>4</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>5</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>6</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>7</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>8</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>9</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>13</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>14</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>15</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>16</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>17</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>18</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>19</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>20</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>21</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>22</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>23</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>24</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>25</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>26</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>27</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>28</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>29</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>30</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>31</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Seasonal_End_Month__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The month of the year when this address no longer replaces the default address.</inlineHelpText>
         <label>Seasonal End Month</label>
-        <precision>2</precision>
-        <required>false</required>
-        <scale>0</scale>
+        <picklist>
+            <picklistValues>
+                <fullName>1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>4</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>5</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>6</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>7</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>8</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>9</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Seasonal_Start_Day__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The day of the month when this address replaces the default address.</inlineHelpText>
         <label>Seasonal Start Day</label>
-        <precision>2</precision>
-        <required>false</required>
-        <scale>0</scale>
+        <picklist>
+            <picklistValues>
+                <fullName>1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>4</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>5</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>6</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>7</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>8</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>9</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>13</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>14</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>15</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>16</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>17</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>18</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>19</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>20</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>21</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>22</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>23</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>24</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>25</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>26</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>27</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>28</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>29</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>30</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>31</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Seasonal_Start_Month__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The month of the year when this address replaces the default address.</inlineHelpText>
         <label>Seasonal Start Month</label>
-        <precision>2</precision>
-        <required>false</required>
-        <scale>0</scale>
+        <picklist>
+            <picklistValues>
+                <fullName>1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>4</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>5</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>6</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>7</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>8</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>9</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>10</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>11</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>12</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
         <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Start_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>The starting date that this Address is valid for this Household.</inlineHelpText>
-        <label>Start Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
+        <type>Picklist</type>
     </fields>
     <label>Address</label>
     <nameField>

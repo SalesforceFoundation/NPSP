@@ -141,8 +141,8 @@ global with sharing class HH_ManageHousehold_EXT {
     public String originalState {get;set;}
     public String redirectTo {get;set;}
     
-    // update contact addresses to match household address - default to false for NPSP? 
-    public boolean useAddress = false;
+    // update contact addresses to match household address 
+    public boolean useAddress;
     public string activeAddressKey;
     public string activeStreet;
     public string activeCity;
@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
+    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -200,6 +200,7 @@ global with sharing class HH_ManageHousehold_EXT {
         
         // remember whether we are dealing with HH Accounts or HH Objects
         isHHAccount = hh.getSObjectType() == Account.sObjectType;
+        useAddress = isHHAccount;
         
         //Get the contact id from the query if present - ensure it is sanitised
         try {
@@ -533,11 +534,11 @@ global with sharing class HH_ManageHousehold_EXT {
         string strCountry = null;
         
         if (isHHAccount) {
-        	strStreet = hhA.ShippingStreet;
-        	strCity = hhA.ShippingCity;
-        	strState = hhA.ShippingState;
-        	strPostalCode = hhA.ShippingPostalCode;
-        	strCountry = hhA.ShippingCountry;
+        	strStreet = hhA.BillingStreet;
+        	strCity = hhA.BillingCity;
+        	strState = hhA.BillingState;
+        	strPostalCode = hhA.BillingPostalCode;
+        	strCountry = hhA.BillingCountry;
         } else {
         	strStreet = hhO.npo02__MailingStreet__c;
             strCity = hhO.npo02__MailingCity__c;
@@ -611,6 +612,46 @@ global with sharing class HH_ManageHousehold_EXT {
                 }
             }
         }
+
+        // for HH Accounts, also include all Address objects
+        if (isHHAccount && hh.Id != null) {
+	        q = 'select MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
+	           ' where Household_Account__c = \'' + hh.Id + '\''; 
+	        list<Address__c> listAddr = Database.query(q);	        
+	        
+	        for (Address__c addr : listAddr) {
+	            if (addr.MailingStreet__c != null || addr.MailingCity__c != null || addr.MailingState__c != null || addr.MailingPostalCode__c != null || addr.MailingCountry__c != null) {
+	                
+	                string addressString = addr.MailingStreet__c + '#' + addr.MailingCity__c + '#' + addr.MailingState__c + '#' + addr.MailingPostalCode__c + '#' + addr.MailingCountry__c;
+	                
+	                // regex pattern for getting all white space
+	                pattern whtspc = pattern.compile('[\\s]');
+	                
+	                //find whitespace
+	                matcher matchWhtSpc = whtspc.matcher(addressString);
+	                
+	                //replace whitespace
+	                addressString = matchWhtSpc.replaceAll('');
+	                
+	                if (!viableAddresses.containsKey(addressString))
+	                {
+	                    viableAddress va = new viableAddress();
+	                    va.AddressKey = addressString;
+	                    va.MailingStreet = addr.MailingStreet__c;
+	                    va.MailingCity = addr.MailingCity__c;
+	                    va.MailingState = addr.MailingState__c;
+	                    va.MailingPostalCode = addr.MailingPostalCode__c;
+	                    va.MailingCountry = addr.MailingCountry__c;
+	                    viableAddresses.put(addressString, va);
+	                    
+	                    if(activeAddressKey == null)
+	                        setActiveAddress(addressString);
+	                }
+	            }
+	        }
+        }
+
+
         return viableAddresses.values();
     }
     
@@ -715,12 +756,12 @@ global with sharing class HH_ManageHousehold_EXT {
             hhO.npo02__MailingState__c = activeState;
             hhO.npo02__MailingPostalCode__c = activePostalCode;
             hhO.npo02__MailingCountry__c = activeCountry;
-        } else if (hh.id == null && isHHAccount) { 
-            hhA.ShippingStreet = activeStreet;
-            hhA.ShippingCity = activeCity;
-            hhA.ShippingState = activeState;
-            hhA.ShippingPostalCode = activePostalCode;
-            hhA.ShippingCountry = activeCountry;
+        } else if (hh.id == null && isHHAccount) {        	 
+            hhA.BillingStreet = activeStreet;
+            hhA.BillingCity = activeCity;
+            hhA.BillingState = activeState;
+            hhA.BillingPostalCode = activePostalCode;
+            hhA.BillingCountry = activeCountry;
         }
         // Insert Household
         upsert hh;
@@ -753,7 +794,7 @@ global with sharing class HH_ManageHousehold_EXT {
             for (Contact con : activeContacts.values()) {
                 
                 // Set Addresses on active Contacts
-                if (useAddress == true) {
+                if (useAddress == true && con.Address_Override__c == null) {
                     con.MailingStreet = activeStreet;
                     con.MailingCity = activeCity;
                     con.MailingState = activeState;
@@ -825,11 +866,11 @@ global with sharing class HH_ManageHousehold_EXT {
 	        acc.npo02__SYSTEM_CUSTOM_NAMING__c = hhA.npo02__SYSTEM_CUSTOM_NAMING__c;
 	        acc.npo02__Formal_Greeting__c = hhA.npo02__Formal_Greeting__c;
 	        acc.npo02__Informal_Greeting__c = hhA.npo02__Informal_Greeting__c;
-            acc.ShippingStreet = hhA.ShippingStreet;
-	        acc.ShippingCity = hhA.ShippingCity;
-            acc.ShippingState = hhA.ShippingState;
-	        acc.ShippingPostalCode = hhA.ShippingPostalCode;
-            acc.ShippingCountry = hhA.ShippingCountry;
+            acc.BillingStreet = hhA.BillingStreet;
+	        acc.BillingCity = hhA.BillingCity;
+            acc.BillingState = hhA.BillingState;
+	        acc.BillingPostalCode = hhA.BillingPostalCode;
+            acc.BillingCountry = hhA.BillingCountry;
             upsert acc;
         } else {
             npo02__Household__c h = new npo02__Household__c(Id = hh.Id);
