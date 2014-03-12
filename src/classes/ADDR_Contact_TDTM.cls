@@ -42,6 +42,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> listConAddrSet = new list<Contact>(); 
         list<Contact> listConCreateAddr = new list<Contact>();
         map<Id, boolean> mapAddrIdIsOverride = new map<Id, boolean>();
+        list<Contact> listConAddrReset = new list<Contact>();
        
         integer i = 0;        
         for (SObject so : listNew) {
@@ -63,8 +64,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                         listConAddrSet.add(con);
                         mapAddrIdIsOverride.put(con.Address_Override__c, true);
                 	}
-                	if (conOld.Address_Override__c != null)
-                        mapAddrIdIsOverride.put(conOld.Address_Override__c, false);                        
+                	if (conOld.Address_Override__c != null) {
+                        mapAddrIdIsOverride.put(conOld.Address_Override__c, false);
+                        listConAddrReset.add(con);
+                	}                        
                 }
             }
             
@@ -95,6 +98,13 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         // set the mailing address for contacts who specify an address override
         if (listConAddrSet.size() > 0) {
             setConAddrFromOverride(listConAddrSet);
+            // to avoid pushing these address changes to the HH.
+            ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
+        }
+        
+        // reset the mailing address for contacts who no longer have an address override
+        if (listConAddrReset.size() > 0) {
+        	resetConAddr(listConAddrReset);
             // to avoid pushing these address changes to the HH.
             ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
         }
@@ -184,6 +194,36 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             dmlWrapper.objectsToUpdate.put(id, addr);
         }        
+    }
+
+    // for each Contact, find its HH current address (either Default or Seasonal) and update the contact's address fields
+    private void resetConAddr(list<Contact> listCon) {
+        if (listCon == null || listCon.size() == 0) return;
+        
+        map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>();
+        for (Contact con : listCon) 
+            mapAccIdAddr.put(con.AccountId, null);
+            
+        // get the default and seasonal address for each HH
+        map<Id, ADDR_Addresses_TDTM.HHInfo> mapAccIdHHInfo = ADDR_Addresses_TDTM.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        
+        // reset the Contact's address fields with the appropriate address
+        for (Contact con : listCon) {
+        	ADDR_Addresses_TDTM.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
+        	if (hhinfo != null) {
+        		Address__c addr = hhinfo.addrSeasonal;
+        		if (addr == null)
+        		  addr = hhinfo.addrDefault;
+                if (addr != null) {
+                	con.MailingStreet = addr.MailingStreet__c;
+                	con.MailingCity = addr.MailingCity__c;
+                	con.MailingState = addr.MailingState__c;
+                	con.MailingPostalCode = addr.MailingPostalCode__c;
+                	con.MailingCountry = addr.MailingCountry__c;
+                	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+                }        	   
+        	}
+        }         
     }
 
 }
