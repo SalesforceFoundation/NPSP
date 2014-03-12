@@ -9,6 +9,10 @@
     <members>ACCT_ViewOverride_TEST</members>
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
+    <members>ADDR_Validation_Gateway</members>
+    <members>ADDR_Validator</members>
+    <members>ADDR_Validator_TDTM</members>
+    <members>ADDR_Zipcode_Validation_Gateway</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -212,8 +216,9 @@
     <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
     <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
     <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
-    <members>Address_Verification_Settings__c.Verify_Addresses__c</members>
+    <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>
+    <members>Address__c.Ambiguous__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.End_Date__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
@@ -228,6 +233,7 @@
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
     <members>Address__c.Start_Date__c</members>
+    <members>Address__c.Verified__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>

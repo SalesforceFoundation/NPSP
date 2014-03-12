@@ -52,6 +52,17 @@
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
     <fields>
+        <fullName>API_Response__c</fullName>
+        <description>Contains the raw response or an error message.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains the raw response or an error message.</inlineHelpText>
+        <label>API Response</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>6</visibleLines>
+    </fields>
+    <fields>
         <fullName>Address_Type__c</fullName>
         <externalId>false</externalId>
         <label>Address Type</label>
@@ -76,6 +87,16 @@
         </picklist>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Ambiguous__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates whether more than on valid address was found when attempting to validate it through an external service.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether more than on valid address was found when attempting to validate it through an external service.</inlineHelpText>
+        <label>Ambiguous</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Default_Address__c</fullName>
@@ -228,6 +249,16 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Verified__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates whether the address has been verified by an external address verification service.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the address has been verified by an external address verification service.</inlineHelpText>
+        <label>Verified</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <label>Address</label>
     <nameField>
