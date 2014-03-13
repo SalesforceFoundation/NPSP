@@ -1,0 +1,186 @@
+<apex:page controller="STG_PanelADDRVerification_CTRL">
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/2.4/jquery.liveaddress.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<!-- <apex:includeScript value="{!URLFOR($Resource.LiveAddress, 'js/jquery.validate.min.js')}" /> -->
+
+	<script>
+        var j$ = jQuery.noConflict();
+       j$(document).ready(function() {
+          j$('[id$="zipTest"]').focus().keydown( function(e) {
+              if (!!j$(this).val() && e.which == 13) j$('[id$="submitZipTest"]').click();
+          });    
+       });
+    </script>
+
+	<apex:form id="form">
+		<apex:sectionHeader title="SmartyStreets" subtitle="LiveAddress API Setup" />
+		<apex:pageMessages id="pageMessages" />
+		<apex:pageBlock mode="maindetail">
+
+			<h3 class="sectionBar" >Introduction</h3>
+            <apex:outputPanel layout="block"  styleClass="sectionHelp">
+				<p>Using the LiveAddress API from SmartyStreets.com, you can
+					verify and geocode US addresses in your Salesforce.com database.</p>
+	
+				<p>This integration allows you to:</p>
+				<ul>
+					<li>Automatically validate every address you enter.</li>
+					<li>Automatically update every address you enter with a
+						standardized version.</li>
+					<li>Look up ZIP Code based on City and State entered, or City
+						and State based on ZIP Code entered.</li>
+					<li>Automatically add latitude and longitude, county name,
+						congressional district, and other location details to your address
+						records.</li>
+					<li>Verify or update all existing addresses in your database in
+						one operation.</li>
+				</ul>
+	
+				<p>
+					To get started, open an account at <a
+						href="http://smartystreets.com/account/create" target="_blank">SmartyStreets.com</a>.
+				</p>
+            </apex:outputPanel>
+            
+			<h3 class="sectionBar" >API Account Settings</h3>
+			<apex:outputPanel layout="block" styleClass="sectionHelp">
+				First, open your own <a href="http://smartystreets.com/account/create" target="_blank">
+				SmartyStreets</a> account. Then, create and copy the API keys from your 
+				<a href="https://smartystreets.com/account/keys" target="_blank">Account
+			     Settings page</a> and save them here.
+			</apex:outputPanel>
+
+			<h4>Secret Key Pair</h4>
+			<p>
+				To use automatic verification features of this app, create a
+				secret key pair, and then enter it here.
+			</p>
+			
+			 <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
+				<apex:outputLabel value="Auth ID" />
+				<apex:inputText value="{!apiSettings.Auth_ID__c}" />
+	            <apex:outputLabel value="Help here" />
+	            
+				<apex:outputLabel value="Auth Token" />
+				<apex:inputText value="{!apiSettings.Auth_Token__c}" />
+	            <apex:outputLabel value="Help here" />
+            </apex:panelGrid>
+            
+			<h4>HTML Key</h4>
+			<p>
+				To use the LiveAddress lookup controls, create an HTML Key for the <strong>Salesforce.com</strong>
+				domain, and then enter it here.
+			</p>
+			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" > 
+			    <apex:outputLabel value="HTML Key Auth Token" />
+			    <apex:inputText value="{!apiSettings.HTML_Key__c}" />
+			    <apex:outputLabel value="Help here" />
+            </apex:panelGrid>
+
+            <br/>
+            <div style="text-align:center">
+			    <apex:commandButton id="submitSaveApiSettings" action="{!saveApiSettings}"
+				rerender="saveApiResult" value="Save Settings" />
+		    </div>
+			<br/>
+			
+			<apex:outputPanel id="saveApiResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsSaveMessage))}">
+					<apex:outputText value="{!apiSettingsSaveMessage}" />
+				</apex:outputPanel>
+			</apex:outputPanel>
+
+            <br/>
+			<h4>Test My Settings</h4>
+			<p>To test your SmartyStreets Secret Key Pair, enter any US Zip Code.</p>
+			<apex:outputLabel value="Zip Code" />
+			<apex:inputText id="zipTest" value="{!apiTestEntry}" />
+			
+			<br/>
+			<div style="text-align:center">
+			    <apex:commandButton id="submitZipTest" action="{!testApi}" rerender="testResult" value="Submit Test"/>
+			</div>
+			<br/>
+			
+			<apex:outputPanel id="testResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
+					<h5>SmartyStreets API Response</h5>
+					<p>
+						<apex:outputText value="{!apiTestResult}" />
+					</p>
+				</apex:outputPanel>
+			</apex:outputPanel>
+
+			<h3 class="sectionBar" >3. Automatic Verification Settings</h3>
+
+			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >			
+					
+					<apex:outputLabel value="Enable Automatic Verification"/>
+					<apex:inputCheckbox value="{!verificationSettings.Enable_Automatic_Verification__c}" />
+					<apex:outputLabel value="Help here" />
+					
+					<apex:outputLabel value="Auto Update Addresses"/>
+					<apex:inputField value="{!verificationSettings.Auto_Update_Addresses__c}" />
+					<apex:outputLabel value="Help here" />
+					
+					<apex:outputLabel value="Reject Ambiguous Addresses"/>
+					<apex:inputField value="{!verificationSettings.Reject_Ambiguous_Addresses__c}" />
+					<apex:outputLabel value="Help here" />
+					
+					<apex:outputLabel value="Clear Invalid Addresses"/>
+					<apex:inputField value="{!verificationSettings.Clear_Invalid_Addresses__c}" />
+			        <apex:outputLabel value="Help here" />
+			
+			</apex:panelGrid>
+ 
+            <br/>
+            <div style="text-align:center">
+			    <apex:commandButton id="submitVerificationSettings" action="{!saveVerificationSettings}"
+				rerender="saveVerificationResult" value="Save Settings"/>
+		    </div>
+			<br/>
+			
+			<apex:outputPanel id="saveVerificationResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(verificationSettingsSaveMessage))}">
+					<apex:outputText value="{!verificationSettingsSaveMessage}" />
+				</apex:outputPanel>
+			</apex:outputPanel>
+
+			<h3 class="sectionBar" >5. Mass Verify Existing Addresses</h3>
+			<p>To create an Address Verification record for every address
+				currently in your Salesforce database, click the button below.
+				Please note that address verifications consume credits from your
+				SmartyStreets account.</p>
+
+			<p>Mass verification follows the settings from sections 3 and 4
+				above. If you want to choose which objects get verification or
+				updates, or which custom fields get filled with verification
+				information, set options above before verifying addresses.</p>
+            <br/>
+			<label class="checkbox"> 
+			    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" /> Skip Objects that Have
+				Previously Been Verified
+			</label>
+			
+			<br/>
+			<div style="text-align:center">
+			    <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult"
+			    value="Verify All Addresses"/>
+			</div>
+			<br/>
+			
+			<apex:outputPanel id="bulkVerifyResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
+					<h4>Mass Verification Status</h4>
+					<p>
+						<apex:outputText value="{!bulkVerifyMessage}" />
+					</p>
+				</apex:outputPanel>
+			</apex:outputPanel>
+			
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

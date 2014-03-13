@@ -89,6 +89,7 @@
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
     <members>STG_Panel</members>
+    <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
@@ -159,6 +160,7 @@
     <members>RD_AddDonationsBTN</members>
     <members>REL_RelationshipsViewer</members>
     <members>RLLP_OppRollup</members>
+    <members>STG_PanelAddrVerification</members>
     <members>STG_PanelAffiliations</members>
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
@@ -423,6 +425,7 @@
     <members>stgLinkDelete</members>
     <members>stgNPSPSettingsTitle</members>
     <members>stgNavAccountModel</members>
+    <members>stgNavAddressVerification</members>
     <members>stgNavAffiliations</members>
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
