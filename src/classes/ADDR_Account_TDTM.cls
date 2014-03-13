@@ -113,7 +113,7 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.MailingCountry__c = acc.BillingCountry;
             listAddr.add(addr);         
         }
-        ADDR_Addresses_TDTM.createNonDuplicateDefaultAddresses(listAddr, dmlWrapper);
+        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper);
     }
 
 }
