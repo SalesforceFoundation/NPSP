@@ -766,7 +766,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupPrimaryContact</shortDescription>
-        <value>Always rollup donor statistics to the primary contact, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
+        <value>Always rollup donor statistics to the primary Contact Role, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
     </labels>
     <labels>
         <fullName>stgHelpSoftCreditRoles</fullName>
