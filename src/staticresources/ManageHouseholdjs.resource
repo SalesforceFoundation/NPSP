@@ -10,7 +10,7 @@ var fldPfxNpsp;
 // Set the controller for APEX Remoting methods to handle managed/unmanaged
 // todo: replace this and pgController throughout with Wes Nolte's cleaner code: http://th3silverlining.com/2012/02/26/salesforce-javascript-remoting-and-managed-packages/
 try {
-	pgController = npsp__HH_ManageHousehold_EXT;
+	pgController = npsp.HH_ManageHousehold_EXT;
 	fldPfx = 'npo02__';
     fldPfxNpsp = 'npsp__';
 } catch (err) {
