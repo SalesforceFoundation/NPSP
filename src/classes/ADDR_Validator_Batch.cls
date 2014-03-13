@@ -50,21 +50,19 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     public static Id verifyAddresses( Boolean skipPreviouslyVerified ) {
 
         // query for all US addresses
-        String queryString = 'select id, name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, ' +
-            'ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry from Account where ' +
-            '(((BillingCountry = null or BillingCountry in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
-            'and (BillingStreet != null or BillingPostalCode != null or (BillingCity != null and BillingState != null))) or ' +
-            '((ShippingCountry = null or ShippingCountry in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
-            'and (ShippingStreet != null or ShippingPostalCode != null or (ShippingCity != null and ShippingState != null)))) ';
-
+        String queryString = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c ' +
+            ' from Address__c where ' +
+            '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
+            'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
+         
         if (skipPreviouslyVerified == true)
-            queryString += 'and id not in (select account__c from Address_Verification__c) ';
+            queryString += 'and Verified__c != true';
 
         if (Test.isRunningTest())
             queryString += 'LIMIT 200';
 
-       ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch( queryString );
-       return Database.executeBatch(b); 
+        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch( queryString );
+        return Database.executeBatch(b); 
     }
     
     static Boolean isUS( Address__c c ) {
