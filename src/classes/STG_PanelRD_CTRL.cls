@@ -9,8 +9,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     public STG_PanelRD_CTRL() { }
     
     public void init(){
-        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
-        rdSched = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
+        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;        
+        list<Schedulable__c> listSch = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
+        if (listSch.size() > 0) 
+            rdSched = listSch[0];
     }
     
     public override PageReference saveSettings() { 

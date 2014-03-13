@@ -25,8 +25,13 @@
 @isTest
 public with sharing class HH_ManageHHAccount_TEST {
 
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+
     // TEST METHOD
     public static testMethod void testExistingHH() { 
+        if (strTestOnly != '*' && strTestOnly != 'testExistingHH') return;
         
         Account hh = new Account(
             Name = 'test_hh',
@@ -92,15 +97,17 @@ public with sharing class HH_ManageHHAccount_TEST {
     
     
     public static testMethod void testHHAddrToContact() {
+        if (strTestOnly != '*' && strTestOnly != 'testHHAddrToContact') return;
+
         //tests writing the household address to the contact if the flag is ticked
         Account hh = new Account(
             Name = 'test_hh',
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE,
-            ShippingStreet = '1234 Testing Drive Suite 1000',
-            ShippingCity = 'Seattle',
-            ShippingState = 'WA',
-            ShippingPostalCode = '98101',
-            ShippingCountry = 'USA'
+            BillingStreet = '1234 Testing Drive Suite 1000',
+            BillingCity = 'Seattle',
+            BillingState = 'WA',
+            BillingPostalCode = '98101',
+            BillingCountry = 'USA'
             
             );
         insert hh;
@@ -136,22 +143,24 @@ public with sharing class HH_ManageHHAccount_TEST {
         Test.stopTest();
         Contact con1 = [select MailingStreet,MailingState,MailingCity,MailingPostalCode,MailingCountry from contact where id = :con.id][0];
         //test household address written to contact
-        system.assertEquals(con1.MailingStreet, ext.hhA.ShippingStreet);
-        system.assertEquals(con1.MailingState, ext.hhA.ShippingState);
-        system.assertEquals(con1.MailingCity, ext.hhA.ShippingCity);
-        system.assertEquals(con1.MailingPostalCode, ext.hhA.ShippingPostalCode);
-        system.assertEquals(con1.MailingCountry, ext.hhA.ShippingCountry);
+        system.assertEquals(con1.MailingStreet, ext.hhA.BillingStreet);
+        system.assertEquals(con1.MailingState, ext.hhA.BillingState);
+        system.assertEquals(con1.MailingCity, ext.hhA.BillingCity);
+        system.assertEquals(con1.MailingPostalCode, ext.hhA.BillingPostalCode);
+        system.assertEquals(con1.MailingCountry, ext.hhA.BillingCountry);
 
         Contact con2 = [select MailingStreet,MailingState,MailingCity,MailingPostalCode,MailingCountry from contact where name = 'John Jones'][0];
         //test household address written to contact
-        system.assertEquals(con2.MailingStreet, ext.hhA.ShippingStreet);
-        system.assertEquals(con2.MailingState, ext.hhA.ShippingState);
-        system.assertEquals(con2.MailingCity, ext.hhA.ShippingCity);
-        system.assertEquals(con2.MailingPostalCode, ext.hhA.ShippingPostalCode);
-        system.assertEquals(con2.MailingCountry, ext.hhA.ShippingCountry);   
+        system.assertEquals(con2.MailingStreet, ext.hhA.BillingStreet);
+        system.assertEquals(con2.MailingState, ext.hhA.BillingState);
+        system.assertEquals(con2.MailingCity, ext.hhA.BillingCity);
+        system.assertEquals(con2.MailingPostalCode, ext.hhA.BillingPostalCode);
+        system.assertEquals(con2.MailingCountry, ext.hhA.BillingCountry);   
     }
     
     public static testMethod void testRemoveContactActiveAddress() {
+        if (strTestOnly != '*' && strTestOnly != 'testRemoveContactActiveAddress') return;
+
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
         
         Account hh = new Account(
@@ -230,6 +239,7 @@ public with sharing class HH_ManageHHAccount_TEST {
     }
     
     public static testMethod void testNewHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNewHH') return;
         
         Account hh = new Account(
             Name = 'test_hh',
@@ -290,16 +300,17 @@ public with sharing class HH_ManageHHAccount_TEST {
         //list<Contact> householdMembers = [SELECT Id, Name, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, Account FROM Contact WHERE Account = :ext.hh.id];
         
         //test household address is set
-        system.assertEquals(con.MailingStreet, ext.hhA.ShippingStreet);
-        system.assertEquals(con.MailingState, ext.hhA.ShippingState);
-        system.assertEquals(con.MailingCity, ext.hhA.ShippingCity);
-        system.assertEquals(con.MailingPostalCode, ext.hhA.ShippingPostalCode);
-        system.assertEquals(con.MailingCountry, ext.hhA.ShippingCountry);
+        system.assertEquals(con.MailingStreet, ext.hhA.BillingStreet);
+        system.assertEquals(con.MailingState, ext.hhA.BillingState);
+        system.assertEquals(con.MailingCity, ext.hhA.BillingCity);
+        system.assertEquals(con.MailingPostalCode, ext.hhA.BillingPostalCode);
+        system.assertEquals(con.MailingCountry, ext.hhA.BillingCountry);
         
         Test.stopTest();
     }
     
     public static testMethod void testFindAndAddPart1() {
+        if (strTestOnly != '*' && strTestOnly != 'testFindAndAddPart1') return;
         
         Account hh = new Account(            
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
@@ -449,6 +460,7 @@ public with sharing class HH_ManageHHAccount_TEST {
     }
 
     public static testMethod void testFindAndAddPart2() {
+        if (strTestOnly != '*' && strTestOnly != 'testFindAndAddPart2') return;
         
         Account hh = new Account(            
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE            
@@ -547,6 +559,7 @@ public with sharing class HH_ManageHHAccount_TEST {
     
         
     public static testMethod void testRemoveReAdd() {
+        if (strTestOnly != '*' && strTestOnly != 'testRemoveReAdd') return;
         
         Account hh = new Account (
             Name = 'Household',
