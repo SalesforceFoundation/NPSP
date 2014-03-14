@@ -1,9 +1,8 @@
 public with sharing class ADDR_Validator {
 
-        // store the current update set so we don't update recursively
+    // store the current update set so we don't update recursively
     public static set<id> nowUpdating = new set<id>();
     private static Address_Verification_Settings__c settings = Address_Verification_Settings__c.getInstance();
-    //private static map<String, LiveAddress_Field_Mapping__c> mappings = LiveAddress_Field_Mapping__c.getAll();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -72,30 +71,24 @@ public with sharing class ADDR_Validator {
         try {
             ADDR_Validation_Gateway la = new ADDR_Validation_Gateway();
             list<ADDR_Validation_Gateway.Response> responses = la.verifyAddresses( srList );
+            System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null) {
                 list<ADDR_Validation_Gateway.Response> responseGroup;
                 for (ADDR_Validation_Gateway.Response sr : responses) {         
                     Address__c av = avList[ sr.input_index ];              
                     if (sr.candidate_index == 0) {
                         responseGroup = new list<ADDR_Validation_Gateway.Response>{ sr };
+                        System.debug('****Flagging address as verified. Address ID: ' + av.Id);
                         av.Verified__c = true;
-                        //if (sr.delivery_line_1 != null && (sr.analysis.dpv_match_code == 'Y' || sr.analysis.dpv_match_code == 'S')) {
-                            av.Verified__c = true;
-                            av.MailingStreet__c = sr.delivery_line_1 + 
-                                ((sr.delivery_line_2 != null && sr.delivery_line_2 != '') ? ('\n' + sr.delivery_line_2) : '');
-                            av.MailingCity__c = sr.components.city_name;
-                            av.MailingState__c = sr.components.state_abbreviation;
-                            av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
-                                ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
-                            //av.MailingCountry__c = av.Original_Country__c;
-                            //av.Geolocation__Latitude__s = sr.metadata.latitude;
-                            //av.Geolocation__Longitude__s = sr.metadata.longitude;
-                            //av.County__c = sr.metadata.county_name;
-                            //av.Carrier_Route__c = sr.metadata.carrier_route;
-                            //av.Congressional_District__c = sr.metadata.congressional_district;
-                        //}
+                        av.MailingStreet__c = sr.delivery_line_1 + 
+                            ((sr.delivery_line_2 != null && sr.delivery_line_2 != '') ? ('\n' + sr.delivery_line_2) : '');
+                        av.MailingCity__c = sr.components.city_name;
+                        av.MailingState__c = sr.components.state_abbreviation;
+                        av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
+                            ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
                     } else {
-                        // more than one candidate means should mark as unverified
+                        // more than one candidate means should mark as ambiguous
+                        System.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
                         av.Verified__c = false; 
                         av.Ambiguous__c = true;
                         responseGroup.add( sr );
@@ -106,13 +99,13 @@ public with sharing class ADDR_Validator {
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
                     av.API_Response__c = 'Address not found.';
-                    //av.Callout_Success__c = true;
                 }
             }
         } catch (Exception ex) {
-            system.debug(LoggingLevel.WARN, ex.getStackTraceString());
             for (Address__c av : avList) {
-                //av.Callout_Success__c = false;
+            	System.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
+            	               + ' - Exception in verifyRecords100: ' + ex.getMessage() 
+            	               + '\n' + ex.getStackTraceString());
                 av.Verified__c = false;
                 av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
             }
@@ -141,7 +134,6 @@ public with sharing class ADDR_Validator {
                 for (integer i = 0; i < responses.size(); i++) {
                     ADDR_Zipcode_Validation_Gateway.Response sr = responses[i];
                     Address__c av = avList[i];             
-                    //av.Callout_Success__c = true;
 
                     // look for an error
                     if (sr.status != null && sr.reason != null) {
@@ -150,8 +142,6 @@ public with sharing class ADDR_Validator {
                     // if there is any response, serialize it and fill in location with first location value
                     } else if (sr.zipcodes != null) {
                         //av.MailingCountry__c = av.Original_Country__c;
-                        //av.Geolocation__Latitude__s = sr.zipcodes[0].latitude;
-                        //av.Geolocation__Longitude__s = sr.zipcodes[0].longitude;
                         av.API_Response__c = JSON.serializePretty( sr );
                         
                         // if there is at least one city/state, fill in city state
@@ -169,13 +159,13 @@ public with sharing class ADDR_Validator {
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
                     av.API_Response__c = 'Zip not found.';
-                    //av.Callout_Success__c = true;
                 }
             }
         } catch (Exception ex) {
-            system.debug(LoggingLevel.WARN, ex.getStackTraceString());
             for (Address__c av : avList) {
-                //av.Callout_Success__c = false;
+            	System.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
+            	            + ' - Exception in verifyZipRecords100: ' + ex.getMessage()
+                            + '\n' + ex.getStackTraceString());
                 av.Verified__c = false;
                 av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
             }

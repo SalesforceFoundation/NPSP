@@ -56,10 +56,10 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
          
         if (skipPreviouslyVerified == true)
-            queryString += 'and Verified__c != true';
+            queryString += ' and Verified__c != true';
 
         if (Test.isRunningTest())
-            queryString += 'LIMIT 200';
+            queryString += ' LIMIT 200';
 
         ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch( queryString );
         return Database.executeBatch(b); 
