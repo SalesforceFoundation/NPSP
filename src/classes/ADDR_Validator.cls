@@ -182,41 +182,4 @@ public with sharing class ADDR_Validator {
         }
         upsert avList;
     }
-
-    /*
-    public static sObject fillMappedFields( sObject obj, sObject av, String objType, String addrType ) {
-        system.debug(LoggingLevel.WARN, obj);
-        for (LiveAddress_Field_Mapping__c mapping : mappings.values()) {
-            if ( (mapping.Target_Object__c == objType || mapping.Target_Object__c == null) && 
-                  (mapping.Address_Field_Type__c == addrType || mapping.Address_Field_Type__c == null) ) {
-
-                //system.debug(logginglevel.warn, 'Setting field ' + objType + '.' + mapping.Target_Field__c + ' to value in ' + mapping.Source_Field__c + ': ' + av.get(mapping.Source_Field__c));
-                try {
-                    obj.put( mapping.Target_Field__c, 
-                        ((mapping.Source_Field__c == 'Date_Verified__c') ?
-                            (((Boolean)(av.get('Address_Verified__c'))) ? system.today() : null) : 
-                        av.get(mapping.Source_Field__c)));
-                } catch (exception ex) { 
-                    system.debug(logginglevel.WARN, 'Could not set field ' + objType + '.' + mapping.Target_Field__c + ' to value in ' + mapping.Source_Field__c);
-                }
-            }
-        }
-        return obj;
-    }
-
-    public static void clearMappedFields( sObject obj, String objType, String addrType ) {
-        for (LiveAddress_Field_Mapping__c mapping : mappings.values()) {
-            if ( (mapping.Target_Object__c == objType || mapping.Target_Object__c == null) && 
-                  (mapping.Address_Field_Type__c == addrType || mapping.Address_Field_Type__c == null) ) {
-
-                //system.debug('Clearing field ' + objType + '.' + mapping.Target_Field__c);
-                try {
-                    if ( mapping.Clear_When_Unverified__c )
-                        obj.put( mapping.Target_Field__c, null);
-                } catch (exception ex) { 
-                    system.debug(logginglevel.WARN, 'Could not clear field ' + objType + '.' + mapping.Target_Field__c);
-                }
-            }
-        }
-    }*/
 }
