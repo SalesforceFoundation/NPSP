@@ -74,24 +74,20 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 	}                        
                 }
             }
-             
-            // AFTER INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
-
-            }
     
-            // BEFORE UPDATE & AFTER UPDATE
+            // BEFORE UPDATE & AFTER UPDATE & AFTER INSERT
             // our functionality for dealing with contact address changes requires some trickery!
             // if the contact doesn't have an address override, we create (or match) a default address,
             // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
             // but if the contact has an address override, we are supposed to create (or match) a non default address override.
             // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate ||
+               triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || 
                triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
-                Contact conOld = (Contact)listOld[i];
+                Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
-                if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
+                if (ADDR_Addresses_TDTM.hasRunAddrTrigger) 
                     continue;
                 // we only support address management with HH Accounts being used
                 if (con.HHId__c == null || con.HHId__c != con.AccountId)
@@ -158,9 +154,23 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
     // utility to compare two contacts' addresses
     private boolean isContactAddressChanged(Contact con1, Contact con2) {
-        if (con1 == null || con2 == null) 
+    	// if both null, no change
+        if (con1 == null && con2 == null) 
            return false;
+
+        // if one null, make sure other has at least one address field set
+        if (con1 == null || con2 == null) {
+        	if (con1 == null) 
+        	   con1 = con2;
+        	return (con1.MailingStreet != null ||
+	           con1.MailingCity != null ||
+	           con1.MailingState != null ||
+	           con1.MailingPostalCode != null ||
+	           con1.MailingCountry != null ||
+	           con1.npe01__Primary_Address_Type__c != null);
+        }
         
+        // both provided, so look for at least one change between address fields
         return (
            con1.MailingStreet != con2.MailingStreet ||
            con1.MailingCity != con2.MailingCity ||

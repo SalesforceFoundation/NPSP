@@ -38,7 +38,7 @@ private with sharing class ADDR_Addresses_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'setConAddrNoOverride';
+    private static string strTestOnly = '*';
     static integer cHH = 2;
     static integer cCon = 2;    
 
@@ -124,6 +124,39 @@ private with sharing class ADDR_Addresses_TEST {
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         Test.stopTest();
+
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        insert contact w/ address
+    verify:
+        new default Address created
+        contact address lookup updated to new address
+        only the contact gets the new Address
+    **********************************************************************************************************/            
+    static testMethod void insertContactWithAddress() {
+        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+            
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
+        for (Contact con : listConT) {
+            con.MailingStreet = 'new street';
+            con.MailingCity = 'new city';
+        }
+        insert listConT;        
 
         // verify that the HH and Contacts share the same address
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
