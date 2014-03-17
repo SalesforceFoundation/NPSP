@@ -492,24 +492,18 @@
   <types>
     <members>Account.AllAccounts</members>
     <members>Account.Household_Accounts</members>
-    <members>Account.Organization_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
-    <members>Schedulable__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
   </types>
   <types>
-    <members>Address__c.Contact_00NG000000DDOnlMAH</members>
+    <members>Address__c.Contact_00NG000000DCNRfMAP</members>
     <name>NamedFilter</name>
   </types>
   <types>
     <members>Account.HH_Account</members>
-    <members>Opportunity.Donation</members>
-    <members>Opportunity.Grant</members>
-    <members>Opportunity.MajorGift</members>
-    <members>Opportunity.MatchingDonation</members>
     <name>RecordType</name>
   </types>
   <types>
