@@ -95,10 +95,6 @@
         <label>BDE List FS</label>
     </fieldSets>
     <fields>
-        <fullName>AccountId</fullName>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
