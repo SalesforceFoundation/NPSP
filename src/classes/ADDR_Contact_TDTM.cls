@@ -50,27 +50,31 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
             // BEFORE INSERT
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
-                if (con.Address_Override__c != null) {
+                if (con.Current_Address__c != null) {
                     listConAddrSet.add(con);
-                    mapAddrIdIsOverride.put(con.Address_Override__c, true);
+                    if (con.is_Address_Override__c)
+                        mapAddrIdIsOverride.put(con.Current_Address__c, true);
                 }
             }
             
             // BEFORE UPDATE
             if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
             	Contact conOld = (Contact)listOld[i];
-                if (con.Address_Override__c != conOld.Address_Override__c) {
-                	if (con.Address_Override__c != null) {
+                if (con.is_Address_Override__c != conOld.is_Address_Override__c  || con.Current_Address__c != conOld.Current_Address__c) {
+                	if (con.Current_Address__c != null) {
                         listConAddrSet.add(con);
-                        mapAddrIdIsOverride.put(con.Address_Override__c, true);
+                        if (con.is_Address_Override__c)
+                            mapAddrIdIsOverride.put(con.Current_Address__c, true);
                 	}
-                	if (conOld.Address_Override__c != null) {
-                        mapAddrIdIsOverride.put(conOld.Address_Override__c, false);
-                        listConAddrReset.add(con);
+                	if (conOld.is_Address_Override__c) {
+                		if (conOld.Current_Address__c != null)
+                            mapAddrIdIsOverride.put(conOld.Current_Address__c, false);
+                        if (!con.is_Address_Override__c)
+                            listConAddrReset.add(con);
                 	}                        
                 }
             }
-            
+             
             // AFTER INSERT
             if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
 
@@ -101,9 +105,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             i++;  
         }
         
-        // set the mailing address for contacts who specify an address override
+        // set the mailing address for contacts who specify an address lookup or override
         if (listConAddrSet.size() > 0) {
-            setConAddrFromOverride(listConAddrSet);
+            setConAddrFromLookup(listConAddrSet);
             // to avoid pushing these address changes to the HH.
             ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
         }
@@ -126,12 +130,12 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    // for each contact, refresh its mailing address from its Address Override
-    private void setConAddrFromOverride(list<Contact> listCon) {
+    // for each contact, refresh its mailing address from its Address lookup
+    private void setConAddrFromLookup(list<Contact> listCon) {
     	set<Id> setAddrId = new set<Id>();
     	for (Contact con : listCon) {
-    		if (con.Address_Override__c != null)
-    		  setAddrId.add(con.Address_Override__c);
+    		if (con.Current_Address__c != null)
+    		  setAddrId.add(con.Current_Address__c);
     	}
     
         map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, MailingStreet__c, MailingCity__c, MailingState__c, 
@@ -139,7 +143,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         system.debug('DJH**** mapAddrIdAddr: ' + mapAddrIdAddr);
             
         for (Contact con : listCon) {
-            Address__c addr = mapAddrIdAddr.get(con.Address_Override__c);
+            Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (addr != null) {
             	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
             	con.MailingStreet = addr.MailingStreet__c;
@@ -186,7 +190,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = new list<Contact>();
     	
         for (Contact con : listConAll) {
-        	boolean hasOverride = con.Address_Override__c != null;
+        	boolean hasOverride = con.is_Address_Override__c && con.Current_Address__c != null;
         	
         	// during BeforeUpdate, only deal with Contacts with address overrides.
         	// during AfterUpdate, only deal with Contacts without address overrides.
@@ -218,7 +222,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             
             // if no override, create/use a default address
-            if (con.Address_Override__c == null) {
+            if (con.is_Address_Override__c == false) {
             	if (addrDup != null) {
             	   if (!addrDup.Default_Address__c) {
             	       addrDup.Default_Address__c = true;
@@ -231,7 +235,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             // contact has an override, create/use a non-default address and update the override
             } else {
                 if (addrDup != null) {
-                	con.Address_Override__c = addrDup.Id;
+                	con.Current_Address__c = addrDup.Id;
                 } else {
                     mapConAddrNew.put(con, addrNew);
                 }
@@ -244,7 +248,8 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         // update any contact address overrides
         for (Contact con : mapConAddrNew.keySet()) {
         	Address__c addr = mapConAddrNew.get(con);
-        	con.Address_Override__c = addr.Id;
+        	con.Current_Address__c = addr.Id;
+        	con.is_Address_Override__c = true;
         }        
     }
 
