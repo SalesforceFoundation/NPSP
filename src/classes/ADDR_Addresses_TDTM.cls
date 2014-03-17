@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2014 
-* @description trigger handler on Address object to support propogating addresses 
+* @description trigger handler on Address object to support propagating addresses 
 */
 public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 

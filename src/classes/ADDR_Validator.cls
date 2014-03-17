@@ -128,32 +128,37 @@ public with sharing class ADDR_Validator {
         try {
             ADDR_Zipcode_Validation_Gateway la = new ADDR_Zipcode_Validation_Gateway();
             list<ADDR_Zipcode_Validation_Gateway.Response> responses = la.verifyZips( zrList );
+            System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null && !responses.isEmpty()) {
-                system.assert(responses.size() == avList.size(), 'Responses did not match number of verifications.');
-
-                for (integer i = 0; i < responses.size(); i++) {
-                    ADDR_Zipcode_Validation_Gateway.Response sr = responses[i];
-                    Address__c av = avList[i];             
-
-                    // look for an error
-                    if (sr.status != null && sr.reason != null) {
-                        av.API_Response__c = sr.reason;
-
-                    // if there is any response, serialize it and fill in location with first location value
-                    } else if (sr.zipcodes != null) {
-                        //av.MailingCountry__c = av.Original_Country__c;
-                        av.API_Response__c = JSON.serializePretty( sr );
-                        
-                        // if there is at least one city/state, fill in city state
-                        if (sr.city_states != null && sr.city_states.size() > 0) {
-                            av.MailingCity__c = sr.city_states[0].city;
-                            av.MailingState__c = sr.city_states[0].state_abbreviation;
-                        }
-
-                        // if there is exactly one zip, fill in zip
-                        if (sr.zipcodes.size() == 1)
-                            av.MailingPostalCode__c = sr.zipcodes[0].zipcode;
-                    }
+                if(responses.size() == avList.size()) {
+	                for (integer i = 0; i < responses.size(); i++) {
+	                    ADDR_Zipcode_Validation_Gateway.Response sr = responses[i];
+	                    Address__c av = avList[i];             
+	
+	                    // look for an error
+	                    if (sr.status != null && sr.reason != null) {
+	                    	System.debug('****Error found. Reason: ' + sr.reason);
+	                        av.API_Response__c = sr.reason;
+	                    // if there is any response, serialize it and fill in location with first location value
+	                    } else if (sr.zipcodes != null) {
+	                    	System.debug('****No error. Populating raw response field.');
+	                        //av.MailingCountry__c = av.Original_Country__c;
+	                        av.API_Response__c = JSON.serializePretty( sr );
+	                        
+	                        // if there is at least one city/state, fill in city state
+	                        if (sr.city_states != null && sr.city_states.size() > 0) {
+	                        	System.debug('****Populating city and estate.');
+	                            av.MailingCity__c = sr.city_states[0].city;
+	                            av.MailingState__c = sr.city_states[0].state_abbreviation;
+	                        }
+	
+	                        // if there is exactly one zip, fill in zip
+	                        if (sr.zipcodes.size() == 1)
+	                            av.MailingPostalCode__c = sr.zipcodes[0].zipcode;
+	                    }
+	                }
+                } else {
+                	System.debug('****Responses did not match number of verifications.');
                 }
             }
             for (Address__c av : avList) {             

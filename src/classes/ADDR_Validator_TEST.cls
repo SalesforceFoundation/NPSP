@@ -3,7 +3,7 @@ public with sharing class ADDR_Validator_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'testContactAddress';
+    private static string strTestOnly = '*';
     
     public static void createDefaultSettings() {
     	// create the trigger handler records
@@ -46,10 +46,10 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.mailingstreet = '200 west jackson';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
-        contact.MailingPostalCode = '60606';
+        contact.MailingStreet = 'single-address-response';
+        contact.MailingCity = 'Cupertino';
+        contact.MailingState = 'CA';
+        contact.MailingPostalCode = '95014';
         Test.StartTest();
         update contact;
         Test.StopTest();
@@ -78,7 +78,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.mailingstreet = 'bogus-address-for-test';
+        contact.MailingStreet = 'bogus-address-for-test';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'il';
         contact.MailingPostalCode = '60606';
@@ -106,7 +106,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.mailingstreet = ' multipleAddrFoundResponse';
+        contact.MailingStreet = 'ambiguous-address-for-test';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'il';
         contact.MailingPostalCode = '60606';
@@ -115,30 +115,41 @@ public with sharing class ADDR_Validator_TEST {
         Test.StopTest();
 
         Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
-                            where Household_Account__c = :contact.AccountId];       
+                            where Household_Account__c = :accountId];       
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
         System.assertEquals(true, av[0].Ambiguous__c);
     }
 
-    /*
     static testMethod void testContactZipOnly() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactZipOnly') return;
     	
-        createDefaultSettings();
+    	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        Test.StartTest();
-        Contact contact = new contact(firstname='Test', lastname='Person', mailingpostalcode='98236'); 
-        insert contact;
-        Test.StopTest();
         
-        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c where Household_Account__c = :contact.AccountId];        
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        insert contact;
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+         
+        // update contact with postal code to get the Address__c record created
+        contact.MailingPostalCode = '60606';
+        Test.StartTest();
+        update contact;
+        Test.StopTest();
+                        
+        Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
+                            from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
-
-        contact[] c1 = [select id, mailingstreet, MailingCity from contact where id = :contact.id];
-        System.assertEquals(null, c1[0].mailingstreet);
-        System.assertEquals('Clinton', c1[0].MailingCity);
+        /*
+        contact[] c1 = [select id, MailingStreet, MailingCity from contact where id = :contact.id];
+        System.assertEquals(null, c1[0].MailingStreet);
+        System.assertEquals('98236', c1[0].MailingPostalCode__c);
+        System.assertEquals('Clinton', c1[0].MailingCity);*/
     }
 
     static testMethod void testContactCityAndStateOnly() {
@@ -146,19 +157,32 @@ public with sharing class ADDR_Validator_TEST {
     	
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        Test.StartTest();
-        Contact contact = new contact(firstname='Test', lastname='Person', MailingCity='Clinton', MailingState='WA'); 
+        
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+         
+        // update contact with to get the Address__c record created
+        contact.MailingCity = 'Clinton';
+        contact.MailingState = 'WA';
+        Test.StartTest();
+        update contact;
         Test.StopTest();
 
-        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c where Household_Account__c = :contact.AccountId];        
+        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
+                            where Household_Account__c = :contact.AccountId];        
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
-
-        contact[] c1 = [select id, mailingstreet, mailingpostalcode from contact where id = :contact.id];
-        System.assertEquals(null, c1[0].mailingstreet);
-        System.assertEquals('98236', c1[0].mailingpostalcode);
-    } */
+        /*
+        contact[] c1 = [select id, MailingStreet, MailingPostalCode from contact where id = :contact.id];
+        System.assertEquals(null, c1[0].MailingStreet)
+        System.assertEquals('Clinton', c1[0].MailingCity__c);
+        System.assertEquals('98236', c1[0].MailingPostalCode);*/
+    }
 
     static testMethod void testBatch() {
     	if (strTestOnly != '*' && strTestOnly != 'testBatch') return;

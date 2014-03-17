@@ -17,11 +17,12 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
         ADDR_Validation_Gateway la = new ADDR_Validation_Gateway('key');
-        list<ADDR_Validation_Gateway.Response> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA'} );
+        list<ADDR_Validation_Gateway.Response> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA', 'Two Infinite Loop Cupertino, CA'} );
 
         system.assert(srs != null && srs.size() == 2);
         system.assertEquals('1 Infinite Loop', srs[0].delivery_line_1);
         system.assertEquals(37.33118, srs[0].metadata.latitude);
+        system.assertEquals('2 Infinite Loop', srs[1].delivery_line_1);
     }
 
     public static testMethod void testZip() {
