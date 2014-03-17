@@ -42,10 +42,11 @@ public with sharing class ADDR_Validator_TEST {
         // update contact with address to get the Address__c record created
         contact.MailingStreet = 'single-address-response';
         contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'CA';
+        contact.MailingState = 'ca';
         contact.MailingPostalCode = '95014';
         Test.StartTest();
         update contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
         
         Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
@@ -55,6 +56,14 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('CA', av[0].MailingState__c);
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
+        
+        contact = [select id, MailingStreet, MailingCity, MailingPostalCode, MailingState
+                         from contact where id = :contact.id];
+        System.assertEquals('1 Infinite Loop', contact.MailingStreet);
+        System.assertEquals('Cupertino', contact.MailingCity);
+        System.assertEquals('95014-2083', contact.MailingPostalCode);
+        System.assertEquals('CA', contact.MailingState);
+        
     }
 
     static testMethod void testContactBadAddress() {
@@ -133,17 +142,18 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingPostalCode = '60606';
         Test.StartTest();
         update contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
                         
         Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
                             from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
-        /*
-        contact[] c1 = [select id, MailingStreet, MailingCity from contact where id = :contact.id];
+        
+        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);
-        System.assertEquals('98236', c1[0].MailingPostalCode__c);
-        System.assertEquals('Clinton', c1[0].MailingCity);*/
+        System.assertEquals('Clinton', c1[0].MailingCity);
+        System.assertEquals('98236', c1[0].MailingPostalCode); 
     }
 
     static testMethod void testContactCityAndStateOnly() {
@@ -165,17 +175,18 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingState = 'WA';
         Test.StartTest();
         update contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
 
         Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
                             where Household_Account__c = :contact.AccountId];        
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
-        /*
-        contact[] c1 = [select id, MailingStreet, MailingPostalCode from contact where id = :contact.id];
-        System.assertEquals(null, c1[0].MailingStreet)
-        System.assertEquals('Clinton', c1[0].MailingCity__c);
-        System.assertEquals('98236', c1[0].MailingPostalCode);*/
+        
+        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
+        System.assertEquals(null, c1[0].MailingStreet);
+        System.assertEquals('Clinton', c1[0].MailingCity);
+        System.assertEquals('98236', c1[0].MailingPostalCode);
     }
 
     static testMethod void testBatch() {
