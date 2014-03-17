@@ -491,36 +491,11 @@
   </types>
   <types>
     <members>Account.AllAccounts</members>
-    <members>Account.HH_Accounts</members>
     <members>Account.Household_Accounts</members>
-    <members>Account.MyAccounts</members>
-    <members>Account.NewLastWeek</members>
-    <members>Account.NewThisWeek</members>
     <members>Account.Organization_Accounts</members>
-    <members>Account.PlatinumandGoldSLACustomers</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
-    <members>Contact.AllContacts</members>
-    <members>Contact.BirthdaysThisMonth</members>
-    <members>Contact.MyContacts</members>
-    <members>Contact.NewLastWeek</members>
-    <members>Contact.NewThisWeek</members>
-    <members>Lead.AllOpenLeads</members>
-    <members>Lead.InternationalLeads</members>
-    <members>Lead.MyUnreadLeads</members>
-    <members>Lead.TodaysLeads</members>
-    <members>Lead.USLeads</members>
-    <members>Lead.ViewCustom1</members>
-    <members>Lead.ViewCustom2</members>
-    <members>Opportunity.AllOpportunities</members>
-    <members>Opportunity.ClosingNextMonth</members>
-    <members>Opportunity.ClosingThisMonth</members>
-    <members>Opportunity.MyOpportunities</members>
-    <members>Opportunity.NewLastWeek</members>
-    <members>Opportunity.NewThisWeek</members>
-    <members>Opportunity.Private</members>
-    <members>Opportunity.Won</members>
     <members>Schedulable__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
@@ -530,20 +505,11 @@
     <name>NamedFilter</name>
   </types>
   <types>
-    <members>Account.Default</members>
     <members>Account.HH_Account</members>
-    <members>Account.foorectype</members>
-    <members>Contact.ConRecType3</members>
-    <members>Contact.ConRecType4</members>
-    <members>Contact.contact_recordtype_1</members>
-    <members>Contact.contact_recordtype_2</members>
-    <members>Contact.default_contact_recordtype</members>
     <members>Opportunity.Donation</members>
     <members>Opportunity.Grant</members>
     <members>Opportunity.MajorGift</members>
     <members>Opportunity.MatchingDonation</members>
-    <members>Opportunity.dummyRT</members>
-    <members>Opportunity.membership</members>
     <name>RecordType</name>
   </types>
   <types>
