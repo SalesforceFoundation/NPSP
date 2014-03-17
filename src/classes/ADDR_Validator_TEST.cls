@@ -6,15 +6,9 @@ public with sharing class ADDR_Validator_TEST {
     private static string strTestOnly = '*';
     
     public static void createDefaultSettings() {
-    	// create the trigger handler records
-    	delete [select class__c from Trigger_Handler__c];
-        STG_InstallScript i = new STG_InstallScript();
-        i.runNewOrgScript();
-        
         // use the household account model
-        npe01__Contacts_And_Orgs_Settings__c contactSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        contactSettings.npe01__Account_Processor__c = 'HH Account';
-        upsert contactSettings;
+        CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api authentication settings
         Address_Authentication_Settings__c authSettings = Address_Authentication_Settings__c.getOrgDefaults();
