@@ -246,6 +246,7 @@
                     <li class="header" id="idPanelHHHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavHouseholds}<span class="caret"></span></a></li>
                     <ul>
                     <li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHouseholds}</a></li>
+                    <li class="subitem" id="idPanelADDRVerifNav"><a href="." onclick="ShowPanel('idPanelADDR');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAddressVerification}</a></li>
                     </ul>
                     
                     <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">{!$Label.stgNavConnections}<span class="caret"></span></a></li>
@@ -319,6 +320,10 @@
                             <apex:include pageName="STG_PanelHouseholds" />
                         </div>
             
+                        <div class="panel" id="idPanelADDR" style="display:none" >
+                            <apex:include pageName="STG_PanelAddrVerification" />
+                        </div>
+                        
                         <div class="panel" id="idPanelAffl" style="display:none" >
                             <apex:include pageName="STG_PanelAffiliations" />
                         </div>

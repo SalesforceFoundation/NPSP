@@ -1225,6 +1225,14 @@
         <value>Account Model</value>
     </labels>
     <labels>
+        <fullName>stgNavAddressVerification</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavAddressVerification</shortDescription>
+        <value>Address Verification</value>
+    </labels>
+    <labels>
         <fullName>stgNavAffiliations</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
