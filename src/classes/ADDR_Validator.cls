@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2014
 * @description Class that asynchronously starts the address verification calls
-* and processes the results
+* and processes the results.
 */
 public with sharing class ADDR_Validator {
 
@@ -47,8 +47,7 @@ public with sharing class ADDR_Validator {
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__C, MailingPostalCode__c, 
             Verified__c, API_Response__c
-            //Geolocation__Latitude__s, Geolocation__Longitude__s, Congressional_District__c, Date_Verified__c,
-            //County__c, Address_Field_Type__c, Carrier_Route__c 
+            //, Latitude__s, Longitude__s, Congressional_District__c, County__c  
             from Address__c where id in : recordIds];
 
         if (!avList.isEmpty()) {
@@ -121,6 +120,7 @@ public with sharing class ADDR_Validator {
                         av.MailingState__c = sr.components.state_abbreviation;
                         av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
                             ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
+                        av.MailingCountry__c = 'US';
                     } else {
                         // more than one candidate means should mark as ambiguous
                         System.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
@@ -133,7 +133,7 @@ public with sharing class ADDR_Validator {
             }
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
-                    av.API_Response__c = 'Address not found.';
+                    av.API_Response__c = Label.Address_Not_Found;
                 }
             }
         } catch (Exception ex) {
@@ -177,7 +177,6 @@ public with sharing class ADDR_Validator {
 	                    // if there is any response, serialize it and fill in location with first location value
 	                    } else if (sr.zipcodes != null) {
 	                    	System.debug('****No error. Populating raw response field.');
-	                        //av.MailingCountry__c = av.Original_Country__c;
 	                        av.API_Response__c = JSON.serializePretty( sr );
 	                        
 	                        // if there is at least one city/state, fill in city state
@@ -185,6 +184,7 @@ public with sharing class ADDR_Validator {
 	                        	System.debug('****Populating city and estate.');
 	                            av.MailingCity__c = sr.city_states[0].city;
 	                            av.MailingState__c = sr.city_states[0].state_abbreviation;
+	                            av.MailingCountry__c = 'US';
 	                        }
 	
 	                        // if there is exactly one zip, fill in zip

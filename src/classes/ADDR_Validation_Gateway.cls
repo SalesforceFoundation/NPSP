@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Base class that talks to the address verification API
+* @description Base class that talks to the address verification API.
  */
 public with sharing class ADDR_Validation_Gateway {
 
@@ -79,7 +79,7 @@ public with sharing class ADDR_Validation_Gateway {
         if (addresses == null || addresses.isEmpty()) 
             return null;
         else if (addresses.size() > 100)
-            throw new LiveAddressException('You cannot verify more than 100 addresses at a time.');
+            throw new LiveAddressException(Label.Address_Verification_Limit);
 
       // prepare the request
         Http h = new Http();

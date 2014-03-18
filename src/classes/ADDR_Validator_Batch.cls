@@ -30,11 +30,11 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Batch class for address verification
+* @description Batch class for address verification.
 *
-* Batch process looks for all populated addresses and then updates them if the setting is turned on to do that
+* Batch process looks for all populated addresses and then updates them if the setting is turned on to do that.
 *
-* If skipPreviouslyVerified is true, the batch skips over objects that already have any verification records
+* If skipPreviouslyVerified is true, the batch skips over objects that already have any verification records.
 */
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
@@ -52,8 +52,6 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
 
         list<Address__c> addressesToVerify = new list<Address__c>();
 
-        // batch needs to accept accounts, contacts, or leads
-        Schema.sObjectType objType = scope[0].getSObjectType();
         for (Address__c a : scope) {
             if (isUS(a)) addressesToVerify.add(a); 
         }
@@ -66,7 +64,6 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     
     public void finish(Database.BatchableContext BC) {}
     
-    // Method to run this batch process on all three objects
     public static list<Id> verifyAllAddresses() { return verifyAllAddresses( true ); }
     
     public static list<Id> verifyAllAddresses( Boolean skipPreviouslyVerified ) {

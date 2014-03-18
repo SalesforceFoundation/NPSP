@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2014
 * @description Class that gets called when Address__c records change and
-* begins the address verification/normalization
+* begins the address verification/normalization.
 */
 public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
@@ -40,8 +40,6 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
         
-        DmlWrapper wrapper = new DmlWrapper();
-        
         if(!alreadyRun) {
 	        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getInstance();
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
@@ -49,6 +47,6 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	        }
         }
         alreadyRun = true;
-        return wrapper;
+        return new DmlWrapper();
     }
 }

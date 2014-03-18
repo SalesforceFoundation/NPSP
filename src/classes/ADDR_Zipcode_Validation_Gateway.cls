@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Base class that talks to the Zipcode verification API
+* @description Base class that talks to the Zipcode verification API.
  */
 public with sharing class ADDR_Zipcode_Validation_Gateway {
 
