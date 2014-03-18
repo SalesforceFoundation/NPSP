@@ -198,7 +198,7 @@ public with sharing class ADDR_Validator {
             }
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
-                    av.API_Response__c = 'Zip not found.';
+                    av.API_Response__c = Label.Zip_Not_Found;
                 }
             }
         } catch (Exception ex) {
