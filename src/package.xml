@@ -11,7 +11,15 @@
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
     <members>ADDR_Contact_TDTM</members>
+    <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
+    <members>ADDR_Validation_Gateway</members>
+    <members>ADDR_Validation_Gateway_TEST</members>
+    <members>ADDR_Validator</members>
+    <members>ADDR_Validator_Batch</members>
+    <members>ADDR_Validator_TDTM</members>
+    <members>ADDR_Validator_TEST</members>
+    <members>ADDR_Zipcode_Validation_Gateway</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -91,6 +99,7 @@
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
     <members>STG_Panel</members>
+    <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
@@ -162,6 +171,7 @@
     <members>RD_AddDonationsBTN</members>
     <members>REL_RelationshipsViewer</members>
     <members>RLLP_OppRollup</members>
+    <members>STG_PanelAddrVerification</members>
     <members>STG_PanelAffiliations</members>
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
@@ -213,7 +223,17 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Address_Authentication_Settings__c.Auth_ID__c</members>
+    <members>Address_Authentication_Settings__c.Auth_Token__c</members>
+    <members>Address_Authentication_Settings__c.HTML_Key__c</members>
+    <members>Address_Authentication_Settings__c.Timeout__c</members>
+    <members>Address_Verification_Settings__c.Auto_Update_Addresses__c</members>
+    <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
+    <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+    <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
+    <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>
+    <members>Address__c.Ambiguous__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
     <members>Address__c.Household_Account__c</members>
@@ -228,6 +248,7 @@
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
+    <members>Address__c.Verified__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -418,6 +439,7 @@
     <members>stgLinkDelete</members>
     <members>stgNPSPSettingsTitle</members>
     <members>stgNavAccountModel</members>
+    <members>stgNavAddressVerification</members>
     <members>stgNavAffiliations</members>
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
@@ -450,6 +472,8 @@
   </types>
   <types>
     <members>Account</members>
+    <members>Address_Authentication_Settings__c</members>
+    <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
