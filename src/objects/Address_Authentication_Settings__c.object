@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Credentials for the SmartyStreets address verification/normalization integration.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Auth_ID__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>LiveAddress API Auth ID - get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>Auth ID</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Auth_Token__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>LiveAddress API Auth Token (unencoded) - get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>Auth Token</label>
+        <length>200</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HTML_Key__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>LiveAddress API numeric HTML Auth Key (depends on matching domain) - get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>HTML Key</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Timeout__c</fullName>
+        <defaultValue>5</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Callout timeout in seconds</inlineHelpText>
+        <label>Timeout</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Address Authentication Settings</label>
+</CustomObject>

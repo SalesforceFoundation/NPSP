@@ -102,21 +102,26 @@ public with sharing class TDTM_DefaultConfig {
               Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
               Trigger_Action__c = 'BeforeInsert;AfterInsert'));
           
-        //Addresses on Address object
+        //Addresses on Address object - copies address from Address__c to Contact and Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Addresses_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
                     
-        //Addresses on Contact object
+        //Addresses on Contact object - creates Address__c record from Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Contact_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
         
-        //Addresses on Account object
+        //Addresses on Account object - creates Address__c record from Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Account_TDTM', Load_Order__c = 1, Object__c = 'Account', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
         
+        //Address Verification/Normalization on Address object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
         return handlers;
     }
     
