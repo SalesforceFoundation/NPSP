@@ -162,11 +162,36 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     <!-- Deploys the latest managed beta (UAT) release to an org -->
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployManagedUAT">
-      <!-- Get the latest beta release tag name -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
-      <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
-      <delete file="${basedir}/managed_uat_tag" />
+      <property environment="env" />
 
+      <echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
+      <if>
+        <and>
+          <isset property="env.BUILD_COMMIT" />
+          <not><equals arg1="env.BUILD_COMMIT" arg2="" /></not>
+          <isset property="env.PACKAGE_VERSION" />
+          <not><equals arg1="env.PACKAGE_VERSION" arg2="" /></not>
+        </and>
+        <then>
+          <!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
+          <property name="managed_uat_tag" value="${env.BUILD_COMMIT}" />
+          <property name="version.npsp.uat" value="${env.PACKAGE_VERSION}" />
+          <echo>Building with environment variables: BUILD_COMMIT=${managed_uat_tag}, PACKAGE_VERSION=${version.npsp.uat}</echo>
+        </then>
+        <else>
+          <!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
+          <!-- Get the latest beta release tag name -->
+          <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+          <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
+          <delete file="${basedir}/managed_uat_tag" />
+
+          <!-- Get the latest beta release version number -->
+          <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
+          <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
+          <delete file="${basedir}/version_uat" />
+        </else>
+      </if>
+      
       <!-- Fetch the version.properties file for the release from GitHub -->
       <get src="https://raw.github.com/SalesforceFoundation/Cumulus/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
 
@@ -179,11 +204,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <loadproperties srcFile="${basedir}/version.properties.uat"/>
       <delete file="${basedir}/version.properties.uat" />
 
-      <!-- Get the latest beta release version number -->
-      <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
-      <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
       <var name="version.npsp" value="${version.npsp.uat}" />
-      <delete file="${basedir}/version_uat" />
 
       <getPackageVersions />
 
@@ -235,8 +256,10 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <retrievePackaged dir="uninstallsrc" package="Cumulus" />
       <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
+<!--
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
+-->
     </target>
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
