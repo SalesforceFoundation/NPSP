@@ -256,10 +256,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <retrievePackaged dir="uninstallsrc" package="Cumulus" />
       <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
-<!--
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
--->
     </target>
 
     <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
