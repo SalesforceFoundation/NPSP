@@ -783,6 +783,7 @@ global with sharing class HH_ManageHousehold_EXT {
                     con.MailingState = activeState;
                     con.MailingPostalCode = activePostalCode;
                     con.MailingCountry = activeCountry;
+                    con.Current_Address__c = null;
                 }
             }
             insert insertContacts;
@@ -800,6 +801,7 @@ global with sharing class HH_ManageHousehold_EXT {
                     con.MailingState = activeState;
                     con.MailingPostalCode = activePostalCode;
                     con.MailingCountry = activeCountry;
+                    con.Current_Address__c = null;
                 }
                 
                 // Set household on contacts
