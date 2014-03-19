@@ -8,10 +8,6 @@
             <h3 class="sectionBar" >{!$Label.stgLabelOppRollups}</h3>
             <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Opp_Rollup_Triggers__c.Label}" for="cbxEORT" />
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Enable_Opp_Rollup_Triggers__c}" disabled="{!isReadOnlyMode}" id="cbxEORT" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupOppsTrigger}" />
-
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" />
                 <apex:inputcheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" disabled="{!isReadOnlyMode}" id="cbxARPC" />
                 <apex:outputLabel value="{!$Label.stgHelpRollupPrimaryContact}" />
