@@ -211,7 +211,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // get all Contacts by HH, that might need updating
         map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
-        list<Contact> listCon = [select Id, Address_Override__c, AccountId from Contact where AccountId in :mapAccIdAddr.keySet()];
+        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId from Contact where AccountId in :mapAccIdAddr.keySet()];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
@@ -258,13 +258,14 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // check the Contacts on this household
             for (Contact con : mapAccIdListCon.get(accId)) {
-                if (con.Address_Override__c == null || con.Address_Override__c == addr.Id) {
+                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
                     con.MailingStreet = addr.MailingStreet__c;
                     con.MailingCity = addr.MailingCity__c;
                     con.MailingState = addr.MailingState__c;
                     con.MailingPostalCode = addr.MailingPostalCode__c;
                     con.MailingCountry = addr.MailingCountry__c;
                     con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+                    con.Current_Address__c = addr.Id;
                     listConUpdate.add(con);
                 }   
             }
@@ -301,9 +302,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
     // for the map of addresses, update any contact's mailing fields that are using the address as an override.
     private void updateAddrOverrides(map<Id, Address__c> mapAddrIdAddr, DmlWrapper dmlWrapper) {    	
-    	list<Contact> listCon = [select Id, Address_Override__c from Contact where Address_Override__c in :mapAddrIdAddr.keyset()];
+    	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
-    		Address__c addr = mapAddrIdAddr.get(con.Address_Override__c);
+    		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             con.MailingStreet = addr.MailingStreet__c;
             con.MailingCity = addr.MailingCity__c;
             con.MailingState = addr.MailingState__c;

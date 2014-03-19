@@ -229,11 +229,13 @@ public with sharing class HH_ManageHHAccount_TEST {
             ext = HH_ManageHousehold_EXT.unpackState(nwSt);
         }
         
+        // since contacts create HH Default addresses on contact insert, this is no longer valid
         //ensure that the active address has changed
-        system.assertNotEquals(oldactiveaddr, ext.activeAddressKey);
+        //system.assertNotEquals(oldactiveaddr, ext.activeAddressKey);
         
+        // since contacts create HH defaults addresses on contact insert, there will still be 2 viable addresses
         //check single address left
-        system.assertEquals(1, ext.viableAddresses.size());
+        system.assertEquals(2, ext.viableAddresses.size());
                 
         Test.stopTest();
     }

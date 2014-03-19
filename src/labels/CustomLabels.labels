@@ -753,20 +753,12 @@
         <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
     </labels>
     <labels>
-        <fullName>stgHelpRollupOppsTrigger</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpRollupOppsTrigger</shortDescription>
-        <value>Check this box to update Opportunity statistics whenever Opportunities are inserted or updated (as long as capacity allows). If unchecked, you should schedule regular Opportunity Rollups to keep your statistics up to date.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpRollupPrimaryContact</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupPrimaryContact</shortDescription>
-        <value>Always rollup donor statistics to the primary contact, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
+        <value>Always rollup donor statistics to the primary Contact Role, and corresponding household, on an opportunity, even if the opportunity is not from an individual (i.e. from a company, foundation, etc.)</value>
     </labels>
     <labels>
         <fullName>stgHelpSoftCreditRoles</fullName>

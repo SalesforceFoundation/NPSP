@@ -696,7 +696,7 @@ gwManageHH.renderMembers = function() {
 		
 		// Check to see if the address is different from the active address
         var ct = gwManageHH.state.activeContacts[cid];
-        if (ct.Address_Override__c != null) {
+        if (ct.is_Address_Override__c) {
             j$(this).find('.hhCard-details-address').addClass('gwAddressOverride');        
 		 } else if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true) {
 			j$(this).find('.hhCard-details-address').removeClass('gwModified');
@@ -883,7 +883,7 @@ gwManageHH.addressStringify = function(contact) {
 	
 	var address = new String();
 	
-	if (contact.Address_Override__c != null) {
+	if (contact.is_Address_Override__c) {
 	   address = 'using Address Override: <br/>';
 	}	
 	

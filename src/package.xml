@@ -255,10 +255,11 @@
     <members>Batch__c.Description__c</members>
     <members>Batch__c.Number_of_Items__c</members>
     <members>Batch__c.Object_Name__c</members>
-    <members>Contact.Address_Override__c</members>
     <members>Contact.Batch__c</members>
+    <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
+    <members>Contact.is_Address_Override__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -380,7 +381,6 @@
     <members>stgHelpRollupExcludeContactOppRT</members>
     <members>stgHelpRollupExcludeContactOppType</members>
     <members>stgHelpRollupNDayValue</members>
-    <members>stgHelpRollupOppsTrigger</members>
     <members>stgHelpRollupPrimaryContact</members>
     <members>stgHelpSoftCreditRoles</members>
     <members>stgHelpStoreErrorsOn</members>
@@ -528,7 +528,7 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Address__c.Contact_00NG000000DCNRfMAP</members>
+    <members>Address__c.Contact_00NG000000DDOnlMAH</members>
     <name>NamedFilter</name>
   </types>
   <types>
