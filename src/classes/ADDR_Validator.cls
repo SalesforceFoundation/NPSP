@@ -1,3 +1,38 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Class that asynchronously starts the address verification calls
+* and processes the results.
+*/
 public with sharing class ADDR_Validator {
 
     // store the current update set so we don't update recursively
@@ -12,8 +47,7 @@ public with sharing class ADDR_Validator {
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__C, MailingPostalCode__c, 
             Verified__c, API_Response__c
-            //Geolocation__Latitude__s, Geolocation__Longitude__s, Congressional_District__c, Date_Verified__c,
-            //County__c, Address_Field_Type__c, Carrier_Route__c 
+            //, Latitude__s, Longitude__s, Congressional_District__c, County__c  
             from Address__c where id in : recordIds];
 
         if (!avList.isEmpty()) {
@@ -86,6 +120,7 @@ public with sharing class ADDR_Validator {
                         av.MailingState__c = sr.components.state_abbreviation;
                         av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
                             ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
+                        av.MailingCountry__c = 'US';
                     } else {
                         // more than one candidate means should mark as ambiguous
                         System.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
@@ -98,7 +133,7 @@ public with sharing class ADDR_Validator {
             }
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
-                    av.API_Response__c = 'Address not found.';
+                    av.API_Response__c = Label.Address_Not_Found;
                 }
             }
         } catch (Exception ex) {
@@ -142,7 +177,6 @@ public with sharing class ADDR_Validator {
 	                    // if there is any response, serialize it and fill in location with first location value
 	                    } else if (sr.zipcodes != null) {
 	                    	System.debug('****No error. Populating raw response field.');
-	                        //av.MailingCountry__c = av.Original_Country__c;
 	                        av.API_Response__c = JSON.serializePretty( sr );
 	                        
 	                        // if there is at least one city/state, fill in city state
@@ -150,6 +184,7 @@ public with sharing class ADDR_Validator {
 	                        	System.debug('****Populating city and estate.');
 	                            av.MailingCity__c = sr.city_states[0].city;
 	                            av.MailingState__c = sr.city_states[0].state_abbreviation;
+	                            av.MailingCountry__c = 'US';
 	                        }
 	
 	                        // if there is exactly one zip, fill in zip
@@ -163,7 +198,7 @@ public with sharing class ADDR_Validator {
             }
             for (Address__c av : avList) {             
                 if (av.API_Response__c == null) {   
-                    av.API_Response__c = 'Zip not found.';
+                    av.API_Response__c = Label.Zip_Not_Found;
                 }
             }
         } catch (Exception ex) {
