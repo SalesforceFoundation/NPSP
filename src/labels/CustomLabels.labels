@@ -366,7 +366,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
-        <value>The ID of the Account Record Type to be used for Household Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+        <value>The Account Record Type to be used for Household Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
@@ -382,7 +382,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
-        <value>The report ID of the Household Mailing List Report used for Household-deduplicated Campaign mailing lists. Report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+        <value>The Household Mailing List Report used for Household-deduplicated Campaign mailing lists. The report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNaming</fullName>
@@ -486,7 +486,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
-        <value>The ID of the Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+        <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapOppField</fullName>
