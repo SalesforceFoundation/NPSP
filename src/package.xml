@@ -282,6 +282,25 @@
     <name>CustomField</name>
   </types>
   <types>
+    <members>Addr_Settings_API_Body</members>
+    <members>Addr_Settings_API_Title</members>
+    <members>Addr_Settings_Customization_Title</members>
+    <members>Addr_Settings_HTML_Key_Body</members>
+    <members>Addr_Settings_HTML_Key_Title</members>
+    <members>Addr_Settings_Intro_Body</members>
+    <members>Addr_Settings_Intro_Title</members>
+    <members>Addr_Settings_Key_Body</members>
+    <members>Addr_Settings_Key_Title</members>
+    <members>Addr_Settings_Test_Body</members>
+    <members>Addr_Settings_Test_Response_Title</members>
+    <members>Addr_Settings_Test_Title</members>
+    <members>Addr_Skip_Verified</members>
+    <members>Addr_Verification_Batch_Body</members>
+    <members>Addr_Verification_Batch_Status</members>
+    <members>Addr_Verification_Batch_Title</members>
+    <members>Address_Not_Found</members>
+    <members>Address_Verification_Limit</members>
+    <members>Zip_Not_Found</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
     <members>labelListViewFirst</members>
