@@ -1,11 +1,5 @@
 <apex:page controller="STG_PanelADDRVerification_CTRL">
 
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script type="text/javascript" src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/2.4/jquery.liveaddress.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-	<!-- <apex:includeScript value="{!URLFOR($Resource.LiveAddress, 'js/jquery.validate.min.js')}" /> -->
-
 	<script>
         var j$ = jQuery.noConflict();
        j$(document).ready(function() {
