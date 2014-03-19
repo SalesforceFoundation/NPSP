@@ -292,7 +292,7 @@ private class HH_OppContactRoles_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
-                npe01__Account_Processor__c = 'One-to-One'));
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c ( 

@@ -135,10 +135,10 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelContacts() {
         STG_PanelContacts_CTRL panel = new STG_PanelContacts_CTRL();
         system.assertEquals('idPanelCon', panel.idPanel());
-        STG_Panel.stgService.stgCon.npe01__Account_Processor__c = 'HH Account';
+        STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         panel.saveSettings();
-        system.assertEquals('HH Account', npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Account_Processor__c);
-        STG_Panel.stgService.stgCon.npe01__Account_Processor__c = 'One-to-One';
+        system.assertEquals('Household Account', npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Account_Processor__c);
+        STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         panel.saveSettings();
         system.assertEquals('One-to-One', npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Account_Processor__c);
     }

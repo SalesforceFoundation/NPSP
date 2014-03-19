@@ -46,9 +46,9 @@ public with sharing class CAO_Constants {
     public static  String BUCKET_ACCOUNT_NAME = 'Individual';
 
     //HH_Account value for system processor field
-    public static final String HH_ACCOUNT_PROCESSOR = 'HH Account';
+    public static final String HH_ACCOUNT_PROCESSOR = 'Household Account';
     //HH_Account type value
-    public static final String HH_ACCOUNT_TYPE = 'HH Account';
+    public static final String HH_ACCOUNT_TYPE = 'Household Account';
 
     public static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
 
