@@ -50,7 +50,6 @@ public without sharing class RLLP_OppRollup{
         //opp ids for Account querying
         set<id> accountRequerySet = new set<id>();        
         
-        if (RLLP_OppRollup_UTIL.hh_settings.npo02__Enable_Opp_Rollup_Triggers__c){
             //delete or insert            
             if (newOpps == null || oldOpps == null){
                 for (id oid : (newOpps == null ? oldOpps.keySet() : newOpps.keySet())){
@@ -81,7 +80,6 @@ public without sharing class RLLP_OppRollup{
                    }    
                 }
             }
-        }            
             
         if (!accountRequerySet.isEmpty()){
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 

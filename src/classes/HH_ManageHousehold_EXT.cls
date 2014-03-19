@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, Address_Override__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
+    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -783,6 +783,7 @@ global with sharing class HH_ManageHousehold_EXT {
                     con.MailingState = activeState;
                     con.MailingPostalCode = activePostalCode;
                     con.MailingCountry = activeCountry;
+                    con.Current_Address__c = null;
                 }
             }
             insert insertContacts;
@@ -794,12 +795,13 @@ global with sharing class HH_ManageHousehold_EXT {
             for (Contact con : activeContacts.values()) {
                 
                 // Set Addresses on active Contacts
-                if (useAddress == true && con.Address_Override__c == null) {
+                if (useAddress == true && con.is_Address_Override__c == false) {
                     con.MailingStreet = activeStreet;
                     con.MailingCity = activeCity;
                     con.MailingState = activeState;
                     con.MailingPostalCode = activePostalCode;
                     con.MailingCountry = activeCountry;
+                    con.Current_Address__c = null;
                 }
                 
                 // Set household on contacts
