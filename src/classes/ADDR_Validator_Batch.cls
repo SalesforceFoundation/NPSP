@@ -1,9 +1,40 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 /**
-* Batch class for address verification
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Batch class for address verification.
 *
-* Batch process looks for all populated addresses and then updates them if the setting is turned on to do that
+* Batch process looks for all populated addresses and then updates them if the setting is turned on to do that.
 *
-* If skipPreviouslyVerified is true, the batch skips over objects that already have any verification records
+* If skipPreviouslyVerified is true, the batch skips over objects that already have any verification records.
 */
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
@@ -21,8 +52,6 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
 
         list<Address__c> addressesToVerify = new list<Address__c>();
 
-        // batch needs to accept accounts, contacts, or leads
-        Schema.sObjectType objType = scope[0].getSObjectType();
         for (Address__c a : scope) {
             if (isUS(a)) addressesToVerify.add(a); 
         }
@@ -35,7 +64,6 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     
     public void finish(Database.BatchableContext BC) {}
     
-    // Method to run this batch process on all three objects
     public static list<Id> verifyAllAddresses() { return verifyAllAddresses( true ); }
     
     public static list<Id> verifyAllAddresses( Boolean skipPreviouslyVerified ) {
