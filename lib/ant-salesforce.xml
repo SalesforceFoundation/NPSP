@@ -447,6 +447,7 @@
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="ListView" element="listViews" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="NamedFilter" element="namedFilters" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="RecordType" element="recordTypes" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="WebLink" element="webLinks" />
 
       <move file="${basedir}/src/package.xml.new" tofile="${basedir}/src/package.xml" />
     </sequential>
@@ -571,6 +572,7 @@
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="WebLink" element="webLinks" />
 
     </sequential>
   </macrodef>
@@ -628,6 +630,7 @@
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="WebLink" element="webLinks" />
 
     </sequential>
 
