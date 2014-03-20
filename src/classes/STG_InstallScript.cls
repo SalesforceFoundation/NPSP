@@ -38,7 +38,7 @@ global class STG_InstallScript implements InstallHandler {
                     Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
         }
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
