@@ -99,6 +99,30 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Congressional_District__c</fullName>
+        <description>The congressional district to which the address belongs pertains.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The congressional district to which the address belongs pertains.</inlineHelpText>
+        <label>Congressional District</label>
+        <length>12</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>County_Name__c</fullName>
+        <description>Name of the county the address is located at.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Name of the county the address is located at.</inlineHelpText>
+        <label>County Name</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Default_Address__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
@@ -119,6 +143,18 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Geolocation__c</fullName>
+        <description>Location expressed as latitude and longitude.</description>
+        <displayLocationInDecimal>true</displayLocationInDecimal>
+        <externalId>false</externalId>
+        <inlineHelpText>Location expressed as latitude and longitude.</inlineHelpText>
+        <label>Geolocation</label>
+        <required>false</required>
+        <scale>6</scale>
+        <trackTrending>false</trackTrending>
+        <type>Location</type>
     </fields>
     <fields>
         <fullName>Household_Account__c</fullName>

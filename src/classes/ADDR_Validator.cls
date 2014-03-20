@@ -45,10 +45,9 @@ public with sharing class ADDR_Validator {
         System.debug('****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
-            MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__C, MailingPostalCode__c, 
-            Verified__c, API_Response__c
-            //, Latitude__s, Longitude__s, Congressional_District__c, County__c  
-            from Address__c where id in : recordIds];
+            MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
+            Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
+            Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
 
         if (!avList.isEmpty()) {
             System.debug('****Verifying records');
@@ -121,6 +120,10 @@ public with sharing class ADDR_Validator {
                         av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
                             ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
                         av.MailingCountry__c = 'US';
+                        av.Geolocation__Latitude__s = sr.metadata.latitude;
+                        av.Geolocation__Longitude__s = sr.metadata.longitude;
+                        av.County_Name__c = sr.metadata.county_name;
+                        av.Congressional_District__c = sr.metadata.congressional_district;
                     } else {
                         // more than one candidate means should mark as ambiguous
                         System.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
