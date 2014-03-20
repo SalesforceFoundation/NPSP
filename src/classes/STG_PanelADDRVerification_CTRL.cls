@@ -87,7 +87,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
     public PageReference bulkVerify() {
         list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses( skipPreviouslyVerifiedObjects );
         nowVerifying = true;
-        bulkVerifyMessage = 'Verifying addresses. ' + JSON.serialize( apexJobIds );
+        bulkVerifyMessage = 'Verifying addresses.';
         return null;
     }
 }
