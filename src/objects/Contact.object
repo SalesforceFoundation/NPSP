@@ -124,7 +124,7 @@
     <fields>
         <fullName>HHId__c</fullName>
         <externalId>false</externalId>
-        <formula>CASESAFEID(if ( Account.npe01__SYSTEM_AccountType__c ==&apos;HH Account&apos;,  AccountId,  npo02__Household__c ))</formula>
+        <formula>if(Account.npe01__SYSTEM_AccountType__c==&apos;Household Account&apos;,CASESAFEID(AccountId),CASESAFEID(npo02__Household__c))</formula>
         <inlineHelpText>holds the ID of the current household, whether it is a Household Account, or a Household Object.</inlineHelpText>
         <label>HHId</label>
         <required>false</required>

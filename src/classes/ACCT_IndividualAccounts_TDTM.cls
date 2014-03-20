@@ -579,7 +579,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             //delete accountsForDeletion;
         }
         // update any HH accounts that just lost a contact
-        updateHHAccount(listAccountIdUpdate, dmlWrapper);        
+        if (listAccountIdUpdate.size() > 0)
+            updateHHAccount(listAccountIdUpdate, dmlWrapper);        
     }
 
     // contact's owner has changed.  consider updating related account owner.

@@ -57,9 +57,9 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOAccountModels == null) {
                 listSOAccountModels = new list<SelectOption>();
-                listSOAccountModels.add(new SelectOption('HH Account', 'HH Account'));
-                listSOAccountModels.add(new SelectOption('One-to-One', 'One-to-One'));
-                listSOAccountModels.add(new SelectOption('Individual', 'Individual'));
+                listSOAccountModels.add(new SelectOption(CAO_Constants.HH_ACCOUNT_PROCESSOR, CAO_Constants.HH_ACCOUNT_PROCESSOR));
+                listSOAccountModels.add(new SelectOption(CAO_Constants.ONE_TO_ONE_PROCESSOR, CAO_Constants.ONE_TO_ONE_PROCESSOR));
+                listSOAccountModels.add(new SelectOption(CAO_Constants.BUCKET_PROCESSOR, CAO_Constants.BUCKET_PROCESSOR));
             }
             return listSOAccountModels;
         }

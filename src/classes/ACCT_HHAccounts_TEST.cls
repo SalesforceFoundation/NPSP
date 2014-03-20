@@ -71,7 +71,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             if (acc.npe01__One2OneContact__c == listCon[1].Id) {
             	system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
@@ -128,7 +128,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // single contact
             if (acc.Id == listCon[4].AccountId) {
@@ -204,7 +204,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // single contact
             if (acc.Id == listCon[4].AccountId) {
@@ -272,7 +272,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             if (acc.npe01__One2OneContact__c == listCon[1].Id) {
                 system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
@@ -339,7 +339,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // single contact
             if (acc.Id == listCon[4].AccountId) {
@@ -420,7 +420,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // 2 contacts, same lastname
             if (acc.Id == listCon[1].AccountId) {
@@ -505,7 +505,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Account acc = listAcc[0];
         system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-        system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+        system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
         system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
         system.assertEquals(listCon[0].Id, acc.npe01__One2OneContact__c);
         system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
@@ -588,7 +588,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
@@ -667,7 +667,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, acc.npe01__SYSTEM_AccountType__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             if (acc.npe01__One2OneContact__c == listCon[1].Id) {
                 system.assertEquals(listCon[1].LastName + ' Household', acc.Name);

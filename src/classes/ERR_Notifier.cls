@@ -36,21 +36,21 @@ public with sharing class ERR_Notifier {
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             sendErrorQueueEmailNotificationFuture(sendList);
         } else if (system.isFuture()) {
-            sendErrorQueueEmailNotification(sendList);
+            sendErrorQueueEmailNotification(context, sendList);
         }
     }
     
     @future
     private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
-    	sendErrorQueueEmailNotification(sendList); 
+    	sendErrorQueueEmailNotification(null, sendList); 
     }
     
-    private static void sendErrorQueueEmailNotification(List<String> sendList) {
+    private static void sendErrorQueueEmailNotification(ERR_Handler.Context context, List<String> sendList) {
         List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
                                         Stack_Trace__c from Error__c where Email_Sent__c = false];
         
         if (!errors.isEmpty()) {
-            Messaging.SingleEmailMessage sme = createEmailMessage(errors, sendList);
+            Messaging.SingleEmailMessage sme = createEmailMessage(context, errors, sendList);
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
             for(Error__c error : errors)
                 error.Email_Sent__c = true;
@@ -58,13 +58,14 @@ public with sharing class ERR_Notifier {
         update errors;
     } 
 
-    private static Messaging.SingleEmailMessage createEmailMessage(List<Error__c> rdeqList, List<String> sendList) {
+    private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> rdeqList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setSenderDisplayName('Salesforce NPSP');
         mail.setSubject('Salesforce Errors');
         string bodyString = '';
-        bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
+        if (context == ERR_Handler.Context.RD)
+            bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
         Integer i = 1;
         for (Error__c rdeq : rdeqlist){
