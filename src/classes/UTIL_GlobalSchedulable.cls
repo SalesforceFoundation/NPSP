@@ -37,10 +37,6 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
     
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
-    public Interface iScheduled {
-        void execute(SchedulableContext context);
-    }
-    
     public static void execute(SchedulableContext context) {
         
         List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
@@ -70,9 +66,9 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
             
             if(classType != null && shouldRun) {     
                Object instance = classType.newInstance();
-               if(instance instanceof iScheduled)
+               if(instance instanceof UTIL_IScheduled)
                    try {
-                       ((iScheduled)instance).execute(context);
+                       ((UTIL_IScheduled)instance).execute(context);
                        //Update last time run
                        job.Last_Time_Run__c = System.now();
                        jobsToUpdate.add(job);

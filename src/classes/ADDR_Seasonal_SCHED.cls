@@ -32,11 +32,10 @@
 * @date 2014
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
-public with sharing class ADDR_Seasonal_SCHED implements UTIL_GlobalSchedulable.iScheduled, Database.Batchable<SObject>  {
+public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Database.Batchable<SObject>  {
 
     public String strQuery { get; set; }
 
-    //***** Method for iScheduled interface *****
     public void execute(SchedulableContext SC) { 
     	
     	integer iMonth = system.today().month();
