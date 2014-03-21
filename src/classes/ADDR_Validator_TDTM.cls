@@ -38,7 +38,7 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	private static Boolean alreadyRun = false;
 	
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
         
         if(!alreadyRun) {
 	        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getInstance();

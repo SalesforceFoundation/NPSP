@@ -32,7 +32,7 @@
 * @date 2011 (2.0)
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
-public without sharing class HH_Households_TDTM extends TDTM_Runnable { 
+public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
     /// <name> HH_Households_TDTM </name>
     /// <summary> Overloads the HH_Households_TDTM object constructor to handle Household processing </summary>
@@ -41,7 +41,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     /// <param name="ta"> Trigger action that is occuring </param>
   	
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         list<Contact> contacts = newlist;
         list<Contact> oldContacts = oldlist;
@@ -49,7 +49,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         // this code assumed newlist was filled in for AfterDelete, rather than oldlist
         // rather than change the code to require two seperate contact loops, just
         // continue the strategy.
-        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterDelete) {
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
         	contacts = oldlist;
         	oldContacts = null;
         }
@@ -77,7 +77,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
      
         //if its an update, we need to get some data about their
         //old Household for processing
-        if (triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate){
+        if (triggerAction==TDTM_Runnable.Action.AfterUpdate){
             
             for (Contact c : Contacts){
                 
@@ -109,7 +109,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
             //since we don't have the contact's household ids until after the insert
             //we'll check the trigger action again there to make sure it doesn't run twice
-            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert )
+            if ( triggerAction==TDTM_Runnable.Action.AfterInsert )
             {
                 //If the user has chosen for all Contacts to have households, add them all to the list
                 //for Household creation
@@ -124,7 +124,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             }
 
             //AFTER UPDATE
-            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate )
+            if ( triggerAction==TDTM_Runnable.Action.AfterUpdate )
             {            
                 //if we're doing an update, pile up all of the households into a list
                 //and send it to our naming code for action
@@ -160,7 +160,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     householdnameupdates.add(c.npo02__household__c);
             }
             
-            if ( triggerAction==TDTM_TriggerActionHelper.Action.AfterDelete ){
+            if ( triggerAction==TDTM_Runnable.Action.AfterDelete ){
                 if (c.npo02__household__c != null )
                     householdDeletes.add(c);
             
@@ -181,14 +181,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToDelete.addAll(blankHHDeletes);
         }
         
-        if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
+        if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
             insertHousehold(householdInserts, true, dmlWrapper);
-        else if (householdInserts.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
+        else if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
             insertHousehold(householdInserts, false, dmlWrapper);
         
-        if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterInsert)        
+        if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
             evaluateContacts(contactEvaluations, true, dmlWrapper);
-        else if (contactEvaluations.size() > 0 && triggerAction==TDTM_TriggerActionHelper.Action.AfterUpdate)
+        else if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
             evaluateContacts(contactEvaluations, false, dmlWrapper);
         
         if (householdDeletes.size() > 0)        

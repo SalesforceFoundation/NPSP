@@ -37,7 +37,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     // trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
     // needs to see if the Opp is changing to closed, and if it has open RD's, update them.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
         map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>(); 
@@ -48,7 +48,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         if (RD_ProcessControl.hasRun) 
             return null;
             
-        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
         	set<Id> setRDId = new set<Id>();
         	for (SObject s : newlist) 
         	   setRDId.add(s.Id);
@@ -56,12 +56,12 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         	// since we recreate newlist, we can't assume it is same order as oldlist.
         	// luckily we don't need oldlist for the AfterInsert scenario.
         	oldlist = null; 
-        } else if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeDelete) {
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
         	// newlist will be null.  copy over oldlist, so we can use common loop below.
         	newlist = oldlist;
         }
 
-        if (triggerAction != TDTM_TriggerActionHelper.Action.BeforeInsert)
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert)
             RD_ProcessControl.hasRun = true;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -71,18 +71,18 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         for (SObject sobj : newlist) {
             npe03__Recurring_Donation__c r = (npe03__Recurring_Donation__c)sobj;                   
 
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 if (r.npe03__Organization__c == null && r.npe03__Contact__c == null) {
                     r.addError(system.label.npe03.RecurringDonationMissingDataError);
                 }
                 if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c) {
                     r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
                 }            
-            } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+            } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 mapIdRDInserts.put(r.id, r);
-            } else if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeDelete) {
+            } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
                 listRDDeletes.add(r);
-            } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 listRDUpdates.add(r);
             }            
         }

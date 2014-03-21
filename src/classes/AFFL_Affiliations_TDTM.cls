@@ -35,7 +35,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         // dispatch to the correct handler
     	if (objResult == Schema.Sobjecttype.Contact && !hasRunForContacts) {
@@ -53,7 +53,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         		
     // the trigger handler on Contact for managing Affiliations        
     private DmlWrapper runContactTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
@@ -74,7 +74,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             	Contact contact = (Contact)so;
 
                 // AFTER INSERT
-                if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+                if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
 
                     if (contact.AccountId != null) {
                     	string strComboKey = strComboKeyFromContactIdAccountId(contact.Id, contact.AccountId);
@@ -94,7 +94,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 }
 
 	            // AFTER UPDATE
-	            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {	            
+	            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {	            
                     listContactId.add(contact.Id);
                     Contact oldContact = (Contact) oldlist[i];
                     
@@ -280,7 +280,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     
     // the trigger handler on Affiliation for managing Affiliations        
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         DmlWrapper dmlWrapper = new DmlWrapper();
         
@@ -292,14 +292,14 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             npe5__Affiliation__c affl = (npe5__Affiliation__c)so;
 
             // AFTER INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 if (affl.npe5__Primary__c && affl.npe5__Contact__c != null && affl.npe5__Organization__c != null) {
                 	mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
                 }        
             }
             
             // AFTER UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 npe5__Affiliation__c afflOld = (npe5__Affiliation__c)oldlist[i];
                 if (affl.npe5__Primary__c != afflOld.npe5__Primary__c) {
                     if (affl.npe5__Primary__c)    

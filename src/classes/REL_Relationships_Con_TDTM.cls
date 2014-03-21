@@ -34,7 +34,7 @@
 public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
 	
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //Casting them to contacts, since this class should be run only for contacts
         List<Contact> newListCasted = (newList == null ? new List<Contact>(): (List<Contact>)newList);
@@ -60,12 +60,12 @@ public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
                             c.addError(system.Label.npe4.AutoCreateFieldError);
                         }    
                         
-                        if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
+                        if(triggerAction == TDTM_Runnable.Action.afterInsert && relatedContactId != null) {                        
                             ContactIds.add(c.Id);
                             ReciprocalIds.add(relatedContactId);
                             Types.add(rac.npe4__Relationship_Type__c);
                         }
-                        else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
+                        else if (triggerAction == TDTM_Runnable.Action.afterUpdate && relatedContactId != null 
                         && relatedContactId != oldMap.get(c.id).get(rac.npe4__Field__c)){
                             ContactIds.add(c.Id);
                             ReciprocalIds.add(relatedContactId);
@@ -76,7 +76,7 @@ public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
             }
         }
         
-        if(triggerAction == TDTM_TriggerActionHelper.Action.afterDelete) {
+        if(triggerAction == TDTM_Runnable.Action.afterDelete) {
             DmlWrapper w = deleteEmptyRelationships();
             dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
         }

@@ -43,7 +43,7 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
     	return false;
     }
     
-    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_TriggerActionHelper.Action action) {   
+    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
         ToRunOnObjectAction toRun = objectActionQueried(objectName, action);
         if(toRun != null) {
         	return toRun.classesToCall;
@@ -57,7 +57,7 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
         }
     }
     
-    private static ToRunOnObjectAction objectActionQueried(String objectName, TDTM_TriggerActionHelper.Action action) {
+    private static ToRunOnObjectAction objectActionQueried(String objectName, TDTM_Runnable.Action action) {
     	for(ToRunOnObjectAction toRun : classesQueried) {
     		if(toRun.objectName == objectName && toRun.action == action) {
     		  return toRun;
@@ -68,10 +68,10 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
     
     private class ToRunOnObjectAction {
     	private String objectName;
-    	private TDTM_TriggerActionHelper.Action action;
+    	private TDTM_Runnable.Action action;
     	private List<SObject> classesToCall;
     	
-    	ToRunOnObjectAction(String objectName, TDTM_TriggerActionHelper.Action action, List<SObject> classesToCall) {
+    	ToRunOnObjectAction(String objectName, TDTM_Runnable.Action action, List<SObject> classesToCall) {
     		this.objectName = objectName;
     		this.action = action;
     		this.classesToCall = classesToCall;
