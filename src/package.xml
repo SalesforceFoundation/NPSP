@@ -11,12 +11,14 @@
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
     <members>ADDR_Contact_TDTM</members>
+    <members>ADDR_IValidator</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
     <members>ADDR_Validation_Gateway</members>
     <members>ADDR_Validation_Gateway_TEST</members>
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
+    <members>ADDR_Validator_SmartyStreets</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>ADDR_Zipcode_Validation_Gateway</members>
@@ -132,6 +134,7 @@
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
     <members>UTIL_GlobalSchedulable_TEST</members>
+    <members>UTIL_IScheduled</members>
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
