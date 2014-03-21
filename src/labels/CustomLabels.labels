@@ -604,7 +604,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHRules</shortDescription>
-        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.</value>
+        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.  If your Account Model is set to &quot;Household Account&quot;, this setting will always be reset to &quot;No Contacts&quot;.</value>
     </labels>
     <labels>
         <fullName>stgHelpLeadConvert</fullName>

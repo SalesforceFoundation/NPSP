@@ -572,7 +572,7 @@
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
-      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="WebLink" element="webLinks" />
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="Weblink" element="webLinks" />
 
     </sequential>
   </macrodef>
@@ -630,7 +630,7 @@
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
-      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="WebLink" element="webLinks" />
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="Weblink" element="webLinks" />
 
     </sequential>
 
