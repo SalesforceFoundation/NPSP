@@ -32,12 +32,12 @@
 * @date 2012 
 * @description Controller for Relationships viewer VF page 
 */
-public with sharing class REL_RelationshipsViewer_CTRL{
-    
-    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller){}
+global with sharing class REL_RelationshipsViewer_CTRL{
+	
+    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {}
     
     @RemoteAction
-    public static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
+    global static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
         list<Node> returnList = new list<Node>();
         list<npe4__Relationship__c> relationshipList = new list<npe4__Relationship__c>();
         
@@ -89,11 +89,11 @@ public with sharing class REL_RelationshipsViewer_CTRL{
         
     //get Relationship object prefix for links
     @RemoteAction
-    public static RelationshipInfo getRelationshipInfo(){
+    global static RelationshipInfo getRelationshipInfo(){
         return new RelationshipInfo();
     }
     
-    public class RelationshipInfo{
+    global class RelationshipInfo{
         String prefix;
         String NameField;
         String NameIdField;
@@ -110,7 +110,7 @@ public with sharing class REL_RelationshipsViewer_CTRL{
         }       
     }
 
-    public class Node { 
+    global class Node { 
         public String FirstName;
         public String LastName;
         public String id;              

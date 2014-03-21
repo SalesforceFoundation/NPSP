@@ -6,7 +6,7 @@
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor-tween.js')}"/> 
     <body>
-        <canvas id="viewport" width="1000" height="600"></canvas>
+        <canvas id="viewport" width="1000" height="600"></canvas>  
         <script> 
             var j$ = jQuery.noConflict();
             /*
@@ -259,9 +259,8 @@
                }
                return that;
             }    
-
+ 
             j$(document).ready(function(){
-                
                 //The initial call to the controller
                 Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}','{!id}', true, null, function(result, event){
                     if (event.status){
@@ -403,7 +402,7 @@
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
             infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ Create New Relationship ]</a><br />';
-            infoText += '<a href=/apex/RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ Re-Center on This Contact ]</a><br />';
+            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ Re-Center on This Contact ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
         }   
