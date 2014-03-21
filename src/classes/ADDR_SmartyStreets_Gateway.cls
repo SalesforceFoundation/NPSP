@@ -30,27 +30,27 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Base class that talks to the address verification API.
+* @description Class that talks to the SmartyStreets address verification API.
  */
-public with sharing class ADDR_Validation_Gateway {
-
-    Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getInstance();
+public with sharing class ADDR_SmartyStreets_Gateway {
+	
+	Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getInstance();
     String baseUrl = 'https://api.smartystreets.com/street-address';
     String auth;
     
     public class LiveAddressException extends Exception {}
     
     // Constructor with auth id and token
-    public ADDR_Validation_Gateway( String authId, String authToken ) {
+    public ADDR_SmartyStreets_Gateway( String authId, String authToken ) {
         auth = '?auth-id=' + authId + '&auth-token=' + EncodingUtil.URLEncode(authToken, 'UTF-8');
     }
 
     // Constructor with HTML Key only - works for a single domain
-    public ADDR_Validation_Gateway( String htmlKey ) {
+    public ADDR_SmartyStreets_Gateway( String htmlKey ) {
         auth = '?auth-token=' + htmlKey;
     }
 
-    public ADDR_Validation_Gateway() {
+    public ADDR_SmartyStreets_Gateway() {
         if (settings.auth_id__c != null && settings.auth_token__c != null)
             auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + EncodingUtil.URLEncode(settings.auth_token__c, 'UTF-8');
         else if (settings.html_key__c != null)
@@ -116,45 +116,45 @@ public with sharing class ADDR_Validation_Gateway {
     }
     
     public class Request {
-    	
-    	public String street;           // REQUIRED - Can be full address, or just first line
-	    public String street2;
-	    public String secondary;        // If used, usually contains apartment or suite number.
-	    public String city;
-	    public String state;
-	    public String urbanization;     // Only used with Puerto Rican addresses.
-	    public String zipcode;          
-	    public String addressee;        // The recipient's name or FirmName. Can also be the company.
-	    public Integer candidates = 1;  // The maximum number of valid addresses returned when the  
-	                                    //   input address is ambiguous (max = 10, default = 1).
-		
-		public Request() {}
-		
-	    public Request(String address) {
-	        street = address;
-	    }
+        
+        public String street;           // REQUIRED - Can be full address, or just first line
+        public String street2;
+        public String secondary;        // If used, usually contains apartment or suite number.
+        public String city;
+        public String state;
+        public String urbanization;     // Only used with Puerto Rican addresses.
+        public String zipcode;          
+        public String addressee;        // The recipient's name or FirmName. Can also be the company.
+        public Integer candidates = 1;  // The maximum number of valid addresses returned when the  
+                                        //   input address is ambiguous (max = 10, default = 1).
+        
+        public Request() {}
+        
+        public Request(String address) {
+            street = address;
+        }
     }
     
     public class Response {
 
-	    public Integer input_index;      // The order in which this address was submitted
-	    public Integer candidate_index;  // Index when there are multiple addresses returned
-	    public String addressee;         // Company name or intended recipient
-	    public String delivery_line_1;  // Verified street address
-	    public String delivery_line_2;
-	    public String last_line;            // City, state, and ZIP code combined
-	    public String delivery_point_barcode;
-	    public Components components;
-	    public Metadata metadata;
-	    public Analysis analysis;
-	
-	    public String getFullAddress() {
-	        return (((addressee != null) ? (addressee + '\n') : '') + ((delivery_line_1 != null) ? (delivery_line_1 + '\n') : '') + 
-	            ((delivery_line_2 != null) ? (delivery_line_2 + '\n') : '') + ((last_line != null) ? (last_line) : '')).trim();
-	    }
-	}
-	
-	public class Components {
+        public Integer input_index;      // The order in which this address was submitted
+        public Integer candidate_index;  // Index when there are multiple addresses returned
+        public String addressee;         // Company name or intended recipient
+        public String delivery_line_1;  // Verified street address
+        public String delivery_line_2;
+        public String last_line;            // City, state, and ZIP code combined
+        public String delivery_point_barcode;
+        public Components components;
+        public Metadata metadata;
+        public Analysis analysis;
+    
+        public String getFullAddress() {
+            return (((addressee != null) ? (addressee + '\n') : '') + ((delivery_line_1 != null) ? (delivery_line_1 + '\n') : '') + 
+                ((delivery_line_2 != null) ? (delivery_line_2 + '\n') : '') + ((last_line != null) ? (last_line) : '')).trim();
+        }
+    }
+    
+    public class Components {
         public String primary_number;   // The house, PO box, or building number
         public String street_name;
         public String street_predirection;
@@ -196,4 +196,5 @@ public with sharing class ADDR_Validation_Gateway {
         public String lacslink_code;
         public String lacslink_indicator;
     }
+
 }

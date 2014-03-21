@@ -14,11 +14,11 @@
     <members>ADDR_IValidator</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
-    <members>ADDR_Validation_Gateway</members>
+    <members>ADDR_SmartyStreets_Gateway</members>
+    <members>ADDR_SmartyStreets_Validator</members>
     <members>ADDR_Validation_Gateway_TEST</members>
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
-    <members>ADDR_Validator_SmartyStreets</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>ADDR_Zipcode_Validation_Gateway</members>

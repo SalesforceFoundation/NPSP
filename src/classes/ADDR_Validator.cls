@@ -49,7 +49,7 @@ public with sharing class ADDR_Validator {
 
         if (!avList.isEmpty()) {
             System.debug('****Verifying records');
-            ADDR_Validator_SmartyStreets validator = new ADDR_Validator_SmartyStreets();
+            ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
             upsert validator.verifyRecords(avList, settings.Reject_Ambiguous_Addresses__c);
         }
     }
