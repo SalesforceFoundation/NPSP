@@ -6,9 +6,9 @@
     modification, are permitted provided that the following conditions are met:
     
     * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+      notice, this List of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
+      notice, this List of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
@@ -35,18 +35,19 @@
 public with sharing class ADDR_SmartyStreets_Gateway {
 	
 	Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getInstance();
-    String baseUrl = 'https://api.smartystreets.com/street-address';
+    String addressBaseURL = 'https://api.smartystreets.com/street-address';
+    String zipBaseURL = 'https://api.smartystreets.com/zipcode';
     String auth;
     
     public class LiveAddressException extends Exception {}
     
     // Constructor with auth id and token
-    public ADDR_SmartyStreets_Gateway( String authId, String authToken ) {
+    public ADDR_SmartyStreets_Gateway(String authId, String authToken) {
         auth = '?auth-id=' + authId + '&auth-token=' + EncodingUtil.URLEncode(authToken, 'UTF-8');
     }
 
     // Constructor with HTML Key only - works for a single domain
-    public ADDR_SmartyStreets_Gateway( String htmlKey ) {
+    public ADDR_SmartyStreets_Gateway(String htmlKey) {
         auth = '?auth-token=' + htmlKey;
     }
 
@@ -58,64 +59,103 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     }
 
     /* SINGLE RECORD VERIFY ADDRESS METHODS */
-    public Response verifyAddress( String address ) {
-        return verifyAddress( new Request(address) );
+    public AddressResponse verifyAddress(String address) {
+        return verifyAddress(new AddressRequest(address));
     }
-    public Response verifyAddress( Request address ) {
-        list<Response> sr = verifyAddresses( new list<Request>{ address } );
+    public AddressResponse verifyAddress(AddressRequest address) {
+        List<AddressResponse> sr = verifyAddresses(new List<AddressRequest>{address});
         return ((sr == null) ? null : sr[0]);
     }
 
     /* MULTI-RECORD VERIFY ADDRESS METHODS */
-    public list<Response> verifyAddresses( list<String> addresses ) {
-        list<Request> requests = new list<Request>();
+    public List<AddressResponse> verifyAddresses(List<String> addresses) {
+        List<AddressRequest> requests = new List<AddressRequest>();
         for (String addr : addresses)
-            requests.add( new Request(addr) );
-        return verifyAddresses( requests );
+            requests.add(new AddressRequest(addr));
+        return verifyAddresses(requests);
     }
-    public list<Response> verifyAddresses( list<Request> addresses ) {
-        System.debug('****Addresses to verify: ' + JSON.serializePretty(addresses));
-        String js;
+    public List<AddressResponse> verifyAddresses(List<AddressRequest> addresses) {
+
         if (addresses == null || addresses.isEmpty()) 
             return null;
         else if (addresses.size() > 100)
             throw new LiveAddressException(Label.Address_Verification_Limit);
 
-      // prepare the request
         Http h = new Http();
+        
+        // prepare the request
+        String requestBody = JSON.serialize(addresses);
+        HttpRequest req = prepareRequest(requestBody, addressBaseURL);
+
+        // execute the request
+        HttpResponse res = h.send(req);
+        System.debug('****Response body: \n' + res.getBody());
+        List<AddressResponse> sr;
+        
+        if (res.getStatusCode() == 200)
+            sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
+        else
+            throw new LiveAddressException(res.getStatus());
+        
+        if (sr == null || sr.isEmpty())
+            return null;
+        else
+            return sr; 
+    }
+    
+    /* SINGLE RECORD VERIFY ZIP METHODS */
+    public ZipResponse verifyZip(String zip) { 
+        return verifyZip(null, null, zip); 
+    }
+    public ZipResponse verifyZip(String city, String state) { 
+        return verifyZip(city, state, null);   
+    }   
+    public ZipResponse verifyZip(String city, String state, String zip) {
+        list<ZipResponse> sz = verifyZips(new list<ZipRequest>{ new ZipRequest(city, state, zip) });
+        return ((sz == null) ? null : sz[0]);
+    }
+
+    /* MULTI-RECORD VERIFY ZIP METHOD */
+    public list<ZipResponse> verifyZips(list<ZipRequest> zreqs) {
+
+        if (zreqs == null || zreqs.isEmpty()) 
+            return null;
+        else if (zreqs.size() > 100)
+            throw new LiveAddressException('You cannot verify more than 100 zipcodes at a time.');
+
+        // prepare the request
+        Http h = new Http();
+        
+        // prepare the request
+        String requestBody = JSON.serialize(zreqs);
+        HttpRequest req = prepareRequest(requestBody, zipBaseURL);
+
+        // execute the request
+        HttpResponse res = h.send(req);
+        System.debug('****Response body: \n' + res.getBody());
+        list<ZipResponse> sz;
+        if (res.getStatusCode() == 200) {
+            sz = (list<ZipResponse>)(JSON.deserialize(res.getBody(), list<ZipResponse>.class));
+        } else {
+            throw new LiveAddressException(res.getStatus());
+        }
+        return ((sz == null || sz.isEmpty()) ? null : sz);
+    }
+    
+    private HTTPRequest prepareRequest(String body, String baseURL) {
         HttpRequest req = new HttpRequest();
         req.setMethod('POST');
         req.setHeader('Content-Type','application/json');
         req.setHeader('Accept','application/json');
-        req.setEndpoint(baseUrl + auth);
-        js = JSON.serialize( addresses );
-        //system.debug(LoggingLevel.WARN, js );
-        req.setBody( js );
+        req.setEndpoint(baseURL + auth);  
+        req.setBody(body);
         req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-        //system.debug(LoggingLevel.WARN, req );
-
-        // execute the request
         System.debug('****Request body: \n' + req.getBody());
-        HttpResponse res = h.send(req);
-        System.debug('****Response header: \n' + res);
-        System.debug('****Response body: \n' + res.getBody());
-        list<Response> sr;
-        if (res.getStatusCode() == 200) {
-            js = res.getBody();
-            sr = (list<Response>)(JSON.deserialize(js, list<Response>.class));
-            system.debug('****Fixed addresses: ' + sr);
-        } else {
-            throw new LiveAddressException( res.getStatus() );
-        }
-        if (sr == null || sr.isEmpty()) {
-            return null;
-        } else {
-            //system.debug( LoggingLevel.INFO, sr[0].getFullAddress() );
-            return sr; 
-        }
+        return req;
     }
     
-    public class Request {
+    /* ADDRESS REQUEST DATA */
+    public class AddressRequest {
         
         public String street;           // REQUIRED - Can be full address, or just first line
         public String street2;
@@ -128,14 +168,15 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public Integer candidates = 1;  // The maximum number of valid addresses returned when the  
                                         //   input address is ambiguous (max = 10, default = 1).
         
-        public Request() {}
+        public AddressRequest() {}
         
-        public Request(String address) {
+        public AddressRequest(String address) {
             street = address;
         }
     }
     
-    public class Response {
+    /* ADDRESS RESPONSE DATA */
+    public class AddressResponse {
 
         public Integer input_index;      // The order in which this address was submitted
         public Integer candidate_index;  // Index when there are multiple addresses returned
@@ -196,5 +237,39 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String lacslink_code;
         public String lacslink_indicator;
     }
+    
+    /* ZIP REQUEST DATA */
+    public class ZipRequest {
+        public String city;
+        public String state;
+        public String zipcode;
 
+        public ZipRequest() {}
+        
+        public ZipRequest(String c, String s, String z) {
+            city = c;
+            state = s;
+            zipcode = z;
+        }
+    }
+    
+    /* ZIP RESPONSE DATA */
+    public class ZipResponse {
+        public String status;
+        public String reason;
+        public list<CityState> city_states;     
+        public list<ZipLoc> zipcodes;
+    } 
+
+    public class CityState {
+        public String city;
+        public String state_abbreviation;
+        public String state;
+    }
+
+    public class ZipLoc {
+        public String zipcode;
+        public Double latitude;
+        public Double longitude;
+    }
 }

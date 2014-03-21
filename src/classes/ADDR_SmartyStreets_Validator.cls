@@ -67,10 +67,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 
     private List<Address__c> verifyRecords100(List<Address__c> avList, Boolean rejectAmbiguous) {
         integer recs = 0;
-        List<ADDR_Validation_Gateway.Request> srList = new List<ADDR_Validation_Gateway.Request>();
+        List<ADDR_SmartyStreets_Gateway.AddressRequest> srList = new List<ADDR_SmartyStreets_Gateway.AddressRequest>();
         
         for (Address__c av : avList) {
-            ADDR_Validation_Gateway.Request sr = new ADDR_Validation_Gateway.Request();
+            ADDR_SmartyStreets_Gateway.AddressRequest sr = new ADDR_SmartyStreets_Gateway.AddressRequest();
             sr.street = av.MailingStreet__c;
             // sr.street2 =     // SHOULD WE SPLIT STREET WHEN MULTILINE??
             sr.city = av.MailingCity__c;
@@ -83,15 +83,15 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         }   
 
         try {
-            ADDR_Validation_Gateway la = new ADDR_Validation_Gateway();
-            List<ADDR_Validation_Gateway.Response> responses = la.verifyAddresses(srList);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway();
+            List<ADDR_SmartyStreets_Gateway.AddressResponse> responses = la.verifyAddresses(srList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null) {
-                List<ADDR_Validation_Gateway.Response> responseGroup;
-                for (ADDR_Validation_Gateway.Response sr : responses) {         
+                List<ADDR_SmartyStreets_Gateway.AddressResponse> responseGroup;
+                for (ADDR_SmartyStreets_Gateway.AddressResponse sr : responses) {         
                     Address__c av = avList[ sr.input_index ];              
                     if (sr.candidate_index == 0) {
-                        responseGroup = new List<ADDR_Validation_Gateway.Response>{ sr };
+                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
                         System.debug('****Flagging address as verified. Address ID: ' + av.Id);
                         av.Verified__c = true;
                         av.MailingStreet__c = sr.delivery_line_1 + 
@@ -134,10 +134,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 
     private List<Address__c> verifyZipRecords100(List<Address__c> avList) {
         integer recs = 0;
-        List<ADDR_Zipcode_Validation_Gateway.Request> zrList = new List<ADDR_Zipcode_Validation_Gateway.Request>();
+        List<ADDR_SmartyStreets_Gateway.ZipRequest> zrList = new List<ADDR_SmartyStreets_Gateway.ZipRequest>();
         
         for (Address__c av : avList) {
-            zrList.add(new ADDR_Zipcode_Validation_Gateway.Request(
+            zrList.add(new ADDR_SmartyStreets_Gateway.ZipRequest(
                 av.MailingCity__c,
                 av.MailingState__c,
                 av.MailingPostalCode__c
@@ -145,13 +145,13 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         }   
 
         try {
-            ADDR_Zipcode_Validation_Gateway la = new ADDR_Zipcode_Validation_Gateway();
-            List<ADDR_Zipcode_Validation_Gateway.Response> responses = la.verifyZips(zrList);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway();
+            List<ADDR_SmartyStreets_Gateway.ZipResponse> responses = la.verifyZips(zrList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null && !responses.isEmpty()) {
                 if(responses.size() == avList.size()) {
                     for (integer i = 0; i < responses.size(); i++) {
-                        ADDR_Zipcode_Validation_Gateway.Response sr = responses[i];
+                        ADDR_SmartyStreets_Gateway.ZipResponse sr = responses[i];
                         Address__c av = avList[i];             
     
                         // look for an error

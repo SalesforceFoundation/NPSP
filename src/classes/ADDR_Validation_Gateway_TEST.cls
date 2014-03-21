@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Class that tests ADDR_Validation_Gateway class.
+* @description Class that tests ADDR_SmartyStreets_Gateway class.
 */
 @isTest
 public with sharing class ADDR_Validation_Gateway_TEST {
@@ -38,8 +38,8 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     public static testMethod void testOneAddress() {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_Validation_Gateway la = new ADDR_Validation_Gateway('key', 'key');
-        ADDR_Validation_Gateway.Response sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway('key', 'key');
+        ADDR_SmartyStreets_Gateway.AddressResponse sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
 
         system.assert(sr != null);
         system.assertEquals(sr.delivery_line_1, '1 Infinite Loop');
@@ -50,8 +50,8 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     public static testMethod void testMultiAddress() {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_Validation_Gateway la = new ADDR_Validation_Gateway('key');
-        list<ADDR_Validation_Gateway.Response> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA', 'Two Infinite Loop Cupertino, CA'} );
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway('key');
+        list<ADDR_SmartyStreets_Gateway.AddressResponse> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA', 'Two Infinite Loop Cupertino, CA'} );
 
         system.assert(srs != null && srs.size() == 2);
         system.assertEquals('1 Infinite Loop', srs[0].delivery_line_1);
@@ -62,8 +62,8 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     public static testMethod void testZip() {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_Zipcode_Validation_Gateway la = new ADDR_Zipcode_Validation_Gateway('key', 'key');
-        ADDR_Zipcode_Validation_Gateway.Response sz = la.verifyZip( '98236' );
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway('key', 'key');
+        ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip( '98236' );
 
         system.assert(sz != null);
         system.assertEquals(3, sz.city_states.size());
@@ -76,9 +76,9 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     public static testMethod void testBadAuth() {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_Validation_Gateway.Response sr;
+        ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            ADDR_Validation_Gateway la = new ADDR_Validation_Gateway('bad-authentication-for-test');
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway('bad-authentication-for-test');
             sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
             system.assertEquals('Not authenticated.', e.getMessage());

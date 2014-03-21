@@ -58,24 +58,26 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
         
         // verify and update this batch of addresses
         if (!addressesToVerify.isEmpty()) {
-            ADDR_Validator.verifyRecords( addressesToVerify );
+            ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+            validator.verifyRecords(addressesToVerify, 
+                Address_Verification_Settings__c.getInstance().Reject_Ambiguous_Addresses__c);
         }       
     }
     
     public void finish(Database.BatchableContext BC) {}
     
-    public static list<Id> verifyAllAddresses() { return verifyAllAddresses( true ); }
+    public static list<Id> verifyAllAddresses() { return verifyAllAddresses(true); }
     
-    public static list<Id> verifyAllAddresses( Boolean skipPreviouslyVerified ) {
+    public static list<Id> verifyAllAddresses(Boolean skipPreviouslyVerified) {
         list<Id> apexJobIds = new list<Id>();
         
-        apexJobIds.add( verifyAddresses( skipPreviouslyVerified ) );
+        apexJobIds.add(verifyAddresses(skipPreviouslyVerified));
 
         return apexJobIds;
     }
 
     // Methods to run the batch on each object
-    public static Id verifyAddresses( Boolean skipPreviouslyVerified ) {
+    public static Id verifyAddresses(Boolean skipPreviouslyVerified) {
 
         // query for all US addresses
         String queryString = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c ' +
@@ -86,11 +88,11 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
         if (skipPreviouslyVerified == true)
             queryString += ' and Verified__c != true';
 
-        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch( queryString );
+        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(queryString);
         return Database.executeBatch(b); 
     }
     
-    static Boolean isUS( Address__c c ) {
+    static Boolean isUS(Address__c c) {
         return ((c.MailingStreet__c != null || c.MailingPostalCode__c != null || (c.MailingCity__c != null && c.MailingState__c != null))
             && (c.MailingCountry__c == null || c.MailingCountry__c == 'US' || c.MailingCountry__c == 'USA' || 
                         c.MailingCountry__c == 'United States' || c.MailingCountry__c == 'United States of America'));

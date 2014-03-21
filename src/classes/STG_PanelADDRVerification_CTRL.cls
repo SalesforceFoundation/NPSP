@@ -75,8 +75,8 @@ public with sharing class STG_PanelADDRVerification_CTRL {
 
     public PageReference testApi() {
         try {
-            ADDR_Zipcode_Validation_Gateway la = new ADDR_Zipcode_Validation_Gateway(apiSettings.Auth_ID__c, apiSettings.Auth_Token__c);
-            ADDR_Zipcode_Validation_Gateway.Response sz = la.verifyZip( apiTestEntry );
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(apiSettings.Auth_ID__c, apiSettings.Auth_Token__c);
+            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
             apiTestResult = e.getMessage();
@@ -85,7 +85,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
     }
 
     public PageReference bulkVerify() {
-        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses( skipPreviouslyVerifiedObjects );
+        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses(skipPreviouslyVerifiedObjects);
         nowVerifying = true;
         bulkVerifyMessage = 'Verifying addresses.';
         return null;

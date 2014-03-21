@@ -21,7 +21,6 @@
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
-    <members>ADDR_Zipcode_Validation_Gateway</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
