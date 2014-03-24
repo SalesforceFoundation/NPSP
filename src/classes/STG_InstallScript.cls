@@ -38,7 +38,7 @@ global class STG_InstallScript implements InstallHandler {
                     Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
         }
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Global Scheduler', '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
@@ -98,10 +98,23 @@ global class STG_InstallScript implements InstallHandler {
     }
     
     private static void insertTdtmDefauls() {
-        List<Trigger_Handler__c> triggerHandlers = TDTM_DefaultConfig.getDefaultRecords();
-        for(Trigger_Handler__c handler : triggerHandlers)
-            handler.Active__c = true;
-        insert triggerHandlers;
+    	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c from Trigger_Handler__c];
+        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
+        List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
+        
+        //If a handler is in the list of default handlers but it's not in the database
+        for(Trigger_Handler__c defaultHandler : defaultHandlers) {
+        	Boolean alreadyExists = false;
+            for(Trigger_Handler__c existingHandler : existingHandlers) {
+            	if(defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
+            		alreadyExists = true;
+            		break;
+            	}
+            }
+            if(!alreadyExists)
+                handlersToInsert.add(defaultHandler); 
+        }    
+        insert handlersToInsert;
     }
     
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
