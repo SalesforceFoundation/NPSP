@@ -84,8 +84,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         Http h = new Http();
         
         // prepare the request
-        String requestBody = JSON.serialize(addresses);
-        HttpRequest req = prepareRequest(requestBody, addressBaseURL);
+        HttpRequest req = prepareRequest(addresses, addressBaseURL);
 
         // execute the request
         HttpResponse res = h.send(req);
@@ -121,14 +120,13 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         if (zreqs == null || zreqs.isEmpty()) 
             return null;
         else if (zreqs.size() > 100)
-            throw new LiveAddressException('You cannot verify more than 100 zipcodes at a time.');
+            throw new LiveAddressException(Label.Zipcode_Verification_Limit);
 
         // prepare the request
         Http h = new Http();
         
         // prepare the request
-        String requestBody = JSON.serialize(zreqs);
-        HttpRequest req = prepareRequest(requestBody, zipBaseURL);
+        HttpRequest req = prepareRequest(zreqs, zipBaseURL);
 
         // execute the request
         HttpResponse res = h.send(req);
@@ -142,7 +140,8 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         return ((sz == null || sz.isEmpty()) ? null : sz);
     }
     
-    private HTTPRequest prepareRequest(String body, String baseURL) {
+    private HTTPRequest prepareRequest(List<Object> payload, String baseURL) {
+    	String body = JSON.serialize(payload);
         HttpRequest req = new HttpRequest();
         req.setMethod('POST');
         req.setHeader('Content-Type','application/json');
