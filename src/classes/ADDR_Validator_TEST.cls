@@ -243,10 +243,10 @@ public with sharing class ADDR_Validator_TEST {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
         sc.settings.HTML_Key__c = 'skldjflsdkfj';
-        sc.saveApiSettings();
+        sc.saveSettings();
         System.assertEquals('Saved.', sc.apiSettingsSaveMessage);
 
-        sc.saveVerificationSettings();
+        sc.saveOptions();
 
         sc.apiTestEntry = '98236';
         sc.testApi();
