@@ -120,6 +120,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
             // enforce only HH Accounts are being used
             verifyAddrHHAccOnly((list<Address__c>)listNew);
+            
+            // enforce Seasonal Addresses don't overlap
+            verifyAddrSeasonalNoOverlap((list<Address__c>)listNew);
+            
             return null;    
         }
 
@@ -182,22 +186,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             	if (hhinfo.addrDefault == null && addrHH.Default_Address__c)
             	   hhinfo.addrDefault = addrHH;
             	
-            	if (addrHH.Seasonal_Start_Month__c != null && addrHH.Seasonal_Start_Day__c != null &&      
-                   addrHH.Seasonal_End_Day__c != null && addrHH.Seasonal_End_Day__c != null) {
-                   	integer startMonth = integer.valueOf(addrHH.Seasonal_Start_Month__c);
-                    integer startDay = integer.valueOf(addrHH.Seasonal_Start_Day__c);
-                    integer endMonth = integer.valueOf(addrHH.Seasonal_End_Month__c);
-                    integer endDay = integer.valueOf(addrHH.Seasonal_End_Month__c);
-                    Date dtStart;
-                    Date dtEnd;
+            	if (isSeasonalAddr(addrHH)) {
+                    Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
+                    Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
                     Date dtToday = system.today();
-                   	if (startMonth <= endMonth) { 
-                        dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
-                        dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-                   	} else {
-                        dtStart = date.newInstance(dtToday.year(), endMonth, endDay);                           
-                        dtEnd = date.newInstance(dtToday.year()+1, startMonth, startDay);
-                   	}
                    	if (dtToday >= dtStart && dtToday < dtEnd) {
                    	    hhinfo.addrSeasonal = addrHH;
                    	}                        
@@ -293,11 +285,40 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	public Address__c addrDefault;      
     	public Address__c addrSeasonal;        
     }
+
+    // utility to return the current StartDate or EndDate of a Seasonal Address 
+    private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {    
+        integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
+        integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
+        integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
+        integer endDay = integer.valueOf(addr.Seasonal_End_Month__c);
+        Date dtStart;
+        Date dtEnd;
+        Date dtToday = system.today();
+        if (startMonth <= endMonth) { 
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
+        } else {
+            dtStart = date.newInstance(dtToday.year(), endMonth, endDay);                           
+            dtEnd = date.newInstance(dtToday.year()+1, startMonth, startDay);
+        }
+        return (fStart ? dtStart : dtEnd);
+    }
     
     // utility to see if the address has seasonal fields set
-    private boolean isSeasonalAddr(Address__c addr) {
+    private static boolean isSeasonalAddr(Address__c addr) {
     	return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
     	   addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+    }
+    
+    // utility to see if the address has only a subset of its seasonal fields set
+    private static boolean isPartialSeasonalAddr(Address__c addr) {
+        integer cParts = 0;
+        if (addr.Seasonal_Start_Month__c != null) cParts++;
+        if (addr.Seasonal_Start_Day__c != null) cParts++;
+        if (addr.Seasonal_End_Month__c != null) cParts++;
+        if (addr.Seasonal_End_Day__c != null) cParts++;
+        return (cParts > 0 && cParts < 4);
     }
     
     // for the map of addresses, update any contact's mailing fields that are using the address as an override.
@@ -358,6 +379,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
     }
 
+    // utility to see if two seasonal addresses overlap
+    private boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
+        if (addr1 == null || addr2 == null) 
+            return false;        
+        if (!isSeasonalAddr(addr1) || !isSeasonalAddr(addr2))
+            return false;
+            
+		Date dtStart1 = dtStartOrEndOfAddrSeasonal(addr1, true);
+		Date dtEnd1 = dtStartOrEndOfAddrSeasonal(addr1, false);
+		Date dtStart2 = dtStartOrEndOfAddrSeasonal(addr2, true);
+		Date dtEnd2 = dtStartOrEndOfAddrSeasonal(addr2, false);
+                      
+        return ((dtStart1 >= dtStart2 && dtStart1 < dtEnd2) || (dtStart2 >= dtStart1 && dtStart2 < dtEnd1));
+    }
+
     // verify that the account for each Address is a HH account
     private void verifyAddrHHAccOnly(list<Address__c> listAddr) {    	
     	set<Id> setAccId = new set<Id>();
@@ -381,6 +417,51 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
             }
         }    	
+    }
+    
+    // verify that any seasonal addresses don't overlap
+    private void verifyAddrSeasonalNoOverlap(list<Address__c> listAddr) { 
+    	
+    	// first get just the seasonal addresses
+    	list<Address__c> listAddrS = new list<Address__c>();
+    	for (Address__c addr : listAddr) {
+            if (isSeasonalAddr(addr)) {
+                listAddrS.add(addr);
+            } else if (isPartialSeasonalAddr(addr)) {
+                addr.addError(Label.addrSeasonalPartial);                
+            }
+    	}      
+
+        // protect against overlaps within the set being inserted or updated
+        for (Address__c addr : listAddrS) {
+            for (Address__c addr2 : listAddrS) {
+                if (addr == addr2)
+                    continue;
+                if (addr.Household_Account__c != addr2.Household_Account__c)
+                    continue;  
+                if (isSeasonalOverlap(addr, addr2)) {
+                    addr.addError(Label.addrSeasonalOverlap);
+                }
+            }
+        }
+
+        // now check for overlaps within each household's saved addresses
+        list<Id> listAccId = new list<Id>();
+        for (Address__c addr : listAddrS) {
+            listAccId.add(addr.Household_Account__c);
+        }        
+        map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);        
+        
+        for (Address__c addr : listAddrS) {
+            for (Address__c addr2 : mapAccIdListAddrHH.get(addr.Household_Account__c)) {
+            	if (addr.id == addr2.id)
+            	   continue;
+                if (isSeasonalOverlap(addr, addr2)) {
+                    addr.addError(Label.addrSeasonalOverlap);
+                    break;
+                }
+            }
+    	}
     }
     
     private class MyException extends Exception {}
