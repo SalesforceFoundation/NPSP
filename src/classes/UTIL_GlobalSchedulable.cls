@@ -34,6 +34,8 @@
 * schedulable that exists in the package.
 */
 public with sharing class UTIL_GlobalSchedulable implements Schedulable {
+	
+	public static String jobName = 'NPSP Global Scheduler';
     
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
