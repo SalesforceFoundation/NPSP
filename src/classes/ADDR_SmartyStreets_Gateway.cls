@@ -39,18 +39,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     private String auth;
     
     public class LiveAddressException extends Exception {}
-    
-    // Constructor with auth id and token
-    public ADDR_SmartyStreets_Gateway(String authId, String authToken) {
-        auth = '?auth-id=' + authId + '&auth-token=' + EncodingUtil.URLEncode(authToken, 'UTF-8');
-    }
-
-    // Constructor with HTML Key only - works for a single domain
-    public ADDR_SmartyStreets_Gateway(String htmlKey) {
-        auth = '?auth-token=' + htmlKey;
-    }
 
     public ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c options, Address_Authentication_Settings__c settings) {
+        this.options = options;
+        this.settings = settings;
+        
         if (settings.auth_id__c != null && settings.auth_token__c != null)
             auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + EncodingUtil.URLEncode(settings.auth_token__c, 'UTF-8');
         else if (settings.html_key__c != null)
