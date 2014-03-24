@@ -207,6 +207,22 @@
         <value>The Household Address will be copied to all Contacts that do not have an Address Override.</value>
     </labels>
     <labels>
+        <fullName>addrSeasonalOverlap</fullName>
+        <categories>Address Management</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrSeasonalOverlap</shortDescription>
+        <value>Seasonal addresses cannot overlap with any other seasonal address in the Household.</value>
+    </labels>
+    <labels>
+        <fullName>addrSeasonalPartial</fullName>
+        <categories>Address Management</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrSeasonalPartial</shortDescription>
+        <value>An address must have all or none of its Seasonal fields set.</value>
+    </labels>
+    <labels>
         <fullName>labelListViewFirst</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>

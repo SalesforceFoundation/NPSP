@@ -308,6 +308,8 @@
     <members>Zip_Not_Found</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
+    <members>addrSeasonalOverlap</members>
+    <members>addrSeasonalPartial</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
