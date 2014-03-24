@@ -35,7 +35,10 @@
 */
 public with sharing class ADDR_Validator {
 
-    private static Address_Verification_Settings__c settings = Address_Verification_Settings__c.getInstance();
+    //get verification options selected
+    private static Address_Verification_Settings__c options = Address_Verification_Settings__c.getInstance();
+    //get the information about the address verification service to use
+    private static Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getOrgDefaults();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -49,8 +52,24 @@ public with sharing class ADDR_Validator {
 
         if (!avList.isEmpty()) {
             System.debug('****Verifying records');
-            ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-            upsert validator.verifyRecords(avList, settings.Reject_Ambiguous_Addresses__c);
+            if(settings != null) {
+	            String classToRunName = String.valueOf(settings.get('Class__c'));
+	            Type classType = Type.forName(classToRunName);
+	            if(classType != null) {     
+	                Object classInstance = classType.newInstance();
+	                //The objects we create dynamically need to implement the ADDR_IValidator interface
+	                if(classInstance instanceof ADDR_IValidator) {
+	                    ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+	                    upsert validator.verifyRecords(avList, options, settings);
+	                } else {
+	                    System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+	                }
+	            } else {
+	                System.debug(LoggingLevel.WARN, '****ClassType was null.');
+	            }
+	        } else {
+	            System.debug(LoggingLevel.WARN, '****ClassToCall was null');
+	        }
         }
     }
 }

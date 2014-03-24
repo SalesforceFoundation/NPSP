@@ -35,9 +35,15 @@
  */
 public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidator {
 
+    private Address_Verification_Settings__c options;
+    private Address_Authentication_Settings__c settings;
+    
     // verify a List of custom object records - split them up into those we are
     // sending for address and those for zip only - max of 100 at a time for each
-    public List<Address__c> verifyRecords(List<Address__c> avList, Boolean rejectAmbiguous) {
+    public List<Address__c> verifyRecords(List<Address__c> avList, Address_Verification_Settings__c options, 
+    Address_Authentication_Settings__c settings) {
+    	this.options = options;
+    	this.settings = settings;
         
         List<Address__c> shortList = new List<Address__c>();
         List<Address__c> shortListZipOnly = new List<Address__c>();
@@ -54,18 +60,18 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
             } else if (av.MailingStreet__c != null) {
                 shortList.add(av);
                 if (shortList.size() == 100) {
-                    return verifyRecords100(shortList, rejectAmbiguous); 
+                    return verifyRecords100(shortList); 
                 }
             }
         }
         if (!shortListZipOnly.isEmpty())
             return verifyZipRecords100(shortListZipOnly);
         if (!shortList.isEmpty())
-            return verifyRecords100(shortList, rejectAmbiguous);
+            return verifyRecords100(shortList);
         return new List<Address__c>();
     }
 
-    private List<Address__c> verifyRecords100(List<Address__c> avList, Boolean rejectAmbiguous) {
+    private List<Address__c> verifyRecords100(List<Address__c> avList) {
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.AddressRequest> srList = new List<ADDR_SmartyStreets_Gateway.AddressRequest>();
         
@@ -78,12 +84,12 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
             sr.zipcode = av.MailingPostalCode__c;
 
             // request a few candidates to determine if the address is unique
-            sr.candidates = (rejectAmbiguous) ? 3 : 1;   
+            sr.candidates = (options.Reject_Ambiguous_Addresses__c) ? 3 : 1;   
             srList.add(sr);         
         }   
 
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway();
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
             List<ADDR_SmartyStreets_Gateway.AddressResponse> responses = la.verifyAddresses(srList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null) {
@@ -145,7 +151,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         }   
 
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway();
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
             List<ADDR_SmartyStreets_Gateway.ZipResponse> responses = la.verifyZips(zrList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null && !responses.isEmpty()) {

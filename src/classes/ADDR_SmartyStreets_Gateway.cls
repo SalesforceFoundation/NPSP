@@ -33,11 +33,10 @@
 * @description Class that talks to the SmartyStreets address verification API.
  */
 public with sharing class ADDR_SmartyStreets_Gateway {
-	
-	Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getInstance();
-    String addressBaseURL = 'https://api.smartystreets.com/street-address';
-    String zipBaseURL = 'https://api.smartystreets.com/zipcode';
-    String auth;
+
+    private Address_Verification_Settings__c options;
+    private Address_Authentication_Settings__c settings;
+    private String auth;
     
     public class LiveAddressException extends Exception {}
     
@@ -51,7 +50,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         auth = '?auth-token=' + htmlKey;
     }
 
-    public ADDR_SmartyStreets_Gateway() {
+    public ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c options, Address_Authentication_Settings__c settings) {
         if (settings.auth_id__c != null && settings.auth_token__c != null)
             auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + EncodingUtil.URLEncode(settings.auth_token__c, 'UTF-8');
         else if (settings.html_key__c != null)
@@ -82,7 +81,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(addresses, addressBaseURL);
+        HttpResponse res = prepareRequest(addresses, settings.Address_Verification_Endpoint__c);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
@@ -115,7 +114,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(zreqs, zipBaseURL);
+        HttpResponse res = prepareRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
 
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
