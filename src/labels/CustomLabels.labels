@@ -191,6 +191,14 @@
         <value>Zip code not found.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnHHObjOnly</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrCopyConAddBtnHHObjOnly</shortDescription>
+        <value>This button only supports Contacts with Household objects, not Household Accounts.</value>
+    </labels>
+    <labels>
         <fullName>addrHHAccountOnly</fullName>
         <categories>Address Management</categories>
         <language>en_US</language>
