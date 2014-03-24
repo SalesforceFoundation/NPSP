@@ -78,28 +78,20 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 
         if (addresses == null || addresses.isEmpty()) 
             return null;
-        else if (addresses.size() > 100)
+        else if (addresses.size() > 100) //This is a smartyStreets limit
             throw new LiveAddressException(Label.Address_Verification_Limit);
-
-        Http h = new Http();
         
-        // prepare the request
-        HttpRequest req = prepareRequest(addresses, addressBaseURL);
+        // send the request
+        HttpResponse res = prepareRequest(addresses, addressBaseURL);
 
-        // execute the request
-        HttpResponse res = h.send(req);
-        System.debug('****Response body: \n' + res.getBody());
         List<AddressResponse> sr;
-        
         if (res.getStatusCode() == 200)
             sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
         else
             throw new LiveAddressException(res.getStatus());
         
-        if (sr == null || sr.isEmpty())
-            return null;
-        else
-            return sr; 
+        if (sr == null || sr.isEmpty()) return null;
+        else return sr; 
     }
     
     /* SINGLE RECORD VERIFY ZIP METHODS */
@@ -121,26 +113,23 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             return null;
         else if (zreqs.size() > 100)
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
-
-        // prepare the request
-        Http h = new Http();
         
-        // prepare the request
-        HttpRequest req = prepareRequest(zreqs, zipBaseURL);
+        // send the request
+        HttpResponse res = prepareRequest(zreqs, zipBaseURL);
 
-        // execute the request
-        HttpResponse res = h.send(req);
-        System.debug('****Response body: \n' + res.getBody());
         list<ZipResponse> sz;
-        if (res.getStatusCode() == 200) {
+        if (res.getStatusCode() == 200)
             sz = (list<ZipResponse>)(JSON.deserialize(res.getBody(), list<ZipResponse>.class));
-        } else {
+        else
             throw new LiveAddressException(res.getStatus());
-        }
-        return ((sz == null || sz.isEmpty()) ? null : sz);
+        
+        if (sz == null || sz.isEmpty()) return null;
+        else return sz;
     }
     
-    private HTTPRequest prepareRequest(List<Object> payload, String baseURL) {
+    private HTTPResponse prepareRequest(List<Object> payload, String baseURL) {
+    	// prepare the request
+        Http h = new Http();
     	String body = JSON.serialize(payload);
         HttpRequest req = new HttpRequest();
         req.setMethod('POST');
@@ -150,7 +139,10 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         req.setBody(body);
         req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
         System.debug('****Request body: \n' + req.getBody());
-        return req;
+        // execute the request
+        HttpResponse res = h.send(req);
+        System.debug('****Response body: \n' + res.getBody());
+        return res;
     }
     
     /* ADDRESS REQUEST DATA */
