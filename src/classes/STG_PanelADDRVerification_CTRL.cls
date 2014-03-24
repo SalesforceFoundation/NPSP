@@ -53,7 +53,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
         options = Address_Verification_Settings__c.getOrgDefaults();
     }
 
-    public PageReference saveApiSettings() {
+    public PageReference saveSettings() {
         try {
             upsert settings;
             apiSettingsSaveMessage = 'Saved.';
@@ -63,7 +63,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
         return null;
     }
 
-    public PageReference saveVerificationSettings() {
+    public PageReference saveOptions() {
         try {
             upsert options;
             verificationSettingsSaveMessage = 'Saved.';
