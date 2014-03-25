@@ -17,6 +17,9 @@
       </then>
     </if>
 
+    <!-- Load up cumulusci.properties file with package specific properties -->
+    <loadproperties srcFile="${basedir}/cumulusci.properties"/>
+
     <!-- Load up the version.properties file to get desired versions -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 
@@ -109,7 +112,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     </macrodef>
 
 
-    <!-- Cumulus Primary Build Targets -->
+    <!-- Primary Build Targets -->
 
     <!-- deploy: Run a full deployment including running all tests.  Does not attempt to clean target org or ensure dependent package versions are correct -->
     <target name="deploy">
@@ -121,16 +124,16 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
     </target>
 
-    <!-- deployUnpackaged: Deploy the unpackaged directory containing metadata used in builds but not included in the Cumulus managed package -->
+    <!-- deployUnpackaged: Deploy the unpackaged directory containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackaged">
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged" runAllTests="false" maxPoll="200" />
     </target>
 
-    <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying Cumulus with all tests --> 
+    <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests --> 
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployCI">
       <!-- First, uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
-      <antcall target="uninstallCumulus" />
+      <antcall target="uninstall" />
 
       <!-- Deploy any unpackaged metadata needed for builds -->
       <antcall target="deployUnpackaged" />
@@ -142,7 +145,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="deploy" />
     </target>
 
-    <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstallCumulus.
+    <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstall.
          There are a few assumptions.  We never downgrade a dependent managed package in the packaging org.  This removes the need to completely remove
          all metadata to allow a package downgrade.  In the package org, we can't delete all metadata once a production managed release is cut so this approach is required -->
     <target name="deployCIPackageOrg">
@@ -184,19 +187,19 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
         <else>
           <!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
           <!-- Get the latest beta release tag name -->
-          <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta/tag" dest="${basedir}/managed_uat_tag" />
+          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta/tag" dest="${basedir}/managed_uat_tag" />
           <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
           <delete file="${basedir}/managed_uat_tag" />
 
           <!-- Get the latest beta release version number -->
-          <get src="http://mrbelvedere.salesforcefoundation.org/mrbelvedere/repo/SalesforceFoundation/Cumulus/version/beta" dest="${basedir}/version_uat" />
+          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta" dest="${basedir}/version_uat" />
           <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
           <delete file="${basedir}/version_uat" />
         </else>
       </if>
       
       <!-- Fetch the version.properties file for the release from GitHub -->
-      <get src="https://raw.github.com/SalesforceFoundation/Cumulus/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
+      <get src="${cumulusci.github.url.raw}/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
 
       <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.uat file -->
       <var name="version.npe01" unset="true" />
@@ -231,14 +234,14 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     </target>
 
 
-    <!-- Cumulus Utility Build Targets -->
+    <!-- Utility Build Targets -->
 
     <target name="destroyStaleMetadata">
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
 
-      <!-- Fetch all metadata in the Cumulus package from target org -->
-      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
+      <!-- Fetch all metadata in the  package from target org -->
+      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
 
       <!-- Build a destructiveChanges.xml pacckage to delete metadata in org but not in repo -->
       <buildDestroyStaleMetadata srcdir="uninstallsrc" commdir="src" dir="uninstall" />
@@ -250,19 +253,19 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete dir="uninstall" />
     </target>
 
-    <!-- uninstallCumulus: Removes all metadata from the Cumulus package for types used in Cumulus -->
-    <target name="uninstallCumulus">
+    <!-- uninstall: Removes all metadata from the package -->
+    <target name="uninstall">
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
-      <retrievePackaged dir="uninstallsrc" package="Cumulus" />
-      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="Cumulus" />
+      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
+      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="${cumulusci.package.name}" />
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="200" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
     </target>
 
-    <!-- uninstallCumulus: Removes all non-standard unpackaged metadata from the org for the metadata types used in Cumulus -->
-    <target name="uninstallCumulusUnpackaged">
+    <!-- uninstall: Removes all non-standard unpackaged metadata from the org -->
+    <target name="uninstallUnpackaged">
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
       <retrieveUnpackaged dir="uninstallsrc" />
@@ -286,9 +289,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <retrieveUnpackaged dir="org_unpackaged" /> 
     </target>
 
-    <!-- retrievePackaged: Retrieves all metadata from the Cumulus package in the target org into the packaged directory -->
+    <!-- retrievePackaged: Retrieves all metadata from the package in the target org into the packaged directory -->
     <target name="retrievePackaged">
-      <retrievePackaged dir="packaged" package="Cumulus" /> 
+      <retrievePackaged dir="packaged" package="${cumulusci.package.name}" /> 
     </target>
 
     <!-- runAllTests: Uses an empty package manifest to trigger execution of all tests in the target org without deploying any actual code changes -->
@@ -298,11 +301,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- updatePackageXml: Builds a new package.xml based upon the metadata in the src directory -->
     <target name="updatePackageXml">
-      <buildPackageXml package="Cumulus" version="29.0" />
+      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" />
     </target>
 
     <target name="updatePackageXmlManaged">
-      <buildPackageXml package="Cumulus" version="29.0" installClass="STG_InstallScript" uninstallClass="STG_UninstallScript" />
+      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass" />
     </target>
 
     <target name="updateMetaXml">
