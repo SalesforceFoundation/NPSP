@@ -10,12 +10,12 @@
   <xsl:template match="sf:Package">
     <xsl:copy>
       <xsl:apply-templates select="@*" />
-      <xsl:apply-templates select="sf:installClass" />
-      <xsl:apply-templates select="sf:uninstallClass" />
       <xsl:apply-templates select="sf:fullName" />
+      <xsl:apply-templates select="sf:postInstallClass" />
       <xsl:apply-templates select="sf:types">    
         <xsl:sort select="sf:name"/>
       </xsl:apply-templates>
+      <xsl:apply-templates select="sf:uninstallClass" />
       <xsl:apply-templates select="sf:version" />
     </xsl:copy>
   </xsl:template>
