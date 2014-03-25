@@ -35,7 +35,7 @@
 */
 public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
-	private static Boolean alreadyRun = false;
+	public static Boolean alreadyRun = false;
 	
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
@@ -44,9 +44,11 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
                 ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
+                alreadyRun = true;
 	        }
         }
-        alreadyRun = true;
+        //we cannot return records to perform DML on because the address verification has to run
+        //in a future for making external web service calls
         return new DmlWrapper();
     }
 }

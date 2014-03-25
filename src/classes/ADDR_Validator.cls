@@ -66,10 +66,13 @@ public with sharing class ADDR_Validator {
                 Type classType = Type.forName(classToRunName);
                 if(classType != null) {     
                     Object classInstance = classType.newInstance();
-                    //The objects we create dynamically need to implement the ADDR_IValidator interface
+                    //the objects we create dynamically need to implement the ADDR_IValidator interface
                     if(classInstance instanceof ADDR_IValidator) {
                         ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-                        upsert validator.verifyRecords(avList, options, settings);
+                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
+                        ADDR_Validator_TDTM.alreadyRun = true;
+                        //updating the addresses with the verified version
+                        update validator.verifyRecords(avList, options, settings);
                     } else {
                         System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
                     }
