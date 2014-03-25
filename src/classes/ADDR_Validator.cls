@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification options selected
-    private static Address_Verification_Settings__c options = Address_Verification_Settings__c.getInstance();
+    private static Address_Verification_Settings__c options = Address_Verification_Settings__c.getOrgDefaults();
     //get the information about the address verification service to use
     private static Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getOrgDefaults();
 

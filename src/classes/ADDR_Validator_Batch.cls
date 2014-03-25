@@ -59,7 +59,7 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
         // verify and update this batch of addresses
         if (!addressesToVerify.isEmpty()) {
             ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-            validator.verifyRecords(addressesToVerify, Address_Verification_Settings__c.getInstance(), 
+            validator.verifyRecords(addressesToVerify, Address_Verification_Settings__c.getOrgDefaults(), 
                 Address_Authentication_Settings__c.getOrgDefaults());
         }       
     }
