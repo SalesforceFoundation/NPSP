@@ -43,7 +43,7 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
         if(!alreadyRun) {
 	        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
-                ADDR_Validator.verifyRecords(new Map<Id, SObject>(newList).keyset());
+                ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
 	        }
         }
         alreadyRun = true;

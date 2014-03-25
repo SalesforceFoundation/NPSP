@@ -51,17 +51,12 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     public void execute(Database.BatchableContext BC, List<Address__c> scope) {
 
         list<Address__c> addressesToVerify = new list<Address__c>();
-
-        for (Address__c a : scope) {
+        for (Address__c a : scope)
             if (isUS(a)) addressesToVerify.add(a); 
-        }
         
         // verify and update this batch of addresses
-        if (!addressesToVerify.isEmpty()) {
-            ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-            validator.verifyRecords(addressesToVerify, Address_Verification_Settings__c.getOrgDefaults(), 
-                Address_Authentication_Settings__c.getOrgDefaults());
-        }       
+        if (!addressesToVerify.isEmpty())
+            ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
     public void finish(Database.BatchableContext BC) {}

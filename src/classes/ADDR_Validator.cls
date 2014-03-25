@@ -42,34 +42,43 @@ public with sharing class ADDR_Validator {
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
+    public static void verifyRecordsFuture(set<id> recordIds) {
+        verifyRecords(recordIds);
+    }
+    
     public static void verifyRecords(set<id> recordIds) {
-        System.debug('****Retrieving data records');
+    	System.debug('****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
             Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
             Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
 
-        if (!avList.isEmpty()) {
+        verifyAddressRecords(avList);
+    }
+    
+    //we separate it from the query so that we can call it also from the batch process
+    public static void verifyAddressRecords(List<Address__c> avList) {
+    	if (!avList.isEmpty()) {
             System.debug('****Verifying records');
             if(settings != null) {
-	            String classToRunName = String.valueOf(settings.get('Class__c'));
-	            Type classType = Type.forName(classToRunName);
-	            if(classType != null) {     
-	                Object classInstance = classType.newInstance();
-	                //The objects we create dynamically need to implement the ADDR_IValidator interface
-	                if(classInstance instanceof ADDR_IValidator) {
-	                    ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-	                    upsert validator.verifyRecords(avList, options, settings);
-	                } else {
-	                    System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
-	                }
-	            } else {
-	                System.debug(LoggingLevel.WARN, '****ClassType was null.');
-	            }
-	        } else {
-	            System.debug(LoggingLevel.WARN, '****ClassToCall was null');
-	        }
+                String classToRunName = String.valueOf(settings.get('Class__c'));
+                Type classType = Type.forName(classToRunName);
+                if(classType != null) {     
+                    Object classInstance = classType.newInstance();
+                    //The objects we create dynamically need to implement the ADDR_IValidator interface
+                    if(classInstance instanceof ADDR_IValidator) {
+                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+                        upsert validator.verifyRecords(avList, options, settings);
+                    } else {
+                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+                    }
+                } else {
+                    System.debug(LoggingLevel.WARN, '****ClassType was null.');
+                }
+            } else {
+                System.debug(LoggingLevel.WARN, '****ClassToCall was null');
+            }
         }
     }
 }
