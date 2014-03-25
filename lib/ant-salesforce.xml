@@ -314,7 +314,7 @@
       <if>
       	<not><equals arg1="@{installClass}" arg2="NOTSET" /></not>
       	<then>
-      	    <echo file="@{xmlfile}" append="true">  &lt;installClass&gt;@{installClass}&lt;/installClass&gt;${line.separator}</echo>
+      	    <echo file="@{xmlfile}" append="true">  &lt;postInstallClass&gt;@{installClass}&lt;/postInstallClass&gt;${line.separator}</echo>
         </then>
       </if>
     	
