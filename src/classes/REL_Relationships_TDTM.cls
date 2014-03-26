@@ -34,12 +34,12 @@
 public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
     	
     	List<npe4__Relationship__c> newListCasted = (newList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)newList);
         List<npe4__Relationship__c> oldListCasted = (oldList == null ? new List<npe4__Relationship__c>(): (List<npe4__Relationship__c>)oldList);
     	
-    	if(triggerAction != TDTM_TriggerActionHelper.Action.afterDelete) {
+    	if(triggerAction != TDTM_Runnable.Action.afterDelete) {
     		return runForRelationships(newListCasted, oldListCasted, triggerAction);
         } else {
         	return runForRelationships(oldListCasted, null, triggerAction);
@@ -52,7 +52,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <param name="oldRelationships"> Relationships object values before trigger event </param>
     /// <param name="ta"> Trigger action that is occuring </param>
     private DmlWrapper runForRelationships(List<npe4__Relationship__c> newlist, List<npe4__Relationship__c> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction) {
+    TDTM_Runnable.Action triggerAction) {
     	    
     	DmlWrapper mainWrapper = new DmlWrapper();
     	
@@ -63,14 +63,14 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         List<npe4__Relationship__c> relationshipsToDelete = new List<npe4__Relationship__c>();
         List<npe4__Relationship__c> reciprocalsToUpdate = new List<npe4__Relationship__c>();
         
-        if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {
+        if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
             REL_ProcessControl.hasRun = true;
         }
         
         Integer i = 0;          // processing counter            
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.afterInsert) {
+            if (triggerAction == TDTM_Runnable.Action.afterInsert) {
             	System.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
                 if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
@@ -81,7 +81,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             }
             
             // AFTER UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {   
+            if (triggerAction == TDTM_Runnable.Action.afterUpdate) {   
             	System.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
                 if (r.npe4__ReciprocalRelationship__c == oldlist[i].npe4__ReciprocalRelationship__c 
                 && r.npe4__RelatedContact__c != null) {
@@ -94,7 +94,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             }
 
             // AFTER DELETE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.afterDelete) {
+            if (triggerAction == TDTM_Runnable.Action.afterDelete) {
             	System.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
@@ -128,7 +128,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             mainWrapper.objectsToDelete.addAll(wrapper.objectsToDelete);
         }
 
-        if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate) {
+        if (triggerAction == TDTM_Runnable.Action.afterUpdate) {
             REL_ProcessControl.hasRun = false;
         }
         return mainWrapper;

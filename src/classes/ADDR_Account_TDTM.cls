@@ -36,7 +36,7 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         DmlWrapper dmlWrapper = new DmlWrapper();  
         list<Account> listAccCreateAddr = new list<Account>();      
@@ -46,20 +46,20 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             Account acc = (Account)so;
 
             // BEFORE INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             }
             
             // BEFORE UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             }
             
             // AFTER INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
 
             }
     
             // AFTER UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Account accOld = (Account)listOld[i];
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.

@@ -34,7 +34,7 @@
 public with sharing class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         List<CampaignMember> newListCasted = (newList == null ? new List<CampaignMember>(): (List<CampaignMember>)newList);
         List<CampaignMember> oldListCasted = (oldList == null ? new List<CampaignMember>(): (List<CampaignMember>)oldList);
@@ -76,12 +76,12 @@ public with sharing class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
                             }catch(Exception e) {
                                 cm.addError(system.Label.npe4.AutoCreateFieldError); 
                             }
-                            if(triggerAction == TDTM_TriggerActionHelper.Action.afterInsert && relatedContactId != null) {                        
+                            if(triggerAction == TDTM_Runnable.Action.afterInsert && relatedContactId != null) {                        
                                 ContactIds.add(cm.ContactId);
                                 ReciprocalIds.add(relatedContactId);
                                 Types.add(rac.npe4__Relationship_Type__c);
                             }
-                            else if (triggerAction == TDTM_TriggerActionHelper.Action.afterUpdate && relatedContactId != null 
+                            else if (triggerAction == TDTM_Runnable.Action.afterUpdate && relatedContactId != null 
                             && relatedContactId != oldMap.get(cm.id).get(rac.npe4__Field__c)){
                                 ContactIds.add(cm.ContactId);
                                 ReciprocalIds.add(relatedContactId);

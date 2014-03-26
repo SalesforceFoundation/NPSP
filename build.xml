@@ -305,7 +305,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     </target>
 
     <target name="updatePackageXmlManaged">
-      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass" />
+      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
     </target>
 
     <target name="updateMetaXml">
