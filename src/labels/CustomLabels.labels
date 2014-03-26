@@ -1638,4 +1638,12 @@
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
     </labels>
+    <labels>
+        <fullName>stgValidationHHAccountHHRules</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgValidationHHAccountHHRules</shortDescription>
+        <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
+    </labels>
 </CustomLabels>
