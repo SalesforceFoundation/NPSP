@@ -36,7 +36,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
         DmlWrapper dmlWrapper = new DmlWrapper();        
         list<Contact> listConAddrSet = new list<Contact>(); 
@@ -49,7 +49,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             Contact con = (Contact)so;
 
             // BEFORE INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 if (con.Current_Address__c != null) {
                     listConAddrSet.add(con);
                     if (con.is_Address_Override__c)
@@ -58,7 +58,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             }
             
             // BEFORE UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             	Contact conOld = (Contact)listOld[i];
                 if (con.is_Address_Override__c != conOld.is_Address_Override__c  || con.Current_Address__c != conOld.Current_Address__c) {
                 	if (con.Current_Address__c != null) {
@@ -81,9 +81,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
             // but if the contact has an address override, we are supposed to create (or match) a non default address override.
             // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate ||
-               triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || 
-               triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate ||
+               triggerAction == TDTM_Runnable.Action.AfterInsert || 
+               triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Contact conOld = (listOld != null ? (Contact)listOld[i] : null);
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
@@ -121,7 +121,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             
         // create any new Address objects
         if (listConCreateAddr.size() > 0)
-            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate);
+            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction == TDTM_Runnable.Action.BeforeUpdate);
             
         return dmlWrapper;    
     }

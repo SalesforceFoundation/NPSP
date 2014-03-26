@@ -28,48 +28,38 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 public with sharing class TDTM_TriggerActionHelper {
-
-    public enum Action {   
-        BeforeInsert, 
-        BeforeUpdate, 
-        BeforeDelete, 
-        AfterInsert, 
-        AfterUpdate, 
-        AfterDelete,
-        AfterUndelete
-    }
     
-    public static Action determineTriggerAction(Boolean isBefore, Boolean isAfter, Boolean isInsert,
+    public static TDTM_Runnable.Action determineTriggerAction(Boolean isBefore, Boolean isAfter, Boolean isInsert,
     Boolean isUpdate, Boolean isDelete, Boolean isUnDelete) {
         if (isBefore) {
-            if (isInsert) return Action.BeforeInsert;
-            else if (isUpdate) return Action.BeforeUpdate;
-            else return Action.BeforeDelete;
+            if (isInsert) return TDTM_Runnable.Action.BeforeInsert;
+            else if (isUpdate) return TDTM_Runnable.Action.BeforeUpdate;
+            else return TDTM_Runnable.Action.BeforeDelete;
         } else {
-            if (isInsert) return Action.AfterInsert;
-            else if (isUpdate) return Action.AfterUpdate;
-            else if (isDelete) return Action.AfterDelete;
-            else return Action.AfterUndelete;
+            if (isInsert) return TDTM_Runnable.Action.AfterInsert;
+            else if (isUpdate) return TDTM_Runnable.Action.AfterUpdate;
+            else if (isDelete) return TDTM_Runnable.Action.AfterDelete;
+            else return TDTM_Runnable.Action.AfterUndelete;
         }
     }
     
-    public static Action getTriggerActionFromName(String name) {
-        Action ta;
+    public static TDTM_Runnable.Action getTriggerActionFromName(String name) {
+        TDTM_Runnable.Action ta;
     
-        if (name == Action.BeforeInsert.name())
-           ta = Action.BeforeInsert;
-        else if(name == Action.BeforeUpdate.name())
-           ta = Action.BeforeUpdate;
-        else if(name == Action.BeforeDelete.name())
-           ta = Action.BeforeDelete;
-        else if(name == Action.AfterInsert.name())
-           ta = Action.AfterInsert;
-        else if(name == Action.AfterUpdate.name())
-           ta = Action.AfterUpdate;
-        else if(name == Action.AfterDelete.name())
-           ta = Action.AfterDelete;
-        else if(name == Action.AfterUndelete.name())
-           ta = Action.AfterUndelete;
+        if (name == TDTM_Runnable.Action.BeforeInsert.name())
+           ta = TDTM_Runnable.Action.BeforeInsert;
+        else if(name == TDTM_Runnable.Action.BeforeUpdate.name())
+           ta = TDTM_Runnable.Action.BeforeUpdate;
+        else if(name == TDTM_Runnable.Action.BeforeDelete.name())
+           ta = TDTM_Runnable.Action.BeforeDelete;
+        else if(name == TDTM_Runnable.Action.AfterInsert.name())
+           ta = TDTM_Runnable.Action.AfterInsert;
+        else if(name == TDTM_Runnable.Action.AfterUpdate.name())
+           ta = TDTM_Runnable.Action.AfterUpdate;
+        else if(name == TDTM_Runnable.Action.AfterDelete.name())
+           ta = TDTM_Runnable.Action.AfterDelete;
+        else if(name == TDTM_Runnable.Action.AfterUndelete.name())
+           ta = TDTM_Runnable.Action.AfterUndelete;
         return ta;
     }
     

@@ -31,7 +31,7 @@
 public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-     TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
          
         DmlWrapper dmlWrapper = new DmlWrapper();
  

@@ -191,6 +191,14 @@
         <value>Zip code not found.</value>
     </labels>
     <labels>
+        <fullName>Zipcode_Verification_Limit</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Zipcode Verification Limit</shortDescription>
+        <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
         <fullName>addrHHAccountOnly</fullName>
         <categories>Address Management</categories>
         <language>en_US</language>

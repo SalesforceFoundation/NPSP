@@ -37,13 +37,13 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     // trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
     // needs to see if the Opp is changing to closed, and if it has open RD's, update them.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         RD_ProcessControl.hasRun = true;
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         set<id> rdIDs = new set<id>();        
-        if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             integer i = 0;       
             for (SObject sobj : newlist) {
                 Opportunity o = (Opportunity)sobj;

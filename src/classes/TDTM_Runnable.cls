@@ -32,7 +32,7 @@
  * Class that classes to be run from a trigger according to the TDTM design
  * need to extend.
  */
-public abstract class TDTM_Runnable {
+global abstract class TDTM_Runnable {
 
     //It will be the duty of the run method implementation to set a flag to prevent re-entrancy. We cannot do 
     //that for them in TDTM_TriggerHandler, even if it's after calling the future, because then it might get set 
@@ -48,7 +48,7 @@ public abstract class TDTM_Runnable {
     public static void runFuture(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
         
         Schema.DescribeSObjectResult objResult = TDTM_TriggerActionHelper.getDescribeObjectByName(objectName);
-        TDTM_TriggerActionHelper.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
+        TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
         
         //Get all fields for the object
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
@@ -81,13 +81,23 @@ public abstract class TDTM_Runnable {
         }
     }
     
-    public abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult);
+    global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction, 
+        Schema.DescribeSObjectResult objResult);
         
-    public class DmlWrapper {
+    global class DmlWrapper {
         public List<SObject> objectsToInsert = new List<SObject>(); 
         public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
         public List<SObject> objectsToDelete = new List<SObject>();
         public List<SObject> objectsToUndelete = new List<SObject>();
+    }
+    
+    global enum Action {   
+        BeforeInsert, 
+        BeforeUpdate, 
+        BeforeDelete, 
+        AfterInsert, 
+        AfterUpdate, 
+        AfterDelete,
+        AfterUndelete
     }
 }

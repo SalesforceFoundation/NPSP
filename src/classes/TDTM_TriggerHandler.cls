@@ -43,7 +43,7 @@ public with sharing class TDTM_TriggerHandler {
     	Savepoint sp = Database.setSavepoint();
     	
     	try {
-    		TDTM_TriggerActionHelper.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, 
+    		TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, 
     		                                              isAfter, isInsert, isUpdate, isDelete, isUnDelete);
             System.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
         
@@ -92,7 +92,7 @@ public with sharing class TDTM_TriggerHandler {
     }
     
     private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
-    TDTM_TriggerActionHelper.Action thisAction, Schema.DescribeSobjectResult describeObj) {
+    TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -130,7 +130,7 @@ public with sharing class TDTM_TriggerHandler {
     }
     
     private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
-    List<Sobject> oldList, TDTM_TriggerActionHelper.Action thisAction, Schema.DescribeSobjectResult describeObj) {
+    List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
        Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
        
        Map<Id,Sobject> om;
