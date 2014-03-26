@@ -55,8 +55,6 @@ public with sharing class ADDR_Validator_TEST {
 
         // set the verification settings
         Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
-        settings.Auto_Update_Addresses__c = true;
-        settings.Clear_Invalid_Addresses__c = true;
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
         insert settings;

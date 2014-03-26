@@ -58,8 +58,6 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
         // set the verification settings
         options = Address_Verification_Settings__c.getOrgDefaults();
-        options.Auto_Update_Addresses__c = true;
-        options.Clear_Invalid_Addresses__c = true;
         options.Enable_Automatic_Verification__c = true;
         options.Reject_Ambiguous_Addresses__c = true;
         insert options;

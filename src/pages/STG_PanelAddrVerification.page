@@ -95,17 +95,9 @@
 					<apex:inputCheckbox value="{!options.Enable_Automatic_Verification__c}" />
 					<apex:outputLabel value="Help here" />
 					
-					<apex:outputLabel value="Auto Update Addresses"/>
-					<apex:inputField value="{!options.Auto_Update_Addresses__c}" />
-					<apex:outputLabel value="Help here" />
-					
 					<apex:outputLabel value="Reject Ambiguous Addresses"/>
 					<apex:inputField value="{!options.Reject_Ambiguous_Addresses__c}" />
 					<apex:outputLabel value="Help here" />
-					
-					<apex:outputLabel value="Clear Invalid Addresses"/>
-					<apex:inputField value="{!options.Clear_Invalid_Addresses__c}" />
-			        <apex:outputLabel value="Help here" />
 			
 			</apex:panelGrid>
  
