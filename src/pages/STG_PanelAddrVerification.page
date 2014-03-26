@@ -28,6 +28,7 @@
 			<apex:outputText escape="false" value="{!$Label.Addr_Settings_Key_Body}" />
 
 			 <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
+			 
 				<apex:outputLabel value="Auth ID" />
 				<apex:inputText value="{!settings.Auth_ID__c}" />
 	            <apex:outputLabel value="Help here" />
@@ -51,6 +52,15 @@
 			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Title}" />
 			    <apex:inputText value="{!settings.HTML_Key__c}" />
 			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Body}" escape="false" />
+			    
+			    <apex:outputLabel value="Enable Automatic Verification"/>
+                <apex:inputCheckbox value="{!settings.Enable_Automatic_Verification__c}" />
+                <apex:outputLabel value="Help here" />
+                
+                <apex:outputLabel value="Reject Ambiguous Addresses"/>
+                <apex:inputField value="{!settings.Reject_Ambiguous_Addresses__c}" />
+                <apex:outputLabel value="Help here" />
+                    
             </apex:panelGrid>
 
             <br/>
@@ -86,33 +96,8 @@
 					</p>
 				</apex:outputPanel>
 			</apex:outputPanel>
-
-			<h3 class="sectionBar" >{!$Label.Addr_Settings_Customization_Title}</h3>
-
-			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >			
-					
-					<apex:outputLabel value="Enable Automatic Verification"/>
-					<apex:inputCheckbox value="{!options.Enable_Automatic_Verification__c}" />
-					<apex:outputLabel value="Help here" />
-					
-					<apex:outputLabel value="Reject Ambiguous Addresses"/>
-					<apex:inputField value="{!options.Reject_Ambiguous_Addresses__c}" />
-					<apex:outputLabel value="Help here" />
-			
-			</apex:panelGrid>
  
-            <br/>
-            <div style="text-align:center">
-			    <apex:commandButton id="submitVerificationSettings" action="{!saveOptions}"
-				rerender="saveVerificationResult" value="Save Settings"/>
-		    </div>
 			<br/>
-			
-			<apex:outputPanel id="saveVerificationResult">
-				<apex:outputPanel rendered="{!NOT(ISNULL(verificationSettingsSaveMessage))}">
-					<apex:outputText value="{!verificationSettingsSaveMessage}" />
-				</apex:outputPanel>
-			</apex:outputPanel>
 
 			<h3 class="sectionBar" >{!$Label.Addr_Verification_Batch_Title}</h3>
 			<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />

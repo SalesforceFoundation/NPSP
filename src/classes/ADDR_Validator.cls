@@ -35,10 +35,8 @@
 */
 public with sharing class ADDR_Validator {
 
-    //get verification options selected
-    private static Address_Verification_Settings__c options = Address_Verification_Settings__c.getOrgDefaults();
-    //get the information about the address verification service to use
-    private static Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getOrgDefaults();
+    //get verification settings
+    private static Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -72,7 +70,7 @@ public with sharing class ADDR_Validator {
                         //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
                         ADDR_Validator_TDTM.alreadyRun = true;
                         //updating the addresses with the verified version
-                        update validator.verifyRecords(avList, options, settings);
+                        update validator.verifyRecords(avList, settings);
                     } else {
                         System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
                     }

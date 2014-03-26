@@ -44,17 +44,13 @@ public with sharing class ADDR_Validator_TEST {
         CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
-        // create the basic api authentication settings
-        Address_Authentication_Settings__c authSettings = Address_Authentication_Settings__c.getOrgDefaults();
-        authSettings.Auth_ID__c = 'hey';
-        authSettings.Auth_Token__c = 'there';
-        authSettings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
-        authSettings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
-        authSettings.Class__c = 'ADDR_SmartyStreets_Validator';
-        insert authSettings;
-
-        // set the verification settings
+        // create the basic api settings
         Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        settings.Auth_ID__c = 'hey';
+        settings.Auth_Token__c = 'there';
+        settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
+        settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
+        settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
         insert settings;
@@ -243,8 +239,6 @@ public with sharing class ADDR_Validator_TEST {
         sc.settings.HTML_Key__c = 'skldjflsdkfj';
         sc.saveSettings();
         System.assertEquals('Saved.', sc.apiSettingsSaveMessage);
-
-        sc.saveOptions();
 
         sc.apiTestEntry = '98236';
         sc.testApi();
