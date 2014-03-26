@@ -237,6 +237,7 @@ public with sharing class ADDR_Validator_TEST {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
         sc.settings.HTML_Key__c = 'skldjflsdkfj';
+        sc.settings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.', sc.apiSettingsSaveMessage);
 
@@ -247,5 +248,19 @@ public with sharing class ADDR_Validator_TEST {
         Test.startTest();
         sc.bulkVerify();
         Test.stopTest();
+    }
+    
+    static testMethod void testControllerMissingSetting() {
+        if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
+        
+        STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        
+        sc.settings.HTML_Key__c = 'skldjflsdkfj';
+        
+        Test.startTest();
+        sc.saveSettings();
+        Test.stopTest();
+        
+        System.assert(sc.apiSettingsSaveMessage.contains('Required fields are missing'));
     }
 }
