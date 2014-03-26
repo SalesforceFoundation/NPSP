@@ -20,14 +20,6 @@
         <value>API Account Settings</value>
     </labels>
     <labels>
-        <fullName>Addr_Settings_Customization_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Customization Title</shortDescription>
-        <value>Automatic Verification Settings</value>
-    </labels>
-    <labels>
         <fullName>Addr_Settings_HTML_Key_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
