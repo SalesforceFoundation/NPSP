@@ -191,20 +191,20 @@
         <value>Zip code not found.</value>
     </labels>
     <labels>
-        <fullName>addrCopyConAddBtnHHObjOnly</fullName>
-        <categories>ADDR_CopyConAddrHHObjBTN</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>addrCopyConAddBtnHHObjOnly</shortDescription>
-        <value>This button only supports Contacts with Household objects, not Household Accounts.</value>
-    </labels>
-    <labels>
         <fullName>Zipcode_Verification_Limit</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Zipcode Verification Limit</shortDescription>
         <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
+        <fullName>addrCopyConAddBtnHHObjOnly</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrCopyConAddBtnHHObjOnly</shortDescription>
+        <value>This button only supports Contacts with Household objects, not Household Accounts.</value>
     </labels>
     <labels>
         <fullName>addrHHAccountOnly</fullName>
