@@ -36,13 +36,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
         DmlWrapper dmlWrapper = null;
         
-        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
         	setOpportunityAccountField((list<Opportunity>) newlist);
-        } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+        } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
         	dmlWrapper = new DmlWrapper();
         	createOrUpdateContactRoles((list<Opportunity>) newlist, dmlWrapper);
             // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.

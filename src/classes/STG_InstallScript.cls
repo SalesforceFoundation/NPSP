@@ -26,7 +26,7 @@ global class STG_InstallScript implements InstallHandler {
         AFFL_Affiliations_UTIL.getAffiliationsSettings();
         ERR_Notifier.getOrgSettings();
         
-        //schedule cron job
+        //create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c];
         if(numOfJobs == 0) {
         	List<Schedulable__c> jobs = new List<Schedulable__c>();
@@ -38,6 +38,7 @@ global class STG_InstallScript implements InstallHandler {
                     Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
         }
+        //schedule master cron job
         UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
     }
 

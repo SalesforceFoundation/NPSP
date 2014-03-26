@@ -5,6 +5,16 @@
     <description>Credentials for the SmartyStreets address verification/normalization integration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Address_Verification_Endpoint__c</fullName>
+        <description>The endpoint (URL) to point to for address verification.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The endpoint (URL) to point to for address verification.</inlineHelpText>
+        <label>Address Verification Endpoint</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>Auth_ID__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>LiveAddress API Auth ID - get yours at https://smartystreets.com/account/keys</inlineHelpText>
@@ -21,6 +31,18 @@
         <inlineHelpText>LiveAddress API Auth Token (unencoded) - get yours at https://smartystreets.com/account/keys</inlineHelpText>
         <label>Auth Token</label>
         <length>200</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Class__c</fullName>
+        <description>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</inlineHelpText>
+        <label>Class</label>
+        <length>124</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -49,6 +71,16 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Zipcode_Verification_Endpoint__c</fullName>
+        <description>The endpoint (URL) to point to for zipcode verification.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The endpoint (URL) to point to for zipcode verification.</inlineHelpText>
+        <label>Zipcode Verification Endpoint</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
     </fields>
     <label>Address Authentication Settings</label>
 </CustomObject>

@@ -32,7 +32,7 @@
 * @date 2011 (2.1)
 * @description Controls the creation of payment objects from Opportunity trigger
 */
-public without sharing class PMT_PaymentCreator{
+public without sharing class PMT_PaymentCreator {
 
     //user defined rollups in list settings
     public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
@@ -45,7 +45,7 @@ public without sharing class PMT_PaymentCreator{
     public npe01__Contacts_And_Orgs_Settings__c ContactSettings;
 
     //constructor gets opps from trigger??
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_TriggerActionHelper.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
+    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
         
         ContactSettings = CAO_Constants.getContactsSettings();
                     
@@ -90,7 +90,7 @@ public without sharing class PMT_PaymentCreator{
             }
             
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
-            if (ta == TDTM_TriggerActionHelper.Action.AfterUpdate){
+            if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
                 soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
                 for (string s : paymentMappings.keyset()){
@@ -108,7 +108,7 @@ public without sharing class PMT_PaymentCreator{
             }
     
             //IF Trigger is Insert, Create a new Payment
-            if( ta == TDTM_TriggerActionHelper.Action.AfterInsert){
+            if( ta == TDTM_Runnable.Action.AfterInsert){
                 for (Opportunity thisOpp : newOpps){
                     // if opp is closed won with no payments scheduled or made, add an automatic payment
                         if ( /*(thisOpp.IsClosed && thisOpp.IsWon) && */
@@ -171,7 +171,7 @@ public without sharing class PMT_PaymentCreator{
             
             
             //IF Trigger is Update, keep synced Payments in Sync or delete if Opp is lost
-            if( ta == TDTM_TriggerActionHelper.Action.AfterUpdate ){
+            if( ta == TDTM_Runnable.Action.AfterUpdate ){
                 list<Opportunity> oldOpps = oldOppsMap.values();
                 for (Opportunity thisOpp : updatedOpps){
                     Opportunity oldOpp = oldOppsMap.get(thisOpp.id);

@@ -30,7 +30,7 @@
 public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
     
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
         list<npo02__Household__c> listHHNew = newlist;
         list<npo02__Household__c> listHHOld = oldlist;  
@@ -43,7 +43,7 @@ public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
         //need to use a process control class to avoid recursion when async updates occur
         //in non async updates, this won't fire again, so we don't need to worry
         if (!HH_ProcessControl.inFutureContext && 
-            (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate)) {
+            (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
             
             if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
 
@@ -64,7 +64,7 @@ public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
                     customnamelist = customname.split(';');
                     customnameset.addall(customnamelist);
                     
-                    if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                
+                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                
 	                    if (h.Name != null && h.Name != mapIdHHOld.get(h.id).Name && !customnameset.contains('Name')) {
 	                        customname += 'Name' + ';';
 	                    } else if ((h.Name == null || h.Name == '' || h.Name == system.Label.npo02.NameReplacementText) && customnameset.contains('Name')) {
@@ -92,7 +92,7 @@ public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
 	                        h.npo02__Formal_Greeting__c = system.Label.npo02.NameReplacementText;
 	                    }
 	                    h.npo02__SYSTEM_CUSTOM_NAMING__c = customname;
-                    } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                    } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
 	                    if (h.Name == system.Label.npo02.NameReplacementText)
 	                       hhlist.add(h.id);
 	                    else if (h.npo02__Informal_Greeting__c == system.Label.npo02.NameReplacementText)

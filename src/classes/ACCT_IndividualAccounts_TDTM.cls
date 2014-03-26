@@ -54,7 +54,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     // public ACCT_IndividualAccounts(Contact[] contacts, Contact[] oldContacts, CAO_Constants.triggerAction ta) {
     	
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         list<Contact> contacts = newlist;
         list<Contact> oldContacts = oldlist;
@@ -75,13 +75,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
             map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
             
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert || triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {                    
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
                 // need to query account fields we need to look at
                 Set<Id> setAccountId = new Set<Id>();
                 for (Contact c : contacts) 
                     setAccountId.add(c.AccountId);
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
-            } else if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert || triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
                contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
                     Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
@@ -91,7 +91,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }        
                         
             // AFTER DELETE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterDelete) {
+            if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
                 for (Contact c : oldContacts)
                     listContactAccountDelete.add(c);                     
             } else {               
@@ -99,7 +99,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 for (Contact c : contacts) {
                     
                     // BEFORE INSERT
-                    if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+                    if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                         /* HH Account should be created if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
@@ -134,7 +134,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     }
         
                     // AFTER INSERT
-                    if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+                    if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                         /*grab the Accounts that need to have the newly assigned Contact Id to them if:
                             1. If the contact is connected to an Account
                             2. The Contact is flagged as an individual
@@ -155,7 +155,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     }
         
                     // BEFORE UPDATE
-                    if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                         /* HH account should be created if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
@@ -193,7 +193,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     }
         
                     // AFTER UPDATE
-                    if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+                    if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                         /*if the contact is in the one-to-one model, changes to fields on the Contact
                         will require data changes on the Account to keep some fields in sync
                         */

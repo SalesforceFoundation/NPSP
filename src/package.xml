@@ -13,15 +13,16 @@
     <members>ADDR_Contact_TDTM</members>
     <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
     <members>ADDR_CopyAddrHHObjBTN_TEST</members>
+    <members>ADDR_IValidator</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
-    <members>ADDR_Validation_Gateway</members>
+    <members>ADDR_SmartyStreets_Gateway</members>
+    <members>ADDR_SmartyStreets_Validator</members>
     <members>ADDR_Validation_Gateway_TEST</members>
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
-    <members>ADDR_Zipcode_Validation_Gateway</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
@@ -136,6 +137,7 @@
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
     <members>UTIL_GlobalSchedulable_TEST</members>
+    <members>UTIL_IScheduled</members>
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
@@ -223,10 +225,13 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Address_Authentication_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Authentication_Settings__c.Auth_ID__c</members>
     <members>Address_Authentication_Settings__c.Auth_Token__c</members>
+    <members>Address_Authentication_Settings__c.Class__c</members>
     <members>Address_Authentication_Settings__c.HTML_Key__c</members>
     <members>Address_Authentication_Settings__c.Timeout__c</members>
+    <members>Address_Authentication_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auto_Update_Addresses__c</members>
     <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
     <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
@@ -309,6 +314,7 @@
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
     <members>Zip_Not_Found</members>
+    <members>Zipcode_Verification_Limit</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
