@@ -39,7 +39,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
         // STRATEGY
         // when an Address is created or modified, we need to consider three other objects we may need to update:
@@ -68,7 +68,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
             
             // BEFORE INSERT
-	        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert) {
+	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
 	           // when an address is marked Default, we update its latest date fields
 	           if (addr.Default_Address__c) { 
 	               addr.Latest_Start_Date__c = system.today();
@@ -77,7 +77,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	        }
 	        
             // BEFORE UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 if (addr.Default_Address__c != addrOld.Default_Address__c) {
                    // when an address changes Default, we update its latest date fields
                     if (addr.Default_Address__c) {
@@ -90,14 +90,14 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
 
             // AFTER INSERT
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterInsert) {
+            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             	// a new address that is marked default or seasonal needs to propogate to the household
                 if (addr.Default_Address__c || isSeasonalAddr(addr)) 
                     mapAccIdAddr.put(addr.Household_Account__c, addr);
             }
             
             // AFTER UPDATE
-            if (triggerAction == TDTM_TriggerActionHelper.Action.AfterUpdate) {
+            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 // an address that is marked default needs to propogate to the household
                 if ((addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c)) 
                     // any seasonal address also need to be considered
@@ -116,8 +116,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         // BEFORE INSERT & BEFORE UPDATE
-        if (triggerAction == TDTM_TriggerActionHelper.Action.BeforeInsert ||
-           triggerAction == TDTM_TriggerActionHelper.Action.BeforeUpdate) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
+           triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             // enforce only HH Accounts are being used
             verifyAddrHHAccOnly((list<Address__c>)listNew);
             return null;    

@@ -29,26 +29,33 @@
 
 			 <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
 				<apex:outputLabel value="Auth ID" />
-				<apex:inputText value="{!apiSettings.Auth_ID__c}" />
+				<apex:inputText value="{!settings.Auth_ID__c}" />
 	            <apex:outputLabel value="Help here" />
 	            
 				<apex:outputLabel value="Auth Token" />
-				<apex:inputText value="{!apiSettings.Auth_Token__c}" />
+				<apex:inputText value="{!settings.Auth_Token__c}" />
 	            <apex:outputLabel value="Help here" />
-            </apex:panelGrid>
-            
-			<h4>{!$Label.Addr_Settings_HTML_Key_Title}</h4>
-			<apex:outputText escape="false" value="{!$Label.Addr_Settings_HTML_Key_Body}" />
-			
-			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" > 
-			    <apex:outputLabel value="HTML Key Auth Token" />
-			    <apex:inputText value="{!apiSettings.HTML_Key__c}" />
-			    <apex:outputLabel value="Help here" />
+	            
+	            <apex:outputLabel value="Address Verification URL" />
+                <apex:inputText value="{!settings.Address_Verification_Endpoint__c}" />
+                <apex:outputLabel value="Help here" />
+                
+                <apex:outputLabel value="Zipcode Verification URL" />
+                <apex:inputText value="{!settings.Zipcode_Verification_Endpoint__c}" />
+                <apex:outputLabel value="Help here" />
+                
+                <apex:outputLabel value="Implementing Class" />
+                <apex:inputText value="{!settings.Class__c}" />
+                <apex:outputLabel value="Help here" />
+                
+			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Title}" />
+			    <apex:inputText value="{!settings.HTML_Key__c}" />
+			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Body}" escape="false" />
             </apex:panelGrid>
 
             <br/>
             <div style="text-align:center">
-			    <apex:commandButton id="submitSaveApiSettings" action="{!saveApiSettings}"
+			    <apex:commandButton id="submitSaveApiSettings" action="{!saveSettings}"
 				rerender="saveApiResult" value="Save Settings" />
 		    </div>
 			<br/>
@@ -85,26 +92,26 @@
 			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >			
 					
 					<apex:outputLabel value="Enable Automatic Verification"/>
-					<apex:inputCheckbox value="{!verificationSettings.Enable_Automatic_Verification__c}" />
+					<apex:inputCheckbox value="{!options.Enable_Automatic_Verification__c}" />
 					<apex:outputLabel value="Help here" />
 					
 					<apex:outputLabel value="Auto Update Addresses"/>
-					<apex:inputField value="{!verificationSettings.Auto_Update_Addresses__c}" />
+					<apex:inputField value="{!options.Auto_Update_Addresses__c}" />
 					<apex:outputLabel value="Help here" />
 					
 					<apex:outputLabel value="Reject Ambiguous Addresses"/>
-					<apex:inputField value="{!verificationSettings.Reject_Ambiguous_Addresses__c}" />
+					<apex:inputField value="{!options.Reject_Ambiguous_Addresses__c}" />
 					<apex:outputLabel value="Help here" />
 					
 					<apex:outputLabel value="Clear Invalid Addresses"/>
-					<apex:inputField value="{!verificationSettings.Clear_Invalid_Addresses__c}" />
+					<apex:inputField value="{!options.Clear_Invalid_Addresses__c}" />
 			        <apex:outputLabel value="Help here" />
 			
 			</apex:panelGrid>
  
             <br/>
             <div style="text-align:center">
-			    <apex:commandButton id="submitVerificationSettings" action="{!saveVerificationSettings}"
+			    <apex:commandButton id="submitVerificationSettings" action="{!saveOptions}"
 				rerender="saveVerificationResult" value="Save Settings"/>
 		    </div>
 			<br/>

@@ -48,6 +48,9 @@ public with sharing class ADDR_Validator_TEST {
         Address_Authentication_Settings__c authSettings = Address_Authentication_Settings__c.getOrgDefaults();
         authSettings.Auth_ID__c = 'hey';
         authSettings.Auth_Token__c = 'there';
+        authSettings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
+        authSettings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
+        authSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         insert authSettings;
 
         // set the verification settings
@@ -239,11 +242,11 @@ public with sharing class ADDR_Validator_TEST {
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
-        sc.apiSettings.HTML_Key__c = 'skldjflsdkfj';
-        sc.saveApiSettings();
+        sc.settings.HTML_Key__c = 'skldjflsdkfj';
+        sc.saveSettings();
         System.assertEquals('Saved.', sc.apiSettingsSaveMessage);
 
-        sc.saveVerificationSettings();
+        sc.saveOptions();
 
         sc.apiTestEntry = '98236';
         sc.testApi();

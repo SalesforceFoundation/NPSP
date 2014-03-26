@@ -32,7 +32,7 @@
 * @date 2011 (2.0)
 * @description Supports the automatic scheduling of opportunity rollups  
 */
-public class RLLP_OppRollup_SCHED implements UTIL_GlobalSchedulable.iScheduled {
+public class RLLP_OppRollup_SCHED implements UTIL_IScheduled {
 
     public void execute(SchedulableContext SC) { 
         RLLP_OppRollup rg = new RLLP_OppRollup();

@@ -34,8 +34,8 @@
  */
 public with sharing class STG_PanelADDRVerification_CTRL {
 
-    public Address_Authentication_Settings__c apiSettings { get; set; }
-    public Address_Verification_Settings__c verificationSettings { get; set; }
+    public Address_Authentication_Settings__c settings { get; set; }
+    public Address_Verification_Settings__c options { get; set; }
 
     public String apiSettingsSaveMessage { get; private set; }
     public String verificationSettingsSaveMessage { get; private set; }
@@ -49,13 +49,13 @@ public with sharing class STG_PanelADDRVerification_CTRL {
 
 
     public STG_PanelADDRVerification_CTRL() {
-        apiSettings = Address_Authentication_Settings__c.getInstance();
-        verificationSettings = Address_Verification_Settings__c.getInstance();
+        settings = Address_Authentication_Settings__c.getOrgDefaults();
+        options = Address_Verification_Settings__c.getOrgDefaults();
     }
 
-    public PageReference saveApiSettings() {
+    public PageReference saveSettings() {
         try {
-            upsert apiSettings;
+            upsert settings;
             apiSettingsSaveMessage = 'Saved.';
         } catch (Exception e) {
             apiSettingsSaveMessage = 'Did not save settings: ' + e.getMessage();
@@ -63,9 +63,9 @@ public with sharing class STG_PanelADDRVerification_CTRL {
         return null;
     }
 
-    public PageReference saveVerificationSettings() {
+    public PageReference saveOptions() {
         try {
-            upsert verificationSettings;
+            upsert options;
             verificationSettingsSaveMessage = 'Saved.';
         } catch (Exception e) {
             verificationSettingsSaveMessage = 'Did not save settings: ' + e.getMessage();
@@ -75,8 +75,8 @@ public with sharing class STG_PanelADDRVerification_CTRL {
 
     public PageReference testApi() {
         try {
-            ADDR_Zipcode_Validation_Gateway la = new ADDR_Zipcode_Validation_Gateway(apiSettings.Auth_ID__c, apiSettings.Auth_Token__c);
-            ADDR_Zipcode_Validation_Gateway.Response sz = la.verifyZip( apiTestEntry );
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
             apiTestResult = e.getMessage();
@@ -85,7 +85,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
     }
 
     public PageReference bulkVerify() {
-        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses( skipPreviouslyVerifiedObjects );
+        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses(skipPreviouslyVerifiedObjects);
         nowVerifying = true;
         bulkVerifyMessage = 'Verifying addresses.';
         return null;

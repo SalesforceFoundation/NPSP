@@ -37,7 +37,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
 
 //  public HH_OppContactRoles_TDTM(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_TriggerActionHelper.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<Opportunity> opportunities = newlist;
         list<Opportunity> oldOpportunities = oldlist;

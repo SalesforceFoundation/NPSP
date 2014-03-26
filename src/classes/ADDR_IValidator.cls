@@ -30,38 +30,10 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Supports the automatic scheduling of Seasonal Address updates  
-*/ 
-public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Database.Batchable<SObject>  {
+* @description Interface that classes that provide address validation/normalization
+* should implement.
+*/
+public Interface ADDR_IValidator {
 
-    public String strQuery { get; set; }
-
-    public void execute(SchedulableContext SC) { 
-    	
-    	integer iMonth = system.today().month();
-    	integer iDay = system.today().day();
-        
-        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-            ' from Address__c ' +
-            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-        //call the batch job, processing 10 at a time 
-        Id batchInstanceId = Database.executeBatch(this, 10);    
-    }
-
-
-    //***** Methods for Database.Batchable interface *****
-    public database.Querylocator start(Database.BatchableContext bc){       
-        return Database.getQueryLocator(strQuery);      
-    }
-    
-    public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-    	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
-    }
-
-    public void finish(Database.BatchableContext bc) {
-
-    }   
-       
+    List<Address__c> verifyRecords(list<Address__c> addresses, Address_Verification_Settings__c options, Address_Authentication_Settings__c settings);
 }
