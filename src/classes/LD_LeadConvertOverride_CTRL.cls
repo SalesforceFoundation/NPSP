@@ -163,11 +163,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
             
             // fix the account that lead conversion created
-            if (con == 'NEW_CONTACT') {     
-                Contact con = [select id,firstname, lastname,
-                    // extra fields needed by insertHousehold()
-                    npo02__Household__c, RecordTypeId, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email                    
-                    from contact where id=:lcr.getContactId()];                
+            if (con == 'NEW_CONTACT') {  
+            	string strSoql = 'select id, firstname, lastname,';
+            	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
+            	   strSoql += ' recordtypeId,';
+            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email';
+                strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';             	
+            	Contact con = database.query(strSoql);   
                 Account myAccount = new Account(Id=lcr.getAccountId());
                 
                 // update the account if it is non-standard 
