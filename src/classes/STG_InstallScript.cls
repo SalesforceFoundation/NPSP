@@ -25,6 +25,7 @@ global class STG_InstallScript implements InstallHandler {
         REL_Utils.getRelationshipSettings();
         AFFL_Affiliations_UTIL.getAffiliationsSettings();
         ERR_Notifier.getOrgSettings();
+        ADDR_Validator.getValidationSettings();
         
         //create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c];

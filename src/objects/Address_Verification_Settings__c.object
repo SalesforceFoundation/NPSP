@@ -5,6 +5,40 @@
     <description>Settings for automatic address verification and normalization.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Address_Verification_Endpoint__c</fullName>
+        <description>The endpoint (URL) to point to for address verification.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The endpoint (URL) to point to for address verification.</inlineHelpText>
+        <label>Address Verification Endpoint</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Auth_ID__c</fullName>
+        <description>Address verification  ID/Username - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Address verification  ID/Username - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>Auth ID</label>
+        <length>124</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Auth_Token__c</fullName>
+        <description>Authentication Token/Password - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Authentication Token/Password - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>Auth Token</label>
+        <length>200</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Auto_Update_Addresses__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
@@ -12,6 +46,18 @@
         <label>Auto-Update Addresses</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Class__c</fullName>
+        <description>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</inlineHelpText>
+        <label>Class</label>
+        <length>124</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Clear_Invalid_Addresses__c</fullName>
@@ -32,6 +78,18 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>HTML_Key__c</fullName>
+        <description>Used instead of ID/Token combination for certain type of services. You usually have to specify the domain for it in the web service account settings - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Used instead of ID/Token combination for certain type of services. You usually have to specify the domain for it in the web service account settings - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
+        <label>HTML Key</label>
+        <length>200</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>true</defaultValue>
         <externalId>false</externalId>
@@ -39,6 +97,29 @@
         <label>Reject Ambiguous Addresses</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Timeout__c</fullName>
+        <description>Callout timeout in seconds</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Callout timeout in seconds</inlineHelpText>
+        <label>Timeout</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Zipcode_Verification_Endpoint__c</fullName>
+        <description>The endpoint (URL) to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The endpoint (URL) to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</inlineHelpText>
+        <label>Zipcode Verification Endpoint</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
     </fields>
     <label>Address Verification Settings</label>
 </CustomObject>
