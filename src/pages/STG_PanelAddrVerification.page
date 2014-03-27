@@ -24,30 +24,28 @@
 				<apex:outputText escape="false" value="{!$Label.Addr_Settings_API_Body}" />
 			</apex:outputPanel>
 
-			<h4>{!$Label.Addr_Settings_Key_Title}</h4>
-			<apex:outputText escape="false" value="{!$Label.Addr_Settings_Key_Body}" />
-
-			 <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
+            <br/>
+			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
 			 
 				<apex:outputLabel value="Auth ID" />
 				<apex:inputText value="{!settings.Auth_ID__c}" />
-	            <apex:outputLabel value="Help here" />
+	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
 	            
 				<apex:outputLabel value="Auth Token" />
 				<apex:inputText value="{!settings.Auth_Token__c}" />
-	            <apex:outputLabel value="Help here" />
+	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
 	            
 	            <apex:outputLabel value="Address Verification URL" />
                 <apex:inputText value="{!settings.Address_Verification_Endpoint__c}" />
-                <apex:outputLabel value="Help here" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Zipcode Verification URL" />
                 <apex:inputText value="{!settings.Zipcode_Verification_Endpoint__c}" />
-                <apex:outputLabel value="Help here" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Implementing Class" />
                 <apex:inputText value="{!settings.Class__c}" />
-                <apex:outputLabel value="Help here" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
                 
 			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Title}" />
 			    <apex:inputText value="{!settings.HTML_Key__c}" />
@@ -55,11 +53,11 @@
 			    
 			    <apex:outputLabel value="Enable Automatic Verification"/>
                 <apex:inputCheckbox value="{!settings.Enable_Automatic_Verification__c}" />
-                <apex:outputLabel value="Help here" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Reject Ambiguous Addresses"/>
                 <apex:inputField value="{!settings.Reject_Ambiguous_Addresses__c}" />
-                <apex:outputLabel value="Help here" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                     
             </apex:panelGrid>
 
