@@ -30,10 +30,10 @@
 /**
 * @author Jason Venable & Evan Callahan
 * @date 2010 (2.x)
-* @description Controller for lead conversion of 1x1 contacts
+* @description Controller for lead conversion of all contacts
 */
 public with sharing class LD_LeadConvertOverride_CTRL {
-// Controller for lead conversion of one-to-one contacts
+// Controller for lead conversion of all contacts
  
 // Written by jason venable and evan callahan
 // at the NPSP Sprint 2010    
@@ -46,13 +46,23 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public string con { get; set; }
     public string oppName { get; set; }
     public boolean doNotCreateOpp { get; set; }
-    public string leadConvStatus { get; set; }
+    
+    public string leadConvStatus { 
+    	get {
+    		if (leadConvStatus == null || leadConvStatus == '') {
+                if (lcStatuses != null && lcStatuses.size() > 0)
+                    leadConvStatus = lcStatuses[0].getValue();
+    		}
+    		return leadConvStatus;
+    	}
+    	set;
+    }
+
     //public task leadTask { get; set; }
 
     //public list<selectOption> acctList = new list<selectOption>(); 
     public list<selectOption> conList; 
     map<id, contact> conMap = new map<id, contact>(); 
-    public list<selectOption> lcStatuses; 
     
     private npe01__Contacts_And_Orgs_Settings__c ContactsSettings; 
     
@@ -70,7 +80,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         
         // set a default opp name
         oppName = l.name;
-        doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;        
+        doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
+        sendEmailToOwner = false;        
     }    
     
     public list<selectOption> getConList() {
@@ -92,37 +103,36 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         return conList; 
     } 
     
-    public list<selectOption> getlcStatuses() {
-        if (lcStatuses == null) {
-            lcStatuses = new list<selectOption>();
-            // query
-            for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
-                lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
-            }
-            leadConvStatus = lcStatuses[0].getValue();
-        }
-        return lcStatuses;
+    public list<selectOption> lcStatuses {
+    	get {
+	        if (lcStatuses == null) {
+	            lcStatuses = new list<selectOption>();
+	            // query
+	            for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
+	                lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
+	            }
+	            //leadConvStatus = lcStatuses[0].getValue();
+	        }
+	        return lcStatuses;
+    	}
+    	private set;
     } 
     
-    public pageReference convertLead()
-    {
-        //String lId = ApexPages.currentPage().getParameters().get('id');  
-        PageReference pageRef;
-        
-        //DJH:UNDONE treat HH Account model just like 1:1?
-        
-        //don't test if we're not in the one-to-one model
-        if (!CAO_Constants.isBucketModel() && !((l.company.toUpperCase() != 'INDIVIDUAL' && 
-                (l.company == null || l.company == '' || l.company.toUpperCase() == 'SELF' || 
-                l.company.toUpperCase() == l.name)))) {
-
-            pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + l.Id + '&id=' + l.Id + '&nooverride=1');
-            pageRef.setRedirect(true);
-        }
-        return pageRef;
-    }           
-
-    public pageReference convertOneToOne() {
+    // utility to handle all the lead.company scenarios that specify
+    // that our special account handling should be used.
+    private boolean isSpecialAccount() {
+    	if (l == null)
+    	   return false;
+    	return (
+    	   l.company == null ||
+    	   l.company == '' ||
+    	   l.company.toLowerCase() == 'self' ||
+    	   l.company.toLowerCase() == 'individual' ||
+    	   l.company.toLowerCase() == l.name.toLowerCase()
+        ); 
+    }
+    
+    public pageReference convertLeadNow() {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        if (con == null) {
@@ -138,17 +148,14 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
 	        lc.setConvertedStatus(leadConvStatus);
 	        lc.setOwnerId(dummyCon.OwnerId);
+	        lc.setSendNotificationEmail(sendEmailToOwner);
 	        
 	        // is this a merge to existing?
 	        if (con != 'NEW_CONTACT') { 
 	            // get this contact's account
 	            lc.setContactId(con);
 	            lc.setAccountId(conMap.get(con).accountId);          
-	        }
-	        else{
-	            if (CAO_Constants.isBucketModel() && 
-	            (l.Company == CAO_Constants.BUCKET_ACCOUNT_NAME || l.Company == 'self' 
-	            || l.Company == '' || l.Company == null))
+	        } else if (CAO_Constants.isBucketModel() && isSpecialAccount()) {
 	               lc.setAccountID(CAO_Constants.getIndividualAccountID());
 	        }    
 	
@@ -156,27 +163,50 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
             
             // fix the account that lead conversion created
-            if (con == 'NEW_CONTACT' && !CAO_Constants.isBucketModel()) {     
-                //
-                Contact[] myconvertedContact = [select id,firstname, lastname from contact where id=:lcr.getContactId()];
-                
+            if (con == 'NEW_CONTACT') {  
+            	string strSoql = 'select id, firstname, lastname,';
+            	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
+            	   strSoql += ' recordtypeId,';
+            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email';
+                strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';             	
+            	Contact con = database.query(strSoql);   
                 Account myAccount = new Account(Id=lcr.getAccountId());
-                if (CAO_Constants.isOneToOne()) {
-	                myAccount.Name= ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(myconvertedContact[0]);
-	                myAccount.npe01__One2OneContact__c=lcr.getContactId();
-	                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                } else { 
-                	myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(myconvertedContact[0]);
-                	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+                
+                // update the account if it is non-standard 
+                if (isSpecialAccount()) {
+	                if (CAO_Constants.isOneToOne()) {
+		                myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
+		                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+	                } else if (CAO_Constants.isHHAccountModel()) { 
+	                	myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
+	                	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+	                }
+	                
+	                if (!CAO_Constants.isBucketModel()) {
+	                	// change its recordtype if specified in settings 
+	                    ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
+		                if (rtIdAcccount != null) {                
+		                    myAccount.put('RecordTypeID', rtIdAcccount);
+		                }                                    
+		                myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
+	                    myAccount.npe01__One2OneContact__c = con.Id;
+		                update myAccount;                    
+   	                }
                 }
-                myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
-                update myAccount;
+                                             
+	            // see if we need to create a household object for this contact (1:1 & bucket only)
+	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
+	                npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();                
+	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
+	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
+	                    update con;                         
+	                }
+	            }
             }     
-            
+                        
             //clean up the extra OCR Issue #214
-            // if we create an opp, its a 1x1, and its merged into an existing contact
-            // DJH:UNDONE is this issue affect HH Account as well?
-            if (!lc.isDoNotCreateOpportunity() && CAO_Constants.isOneToOne() && con != 'NEW_CONTACT'){
+            // if we create an opp, its a 1x1 (or HH?), and its merged into an existing contact
+            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && con != 'NEW_CONTACT'){
                 
                 //get the new OCRs
                 list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];

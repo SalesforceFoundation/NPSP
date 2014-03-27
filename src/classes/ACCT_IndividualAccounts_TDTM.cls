@@ -85,7 +85,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                // requery to get correct Account values (and all the other fields we will look at)
                contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
                     Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
-                    Salutation, npo02__Naming_Exclusions__c,
+                    Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,
                     MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
                     Phone, Fax from Contact where Id IN :contacts];
             }        
@@ -404,6 +404,22 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
+    // utility to return the recordtypeId for a new account, given the account model.
+    // if none is explicitly specified, returns null.
+    public static ID rtIdForNewAccount() {
+        ContactsSettings = CAO_Constants.getContactsSettings();
+        Schema.Recordtypeinfo rtById = null;
+        // check if recordtypes are enabled, and if it matches the existing setting
+        // we go thru describe to validate that it is a valid recordType ID.
+        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
+        if (rtId != null) {
+            Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
+            Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
+            rtById = rtMapById.get(rtId);
+            return rtById.getRecordTypeID();            
+        }
+        return null;
+    }
 
     /// <name> insertContactAccount </name>
     /// <summary> Inserts a new 1:1 or HH Account for an Individual Contact</summary>
@@ -426,17 +442,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         
         List<Account> accountInserts = new List<Account>();
-
-        Schema.Recordtypeinfo rtById = null;
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (rtId != null) {
-            Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
-            Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
-            rtById = rtMapById.get(rtId);            
-        }
-
+        ID rtIdAcccount = rtIdForNewAccount();
+        
         for (Contact c : contacts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
@@ -469,8 +476,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 a.ShippingState = c.OtherState;
                 a.ShippingCountry = c.OtherCountry;
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (rtById != null) {                
-                    a.put('RecordTypeID', rtByID.getRecordTypeID());
+                if (rtIdAcccount != null) {                
+                    a.put('RecordTypeID', rtIdAcccount);
                 }                
                 a.Type = CAO_Constants.isHHAccountModel() ? 'Household' : '';
                 a.npe01__SYSTEMISINDIVIDUAL__c = true;
@@ -675,6 +682,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return (!conNew.Firstname.equals(conOld.Firstname) ||
                 !conNew.Lastname.equals(conOld.Lastname) ||
                 conNew.Salutation != conOld.Salutation ||
+                conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
                 conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c);
     }   
     

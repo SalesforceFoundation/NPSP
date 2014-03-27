@@ -226,7 +226,7 @@ public without sharing class PMT_PaymentCreator {
                         else if ( thisOpp.isClosed && !thisOpp.isWon) {
                             
                             for(npe01__OppPayment__c thisPayment : thisOpp.npe01__OppPayment__r){
-                                if(thisPayment.npe01__Paid__c == False){
+                                if(thisPayment.npe01__Paid__c == False && thisPayment.npe01__Written_Off__c == False){
                                     paymentsToDelete.add(thisPayment);
                                 }
                             }

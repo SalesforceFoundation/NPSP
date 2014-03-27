@@ -1,4 +1,4 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" action="{!convertLead}" title="Convert Lead: {!Lead.Name}">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="Convert Lead: {!Lead.Name}">
     <style>
         .error{
             color: #CC0000;
@@ -12,7 +12,7 @@
     <apex:form >
         <apex:pageblock mode="edit" >
             <apex:pageBlockButtons >
-                <apex:commandButton value="Convert" action="{!convertOneToOne}"/>
+                <apex:commandButton value="Convert" action="{!convertLeadNow}"/>
                 <apex:commandButton value="Cancel" action="{!cancel}"/>
             </apex:pageBlockButtons>    
             <apex:pageBlockSection title="Convert Lead" columns="1" collapsible="false">

@@ -936,6 +936,133 @@ private with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     operation:
+        create multiple seasonal address that overlap with eachother  
+    verify:
+        overlap detected, seasonal addresses don't save
+    **********************************************************************************************************/            
+    static testMethod void insertSeasonalAddrWithOverlap() {
+        if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrWithOverlap') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // create additional seasonal addresses not current
+        initTestAddr(cHH * 2);
+        for (integer i = 0; i < cHH * 2; i++) {
+        	integer iacc = i < cHH ? i : i-cHH;
+        	if (math.mod(i, 2) == 0) {
+	            listAddrT[i].Household_Account__c = listAccT[iacc].Id;
+	            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
+	            listAddrT[i].Seasonal_Start_Day__c = '1';
+	            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
+	            listAddrT[i].Seasonal_End_Day__c = '31';
+        	} else {
+                listAddrT[i].Household_Account__c = listAccT[iacc-1].Id;
+                listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(-1).month());
+                listAddrT[i].Seasonal_Start_Day__c = '1';
+                listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
+                listAddrT[i].Seasonal_End_Day__c = '31';        	
+        	}
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
+            listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        try {
+            insert listAddrT;
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains(Label.addrSeasonalOverlap));
+            return;
+        }
+        system.assert(false); //we shouldn't get here!
+        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create multiple seasonal address that overlap existing seasonal addresses  
+    verify:
+        overlap detected, seasonal addresses don't save
+    **********************************************************************************************************/            
+    static testMethod void insertSeasonalAddrOverlapExisting() {
+        if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrOverlapExisting') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // create additional seasonal addresses not current
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
+            listAddrT[i].Seasonal_Start_Day__c = '1';
+            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
+            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
+            listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        
+        // create additional seasonal addresses that overlap existing seasonal addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(2).month());
+            listAddrT[i].Seasonal_Start_Day__c = '1';
+            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(4).month());
+            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
+            listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        try {
+            insert listAddrT;
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains(Label.addrSeasonalOverlap));
+            return;
+        }
+        system.assert(false); //we shouldn't get here!
+        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create multiple partial seasonal address  
+    verify:
+        partial seasonal detected, seasonal addresses don't save
+    **********************************************************************************************************/            
+    static testMethod void insertPartialSeasonalAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'insertPartialSeasonalAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // create additional seasonal addresses not current
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
+            listAddrT[i].Seasonal_Start_Day__c = '1';
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
+            listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        try {
+            insert listAddrT;
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains(Label.addrSeasonalPartial));
+            return;
+        }
+        system.assert(false); //we shouldn't get here!
+        
+    }
+
+    /*********************************************************************************************************
+    operation:
         schedule a seasonal address update 
     verify:
         contact's && hh address matches new seasonal
