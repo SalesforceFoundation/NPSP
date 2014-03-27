@@ -7,13 +7,13 @@ global class STG_InstallScript implements InstallHandler {
             try {
                 runNewOrgScript();
             } catch(Exception e) {
-            	sendEmailOnError();
+            	sendEmailOnError(e);
             	throw e;
             }
         }
     }
     
-    public void sendEmailOnError() {
+    public void sendEmailOnError(Exception e) {
     	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setSenderDisplayName('NPSP Install Script');
