@@ -34,11 +34,9 @@
  */
 public with sharing class STG_PanelADDRVerification_CTRL {
 
-    public Address_Authentication_Settings__c settings { get; set; }
-    public Address_Verification_Settings__c options { get; set; }
+    public Address_Verification_Settings__c settings { get; set; }
 
     public String apiSettingsSaveMessage { get; private set; }
-    public String verificationSettingsSaveMessage { get; private set; }
 
     public String apiTestEntry { get; set; }
     public String apiTestResult { get; set; }
@@ -49,8 +47,7 @@ public with sharing class STG_PanelADDRVerification_CTRL {
 
 
     public STG_PanelADDRVerification_CTRL() {
-        settings = Address_Authentication_Settings__c.getOrgDefaults();
-        options = Address_Verification_Settings__c.getOrgDefaults();
+        settings = Address_Verification_Settings__c.getOrgDefaults();
     }
 
     public PageReference saveSettings() {
@@ -63,19 +60,9 @@ public with sharing class STG_PanelADDRVerification_CTRL {
         return null;
     }
 
-    public PageReference saveOptions() {
-        try {
-            upsert options;
-            verificationSettingsSaveMessage = 'Saved.';
-        } catch (Exception e) {
-            verificationSettingsSaveMessage = 'Did not save settings: ' + e.getMessage();
-        }
-        return null;
-    }
-
     public PageReference testApi() {
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
