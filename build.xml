@@ -149,9 +149,6 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
          There are a few assumptions.  We never downgrade a dependent managed package in the packaging org.  This removes the need to completely remove
          all metadata to allow a package downgrade.  In the package org, we can't delete all metadata once a production managed release is cut so this approach is required -->
     <target name="deployCIPackageOrg">
-      <!-- First, delete any metadata from the org which is not in the repo -->
-      <antcall target="destroyStaleMetadata" />
-
       <!-- Deploy any unpackaged metadata needed for builds -->
       <antcall target="deployUnpackaged" />
 
@@ -161,8 +158,12 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Update the package.xml to managed package mode, adding install and uninstall script classes -->
       <antcall target="updatePackageXmlManaged" />
 
-      <!-- Finally, do a deploy with all tests -->
+      <!-- Do a deploy with all tests -->
       <antcall target="deploy" />
+
+      <!-- Finally, delete any metadata from the org which is not in the repo -->
+      <antcall target="destroyStaleMetadata" />
+
     </target>
 
     <!-- Deploys the latest managed beta (UAT) release to an org -->
