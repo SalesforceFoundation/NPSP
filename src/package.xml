@@ -11,6 +11,8 @@
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
     <members>ADDR_Contact_TDTM</members>
+    <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
+    <members>ADDR_CopyAddrHHObjBTN_TEST</members>
     <members>ADDR_IValidator</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
@@ -159,6 +161,7 @@
   </types>
   <types>
     <members>ACCT_ViewOverride</members>
+    <members>ADDR_CopyAddrHHObjBTN</members>
     <members>BDE_BatchEntry</members>
     <members>CON_ContactMerge</members>
     <members>HH_CampaignDedupeBTN</members>
@@ -309,8 +312,11 @@
     <members>Address_Verification_Limit</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
+    <members>addrCopyConAddBtnHHObjOnly</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
+    <members>addrSeasonalOverlap</members>
+    <members>addrSeasonalPartial</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -487,6 +493,7 @@
     <members>stgNavSystem</members>
     <members>stgNavTriggerConfig</members>
     <members>stgNavUserDefinedRollups</members>
+    <members>stgValidationHHAccountHHRules</members>
     <name>CustomLabel</name>
   </types>
   <types>
@@ -547,10 +554,6 @@
     <members>Batch__c.Open_Batches</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
-  </types>
-  <types>
-    <members>Address__c.Contact_00NG000000DDOnlMAH</members>
-    <name>NamedFilter</name>
   </types>
   <types>
     <members>Account.HH_Account</members>

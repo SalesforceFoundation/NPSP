@@ -174,6 +174,14 @@
         <value>You cannot verify more than 100 zipcodes at a time.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnHHObjOnly</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrCopyConAddBtnHHObjOnly</shortDescription>
+        <value>This button only supports Contacts with Household objects, not Household Accounts.</value>
+    </labels>
+    <labels>
         <fullName>addrHHAccountOnly</fullName>
         <categories>Address Management</categories>
         <language>en_US</language>
@@ -188,6 +196,22 @@
         <protected>false</protected>
         <shortDescription>addrHHAddressAlwaysDefault</shortDescription>
         <value>The Household Address will be copied to all Contacts that do not have an Address Override.</value>
+    </labels>
+    <labels>
+        <fullName>addrSeasonalOverlap</fullName>
+        <categories>Address Management</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrSeasonalOverlap</shortDescription>
+        <value>Seasonal addresses cannot overlap with any other seasonal address in the Household.</value>
+    </labels>
+    <labels>
+        <fullName>addrSeasonalPartial</fullName>
+        <categories>Address Management</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>addrSeasonalPartial</shortDescription>
+        <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
         <fullName>labelListViewFirst</fullName>
@@ -1596,5 +1620,13 @@
         <protected>false</protected>
         <shortDescription>stgNavUserDefinedRollups</shortDescription>
         <value>User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgValidationHHAccountHHRules</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgValidationHHAccountHHRules</shortDescription>
+        <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
 </CustomLabels>
