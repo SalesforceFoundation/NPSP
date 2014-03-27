@@ -1,4 +1,4 @@
-public with sharing class ERR_Notifier {
+public without sharing class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
     

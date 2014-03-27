@@ -32,7 +32,7 @@
 * @date 2011 (1.x)
 * @description Constants and helper methods used for common settings in npe01: account model, default contact role, etc. 
 */
-public with sharing class CAO_Constants {
+public without sharing class CAO_Constants {
     //One-to-One value for system processor field
     public static final String ONE_TO_ONE_PROCESSOR = 'One-to-One';
     //One-to-One org type value

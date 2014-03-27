@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-public with sharing class AFFL_Affiliations_UTIL {
+public without sharing class AFFL_Affiliations_UTIL {
 
     public static npe5__Affiliations_Settings__c affiliationsSettings;
     

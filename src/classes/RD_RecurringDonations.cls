@@ -32,7 +32,7 @@
 * @date 2012 (2.0)
 * @description The main class for controlling the behavior of Recurring Donations, both open ended and standard 
 */
-public with sharing class RD_RecurringDonations {
+public without sharing class RD_RecurringDonations {
     
     /*** Public Vars ***/ 
     

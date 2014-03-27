@@ -27,7 +27,7 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class TDTM_DefaultConfig {
+public without sharing class TDTM_DefaultConfig {
 
     public static List<Trigger_Handler__c> getDefaultRecords() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();

@@ -7,18 +7,22 @@ global class STG_InstallScript implements InstallHandler {
             try {
                 runNewOrgScript();
             } catch(Exception e) {
-            	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-		        mail.setUseSignature(false);
-		        mail.setSenderDisplayName('NPSP Install Script');
-		        mail.setSubject('NPSP Install Errors');
-		        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
-		        + 'Stack trace: \n' + e.getStackTraceString();
-		        mail.setPlainTextBody(bodyString);      
-                mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
-                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+            	sendEmailOnError();
             	throw e;
             }
         }
+    }
+    
+    public void sendEmailOnError() {
+    	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setUseSignature(false);
+        mail.setSenderDisplayName('NPSP Install Script');
+        mail.setSubject('NPSP Install Errors');
+        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
+        + 'Stack trace: \n' + e.getStackTraceString();
+        mail.setPlainTextBody(bodyString);      
+        mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
     global void runNewOrgScript(){
@@ -59,7 +63,7 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_and_Orgs_Settings__c npe01Settings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();

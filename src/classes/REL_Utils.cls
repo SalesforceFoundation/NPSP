@@ -32,7 +32,7 @@
 * @date 2011,2012
 * @description Enum for triggers and static utils for settings and collections
 */
-public class REL_Utils {
+public without sharing class REL_Utils {
     private static npe4__Relationship_Settings__c RelationshipSettings;
 
     public static npe4__Relationship_Settings__c getRelationshipSettings(){
