@@ -39,8 +39,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
 
-    private static Address_Verification_Settings__c options;
-    private static Address_Authentication_Settings__c settings;
+    private static Address_Verification_Settings__c settings;
     
     public static void createDefaultSettings() {
         // use the household account model
@@ -48,21 +47,15 @@ public with sharing class ADDR_Validation_Gateway_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api authentication settings
-        settings = Address_Authentication_Settings__c.getOrgDefaults();
+        settings = Address_Verification_Settings__c.getOrgDefaults();
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
         settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
+        settings.Enable_Automatic_Verification__c = true;
+        settings.Reject_Ambiguous_Addresses__c = true;
         insert settings;
-
-        // set the verification settings
-        options = Address_Verification_Settings__c.getOrgDefaults();
-        options.Auto_Update_Addresses__c = true;
-        options.Clear_Invalid_Addresses__c = true;
-        options.Enable_Automatic_Verification__c = true;
-        options.Reject_Ambiguous_Addresses__c = true;
-        insert options;
     }
     
     public static testMethod void testOneAddress() {
@@ -71,7 +64,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
         ADDR_SmartyStreets_Gateway.AddressResponse sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
 
         system.assert(sr != null);
@@ -86,7 +79,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
         list<ADDR_SmartyStreets_Gateway.AddressResponse> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA', 'Two Infinite Loop Cupertino, CA'} );
 
         system.assert(srs != null && srs.size() == 2);
@@ -101,7 +94,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
         ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip( '98236' );
 
         system.assert(sz != null);
@@ -123,7 +116,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.StartTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
             sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
         	System.debug('****' + e.getStackTraceString());

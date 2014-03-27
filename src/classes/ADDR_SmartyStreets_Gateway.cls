@@ -34,14 +34,12 @@
  */
 public with sharing class ADDR_SmartyStreets_Gateway {
 
-    private Address_Verification_Settings__c options;
-    private Address_Authentication_Settings__c settings;
+    private Address_Verification_Settings__c settings;
     private String auth;
     
     public class LiveAddressException extends Exception {}
 
-    public ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c options, Address_Authentication_Settings__c settings) {
-        this.options = options;
+    public ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c settings) {
         this.settings = settings;
         
         if (settings.auth_id__c != null && settings.auth_token__c != null)
