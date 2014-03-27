@@ -22,6 +22,18 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return null;
     }
 
+    public override PageReference saveSettings() {
+    	
+    	// add some extra error detection
+    	if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
+    	   STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.Label.stgValidationHHAccountHHRules));
+            return null;
+        }
+        
+        return super.saveSettings();
+    }
+
     static public string strMailingReport {
         get {
             if (strMailingReport == null) {
