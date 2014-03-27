@@ -35,10 +35,8 @@
 */
 public with sharing class ADDR_Validator {
 
-    //get verification options selected
-    private static Address_Verification_Settings__c options = Address_Verification_Settings__c.getOrgDefaults();
-    //get the information about the address verification service to use
-    private static Address_Authentication_Settings__c settings = Address_Authentication_Settings__c.getOrgDefaults();
+    //get verification settings
+    private static Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -72,7 +70,7 @@ public with sharing class ADDR_Validator {
                         //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
                         ADDR_Validator_TDTM.alreadyRun = true;
                         //updating the addresses with the verified version
-                        update validator.verifyRecords(avList, options, settings);
+                        update validator.verifyRecords(avList, settings);
                     } else {
                         System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
                     }
@@ -83,5 +81,18 @@ public with sharing class ADDR_Validator {
                 System.debug(LoggingLevel.WARN, '****ClassToCall was null');
             }
         }
+    }
+    
+    public static Address_Verification_Settings__c getValidationSettings() {        
+        if(settings.Id == null) {
+            settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
+	        settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
+	        settings.Class__c = 'ADDR_SmartyStreets_Validator';
+	        settings.Enable_Automatic_Verification__c = true;
+	        settings.Reject_Ambiguous_Addresses__c = true;
+            
+            insert settings;
+        }
+        return settings;
     }
 }
