@@ -6,10 +6,12 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Body</shortDescription>
-        <value>First, open your own &lt;a href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;
+        <value>To work with the SmartyStreets API, first open your own 
+                &lt;a href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;
 				SmartyStreets&lt;/a&gt; account. Then, create and copy the API keys from your 
 				&lt;a href=&quot;https://smartystreets.com/account/keys&quot; target=&quot;_blank&quot;&gt;Account
-			     Settings page&lt;/a&gt; and save them here.</value>
+			     Settings page&lt;/a&gt; and save them here. You can use an alternative address verification service of your choice by creating a class that implements the 
+                ADDR_IValidator interface, and entering the class name, as well as the service credentials, below.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_API_Title</fullName>
@@ -18,14 +20,6 @@
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Customization_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Customization Title</shortDescription>
-        <value>Automatic Verification Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_HTML_Key_Body</fullName>
@@ -81,25 +75,6 @@
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Title</shortDescription>
         <value>Introduction</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Key_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Key Body</shortDescription>
-        <value>&lt;p&gt;
-				To use automatic verification features of this app, create a
-				secret key pair, and then enter it here.
-			&lt;/p&gt;</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Key_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Key Title</shortDescription>
-        <value>Secret Key Pair</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Body</fullName>

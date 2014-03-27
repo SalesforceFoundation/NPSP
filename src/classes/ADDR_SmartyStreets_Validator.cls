@@ -35,14 +35,11 @@
  */
 public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidator {
 
-    private Address_Verification_Settings__c options;
-    private Address_Authentication_Settings__c settings;
+    private Address_Verification_Settings__c settings;
     
     // verify a List of custom object records - split them up into those we are
     // sending for address and those for zip only - max of 100 at a time for each
-    public List<Address__c> verifyRecords(List<Address__c> avList, Address_Verification_Settings__c options, 
-    Address_Authentication_Settings__c settings) {
-    	this.options = options;
+    public List<Address__c> verifyRecords(List<Address__c> avList, Address_Verification_Settings__c settings) {
     	this.settings = settings;
         
         List<Address__c> shortList = new List<Address__c>();
@@ -84,12 +81,12 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
             sr.zipcode = av.MailingPostalCode__c;
 
             // request a few candidates to determine if the address is unique
-            sr.candidates = (options.Reject_Ambiguous_Addresses__c) ? 3 : 1;   
+            sr.candidates = (settings.Reject_Ambiguous_Addresses__c) ? 3 : 1;   
             srList.add(sr);         
         }   
 
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
             List<ADDR_SmartyStreets_Gateway.AddressResponse> responses = la.verifyAddresses(srList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null) {
@@ -151,7 +148,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         }   
 
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(options, settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
             List<ADDR_SmartyStreets_Gateway.ZipResponse> responses = la.verifyZips(zrList);
             System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
             if (responses != null && !responses.isEmpty()) {
