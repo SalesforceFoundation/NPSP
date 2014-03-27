@@ -4,7 +4,20 @@ global class STG_InstallScript implements InstallHandler {
         //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
         if(context.previousVersion() == null) {
             System.debug('****First install');
-            runNewOrgScript();
+            try {
+                runNewOrgScript();
+            } catch(Exception e) {
+            	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+		        mail.setUseSignature(false);
+		        mail.setSenderDisplayName('NPSP Install Script');
+		        mail.setSubject('NPSP Install Errors');
+		        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
+		        + 'Stack trace: \n' + e.getStackTraceString();
+		        mail.setPlainTextBody(bodyString);      
+                mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+            	throw e;
+            }
         }
     }
 
