@@ -68,12 +68,15 @@
 		    </div>
 			<br/>
 			
+			<div style="text-align:center; font-weight:bold; color: green;">
 			<apex:outputPanel id="saveApiResult">
 				<apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsSaveMessage))}">
 					<apex:outputText value="{!apiSettingsSaveMessage}" />
+					<br/>
 				</apex:outputPanel>
 			</apex:outputPanel>
-
+            </div>
+            
             <br/>
 			<h4>{!$Label.Addr_Settings_Test_Title}</h4>
 			<apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />
