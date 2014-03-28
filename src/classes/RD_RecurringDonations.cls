@@ -848,27 +848,9 @@ public with sharing class RD_RecurringDonations {
     
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-        //if no settings exist, create defaults
-        if (recurringDonationsSettings == null) {
-            //first see if we already have settings
-            recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-            //if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its 
-            //the only field w/o a default defined
-            if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null){  
-                recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
-                recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = true;
-                recurringDonationsSettings.npe03__Enable_Update_Check__c = true;
-                //recurringDonationsSettings.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting
-                recurringDonationsSettings.npe03__Maximum_Donations__c = 50;
-                recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = 12;
-                recurringDonationsSettings.npe03__Update_Check_Interval__c = 90;
-                id myid = [select id from RecordType where sobjecttype = 'Opportunity' limit 1].id;
-                recurringDonationsSettings.npe03__Record_Type__c = myid; 
-                upsert recurringDonationsSettings;    
-                recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();                           
-            }
-        }         
-        return recurringDonationsSettings;
+    	recurringDonationsSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings(recurringDonationsSettings, 
+    	                                           RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
+    	return recurringDonationsSettings;
     }
 
     //handles action for opps on recurring donations
@@ -877,7 +859,8 @@ public with sharing class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
         //system.debug('IN THE PRIVATE METHOD');
         if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RecurringDonationCloseOptions.No_Action.name()) {
-            map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__r.id from Opportunity where npe03__Recurring_Donation__r.id IN :closedRDs and isClosed = false]);
+            map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__r.id 
+                                    from Opportunity where npe03__Recurring_Donation__r.id IN :closedRDs and isClosed = false]);
          
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()){
                 //system.debug('IN THE PRIVATE METHOD3');

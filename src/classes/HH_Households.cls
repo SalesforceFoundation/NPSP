@@ -32,7 +32,7 @@
 * @date 2011 (2.0)
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
-public without sharing class HH_Households { 
+public with sharing class HH_Households { 
     
     //One-to-One value for system processor field
     public static String ALL_PROCESSOR = 'All New or Edited Contacts';
@@ -43,75 +43,7 @@ public without sharing class HH_Households {
     
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npo02__Households_Settings__c getHouseholdsSettings() {
-        String oldProcessor = '';
-        //if no settings exist, create defaults
-        if (householdsSettings == null) {
-            //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
-            
-            //modified to check again the Id instead of the object
-            if (householdsSettings.Id == null) { 
-                //get the model they used to be in 
-                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                
-                for(Schema.PicklistEntry pe : P){
-                   // system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
-                    if (pe.isDefaultValue()){
-                        if(pe.getValue()==ALL_PROCESSOR){
-                            oldProcessor = ALL_PROCESSOR;
-                        } else if(pe.getValue()==ALL_INDIVIDUALS_PROCESSOR){
-                            oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
-                        } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
-                            oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
-                        }
-                        break;
-                    }
-                }
-                householdsSettings = new npo02__Households_Settings__c();
-                //set them up with their old setting in the new settings object
-                if(oldProcessor==ALL_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_PROCESSOR;
-                } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
-                } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-                } else {
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-                }
- 
-                householdsSettings.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
-                householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c = false;
-                householdsSettings.npo02__Enable_Opp_Rollup_Triggers__c = true;
-                householdsSettings.npo02__Excluded_Account_Opp_Rectypes__c = null;
-                householdsSettings.npo02__Excluded_Account_Opp_Types__c = null;
-                householdsSettings.npo02__Excluded_Contact_Opp_Rectypes__c = null;
-                householdsSettings.npo02__Excluded_Contact_Opp_Types__c = null;
-                householdsSettings.npo02__Membership_Record_Types__c = null;
-                householdsSettings.npo02__Rollup_N_Day_Value__c = 365;
-                householdsSettings.npo02__Membership_Grace_Period__c = 30;
-                householdsSettings.npo02__Advanced_Household_Naming__c = true;
-                householdsSettings.npo02__Async_Household_Naming__c = false;
-                householdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                householdsSettings.npo02__Schedule_Job_Limit__c = 25;
-                householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
-                householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
-                householdsSettings.npo02__Enable_Soft_Credit_Rollups__c = true;
-                householdsSettings.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
-				householdsSettings.npo02__Household_Contact_Roles_On__c = true;
-                
-                // new HH Account model overrides having HH objects
-                if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-
-                insert householdsSettings;
-            }
-        }
-        
-        // new HH Account model overrides having HH objects
-        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
-
+        householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings(householdsSettings, ALL_PROCESSOR, ALL_INDIVIDUALS_PROCESSOR, NO_HOUSEHOLDS_PROCESSOR);
         return householdsSettings;
     }
     

@@ -50,7 +50,7 @@ public with sharing class CAO_Constants {
     //HH_Account type value
     public static final String HH_ACCOUNT_TYPE = 'Household Account';
 
-    public static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
+    public static npe01__Contacts_And_Orgs_Settings__c ContactsSettings;
 
     public static  string CONTACT_FIRSTNAME_FOR_TESTS = 'test';
     public static  string CONTACT_LASTNAME_FOR_TESTS = 'Contact_forTests';
@@ -64,31 +64,7 @@ public with sharing class CAO_Constants {
 
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
-        boolean usedToBeOneToOne = false;
-        boolean usedToBeBucket = false;
-        //if no settings exist, create defaults
-        if (ContactsSettings == null) {
-            //first see if we already have settings
-            ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
-            //system.debug(npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults());
-            
-            if (ContactsSettings.Id == null) { 
-                ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                	
-                
-                //this setting does nothing, but needs to be extracted from the tests before removing
-                ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
-                ContactsSettings.npe01__Payments_Enabled__c  = true;
-                ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
-                ContactsSettings.Setupownerid = UserInfo.getOrganizationId();
-                
-                Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
-                if(householdAccount != null)
-                    ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
-                
-                //this is not allowed...
-                insert ContactsSettings;
-            }
-        }
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings(ContactsSettings, HH_ACCOUNT_PROCESSOR);
         return ContactsSettings;
     }
 
