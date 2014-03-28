@@ -217,8 +217,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgErrorSettings;
     }
     
-    public static Address_Verification_Settings__c getValidationSettings(Address_Verification_Settings__c settings) {        
-        if(settings == null) {
+    public static Address_Verification_Settings__c getValidationSettings() {        
+        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        if(settings.Id == null) {
         	settings = Address_Verification_Settings__c.getOrgDefaults();
             settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
             settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
