@@ -82,7 +82,7 @@ public with sharing class STG_SettingsService {
     
     public Error_Settings__c stgErr {
         get {
-            if (stgErr == null) stgErr = ERR_Notifier.getOrgSettings();
+            if (stgErr == null) stgErr = ERR_Notifier.getErrorSettings();
             return stgErr;
         }
         private set;

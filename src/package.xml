@@ -133,6 +133,7 @@
     <members>TDTM_TriggerActionHelper</members>
     <members>TDTM_TriggerHandler</members>
     <members>TDTM_iTableDataGateway</members>
+    <members>UTIL_CustomSettingsFacade</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>

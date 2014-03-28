@@ -1,14 +1,67 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Install Script for the NPSP package. 
+*/
 global class STG_InstallScript implements InstallHandler {
 
     global void onInstall(InstallContext context) {
         //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
         if(context.previousVersion() == null) {
             System.debug('****First install');
-            runNewOrgScript();
+            try {
+                runNewOrgScript();
+            } catch(Exception e) {
+            	//sendEmailOnError(e);
+            	throw e;
+            }
         }
     }
+    
+    //For some reason this method does not seem to be working when the installation of the package fails. We'll
+    //leave it here for future debugging purposes. 
+    public void sendEmailOnError(Exception e) {
+    	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setUseSignature(false);
+        mail.setSenderDisplayName('NPSP Install Script');
+        mail.setSubject('NPSP Install Errors');
+        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
+        + 'Stack trace: \n' + e.getStackTraceString();
+        mail.setPlainTextBody(bodyString);      
+        mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+    }
 
-    global void runNewOrgScript(){
+    global void runNewOrgScript() {
         //provides a global callable method for running the default install script to setup TDTM in new orgs
 
         //Get the mapping from old settings to the new TDTM default setup
@@ -19,13 +72,13 @@ global class STG_InstallScript implements InstallHandler {
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
         
         //set default settings
-        CAO_Constants.getContactsSettings();
-        HH_Households.getHouseholdsSettings();
-        RD_RecurringDonations.getRecurringDonationsSettings();
-        REL_Utils.getRelationshipSettings();
-        AFFL_Affiliations_UTIL.getAffiliationsSettings();
-        ERR_Notifier.getOrgSettings();
-        ADDR_Validator.getValidationSettings();
+        UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
+        UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 'Mark_Opportunities_Closed_Lost');
+        UTIL_CustomSettingsFacade.getRelationshipSettings(null);
+        UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
+        UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
+        UTIL_CustomSettingsFacade.getValidationSettings();
         
         //create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c];
@@ -47,7 +100,7 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_and_Orgs_Settings__c npe01Settings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
