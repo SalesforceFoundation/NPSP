@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
