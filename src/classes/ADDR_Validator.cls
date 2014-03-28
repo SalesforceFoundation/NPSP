@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+    private static Address_Verification_Settings__c settings = getValidationSettings();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -84,15 +84,7 @@ public with sharing class ADDR_Validator {
     }
     
     public static Address_Verification_Settings__c getValidationSettings() {        
-        if(settings.Id == null) {
-            settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
-	        settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
-	        settings.Class__c = 'ADDR_SmartyStreets_Validator';
-	        settings.Enable_Automatic_Verification__c = true;
-	        settings.Reject_Ambiguous_Addresses__c = true;
-            
-            insert settings;
-        }
+        settings = UTIL_CustomSettingsFacade.getValidationSettings();
         return settings;
     }
 }

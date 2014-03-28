@@ -32,36 +32,22 @@
 * @date 2011,2012
 * @description Enum for triggers and static utils for settings and collections
 */
-public class REL_Utils {
-    private static npe4__Relationship_Settings__c RelationshipSettings;
+public with sharing class REL_Utils {
+    private static npe4__Relationship_Settings__c relationshipSettings;
 
-    public static npe4__Relationship_Settings__c getRelationshipSettings(){
-        if (RelationshipSettings == null){
-            //retrive the lowest level hierachy setting
-            RelationshipSettings = npe4__Relationship_Settings__c.getInstance();
-
-            //check for an org wide setting and insert if required
-            if (RelationshipSettings.Id == null){
-                npe4__Relationship_Settings__c newRS;
-                newRS = npe4__Relationship_Settings__c.getOrgDefaults();
-                //will return an empty object is it does not exist
-                if (newRS.Id == null){
-                    newRS.npe4__Reciprocal_Method__c = 'List Settings';
-                    insert newRS;
-                }
-                RelationshipSettings = newRS;
-            }
-        }
-        return RelationshipSettings;
+    public static npe4__Relationship_Settings__c getRelationshipSettings() {
+        relationshipSettings = UTIL_CustomSettingsFacade.getRelationshipSettings(relationshipSettings);
+        return relationshipSettings;
     }
 
     private static Map<String, npe4__Relationship_Auto_Create__c> AutoCreateMap;
-    public static Map<String, npe4__Relationship_Auto_Create__c> getAutoCreateMap(){
+    public static Map<String, npe4__Relationship_Auto_Create__c> getAutoCreateMap() {
         if(AutoCreateMap == null){
             AutoCreateMap = npe4__Relationship_Auto_Create__c.getAll();
         }
         return AutoCreateMap;
     }
+    
     private static Boolean contactAutoCreate;
     public static Boolean hasContactAutoCreate{get{
         if (contactAutoCreate == null){
