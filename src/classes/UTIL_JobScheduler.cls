@@ -1,4 +1,4 @@
-public with sharing class UTIL_JobScheduler {
+public without sharing class UTIL_JobScheduler {
     
     public static String scheduleJobIfNotScheduled(String JobName, String frequency, String className) {
         

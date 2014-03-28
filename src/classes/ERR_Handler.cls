@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -70,7 +70,7 @@ public with sharing class ERR_Handler {
     	
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
-    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c && errorsExist) {
+    	if(ERR_Notifier.getErrorSettings().Error_Notifications_On__c && errorsExist) {
            System.debug('****Errors exist - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
     	}
@@ -133,14 +133,14 @@ public with sharing class ERR_Handler {
                }
            }
            
-           if(ERR_Notifier.getOrgSettings().Store_Errors_On__c) {
+           if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
                Database.SaveResult result = Database.insert(error, false);
                System.debug(LoggingLevel.WARN, '****Error record: ' + JSON.serializePretty(error));
            }
     	}
     	
-    	if(ERR_Notifier.getOrgSettings().Error_Notifications_On__c) {
+    	if(ERR_Notifier.getErrorSettings().Error_Notifications_On__c) {
     	   System.debug('****Processing error - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
     	}
@@ -160,7 +160,7 @@ public with sharing class ERR_Handler {
     
     /*** NOTE: we want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
-        if(ERR_Notifier.getOrgSettings().Store_Errors_On__c) {
+        if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
 		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
 		  Database.insert(errors, false);
         }
