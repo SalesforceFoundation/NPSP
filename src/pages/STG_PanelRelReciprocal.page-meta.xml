@@ -4,27 +4,27 @@
     <label>STG_PanelRelReciprocal</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>96</minorNumber>
+        <minorNumber>97</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>93</minorNumber>
+        <minorNumber>94</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>92</minorNumber>
+        <minorNumber>93</minorNumber>
         <namespace>npe4</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>93</minorNumber>
+        <minorNumber>94</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>98</minorNumber>
+        <minorNumber>99</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>
