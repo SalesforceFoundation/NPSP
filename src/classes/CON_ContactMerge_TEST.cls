@@ -59,14 +59,14 @@ private class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2, con3};
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));  
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         controller.searchText = 'test';
         
         Test.startTest();
         controller.search();
         
         //Since we didn't index the results yet, search results should be empty and should not be displayed
-        system.assert(!controller.displaySearchResults);
+        system.assert(controller.searchResults.isEmpty());
 
         Id[] fixedSearchResults=new Id[3]; 
         fixedSearchResults[0]=con.Id; 
@@ -79,7 +79,7 @@ private class CON_ContactMerge_TEST {
         controller.search();
         
         //search results should be displayed
-        system.assert(controller.displaySearchResults);
+        system.assert(!controller.searchResults.isEmpty());
         
         //there should be 3 Contacts returned
         system.assertEquals(3,controller.searchResults.size());
@@ -154,7 +154,7 @@ private class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2};
  
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge')); 
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         controller.searchText = 'test';
         
         Id[] fixedSearchResults=new Id[2]; 
@@ -210,7 +210,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
 
         controller.searchText = 'test';
         
@@ -261,7 +261,7 @@ private class CON_ContactMerge_TEST {
         insert con;
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));   
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();     
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));     
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value      
         Id[] fixedSearchResults=new Id[1]; 
@@ -307,7 +307,7 @@ private class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2, con3, con4};
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));     
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();     
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));     
         controller.searchText = 'test';
         
         Id[] fixedSearchResults=new Id[4]; 
@@ -365,7 +365,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -423,7 +423,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -500,7 +500,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -558,7 +558,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -611,7 +611,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -661,7 +661,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -711,7 +711,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -775,7 +775,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -833,7 +833,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -898,7 +898,7 @@ private class CON_ContactMerge_TEST {
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -960,7 +960,7 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con.LastName, 'O\'Sullivan');
                 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'O\'Sullivan';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -1016,7 +1016,7 @@ private class CON_ContactMerge_TEST {
          
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL();
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
@@ -1049,4 +1049,121 @@ private class CON_ContactMerge_TEST {
         //Merged contact should reference the second contact's household
         System.assertEquals(hh2Id, [select npo02__Household__c from Contact where id=:con.id].npo02__Household__c);
     }  
+
+    
+    //check a standard set controller passed into the page is handled correctly
+    static testMethod void testStandardSetSelected(){
+        
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[]{con, con2};
+                
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        
+        //create standard set controller with 2 records
+        ApexPages.Standardsetcontroller ssc =new ApexPages.Standardsetcontroller(new list<Contact>{con,con2});
+        
+        //select these two records for merge
+        ssc.setSelected(new list<Contact>{con,con2});
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(ssc);
+        
+        //check we ended up on step 2 of the merge
+        system.assertEquals(2, controller.step); 
+        
+        //check 2 records selected
+        system.assertEquals(2, controller.selectedRecordsCount);
+        
+        //and that fields were populated
+        system.assert(!controller.fieldRows.isEmpty());
+    }
+  
+    //check a search term passed into the page is handled correctly
+    static testMethod void testSearchSpecPassed(){
+        
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[]{con, con2};
+        
+        list<Id> fixedSearchResults = new List<Id>(); 
+        fixedSearchResults.add(con.Id);
+        fixedSearchResults.add(con2.Id);  
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        PageReference pr = Page.CON_ContactMerge;
+        pr.getParameters().put('srch', 'O\'Sullivan');
+        
+        Test.setCurrentPageReference(pr);
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        
+        //check we ended up on step 1 of the merge
+        system.assertEquals(1, controller.step); 
+        
+        //check the 2 records already retrieved in search results
+        system.assertEquals(2, controller.searchResults.size());
+    }
+    
+    //check a comma separated list of Ids are handled correctly
+    static testMethod void testGoodIdsPassed(){
+        
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[]{con, con2};
+        
+        PageReference pr = Page.CON_ContactMerge;
+        pr.getParameters().put('mergeIds', con.Id + ',' + con2.Id);
+        
+        Test.setCurrentPageReference(pr);
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        
+        //check we ended up on step 2 of the merge
+        system.assertEquals(2, controller.step); 
+        
+        //check 2 records selected
+        system.assertEquals(2, controller.selectedRecordsCount);
+        
+        //and that fields were populated
+        system.assert(!controller.fieldRows.isEmpty());
+    }
+    
+    //check invalid Ids are handled
+    static testMethod void testBadIdsPassed(){
+        
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+        Contact con = UTIL_UnitTestData_TEST.getContact();        
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[]{con, con2};
+        
+        list<Id> fixedSearchResults = new List<Id>(); 
+        fixedSearchResults.add(con.Id);
+        fixedSearchResults.add(con2.Id);  
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        PageReference pr = Page.CON_ContactMerge;
+        pr.getParameters().put('mergeIds', 'blah');
+        
+        Test.setCurrentPageReference(pr);
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        
+        //check we ended up on step 1 of the merge
+        system.assertEquals(1, controller.step); 
+        
+        //check error message logged to the page
+        system.assert(ApexPages.hasMessages()); 
+        
+    }
 }
