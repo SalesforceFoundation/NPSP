@@ -1,4 +1,4 @@
-<apex:page controller="CON_ContactMerge_CTRL" title="Merge Contacts" id="contactMergePage">
+<apex:page standardController="Contact" extensions="CON_ContactMerge_CTRL" title="Merge Contacts" id="contactMergePage" recordSetVar="cons" >
 
     <style type="text/css">
         .mergeTable{
@@ -63,11 +63,11 @@
         
         <apex:pageMessages /> 
         <apex:outputPanel id="searchresults" layout="block">
-            <apex:outputPanel id="nothingfound" layout="block" rendered="{!!displaySearchResults&&searchText!=''}">
+            <apex:outputPanel id="nothingfound" layout="block" rendered="{!searchResults.size == 0 && searchText!=''}">
             {!$Label.npe01__Contact_Merge_Error_Confirm_Message_Nothing_Found}
             </apex:outputPanel>
             <apex:form >
-                <apex:pageBlock title="Found Contacts" rendered="{!displaySearchResults}"> 
+                <apex:pageBlock title="Found Contacts" rendered="{!searchResults.size > 0}"> 
                     <apex:pageBlockTable value="{!searchResults}" var="item">
                         <apex:column >
                             <apex:inputCheckbox value="{!item.selected}" id="checkedone"/>

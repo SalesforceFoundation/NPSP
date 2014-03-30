@@ -155,6 +155,18 @@
         <type>Checkbox</type>
     </fields>
     <webLinks>
+        <fullName>Merge_Contacts</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Merge Contacts</masterLabel>
+        <openType>sidebar</openType>
+        <page>CON_ContactMerge</page>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
         <fullName>Relationships_Viewer</fullName>
         <availability>online</availability>
         <displayType>button</displayType>
