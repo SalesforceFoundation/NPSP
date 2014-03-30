@@ -3,7 +3,7 @@
     <apiVersion>28.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>98</minorNumber>
+        <minorNumber>99</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
     <status>Active</status>
