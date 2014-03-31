@@ -27,6 +27,10 @@
             <br/>
 			<apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
 			 
+				<apex:outputLabel value="Using Smarty Streets" />
+                <apex:inputCheckbox value="{!settings.Using_SmartyStreets__c}" />
+                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
+                
 				<apex:outputLabel value="Auth ID" />
 				<apex:inputText value="{!settings.Auth_ID__c}" />
 	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
@@ -64,12 +68,12 @@
             <br/>
             <div style="text-align:center">
 			    <apex:commandButton id="submitSaveApiSettings" action="{!saveSettings}"
-				rerender="saveApiResult" value="Save Settings" />
+				rerender="saveApiSettingsSuccess, saveApiSettingsFailure" value="Save Settings" />
 		    </div>
 			<br/>
 			
 			<div style="text-align:center; font-weight:bold; color: green;">
-			<apex:outputPanel id="saveApiResult">
+			<apex:outputPanel id="saveApiSettingsSuccess">
 				<apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsSaveMessage))}">
 					<apex:outputText value="{!apiSettingsSaveMessage}" />
 					<br/>
@@ -77,10 +81,19 @@
 			</apex:outputPanel>
             </div>
             
+            <div style="text-align:center; font-weight:bold; color: red;">
+            <apex:outputPanel id="saveApiSettingsFailure">
+                <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
+                    <apex:outputText value="{!apiSettingsErrorMessage}" />
+                    <br/>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            </div>
+            
             <br/>
 			<h4>{!$Label.Addr_Settings_Test_Title}</h4>
 			<apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />
-			<apex:outputLabel value="Zip Code" />
+			<apex:outputLabel value="Zip Code: " />
 			<apex:inputText id="zipTest" value="{!apiTestEntry}" />
 			
 			<br/>
