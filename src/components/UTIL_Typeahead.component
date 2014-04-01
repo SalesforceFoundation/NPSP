@@ -2,8 +2,8 @@
 <apex:component controller="UTIL_Typeahead">
 
     <script type="text/javascript">
-        window.jQuery || document.write('<script src="{!URLFOR($Resource.Bootstrap, 'js/jquery-1.10.2.min.js')}"><\/script>');
-        window.typeahead || document.write('<script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"><\/script>');
+        window.jQuery || document.write('<script src="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"><\/script>');
+        window.typeahead || document.write('<script src="{!URLFOR($Resource.CumulusStaticResources, '/Typeahead/typeahead.bundle.min.js')}"><\/script>');
     </script>
 
     <apex:attribute name="searchBoxId" type="String" default="searchBox"

@@ -1,13 +1,7 @@
 <apex:page controller="STG_SettingsManager_CTRL" >
 
-<head>
-    <script type="text/javascript">
-            window.jQuery || document.write('<script src="{!URLFOR($Resource.Bootstrap, 'js/jquery-1.10.2.min.js')}"><\/script>');
-    </script>
-    <script src="{!URLFOR($Resource.Bootstrap, 'js/bootstrap.min.js')}" type="text/javascript" />
-
-    <apex:styleSheet value="{!URLFOR($Resource.Bootstrap, IF(false /*isSalesforce1*/, 'css/bootstrap-namespaced-s1.css', 'css/bootstrap-namespaced.css'))}" />
-</head>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
 
 <style>
     body{
@@ -77,7 +71,7 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Quicklinks</h3></div>
                     <ul class="list-group">
-                        <li class="list-group-item">Get answers in the<a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a></li>
+                        <li class="list-group-item">Get answers in the <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a></li>
                         <li class="list-group-item">How to <a href="https://powerofus.force.com/articles/Resource/How-to-log-a-tech-support-ticket-with-salesforce-com" title="How to log a tech support ticket with salesforce.com" target="_blank">log a tech support ticket</a></li>
                         <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/findapartner" title="Find a partner" target="_blank">consulting partner or App</a></li>
                         <li class="list-group-item">Find and join a local <a href="http://www.salesforcefoundation.org/user-groups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>

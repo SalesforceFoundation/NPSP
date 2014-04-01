@@ -416,7 +416,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
             Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
             rtById = rtMapById.get(rtId);
-            return rtById.getRecordTypeID();            
+            return (rtById == null ? null : rtById.getRecordTypeID());            
         }
         return null;
     }
