@@ -98,7 +98,9 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                     notebody += c.npo02__Household__r.npo02__MailingState__c + '  ';
                     notebody += c.npo02__Household__r.npo02__MailingPostalCode__c + '  ';
                     notebody += c.npo02__Household__r.npo02__MailingCountry__c;
-                    n = new Note(Title = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + UserInfo.getName(), ParentId = h.id, Body = notebody);
+                    string strTitle = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + UserInfo.getName();
+                    strTitle = strTitle.left(80);
+                    n = new Note(Title = strTitle, ParentId = h.id, Body = notebody);
                 }
                 
                 h.npo02__MailingStreet__c = c.MailingStreet;
@@ -151,7 +153,9 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                     notebody += con.MailingState + '  ';
                     notebody += con.MailingPostalCode + '  ';
                     notebody += con.MailingCountry;
-                    n = new Note(Title = 'ADDRESS UPDATE FROM HOUSEHOLD: ' + system.today() + ' BY: ' + UserInfo.getName(), ParentId = con.id, Body = notebody);
+                    string strTitle = 'ADDRESS UPDATE FROM HOUSEHOLD: ' + system.today() + ' BY: ' + UserInfo.getName();
+                    strTitle = strTitle.left(80);
+                    n = new Note(Title = strTitle, ParentId = con.id, Body = notebody);
                     notestoinsert.add(n);
                 }   
                 

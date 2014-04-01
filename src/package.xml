@@ -561,13 +561,7 @@
     <name>RecordType</name>
   </types>
   <types>
-    <members>BDE_jQTSSkin</members>
-    <members>BDE_jqtablesorter</members>
-    <members>Bootstrap</members>
-    <members>CollapsibleListJS</members>
-    <members>ManageHouseholdcss</members>
-    <members>ManageHouseholdjs</members>
-    <members>Typeahead</members>
+    <members>CumulusStaticResources</members>
     <name>StaticResource</name>
   </types>
   <types>
