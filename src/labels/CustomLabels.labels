@@ -82,7 +82,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>&lt;p&gt;To test your SmartyStreets Secret Key Pair, enter any US Zip Code.&lt;/p&gt;</value>
+        <value>To test your SmartyStreets Secret Key Pair, enter any US Zip Code:</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Response_Title</fullName>
