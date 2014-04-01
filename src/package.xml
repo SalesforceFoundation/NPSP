@@ -550,6 +550,7 @@
   <types>
     <members>Account.AllAccounts</members>
     <members>Account.Household_Accounts</members>
+    <members>Account.Organization_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
@@ -558,20 +559,19 @@
   </types>
   <types>
     <members>Account.HH_Account</members>
+    <members>Opportunity.Donation</members>
+    <members>Opportunity.Grant</members>
+    <members>Opportunity.MajorGift</members>
+    <members>Opportunity.MatchingDonation</members>
     <name>RecordType</name>
   </types>
   <types>
-    <members>BDE_jQTSSkin</members>
-    <members>BDE_jqtablesorter</members>
     <members>Bootstrap</members>
-    <members>CollapsibleListJS</members>
-    <members>ManageHouseholdcss</members>
-    <members>ManageHouseholdjs</members>
+    <members>CumulusStaticResources</members>
     <members>Typeahead</members>
     <name>StaticResource</name>
   </types>
   <types>
-    <members>Contact.Merge_Contacts</members>
     <members>Contact.Relationships_Viewer</members>
     <name>WebLink</name>
   </types>
