@@ -2,7 +2,8 @@
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/colors.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/primitives.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/graphics.js')}"/>
-    <apex:includescript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor-tween.js')}"/> 
     <body>

@@ -1,12 +1,8 @@
 <apex:page showHeader="true" sidebar="false" controller="STG_SettingsManager_CTRL" docType="html-5.0" >
 
-<head>
-    <script type="text/javascript">
-            window.jQuery || document.write('<script src="{!URLFOR($Resource.Bootstrap, 'js/jquery-1.10.2.min.js')}"><\/script>');
-    </script>
-
-    <script src="{!URLFOR($Resource.CollapsibleListJS)}" />
-</head>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
     
 <style> 
        
