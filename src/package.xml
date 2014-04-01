@@ -236,6 +236,7 @@
     <members>Address_Verification_Settings__c.HTML_Key__c</members>
     <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
     <members>Address_Verification_Settings__c.Timeout__c</members>
+    <members>Address_Verification_Settings__c.Using_SmartyStreets__c</members>
     <members>Address_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>

@@ -43,7 +43,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         this.settings = settings;
         
         if (settings.auth_id__c != null && settings.auth_token__c != null)
-            auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + EncodingUtil.URLEncode(settings.auth_token__c, 'UTF-8');
+            auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + settings.auth_token__c;
         else if (settings.html_key__c != null)
             auth = '?auth-token=' + settings.html_key__c;
     }
