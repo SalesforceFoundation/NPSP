@@ -561,9 +561,7 @@
     <name>RecordType</name>
   </types>
   <types>
-    <members>Bootstrap</members>
     <members>CumulusStaticResources</members>
-    <members>Typeahead</members>
     <name>StaticResource</name>
   </types>
   <types>
