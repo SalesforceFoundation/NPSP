@@ -112,6 +112,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Using_SmartyStreets__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Indicates whether the default SmartyStreets address verification integration will be used.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check if you are going to use the default SmartyStreets address verification integration.</inlineHelpText>
+        <label>Using SmartyStreets</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Zipcode_Verification_Endpoint__c</fullName>
         <description>The endpoint (URL) to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</description>
         <externalId>false</externalId>
