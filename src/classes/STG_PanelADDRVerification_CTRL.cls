@@ -32,10 +32,13 @@
 * @date 2014
 * @description Controller for the address verification settings page.
  */
-public with sharing class STG_PanelADDRVerification_CTRL {
+public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
+    public override String idPanel() { return 'idPanelAddressVerification'; }
+    
     public Address_Verification_Settings__c settings { get; set; }
 
+    public String apiSettingsErrorMessage { get; private set; }
     public String apiSettingsSaveMessage { get; private set; }
 
     public String apiTestEntry { get; set; }
@@ -50,19 +53,42 @@ public with sharing class STG_PanelADDRVerification_CTRL {
         settings = Address_Verification_Settings__c.getOrgDefaults();
     }
 
-    public PageReference saveSettings() {
+    public override PageReference saveSettings() {
         try {
-            upsert settings;
-            apiSettingsSaveMessage = 'Saved.';
+        	//SmartyStreets' unencoded token is always 88 chars long
+        	if(settings.Using_SmartyStreets__c && settings.Auth_Token__c.length() == 88)
+                settings.Auth_Token__c = EncodingUtil.urlEncode(settings.Auth_Token__c, 'UTF-8');
+                        
+            Boolean validationError = false;
+            apiSettingsErrorMessage = '';
+            if(settings.Using_SmartyStreets__c && String.isBlank(settings.Auth_ID__c)) {
+                apiSettingsErrorMessage = 'Auth ID cannot be blank. ';
+                apiSettingsSaveMessage = null;
+                validationError = true;
+            }
+            
+            if(settings.Using_SmartyStreets__c && String.isBlank(settings.Auth_Token__c)) {
+                String validationMessage = 'Auth Token cannot be blank.';
+                apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
+                apiSettingsSaveMessage = null;
+                validationError = true;
+            }
+            
+            if(!validationError) {
+                upsert settings;
+                apiSettingsSaveMessage = 'Saved.\n';
+                apiSettingsErrorMessage = null;
+                return super.saveSettings();
+            }
         } catch (Exception e) {
-            apiSettingsSaveMessage = 'Did not save settings: ' + e.getMessage();
+            apiSettingsErrorMessage = 'Did not save settings: ' + e.getMessage();
         }
         return null;
     }
 
     public PageReference testApi() {
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c.getOrgDefaults());
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {

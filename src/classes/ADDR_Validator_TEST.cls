@@ -239,7 +239,7 @@ public with sharing class ADDR_Validator_TEST {
         sc.settings.HTML_Key__c = 'skldjflsdkfj';
         sc.settings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
-        System.assertEquals('Saved.', sc.apiSettingsSaveMessage);
+        System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
 
         sc.apiTestEntry = '98236';
         sc.testApi();
@@ -261,6 +261,6 @@ public with sharing class ADDR_Validator_TEST {
         sc.saveSettings();
         Test.stopTest();
         
-        System.assert(sc.apiSettingsSaveMessage.contains('Required fields are missing'));
+        System.assert(sc.apiSettingsErrorMessage.contains('Required fields are missing'));
     }
 }
