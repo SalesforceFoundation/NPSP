@@ -98,7 +98,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference bulkVerify() {
-        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses(skipPreviouslyVerifiedObjects);
+    	ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(skipPreviouslyVerifiedObjects);
+        Database.executeBatch(b); 
         nowVerifying = true;
         bulkVerifyMessage = 'Verifying addresses.';
         return null;
