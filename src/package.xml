@@ -202,8 +202,6 @@
     <name>ApexPage</name>
   </types>
   <types>
-    <members>REL_RelationshipCampaignMembers</members>
-    <members>REL_Relationships</members>
     <members>TDTM_Account</members>
     <members>TDTM_Address</members>
     <members>TDTM_Affiliation</members>
