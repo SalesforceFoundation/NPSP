@@ -196,6 +196,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                 av.Verified__c = false;
                 av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
             }
+            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
         }
         return avList;
     }
