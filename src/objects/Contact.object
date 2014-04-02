@@ -166,15 +166,4 @@
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
-    <webLinks>
-        <fullName>Relationships_Viewer</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>Relationships Viewer</masterLabel>
-        <openType>noSidebar</openType>
-        <page>REL_RelationshipsViewer</page>
-        <protected>false</protected>
-    </webLinks>
 </CustomObject>
