@@ -6,62 +6,62 @@
     
 <style> 
        
-	.sidebar {
-	    width: 200px; 
-	    position: relative; 
-	    top: 0px; 
-	    left: 0px; 
-	}
-	        
-	.sidebar ul {
-	    margin: 0; 
-	    padding: 0; 
-	    list-style: none;
-	    background: lightgray; 
-	}
-	    
-	div.navbar ul li {
-	    font-size: 100%; 
-	    margin-bottom: 0px;
-	    margin-left: 0px;
-	    padding: 2px; 
-	    background: #f2f5f6;
-	    font-weight: normal; 
-		border-top: 1px solid #fff;
-		border-bottom: 1px solid #dce4e7;	    
-		border-left: 1px solid #dce4e7;       
-		border-right: 1px solid #dce4e7;       
-	}
-	    
-	div.navbar ul li:hover {
-	    background: Gray; 
-	}
-	
+    .sidebar {
+        width: 200px; 
+        position: relative; 
+        top: 0px; 
+        left: 0px; 
+    }
+            
+    .sidebar ul {
+        margin: 0; 
+        padding: 0; 
+        list-style: none;
+        background: lightgray; 
+    }
+        
+    div.navbar ul li {
+        font-size: 100%; 
+        margin-bottom: 0px;
+        margin-left: 0px;
+        padding: 2px; 
+        background: #f2f5f6;
+        font-weight: normal; 
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #dce4e7;       
+        border-left: 1px solid #dce4e7;       
+        border-right: 1px solid #dce4e7;       
+    }
+        
+    div.navbar ul li:hover {
+        background: Gray; 
+    }
+    
     div.navbar ul li.subitem:hover {
         background: Gray; 
     }
     div.navbar ul li.subitem {
         background: #eaeef0; 
-		border-bottom: 0;
-		border-top: 0;        
+        border-bottom: 0;
+        border-top: 0;        
     }
     
-	div.navbar {
-	   border-top: 1px solid #dce4e7;
-	}
-	
-	div.navbar ul li a {
-	    display: block; 
-	    text-decoration: none; 
-	    padding: 5px 5px 5px 10px;
-	    font-size: 100%; 
-	    color: black;
-	}
-	    
-	div.navbar ul li a:hover {
-	    color: #fff; 
-	    background: none; 
-	}
+    div.navbar {
+       border-top: 1px solid #dce4e7;
+    }
+    
+    div.navbar ul li a {
+        display: block; 
+        text-decoration: none; 
+        padding: 5px 5px 5px 10px;
+        font-size: 100%; 
+        color: black;
+    }
+        
+    div.navbar ul li a:hover {
+        color: #fff; 
+        background: none; 
+    }
     
     div.navbar ul li.nav-selected {
         background: LightGray;
@@ -77,19 +77,19 @@
     }
         
     li.collapsed .caret {
-		float: right;
-		width: 0;
-		height: 0;
-		display: inline-block;
-		vertical-align: top;
-		content: "";
-		margin-top: 8px;
-		margin-left: 2px;
+        float: right;
+        width: 0;
+        height: 0;
+        display: inline-block;
+        vertical-align: top;
+        content: "";
+        margin-top: 8px;
+        margin-left: 2px;
         border-top: 4px solid #000;
         border-bottom: 0px;
         border-right: 4px solid transparent;
         border-left: 4px solid transparent;
-	}
+    }
 
     li .caret {
         float: right;
@@ -100,15 +100,15 @@
         content: "";
         margin-top: 8px;
         margin-left: 2px;
-		border-top: none;
-		border-bottom: 4px solid #000;
-		border-right: 4px solid transparent;
-		border-left: 4px solid transparent;
+        border-top: none;
+        border-bottom: 4px solid #000;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
     }
          
-	.content {
-	    padding:10px;
-	}
+    .content {
+        padding:10px;
+    }
 
     .propLabel { 
         font-weight: bold;
@@ -131,10 +131,10 @@
     }
     
     .panelButtons {
-		padding-left: 400px;
-		border-top: #6aafac;
-		border-width: 2px 0 0 0;
-		border-style: solid;        
+        padding-left: 400px;
+        border-top: #6aafac;
+        border-width: 2px 0 0 0;
+        border-style: solid;        
         margin-top: 10px;    
     }
     
@@ -218,9 +218,9 @@
     }
 </script>
     <apex:form >
-	    <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
-	        <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
-	    </apex:actionFunction>
+        <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
+            <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
+        </apex:actionFunction>
     </apex:form>
 
     <table>
@@ -286,23 +286,23 @@
             <td>
                 <div class="content" >
                 
-			            <apex:actionStatus id="statusLoad" 
-			                 onstart="document.getElementById('divLoading').style.display = 'block';" 
-			                 onstop="document.getElementById('divLoading').style.display = 'none';" />
-			            <div class="loading clsLoading" id="divLoading" style="display:none" >
-			              <p style="vertical-align: middle;" >
-			                <img src="/img/loading.gif" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" style="vertical-align: middle;"/>
-			                <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
-			              </p>
-			            </div>                                                                  
+                        <apex:actionStatus id="statusLoad" 
+                             onstart="document.getElementById('divLoading').style.display = 'block';" 
+                             onstop="document.getElementById('divLoading').style.display = 'none';" />
+                        <div class="loading clsLoading" id="divLoading" style="display:none" >
+                          <p style="vertical-align: middle;" >
+                            <img src="/img/loading.gif" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" style="vertical-align: middle;"/>
+                            <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
+                          </p>
+                        </div>                                                                  
                 
                         <div class="panel" id="idPanelHome" style="display:none" >
                             <apex:include pageName="STG_PanelHome" />                               
                         </div>
                         
-	                    <div class="panel" id="idPanelCon" style="display:none" >
+                        <div class="panel" id="idPanelCon" style="display:none" >
                             <apex:include pageName="STG_PanelContacts" />
-	                    </div>
+                        </div>
 
                         <div class="panel" id="idPanelConRole" style="display:none" >
                             <apex:include pageName="STG_PanelContactRoles" />
