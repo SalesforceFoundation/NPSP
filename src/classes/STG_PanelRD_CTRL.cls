@@ -5,14 +5,17 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     //holds value to evaluate change in forecast months
     private integer originalForecastMonths;
     public Schedulable__c rdSched { public get; public set; }
+    public boolean isRDScheduleDisabled { get; set; }
     
     public STG_PanelRD_CTRL() { }
     
     public void init(){
         originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;        
         list<Schedulable__c> listSch = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
-        if (listSch.size() > 0) 
+        if (listSch.size() > 0) {
             rdSched = listSch[0];
+            isRDScheduleDisabled = !rdSched.Active__c;
+        }
     }
     
     public override PageReference saveSettings() { 
@@ -22,8 +25,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         	List<SObject> toUpdate = new List<SObject>();
         	if(STG_Panel.stgService.stgRD != null)
         		toUpdate.add(STG_Panel.stgService.stgRD);
-        	if(rdSched != null)
+        	if(rdSched != null) {
+                rdSched.Active__c = !isRDScheduleDisabled;
                 toUpdate.add(rdSched);
+        	}
             update toUpdate;
             
             strRDOppRecordTypeLabel = null;
