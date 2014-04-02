@@ -261,7 +261,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
-        panel.rdSched.Active__c = false;
+        panel.isRDScheduleDisabled = true;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(false, [select Active__c from Schedulable__c

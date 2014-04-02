@@ -60,10 +60,10 @@
             <br/>      
             <apex:pageBlockButtons location="bottom" >
                 <apex:outputPanel id="commandButtons">
-	                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons" />
-	                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons" />
-	                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons" />
-	            </apex:outputPanel>
+                    <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons" />
+                    <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons" />
+                    <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons" />
+                </apex:outputPanel>
             </apex:pageBlockButtons>
      
         </apex:pageBlock>
