@@ -1632,65 +1632,6 @@ public with sharing class RLLP_OppRollup_TEST {
         system.assertEquals(4, ct.npo02__Household__r.npo02__Household_ID__c);
     }
 
-    static testMethod void testRollupCtrlOne2One(){
-        testRollupCtrl(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void testRollupCtrlHAccount(){
-        testRollupCtrl(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
-    public static void testRollupCtrl(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Account_Processor__c = strProcessor,
-            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (
-                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                npo02__Always_Rollup_to_Primary_Contact__c = true,
-                npo02__Enable_Opp_Rollup_Triggers__c = true,
-                npo02__Excluded_Account_Opp_Rectypes__c = null,
-                npo02__Excluded_Account_Opp_Types__c = null,
-                npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                npo02__Excluded_Contact_Opp_Types__c = null,
-                npo02__Membership_Record_Types__c = null
-            ));
-
-        Date datClose = System.Today();
-
-        // create & insert contact(s)
-        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts ( 50 ) ;
-        insert TestCons;
-
-        // create new opps
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
-
-        account testacct = new account(name='testacct');
-        insert testacct;
-
-        Test.startTest();
-
-        // create the page 
-        PageReference pageRef=Page.RLLP_OppRollup; 
-        Test.setCurrentPage(pageRef); 
-
-        // set the parameter for the contact
-        ApexPages.currentPage().getParameters().put('id', testcons[3].id);
-        
-        // instantiate the controller
-        RLLP_OppRollup_CTRL controller=new RLLP_OppRollup_CTRL();
-
-        // rollup the contact
-        pageReference nextref = controller.startAction();       
-
-        system.assert(nextref.getUrl().contains(testcons[3].id));
-        
-        // roll up everyone
-        controller.rollup();
-        controller.cancel();
-    }
-
     static testmethod void testOppRollupSchedule(){ 
         Test.startTest(); 
 
