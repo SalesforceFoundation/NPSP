@@ -68,7 +68,9 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     
     public void finish(Database.BatchableContext bc) { }
     
-    static Boolean isUS(Address__c c) {
+    //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
+    //class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
+    public static Boolean isUS(Address__c c) {
         return ((c.MailingStreet__c != null || c.MailingPostalCode__c != null || (c.MailingCity__c != null && c.MailingState__c != null))
             && (c.MailingCountry__c == null || c.MailingCountry__c == 'US' || c.MailingCountry__c == 'USA' || 
                         c.MailingCountry__c == 'United States' || c.MailingCountry__c == 'United States of America'));
