@@ -234,6 +234,59 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     </target>
 
+    <!-- Deploys the latest production managed release to an org -->
+    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
+    <target name="deployManaged">
+      <property environment="env" />
+
+      <echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
+      <if>
+        <and>
+          <isset property="env.BUILD_COMMIT" />
+          <not><equals arg1="env.BUILD_COMMIT" arg2="" /></not>
+          <isset property="env.PACKAGE_VERSION" />
+          <not><equals arg1="env.PACKAGE_VERSION" arg2="" /></not>
+        </and>
+        <then>
+          <!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
+          <property name="managed_prod_tag" value="${env.BUILD_COMMIT}" />
+          <property name="version.npsp.prod" value="${env.PACKAGE_VERSION}" />
+          <echo>Building with environment variables: BUILD_COMMIT=${managed_prod_tag}, PACKAGE_VERSION=${version.npsp.prod}</echo>
+        </then>
+        <else>
+          <!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
+          <!-- Get the latest production release tag name -->
+          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/tag" dest="${basedir}/managed_prod_tag" />
+          <loadfile property="managed_prod_tag" srcfile="${basedir}/managed_prod_tag" />
+          <delete file="${basedir}/managed_prod_tag" />
+
+          <!-- Get the latest production release version number -->
+          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version" dest="${basedir}/version_prod" />
+          <loadfile property="version.npsp.prod" srcfile="${basedir}/version_prod" />
+          <delete file="${basedir}/version_prod" />
+        </else>
+      </if>
+      
+      <!-- Fetch the version.properties file for the release from GitHub -->
+      <get src="${cumulusci.github.url.raw}/${managed_prod_tag}/version.properties" dest="${basedir}/version.properties.prod" />
+
+      <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.prod file -->
+      <var name="version.npe01" unset="true" />
+      <var name="version.npo02" unset="true" />
+      <var name="version.npe03" unset="true" />
+      <var name="version.npe4" unset="true" />
+      <var name="version.npe5" unset="true" />
+      <loadproperties srcFile="${basedir}/version.properties.prod"/>
+      <delete file="${basedir}/version.properties.prod" />
+
+      <var name="version.npsp" value="${version.npsp.prod}" />
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
+
+      <antcall target="updateDependentPackages" />
+
+    </target>
 
     <!-- Utility Build Targets -->
 
