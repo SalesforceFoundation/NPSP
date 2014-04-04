@@ -55,9 +55,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override PageReference saveSettings() {
         try {
-        	//SmartyStreets' unencoded token is always 88 chars long
-        	if(settings.Using_SmartyStreets__c && settings.Auth_Token__c.length() == 88)
-                settings.Auth_Token__c = EncodingUtil.urlEncode(settings.Auth_Token__c, 'UTF-8');
+        	encodeTokenIfNotEncoded(settings);
                         
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
@@ -88,7 +86,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public PageReference testApi() {
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c.getOrgDefaults());
+        	encodeTokenIfNotEncoded(settings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
@@ -96,9 +95,16 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         }
         return null;
     }
+    
+    private void encodeTokenIfNotEncoded(Address_Verification_Settings__c settings) {
+    	//SmartyStreets' unencoded token is always 88 chars long
+        if(settings.Using_SmartyStreets__c && settings.Auth_Token__c.length() == 88)
+            settings.Auth_Token__c = EncodingUtil.urlEncode(settings.Auth_Token__c, 'UTF-8');
+    }
 
     public PageReference bulkVerify() {
-        list<Id> apexJobIds = ADDR_Validator_Batch.verifyAllAddresses(skipPreviouslyVerifiedObjects);
+    	ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(skipPreviouslyVerifiedObjects);
+        Database.executeBatch(b); 
         nowVerifying = true;
         bulkVerifyMessage = 'Verifying addresses.';
         return null;
