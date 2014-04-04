@@ -129,10 +129,19 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         req.setBody(body);
         req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
         System.debug('****Request body: \n' + req.getBody());
-        // execute the request
-        HttpResponse res = h.send(req);
-        System.debug('****Response body: \n' + res.getBody());
-        return res;
+        HttpResponse response;
+        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
+        //calling out" error.
+        if(Test.isRunningTest() && System.isBatch()) {  
+            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
+            req.setBody('single-address-response');
+            response = mockResponseGenerator.respond(req);
+        } else {
+        	// execute the request
+        	response = h.send(req);
+        }
+        System.debug('****Response body: \n' + response.getBody());
+        return response;
     }
     
     /* ADDRESS REQUEST DATA */
