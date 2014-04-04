@@ -44,6 +44,10 @@ global class STG_InstallScript implements InstallHandler {
             	//sendEmailOnError(e);
             	throw e;
             }
+        } else if(context.isUpgrade()) {
+        	insertTdtmDefauls();
+        } else if(context.isPush()) {
+        	insertTdtmDefauls();
         }
     }
     
