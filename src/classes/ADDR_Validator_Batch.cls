@@ -38,17 +38,24 @@
 */
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
-    private final String query;
+    private String query;
     
-    public ADDR_Validator_Batch(String q) {
-        query = q;
+    public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
+        // query for all US addresses
+        query = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c ' +
+            ' from Address__c where ' +
+            '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
+            'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
+         
+        if (skipPreviouslyVerified)
+            query += ' and Verified__c != true';
     }
     
-    public Database.QueryLocator start(Database.BatchableContext BC) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(query);
     }
 
-    public void execute(Database.BatchableContext BC, List<Address__c> scope) {
+    public void execute(Database.BatchableContext bc, List<Address__c> scope) {
 
         list<Address__c> addressesToVerify = new list<Address__c>();
         for (Address__c a : scope)
@@ -59,35 +66,11 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
-    public void finish(Database.BatchableContext BC) {}
+    public void finish(Database.BatchableContext bc) { }
     
-    public static list<Id> verifyAllAddresses() { return verifyAllAddresses(true); }
-    
-    public static list<Id> verifyAllAddresses(Boolean skipPreviouslyVerified) {
-        list<Id> apexJobIds = new list<Id>();
-        
-        apexJobIds.add(verifyAddresses(skipPreviouslyVerified));
-
-        return apexJobIds;
-    }
-
-    // Methods to run the batch on each object
-    public static Id verifyAddresses(Boolean skipPreviouslyVerified) {
-
-        // query for all US addresses
-        String queryString = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c ' +
-            ' from Address__c where ' +
-            '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
-            'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
-         
-        if (skipPreviouslyVerified == true)
-            queryString += ' and Verified__c != true';
-
-        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(queryString);
-        return Database.executeBatch(b); 
-    }
-    
-    static Boolean isUS(Address__c c) {
+    //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
+    //class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
+    public static Boolean isUS(Address__c c) {
         return ((c.MailingStreet__c != null || c.MailingPostalCode__c != null || (c.MailingCity__c != null && c.MailingState__c != null))
             && (c.MailingCountry__c == null || c.MailingCountry__c == 'US' || c.MailingCountry__c == 'USA' || 
                         c.MailingCountry__c == 'United States' || c.MailingCountry__c == 'United States of America'));
