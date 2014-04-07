@@ -256,7 +256,7 @@ public with sharing class RD_RecurringDonations {
             if (r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationOpenStatus && r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus){          
         
                 Decimal installs = r.npe03__Installments__c;
-                Integer installments = installs.intValue();
+                Integer installments = (installs == null ? 0 : installs.intValue());
                 
                 for ( Integer j=0;j<installments;j++ )
                 {
