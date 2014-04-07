@@ -61,8 +61,8 @@
             </apex:form>
         </apex:outputPanel>
         
-        <apex:pageMessages /> 
         <apex:outputPanel id="searchresults" layout="block">
+            <apex:pageMessages /> 
             <apex:outputPanel id="nothingfound" layout="block" rendered="{!searchResults.size == 0 && searchText!=''}">
             {!$Label.npe01__Contact_Merge_Error_Confirm_Message_Nothing_Found}
             </apex:outputPanel>
