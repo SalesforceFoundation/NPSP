@@ -94,7 +94,6 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
         System.assertEquals('CA', contact.MailingState);
-        
     }
 
     static testMethod void testContactBadAddress() {
@@ -224,11 +223,43 @@ public with sharing class ADDR_Validator_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
     	
         createDefaultSettings();
+        //Turn off automatic verification to avoid getting the address verified as we create the contact. 
+        //We want the batch process to do it.
+        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        settings.Enable_Automatic_Verification__c = false;
+        update settings;
+        
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
+         Contact contact = new contact(firstname='Test', lastname='Person', MailingStreet = 'single-address-response', 
+                                    MailingCity = 'Cupertino', MailingState = 'ca', MailingPostalCode = '95014'); 
+        insert contact;
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+        
+        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                from Address__c where Household_Account__c = :accountId];
+        System.assertEquals(1, av.size());
+        System.assertEquals('single-address-response', av[0].MailingStreet__c);
+        System.assertEquals('ca', av[0].MailingState__c);
+        System.assertEquals('95014', av[0].MailingPostalCode__c);
+        System.assertEquals(false, av[0].Verified__c);
+        
         Test.StartTest();
-        ADDR_Validator_Batch.verifyAllAddresses();
+        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(true);
+        Database.executeBatch(b);
         Test.StopTest();
+        
+        av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                from Address__c where Household_Account__c = :accountId];
+        System.assertEquals(1, av.size());
+        System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
+        System.assertEquals('CA', av[0].MailingState__c);
+        System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
+        System.assertEquals(true, av[0].Verified__c);
     }
 
     static testMethod void testController() {
@@ -248,6 +279,10 @@ public with sharing class ADDR_Validator_TEST {
         Test.startTest();
         sc.bulkVerify();
         Test.stopTest();
+        
+        //The batch has its own test. This basically tests that no exception was thrown
+        //since it got to set the status variable.
+        System.assertEquals(true, sc.nowVerifying);
     }
     
     static testMethod void testControllerMissingSetting() {
