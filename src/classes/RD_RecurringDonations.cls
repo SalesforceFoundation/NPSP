@@ -146,6 +146,8 @@ public with sharing class RD_RecurringDonations {
                 else if (isClosed && isWon){
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
                     rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');     
+                    if (isMultiCurrency)                         
+                        rd.put(RDCurrencyField, (string)obj.get(OppCurrencyField));                        
                     rd.npe03__Total_Paid_Installments__c = (integer)obj.get('oppcount');
                     updateMap.put(rdid, rd);                        
                 }                   
