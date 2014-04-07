@@ -33,6 +33,8 @@ public with sharing class ERR_Handler {
     
     public enum Context {AFFL, BDE, CON, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR}
     
+    private static String stackTrace;
+    
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
@@ -172,7 +174,10 @@ public with sharing class ERR_Handler {
 		error.Datetime__c = System.now();        
 		error.Error_Type__c = e.getTypeName();
 		error.Full_Message__c = e.getMessage();
-		error.Stack_Trace__c = e.getStackTraceString();
+		//Putting it into a local string to see if that helps storing the stack trace when we
+		//are in a managed package.
+		stackTrace = e.getStackTraceString();
+		error.Stack_Trace__c = stacktrace;
 		return error;
 	}
 
