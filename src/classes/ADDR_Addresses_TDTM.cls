@@ -54,7 +54,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         	
         // prevent recursion
         if (hasRunAddrTrigger) {
-        	system.debug('DJH**** stop Addr Trigger recursion');
+        	//system.debug('DJH**** stop Addr Trigger recursion');
             return null;
         }
         
@@ -264,15 +264,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }  
                     
         if (listAccUpdate.size() > 0) {
-            system.debug('DJH**** listAccUpdate: ' + listAccUpdate);
+            //system.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.putAll(listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            system.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
+            //system.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.putAll(listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            system.debug('DJH**** listConUpdate: ' + listConUpdate);
+            //system.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.putAll(listConUpdate);
         }
         

@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry FROM Contact ';
+    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate FROM Contact ';
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -211,7 +211,7 @@ global with sharing class HH_ManageHousehold_EXT {
         
         //if we are an existing household, get the members
         if (hh.Id != null || conId != null) {
-            activeContacts.putAll(getHHMembers());            
+            activeContacts.putAll(getHHMembers()); 
             //lookup viable addresses
             getViableAddresses();
         }
@@ -706,14 +706,22 @@ global with sharing class HH_ManageHousehold_EXT {
         list<Integer> sortOrder = new list<Integer>();
         map<Integer,Contact> consToSort = new map<Integer,Contact>();
         
+        // to handle contacts without naming order, treat them as large unique integer
+        integer iorderNull = 1000;
+        integer iorder;
+        
         if (!activeContacts.isEmpty()) {
-            for(Contact con : activeContacts.values())
-                consToSort.put(Integer.valueOf(con.npo02__Household_Naming_Order__c),con);
+            for(Contact con : activeContacts.values()) {
+                iorder = (con.npo02__Household_Naming_Order__c != null ? Integer.valueOf(con.npo02__Household_Naming_Order__c) : iorderNull++);
+                consToSort.put(iorder, con);
+            }
         }
         
         if (!insertContacts.isEmpty()) {
-            for(Contact con : insertContacts)
-                consToSort.put(Integer.valueOf(con.npo02__Household_Naming_Order__c),con);
+            for(Contact con : insertContacts) {
+                iorder = (con.npo02__Household_Naming_Order__c != null ? Integer.valueOf(con.npo02__Household_Naming_Order__c) : iorderNull++);
+                consToSort.put(iorder ,con);
+            }
         }
         if(!consToSort.isEmpty()) {
             sortOrder.addAll(consToSort.keySet());
@@ -737,7 +745,8 @@ global with sharing class HH_ManageHousehold_EXT {
         if (conId != null || hh.id != null) q += ' WHERE';
         if (conId != null) q += ' Id=\''+conId+'\'';
         if (conId != null && hh.id != null) q += ' or';
-        if (hh.id != null) q += ' HHId__c = \''+hh.id+'\' LIMIT 500';
+        if (hh.id != null) q += ' HHId__c = \''+hh.id+'\'';
+        q += ' ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate LIMIT 500';
         String qry = q;
         return Database.query(qry);
     }

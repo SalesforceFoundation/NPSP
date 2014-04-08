@@ -46,9 +46,11 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     }
     
     public PageReference buttonClick(){
-           system.assert(RecurringDonation != null);
+        Savepoint sp = Database.setSavepoint();
+        try {
+            system.assert(RecurringDonation != null);
         
-           set<string> existingFields = new set<string>{  'npe03__Open_Ended_Status__c', 'npe03__Next_Payment_Date__c', 'name',
+            set<string> existingFields = new set<string>{  'npe03__Open_Ended_Status__c', 'npe03__Next_Payment_Date__c', 'name',
                                                            'npe03__Organization__c', 'npe03__Contact__c', 'npe03__Installment_Amount__c',
                                                            'npe03__Installments__c', 'npe03__Amount__c', 'npe03__Total__c', 'npe03__Installment_Period__c',
                                                            'npe03__Date_Established__c', 'npe03__Donor_Name__c', 'npe03__Schedule_Type__c', 
@@ -68,17 +70,24 @@ public with sharing class RD_AddDonationsBTN_CTRL {
                    qString = qString + ',' + cfmMap.get(s).npe03__Recurring_Donation_Field__c;
                    existingFields.add(RDFieldName.toLowerCase());   
                 }
-            }       
-                                           
+            }                                                  
                             
-        qString += ' from npe03__Recurring_Donation__c ';
-        qString += ' where id = \'' + RecurringDonation.id + '\'';
-        RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
+	        qString += ' from npe03__Recurring_Donation__c ';
+	        qString += ' where id = \'' + RecurringDonation.id + '\'';
+	        RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
+	        
+	        PageReference pageRef = new PageReference(returnurl);
+	        pageRef.setRedirect(true);
+	        return pageRef;
         
-        PageReference pageRef = new PageReference(returnurl);
-        pageRef.setRedirect(true);
-        return pageRef;
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
+        }
+        
     }
     
 
