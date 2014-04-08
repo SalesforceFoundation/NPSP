@@ -49,6 +49,8 @@ public with sharing class CAO_Constants {
     public static final String HH_ACCOUNT_PROCESSOR = 'Household Account';
     //HH_Account type value
     public static final String HH_ACCOUNT_TYPE = 'Household Account';
+    //HH_Account value for the standard Type field
+    public static final string HH_TYPE = 'Household';
 
     public static npe01__Contacts_And_Orgs_Settings__c ContactsSettings;
 

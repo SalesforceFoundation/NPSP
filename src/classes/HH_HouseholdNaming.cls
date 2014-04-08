@@ -56,9 +56,9 @@ public  without sharing class HH_HouseholdNaming {
         
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
-        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, hhId__c, npo02__Naming_Exclusions__c from Contact 
+        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, hhId__c, npo02__Naming_Exclusions__c, CreatedDate from Contact 
             where hhId__c IN :hhids and hhId__c != null 
-            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST ];
+            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ];
             
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
         list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];

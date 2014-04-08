@@ -407,11 +407,15 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     // utility to return the recordtypeId for a new account, given the account model.
     // if none is explicitly specified, returns null.
     public static ID rtIdForNewAccount() {
+    	return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
+    }
+
+    public static ID rtIdForAccountModel(boolean isHHAccountModel) {
         ContactsSettings = CAO_Constants.getContactsSettings();
         Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
-        ID rtId = CAO_Constants.isHHAccountModel() ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
+        ID rtId = isHHAccountModel ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (rtId != null) {
             Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
             Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
@@ -479,7 +483,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (rtIdAcccount != null) {                
                     a.put('RecordTypeID', rtIdAcccount);
                 }                
-                a.Type = CAO_Constants.isHHAccountModel() ? 'Household' : '';
+                a.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
                 a.npe01__SYSTEMISINDIVIDUAL__c = true;
                 accountInserts.add(a);
                 listContactNewAcct.add(c);
