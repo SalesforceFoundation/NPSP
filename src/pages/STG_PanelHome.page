@@ -56,7 +56,7 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Nonprofit Starter Pack Help</h3></div>
                     <div class="panel-body"><p><img src="http://assets.salesforcefoundation.org/images/NPSP_Logo_Small.png" style="float:left; padding:10px;" width="100" alt="Nonprofit Starter Pack" />The Nonprofit Starter Pack is an application that extends the power of Salesforce CRM with customizations that allow you to better manage individual donors out-of-the-box. If you are using the Nonprofit Starter Pack, there are a host of resources specific to the application.</p>
-                        <p><a class="btn btn-primary btn-sm" href="http://www.salesforcefoundation.org/nonprofitstarterpack" role="button" target="_blank">View details »</a></p>
+                        <p><a class="btn btn-primary btn-sm" href="http://www.salesforcefoundation.org/help/nonprofitstarterpack/" role="button" target="_blank">View details »</a></p>
                     </div>
                 </div>
                 
@@ -73,9 +73,9 @@
                     <ul class="list-group">
                         <li class="list-group-item">Get answers in the <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a></li>
                         <li class="list-group-item">How to <a href="https://powerofus.force.com/articles/Resource/How-to-log-a-tech-support-ticket-with-salesforce-com" title="How to log a tech support ticket with salesforce.com" target="_blank">log a tech support ticket</a></li>
-                        <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/findapartner" title="Find a partner" target="_blank">consulting partner or App</a></li>
-                        <li class="list-group-item">Find and join a local <a href="http://www.salesforcefoundation.org/user-groups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
-                        <li class="list-group-item">Ask a question at <a href="http://www.salesforcefoundation.org/webinars#webinars" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
+                        <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/help/findapartner/" title="Find a partner" target="_blank">consulting partner or App</a></li>
+                        <li class="list-group-item">Find and join a local <a href="https://powerofus.force.com/apex/PUBUserGroups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
+                        <li class="list-group-item">Ask a question at <a href="http://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
                     </ul>
                 </div>
             </div>

@@ -27,7 +27,8 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */ 
-trigger REL_RelationshipCampaignMembers on CampaignMember (after insert, after update) {
+trigger TDTM_CampaignMember on CampaignMember (after delete, after insert, after undelete, 
+    after update, before delete, before insert, before update) {
 
     TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
     handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
