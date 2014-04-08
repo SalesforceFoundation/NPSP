@@ -33,10 +33,10 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-sm-3 col-xs-12" >
-                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/sf_foundation.png')}" class="img-rounded img-responsive" />
+                <div class="col-sm-6 col-xs-12" >
+                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/sfdc_Foundation_logo_rgb_large.png')}" class="img-rounded img-responsive" />
                 </div>
-                <div class="col-sm-9 col-xs-12" >
+                <div class="col-sm-6 col-xs-12" >
                     <h2>Welcome to the Nonprofit Starter Pack Settings Page</h2>
                     <p style="font-family: Vagrolight,Arial,Helvetica,sans-serif;">Now all of your Nonprofit Starter Pack options are right here on the NPSP
                     Settings page - with a new organization to make them easier to find and manage.</p>
