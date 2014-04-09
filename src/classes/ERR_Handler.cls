@@ -177,12 +177,12 @@ public with sharing class ERR_Handler {
 		//Putting it into a local string to see if that helps storing the stack trace when we
 		//are in a managed package.
 		stackTrace = e.getStackTraceString();
-		if(stackTrace == '(npsp)') {
+		if(stackTrace == null || stackTrace == '(npsp)') {
 			stackTrace = 'No stacktrace available at the time of saving the record - ';
 		} else {
 			stackTrace = 'Stacktrace available at the time of saving the record - ';
 		}
-		error.Stack_Trace__c += stacktrace;
+		error.Stack_Trace__c = stacktrace + e.getStackTraceString();
 		return error;
 	}
 
