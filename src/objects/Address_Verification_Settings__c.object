@@ -6,9 +6,9 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Address_Verification_Endpoint__c</fullName>
-        <description>The endpoint (URL) to point to for address verification.</description>
+        <description>The endpoint URL to point to for address verification.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The endpoint (URL) to point to for address verification.</inlineHelpText>
+        <inlineHelpText>The endpoint URL to point to for address verification.</inlineHelpText>
         <label>Address Verification Endpoint</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -123,9 +123,9 @@
     </fields>
     <fields>
         <fullName>Zipcode_Verification_Endpoint__c</fullName>
-        <description>The endpoint (URL) to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</description>
+        <description>The endpoint URL to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The endpoint (URL) to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</inlineHelpText>
+        <inlineHelpText>The endpoint URL to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</inlineHelpText>
         <label>Zipcode Verification Endpoint</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
