@@ -47,6 +47,7 @@
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
     <members>HH_CampaignDedupeBTN_TEST</members>
+    <members>HH_CampaignDedupe_BATCH</members>
     <members>HH_HHObject_TDTM</members>
     <members>HH_HouseholdNaming</members>
     <members>HH_HouseholdNaming_BATCH</members>
