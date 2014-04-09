@@ -214,6 +214,54 @@
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>hhCmpDedupLabelReturnToCmp</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupLabelReturnToCmp</shortDescription>
+        <value>Return to Campaign</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeBatchMessage</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeBatchMessage</shortDescription>
+        <value>Due to the size of this campaign, the process to identify household members is being done in batch, and may take several minutes to complete.  Once progress is complete, click on the link to open the report.</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeBatchProgressTitle</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeBatchProgressTitle</shortDescription>
+        <value>Campaign Household Deduplication</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeLabelOpenReport</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeLabelOpenReport</shortDescription>
+        <value>Open Report</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeNoReport</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeNoReport</shortDescription>
+        <value>Could not find report. Create a report with the Report Unique Name of  &apos;NPSP_Campaign_Household_Mailing_List&apos;. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain &apos;Duplicate&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeStatus</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeStatus</shortDescription>
+        <value>- Household Duplicate</value>
+    </labels>
+    <labels>
         <fullName>labelListViewFirst</fullName>
         <categories>SoqlListView</categories>
         <language>en_US</language>

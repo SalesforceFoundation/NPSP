@@ -318,6 +318,12 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>hhCmpDedupLabelReturnToCmp</members>
+    <members>hhCmpDedupeBatchMessage</members>
+    <members>hhCmpDedupeBatchProgressTitle</members>
+    <members>hhCmpDedupeLabelOpenReport</members>
+    <members>hhCmpDedupeNoReport</members>
+    <members>hhCmpDedupeStatus</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
