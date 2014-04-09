@@ -41,7 +41,7 @@ global class STG_InstallScript implements InstallHandler {
             try {
                 runNewOrgScript();
             } catch(Exception e) {
-            	//sendEmailOnError(e);
+            	sendEmailOnError(e);
             	throw e;
             }
         } else if(context.isUpgrade()) {
@@ -61,7 +61,7 @@ global class STG_InstallScript implements InstallHandler {
         String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
         + 'Stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
-        mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
+        mail.setToAddresses(new String[]{'ceiroa@salesforce.com'});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
