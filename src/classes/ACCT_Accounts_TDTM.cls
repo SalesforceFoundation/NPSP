@@ -45,11 +45,11 @@ public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         
         for (SObject so : listNew) {
             Account acc = (Account)so;
-            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null) {
+            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
             	acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
             	acc.Type = CAO_Constants.HH_TYPE;
             	acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null) {
+            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
                 acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
             }    
