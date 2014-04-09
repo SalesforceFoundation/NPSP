@@ -262,18 +262,28 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(33.33,installments3[0].Amount);
     }
     
-    static testMethod void contactRolesOnOpps()
+    static testMethod void contactRolesOnOppsBucket() {
+    	contactRolesOnOppsProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    static testMethod void contactRolesOnOppsOne2One() {
+        contactRolesOnOppsProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void contactRolesOnOppsHHAccount() {
+        contactRolesOnOppsProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }    
+    static void contactRolesOnOppsProcessor(string strProcessor)
     {
-        if (strTestOnly != '*' && strTestOnly != 'contactRolesOnOpps') return;
+        if (strTestOnly != '*' && strTestOnly != 'contactRolesOnOppsProcessor') return;
         
-         Account a = new Account();
-        a.Name = 'test Individual';
-        insert a;
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor, 
+                npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole));
+            
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Contact c = new Contact();
         c.FirstName = 'test';
         c.LastName = 'contact';
-        c.AccountId = a.Id;
         insert c;       
         Test.startTest();
         npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
