@@ -11,59 +11,51 @@ public with sharing class STG_InstallScript_TEST {
                
         //Don't create NPSP custom settings
         
+        //Run the install script
         Test.testInstall(new STG_InstallScript(), null);
         
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-            Object__c, Trigger_Action__c from Trigger_Handler__c];
-        
-        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
-        
-        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+        //Verify all settings created
+        verifyAllSettingsCreated();
     }
     
-        /** Tests that missing trigger handlers get created **/
+    /** Tests that missing trigger handlers get created **/
     public static testmethod void missingSettingsCreated() {
         if (strTestOnly != '*' && strTestOnly != 'missingSettingsCreated') return;
         
         //Create some of the default settings
-        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-        
-        //Relationships on npe4__Relationship__c
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
-                                         
-        //Account Management on Contact
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
-
-        // OpportunityContactRole support
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'AfterInsert'));
-
-        // HH Object support
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
-              Trigger_Action__c = 'BeforeUpdate;AfterUpdate'));
-
-        // HH Object contact trigger support
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
-              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
-        
-        insert handlers;
+        createSomeDefaultSettings();
         
         //Run the install script               
         Test.testInstall(new STG_InstallScript(), null);
         
-        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-            Object__c, Trigger_Action__c from Trigger_Handler__c];
+        //Verify all settings created
+        verifyAllSettingsCreated();
+    }
+    
+    public testmethod static void push() {
+        if (strTestOnly != '*' && strTestOnly != 'push') return;
         
-        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+        //Create some of the default settings
+        createSomeDefaultSettings();
         
-        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
+        //Run the install script               
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), true);
+        
+        //Verify all settings created
+        verifyAllSettingsCreated();
+    }
+    
+    public testmethod static void upgrade() {
+        if (strTestOnly != '*' && strTestOnly != 'upgrade') return;
+        
+        //Create some of the default settings
+        createSomeDefaultSettings();
+        
+        //Run the install script               
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
+        
+        //Verify all settings created
+        verifyAllSettingsCreated();
     }
     
     /** NPSP to TDTM test - If it's the first time we install Cumulus and there was no custom DISABLE flag enabled **/
@@ -286,7 +278,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(true, addrVerificationSetgs.Enable_Automatic_Verification__c);
         System.assertEquals(true, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
     }
-    
+
     public static void deleteAllCustomSettings() {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
@@ -300,5 +292,45 @@ public with sharing class STG_InstallScript_TEST {
         if(npe04Settings.Id != null) delete npe04Settings;
         if(npe05Settings.Id != null) delete npe05Settings;
         if(errorSettings.Id != null) delete errorSettings;
+    }
+    
+    public static void createSomeDefaultSettings() {
+    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        
+        //Relationships on npe4__Relationship__c
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+                                         
+        //Account Management on Contact
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+
+        // OpportunityContactRole support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert'));
+
+        // HH Object support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
+              Trigger_Action__c = 'BeforeUpdate;AfterUpdate'));
+
+        // HH Object contact trigger support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+        
+        insert handlers;
+    }
+    
+    public static void verifyAllSettingsCreated() {
+    	List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
+            Object__c, Trigger_Action__c from Trigger_Handler__c];
+        
+        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+        
+        assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
     }
 }

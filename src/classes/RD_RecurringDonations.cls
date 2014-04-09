@@ -146,6 +146,8 @@ public with sharing class RD_RecurringDonations {
                 else if (isClosed && isWon){
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
                     rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');     
+                    if (isMultiCurrency)                         
+                        rd.put(RDCurrencyField, (string)obj.get(OppCurrencyField));                        
                     rd.npe03__Total_Paid_Installments__c = (integer)obj.get('oppcount');
                     updateMap.put(rdid, rd);                        
                 }                   
@@ -254,7 +256,7 @@ public with sharing class RD_RecurringDonations {
             if (r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationOpenStatus && r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus){          
         
                 Decimal installs = r.npe03__Installments__c;
-                Integer installments = installs.intValue();
+                Integer installments = (installs == null ? 0 : installs.intValue());
                 
                 for ( Integer j=0;j<installments;j++ )
                 {

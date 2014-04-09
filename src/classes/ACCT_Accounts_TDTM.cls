@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009,2012, Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -27,11 +27,34 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-trigger REL_Relationships on npe4__Relationship__c (before insert, before update, before delete, 
-after insert, after update, after delete, after undelete) {
-    
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
-        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe4__Relationship__c, 
-        new TDTM_ObjectDataGateway());
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description handles triggers on Account to deal with initializing system fields for Household and One2One Accounts 
+*/
+public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
+        
+    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert)
+            return null; 
+        
+        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        ID rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
+        
+        for (SObject so : listNew) {
+            Account acc = (Account)so;
+            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null) {
+            	acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+            	acc.Type = CAO_Constants.HH_TYPE;
+            	acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null) {
+                acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+            }    
+        }
+        
+        return null;
+    }
 }

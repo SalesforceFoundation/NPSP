@@ -14,8 +14,9 @@
 		<apex:pageMessages id="pageMessages" />
 		<apex:pageBlock mode="maindetail">
 
-			<h3 class="sectionBar" >{!$Label.Addr_Settings_Intro_Title}</h3>
+			<h3 class="sectionBar" >{!$Label.Addr_Settings_Intro_Title}</h3>	
             <apex:outputPanel layout="block"  styleClass="sectionHelp">
+                <apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
                 <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body}" />
             </apex:outputPanel>
             
@@ -50,10 +51,6 @@
                 <apex:outputLabel value="Implementing Class" />
                 <apex:inputText value="{!settings.Class__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
-                
-			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Title}" />
-			    <apex:inputText value="{!settings.HTML_Key__c}" disabled="{!isReadOnlyMode}" />
-			    <apex:outputLabel value="{!$Label.Addr_Settings_HTML_Key_Body}" escape="false" />
 			    
 			    <apex:outputLabel value="Enable Automatic Verification"/>
                 <apex:inputCheckbox value="{!settings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" />
@@ -72,12 +69,10 @@
 	                <h4>{!$Label.Addr_Settings_Test_Title}</h4>
 	                <p>
 	                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
-	                <apex:inputText id="zipTest" value="{!apiTestEntry}" />
+	                <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
+	                <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
 	                </p>
 	                <br/>
-	                <div style="text-align:center">
-	                    <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>
-	                </div>
 	                <br/>
 	                <apex:outputPanel id="testResult">
 	                    <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
@@ -94,9 +89,9 @@
 			
 			<div style="text-align:center">
 				<apex:outputPanel id="commandButtons">
-	                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest" />
+	                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
 	                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
-	                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest" />
+	                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
 	            </apex:outputPanel>
 			</div>
 			
@@ -127,7 +122,7 @@
 			<label class="checkbox"> 
 			    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
 			</label>
-			
+			<br/>
 			<br/>
 			<div style="text-align:center">
 			    <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult"

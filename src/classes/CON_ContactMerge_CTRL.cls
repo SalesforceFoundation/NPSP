@@ -387,11 +387,15 @@ public with sharing class CON_ContactMerge_CTRL {
     }
     
     //search for contacts
-    public void search() {
-        
-        if(searchText != null && searchText.length()>0){
-            this.searchResults = wrapSOSLResults(mySOSL());
-        }
+    public PageReference search() {
+    	Try {	        
+	        if(searchText != null && searchText.length()>0){
+	            this.searchResults = wrapSOSLResults(mySOSL());
+	        }
+    	} catch (exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));    		
+    	}
+        return null;
     }
     
     //run the SOSL
