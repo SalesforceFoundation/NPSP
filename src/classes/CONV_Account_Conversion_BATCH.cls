@@ -192,10 +192,53 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             //multiple contacts
             else{
                 
+                //map of household ids to Contacts
+                Map<Account, List<Contact>> hhAccount2Contacts = new Map<Account, List<Contact>>();
+                ContactAddress baseHHAddress;
+                //for each of hte contacts in the household
                 for (Contact c : conList){
-                    ContactAddress cadd;
+                    ContactAddress cadd = new ContactAddress(c);
+                    if (cadd.hasAddress()){
+                        addressesForInsert.add(new Address__c(
+                        MailingStreet__c = cadd.MailingStreet,
+                        MailingState__c = cadd.MailingState,
+                        MailingPostalCode__c = cadd.MailingZip,
+                        MailingCountry__c = cadd.MailingCountry,
+                        MailingCity__c = cadd.MailingCity,
+                        Default_Address__c = true,
+                        Address_Type__c = c.npe01__Primary_Address_Type__c,
+                        Household_Account__c = c.AccountId
+                        ));
+
+                        //we have other addresses for this HH
+                        if (baseHHAddress != null){
+
+                        }
+                        //its the first address for this house
+                        else{
+                            baseHHAddress = cadd;
+                            Account myHHAccount = con2Account.get(c.Id);
+                            myHHAccount.ShippingStreet = cadd.MailingStreet;
+                            myHHAccount.ShippingState = cadd.MailingState;
+                            myHHAccount.ShippingPostalCode = cadd.MailingZip;
+                            myHHAccount.ShippingCountry = cadd.MailingCountry;
+                            myHHAccount.ShippingCity = cadd.MailingCity;
+                            hhAccountsForUpdate.add(myHHAccount);
+                        }
+                    }
+
+                    //this contact doesn't have an address, attempt to assign the hh default if it already exists
+                    else{
+                        if (baseHHAddress != null){
+                            c.MailingStreet = baseHHAddress.MailingStreet;
+                            c.MailingCity = baseHHAddress.MailingCity;
+                            c.MailingState = baseHHAddress.MailingState;
+                            c.MailingCountry = baseHHAddress.MailingCountry;
+                            c.MailingPostalCode = baseHHAddress.MailingZip;
+                            consForUpdate.add(c);
+                        }
+                    }
                 }
-            
             }
         }
         if (consForUpdate.size() > 1) update consForUpdate;
