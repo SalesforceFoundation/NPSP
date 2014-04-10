@@ -555,7 +555,6 @@
   </types>
   <types>
     <members>Account.AllAccounts</members>
-    <members>Account.Household_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
