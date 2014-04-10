@@ -716,7 +716,7 @@ gwManageHH.renderMembers = function() {
 		
 		// Check to see if the address is different from the active address
         var ct = gwManageHH.state.activeContacts[cid];
-        if (ct.is_Address_Override__c) {
+        if (ct != null && ct.is_Address_Override__c) {
             j$(this).find('.hhCard-details-address').addClass('gwAddressOverride');        
 		 } else if(gwManageHH.state.useAddress == false || gwManageHH.compareAddress(cid) === true) {
 			j$(this).find('.hhCard-details-address').removeClass('gwModified');
