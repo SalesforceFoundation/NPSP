@@ -53,6 +53,13 @@ public class RLLP_OppRollup_BATCH implements Database.Batchable<SObject> {
     }
     
     public void execute(Database.BatchableContext bc, Sobject[] result) {
+    	
+    	// NOTE: we don't capture exception and log errors here,
+        // because if we don't let the exception percolate up the call
+        // stack, then the batch will think it all succeeded.
+        // but if we were to log it, and then proprogate the exception,
+        // the transaction will get rolled back, and the logging will be erased!
+        // Not sure of a way to have our cake (log it), and eat it to (have batch display failure)!
         
         // run rollups for this batch       
         RLLP_OppRollup rg = new RLLP_OppRollup();

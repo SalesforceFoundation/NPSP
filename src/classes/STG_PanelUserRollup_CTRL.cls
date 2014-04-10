@@ -39,7 +39,6 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     
     //controls which types to display
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
-    map<string, Schema.Displaytype> targetFieldTypes = new map<string, Schema.Displaytype>();
         
     //pickers for setting values   
     public list<SelectOption> sourcefields = new list<SelectOption>();
@@ -140,6 +139,8 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         for (string s : currentURFSMap.keySet()){
             if (currentURFSMap.get(s).npo02__Object_Name__c == activeUDR.TargetObject && currentURFSMap.get(s).npo02__Target_Field__c != activeUDR.TargetField){
                string fieldname = (currentURFSMap.get(s).npo02__Target_Field__c).toLowerCase();
+
+                /*********** why would we do this???
                //we need to strip out the namespace
                if (fieldname.contains('npo02')){
                    fieldname = fieldname.replace('npo02__', '');
@@ -148,85 +149,57 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                else if (fieldname.contains('npe01')){
                    fieldname = fieldname.replace('npe01__', '');
                }
+               ***************/
+               
                currentTargetFieldSet.add(fieldname);
             }
         }  
          
-        if (activeUDR.TargetObject == 'Contact'){
+        if (activeUDR.TargetObject == 'Contact') {
             targetTokenMap = Schema.SObjectType.Contact.fields.getMap().clone();
-            knownfields = new set<string>{
-                'npo02__averageamount__c', 'npo02__donor__c', 'npo02__donor_this_year__c',                
-                'npo02__firstclosedate__c', 'npo02__household__c', 'npo02__formula_householdmailingaddress__c',
-                'npo02__formula_householdphone__c', 'npo02__languages__c', 'npo02__largestamount__c', 
-                'npo02__lastoppamount__c', 'npo02__lastclosedate__c', 'npo02__lastclosedatehh__c',
-                'npo02__lastmembershipdate__c', 'npo02__lastmembershiplevel__c', 'npo02__lastmembershipamount__c',
-                'npo02__lastmembershiporigin__c', 'npo02__last_donation_date__c', 'npo02__level__c',
-                'npo02__membershipenddate__c', 'npo02__membershipjoindate__c', 'npo02__membership_span__c',
-                'npo02__membership_status__c', 'npo02__new_donor_this_year__c', 'npo02__oppsclosedlastndays__c',
-                'npo02__oppsclosedlastyear__c', 'npo02__oppsclosedthisyear__c', 'npo02__oppsclosed2yearsago__c',
-                'npo02__numberofmembershipopps__c', 'npo02__smallestamount__c', 'npo02__totaloppamount__c',
-                'npo02__oppamountlastndays__c', 'npo02__oppamountlastyear__c', 'npo02__oppamountthisyear__c',
-                'npo02__oppamount2yearsago__c', 'npo02__total_household_gifts__c', 'npo02__oppamountlastndayshh__c',
-                'npo02__oppamountlastyearhh__c', 'npo02__oppamountthisyearhh__c', 'npo02__totalmembershipoppamount__c',
-                'npo02__numberofclosedopps__c', 'npo02__systemhouseholdprocessor__c', 'npo02__naming_exclusions__c',
-                'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c', 'npo02__household_naming_order__c',
-                'npo02__soft_credit_last_year__c', 'npo02__soft_credit_this_year__c', 'npo02__soft_credit_total__c',
-                'npo02__soft_credit_two_years_ago__c'
-                };
         }
-        else if(activeUDR.TargetObject == 'Account'){
+        else if (activeUDR.TargetObject == 'Account') {
             targetTokenMap = Schema.SobjectType.Account.fields.getMap().clone();
-            knownfields = new set<string>{
-                'npo02__active__c', 'npo02__averageamount__c', 'npo02__customer_priority__c', 'npo02__customerpriority__c',
-                'npo02__upsellopportunity__c', 'npo02__firstclosedate__c', 'npo02__largestamount__c', 'npo02__lastoppamount__c',
-                'npo02__lastclosedate__c', 'npo02__lastmembershipdate__c', 'npo02__lastmembershipamount__c',
-                'npo02__lastmembershiplevel__c', 'npo02__lastmembershiporigin__c', 'npo02__membershipenddate__c',
-                'npo02__membershipjoindate__c', 'npo02__membership_span__c', 'npo02__membership_status__c',
-                'npo02__oppsclosedlastndays__c', 'npo02__oppsclosedlastyear__c', 'npo02__oppsclosedthisyear__c',
-                'npo02__oppsclosed2yearsago__c', 'npo02__numberoflocations__c', 'npo02__numberofmembershipopps__c',
-                'npo02__sla__c', 'npo02__slaexpirationdate__c', 'npo02__slaserialnumber__c', 'npo02__smallestamount__c',
-                'npo02__totaloppamount__c', 'npo02__oppamountlastndays__c', 'npo02__oppamountlastyear__c', 'npo02__oppamountthisyear__c',
-                'npo02__oppamount2yearsago__c', 'npo02__totalmembershipoppamount__c', 'npo02__numberofclosedopps__c',
-                'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c'
-           };
         }
-        else if(activeUDR.TargetObject == 'npo02__Household__c' || activeUDR.TargetObject == 'npo02__Household__c'){
+        else if (activeUDR.TargetObject == 'npo02__Household__c') {
             targetTokenMap = Schema.SobjectType.npo02__household__c.fields.getMap().clone();
-            knownfields = new set<string>{
-                'npo02__addressee__c', 'npo02__always_anonymous__c', 'npo02__averagemount__c', 'npo02__firstclosedate__c',   
-                'npo02__householdemail__c','npo02__household_id__c','npo02__householdphone__c','npo02__largestamount__c',
-                'npo02__lastoppamount__c','npo02__lastclosedate__c','npo02__lastmembershipamount__c','npo02__lastmembershipdate__c',       
-                'npo02__lastmembershiplevel__c','npo02__lastmembershiporigin__c','npo02__formula_mailingaddress__c',    
-                'npo02__mailingcity__c','npo02__mailingcountry__c','npo02__mailingstate__c','npo02__mailingstreet__c',     
-                'npo02__mailingpostalcode__c','npo02__membershipenddate__c','npo02__membershipjoindate__c','npo02__membership_span__c',      
-                'npo02__membership_status__c','npo02__oppsclosedlastndays__c','npo02__oppsclosedlastyear__c',       
-                'npo02__oppsclosedthisyear__c','npo02__oppsclosed2yearsago__c','npo02__numberOfmembershipopps__c',   
-                'npo02__smallestamount__c','npo02__totaloppamount__c','npo02__oppamountlastndays__c','npo02__oppamountlastyear__c',    
-                'npo02__oppamountthisyear__c','npo02__oppamount2yearsago__c','npo02__totalmembershipoppamount__c',    
-                'npo02__numberofclosedopps__c', 'npo02__formal_greeting__c', 'npo02__informal_greeting__c', 'npo02__averageamount__c',
-                'npo02__system_custom_naming__c', 'npo02__best_gift_year__c', 'npo02__best_gift_year_total__c'
-           };     
         }
-        //set knownfield to an empty set
-        else{
-            knownfields = new set<string>();            
-        }
-        
-        
-        if(!currentTargetFieldSet.isEmpty())
-            knownfields.addAll(currentTargetFieldSet);
-        
-        //pop out the known fields
-        for (string s : knownfields){
+                
+        // remove any field already used in a UDR
+        for (string s : currentTargetFieldSet){
             s = s.toLowerCase();
             targetTokenMap.remove(s);
         }
         
-        if (targettokenMap.size() > 0){        
-            for (string s : targetTokenMap.keyset()){            
-                if (s.contains('__c') && (!s.startswith('npe01__'))){
-                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe(activeUDR.TargetObject, s);                                             
-                    targetfields.add(new SelectOption(f.getName(), f.getLabel()));    
+        // get datatype of current Source field
+        Schema.Displaytype dtSrc = mapFieldTypes.get(activeUDR.SourceField);
+        
+        // valid target fields must:
+        // - be a custom field
+        // - not from any NPSP package
+        // - not be a formula field
+        // - support the source field datatype         
+        if (targettokenMap.size() > 0) {        
+            for (string s : targetTokenMap.keyset()) {            
+                if (s.contains('__c') && 
+                    !s.startswith('npsp__') && 
+                    !s.startswith('npe01__') && 
+                    !s.startswith('npo02__') && 
+                    !s.startswith('npe03__') && 
+                    !s.startswith('npe4__') &&
+                    !s.startswith('npe5__')) {
+                    
+                    // check datatype                                             
+                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe(activeUDR.TargetObject, s);
+                    
+                    // disallow formula fields and autonums
+                    if (f.isCalculated() || f.isAutoNumber())
+                        continue;
+                        
+                    Schema.Displaytype dtTgt = f.getType();
+                    if (isDtsCompatible(dtSrc, dtTgt)) {
+                        targetfields.add(new SelectOption(f.getName(), f.getLabel()));
+                    }    
                 }
             }
         }
@@ -235,7 +208,34 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             targetfields.clear();
             targetfields.add(new SelectOption('', 'No Valid Field Available'));                            
         }
-        return sortOptionList(targetfields);    
+        //return sortOptionList(targetfields);
+        targetfields.sort();
+        return targetfields;    
+    }
+    
+    // utility to check for compatible datatypes for data copying
+    private boolean isDtsCompatible(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
+    	
+    	if (dtSrc == dtTgt)
+    	   return true;
+    	
+    	// date can go to datetime
+    	if (dtSrc == Schema.Displaytype.Date && dtTgt == Schema.Displaytype.DateTime)
+    	   return true;
+    	   
+        // numbers can implictly cast to other numbers
+	    if ((dtSrc == Schema.Displaytype.Currency ||
+	        dtSrc == Schema.Displaytype.Double ||
+	        dtSrc == Schema.Displaytype.Integer ||
+	        dtSrc == Schema.Displaytype.Percent) &&
+           (dtTgt == Schema.Displaytype.Currency ||
+            dtTgt == Schema.Displaytype.Double ||
+            dtTgt == Schema.Displaytype.Integer ||
+            dtTgt == Schema.Displaytype.Percent)) {
+            return true;
+        }
+        
+        return false;
     }
     
     //retrieve valid source fields from opportunity object
@@ -248,8 +248,8 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         if (sourcefields.isEmpty()){                       
             map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.Opportunity.fields.getMap(); 
             
-            system.debug('***** oppFieldTokenList: ' + oppFieldTokenList);
-            system.debug('***** knownopptyFields: ' + knownopptyFields);
+            //system.debug('***** oppFieldTokenList: ' + oppFieldTokenList);
+            //system.debug('***** knownopptyFields: ' + knownopptyFields);
            
             //loop through the map, only get the describe information for fields we don't
             //already recognize, including our own and non-custom fields, we'll add those in a moment
@@ -300,8 +300,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         activeUDR.TargetField = null;       
     }    
     public void clearForOperation(){
-        activeUDR.TargetObject = null;
-        activeUDR.TargetField = null;
+        // the targets are dependent on the source datatype, not the aggregating op.
+        //activeUDR.TargetObject = null;
+        //activeUDR.TargetField = null;
         
     }
     public void clearForTargetObject(){
@@ -425,7 +426,12 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         public void save(){
             
             if (myUDR.id == null){
-                myUDR.Name = 'CustomRollup-' + system.Now(); 
+            	// the udr's name needs to be a valid field alias when we construct the rollup query.
+                string strName = 'CR_' + system.Now();
+                strName = strName.replace(' ','');
+                strName = strName.replace(':',''); 
+                strName = strName.replace('-',''); 
+                myUDR.Name = strName;
                 myUDR.npo02__Object_Name__c = TargetObject;
                 myUDR.npo02__Target_Field__c = TargetField;
                 myUDR.npo02__Field_Action__c = Operation;
