@@ -42,7 +42,7 @@ global class STG_InstallScript implements InstallHandler {
                 runNewOrgScript();
             } catch(Exception e) {
             	sendEmailOnError(e);
-            	throw e;
+            	//throw e; Let's not rethrow the exception, to avoid package failure installation due to install script 
             }
         } else if(context.isUpgrade()) {
         	insertTdtmDefauls();
