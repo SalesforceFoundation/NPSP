@@ -127,11 +127,4 @@
         </filters>
         <label>Household Accounts</label>
     </listViews>
-    <recordTypes>
-        <fullName>HH_Account</fullName>
-        <active>true</active>
-        <compactLayoutAssignment>Account_Compact_Layout</compactLayoutAssignment>
-        <description>An Account representing a Household containing one or more individuals</description>
-        <label>Household Account</label>
-    </recordTypes>
 </CustomObject>
