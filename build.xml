@@ -135,11 +135,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- First, uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
       <antcall target="uninstall" />
 
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
-
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
 
       <!-- Finally, do a deploy with all tests -->
       <antcall target="deploy" />
@@ -149,11 +149,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
          There are a few assumptions.  We never downgrade a dependent managed package in the packaging org.  This removes the need to completely remove
          all metadata to allow a package downgrade.  In the package org, we can't delete all metadata once a production managed release is cut so this approach is required -->
     <target name="deployCIPackageOrg">
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
-
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
+
+      <!-- Deploy any unpackaged metadata needed for builds -->
+      <antcall target="deployUnpackaged" />
 
       <!-- Update the package.xml to managed package mode, adding install and uninstall script classes -->
       <antcall target="updatePackageXmlManaged" />
@@ -211,25 +211,16 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <loadproperties srcFile="${basedir}/version.properties.uat"/>
       <delete file="${basedir}/version.properties.uat" />
 
-      <var name="version.npsp" value="${version.npsp.uat}" />
-
-      <getPackageVersions />
-
-      <!-- If npsp managed package is installed and version is not current, uninstall the package -->
-      <if>
-        <and>
-          <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" /></not>
-          <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="${version.npsp.uat}" /></not>
-        </and>
-        <then>
-          <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber}</echo>
-          <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />    
-        </then>
-      </if>
+      <!-- At this point, version.npsp is set to Not Install.  Call updateDependentPackages to install the correct packages and uninstall the current Cumulus beta version -->
+      <updateDependentPackages />
 
       <!-- Deploy any unpackaged metadata needed for builds -->
       <antcall target="deployUnpackaged" />
 
+      <!-- Now set the version.npsp property to the beta version -->
+      <var name="version.npsp" value="${version.npsp.uat}" />
+
+      <!-- This call should only install the beta package -->
       <antcall target="updateDependentPackages" />
 
     </target>
@@ -279,12 +270,14 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <loadproperties srcFile="${basedir}/version.properties.prod"/>
       <delete file="${basedir}/version.properties.prod" />
 
+      <!-- Now set the version.npsp property to the beta version -->
       <var name="version.npsp" value="${version.npsp.prod}" />
+
+      <!-- Run updateDependentPackages to install the correct versions of the 5 original NPSP packages and the Cumulus package -->
+      <antcall target="updateDependentPackages" />
 
       <!-- Deploy any unpackaged metadata needed for builds -->
       <antcall target="deployUnpackaged" />
-
-      <antcall target="updateDependentPackages" />
 
     </target>
 
