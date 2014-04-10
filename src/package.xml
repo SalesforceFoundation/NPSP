@@ -47,6 +47,7 @@
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
     <members>HH_CampaignDedupeBTN_TEST</members>
+    <members>HH_CampaignDedupe_BATCH</members>
     <members>HH_HHObject_TDTM</members>
     <members>HH_HouseholdNaming</members>
     <members>HH_HouseholdNaming_BATCH</members>
@@ -298,10 +299,9 @@
   <types>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
-    <members>Addr_Settings_HTML_Key_Body</members>
-    <members>Addr_Settings_HTML_Key_Title</members>
     <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Title</members>
+    <members>Addr_Settings_Notice</members>
     <members>Addr_Settings_Test_Body</members>
     <members>Addr_Settings_Test_Response_Title</members>
     <members>Addr_Settings_Test_Title</members>
@@ -318,6 +318,12 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>hhCmpDedupLabelReturnToCmp</members>
+    <members>hhCmpDedupeBatchMessage</members>
+    <members>hhCmpDedupeBatchProgressTitle</members>
+    <members>hhCmpDedupeLabelOpenReport</members>
+    <members>hhCmpDedupeNoReport</members>
+    <members>hhCmpDedupeStatus</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>

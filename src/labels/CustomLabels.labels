@@ -6,12 +6,9 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Body</shortDescription>
-        <value>To work with the SmartyStreets API, first open your own 
-                &lt;a href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;
-				SmartyStreets&lt;/a&gt; account. Then, create and copy the API keys from your 
-				&lt;a href=&quot;https://smartystreets.com/account/keys&quot; target=&quot;_blank&quot;&gt;Account
-			     Settings page&lt;/a&gt; and save them here. You can use an alternative address verification service of your choice by creating a class that implements the 
-                ADDR_IValidator interface, and entering the class name, as well as the service credentials, below.</value>
+        <value>&lt;p&gt;To work with the SmartyStreets API, the first thing you need to do is create a new Remote Site (under Security Controls) with https://api.smartystreets.com as the URL.&lt;/p&gt;
+&lt;p&gt;Then open your own 
+&lt;a href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;SmartyStreets&lt;/a&gt; account. Once you have done so, go to the API Keys section and create a Secret Key Pair - it doesn&apos;t matter what label you use - which will expose the Auth ID and Auth Token you can copy to the fields here.&lt;/p&gt; &lt;p&gt;Alternatively, you can use a different address verification service of your choice by creating a class that implements the ADDR_IValidator interface, and entering the class name, as well as the service credentials, below.&lt;/p&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_API_Title</fullName>
@@ -20,25 +17,6 @@
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_HTML_Key_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings HTML Key Body</shortDescription>
-        <value>&lt;p&gt;
-				To use the LiveAddress lookup controls, create an HTML Key for the &lt;strong&gt;Salesforce.com&lt;/strong&gt;
-				domain, and then enter it here.
-			&lt;/p&gt;</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_HTML_Key_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings HTML Key Title</shortDescription>
-        <value>HTML Key</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body</fullName>
@@ -75,6 +53,14 @@
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Title</shortDescription>
         <value>Introduction</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Notice</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Notice</shortDescription>
+        <value>The address verification/normalization service works on the new Address__c custom object. It won&apos;t be applied to pre-existing contacts and accounts.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Body</fullName>
@@ -114,16 +100,10 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;To create an Address Verification record for every address
-				currently in your Salesforce database, click the button below.
-				Please note that address verifications consume credits from your
-				SmartyStreets account.&lt;/p&gt;
+        <value>&lt;p&gt;To verify/normalize every address record currently in your Salesforce database, click the button below. Please note that address verifications consume credits from your SmartyStreets account.&lt;/p&gt;
 
-			&lt;p&gt;Mass verification follows the settings from sections 3 and 4
-				above. If you want to choose which objects get verification or
-				updates, or which custom fields get filled with verification
-				information, set options above before verifying addresses.&lt;/p&gt;
-            &lt;br/&gt;</value>
+&lt;p&gt;Mass verification uses the settings from the section above.&lt;/p&gt;
+ &lt;br/&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Status</fullName>
@@ -212,6 +192,54 @@
         <protected>false</protected>
         <shortDescription>addrSeasonalPartial</shortDescription>
         <value>An address must have all or none of its Seasonal fields set.</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupLabelReturnToCmp</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupLabelReturnToCmp</shortDescription>
+        <value>Return to Campaign</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeBatchMessage</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeBatchMessage</shortDescription>
+        <value>Due to the size of this campaign, the process to identify household members is being done in batch, and may take several minutes to complete.  Once progress is complete, click on the link to open the report.</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeBatchProgressTitle</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeBatchProgressTitle</shortDescription>
+        <value>Campaign Household Deduplication</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeLabelOpenReport</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeLabelOpenReport</shortDescription>
+        <value>Open Report</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeNoReport</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeNoReport</shortDescription>
+        <value>Could not find report. Create a report with the Report Unique Name of  &apos;NPSP_Campaign_Household_Mailing_List&apos;. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain &apos;Duplicate&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>hhCmpDedupeStatus</fullName>
+        <categories>Household Campaign Dedupe</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>hhCmpDedupeStatus</shortDescription>
+        <value>- Household Duplicate</value>
     </labels>
     <labels>
         <fullName>labelListViewFirst</fullName>

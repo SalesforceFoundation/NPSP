@@ -33,10 +33,10 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-sm-3 col-xs-12" >
-                    <img src="http://assets.salesforcefoundation.org/images/sf_foundation.png" class="img-rounded img-responsive" />
+                <div class="col-sm-6 col-xs-12" >
+                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/sfdc_Foundation_logo_rgb_large.png')}" class="img-rounded img-responsive" />
                 </div>
-                <div class="col-sm-9 col-xs-12" >
+                <div class="col-sm-6 col-xs-12" >
                     <h2>Welcome to the Nonprofit Starter Pack Settings Page</h2>
                     <p style="font-family: Vagrolight,Arial,Helvetica,sans-serif;">Now all of your Nonprofit Starter Pack options are right here on the NPSP
                     Settings page - with a new organization to make them easier to find and manage.</p>
@@ -55,7 +55,7 @@
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Nonprofit Starter Pack Help</h3></div>
-                    <div class="panel-body"><p><img src="http://assets.salesforcefoundation.org/images/NPSP_Logo_Small.png" style="float:left; padding:10px;" width="100" alt="Nonprofit Starter Pack" />The Nonprofit Starter Pack is an application that extends the power of Salesforce CRM with customizations that allow you to better manage individual donors out-of-the-box. If you are using the Nonprofit Starter Pack, there are a host of resources specific to the application.</p>
+                    <div class="panel-body"><p><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" style="float:left; padding:10px;" width="100" alt="Nonprofit Starter Pack" />The Nonprofit Starter Pack is an application that extends the power of Salesforce CRM with customizations that allow you to better manage individual donors out-of-the-box. If you are using the Nonprofit Starter Pack, there are a host of resources specific to the application.</p>
                         <p><a class="btn btn-primary btn-sm" href="http://www.salesforcefoundation.org/help/nonprofitstarterpack/" role="button" target="_blank">View details »</a></p>
                     </div>
                 </div>

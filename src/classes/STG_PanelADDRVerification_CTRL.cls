@@ -55,6 +55,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override PageReference saveSettings() {
         try {
+        	apiTestResult = null;
+        	
         	encodeTokenIfNotEncoded(settings);
                         
             Boolean validationError = false;
@@ -83,6 +85,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         }
         return null;
     }
+    
+    public override PageReference cancelEdit() {
+    	apiSettingsErrorMessage = null;
+	    apiSettingsSaveMessage = null;
+	    apiTestEntry = null;
+	    apiTestResult = null;
+    	return super.cancelEdit();
+    }
 
     public PageReference testApi() {
         try {
@@ -91,7 +101,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
-            apiTestResult = e.getMessage();
+        	if(e.getMessage().startsWith('no protocol')) {
+        		apiTestResult = 'Please enter endpoint URL';
+        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
+        		apiTestResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
+        		                'authorized Remote Sites, under Setup->Security->Remote Site Settings.';
+        	} else {
+                apiTestResult = e.getMessage();
+        	}
         }
         return null;
     }
