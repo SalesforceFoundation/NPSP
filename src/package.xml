@@ -560,16 +560,11 @@
   </types>
   <types>
     <members>Account.AllAccounts</members>
-    <members>Account.Household_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
-  </types>
-  <types>
-    <members>Account.HH_Account</members>
-    <name>RecordType</name>
   </types>
   <types>
     <members>CumulusStaticResources</members>

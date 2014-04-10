@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <listViews>
+        <fullName>Household_Accounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>npo02__Formal_Greeting__c</columns>
+        <columns>npo02__Informal_Greeting__c</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>npo02__Best_Gift_Year__c</columns>
+        <columns>npo02__HouseholdPhone__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.HH_Account</value>
+        </filters>
+        <label>Household Accounts</label>
+    </listViews>
+    <recordTypes>
+        <fullName>HH_Account</fullName>
+        <active>true</active>
+        <description>An Account representing a Household containing one or more individuals</description>
+        <label>Household Account</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Organization</fullName>
+        <active>true</active>
+        <description>An Account representing an organization</description>
+        <label>Organization</label>
+    </recordTypes>
+</CustomObject>
