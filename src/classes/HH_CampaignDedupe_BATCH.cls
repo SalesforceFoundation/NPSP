@@ -30,31 +30,27 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description handles triggers on Account to deal with initializing system fields for Household and One2One Accounts 
+* @description Class provides a batchable wrapper for marking Household duplicates on a Campaign.
 */
-public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
-        
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert)
-            return null; 
-        
-        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
-        ID rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
-        
-        for (SObject so : listNew) {
-            Account acc = (Account)so;
-            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
-            	acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-            	acc.Type = CAO_Constants.HH_TYPE;
-            	acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
-                acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-            }    
-        }
-        
-        return null;
+public with sharing class HH_CampaignDedupe_BATCH implements Database.Batchable<sObject> {
+
+    public String strSoql { get; set; } 
+    public ID cmpId { get; set; } 
+    
+    // constructor
+    public HH_CampaignDedupe_BATCH(ID campaignId, string strQuery) {
+        cmpId = campaignId;
+        strSoql = strQuery;
+    }
+    
+    public database.Querylocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(strSoql);      
+    }
+    
+    public void execute(Database.BatchableContext bc, Sobject[] result) {
+    	HH_CampaignDedupeBTN_CTRL.MarkDuplicatesFromList(cmpId, (list<CampaignMember>) result);
+    }
+    
+    public void finish(Database.BatchableContext bc) {
     }
 }

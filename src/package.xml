@@ -51,6 +51,7 @@
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
     <members>HH_CampaignDedupeBTN_TEST</members>
+    <members>HH_CampaignDedupe_BATCH</members>
     <members>HH_HHObject_TDTM</members>
     <members>HH_HouseholdNaming</members>
     <members>HH_HouseholdNaming_BATCH</members>
@@ -322,6 +323,12 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>hhCmpDedupLabelReturnToCmp</members>
+    <members>hhCmpDedupeBatchMessage</members>
+    <members>hhCmpDedupeBatchProgressTitle</members>
+    <members>hhCmpDedupeLabelOpenReport</members>
+    <members>hhCmpDedupeNoReport</members>
+    <members>hhCmpDedupeStatus</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>

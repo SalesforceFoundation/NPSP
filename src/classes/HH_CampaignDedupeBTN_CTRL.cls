@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2011,2014 Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -40,8 +40,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     private string CampaignMailingListReportId;
     private boolean haveReportID;  
     private npo02__Households_Settings__c hs;
-    public string returnURL{get; private set;}
-    final private string DUPETEXT = ' - Household Duplicate';
+    public string returnURL { get; private set; }
+    public string reportURL { get; private set; }
     
     //we get settings in the constructor, but if we don't have a report ID and query for it,
     //we want to update the old settings with the new report ID, but we can't do it in the consturctor
@@ -56,7 +56,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
       
         campaign = (Campaign)controller.getRecord();
         PageReference pageRef = new PageReference('/' + campaign.id);
-        returnurl = pageref.getUrl();
+        returnURL = pageref.getUrl();
         
         if ((CampaignMailingListReportId == null) || (CampaignMailingListReportId == '')){   
             //try looking it up by name...
@@ -74,7 +74,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }                
         }
         
-        campaign = [select id, name from campaign where id = :campaign.id];             
+        campaign = [select id, name, NumberOfContacts from campaign where id = :campaign.id];             
     }  
   
   
@@ -95,14 +95,18 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        }
 	        
 	        if (!haveReportID){
-	            string errormsg = 'Could not find report. Create a report with the Report Unique Name of \'NPSP_Campaign_Household_Mailing_List\'. NOTE: Report type should be Campaigns with Contacts. Filter for Member Status does not contain \'Duplicate\'';
-	            showMsg(errormsg, ApexPages.Severity.ERROR);
+	            showMsg(Label.hhCmpDedupeNoReport, ApexPages.Severity.ERROR);
 	        }
 	        
 	        else{
 	            dupsmarked = MarkDuplicates();
-	            newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
-	            redirectpage = true;                
+                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
+	            if (dupsmarked == -1) {
+	                showMsg(Label.hhCmpDedupeBatchMessage, ApexPages.Severity.INFO);
+	                reportURL = newPageURL;	            	
+	            } else {
+	            	redirectpage = true;
+	            }
 	        }
 	        
 	        if (redirectPage){
@@ -121,20 +125,50 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     	}
     }
 
-    private integer MarkDuplicates(){
     // mark duplicate households in campaign membership
-
+    // returns the number of duplicates found.  if -1, the process is being done in batch.
+    private integer MarkDuplicates(){
+        string strSoql = strSoqlDedupe();
         
+        if (campaign.NumberOfContacts > 10000) {
+        	MarkDuplicatesBatch(strSoql);
+        	return -1;
+        } else {       
+	        list<CampaignMember> listCM = database.query(strSoql);
+	        return MarkDuplicatesFromList(campaign.Id, listCM);
+        }   
+    }
+
+    // routine to kick off the batch job of marking duplicates
+    private void MarkDuplicatesBatch(string strSoql) {
+        HH_CampaignDedupe_BATCH batch = new HH_CampaignDedupe_BATCH(campaign.Id, strSoql);
+        database.executeBatch(batch, 2000);                 
+    }
+
+    // return the soql needed for getting all CampaignMembers
+    private string strSoqlDedupe() {
+        string strSoql;
+        strSoql = 'Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Contact.AccountId, Contact.HHId__c, Contact.Account.npe01__SYSTEM_AccountType__c, Status ';
+        strSoql += 'From CampaignMember where CampaignId = \'' + campaign.Id + '\' and ContactId != null and ';
+        strSoql += '(Contact.npo02__household__c != null or Contact.Account.npe01__SYSTEM_AccountType__c = \'' + CAO_Constants.HH_ACCOUNT_TYPE + '\') ';
+        strSoql += 'order by Contact.HHId__c, Contact.npo02__TotalOppAmount__c desc';
+        return strSoql;
+    }
+    
+    // the real worker that takes the list of CampaignMembers, and marks any in the list that are duplicates in the household.
+    public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
+
+        final string DUPETEXT = Label.hhCmpDedupeStatus;
         
         //check for the Household Duplicate status values we need
         Map<string, boolean> StatusLabels = new Map<string, boolean>();
-        CampaignMemberStatus[] statuses = [select label, hasResponded from CampaignMemberStatus where CampaignId=:campaign.id];
+        CampaignMemberStatus[] statuses = [select label, hasResponded from CampaignMemberStatus where CampaignId=:campaignId];
         
         list<CampaignMember> dupeMembers = new list<CampaignMember>();
         
         for (CampaignMemberStatus cms : statuses) StatusLabels.put(cms.label, cms.hasResponded);
         
-        List<CampaignMemberStatus> campMemberStatuses = [select sortorder from CampaignMemberStatus where CampaignId=:campaign.Id order by sortorder desc limit 1]; 
+        List<CampaignMemberStatus> campMemberStatuses = [select sortorder from CampaignMemberStatus where CampaignId=:campaignId order by sortorder desc limit 1]; 
         //Giving it a default value because we cannot access CampaignMemberStatus object in tests without the seeAllData=true annotation
         //http://salesforce.stackexchange.com/questions/14051/campaignmemberstatus-records-only-testable-with-seealldata-flag
         Integer nextSortOrder = 0;
@@ -143,19 +177,15 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         CampaignMemberStatus[] newStatuses = new CampaignMemberStatus[]{};
           
         set<id> HouseholdIDSet = new set<id>();        
-    
-        for (CampaignMember m : [Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Contact.AccountId, Contact.Account.npe01__SYSTEM_AccountType__c, Status 
-            From CampaignMember where CampaignId=:campaign.Id and ContactId != null and 
-                (Contact.npo02__household__c != null or Contact.Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE)
-                order by Contact.npo02__TotalOppAmount__c desc]) {
+
+        for (CampaignMember m : listCM) {
             
             //do not want null status
             if (m.Status==null) m.Status = statuses[0].label;
       
             string newStatus = null;
             
-            ID hhId = (m.Contact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ?
-                m.Contact.AccountId : m.Contact.npo02__household__c;
+            ID hhId = m.Contact.HHId__c;
       /*
             //if this contact's household is already in the set, its a dupe from this household
             //also filter any we've already marked 
@@ -179,12 +209,12 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             //(e.g. from a previous time the report was run), unmark it.            
             if(HouseholdIDSet.contains(hhId)){
                 if (!m.Status.endsWith(DupeText)) {
-                	if(Test.isRunningTest()) {
-                		//because it's the only other available status in a test that does not see all data
-                		newStatus = 'Responded'; 
-                	} else {
+                    if(Test.isRunningTest()) {
+                        //because it's the only other available status in a test that does not see all data
+                        newStatus = 'Responded'; 
+                    } else {
                         newStatus =  m.Status + DupeText;
-                	}
+                    }
                 }
             }
              
@@ -200,7 +230,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
                 dupeMembers.add(new CampaignMember(Id = m.Id, Status = newStatus)); 
                 
                 if (StatusLabels.size() > 0 && !StatusLabels.containsKey(newStatus)) {
-                    newStatuses.add(new CampaignMemberStatus(label=newStatus, campaignid=campaign.Id, hasResponded=StatusLabels.get(m.Status), sortorder=nextSortOrder));
+                    newStatuses.add(new CampaignMemberStatus(label=newStatus, campaignid=campaignId, hasResponded=StatusLabels.get(m.Status), sortorder=nextSortOrder));
                     StatusLabels.put(newStatus, StatusLabels.get(m.Status));
                     nextSortOrder++;
                 }
@@ -216,14 +246,14 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }
         }            
         catch (Exception e){
-        	ERR_Handler.processError(e, ERR_Handler.Context.HH);
+            ERR_Handler.processError(e, ERR_Handler.Context.HH);
             showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
         }
         
         return returnsize;
     }
-    
-    private void showMsg(String arg, ApexPages.Severity severity){
+
+    private static void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
     } 
