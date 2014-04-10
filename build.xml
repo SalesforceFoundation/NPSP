@@ -217,7 +217,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Deploy any unpackaged metadata needed for builds -->
       <antcall target="deployUnpackaged" />
 
-      <!-- Now set the version.npsp property to the beta version -->
+      <!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
+      <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
       <var name="version.npsp" value="${version.npsp.uat}" />
 
       <!-- This call should only install the beta package -->
@@ -270,7 +271,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <loadproperties srcFile="${basedir}/version.properties.prod"/>
       <delete file="${basedir}/version.properties.prod" />
 
-      <!-- Now set the version.npsp property to the beta version -->
+      <!-- Now set the version.npsp property to the prod version -->
       <var name="version.npsp" value="${version.npsp.prod}" />
 
       <!-- Run updateDependentPackages to install the correct versions of the 5 original NPSP packages and the Cumulus package -->
