@@ -299,10 +299,9 @@
   <types>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
-    <members>Addr_Settings_HTML_Key_Body</members>
-    <members>Addr_Settings_HTML_Key_Title</members>
     <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Title</members>
+    <members>Addr_Settings_Notice</members>
     <members>Addr_Settings_Test_Body</members>
     <members>Addr_Settings_Test_Response_Title</members>
     <members>Addr_Settings_Test_Title</members>
@@ -556,16 +555,11 @@
   </types>
   <types>
     <members>Account.AllAccounts</members>
-    <members>Account.Household_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
-  </types>
-  <types>
-    <members>Account.HH_Account</members>
-    <name>RecordType</name>
   </types>
   <types>
     <members>CumulusStaticResources</members>
