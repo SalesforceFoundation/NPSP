@@ -42,6 +42,7 @@ global class STG_InstallScript implements InstallHandler {
                 runNewOrgScript();
             } catch(Exception e) {
             	sendEmailOnError(e, context);
+            	ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             	//throw e; Let's not rethrow the exception, to avoid package failure installation due to install script 
             }
         } else if(context.isUpgrade()) {
