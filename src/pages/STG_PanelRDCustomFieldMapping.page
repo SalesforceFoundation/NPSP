@@ -26,13 +26,13 @@
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
      
                     <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.Label}" for="slRDF" />
-                    <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slRDF" >
+                    <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slRDF" >
                         <apex:selectOptions value="{!listSORDFields}"  />
                     </apex:selectList>
                     <apex:outputLabel value="{!$Label.stgHelpRDFieldMapRDField}"/>
                                     
                     <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.Label}" for="slOF" />
-                    <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOF" >
+                    <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slOF" >
                         <apex:selectOptions value="{!listSOOppFields}"  />
                     </apex:selectList>
                     <apex:outputLabel value="{!$Label.stgHelpRDFieldMapOppField}"/>

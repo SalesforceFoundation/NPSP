@@ -185,7 +185,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
 	                        continue;
 	                        
 	                    Schema.Displaytype dtTgt = f.getType();
-	                    if (isDtsCompatible(dtSrc, dtTgt)) {
+	                    if (UTIL_Describe.canDisplaytypesCopy(dtSrc, dtTgt)) {
 	                        targetfields.add(new SelectOption(f.getName(), f.getLabel()));
 	                    }    
 	                }
@@ -201,30 +201,6 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         return targetfields;    
     }
     
-    // utility to check for compatible datatypes for data copying
-    private boolean isDtsCompatible(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
-    	
-    	if (dtSrc == dtTgt)
-    	   return true;
-    	
-    	// date can go to datetime
-    	if (dtSrc == Schema.Displaytype.Date && dtTgt == Schema.Displaytype.DateTime)
-    	   return true;
-    	   
-        // numbers can implictly cast to other numbers
-	    if ((dtSrc == Schema.Displaytype.Currency ||
-	        dtSrc == Schema.Displaytype.Double ||
-	        dtSrc == Schema.Displaytype.Integer ||
-	        dtSrc == Schema.Displaytype.Percent) &&
-           (dtTgt == Schema.Displaytype.Currency ||
-            dtTgt == Schema.Displaytype.Double ||
-            dtTgt == Schema.Displaytype.Integer ||
-            dtTgt == Schema.Displaytype.Percent)) {
-            return true;
-        }
-        
-        return false;
-    }
     
     //retrieve valid source fields from opportunity object
     public list<SelectOption> getSourceFields(){

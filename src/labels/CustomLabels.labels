@@ -699,7 +699,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNewUDR</shortDescription>
-        <value>Select the Opportunity field to be mapped, and the Payment field it maps to.</value>
+        <value>Select the Opportunity field and operator to be mapped, and the object and field to copy into.</value>
     </labels>
     <labels>
         <fullName>stgHelpNoUDR</fullName>
@@ -739,7 +739,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentMapOppField</shortDescription>
-        <value>The Opportunity field to map to.</value>
+        <value>The Opportunity field to copy from.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapPaymentField</fullName>
@@ -747,7 +747,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPaymentMapPaymentField</shortDescription>
-        <value>The Payment field to copy from.</value>
+        <value>The Payment field to copy into.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapping</fullName>
