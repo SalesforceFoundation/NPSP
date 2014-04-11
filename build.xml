@@ -126,28 +126,38 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackagedPre">
-      <for param="dir">
-        <path>
-          <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
-        </path>
-        <sequential>  
-          <echo>Deploying unpackaged bundle @{dir}</echo>
-          <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
-        </sequential>
-      </for>
+      <if>
+        <available file="${basedir}/unpackaged/pre/" type="dir" />
+        <then>
+          <for param="dir">
+            <path>
+              <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
+            </path>
+            <sequential>  
+              <echo>Deploying unpackaged bundle @{dir}</echo>
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
+            </sequential>
+          </for>
+        </then>
+      </if>
     </target>
 
     <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackagedPost">
-      <for param="dir">
-        <path>
-          <dirset dir="${basedir}/unpackaged/post/" includes="*" />
-        </path>
-        <sequential>  
-          <echo>Deploying unpackaged bundle @{dir}</echo>
-          <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
-        </sequential>
-      </for>
+      <if>
+        <available file="${basedir}/unpackaged/post/" type="dir" />
+        <then>
+          <for param="dir">
+            <path>
+              <dirset dir="${basedir}/unpackaged/post/" includes="*" />
+            </path>
+            <sequential>  
+              <echo>Deploying unpackaged bundle @{dir}</echo>
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
+            </sequential>
+          </for>
+        </then>
+      </if>
     </target>
 
     <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests --> 
