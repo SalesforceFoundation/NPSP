@@ -124,9 +124,30 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="200" />
     </target>
 
-    <!-- deployUnpackaged: Deploy the unpackaged directory containing metadata used in builds but not included in the managed package -->
-    <target name="deployUnpackaged">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged" runAllTests="false" maxPoll="200" />
+    <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="deployUnpackagedPre">
+      <for param="dir">
+        <path>
+          <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
+        </path>
+        <sequential>  
+          <echo>Deploying unpackaged bundle @{dir}</echo>
+          <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
+        </sequential>
+      </for>
+    </target>
+
+    <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="deployUnpackagedPost">
+      <for param="dir">
+        <path>
+          <dirset dir="${basedir}/unpackaged/post/" includes="*" />
+        </path>
+        <sequential>  
+          <echo>Deploying unpackaged bundle @{dir}</echo>
+          <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="200" />
+        </sequential>
+      </for>
     </target>
 
     <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests --> 
@@ -138,11 +159,15 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
 
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
+      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
+      <antcall target="deployUnpackagedPre" />
 
       <!-- Finally, do a deploy with all tests -->
       <antcall target="deploy" />
+
+      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
+      <antcall target="deployUnpackagedPost" />
+
     </target>
 
     <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstall.
@@ -152,8 +177,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Update any managed packages which are not at the right version -->
       <antcall target="updateDependentPackages" />
 
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
+      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
+      <antcall target="deployUnpackagedPre" />
 
       <!-- Update the package.xml to managed package mode, adding install and uninstall script classes -->
       <antcall target="updatePackageXmlManaged" />
@@ -163,6 +188,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
       <!-- Finally, delete any metadata from the org which is not in the repo -->
       <antcall target="destroyStaleMetadata" />
+
+      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
+      <antcall target="deployUnpackagedPost" />
 
     </target>
 
@@ -214,8 +242,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- At this point, version.npsp is set to Not Install.  Call updateDependentPackages to install the correct packages and uninstall the current Cumulus beta version -->
       <updateDependentPackages />
 
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
+      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
+      <antcall target="deployUnpackagedPre" />
 
       <!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
       <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
@@ -223,6 +251,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
       <!-- This call should only install the beta package -->
       <antcall target="updateDependentPackages" />
+
+      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
+      <antcall target="deployUnpackagedPost" />
 
     </target>
 
@@ -277,8 +308,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Run updateDependentPackages to install the correct versions of the 5 original NPSP packages and the Cumulus package -->
       <antcall target="updateDependentPackages" />
 
-      <!-- Deploy any unpackaged metadata needed for builds -->
-      <antcall target="deployUnpackaged" />
+      <!-- Deploy any unpackaged metadata bundles needed for builds -->
+      <antcall target="deployUnpackagedPre" />
+      <antcall target="deployUnpackagedPost" />
 
     </target>
 
