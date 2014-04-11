@@ -41,7 +41,7 @@ global class STG_InstallScript implements InstallHandler {
             try {
                 runNewOrgScript();
             } catch(Exception e) {
-            	sendEmailOnError(e);
+            	sendEmailOnError(e, context);
             	//throw e; Let's not rethrow the exception, to avoid package failure installation due to install script 
             }
         } else if(context.isUpgrade()) {
@@ -53,15 +53,17 @@ global class STG_InstallScript implements InstallHandler {
     
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
     //leave it here for future debugging purposes. 
-    public void sendEmailOnError(Exception e) {
+    public void sendEmailOnError(Exception e, InstallContext context) {
+    	String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
     	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
+        mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('NPSP Install Script');
         mail.setSubject('NPSP Install Errors');
         String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
         + 'Stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
-        mail.setToAddresses(new String[]{'ceiroa@salesforce.com'});
+        mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
