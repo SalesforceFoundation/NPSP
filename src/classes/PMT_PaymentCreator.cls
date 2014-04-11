@@ -83,7 +83,7 @@ public without sharing class PMT_PaymentCreator {
                 //check Field Types
                 Schema.DisplayType payF = paymentField.getDescribe().getType();
                 Schema.DisplayType oppF = opportunityField.getDescribe().getType();
-                if (payF != oppF) isValid = false;
+                isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
                 
                 if (isValid == false) paymentMappings.keyset().remove(s);
                                 
@@ -93,15 +93,21 @@ public without sharing class PMT_PaymentCreator {
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
                 soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
-                for (string s : paymentMappings.keyset()){
-                       npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                       soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';   
+                for (string s : paymentMappings.keyset()) {
+                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
+                    if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
+                        soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
+                    }   
                 }
-                soqlStatement += 'npe01__payments_made__c, (SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, ';
-                for (string s : paymentMappings.keyset()){
-                       npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
-                       soqlStatement += pfms.npe01__Payment_Field__c + ', ';   
+                soqlStatement += 'npe01__payments_made__c, ';
+                string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, ';
+                for (string s : paymentMappings.keyset()) {
+                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
+                    if (!soqlSub.contains(pfms.npe01__Payment_Field__c)) {               
+                        soqlSub += pfms.npe01__Payment_Field__c + ', ';   
+                    }
                 }
+                soqlStatement += soqlSub;
                 soqlStatement += 'npe01__scheduled_date__c ';
                 soqlStatement += 'from Opportunity.npe01__OppPayment__r) from Opportunity WHERE id in :newOpps';
                 updatedOpps = Database.query(soqlStatement);

@@ -548,7 +548,7 @@ public with sharing class STG_SettingsManager_TEST {
         controller.clearForTargetObject();
         system.assert(controller.activeUDR.TargetField == null);
         controller.clearForOperation();
-        system.assert(controller.activeUDR.TargetObject == null);
+        system.assert(controller.activeUDR.TargetObject != null);
         controller.clearForSourceField();
         system.assert(controller.activeUDR.Operation == null);
         
