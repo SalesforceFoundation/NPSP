@@ -87,8 +87,14 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             for (string s : targetTokenMap.keyset()){
                 if (s.contains('__c')){
 			        Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe01__OppPayment__c', s);     
-                    Schema.DisplayType payType = f.getType();
-                    if(payType == oppType){
+
+                    // disallow formula fields and autonums
+                    if (f.isCalculated() || f.isAutoNumber())
+                        continue;
+                            
+                    // check for compatible displaytypes
+                    Schema.DisplayType payType = f.getType();                    
+                    if (UTIL_Describe.canDisplaytypesCopy(oppType, payType)) {                    
                         targetfields.add(new SelectOption(f.getName(), f.getLabel()));
                     }                
                 }
@@ -107,44 +113,28 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     private static string strNoValidField = System.Label.stgLabelPaymentMapNoValidFields;
     
     //retrieve valid source fields from opportunity object
-    public list<SelectOption> getSourceFields(){
+    public list<SelectOption> getSourceFields() {
         
-        // sets of strings are case sensitive, so use lower case in our set for the contains() against knownopptyFields.
-        set<string> knownOpptyFields = new set<string>{'amount', 'closedate', 'expectedrevenue', 
-            'probability', 'totalopportunityquantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
-        
-        if (sourcefields.isEmpty()){
-                       
+        if (sourcefields.isEmpty()) {
+	        
+	        // sets of strings are case sensitive, so use lower case in our set for the contains() against knownopptyFields.
+	        set<string> knownOpptyFields = new set<string>{'amount', 'closedate', 'expectedrevenue', 
+	            'probability', 'totalopportunityquantity', 'npe01__membership_start_date__c', 'npe01__membership_end_date__c'};
+                               
             map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.Opportunity.fields.getMap(); 
            
             //loop through the map, only get the describe information for fields we don't
             //already recognize, including our own and non-custom fields, we'll add those in a moment
-            for(string fieldName : oppFieldTokenList.keyset()){
-                if (fieldname.contains('__c') || knownopptyFields.contains(fieldName)){
+            for (string fieldName : oppFieldTokenList.keyset()) {
+                if (fieldname.contains('__c') || knownopptyFields.contains(fieldName)) {
                     Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', fieldname);                         
                     Schema.Displaytype dt = f.getType();
-                    sourcefields.add(new SelectOption(f.getName(),f.getLabel()));
+                    sourcefields.add(new SelectOption(f.getName(), f.getLabel()));
                     mapFieldTypes.put(f.getName(), dt);
                 }
            }
-           
-           /********** used the loop above so we could have labels in the picklist *************
-           //now add our known field types
-           for(string knownField : knownopptyFields){
-                sourcefields.add(new SelectOption(knownField, knownField));
-           
-                if((knownfield == 'Amount') || (knownfield == 'ExpectedRevenue'))
-                    mapFieldTypes.put(knownfield, Schema.Displaytype.Currency);         
-                else if((knownfield == 'CloseDate')||(knownfield == 'npe01__membership_start_date__c') || (knownfield == 'npe01__membership_end_date__c'))                  
-                    mapFieldTypes.put(knownfield, Schema.Displaytype.Date);
-                else
-                    mapFieldTypes.put(knownfield, Schema.Displaytype.Double);   
-           }
-           ****************/
-
            sourcefields.sort();           
-        }
-       
+        }       
         return sourceFields;
     }
 
