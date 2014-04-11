@@ -233,4 +233,33 @@ public with sharing class UTIL_Describe {
         return dfr.getLabel();
     }       
 
+    // utility to check for compatible datatypes for data copying
+    public static boolean canDisplaytypesCopy(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
+        
+        if (dtSrc == dtTgt)
+           return true;
+        
+        // date can go to datetime
+        if (dtSrc == Schema.Displaytype.Date && dtTgt == Schema.Displaytype.DateTime)
+           return true;
+           
+        // numbers can implictly cast to other numbers
+        if ((dtSrc == Schema.Displaytype.Currency ||
+            dtSrc == Schema.Displaytype.Double ||
+            dtSrc == Schema.Displaytype.Integer ||
+            dtSrc == Schema.Displaytype.Percent) &&
+           (dtTgt == Schema.Displaytype.Currency ||
+            dtTgt == Schema.Displaytype.Double ||
+            dtTgt == Schema.Displaytype.Integer ||
+            dtTgt == Schema.Displaytype.Percent)) {
+            return true;
+        }
+        
+        // text can go to longer text
+        if (dtSrc == Schema.Displaytype.String && dtTgt == Schema.Displaytype.TextArea)
+            return true;
+        
+        return false;
+    }
+
 }
