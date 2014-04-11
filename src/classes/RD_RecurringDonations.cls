@@ -271,6 +271,9 @@ public with sharing class RD_RecurringDonations {
                     {
                         Contact c = contactMap.get(r.npe03__Contact__c);
                         opp.AccountId = c.AccountId;
+                        if (ConIDForRole != null){
+                            opp.put('npe01__Contact_Id_For_Role__c', (string)c.id);
+                        }
                     } 
 
                     // James Melville 05/03/2011 Added to support multi-currency sfdc.  
@@ -457,7 +460,7 @@ public with sharing class RD_RecurringDonations {
                 i++;
             }
                     
-            if (ConIDForRole == null || Test.isRunningTest()){ 
+            if (ConIDForRole == null /* || Test.isRunningTest() */){ 
                 if (!system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else
@@ -806,7 +809,7 @@ public with sharing class RD_RecurringDonations {
                 i++;
             }
                     
-            if (ConIDForRole == null || Test.isRunningTest()){
+            if (ConIDForRole == null /* || Test.isRunningTest() */){
                 if (!system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else 

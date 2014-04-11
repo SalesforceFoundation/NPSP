@@ -51,6 +51,7 @@
     <members>ERR_ParentAccountUpdater_TEST</members>
     <members>HH_CampaignDedupeBTN_CTRL</members>
     <members>HH_CampaignDedupeBTN_TEST</members>
+    <members>HH_CampaignDedupe_BATCH</members>
     <members>HH_HHObject_TDTM</members>
     <members>HH_HouseholdNaming</members>
     <members>HH_HouseholdNaming_BATCH</members>
@@ -322,6 +323,12 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>hhCmpDedupLabelReturnToCmp</members>
+    <members>hhCmpDedupeBatchMessage</members>
+    <members>hhCmpDedupeBatchProgressTitle</members>
+    <members>hhCmpDedupeLabelOpenReport</members>
+    <members>hhCmpDedupeNoReport</members>
+    <members>hhCmpDedupeStatus</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -553,16 +560,11 @@
   </types>
   <types>
     <members>Account.AllAccounts</members>
-    <members>Account.Household_Accounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
-  </types>
-  <types>
-    <members>Account.HH_Account</members>
-    <name>RecordType</name>
   </types>
   <types>
     <members>CumulusStaticResources</members>

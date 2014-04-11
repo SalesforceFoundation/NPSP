@@ -87,9 +87,8 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         if (schemaRDField != null && schemaOppField != null) {
             Schema.DescribeFieldResult RDF = schemaRDField.getDescribe();
             Schema.DescribeFieldResult ODF = schemaOppField.getDescribe();                              
-            if  (RDF.isAccessible() && (ODF.isAccessible() && !ODF.isDeprecatedAndHidden() && ODF.isUpdateable()) &&
-                (RDF.getSoapType() == ODF.getSoapType())
-               ){
+            if  (RDF.isAccessible() && ODF.isAccessible() && !ODF.isDeprecatedAndHidden() && ODF.isUpdateable() &&
+                UTIL_Describe.canDisplaytypesCopy(RDF.getType(), ODF.getType()) ){
                 isValid = true;                           
             }
         }
@@ -165,7 +164,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         get {
             if (listSOOppFields == null) {
                 listSOOppFields = new list<SelectOption>();
-                listSOOppFields.add(new SelectOption('','- none -'));
+                //listSOOppFields.add(new SelectOption('','- none -'));
             
                 // filter out opp fields already used
 	            for (npe03__Custom_Field_Mapping__c fm : STG_Panel.stgService.listRDCustomFieldMapping) {   
@@ -176,7 +175,8 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                 for (string fieldName : oppFieldTokenList.keyset()) {                	
                 	if (!setInvalidOppFields.contains(fieldName)) {                	
 	                    Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', fieldname);
-	                    listSOOppFields.add(new SelectOption(f.getName(), f.getLabel()));
+	                    if (f.isAccessible() && !f.isDeprecatedAndHidden() && f.isUpdateable() )
+	                       listSOOppFields.add(new SelectOption(f.getName(), f.getLabel()));
                 	}
                 }
                 listSOOppFields.sort();
@@ -190,7 +190,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         get {
             if (listSORDFields == null) {
                 listSORDFields = new list<SelectOption>();
-                listSORDFields.add(new SelectOption('','- none -'));
+                //listSORDFields.add(new SelectOption('','- none -'));
 
                 map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.npe03__Recurring_Donation__c.fields.getMap(); 
                 for (string fieldName : oppFieldTokenList.keyset()) {
