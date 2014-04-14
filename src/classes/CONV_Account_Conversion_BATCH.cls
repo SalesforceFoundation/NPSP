@@ -163,9 +163,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         for (Id accountId : consWithNewHousehold.keySet()){
             List<Contact> conList = consWithNewHousehold.get(accountId);
-
+            system.assert(conList.size() > 0);
             //if its the only Contact and it has an address recorded, just use that address
             if (conList.size() == 1){
+                system.debug('***************** PROCESSING SINGLE ADDRESS');
                 ContactAddress cadd = new ContactAddress(conList[0]);
                 if (cadd.hasAddress()){
                     Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
@@ -179,13 +180,12 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     addressesForInsert.put(accountId, a);
 
                     Account myHHAccount = con2Account.get(conList[0].Id);
-                    myHHAccount.ShippingStreet = cadd.MailingStreet;
-                    myHHAccount.ShippingState = cadd.MailingState;
-                    myHHAccount.ShippingPostalCode = cadd.MailingZip;
-                    myHHAccount.ShippingCountry = cadd.MailingCountry;
-                    myHHAccount.ShippingCity = cadd.MailingCity;
+                    myHHAccount.BillingStreet = cadd.MailingStreet;
+                    myHHAccount.BillingState = cadd.MailingState;
+                    myHHAccount.BillingPostalCode = cadd.MailingZip;
+                    myHHAccount.BillingCountry = cadd.MailingCountry;
+                    myHHAccount.BillingCity = cadd.MailingCity;
                     hhAccountsForUpdate.add(myHHAccount);
-                    
                 }
             }
 
@@ -223,7 +223,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     }
                     else
                         HHaddresses.put(c, null);
-                }
+                }//end conlist loop
 
                 //loop through the unique addresses create address objects and determine the master address
                 Boolean hasDefaultAddr = false;
@@ -234,8 +234,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 for (String MD5Hash : uniqueContactAddress.keySet()){
                     ContactAddress cadd = uniqueContactAddress.get(MD5Hash);
                     counter ++;
+
                     //is this the top address in this household?
-                    
                     if (!hasDefaultAddr){
                         //first try address frequency
                         Integer addCount = addressFrequency.get(MD5Hash);
@@ -274,26 +274,29 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
                     if (hasDefaultAddr){
                         masteraddresshash = MD5Hash;
-                        addressesForInsert.put(cadd.contact.AccountId, a);
+                        addressesForInsert.put(cadd.AccountId, a);
                     }
                     else
-                        addressesForInsert.put(cadd.contact.Id, a);
+                        addressesForInsert.put(cadd.ConId, a);
                 }
 
                 //set the household address fields to the default address values
                 ContactAddress masteraddress = uniqueContactAddress.get(masteraddresshash);
-                Account a = con2Account.get(masteraddress.contact.Id);
-                a.BillingStreet = masteraddress.MailingStreet;
-                a.BillingCity = masteraddress.MailingCity;
-                a.BillingPostalCode = masteraddress.MailingZip;
-                a.BillingCountry = masteraddress.MailingCountry;
-                a.BillingState = masteraddress.MailingState;
-                hhAccountsForUpdate.add(a);
+
+                if (masteraddress != null && masteraddress.hasAddress()){
+                    Account a = con2Account.get(masteraddress.ConId);
+                    a.BillingStreet = masteraddress.MailingStreet;
+                    a.BillingCity = masteraddress.MailingCity;
+                    a.BillingPostalCode = masteraddress.MailingZip;
+                    a.BillingCountry = masteraddress.MailingCountry;
+                    a.BillingState = masteraddress.MailingState;
+                    hhAccountsForUpdate.add(a);
+                }
 
                 //set any non-addressed contacts to the default address
                 for (Contact c : HHaddresses.keySet()){
                     ContactAddress ca = HHAddresses.get(c);
-                    if (!ca.hasAddress()){
+                    if (ca != null && !ca.hasAddress() && masteraddress != null && masteraddress.hasAddress()){
                         c.MailingStreet = masteraddress.MailingStreet;
                         c.MailingState = masteraddress.MailingState;
                         c.MailingPostalCode = masteraddress.MailingZip;
@@ -305,9 +308,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             }//close else
         }//close for household
 
-        if (consForUpdate.size() > 1) update consForUpdate;
-        if (addressesForInsert.values().size() > 1) insert addressesForInsert.values();
-        if (hhAccountsForUpdate.size() > 1) update hhAccountsForUpdate;
+        if (consForUpdate.size() > 0) update consForUpdate;
+        if (addressesForInsert.values().size() > 0) insert addressesForInsert.values();
+        if (hhAccountsForUpdate.size() > 0) update hhAccountsForUpdate;
 
         consForUpdate.clear();
 
@@ -317,13 +320,13 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             List<Contact> conList = consWithNewHousehold.get(accountId);
             for (Contact c : conList){
                 //This Contact ID is not in the 'unique address' list, so set it to the hh address
-                if (!addressesForInsert.containsKey(c.id)){
+                if (addressesForInsert.containsKey(accountId)){
                     c.Current_Address__c = addressesForInsert.get(accountId).Id;
                     consForUpdate.add(c);
                 }
 
-                //this contact address is not hte master address, associate contact with other address and set override
-                else{
+                //this contact address is not the master address, associate contact with other address and set override
+                else if (addressesForInsert.containsKey(c.Id)){
                     c.Current_Address__c = addressesForInsert.get(c.Id).Id;
                     c.is_Address_Override__c = true;
                     consForUpdate.add(c);
@@ -332,7 +335,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
 
         //update the contacts with the correct address lookup
-        if (consForUpdate.size() > 1) update consForUpdate;
+        if (consForUpdate.size() > 0) update consForUpdate;
 
     }//close execute method
 
@@ -351,6 +354,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         public ContactAddress(Contact c){
             this.contact = c;
+            this.ConId = c.Id;
+            this.AccountId = c.AccountId;
             this.MailingStreet = c.MailingStreet;
             this.MailingCity = c.MailingCity;
             this.MailingState = c.MailingState;
@@ -360,6 +365,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
 
         public Contact contact;
+        public Id ConId;
+        public Id AccountId;
         public String MailingStreet;
         public String MailingCity;
         public String MailingState;
@@ -386,7 +393,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             else{
                 Blob MD5Hash;
                 MD5Hash = System.Crypto.generateDigest('MD5', AddressBlob);
-                MD5 = MD5Hash.toString();
+                MD5 = EncodingUtil.base64Encode(MD5Hash);
                 return MD5;
             }
         }
