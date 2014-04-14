@@ -73,16 +73,11 @@ global class STG_InstallScript implements InstallHandler {
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
+    /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
     global void runNewOrgScript() {
-        //provides a global callable method for running the default install script to setup TDTM in new orgs
-
-        //Get the mapping from old settings to the new TDTM default setup
-        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
-        //Setup the new configuration
-        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
         
+        setTriggerConfig();
+
         //set default settings
         UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
@@ -106,6 +101,15 @@ global class STG_InstallScript implements InstallHandler {
         }
         //schedule master cron job
         UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+    }
+    
+    public void setTriggerConfig() {
+    	//Get the mapping from old settings to the new TDTM default setup
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        //Setup the new configuration
+        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
