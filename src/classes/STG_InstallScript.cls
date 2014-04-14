@@ -40,6 +40,8 @@ global class STG_InstallScript implements InstallHandler {
             System.debug('****First install');
             try {
                 runNewOrgScript();
+                //Just to test if email notification and error log from install script work. Delete after testing!!!
+                throw new Exception('This is a test. Please update install script and delete lines 43 and 44.');
             } catch(Exception e) {
             	sendEmailOnError(e, context);
             	ERR_Handler.processError(e, ERR_Handler.Context.STTG);
