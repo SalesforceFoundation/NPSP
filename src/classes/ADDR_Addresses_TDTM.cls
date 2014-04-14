@@ -291,7 +291,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
         integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
         integer endMonth = integer.valueOf(addr.Seasonal_End_Month__c);
-        integer endDay = integer.valueOf(addr.Seasonal_End_Month__c);
+        integer endDay = integer.valueOf(addr.Seasonal_End_Day__c);
         Date dtStart;
         Date dtEnd;
         Date dtToday = system.today();
