@@ -34,14 +34,10 @@
 */
 global class STG_InstallScript implements InstallHandler {
     
-    private class InstallScriptException extends Exception {} 
-    
     global void onInstall(InstallContext context) {
         //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
         if(context.previousVersion() == null) {
             try {
-            	//throwing exception manually. Delete!
-            	throw new InstallScriptException();
                 runNewOrgScript();
             } catch(Exception e) {
             	sendEmailOnError(e, context);
