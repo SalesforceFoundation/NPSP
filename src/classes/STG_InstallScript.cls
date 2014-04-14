@@ -47,9 +47,9 @@ global class STG_InstallScript implements InstallHandler {
             	//throw e;
             }
         } else if(context.isUpgrade()) {
-        	insertTdtmDefauls();
+        	insertTdtmDefaults();
         } else if(context.isPush()) {
-        	insertTdtmDefauls();
+        	insertTdtmDefaults();
         }
     }
     
@@ -155,12 +155,12 @@ global class STG_InstallScript implements InstallHandler {
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
         //First we insert all TDTM records as active
-        insertTdtmDefauls();   
+        insertTdtmDefaults();   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
     
-    private static void insertTdtmDefauls() {
+    private static void insertTdtmDefaults() {
     	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c from Trigger_Handler__c];
         List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
