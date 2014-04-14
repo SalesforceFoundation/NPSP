@@ -47,8 +47,10 @@ global class STG_InstallScript implements InstallHandler {
                 throw new InstallScriptException('This is a test. Please clean up install script.');
             } catch(Exception e) {
             	sendEmailOnError(e, context);
-            	ERR_Handler.processError(e, ERR_Handler.Context.STTG);
-            	//throw e; Let's not rethrow the exception, to avoid package failure installation due to install script 
+            	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
+            	//ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            	//We won't rethrow the exception, to avoid package failure installation due to install script error
+            	//throw e;
             }
         } else if(context.isUpgrade()) {
         	insertTdtmDefauls();
