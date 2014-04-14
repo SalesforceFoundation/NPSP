@@ -33,18 +33,12 @@
 * @description Install Script for the NPSP package. 
 */
 global class STG_InstallScript implements InstallHandler {
-
-    //Just for testing. Delete.
-    public class InstallScriptException extends Exception{}
     
     global void onInstall(InstallContext context) {
         //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
         if(context.previousVersion() == null) {
-            System.debug('****First install');
             try {
                 runNewOrgScript();
-                //Just to test if email notification and error log from install script work. Delete after testing!!!
-                throw new InstallScriptException('This is a test. Please clean up install script.');
             } catch(Exception e) {
             	sendEmailOnError(e, context);
             	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
