@@ -163,10 +163,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         for (Id accountId : consWithNewHousehold.keySet()){
             List<Contact> conList = consWithNewHousehold.get(accountId);
-            system.assert(conList.size() > 0);
+
             //if its the only Contact and it has an address recorded, just use that address
             if (conList.size() == 1){
-                system.debug('***************** PROCESSING SINGLE ADDRESS');
+
                 ContactAddress cadd = new ContactAddress(conList[0]);
                 if (cadd.hasAddress()){
                     Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
@@ -296,7 +296,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 //set any non-addressed contacts to the default address
                 for (Contact c : HHaddresses.keySet()){
                     ContactAddress ca = HHAddresses.get(c);
-                    if (ca != null && !ca.hasAddress() && masteraddress != null && masteraddress.hasAddress()){
+                    if ((ca != null && !ca.hasAddress()) && 
+                        (masteraddress != null && masteraddress.hasAddress())){
+                        system.assertNotEquals(ca.hasAddress(), true);
+                        system.assertNotEquals(c.FirstName, 'Test');
                         c.MailingStreet = masteraddress.MailingStreet;
                         c.MailingState = masteraddress.MailingState;
                         c.MailingPostalCode = masteraddress.MailingZip;
@@ -319,16 +322,16 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         for (Id accountId : consWithNewHousehold.keySet()){
             List<Contact> conList = consWithNewHousehold.get(accountId);
             for (Contact c : conList){
-                //This Contact ID is not in the 'unique address' list, so set it to the hh address
-                if (addressesForInsert.containsKey(accountId)){
-                    c.Current_Address__c = addressesForInsert.get(accountId).Id;
-                    consForUpdate.add(c);
-                }
 
                 //this contact address is not the master address, associate contact with other address and set override
-                else if (addressesForInsert.containsKey(c.Id)){
+                if (addressesForInsert.containsKey(c.Id)){
                     c.Current_Address__c = addressesForInsert.get(c.Id).Id;
                     c.is_Address_Override__c = true;
+                    consForUpdate.add(c);
+                }
+                //This Contact ID is not in the 'unique address' list, so set it to the hh address
+                else if (addressesForInsert.containsKey(accountId)){
+                    c.Current_Address__c = addressesForInsert.get(accountId).Id;
                     consForUpdate.add(c);
                 }
             }
