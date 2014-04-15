@@ -90,10 +90,19 @@ public with sharing class STG_SettingsService {
     
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
-            if (stgBDE == null) stgBDE = Batch_Data_Entry_Settings__c.getOrgDefaults();
+            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getBDESettings();
             return stgBDE;
         }
         private set;
+    }
+    
+    public Address_Verification_Settings__c addrVerif { 
+        get {
+        	if(addrVerif == null) addrVerif = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        	return addrVerif;
+        }
+        
+        public set; 
     }
     
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
@@ -138,7 +147,7 @@ public with sharing class STG_SettingsService {
             return listPMTFieldMapping;           
         }
         public set;    	
-    }
+    } 
     
     public void saveAll() {
     	system.debug('****stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
@@ -150,6 +159,6 @@ public with sharing class STG_SettingsService {
         upsert stgRel;
         upsert stgAffl;
         upsert stgBDE;
-        upsert stgErr; 	
+        upsert stgErr;
     }
 }

@@ -81,7 +81,8 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        UTIL_CustomSettingsFacade.getValidationSettings();
+        UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        UTIL_CustomSettingsFacade.getBDESettings();
         
         //create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c];
