@@ -703,16 +703,19 @@ global with sharing class HH_ManageHousehold_EXT {
     ********************************************************************************************************/
     public list<Contact> sortingList() {
         list<Contact> cons = new list<contact>();
-        list<Integer> sortOrder = new list<Integer>();
-        map<Integer,Contact> consToSort = new map<Integer,Contact>();
+        list<double> sortOrder = new list<double>();
+        map<double,Contact> consToSort = new map<double,Contact>();
         
-        // to handle contacts without naming order, treat them as large unique integer
-        integer iorderNull = 1000;
-        integer iorder;
+        // to handle contacts without naming order, sort them by creation date.
+        double iorderNull = double.valueOf(System.Now().format('yyyyMMddHHmmss'));
+        double iorder;
         
         if (!activeContacts.isEmpty()) {
             for(Contact con : activeContacts.values()) {
-                iorder = (con.npo02__Household_Naming_Order__c != null ? Integer.valueOf(con.npo02__Household_Naming_Order__c) : iorderNull++);
+            	if (con.npo02__Household_Naming_Order__c != null )
+                    iorder = double.valueOf(con.npo02__Household_Naming_Order__c);
+                else
+                    iorder = double.valueOf(con.CreatedDate.format('yyyyMMddHHmmss'));
                 consToSort.put(iorder, con);
             }
         }
@@ -726,7 +729,7 @@ global with sharing class HH_ManageHousehold_EXT {
         if(!consToSort.isEmpty()) {
             sortOrder.addAll(consToSort.keySet());
             sortOrder.sort();
-            for (Integer nb : sortOrder) {
+            for (double nb : sortOrder) {
                 cons.add(consToSort.get(nb));
             }
         }
