@@ -29,35 +29,35 @@
 			<apex:panelGrid id="fields" columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
 			 
 				<apex:outputLabel value="Using Smarty Streets" />
-                <apex:inputCheckbox value="{!stgService.addrVerif.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" />
+                <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
                 
 				<apex:outputLabel value="Auth ID" />
-				<apex:inputText value="{!stgService.addrVerif.Auth_ID__c}" disabled="{!isReadOnlyMode}" />
+				<apex:inputText value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" />
 	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
 	            
 				<apex:outputLabel value="Auth Token" />
-				<apex:inputText value="{!stgService.addrVerif.Auth_Token__c}" disabled="{!isReadOnlyMode}" />
+				<apex:inputText value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" />
 	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
 	            
 	            <apex:outputLabel value="Address Verification URL" />
-                <apex:inputText value="{!stgService.addrVerif.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" />
+                <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Zipcode Verification URL" />
-                <apex:inputText value="{!stgService.addrVerif.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}"/>
+                <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}"/>
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Implementing Class" />
-                <apex:inputText value="{!stgService.addrVerif.Class__c}" disabled="{!isReadOnlyMode}" />
+                <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
 			    
 			    <apex:outputLabel value="Enable Automatic Verification"/>
-                <apex:inputCheckbox value="{!stgService.addrVerif.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" />
+                <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 
                 <apex:outputLabel value="Reject Ambiguous Addresses"/>
-                <apex:inputCheckbox value="{!stgService.addrVerif.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" />
+                <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" />
                 <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                     
             </apex:panelGrid>

@@ -96,15 +96,6 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
-    public Address_Verification_Settings__c addrVerif { 
-        get {
-        	if(addrVerif == null) addrVerif = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-        	return addrVerif;
-        }
-        
-        public set; 
-    }
-    
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
     	get {
     		if (mapRDCustomField == null) {

@@ -36,6 +36,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
+    public Address_Verification_Settings__c addrVerifSettings { 
+        get {
+            if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+            return addrVerifSettings;
+        }
+        
+        public set; 
+    }
+    
     public String apiSettingsErrorMessage { get; private set; }
     public String apiSettingsSaveMessage { get; private set; }
 
@@ -50,17 +59,17 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         try {
         	apiTestResult = null;
         	
-        	encodeTokenIfNotEncoded(STG_SettingsService.stgService.addrVerif);
+        	encodeTokenIfNotEncoded(addrVerifSettings);
                         
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
-            if(STG_SettingsService.stgService.addrVerif.Using_SmartyStreets__c && String.isBlank(STG_SettingsService.stgService.addrVerif.Auth_ID__c)) {
+            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_ID__c)) {
                 apiSettingsErrorMessage = 'Auth ID cannot be blank. ';
                 apiSettingsSaveMessage = null;
                 validationError = true;
             }
             
-            if(STG_SettingsService.stgService.addrVerif.Using_SmartyStreets__c && String.isBlank(STG_SettingsService.stgService.addrVerif.Auth_Token__c)) {
+            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_Token__c)) {
                 String validationMessage = 'Auth Token cannot be blank.';
                 apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
                 apiSettingsSaveMessage = null;
@@ -68,7 +77,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
-                upsert STG_SettingsService.stgService.addrVerif;
+                upsert addrVerifSettings;
                 apiSettingsSaveMessage = 'Saved.\n';
                 apiSettingsErrorMessage = null;
                 return super.saveSettings();
@@ -89,8 +98,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public PageReference testApi() {
         try {
-        	encodeTokenIfNotEncoded(STG_SettingsService.stgService.addrVerif);
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(STG_SettingsService.stgService.addrVerif);
+        	encodeTokenIfNotEncoded(addrVerifSettings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
             apiTestResult = JSON.serializePretty(sz);
         } catch (Exception e) {
@@ -106,10 +115,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         return null;
     }
     
-    private void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerif) {
+    private void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
-        if(addrVerif.Using_SmartyStreets__c && addrVerif.Auth_Token__c.length() == 88)
-            addrVerif.Auth_Token__c = EncodingUtil.urlEncode(addrVerif.Auth_Token__c, 'UTF-8');
+        if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Auth_Token__c.length() == 88)
+            addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }
 
     public PageReference bulkVerify() {

@@ -267,8 +267,8 @@ public with sharing class ADDR_Validator_TEST {
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
-        sc.settings.HTML_Key__c = 'skldjflsdkfj';
-        sc.settings.Class__c = 'ADDR_SmartyStreets_Validator';
+        sc.addrVerifSettings.HTML_Key__c = 'skldjflsdkfj';
+        sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
 
@@ -290,7 +290,7 @@ public with sharing class ADDR_Validator_TEST {
         
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
-        sc.settings.HTML_Key__c = 'skldjflsdkfj';
+        sc.addrVerifSettings.HTML_Key__c = 'skldjflsdkfj';
         
         Test.startTest();
         sc.saveSettings();
