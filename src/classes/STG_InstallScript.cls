@@ -33,16 +33,18 @@
 * @description Install Script for the NPSP package. 
 */
 global class STG_InstallScript implements InstallHandler {
-
+    
     global void onInstall(InstallContext context) {
         //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
         if(context.previousVersion() == null) {
-            System.debug('****First install');
             try {
                 runNewOrgScript();
             } catch(Exception e) {
-            	//sendEmailOnError(e);
-            	throw e;
+            	sendEmailOnError(e, context);
+            	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
+            	//ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            	//We won't rethrow the exception, to avoid package failure installation due to install script error
+            	//throw e;
             }
         } else if(context.isUpgrade()) {
         	insertTdtmDefauls();
@@ -53,15 +55,17 @@ global class STG_InstallScript implements InstallHandler {
     
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
     //leave it here for future debugging purposes. 
-    public void sendEmailOnError(Exception e) {
+    public void sendEmailOnError(Exception e, InstallContext context) {
+    	String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
     	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
+        mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('NPSP Install Script');
         mail.setSubject('NPSP Install Errors');
         String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
         + 'Stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
-        mail.setToAddresses(new String[]{'ceiroa@salesforce.com', 'jlantz@salesforce.com'});
+        mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
