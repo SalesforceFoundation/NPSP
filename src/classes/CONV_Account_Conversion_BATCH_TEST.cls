@@ -92,7 +92,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     }
 
     public testmethod static void testAccountConversionBucket(){
-        //setup 1x1 model and test account creation
+        //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
@@ -135,6 +135,91 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         
         
     }
+
+    public testMethod static void testSingleContactAddress(){
+        //setup individual model and test account creation
+        CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
+
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+                                MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
+                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+        insert c;
+        Id indID = [select id from Account where Name = 'Individual'].id;
+
+        system.assertEquals(indID, CAO_Constants.GetIndividualAccountId());
+
+        String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
+        system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
+
+        //set the HH Account model before entering the batch
+        CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
+
+        Test.StartTest();
+
+        String query = CONV_Account_Conversion_CTRL.getBatchQuery();
+
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+
+        ID batchprocessid = Database.executeBatch(cacv);
+        Test.StopTest();
+
+        //get the newly created Household 
+        Account newHHAccount = [select npo02__TotalOppAmount__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        system.assertNotEquals(null, newHHAccount);
+        system.assertEquals(c.MailingStreet, newHHAccount.BillingStreet);
+        Address__c add = [select Id, MailingStreet__c, Default_Address__c from Address__c where MailingStreet__c = '123 Main St.'];
+        system.assertNotEquals(null, add);
+        system.assertEquals(true, add.Default_Address__c);
+        system.assertEquals(add.Id, [select Current_Address__c from Contact where id = :c.id].Current_Address__c);
+    }
+
+    public testMethod static void test2ContactAddresses(){
+        //setup individual model and test account creation
+        CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
+
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+                                MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
+                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+        insert c;
+
+        c = [select Account.Name, AccountId, npo02__Household__c, LastName, Id, MailingStreet from Contact where Id = :c.Id];
+        system.assertEquals(c.Account.Name, 'Test Contact');
+        system.assertEquals('123 Main St.', c.MailingStreet);
+
+        Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
+                                MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
+                                MailingPostalCode = '21230', MailingState = 'MD', npo02__TotalOppAmount__c = 100.00,
+                                npo02__Household__c = c.npo02__Household__c);
+        insert c2;
+
+        //set the HH Account model before entering the batch
+        CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
+
+        Test.StartTest();
+
+        String query = CONV_Account_Conversion_CTRL.getBatchQuery();
+
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+
+        ID batchprocessid = Database.executeBatch(cacv);
+        Test.StopTest();
+
+        //get the newly created Household
+        String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
+        Account newHHAccount = [select npo02__TotalOppAmount__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        system.assertNotEquals(null, newHHAccount);
+        system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
+        system.assertEquals(2, [select count() from Address__c]);
+        c2 = [select id, is_Address_Override__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        system.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
+        system.assertEquals('1 1st Avenue', c2.MailingStreet);
+        system.assertEquals(false, c2.is_Address_Override__c);
+        c = [select id, is_Address_Override__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        system.assertEquals('1 1st Avenue', c.Account.BillingStreet);
+        system.assertEquals('123 Main St.', c.MailingStreet);
+        system.assertEquals(true, c.is_Address_Override__c);
+    }
+
     /* Utility methods for setting up and tearing down data and settings */
 
     public static void setPreHHAccountModel(boolean isOne2One){
