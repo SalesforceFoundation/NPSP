@@ -81,6 +81,13 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             targetTokenMap.remove(s);
         }
         
+        // remove fields that are already used in a mapping
+        for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
+            string s = pfm.npe01__Payment_Field__c;
+            s = s.toLowerCase();
+            targetTokenMap.remove(s);
+        }        
+        
         if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
         
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);  
