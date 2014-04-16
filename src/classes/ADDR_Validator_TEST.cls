@@ -37,7 +37,7 @@ public with sharing class ADDR_Validator_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'testControllerMissingSetting';
+    private static string strTestOnly = '*';
     
     public static void createDefaultSettings() {
         // use the household account model
