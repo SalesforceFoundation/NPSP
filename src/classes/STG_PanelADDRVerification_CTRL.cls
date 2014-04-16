@@ -117,7 +117,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     private void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
-        if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Auth_Token__c.length() == 88)
+        if(addrVerifSettings.Using_SmartyStreets__c && !String.isBlank(addrVerifSettings.Auth_Token__c) 
+        && addrVerifSettings.Auth_Token__c.length() == 88)
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }
 
