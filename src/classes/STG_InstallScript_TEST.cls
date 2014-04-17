@@ -224,6 +224,7 @@ public with sharing class STG_InstallScript_TEST {
         npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults(); 
         Error_Settings__c errorSettings = Error_Settings__c.getOrgDefaults();
         Address_Verification_Settings__c addrVerificationSetgs = Address_Verification_Settings__c.getOrgDefaults();
+        Batch_Data_Entry_Settings__c batchDataEntrySetgs = Batch_Data_Entry_Settings__c.getOrgDefaults();
         
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
@@ -277,6 +278,9 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals('ADDR_SmartyStreets_Validator', addrVerificationSetgs.Class__c);
         System.assertEquals(true, addrVerificationSetgs.Enable_Automatic_Verification__c);
         System.assertEquals(true, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
+        
+        System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
+        System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
     }
 
     public static void deleteAllCustomSettings() {
