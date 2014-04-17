@@ -78,18 +78,6 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>HTML_Key__c</fullName>
-        <description>Used instead of ID/Token combination for certain type of services. You usually have to specify the domain for it in the web service account settings - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Used instead of ID/Token combination for certain type of services. You usually have to specify the domain for it in the web service account settings - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
-        <label>HTML Key</label>
-        <length>200</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>true</defaultValue>
         <externalId>false</externalId>
