@@ -267,8 +267,10 @@ public with sharing class ADDR_Validator_TEST {
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
-        sc.settings.HTML_Key__c = 'skldjflsdkfj';
-        sc.settings.Class__c = 'ADDR_SmartyStreets_Validator';
+        sc.addrVerifSettings.Using_SmartyStreets__c = true;
+        sc.addrVerifSettings.Auth_ID__c = 'testID';
+        sc.addrVerifSettings.Auth_Token__c = 'testToken';
+        sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
 
@@ -289,13 +291,15 @@ public with sharing class ADDR_Validator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
         
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
-        
-        sc.settings.HTML_Key__c = 'skldjflsdkfj';
+        sc.addrVerifSettings.Using_SmartyStreets__c = true;
         
         Test.startTest();
         sc.saveSettings();
         Test.stopTest();
         
-        System.assert(sc.apiSettingsErrorMessage.contains('Required fields are missing'));
+        System.assertEquals(null, sc.apiSettingsSaveMessage);
+        System.debug('****Error message: ' + sc.apiSettingsErrorMessage);
+        System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'));
+        System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'));
     }
 }
