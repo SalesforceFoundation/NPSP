@@ -647,6 +647,8 @@ public without sharing class RLLP_OppRollup{
         list<sobject> objectList = new list<sobject>();   
         set<id> cset = cmap.keySet();        
         set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
         objectList = database.query(RLLP_OppRollup_UTIL.buildSoftCreditQuery());
             
