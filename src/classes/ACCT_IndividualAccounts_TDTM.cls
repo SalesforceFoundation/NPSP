@@ -346,7 +346,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <summary> for the list of HH AccountId's, recalc their rollups </summary>
     /// <param name="listAccountId">list of Account Id</param>
     private void rollupHHAccounts(list<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture()) {
+        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
                                                            ' where id IN :listAccountId')); 
@@ -360,7 +360,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture()) {
+        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
         } else {

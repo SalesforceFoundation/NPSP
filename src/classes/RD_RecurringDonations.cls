@@ -180,6 +180,7 @@ public with sharing class RD_RecurringDonations {
     // does not include the where clause (since different callers had different filtering needs)
     public static string strQueryRDNoWhere() {
     	
+    	// these must be lowercase so set.contains() will work
         set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name',
                                                        'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
                                                        'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
@@ -298,10 +299,12 @@ public with sharing class RD_RecurringDonations {
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly)
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c).addMonths(3*j);
+                       opp.CloseDate = dtEndOfMonthFixup(opp.CloseDate);                       
                     } else
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodMonthly)
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c).addMonths(j);
+                       opp.CloseDate = dtEndOfMonthFixup(opp.CloseDate);                       
                     } else
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodWeekly)
                     {
@@ -657,7 +660,7 @@ public with sharing class RD_RecurringDonations {
             runRecurringDonationClosedActions(newlycloseddonations, dmlWrapper);
         }
         if (!reevaluateopps.isEmpty()){
-            if (reevaluateopps.size() == 1 || system.isBatch())
+            if (reevaluateopps.size() == 1 || system.isFuture() || system.isBatch())
                 updateExistingOpps(reevaluateopps, dmlWrapper);
             else
                 updateExistingOppsFuture(reevaluateopps);
@@ -666,7 +669,7 @@ public with sharing class RD_RecurringDonations {
         if (!reinsertopps.isEmpty()){
             //clear existing open opps and recreate
             delete [select id from Opportunity where npe03__Recurring_Donation__c IN :reinsertopps and isClosed = false];
-            if (reinsertopps.size() == 1 || system.isBatch()){
+            if (reinsertopps.size() == 1 || system.isFuture() || system.isBatch()){
                 insertOppsOnRecurringDonationInsert(reinsertopps);                  
             }
             else{
@@ -822,7 +825,7 @@ public with sharing class RD_RecurringDonations {
             }
         }
         
-        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1 && !system.isFuture() && !system.isBatch()) || RD_ProcessControl.batchButton){
+        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_ProcessControl.batchButton){
             updateRecurringDonationOnOppChange(RDID, null);
         }
         else{
@@ -891,6 +894,13 @@ public with sharing class RD_RecurringDonations {
         }
     }
 
+    // hack to avoid having the last day of month get pushed to the 30th, and then the 28th.
+    private static date dtEndOfMonthFixup(Date dt) {
+        if (dt.day() >= 28) {
+            dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
+        } 
+        return dt;   	
+    }
     //helper for calculating the next date in the sequence based on the RD schedule type 
     private static date getNextDate(date CalcDate, string InstallmentType){
         npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
@@ -900,9 +910,11 @@ public with sharing class RD_RecurringDonations {
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly){
             CalcDate = CalcDate.addMonths(3);
+            CalcDate = dtEndOfMonthFixup(CalcDate);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodMonthly){
             CalcDate = CalcDate.addMonths(1);
+            CalcDate = dtEndOfMonthFixup(CalcDate);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodWeekly){
             CalcDate = CalcDate.addDays(7);
@@ -930,6 +942,7 @@ public with sharing class RD_RecurringDonations {
                 }
                 else if (c.npe03__Increment__c == 'Months'){
                     CalcDate = CalcDate.addMonths(integer.valueOf(c.npe03__Value__c));
+                    CalcDate = dtEndOfMonthFixup(CalcDate);                    
                 }
                 else if (c.npe03__Increment__c == 'Years'){
                     CalcDate = CalcDate.addYears(integer.valueOf(c.npe03__Value__c));
@@ -939,6 +952,7 @@ public with sharing class RD_RecurringDonations {
             //the open ended value so we only create one opp max                           
             else{   
                 CalcDate = CalcDate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c);
+                CalcDate = dtEndOfMonthFixup(CalcDate);            
             }                
         }
         return CalcDate;
