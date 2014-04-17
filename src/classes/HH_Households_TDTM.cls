@@ -205,8 +205,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }
         
         if (setHHIdToRollup.size() > 0) {
-            if (system.isFuture() || setHHIdToRollup.size() <= 2) {
-                RLLP_OppRollup rg = new RLLP_OppRollup();
+            if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
+                RLLP_OppRollup rg = new RLLP_OppRollup(); 
                 map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
                                                                                 ' where id IN :setHHIdToRollup'));
                 rg.rollupHouseholds(hhmap);
@@ -226,9 +226,12 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         for (OpportunityContactRole ocr : ocrlist)
             oppIds.add(ocr.OpportunityId);
                 
-        if(!oppIDs.isEmpty())
-            RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds); 
-            
+        if(!oppIDs.isEmpty()) {
+            if (system.isFuture() || system.isBatch())
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);                        
+            else            
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);                        
+        }            
     }
     
     /// <name> insertHousehold </name>
@@ -317,7 +320,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 //send it all out for (re)naming
                 //secret setting for async processing... ooooooooh....
                 
-                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                if (!system.isFuture() && !system.isBatch() && currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
                     HH_HouseholdNaming.FutureUpdateNames(hhidsfornaming);
                 else{
                     HH_HouseholdNaming hn = new HH_HouseholdNaming();
@@ -406,7 +409,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }           
         
         if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdrenames.size() > 0){
-            if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+            if (!system.isFuture() && !system.isBatch() && currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
                 HH_HouseholdNaming.FutureUpdateNames(householdrenames);
             else{
                 HH_HouseholdNaming hn = new HH_HouseholdNaming();

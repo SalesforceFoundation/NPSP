@@ -50,12 +50,12 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         try {
             system.assert(RecurringDonation != null);
         
-            set<string> existingFields = new set<string>{  'npe03__Open_Ended_Status__c', 'npe03__Next_Payment_Date__c', 'name',
-                                                           'npe03__Organization__c', 'npe03__Contact__c', 'npe03__Installment_Amount__c',
-                                                           'npe03__Installments__c', 'npe03__Amount__c', 'npe03__Total__c', 'npe03__Installment_Period__c',
-                                                           'npe03__Date_Established__c', 'npe03__Donor_Name__c', 'npe03__Schedule_Type__c', 
-                                                           'npe03__Recurring_Donation_Campaign__c', 'npe03__Total_Paid_Installments__c'};
-            
+            // these must be lowercase so set.contains() will work
+	        set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name',
+	                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
+	                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
+	                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
+	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c'};                                                                       
             String qString = 'select id';
             for (string s : existingFields){
                 qString += ', ' + s;               

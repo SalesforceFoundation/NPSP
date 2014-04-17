@@ -96,7 +96,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
         
         if (!mapIdRDInserts.isEmpty()) {
-            if (mapIdRDInserts.keySet().size() == 1 || system.isBatch())            
+            if (mapIdRDInserts.keySet().size() == 1 || system.isFuture() || system.isBatch())            
                 RD_RecurringDonations.insertOppsOnRecurringDonationInsert(mapIdRDInserts.values());
             else
                 RD_RecurringDonations.insertOppsOnRecurringDonationInsertFuture(mapIdRDInserts.keySet());
