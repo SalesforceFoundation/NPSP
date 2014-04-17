@@ -100,7 +100,7 @@ public without sharing class PMT_PaymentCreator {
                     }   
                 }
                 soqlStatement += 'npe01__payments_made__c, ';
-                string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, ';
+                string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                     if (!soqlSub.contains(pfms.npe01__Payment_Field__c)) {               
