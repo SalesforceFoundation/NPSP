@@ -85,7 +85,7 @@ public without sharing class RLLP_OppRollup{
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
                                                                         ' where id in :accountRequerySet'));            
             //if we only need to rollup a single Account, do sync
-            if (amap.size() == 1){
+            if (amap.size() == 1 || system.isFuture() || system.isBatch()){
                 rollupAccounts(amap);                               
             }   
             //do it @future
@@ -96,12 +96,19 @@ public without sharing class RLLP_OppRollup{
         
         //contacts needs to be done async to make sure the OCR is in place
         if (!contactRequerySet.isEmpty()){
-            RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
+        	if (system.isFuture() || system.isBatch())
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
+            else        	
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(contactRequerySet);                        
         }            
     }       
     
     /*** Future Wrapper Methods for Handling Bulk Processing & Trigger Opps ***/
     @future 
+    public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
+        rollupContactsandHouseholdsForTrigger(OppIds);
+    }
+
     public static void rollupContactsandHouseholdsForTrigger(set<id> OppIds){
         //we need this to make sure there's a proper OCR when Contact Opps are inserted
         
