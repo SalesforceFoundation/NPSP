@@ -8,13 +8,36 @@
         var errNotif = {}
         jerr$ = jQuery.noConflict();
         
+        errNotif.recipient = jerr$('[id$=errRecipient]');
+        
+        errNotif.hideNotifDisplayName = function() { jerr$('[id$=errorNotifDisplayName]').detach(); }
+        errNotif.showNotifDisplayName = function() { jerr$('[id$=errorNotifDisplayName]').appendTo(errNotif.recipient); }
+        
+        errNotif.hideNotifDropDown = function() { jerr$('select[id$=notificationOption]').detach(); }
+        errNotif.showNotifDropDown = function() { jerr$('select[id$=notificationOption]').appendTo(errNotif.recipient); }
+        
         errNotif.hideChatterGroupBox =  function() { jerr$('span[id$=chatterGroupBox]').hide(); }
         errNotif.showChatterGroupBox = function() { jerr$('span[id$=chatterGroupBox]').show(); }
         
-        jerr$(document).ready(function() {     
+        //initially hiding the auto-complete chatter group textarea
+        jerr$(document).ready(function() {
+            errNotif.hideNotifDropDown();   
             errNotif.hideChatterGroupBox();
         });
         
+        //detecting click action on edit button
+        jerr$(document).on('click', 'input[id$=editNotif]', function() {
+            var errorNotifDisplay = jerr$('[id$=errorNotifDisplayName]').text();
+            console.log('Text of errorNotifDisplayName box: ' + errorNotifDisplay);
+            errNotif.hideNotifDisplayName();
+            errNotif.showNotifDropDown();
+            jerr$('select[id$=notificationOption]').val(errorNotifDisplay);
+            if(errorNotifDisplay.indexOf('Group:') >= 0) {
+                errNotif.showChatterGroupBox();
+            }
+        });
+        
+        //detecting changes to the recipients drop-down
         jerr$(document).on('change', 'select[id$=notificationOption]', function() {         
             if(jerr$('select[id$=notificationOption]').find(':selected').text() == 'Chatter Group') {
                 errNotif.showChatterGroupBox();
@@ -23,6 +46,7 @@
             }
         });
         
+        //detecting click action on save button
         jerr$(document).on('click', 'input[id$=saveNotif]', function() {
             var chatterGroup = jerr$.trim(jerr$('#chatterGroupSearchBox').val());
             if(chatterGroup.length > 0) { 
@@ -30,18 +54,11 @@
             }
         });
         
+        //detecting click action on cancel button
         jerr$(document).on('click', 'input[id$=cancelNotif]', function() { 
             errNotif.hideChatterGroupBox();
         });
-        
-        jerr$(document).on('click', 'input[id$=editNotif]', function() {
-            var errorNotifDisplay = jerr$('[id$=errorNotifDisplayName]').text();
-            console.log('Text of errorNotifDisplayName box: ' + errorNotifDisplay); 
-            jerr$('select[id$=notificationOption]').val(errorNotifDisplay);
-            if(errorNotifDisplay.indexOf('Group:') >= 0) {
-                errNotif.showChatterGroupBox();
-            }
-        });
+
     </script>
      
     <apex:form id="form">   
@@ -60,12 +77,16 @@
                 <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" id="cbxENO" />
                 <apex:outputLabel value="{!$Label.stgHelpErrorNotifyOn}" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" />
-                <apex:outputLabel id="errorNotifDisplayName" value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}" >
-                    <apex:selectOptions value="{!listSOERRNotifOptions}" />
-                </apex:selectList>
-                <apex:outputLabel value="{!$Label.stgHelpErrorNotifyTo}" />
+                <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" />
+                
+                <apex:outputPanel id="errRecipient">
+	                <apex:outputLabel id="errorNotifDisplayName" value="{!strErrorNotifDisplayName}" />
+	                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false">
+	                    <apex:selectOptions value="{!listSOERRNotifOptions}" />
+	                </apex:selectList>
+                </apex:outputPanel>
+                
+                <apex:outputLabel id="recipientHelp" value="{!$Label.stgHelpErrorNotifyTo}" />
             </apex:panelGrid>
              
             <apex:outputPanel id="chatterGroupBox">
