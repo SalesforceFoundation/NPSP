@@ -657,7 +657,7 @@ public with sharing class RD_RecurringDonations {
             runRecurringDonationClosedActions(newlycloseddonations, dmlWrapper);
         }
         if (!reevaluateopps.isEmpty()){
-            if (reevaluateopps.size() == 1 || system.isBatch())
+            if (reevaluateopps.size() == 1 || system.isFuture() || system.isBatch())
                 updateExistingOpps(reevaluateopps, dmlWrapper);
             else
                 updateExistingOppsFuture(reevaluateopps);
@@ -666,7 +666,7 @@ public with sharing class RD_RecurringDonations {
         if (!reinsertopps.isEmpty()){
             //clear existing open opps and recreate
             delete [select id from Opportunity where npe03__Recurring_Donation__c IN :reinsertopps and isClosed = false];
-            if (reinsertopps.size() == 1 || system.isBatch()){
+            if (reinsertopps.size() == 1 || system.isFuture() || system.isBatch()){
                 insertOppsOnRecurringDonationInsert(reinsertopps);                  
             }
             else{
@@ -822,7 +822,7 @@ public with sharing class RD_RecurringDonations {
             }
         }
         
-        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1 && !system.isFuture() && !system.isBatch()) || RD_ProcessControl.batchButton){
+        if (system.isFuture() || system.isBatch() || (recurringDonationsToEvaluate.size() == 1) || RD_ProcessControl.batchButton){
             updateRecurringDonationOnOppChange(RDID, null);
         }
         else{
