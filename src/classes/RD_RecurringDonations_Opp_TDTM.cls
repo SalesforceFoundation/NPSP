@@ -64,7 +64,7 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                                                                                           
         //recurring donations that need to be updated      
         if (rdcount > 0){
-            if (rdcount == 1 || system.isBatch() || RD_ProcessControl.batchButton)
+            if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_ProcessControl.batchButton)
                 RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
             else
                 RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(rdIds);                                        
