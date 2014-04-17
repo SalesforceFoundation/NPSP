@@ -238,7 +238,6 @@
     <members>Address_Verification_Settings__c.Class__c</members>
     <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
     <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
-    <members>Address_Verification_Settings__c.HTML_Key__c</members>
     <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
     <members>Address_Verification_Settings__c.Timeout__c</members>
     <members>Address_Verification_Settings__c.Using_SmartyStreets__c</members>

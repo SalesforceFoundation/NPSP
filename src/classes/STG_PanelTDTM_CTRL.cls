@@ -130,5 +130,12 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
         private set;
     }
 
-  
+    public PageReference createDefaults() {
+    	STG_InstallScript installScript = new STG_InstallScript();
+    	installScript.setTriggerConfig();
+    	isEditMode = false;
+    	listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, 
+                    Object__c, Trigger_Action__c from Trigger_Handler__c order by Object__c, Load_Order__c];
+    	return null;
+    }  
 }
