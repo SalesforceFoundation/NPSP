@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Address_Verification_Settings__c settings = getValidationSettings();
+    private static Address_Verification_Settings__c settings = getAddressValidationSettings();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -83,8 +83,8 @@ public with sharing class ADDR_Validator {
         }
     }
     
-    public static Address_Verification_Settings__c getValidationSettings() {        
-        settings = UTIL_CustomSettingsFacade.getValidationSettings();
+    public static Address_Verification_Settings__c getAddressValidationSettings() {        
+        settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
         return settings;
     }
 }

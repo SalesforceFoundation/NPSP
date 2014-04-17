@@ -217,7 +217,19 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgErrorSettings;
     }
     
-    public static Address_Verification_Settings__c getValidationSettings() {        
+    public static Batch_Data_Entry_Settings__c getBDESettings() {
+        Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
+        
+        if(bdeSettings.Id == null) {
+            bdeSettings.Allow_Blank_Opportunity_Names__c = true;
+            bdeSettings.Opportunity_Naming__c = true;
+            
+            insert bdeSettings;
+        }
+        return bdeSettings;
+    }
+    
+    public static Address_Verification_Settings__c getAddressValidationSettings() {        
         Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
         if(settings.Id == null) {
         	settings = Address_Verification_Settings__c.getOrgDefaults();
