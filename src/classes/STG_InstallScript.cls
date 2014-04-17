@@ -47,9 +47,9 @@ global class STG_InstallScript implements InstallHandler {
             	//throw e;
             }
         } else if(context.isUpgrade()) {
-        	insertTdtmDefauls();
+        	insertTdtmDefaults();
         } else if(context.isPush()) {
-        	insertTdtmDefauls();
+        	insertTdtmDefaults();
         }
     }
     
@@ -69,16 +69,11 @@ global class STG_InstallScript implements InstallHandler {
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
+    /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
     global void runNewOrgScript() {
-        //provides a global callable method for running the default install script to setup TDTM in new orgs
-
-        //Get the mapping from old settings to the new TDTM default setup
-        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
-        //Setup the new configuration
-        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
         
+        setTriggerConfig();
+
         //set default settings
         UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
@@ -86,7 +81,8 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        UTIL_CustomSettingsFacade.getValidationSettings();
+        UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        UTIL_CustomSettingsFacade.getBDESettings();
         
         //create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c];
@@ -102,6 +98,15 @@ global class STG_InstallScript implements InstallHandler {
         }
         //schedule master cron job
         UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+    }
+    
+    public void setTriggerConfig() {
+    	//Get the mapping from old settings to the new TDTM default setup
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        //Setup the new configuration
+        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
@@ -155,12 +160,12 @@ global class STG_InstallScript implements InstallHandler {
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
         //First we insert all TDTM records as active
-        insertTdtmDefauls();   
+        insertTdtmDefaults();   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
     
-    private static void insertTdtmDefauls() {
+    private static void insertTdtmDefaults() {
     	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c from Trigger_Handler__c];
         List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
