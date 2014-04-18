@@ -521,7 +521,6 @@
     <members>Opportunity</members>
     <members>Schedulable__c</members>
     <members>Trigger_Handler__c</members>
-    <members>npo02__Household__c</members>
     <name>CustomObject</name>
   </types>
   <types>
