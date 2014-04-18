@@ -106,15 +106,12 @@ global class STG_InstallScript implements InstallHandler {
     }
     
     public void setTriggerConfig() {
-    	Integer recordCount = [select count() from Trigger_Handler__c];
-    	if(recordCount == 0) {
-	    	//Get the mapping from old settings to the new TDTM default setup
-	        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-	        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-	        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
-	        //Setup the new configuration
-	        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
-    	}
+    	//Get the mapping from old settings to the new TDTM default setup
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        //Setup the new configuration
+        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
