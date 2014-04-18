@@ -84,29 +84,37 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings();
         
-        //create records for the jobs that are to run recursively
-        Integer numOfJobs = [select count() from Schedulable__c];
+        scheduleGlobalJob();      
+    }
+    
+    public void scheduleGlobalJob() {
+    	//create records for the jobs that are to run recursively
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED', 'RLLP_OppRollup_SCHED', 
+                            'ADDR_SEASONAL_SCHED')];
         if(numOfJobs == 0) {
-        	List<Schedulable__c> jobs = new List<Schedulable__c>();
-	        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
-	                    Active__c = true, Frequency__c = 'Daily'));
-	        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
-	                Active__c = true, Frequency__c = 'Daily'));
+            List<Schedulable__c> jobs = new List<Schedulable__c>();
+            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+                        Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+                    Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED', 
                     Active__c = true, Frequency__c = 'Daily'));
-	        insert jobs;
+            insert jobs;
         }
         //schedule master cron job
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');  
     }
     
     public void setTriggerConfig() {
-    	//Get the mapping from old settings to the new TDTM default setup
-        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
-        //Setup the new configuration
-        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
+    	Integer recordCount = [select count() from Trigger_Handler__c];
+    	if(recordCount == 0) {
+	    	//Get the mapping from old settings to the new TDTM default setup
+	        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+	        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+	        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+	        //Setup the new configuration
+	        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
+    	}
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
