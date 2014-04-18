@@ -272,7 +272,8 @@
               <!-- Loop through files in the type's dir and add <members /> element for each file -->
               <for param="file">
                 <path>
-                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml @{exclude}" />
+                  <!-- exclude xml files and namespaced metadata files as well as any manual excludes -->
+                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml *__*__c.* @{exclude}" />
                 </path>
                 <sequential>
                   <!-- get basename and basename without suffix for file. propertyregex is used since we don't know the file suffix from only the dir name (i.e. classes vs .class) -->
