@@ -226,6 +226,7 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Account.Number_of_Household_Members__c</members>
     <members>Address_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auth_ID__c</members>
     <members>Address_Verification_Settings__c.Auth_Token__c</members>
@@ -293,6 +294,7 @@
     <members>Trigger_Handler__c.Load_Order__c</members>
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
+    <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
   <types>
@@ -518,6 +520,7 @@
     <members>Opportunity</members>
     <members>Schedulable__c</members>
     <members>Trigger_Handler__c</members>
+    <members>npo02__Household__c</members>
     <name>CustomObject</name>
   </types>
   <types>
