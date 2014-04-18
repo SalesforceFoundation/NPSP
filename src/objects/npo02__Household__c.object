@@ -9,6 +9,12 @@
         <type>Text</type>
     </nameField>
     <sharingModel>ReadWrite</sharingModel>
+    <deprecated>false</deprecated>
+    <description>Physical mailing address for grouping contacts</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>    
     <fields>
         <fullName>Number_of_Household_Members__c</fullName>
         <defaultValue>0</defaultValue>
