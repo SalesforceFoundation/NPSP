@@ -62,8 +62,12 @@ global class STG_InstallScript implements InstallHandler {
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('NPSP Install Script');
         mail.setSubject('NPSP Install Errors');
-        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
-        + 'Stack trace: \n' + e.getStackTraceString();
+        String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
+                            + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
+                            + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
+                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.';
+        bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+        + 'Error stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
         mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
