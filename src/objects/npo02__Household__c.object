@@ -8,6 +8,7 @@
         <label>Household Name</label>
         <type>Text</type>
     </nameField>
+    <sharingModel>ReadWrite</sharingModel>
     <fields>
         <fullName>Number_of_Household_Members__c</fullName>
         <defaultValue>0</defaultValue>
