@@ -35,22 +35,22 @@
 global class STG_InstallScript implements InstallHandler {
     
     global void onInstall(InstallContext context) {
-        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-        if(context.previousVersion() == null) {
-            try {
-                runNewOrgScript();
-            } catch(Exception e) {
-            	sendEmailOnError(e, context);
-            	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
-            	//ERR_Handler.processError(e, ERR_Handler.Context.STTG);
-            	//We won't rethrow the exception, to avoid package failure installation due to install script error
-            	//throw e;
-            }
-        } else if(context.isUpgrade()) {
-        	insertTdtmDefaults();
-        } else if(context.isPush()) {
-        	insertTdtmDefaults();
-        }
+        try {
+	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+	        if(context.previousVersion() == null) {
+	            runNewOrgScript();           
+	        } else if(context.isUpgrade()) {
+	        	insertTdtmDefaults();
+	        } else if(context.isPush()) {
+	        	insertTdtmDefaults();
+	        }
+        } catch(Exception e) {
+	        sendEmailOnError(e, context);
+	        //We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
+	        //ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+	        //We won't rethrow the exception, to avoid package failure installation due to install script error
+	        //throw e;
+	   }
     }
     
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
