@@ -170,6 +170,7 @@
     <members>HH_ManageHHAccount</members>
     <members>HH_ManageHousehold</members>
     <members>LD_LeadConvertOverride</members>
+    <members>NPSP_Resources</members>
     <members>OPP_MatchingDonationsBTN</members>
     <members>PMT_PaymentWizard</members>
     <members>RD_AddDonationsBTN</members>
@@ -526,6 +527,7 @@
   <types>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>
