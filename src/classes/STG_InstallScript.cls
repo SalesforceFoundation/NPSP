@@ -35,22 +35,22 @@
 global class STG_InstallScript implements InstallHandler {
     
     global void onInstall(InstallContext context) {
-        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-        if(context.previousVersion() == null) {
-            try {
-                runNewOrgScript();
-            } catch(Exception e) {
-            	sendEmailOnError(e, context);
-            	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
-            	//ERR_Handler.processError(e, ERR_Handler.Context.STTG);
-            	//We won't rethrow the exception, to avoid package failure installation due to install script error
-            	//throw e;
-            }
-        } else if(context.isUpgrade()) {
-        	insertTdtmDefaults();
-        } else if(context.isPush()) {
-        	insertTdtmDefaults();
-        }
+        try {
+	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+	        if(context.previousVersion() == null) {
+	            runNewOrgScript();           
+	        } else if(context.isUpgrade()) {
+	        	insertTdtmDefaults();
+	        } else if(context.isPush()) {
+	        	insertTdtmDefaults();
+	        }
+        } catch(Exception e) {
+	        sendEmailOnError(e, context);
+	        //We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
+	        //ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+	        //We won't rethrow the exception, to avoid package failure installation due to install script error
+	        //throw e;
+	   }
     }
     
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
@@ -62,8 +62,12 @@ global class STG_InstallScript implements InstallHandler {
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('NPSP Install Script');
         mail.setSubject('NPSP Install Errors');
-        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
-        + 'Stack trace: \n' + e.getStackTraceString();
+        String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
+                            + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
+                            + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
+                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.';
+        bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+        + 'Error stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
         mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
@@ -84,20 +88,25 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings();
         
-        //create records for the jobs that are to run recursively
-        Integer numOfJobs = [select count() from Schedulable__c];
+        scheduleGlobalJob();      
+    }
+    
+    public void scheduleGlobalJob() {
+    	//create records for the jobs that are to run recursively
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED', 'RLLP_OppRollup_SCHED', 
+                            'ADDR_SEASONAL_SCHED')];
         if(numOfJobs == 0) {
-        	List<Schedulable__c> jobs = new List<Schedulable__c>();
-	        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
-	                    Active__c = true, Frequency__c = 'Daily'));
-	        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
-	                Active__c = true, Frequency__c = 'Daily'));
+            List<Schedulable__c> jobs = new List<Schedulable__c>();
+            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+                        Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+                    Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED', 
                     Active__c = true, Frequency__c = 'Daily'));
-	        insert jobs;
+            insert jobs;
         }
         //schedule master cron job
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');  
     }
     
     public void setTriggerConfig() {
