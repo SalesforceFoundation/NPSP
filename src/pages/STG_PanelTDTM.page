@@ -6,11 +6,8 @@
         <apex:pageBlock mode="maindetail">
 
            <h3 class="sectionBar" >{!$Label.stgLabelTriggerHandlers}</h3>            
-           <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" /><br/>
-           <div style="text-align:center">
-               <apex:commandButton id="createDefaults" value="Create Defaults" action="{!createDefaults}" rendered="{!isReadOnlyMode && listTH.size == 0}" 
-                    status="statusLoad" immediate="true" rerender="form" />
-           </div>
+           <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
+           <br/>
            <br/>
            <apex:pageBlockTable value="{!listTH}" var="th" >
                <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
