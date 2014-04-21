@@ -38,6 +38,9 @@ public with sharing class STG_SettingsService {
     
     public STG_SettingsService() {
     	system.debug('***** STG_SettingsService constructor');
+    	STG_InstallScript installScript = new STG_InstallScript();
+        installScript.setTriggerConfig();
+        installScript.scheduleGlobalJob();
     }
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {

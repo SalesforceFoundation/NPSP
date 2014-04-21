@@ -1375,7 +1375,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelTypeAhead</shortDescription>
-        <value>Type something...</value>
+        <value>Start typing...</value>
     </labels>
     <labels>
         <fullName>stgLabelUDRNoOppFields</fullName>
