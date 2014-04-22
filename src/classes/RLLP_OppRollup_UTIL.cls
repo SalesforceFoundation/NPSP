@@ -80,6 +80,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     private static string ContactMembershipQuery;
     private static string AccountMembershipQuery;    
     private static string SoftCreditQuery;
+    private static string ContactNDaySoftCreditQuery;
          
     /*** Field Lists ***/
     private static set<string> AccountFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppAmountThisYear__c',
@@ -116,7 +117,7 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                                 'npo02__MembershipEndDate__c', 'npo02__OppAmountLastYear__c', 
                                                                 'npo02__OppAmount2YearsAgo__c', 'npo02__MembershipJoinDate__c',
                                                                 'npo02__LastMembershipLevel__c', 'npo02__Soft_Credit_This_Year__c',
-                                                                'npo02__Soft_Credit_Two_Years_Ago__c', 'npo02__Soft_Credit_Total__c',
+                                                                'npo02__Soft_Credit_Two_Years_Ago__c', 'npo02__Soft_Credit_Total__c', 'Soft_Credit_Last_N_Days__c',
                                                                 'npo02__Soft_Credit_Last_Year__c', 'npo02__Best_Gift_Year__c', 'npo02__Best_Gift_Year_Total__c',
                                                                 'npo02__Household__c'};
     
@@ -702,6 +703,13 @@ public without sharing class RLLP_OppRollup_UTIL {
             SoftCreditQuery += 'WHERE Opportunity.isWon=true '; 
             SoftCreditQuery += 'AND Opportunity.Amount != null ';   
             SoftCreditQuery += 'AND Role IN :softCreditRoles ';                                         
+            if (areRecordTypesOnOpps()){
+                SoftCreditQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
+            }
+            SoftCreditQuery += 'AND Opportunity.Type NOT IN :typeset ';
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
+                SoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
+            }
             SoftCreditQuery += 'AND ContactId IN :cset ';            
             if (useFiscalYear)
                 SoftCreditQuery += 'GROUP BY ROLLUP(ContactId, Fiscal_Year(Opportunity.CloseDate)) ';
@@ -709,6 +717,28 @@ public without sharing class RLLP_OppRollup_UTIL {
                 SoftCreditQuery += 'GROUP BY ROLLUP(ContactId, Calendar_Year(Opportunity.CloseDate)) ';
         }           
         return SoftCreditQuery;  
+    }
+    
+    public static string buildContactNDaySoftCreditQuery(){
+        if (ContactNDaySoftCreditQuery == null){
+            ContactNDaySoftCreditQuery = 'SELECT ContactId, ';
+            ContactNDaySoftCreditQuery += 'SUM(Opportunity.Amount) TotalOppAmount ';
+            ContactNDaySoftCreditQuery += 'FROM OpportunityContactRole  ';
+            ContactNDaySoftCreditQuery += 'WHERE opportunity.isWon=true  ';
+            ContactNDaySoftCreditQuery += 'AND Opportunity.Amount != null '; 
+            ContactNDaySoftCreditQuery += 'AND Role IN :softCreditRoles ';        
+            if (areRecordTypesOnOpps()){
+                ContactNDaySoftCreditQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
+            }
+            ContactNDaySoftCreditQuery += 'AND Opportunity.Type NOT IN :typeset ';
+            if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
+                ContactNDaySoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
+            }
+            ContactNDaySoftCreditQuery += 'AND ContactId IN :cset ';
+            ContactNDaySoftCreditQuery += 'AND Opportunity.CloseDate >= LAST_N_DAYS:' + hh_settings.npo02__Rollup_N_Day_Value__c.intValue() + ' ';
+            ContactNDaySoftCreditQuery += 'GROUP BY ROLLUP(ContactId) ';
+        }       
+        return ContactNDaySoftCreditQuery;
     }
     
     /****************************************/
