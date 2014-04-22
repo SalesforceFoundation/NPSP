@@ -98,6 +98,18 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
     </fields>
+    <fields>
+        <fullName>Number_of_Household_Members__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>for Household Accounts, the number of Contacts in the Household.</inlineHelpText>
+        <label>Number of Household Members</label>
+        <precision>10</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
     <listViews>
         <fullName>AllAccounts</fullName>
         <columns>ACCOUNT.NAME</columns>

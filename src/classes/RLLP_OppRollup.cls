@@ -637,7 +637,7 @@ public without sharing class RLLP_OppRollup{
         for (id cid : cmap.keySet()) {
             contactsToUpdate.put(cid, new Contact(id = cid,                 
                 npo02__Soft_Credit_This_Year__c = 0, npo02__Soft_Credit_Last_Year__c = 0,                
-                npo02__Soft_Credit_Two_Years_Ago__c = 0, npo02__Soft_Credit_Total__c = 0
+                npo02__Soft_Credit_Two_Years_Ago__c = 0, npo02__Soft_Credit_Total__c = 0, Soft_Credit_Last_N_Days__c = 0
             ));
             // map currency across if multicurrency
             if(RLLP_OppRollup_UTIL.isMultiCurrency())
@@ -647,6 +647,8 @@ public without sharing class RLLP_OppRollup{
         list<sobject> objectList = new list<sobject>();   
         set<id> cset = cmap.keySet();        
         set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
         objectList = database.query(RLLP_OppRollup_UTIL.buildSoftCreditQuery());
             
@@ -659,6 +661,16 @@ public without sharing class RLLP_OppRollup{
                 updateSoftCreditFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
             }                
         }                
+
+        objectList.clear();
+        objectList = database.query(RLLP_OppRollup_UTIL.buildContactNDaySoftCreditQuery());
+        
+        for (sobject r : objectList){
+            id cid = (id)(r.get('ContactId'));
+            if (cid != null)
+                updateSoftCreditRollupFromResultLastNDays((sobject)(contactsToUpdate.get(cid)), r);
+        }
+
         for (id cid : cmap.keySet()) {
             contact c1 = cmap.get(cid);
             contact c2 = contactsToUpdate.get(cid);
@@ -666,6 +678,7 @@ public without sharing class RLLP_OppRollup{
             if (c1.npo02__Soft_Credit_This_Year__c == c2.npo02__Soft_Credit_This_Year__c &&
                 c1.npo02__Soft_Credit_Last_Year__c == c2.npo02__Soft_Credit_Last_Year__c &&
                 c1.npo02__Soft_Credit_Two_Years_Ago__c == c2.npo02__Soft_Credit_Two_Years_Ago__c && 
+                c1.Soft_Credit_Last_N_Days__c == c2.Soft_Credit_Last_N_Days__c &&
                 c1.npo02__Soft_Credit_Total__c == c2.npo02__Soft_Credit_Total__c)
                 contactsToUpdate.remove(cid);
         }
@@ -873,6 +886,19 @@ public without sharing class RLLP_OppRollup{
             obj.put('npo02__Soft_Credit_Total__c', amt);        
         }
     }
+
+    public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
+           
+        // get the total amount for this result row     
+        decimal amt = (decimal)(r.get('TotalOppAmount'));
+        
+        // calculate amounts into correct currency if needed
+        if(RLLP_OppRollup_UTIL.isMultiCurrency())
+           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        
+        obj.put('Soft_Credit_Last_N_Days__c', amt);               
+    }
+
     
     /*************************************************************/ 
 }
