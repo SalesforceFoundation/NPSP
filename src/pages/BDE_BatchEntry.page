@@ -145,8 +145,10 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
             //j$(".actionLink").remove();
         });
         
-        var defaultValues = new Object;
+        var defaultValues = new Object;            
         var defaultValuesLookupIds = new Object;
+        var defaultValuesSaved = new Object;            
+        var defaultValuesLookupIdsSaved = new Object;
         function saveDefaults() {
             j$(".defaultCheckbox").each( function(i, theCheckbox) {
                 fieldClass = theCheckbox.id;
@@ -162,6 +164,10 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                         if(theInputLookup!=null) {
                             defaultValuesLookupIds[fieldClass] = theInputLookup.value;                            
                         }
+                        
+                        // since a pin was set, clear our saved defaults
+                        defaultValuesSaved = null;
+                        defaultValuesLookupIdsSaved = null;
                     }
                 });
                 }
@@ -169,6 +175,11 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
         }        
 
         function resetDefaults() {
+            // use saved defaults if they exist
+            if (defaultValuesSaved != null) {
+	            defaultValues = j$.extend({}, defaultValuesSaved);
+	            defaultValuesLookupIds = j$.extend({}, defaultValuesLookupIdsSaved);
+            }
             j$(".defaultCheckbox").each( function(i, theCheckbox) {
                 fieldClass = theCheckbox.id;                
                 j$("."+fieldClass).each( function(i, theInput) {
@@ -188,6 +199,11 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
             );  
             getSetUp();         
         }
+        
+        function rememberDefaults() {
+            defaultValuesSaved = j$.extend({}, defaultValues);
+            defaultValuesLookupIdsSaved = j$.extend({}, defaultValuesLookupIds);
+        }        
  
         //turn off the sticky fields when doing certain actions
         function resetSticky(){
@@ -273,9 +289,9 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 <apex:pageBlockTable var="item" value="{!itemList}" width="90%" >                   
                     <apex:column >
                         <apex:facet name="header">Action</apex:facet>
-                        <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" 
-                        immediate="true" rerender="recInfo" oncomplete="resetSticky();" />&nbsp;|&nbsp;<apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" 
-                        immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
+                        <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" immediate="true" rerender="recInfo" onclick="rememberDefaults();" oncomplete="resetSticky();" />
+                        &nbsp;|&nbsp;
+                        <apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
                         <apex:commandLink value="view" action="{!item.viewItem}" immediate="true" target="_blank" />
                     </apex:column>
                     <apex:repeat var="fieldname" value="{!listFieldList}" > 
