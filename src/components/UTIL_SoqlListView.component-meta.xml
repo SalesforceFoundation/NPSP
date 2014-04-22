@@ -4,23 +4,23 @@
     <description>This is a generic template for Visualforce Component.  With this template, you may adjust the default elements and values and add new elements and values.</description>
     <label>UTIL_SoqlListView</label>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>97</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>94</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>93</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npe4</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>94</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>

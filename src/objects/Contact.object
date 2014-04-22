@@ -145,6 +145,18 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Soft_Credit_Last_N_Days__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount of Soft Credit, closed in the last number of days defined in Household Settings.</inlineHelpText>
+        <label>Soft Credit Last N Days</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
         <fullName>is_Address_Override__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If checked, the Contact&apos;s Current Address lookup overrides the Household&apos;s default Address or seasonal Address.</description>
