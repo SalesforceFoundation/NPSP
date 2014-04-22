@@ -226,6 +226,7 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Account.Number_of_Household_Members__c</members>
     <members>Address_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auth_ID__c</members>
     <members>Address_Verification_Settings__c.Auth_Token__c</members>
@@ -268,6 +269,7 @@
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
+    <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
@@ -293,6 +295,7 @@
     <members>Trigger_Handler__c.Load_Order__c</members>
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
+    <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
   <types>
