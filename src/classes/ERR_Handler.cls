@@ -169,7 +169,7 @@ public with sharing class ERR_Handler {
     }
     
     /*** Error creation methods ***/
-	public static Error__c createError(Exception e) {
+	private static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();        
 		error.Error_Type__c = e.getTypeName();
@@ -186,7 +186,7 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
-    public static Error__c createError(Object result, string objectType, id objId) {
+    private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Object_Type__c = objectType;

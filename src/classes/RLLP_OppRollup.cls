@@ -106,7 +106,13 @@ public without sharing class RLLP_OppRollup{
     /*** Future Wrapper Methods for Handling Bulk Processing & Trigger Opps ***/
     @future 
     public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
-        rollupContactsandHouseholdsForTrigger(OppIds);
+    	Savepoint sp = Database.setSavepoint();
+        try {
+            rollupContactsandHouseholdsForTrigger(OppIds);
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }
     }
 
     public static void rollupContactsandHouseholdsForTrigger(set<id> OppIds){
@@ -137,31 +143,51 @@ public without sharing class RLLP_OppRollup{
     
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
-        if (acctIds != null && !acctIds.isEmpty()) { 
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
-                                                           ' where id IN :acctIds')); 
-            rg.rollupAccounts(amap);
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        if (acctIds != null && !acctIds.isEmpty()) { 
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
+	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+	                                                           ' where id IN :acctIds')); 
+	            rg.rollupAccounts(amap);
+	           
+	        }
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
         }
-    }    
+    }
+    
     @future
     public static void rollupContactsFuture (set<id> conIDs){
-        if (conIds != null && !conIDs.isEmpty()){
-            RLLP_OppRollup rg = new RLLP_OppRollup();           
-            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
-                                                          ' where id IN :conIds'));
-            
-            rg.rollupContacts(cmap);
-        }       
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        if (conIds != null && !conIDs.isEmpty()){
+	            RLLP_OppRollup rg = new RLLP_OppRollup();           
+	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
+	                                                          ' where id IN :conIds'));
+	            
+	            rg.rollupContacts(cmap);
+	        }
+	    } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }     
     }
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
-        if (hhIds != null && !hhIds.isEmpty()){
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
-                                                                            ' where id IN :hhIDs'));
-            rg.rollupHouseholds(hhmap);                                                                         
-        }        
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        if (hhIds != null && !hhIds.isEmpty()){
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
+	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+	                                                                            ' where id IN :hhIDs'));
+	            rg.rollupHouseholds(hhmap);                                                                         
+	        }
+	    } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }       
     } 
     /*************************************************************/
 
@@ -310,19 +336,8 @@ public without sharing class RLLP_OppRollup{
                 }
             }
         }         
-        
-        Database.SaveResult[] SR = database.update(accountsToUpdate.values(), false);                
-        List<Error__c> elist = new List<Error__c>();
-        integer i = 0;
-        for(Database.SaveResult s: SR){
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Account', accountsToUpdate.values()[i].id));                            
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }           
+
+        update accountsToUpdate.values();     
     }    
     
     //rollup Opps for a map of Contacts
@@ -461,20 +476,8 @@ public without sharing class RLLP_OppRollup{
                 }
             }                
         }
-        
-        Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        //needed to match errors to update list index
-        integer i = 0;
-        for(Database.SaveResult s: SR){         
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }
+
+        update contactsToUpdate.values();
     }    
     
     public void rollupHouseholds(map<id, npo02__Household__c> hhmap){        
@@ -614,18 +617,7 @@ public without sharing class RLLP_OppRollup{
             }                
         }
         
-        Database.SaveResult[] SR = database.update(householdsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        integer i = 0;
-        for(Database.SaveResult s: SR){
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }
+        update householdsToUpdate.values();
     }  
     
     public void rollupSoftCredits(map<id, Contact> cmap){      
@@ -683,19 +675,7 @@ public without sharing class RLLP_OppRollup{
                 contactsToUpdate.remove(cid);
         }
         
-        Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        //needed to match errors to update list index
-        integer i = 0;
-        for(Database.SaveResult s: SR){         
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }       
+        update contactsToUpdate.values();  
     }
        
     /*************************************************************/

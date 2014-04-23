@@ -56,9 +56,10 @@ public with sharing class ERR_Handler_TEST {
                                        Error_Notifications_To__c = user.Id);
     }
     
-    /*** We need to use Database.insert because otherwise the code does not pass the contacts insert
-         in the test itself. A record gets inserted just because the name field for accounts was not
-         retrieved. This happens in the second pass of the Database.insert ***/
+    /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
+         in the test itself. 
+         An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
+         the second pass of the Database.insert ***/
     public testmethod static void errorsStoredInDbTdtmCustomConfigPostToChatter() {
     	if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigPostToChatter') return;
     	
@@ -97,9 +98,11 @@ public with sharing class ERR_Handler_TEST {
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
         System.assertEquals(2, insertedContacts.size()); 
         
-        //Verify error record was created
+        //Verify error record was created - because the name field for accounts was not retrieved when we try to access
+        //it in line 40 of ERR_ParentAccountUpdater_TEST (in the second pass of the Database.insert operation)
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Posted_in_Chatter__c from Error__c];
         System.assertEquals(1, errors.size());
+        System.debug('****Errors: ' + JSON.serializePretty(errors));
         
         //Verify error was posted to chatter group
         if(Schema.SObjectType.User.isFeedEnabled()) {
@@ -112,9 +115,10 @@ public with sharing class ERR_Handler_TEST {
         }
     }
     
-    /*** We need to use Database.insert because otherwise the code does not pass the contacts insert
-         in the test itself. A record gets inserted just because the name field for accounts was not
-         retrieved. This happens in the second pass of the Database.insert ***/
+    /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
+         in the test itself. 
+         An error record gets inserted just because the name field for accounts was not retrieved. This happens in 
+         the second pass of the Database.insert ***/
     public testmethod static void errorsStoredInDbTdtmCustomConfigEmailErrors() {
         if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigEmailErrors') return;
         
@@ -153,7 +157,8 @@ public with sharing class ERR_Handler_TEST {
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
         System.assertEquals(2, insertedContacts.size()); 
         
-        //Verify error record was created
+        //Verify error record was created - because the name field for accounts was not retrieved when we try to access
+        //it in line 40 of ERR_ParentAccountUpdater_TEST (in the second pass of the Database.insert operation)
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
         System.assertEquals(1, errors.size());
         
@@ -319,10 +324,10 @@ public with sharing class ERR_Handler_TEST {
         Test.stopTest();
         
         //assert contact record creation was rolled back
-         system.assertEquals(0, [select count() from Contact]);
+        system.assertEquals(0, [select count() from Contact]);
         
         //assert relationship record was not stored
-         system.assertEquals(0, [select count() from npe4__Relationship__c]);
+        system.assertEquals(0, [select count() from npe4__Relationship__c]);
          
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
         system.assertEquals(1, [select count() from Error__c]);    
