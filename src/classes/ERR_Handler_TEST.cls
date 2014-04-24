@@ -288,7 +288,7 @@ public with sharing class ERR_Handler_TEST {
         system.assertEquals(1, [select count() from Error__c]);
     }
     
-    /*** Tests that DML that occurs before an exception is thrown and caught does not get automatically rolled back ***/
+    /*** Testing that DML that occurs before an exception is thrown and caught does not get automatically rolled back ***/
     static testMethod void controllerWithoutManualRollback() {
         if (strTestOnly != '*' && strTestOnly != 'controllerWithoutManualRollback') return;
         
@@ -310,7 +310,7 @@ public with sharing class ERR_Handler_TEST {
         system.assertEquals(1, [select count() from Error__c]);  
     }
     
-    /*** Tests that DML changes are properly rolled back in a controller that adheres to our error-handling design, and
+    /*** Testing that DML changes are properly rolled back in a controller that adheres to our error-handling design, and
          that the error is properly stored. ***/
     static testMethod void controllerWithManualRollback() {
         if (strTestOnly != '*' && strTestOnly != 'controllerWithManualRollback') return;
