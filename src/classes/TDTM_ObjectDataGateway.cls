@@ -34,13 +34,16 @@
 public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
     
     private static List<ToRunOnObjectAction> classesQueried = new List<ToRunOnObjectAction>();
+    private static Integer rowCount;
     
     public Boolean isEmpty() {
-    	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
-    	Integer rowCount = (Integer)result[0].get('rowCount');
+    	if(rowCount == null) {
+	    	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
+	    	rowCount = (Integer)result[0].get('rowCount');
+    	}
     	if(rowCount == 0)
-    		return true;	
-    	return false;
+            return true;    
+        return false;
     }
     
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
