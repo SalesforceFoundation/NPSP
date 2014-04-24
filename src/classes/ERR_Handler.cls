@@ -87,27 +87,37 @@ public with sharing class ERR_Handler {
 	    	for(Integer i=0; i<results.size(); i++) {
 	        	String message;
 	        	Boolean isSuccess = true;
+	        	List<Object> resultErrors;
 	        	if(results[i] instanceof Database.SaveResult) {
 	        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
-	        		if(!isSuccess)
+	        		if(!isSuccess) {
 	        		  message = ((Database.SaveResult)results[i]).getErrors()[0].getMessage();
+	        		  resultErrors = ((Database.SaveResult)results[i]).getErrors();
+	        		}
 	        	} else if(results[i] instanceof Database.DeleteResult) {
 	        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess)
+	        		if(!isSuccess) {
 	        		  message = ((Database.DeleteResult)results[i]).getErrors()[0].getMessage();
+	        		  resultErrors = ((Database.DeleteResult)results[i]).getErrors();
+	        		}
 	        	} else if(results[i] instanceof Database.UndeleteResult) {
 	        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess)
+	        		if(!isSuccess) {
 	        		  message = ((Database.UndeleteResult)results[i]).getErrors()[0].getMessage();
+	        		  resultErrors = ((Database.UndeleteResult)results[i]).getErrors();
+	        		}
 	        	}
 	        	
 	        	if(!isSuccess && message != null) {
+	        		System.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
 	        		errorsExist = true;
 	        		//Creating error object
 	                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
 	                //Adding error message to the record
+	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
+                     or error notification sent. 
 	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);
+	                   addErrorMessage(sObjects[i], message);*/
 	        	}
 	        }
     	}
@@ -126,24 +136,27 @@ public with sharing class ERR_Handler {
     public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
     	
     	if(e != null) {
+    		System.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
 			if(e instanceof DmlException && records != null && records.size() > 0) {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
                    System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i));
+                   /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
+                     or error notification sent. 
+                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
                }
            }
            
            if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
+               System.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
                Database.SaveResult result = Database.insert(error, false);
-               System.debug(LoggingLevel.WARN, '****Error record: ' + JSON.serializePretty(error));
            }
     	}
     	
     	if(ERR_Notifier.getErrorSettings().Error_Notifications_On__c) {
-    	   System.debug('****Processing error - calling Error Notifier');
+    	   System.debug('****Sending error notification');
            ERR_Notifier.sendErrorNotifications(context);
     	}
     }
@@ -160,7 +173,7 @@ public with sharing class ERR_Handler {
         record.addError(message);
     }
     
-    /*** NOTE: we want this method to be public to be able to explicitly call it after a rollback. ***/
+    /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
         if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
 		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
