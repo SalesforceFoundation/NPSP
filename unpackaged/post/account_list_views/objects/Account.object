@@ -17,16 +17,4 @@
         </filters>
         <label>Household Accounts</label>
     </listViews>
-    <recordTypes>
-        <fullName>HH_Account</fullName>
-        <active>true</active>
-        <description>An Account representing a Household containing one or more individuals</description>
-        <label>Household Account</label>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Organization</fullName>
-        <active>true</active>
-        <description>An Account representing an organization</description>
-        <label>Organization</label>
-    </recordTypes>
 </CustomObject>
