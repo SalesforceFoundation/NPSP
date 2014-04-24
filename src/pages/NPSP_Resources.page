@@ -19,12 +19,25 @@
         margin-bottom:0px;
     }
 
+    .bootstrap .container .jumbotron {
+        padding: 20px;
+    }
+    
+    .bootstrap .container {
+        padding-top: 10px;
+    }
+
     /* Customize container */
     @media (min-width: 768px) {
       .container {
         max-width: 900px;
       }
-    }    
+    }  
+    
+    .bootstrap .panel .list-group .list-group-item {
+        border-width: 0;
+        padding: 5px 0px 5px 0px;        
+    }  
 </style>
 
 
@@ -33,12 +46,11 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-sm-6 col-xs-12" >
-                    <h2>Welcome to the Nonprofit Starter Pack</h2>
-                    <p style="font-family: Vagrolight,Arial,Helvetica,sans-serif;">Review the resources below to get the most out of your Salesforce Nonprofit system</p>
+                <div class="col-sm-8 col-xs-12" >
+                    <h3>The Nonprofit Starter Pack Application extends Salesforce so you can better manage individual donors.</h3>
                 </div>
-                <div class="col-sm-6 col-xs-12" >
-                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/sfdc_Foundation_logo_rgb_large.png')}" class="img-rounded img-responsive" />
+                <div class="col-sm-4 col-xs-12" >
+                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
                 </div>
             </div>
         </div>
@@ -48,37 +60,29 @@
     <div class="container" >
         <div class="row">
             <div class="col-md-6">
-                <h2>Configure</h2>
-                <p style="padding-bottom:10px;">Did you know you can customize how the Nonprofit Starter Pack works for your organization, by configuring our settings?</p>
-
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading"><h3 class="panel-title">Nonprofit Starter Pack Help</h3></div>
-                    <div class="panel-body"><p><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" style="float:left; padding:10px;" width="100" alt="Nonprofit Starter Pack" />The Nonprofit Starter Pack is an application that extends the power of Salesforce CRM with customizations that allow you to better manage individual donors out-of-the-box. If you are using the Nonprofit Starter Pack, there are a host of resources specific to the application.</p>
-                        <p><a class="btn btn-primary btn-sm" href="http://www.salesforcefoundation.org/help/nonprofitstarterpack/" role="button" target="_blank">View details »</a></p>
+                    <div class="panel-heading"><h3 class="panel-title">Got a Question?</h3></div>
+                    <div class="panel-body"><p><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" style="float:left; padding-right:20px;" alt="Power of Us Hub" />
+                    The <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a> is a vibrant online community of Salesforce Foundation customers and partners.</p>
                     </div>
-                </div>
-                
+                </div>                
             </div>
             
             <div class="col-md-6">
-                <h2>Getting Started Ideas</h2>
-                <p style="padding-bottom:10px;">You now have access to a whole suite of tools you can use to help your nonprofit meet its mission. Invest some time in learning how these tools work so you can work most efficiently to meet your mission.<br/>
-                </p>
-
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading"><h3 class="panel-title">Quicklinks</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title">Quick Links</h3></div>
                     <ul class="list-group">
-                        <li class="list-group-item">Get answers in the <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a></li>
-                        <li class="list-group-item">How to <a href="https://powerofus.force.com/articles/Resource/How-to-log-a-tech-support-ticket-with-salesforce-com" title="How to log a tech support ticket with salesforce.com" target="_blank">log a tech support ticket</a></li>
-                        <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/help/findapartner/" title="Find a partner" target="_blank">consulting partner or App</a></li>
-                        <li class="list-group-item">Find and join a local <a href="https://powerofus.force.com/apex/PUBUserGroups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
+                        <li class="list-group-item">See <a href="" target="_blank">what's new</a> in the Nonprofit Starter Pack 3.0</li>
+                        <li class="list-group-item">NPSP 3.0 <a href="" target="_blank">documentation</a></li>
+                        <li class="list-group-item">Join a <a href="https://powerofus.force.com/apex/PUBUserGroups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
                         <li class="list-group-item">Ask a question at <a href="http://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
+                        <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/help/findapartner/" title="Find a partner" target="_blank">consulting partner or App</a></li>
                     </ul>
                 </div>
             </div>
-            </div>
         </div>
     </div>
+</div>
 </apex:page>

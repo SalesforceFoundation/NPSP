@@ -14,9 +14,17 @@
     .bootstrap3 p{
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
-    .bootstrap .jumbotron{
+    .bootstrap .jumbotron {
         background-color: #f0f1f2;
-        margin-bottom:0px;
+        margin-bottom: 0px;
+    }
+    
+    .bootstrap .container .jumbotron {
+        padding: 20px;
+    }
+    
+    .bootstrap .panel-body {
+        padding: 0px;
     }
 
 	/* Customize container */
@@ -33,50 +41,74 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                    <h2>Welcome to the Nonprofit Starter Pack Settings Page</h2>
-                    <p style="font-family: Vagrolight,Arial,Helvetica,sans-serif;">Now all of your Nonprofit Starter Pack options are right here on the NPSP
-                    Settings page - with a new organization to make them easier to find and manage.</p>
+                <div class="col-sm-9 col-xs-12" >
+                    <h3>Nonprofit Starter Pack Application Settings</h3>
+                    <p class="h4">Customize how the Nonprofit Starter Pack works for your organization.</p>
+                    <br/>
+                    <p class="h6" >Looking to customize page layouts, add fields, or add users?  Try the <a href="">Salesforce Setup</a> pages.</p>
+                </div>
+                <div class="col-sm-3 col-xs-12" >
+                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
+                </div>
             </div>
         </div>
     </div>
+    
 
     <div class="container" >
         <div class="row">
             <div class="col-md-12">
-                <h2>Configure</h2>
-                <p style="padding-bottom:10px;">Did you know you can customize how the Nonprofit Starter Pack works for your organization, by configuring our settings?</p>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Getting Started</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-4">
+                            <h5>Accounts and Contacts</h5>
+                            <a href="">Configure address verification</a><br/>
+                            <a href="">Change your Account Model</a><br/>
+                        </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <p>Contacts - settings for specifying how you want to handle Contacts and Accounts</p>
+                        <div class="col-sm-4">
+                            <h5>Donations and Money</h5>
+                            <a href="">Memberships</a><br/>
+                            <a href="">Donor statistics</a><br/>
+                            <a href="">Recurring donations</a><br/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h5>Salesforce Getting Started</h5>
+                            <a href="">Getting Started Implementation Guide</a><br/>
+                            <a href="">Adding and Managing Users Quick Start</a><br/>
+                            <a href="">Importing Data Quick Start</a><br/>
+                        </div>
                     </div>
-                </div>                
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <p><em>Households</em> - settings for specifying how you want to handle Householding</p>
-                    </div>
-                </div>                
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <p><b>Connections</b> - settings for specifying how you want to handle Relationships and Affiliations between Contacts and Accounts</p>
-                    </div>
-                </div>                
+                </div>
+                                
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Donations &amp; Money</h3></div>
-                        <div class="panel-body"><p>settings for specifying how you want to handle Donations, Money, and Opportunities</p>
+                        <h3 class="panel-title">Quick Links</h3>
                     </div>
-                </div>                
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Batch Data Entry</h3></div>
-                        <div class="panel-body"><p>settings for configuring the Batch Data Entry tool</p>
-                    </div>
-                </div>                
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">System</h3></div>
-                        <div class="panel-body"><p>Information about your system, and how it is functioning</p>
+                    <div class="panel-body">
+                        <div class="col-sm-4">
+                            <h5>Tools</h5>
+                            <a href="">Health Check</a><br/>
+                            <a href="">Error logs</a><br/>
+                            <a href="">Batch rollup donations</a><br/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h5>Documentation</h5>
+                            <a href="">NPSP 3.0 Release Notes</a><br/>
+                            <a href="">NPSP 3.0 Documentation</a><br/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h5>Salesforce Administration</h5>
+                            <a href="">Force.com Home</a><br/>
+                            <a href="">Manage Users</a><br/>
+                            <a href="">Import Data</a><br/>
+                        </div>
                     </div>
                 </div>                
             </div>
