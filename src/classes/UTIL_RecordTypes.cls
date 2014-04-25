@@ -99,19 +99,24 @@ public class UTIL_RecordTypes {
         
     /*******************************************
     * Gives record type Name from a given record type Id
+    * note: takes string, not ID, to avoid runtime errors if the id is invalid.
     ********************************************/
-    public static String GetRecordTypeName(String objectName, Id RecordTypeId) {
-        // make sure we have this object's record types mapped
-        if (!recordTypesById.containsKey(objectName)) 
-            fillMapsForObject(objectName);
-        
-        // now grab and return the requested id
-        Map<Id,Schema.RecordTypeInfo> rtMap = recordTypesById.get(objectName);
-        if (rtMap != null && rtMap.containsKey(RecordTypeId)) {
-            return rtMap.get(RecordTypeId).getName();
-        } else {
-            return null;
-        }
+    public static String GetRecordTypeName(String objectName, string RecordTypeId) {
+    	try {
+	        // make sure we have this object's record types mapped
+	        if (!recordTypesById.containsKey(objectName)) 
+	            fillMapsForObject(objectName);
+	        
+	        // now grab and return the requested id
+	        Map<Id,Schema.RecordTypeInfo> rtMap = recordTypesById.get(objectName);
+	        if (rtMap != null && rtMap.containsKey(RecordTypeId)) {
+	            return rtMap.get(RecordTypeId).getName();
+	        } else {
+	            return null;
+	        }
+    	} catch(exception ex) {
+	    	return null;
+	    }
     }
     
     /*******************************************

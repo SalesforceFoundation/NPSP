@@ -212,7 +212,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, ApexPages.hasMessages());               
         system.assertNotEquals(null, panel.getSourceFields());
         system.assertNotEquals(null, panel.getTargetFields());
-        system.assertEquals(null, panel.checkSettings());
         system.assertEquals(null, panel.newPfm());        
         system.assertNotEquals(null, panel.pfmNew);
         system.assertEquals(true, panel.isEditMode);
@@ -246,9 +245,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listPMTFieldMapping);
         system.assertEquals(1, panel.listPMTFieldMapping.size());
-        integer cMsg = ApexPages.getMessages().size();
-        system.assertEquals(null, panel.checkSettings());
-        system.assertEquals(cMsg+2, ApexPages.getMessages().size());               
+             
     }
 
     public static testMethod void testPanelRD() {
@@ -477,7 +474,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.udrlist);
         system.assertEquals(1, panel.udrlist.size());
-        panel.checkSettings();
         panel.startBuild();
         system.assertNotEquals(null, panel.getTargetFields());
         panel.activeUDR = panel.udrlist[0];
@@ -495,10 +491,6 @@ public with sharing class STG_SettingsManager_TEST {
         //pass the controller into the extension
         STG_PanelUserRollup_CTRL controller = new STG_PanelUserRollup_CTRL();
   
-        //check settings returns a null pagereference
-        PageReference samePage = controller.checkSettings();
-        system.assertEquals(samePage, null);
-        
         //kickoff a new rollup
         controller.startBuild();
         
@@ -538,8 +530,6 @@ public with sharing class STG_SettingsManager_TEST {
         targetFieldList = controller.getTargetFields();
         
         //existing invalid rollups will cause test failure
-        boolean isValid = controller.userRollupsValid();
-        system.assertEquals(isValid, true);
         system.assertEquals(controller.activeUDR.getisValid(), true);
         list<STG_PanelUserRollup_CTRL.UDR> udrlist = controller.udrList;
         system.assert(udrList.size() > 0);        
@@ -570,13 +560,8 @@ public with sharing class STG_SettingsManager_TEST {
         npo02__Source_Field__c = 'InvalidSourceField__test',
         npo02__Object_Name__c = 'Account',
         npo02__Field_Action__c = 'TEST'         
-        );
-        
+        );        
         insert badurfs;
-        
-        isValid = controller.userRollupsValid();
-        system.assertEquals(false, isValid);
-        PageReference pr = controller.checkSettings();        
         
         //exercise household code
         npo02__User_Rollup_Field_Settings__c HHurfs = new npo02__User_Rollup_Field_Settings__c(
@@ -585,25 +570,18 @@ public with sharing class STG_SettingsManager_TEST {
         npo02__Source_Field__c = 'Amount',
         npo02__Object_Name__c = 'npo02__Household__c',
         npo02__Field_Action__c = 'MAX'         
-        );
-        
+        );        
         insert HHurfs; 
                 
-        isValid = controller.userRollupsValid();
-        system.assertEquals(false, isValid);
-            
         npo02__User_Rollup_Field_Settings__c badobject = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Invalid Object Rollup',
         npo02__Target_Field__c = 'InvalidTargetField__test',
         npo02__Source_Field__c = 'InvalidSourceField__test',
         npo02__Object_Name__c = 'BadAccount',
         npo02__Field_Action__c = 'TEST'
-        );
-        
+        );        
         insert badobject;
         
-        isValid = controller.userRollupsValid();
-        system.assertEquals(false, isValid);
         
     }
     

@@ -84,16 +84,6 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         isEditMode = true;
     }
         
-    //called on load of the page
-    public PageReference checkSettings(){
-        //if there are invalid rollups defined, display an error 
-        if (!userRollupsValid()){
-            showMsg('INVALID USER SETTINGS DETECTED - Some user defined rollups have been disabled',ApexPages.Severity.ERROR);
-            showMsg('User defined rollups reference target or source fields which do not exist.  Please update or delete the invalid rollups to re-enable.', ApexPages.Severity.WARNING);
-        }       
-        return null;
-    }
-    
     //reset all instance variable and return to initial screen
     public void cancel(){       
         this.sourcefields.clear();
@@ -257,42 +247,68 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         targetfields.clear();
     }    
     
-    /*** Private Methods **/
-
-    //utility to check that existing user defined rollups are valid - called onpageload
-    //NOTE: Only checks that target/source fields exist, not operation validity
-    public boolean userRollupsValid(){
+    //utility to check that existing user defined rollups are valid - called by Health Check
+    public static void verifyUserRollups(STG_PanelHealthCheck_CTRL ctrl) {
         boolean isValid = true;
         
         map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 
+        string strSetting = Schema.Sobjecttype.npo02__User_Rollup_Field_Settings__c.getLabel(); 
     
-        for (string s : userRollups.keySet()){
+        for (string s : userRollups.keySet()) {
             npo02__User_Rollup_Field_Settings__c urfs = userRollups.get(s);
             SobjectField targetField;
             SobjectField sourceField;
             
             //check source field
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
-            if (sourceField == null) isValid = false;
+            if (sourceField == null) {
+                isValid = false;
+                ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + urfs.npo02__Source_Field__c + ' does not exist.', 
+                    'Add the missing Opportunity field, or delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');    
+            }               
                       
-            //check target fields            
+            //check target fields  
+            boolean isValidTarget = true;          
             if (urfs.npo02__Object_Name__c == 'Contact'){
                 targetField = Schema.sObjectType.Contact.fields.getMap().get(urfs.npo02__Target_Field__c); 
-                if (targetField == null) isValid = false;
+                if (targetField == null) isValidTarget = false;
             }
             else if (urfs.npo02__Object_Name__c == 'Account'){
                 targetField = Schema.sObjectType.Account.fields.getMap().get(urfs.npo02__Target_Field__c); 
-                if (targetField == null) isValid = false;               
+                if (targetField == null) isValidTarget = false;               
             }
             else if (urfs.npo02__Object_Name__c == 'npo02__Household__c' || urfs.npo02__Object_Name__c == 'npo02__Household__c'){
                 targetField = Schema.sObjectType.npo02__household__c.fields.getMap().get(urfs.npo02__Target_Field__c); 
-                if (targetField == null) isValid = false;
+                if (targetField == null) isValidTarget = false;
             }
-            else isValid = false;
+            else isValidTarget = false;
+            
+            if (!isValidTarget) {
+            	isValid = false;
+                ctrl.createDR(strSetting, 'Error', urfs.npo02__Object_Name__c + ' field ' + urfs.npo02__Target_Field__c + ' does not exist.', 
+                    'Add the missing field, or delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');                        
+            }
+
+            //only if the other checks succeed, check displaytypes
+            if (isValid) {
+                //check Field Types
+                Schema.Displaytype dtSrc = UTIL_Describe.getFieldDisplaytype('Opportunity', urfs.npo02__Source_Field__c);
+                Schema.Displaytype dtTgt = UTIL_Describe.getFieldDisplaytype(urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c);
+                if (!UTIL_Describe.canDisplaytypesCopy(dtSrc, dtTgt)) { 
+                    isValid = false;
+                    ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + urfs.npo02__Source_Field__c + ' and ' + urfs.npo02__Object_Name__c + ' field ' + urfs.npo02__Target_Field__c + ' are not of compatible data types.', 
+                        'Delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');    
+                }               
+            }            
+            
         }    
-    
-    return isValid;
+        if (isValid) {
+            ctrl.createDR(strSetting, 'Success', null, null);                    	
+        }
     }           
+    
+    
+    /*** Private Methods **/
         
     //used to render error messages on the VF interface
     private void showMsg(String arg, ApexPages.Severity severity){

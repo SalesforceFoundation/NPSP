@@ -9,10 +9,7 @@
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" />
-                <apex:outputField value="{!stgService.stgHH.npo02__Membership_Record_Types__c}" rendered="{!isReadOnlyMode}" />                          
-                <apex:selectList value="{!stgService.stgHH.npo02__Membership_Record_Types__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMRT" >
-                    <apex:selectOptions value="{!listSOOppRecTypes}"/>
-                </apex:selectList>
+                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Membership_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />                
                 <apex:outputLabel value="{!$Label.stgHelpMembershipRT}" />
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.Label}" for="tbxMGP" />
