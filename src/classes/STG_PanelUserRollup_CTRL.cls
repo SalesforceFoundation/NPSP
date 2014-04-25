@@ -247,8 +247,8 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         targetfields.clear();
     }    
     
-    //utility to check that existing user defined rollups are valid - called by the ProblemDetector
-    public static void verifyUserRollups(STG_PanelProblemDetector_CTRL ctrl) {
+    //utility to check that existing user defined rollups are valid - called by Health Check
+    public static void verifyUserRollups(STG_PanelHealthCheck_CTRL ctrl) {
         boolean isValid = true;
         
         map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 

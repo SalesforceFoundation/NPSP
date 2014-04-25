@@ -106,6 +106,7 @@
     <members>STG_PanelContacts_CTRL</members>
     <members>STG_PanelERR_CTRL</members>
     <members>STG_PanelErrorLog_CTRL</members>
+    <members>STG_PanelHealthCheck_CTRL</members>
     <members>STG_PanelHouseholds_CTRL</members>
     <members>STG_PanelLeads_CTRL</members>
     <members>STG_PanelMembership_CTRL</members>
@@ -182,6 +183,7 @@
     <members>STG_PanelContacts</members>
     <members>STG_PanelERR</members>
     <members>STG_PanelErrorLog</members>
+    <members>STG_PanelHealthCheck</members>
     <members>STG_PanelHome</members>
     <members>STG_PanelHouseholds</members>
     <members>STG_PanelLeads</members>

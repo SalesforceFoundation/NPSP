@@ -135,8 +135,8 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return sourceFields;
     }
 
-    //utility to check that existing user defined rollups are valid - called by the ProblemDetector
-    public static void verifyPaymentMappings(STG_PanelProblemDetector_CTRL ctrl) {
+    //utility to check that existing user defined rollups are valid - called by Health Check
+    public static void verifyPaymentMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
         string strSetting = Schema.Sobjecttype.npe01__Payment_Field_Mapping_Settings__c.getLabel(); 

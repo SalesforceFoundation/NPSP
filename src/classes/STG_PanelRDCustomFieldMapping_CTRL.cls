@@ -204,8 +204,8 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;
     }
 
-    //utility to check that existing RD field mappings are valid - called by the ProblemDetector
-    public static void verifyRDMappings(STG_PanelProblemDetector_CTRL ctrl) {
+    //utility to check that existing RD field mappings are valid - called by the Health Check
+    public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
         string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 

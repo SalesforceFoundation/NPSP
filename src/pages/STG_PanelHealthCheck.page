@@ -1,0 +1,29 @@
+<apex:page controller="STG_PanelHealthCheck_CTRL" >
+
+    <apex:form id="form">   
+        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="Health Check" />        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock id="pbDetector" mode="maindetail">
+  
+            <h3 class="sectionBar" >Health Check</h3>
+            <apex:outputPanel layout="block" styleClass="sectionHelp">
+                    Use this page to detect any problems in your NPSP settings. 
+            </apex:outputPanel>
+            
+            <apex:outputPanel id="panelResults">
+                <apex:outputText value="{!strTimeMessage}" rendered="{!hasResults}" /><br/><br/>
+                <apex:pageBlockTable value="{!listDR}" var="dr" rendered="{!hasResults}">
+                    <apex:column headerValue="Test" value="{!dr.strName}" />
+                    <apex:column headerValue="Status" value="{!dr.strStatus}" />
+                    <apex:column headerValue="Details" value="{!dr.strDetails}" />
+                    <apex:column headerValue="Solution" value="{!dr.strSolution}" /> 
+                </apex:pageBlockTable>            
+            </apex:outputPanel>
+            
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton id="btnRun" value="Run Health Check" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
+            </apex:pageBlockButtons>
+                                    
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
