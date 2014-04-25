@@ -106,6 +106,7 @@
     <members>STG_PanelContacts_CTRL</members>
     <members>STG_PanelERR_CTRL</members>
     <members>STG_PanelErrorLog_CTRL</members>
+    <members>STG_PanelHealthCheck_CTRL</members>
     <members>STG_PanelHouseholds_CTRL</members>
     <members>STG_PanelLeads_CTRL</members>
     <members>STG_PanelMembership_CTRL</members>
@@ -170,6 +171,7 @@
     <members>HH_ManageHHAccount</members>
     <members>HH_ManageHousehold</members>
     <members>LD_LeadConvertOverride</members>
+    <members>NPSP_Resources</members>
     <members>OPP_MatchingDonationsBTN</members>
     <members>PMT_PaymentWizard</members>
     <members>RD_AddDonationsBTN</members>
@@ -181,6 +183,7 @@
     <members>STG_PanelContacts</members>
     <members>STG_PanelERR</members>
     <members>STG_PanelErrorLog</members>
+    <members>STG_PanelHealthCheck</members>
     <members>STG_PanelHome</members>
     <members>STG_PanelHouseholds</members>
     <members>STG_PanelLeads</members>
@@ -526,6 +529,7 @@
   <types>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>

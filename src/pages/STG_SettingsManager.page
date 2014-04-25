@@ -272,6 +272,7 @@
                     
                     <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">{!$Label.stgNavSystem}<span class="caret"></span></a></li>
                     <ul>
+                    <li class="subitem" id="idPanelHealthCheckNav"><a href="." onclick="ShowPanel('idPanelHealthCheck');return false;" class="nav-item sub-nav-item">Health Check</a></li>
                     <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
                     <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
@@ -390,6 +391,10 @@
                         
                         <div class="panel" id="idPanelErrorNotif" style="display:none" >
                             <apex:include pageName="STG_PanelERR" />
+                        </div>
+
+                        <div class="panel" id="idPanelHealthCheck" style="display:none" >
+                            <apex:include pageName="STG_PanelHealthCheck" />
                         </div>
                 </div>
             </td>

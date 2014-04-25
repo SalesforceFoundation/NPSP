@@ -202,6 +202,22 @@ public with sharing class UTIL_Describe {
     }   
 
     /*******************************************************************************************************
+    * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE, 
+    * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
+    * @param objectName the name of the object to look up
+    * @param fieldName the name of the field to look up
+    * @return Displaytype the Displaytype of the field
+    */  
+    public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
+        // make sure we have this field's schema mapped
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
+            fillFieldMapsForObject(objectName, fieldName);
+        
+        Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
+        return dfr.getType();
+    }   
+
+    /*******************************************************************************************************
     * @description Returns field describe data 
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up
@@ -233,7 +249,30 @@ public with sharing class UTIL_Describe {
         return dfr.getLabel();
     }       
 
-    // utility to check for compatible datatypes for data copying
+    /*******************************************************************************************************
+    * @description checks whether the field exists
+    * @param objectName the name of the object to look up
+    * @param fieldName the name of the field to look up
+    * @return boolean whether the field exists
+    */ 
+    public static boolean isValidField(String objectName, String fieldName) {
+        // make sure we have this field's schema mapped
+        fieldName = fieldName.toLowerCase();
+        try {
+	        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
+	            fillFieldMapsForObject(objectName, fieldName);
+	        
+	        Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
+	        return dfr != null;
+        } catch (exception ex) {
+        	return false;
+        }
+    }  
+    
+    /*******************************************************************************************************
+    * @description utility to check for compatible datatypes for data copying
+    * @return true if the types can be copied between
+    */ 
     public static boolean canDisplaytypesCopy(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
         
         if (dtSrc == dtTgt)
