@@ -88,7 +88,7 @@ public with sharing class TDTM_TriggerHandler {
             ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
-            will be rolled back by the platform, and our error record won't be saved. **/
+            will be rolled back by the platform, and our error record won't be saved or error notifications sent. **/ 
         }
     }
     

@@ -112,12 +112,18 @@ public with sharing class ERR_Handler {
 	        		System.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
 	        		errorsExist = true;
 	        		//Creating error object
-	                errors.add(createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id));
+	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
+	                errors.add(err);
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent. 
 	                if(sObjects != null && sObjects.size() > i)
 	                   addErrorMessage(sObjects[i], message);*/
+	                try {
+	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
+	                } catch(Exception ex) {
+                       System.debug('****We could not add the error message to the page. Most likely the code was not called from a controller.');
+                   }  
 	        	}
 	        }
     	}
@@ -145,6 +151,11 @@ public with sharing class ERR_Handler {
                    /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent. 
                    addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
+                   try {
+                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
+                   } catch(Exception ex) {
+                   	   System.debug('****We could not add the error message to the page. Most likely the code was not called from a controller.');
+                   }
                }
            }
            
