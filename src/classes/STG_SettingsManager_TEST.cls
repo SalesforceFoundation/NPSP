@@ -245,8 +245,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listPMTFieldMapping);
         system.assertEquals(1, panel.listPMTFieldMapping.size());
-        integer cMsg = ApexPages.getMessages().size();
-        system.assertEquals(cMsg+2, ApexPages.getMessages().size());               
+             
     }
 
     public static testMethod void testPanelRD() {
