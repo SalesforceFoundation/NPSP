@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
-    <defaultLandingTab>standard-home</defaultLandingTab>
+    <defaultLandingTab>NPSP_Resources</defaultLandingTab>
     <description>The Nonprofit Starter Pack application</description>
     <label>Nonprofit CRM</label>
     <tab>standard-Account</tab>
@@ -12,4 +12,5 @@
     <tab>npe03__Recurring_Donation__c</tab>
     <tab>Contact_Merge</tab>
     <tab>NPSP_Settings</tab>
+    <tab>NPSP_Resources</tab>
 </CustomApplication>
