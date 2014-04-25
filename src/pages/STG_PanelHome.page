@@ -57,57 +57,51 @@
 
     <div class="container" >
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Getting Started</h3>
                     </div>
                     <div class="panel-body">
-                        <div class="col-sm-4">
-                            <h5>Accounts and Contacts</h5>
-                            <a href="">Configure address verification</a><br/>
-                            <a href="">Change your Account Model</a><br/>
+                        <div class="col-sm-5">
+                            <h5><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></h5>
+                            <p>Got questions?  Got answers?  Join the 
+                            <a href="">System Administrators</a><br/> group in the 
+                            <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a>!</p>
                         </div>
 
-                        <div class="col-sm-4">
-                            <h5>Donations and Money</h5>
-                            <a href="">Memberships</a><br/>
-                            <a href="">Donor statistics</a><br/>
-                            <a href="">Recurring donations</a><br/>
-                        </div>
+                        <div class="col-sm-7">
+                            <h5>Recommended Reading</h5>
+                            <a href="">NPSP 3.0 Implementation Guide</a><br/>
+                            <a href="">Upgrading to NPSP 3.0</a><br/>
+                            <br/>
 
-                        <div class="col-sm-4">
-                            <h5>Salesforce Getting Started</h5>
+                            <h5>Salesforce Documentation &amp; Quick Starts</h5>
                             <a href="">Getting Started Implementation Guide</a><br/>
                             <a href="">Adding and Managing Users Quick Start</a><br/>
                             <a href="">Importing Data Quick Start</a><br/>
+                            <br/>
                         </div>
                     </div>
                 </div>
-                                
+            </div>
+            <div class="col-md-4">                                            
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Quick Links</h3>
                     </div>
                     <div class="panel-body">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
                             <h5>Tools</h5>
-                            <a href="">Health Check</a><br/>
-                            <a href="">Error logs</a><br/>
+                            Use <a href="">Health Check</a> to verify your NPSP configuration!<br/>
                             <a href="">Batch rollup donations</a><br/>
-                        </div>
+                            <a href="">Error logs</a><br/>
+                            <br/>
 
-                        <div class="col-sm-4">
                             <h5>Documentation</h5>
                             <a href="">NPSP 3.0 Release Notes</a><br/>
                             <a href="">NPSP 3.0 Documentation</a><br/>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <h5>Salesforce Administration</h5>
-                            <a href="">Force.com Home</a><br/>
-                            <a href="">Manage Users</a><br/>
-                            <a href="">Import Data</a><br/>
+                            <br/>
                         </div>
                     </div>
                 </div>                
