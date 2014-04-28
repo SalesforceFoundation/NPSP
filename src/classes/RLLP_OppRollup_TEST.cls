@@ -1486,53 +1486,6 @@ public with sharing class RLLP_OppRollup_TEST {
         Test.stopTest();
     }
 
-    static testMethod void testOpportunityUtilityErrorHandlingOne2One(){
-        testOpportunityUtilityErrorHandling(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void testOpportunityUtilityErrorHandlingHHAccount(){
-        testOpportunityUtilityErrorHandling(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    static void testOpportunityUtilityErrorHandling(string strProcessor){
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Account_Processor__c = strProcessor,
-            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-        ));
-
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-            npo02__Always_Rollup_to_Primary_Contact__c = false,
-            npo02__Enable_Opp_Rollup_Triggers__c = false,
-            npo02__Excluded_Account_Opp_Rectypes__c = null,
-            npo02__Excluded_Account_Opp_Types__c = null,
-            npo02__Excluded_Contact_Opp_Rectypes__c = null,
-            npo02__Excluded_Contact_Opp_Types__c = null,
-            npo02__Membership_Record_Types__c = null,
-            npo02__Enable_Soft_Credit_Rollups__c = true,
-            npo02__Soft_Credit_Roles__c = 'TestOCR',
-            npo02__Advanced_Household_Naming__c = false
-        ));
-
-        // create & insert contact(s)
-        Contact[] TestCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(10) ;
-        insert TestCons;
-
-        //create new opp with a missing required field
-        Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), null, 1000 , giftRecordTypeNameForTests ,null);
-
-        Database.Saveresult[] sr = Database.insert(newOpps, false);
-        system.assert(sr != null);
-        system.assert(TestCons[0].id != null);
-        Error__c ore = ERR_Handler.createError(sr[0], 'Opportunity', TestCons[0].id);
-        system.assert(ore != null);
-        system.assertEquals('Required Field Missing',ore.Error_Type__c);
-        system.assert(ore.Record_URL__c.endsWith(TestCons[0].id));
-        system.assertEquals('Opportunity',ore.Object_Type__c);
-    }
-
     static testMethod void testFYUtility(){
         integer fy = RLLP_OppRollup_UTIL.getCurrentFY();
         system.assert(fy != null);      
