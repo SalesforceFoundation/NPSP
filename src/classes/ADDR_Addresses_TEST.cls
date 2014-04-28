@@ -796,12 +796,20 @@ private with sharing class ADDR_Addresses_TEST {
         }
         
         try {
+        	Test.startTest();
             insert listAddrT;
+            Test.stopTest();
         } catch (Exception ex) {
             system.assert(ex.getMessage().contains(Label.addrHHAccountOnly));
-            return;
         }
-        system.assert(false); //we shouldn't get here!
+        Integer insertedAddrCount = [select count() from Address__c];
+        System.assertEquals(0, insertedAddrCount);
+        
+        /* We cannot verify error record was created because the usage of addError causes the whole transaction
+        to be rolled back. 
+        List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
+        System.debug('****Errors: ' + JSON.serializePretty(errors));
+        System.assertEquals(1, errors.size());*/
     }
 
     /*********************************************************************************************************

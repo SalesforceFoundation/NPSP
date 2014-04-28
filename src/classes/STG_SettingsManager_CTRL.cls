@@ -46,4 +46,10 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     	// so nothing to do in this method. 
     	return null;
     }
+    
+    public void setTriggerConfig() {
+    	STG_InstallScript installScript = new STG_InstallScript();
+        installScript.setTriggerConfig();
+        installScript.scheduleGlobalJob();
+    }
 }
