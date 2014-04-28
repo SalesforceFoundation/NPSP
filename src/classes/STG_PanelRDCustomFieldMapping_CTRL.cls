@@ -204,5 +204,51 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;
     }
 
+    //utility to check that existing RD field mappings are valid - called by the Health Check
+    public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
+        
+        map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();
+        string strSetting = Schema.Sobjecttype.npe03__Custom_Field_Mapping__c.getLabel(); 
+        boolean isValid = true;
+        
+        for (string s : mapRDCustomField.keySet()){
+            npe03__Custom_Field_Mapping__c cfm = mapRDCustomField.get(s);
+            SobjectField RDField;
+            SobjectField opportunityField;
+            isValid = true;
+            
+            //check source field
+            opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(cfm.npe03__Opportunity_Field__c);
+            if (opportunityField == null) {
+                isValid = false;
+                ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + cfm.npe03__Opportunity_Field__c + ' does not exist.', 
+                    'Add the missing Opportunity field, or delete the Recurring Donation Field Mapping record, on the ' + Label.stgNavRDFieldMap + ' tab in NPSP Settings.');    
+            }               
+                      
+            //check target fields            
+            RDField = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get(cfm.npe03__Recurring_Donation_Field__c);
+            if (RDField == null) {
+                isValid = false;
+                ctrl.createDR(strSetting, 'Error', 'Recurring Donation field ' + cfm.npe03__Recurring_Donation_Field__c + ' does not exist.', 
+                    'Add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record, on the ' + Label.stgNavRDFieldMap + ' tab in NPSP Settings.');    
+            }               
+            
+            //only if the other checks succeed, get the describe type
+            if (isValid == true){
+                //check Field Types
+                Schema.Displaytype dtRD = UTIL_Describe.getFieldDisplaytype('npe03__Recurring_Donation__c', cfm.npe03__Recurring_Donation_Field__c);
+                Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', cfm.npe03__Opportunity_Field__c);
+                if (!UTIL_Describe.canDisplaytypesCopy(dtRD, dtOpp)) { 
+                    isValid = false;
+                    ctrl.createDR(strSetting, 'Error', 'Recurring Donation field ' + cfm.npe03__Recurring_Donation_Field__c + ' and Opportunity field ' + cfm.npe03__Opportunity_Field__c + ' are not of compatible data types.', 
+                        'Delete the Recurring Donation Field Mapping record, on the ' + Label.stgNavRDFieldMap + ' tab in NPSP Settings.');    
+                }               
+            }            
+        }
+
+        if (isValid) {
+            ctrl.createDR(strSetting, 'Success', null, null);            
+        }                           
+    }           
 
 }

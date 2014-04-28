@@ -128,7 +128,5 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
             return listSOTriggerAction;
         }
         private set;
-    }
-
-  
+    }  
 }

@@ -35,22 +35,22 @@
 global class STG_InstallScript implements InstallHandler {
     
     global void onInstall(InstallContext context) {
-        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-        if(context.previousVersion() == null) {
-            try {
-                runNewOrgScript();
-            } catch(Exception e) {
-            	sendEmailOnError(e, context);
-            	//We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
-            	//ERR_Handler.processError(e, ERR_Handler.Context.STTG);
-            	//We won't rethrow the exception, to avoid package failure installation due to install script error
-            	//throw e;
-            }
-        } else if(context.isUpgrade()) {
-        	insertTdtmDefauls();
-        } else if(context.isPush()) {
-        	insertTdtmDefauls();
-        }
+        try {
+	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+	        if(context.previousVersion() == null) {
+	            runNewOrgScript();           
+	        } else if(context.isUpgrade()) {
+	        	insertTdtmDefaults();
+	        } else if(context.isPush()) {
+	        	insertTdtmDefaults();
+	        }
+        } catch(Exception e) {
+	        sendEmailOnError(e, context);
+	        //We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
+	        //ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+	        //We won't rethrow the exception, to avoid package failure installation due to install script error
+	        //throw e;
+	   }
     }
     
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
@@ -62,23 +62,22 @@ global class STG_InstallScript implements InstallHandler {
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('NPSP Install Script');
         mail.setSubject('NPSP Install Errors');
-        String bodyString = 'Exception thrown in install script. \n Message: ' + e.getMessage() + '\n\n'
-        + 'Stack trace: \n' + e.getStackTraceString();
+        String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
+                            + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
+                            + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
+                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.';
+        bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+        + 'Error stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
         mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
         Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
     }
 
+    /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
     global void runNewOrgScript() {
-        //provides a global callable method for running the default install script to setup TDTM in new orgs
-
-        //Get the mapping from old settings to the new TDTM default setup
-        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
-        //Setup the new configuration
-        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
         
+        setTriggerConfig();
+
         //set default settings
         UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
@@ -86,22 +85,37 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        UTIL_CustomSettingsFacade.getValidationSettings();
+        UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        UTIL_CustomSettingsFacade.getBDESettings();
         
-        //create records for the jobs that are to run recursively
-        Integer numOfJobs = [select count() from Schedulable__c];
+        scheduleGlobalJob();      
+    }
+    
+    public void scheduleGlobalJob() {
+    	//create records for the jobs that are to run recursively
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED', 'RLLP_OppRollup_SCHED', 
+                            'ADDR_SEASONAL_SCHED')];
         if(numOfJobs == 0) {
-        	List<Schedulable__c> jobs = new List<Schedulable__c>();
-	        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
-	                    Active__c = true, Frequency__c = 'Daily'));
-	        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
-	                Active__c = true, Frequency__c = 'Daily'));
+            List<Schedulable__c> jobs = new List<Schedulable__c>();
+            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+                        Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+                    Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED', 
                     Active__c = true, Frequency__c = 'Daily'));
-	        insert jobs;
+            insert jobs;
         }
         //schedule master cron job
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');        
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');  
+    }
+    
+    public void setTriggerConfig() {
+    	//Get the mapping from old settings to the new TDTM default setup
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        //Setup the new configuration
+        setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
 
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
@@ -118,25 +132,29 @@ global class STG_InstallScript implements InstallHandler {
             if(setting.startsWith('npe01')) {
                 if(npe01Settings.Id != null && npe01Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));                 
-                    npe01Settings.put(setting, false); //Deactivating flag
+                    if(npe01Settings.get(setting) == true)
+                        npe01Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npo02')) {
                 if(npo02Settings.Id != null && npo02Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));            
-                    npo02Settings.put(setting, false); //Deactivating flag
+                    if(npo02Settings.get(setting) == true)
+                        npo02Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe03')) {
                 if(npe03Settings.Id != null && npe03Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));                    
-                    npe03Settings.put(setting, false); //Deactivating flag
+                    if(npe03Settings.get(setting) == true)
+                        npe03Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe4')) {
                 if(npe04Settings.Id != null && npe04Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe04Settings.get(setting));
-                    npe04Settings.put(setting, false); //Deactivating flag
+                    if(npe04Settings.get(setting) == true)
+                        npe04Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             }
@@ -148,19 +166,22 @@ global class STG_InstallScript implements InstallHandler {
         if(npo02Settings.Id != null) npspCustomSettings.add(npo02Settings);
         if(npe03Settings.Id != null) npspCustomSettings.add(npe03Settings);
         if(npe04Settings.Id != null) npspCustomSettings.add(npe04Settings);
-        update npspCustomSettings;
+        if(npspCustomSettings.size() > 0) {
+            System.debug('****Deactivating pre-cumulus flags');
+            update npspCustomSettings;
+        }
         
         return npspExistingSettings;
     }
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
         //First we insert all TDTM records as active
-        insertTdtmDefauls();   
+        insertTdtmDefaults();   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
     
-    private static void insertTdtmDefauls() {
+    private static void insertTdtmDefaults() {
     	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c from Trigger_Handler__c];
         List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();

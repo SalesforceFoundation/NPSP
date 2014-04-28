@@ -90,7 +90,7 @@ public with sharing class STG_SettingsService {
     
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
-            if (stgBDE == null) stgBDE = Batch_Data_Entry_Settings__c.getOrgDefaults();
+            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getBDESettings();
             return stgBDE;
         }
         private set;
@@ -138,7 +138,7 @@ public with sharing class STG_SettingsService {
             return listPMTFieldMapping;           
         }
         public set;    	
-    }
+    } 
     
     public void saveAll() {
     	system.debug('****stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
@@ -150,6 +150,6 @@ public with sharing class STG_SettingsService {
         upsert stgRel;
         upsert stgAffl;
         upsert stgBDE;
-        upsert stgErr; 	
+        upsert stgErr;
     }
 }

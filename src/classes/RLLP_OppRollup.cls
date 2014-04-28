@@ -85,7 +85,7 @@ public without sharing class RLLP_OppRollup{
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
                                                                         ' where id in :accountRequerySet'));            
             //if we only need to rollup a single Account, do sync
-            if (amap.size() == 1){
+            if (amap.size() == 1 || system.isFuture() || system.isBatch()){
                 rollupAccounts(amap);                               
             }   
             //do it @future
@@ -96,12 +96,25 @@ public without sharing class RLLP_OppRollup{
         
         //contacts needs to be done async to make sure the OCR is in place
         if (!contactRequerySet.isEmpty()){
-            RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
+        	if (system.isFuture() || system.isBatch())
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(contactRequerySet);                        
+            else        	
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(contactRequerySet);                        
         }            
     }       
     
     /*** Future Wrapper Methods for Handling Bulk Processing & Trigger Opps ***/
     @future 
+    public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
+    	Savepoint sp = Database.setSavepoint();
+        try {
+            rollupContactsandHouseholdsForTrigger(OppIds);
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }
+    }
+
     public static void rollupContactsandHouseholdsForTrigger(set<id> OppIds){
         //we need this to make sure there's a proper OCR when Contact Opps are inserted
         
@@ -130,31 +143,51 @@ public without sharing class RLLP_OppRollup{
     
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
-        if (acctIds != null && !acctIds.isEmpty()) { 
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
-                                                           ' where id IN :acctIds')); 
-            rg.rollupAccounts(amap);
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        if (acctIds != null && !acctIds.isEmpty()) { 
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
+	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+	                                                           ' where id IN :acctIds')); 
+	            rg.rollupAccounts(amap);
+	           
+	        }
+        } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
         }
-    }    
+    }
+    
     @future
     public static void rollupContactsFuture (set<id> conIDs){
-        if (conIds != null && !conIDs.isEmpty()){
-            RLLP_OppRollup rg = new RLLP_OppRollup();           
-            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
-                                                          ' where id IN :conIds'));
-            
-            rg.rollupContacts(cmap);
-        }       
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        if (conIds != null && !conIDs.isEmpty()){
+	            RLLP_OppRollup rg = new RLLP_OppRollup();           
+	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
+	                                                          ' where id IN :conIds'));
+	            
+	            rg.rollupContacts(cmap);
+	        }
+	    } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }     
     }
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
-        if (hhIds != null && !hhIds.isEmpty()){
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
-                                                                            ' where id IN :hhIDs'));
-            rg.rollupHouseholds(hhmap);                                                                         
-        }        
+    	Savepoint sp = Database.setSavepoint();
+        try {
+	        if (hhIds != null && !hhIds.isEmpty()){
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
+	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+	                                                                            ' where id IN :hhIDs'));
+	            rg.rollupHouseholds(hhmap);                                                                         
+	        }
+	    } catch(Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler.Context.RLLP);
+        }       
     } 
     /*************************************************************/
 
@@ -303,19 +336,8 @@ public without sharing class RLLP_OppRollup{
                 }
             }
         }         
-        
-        Database.SaveResult[] SR = database.update(accountsToUpdate.values(), false);                
-        List<Error__c> elist = new List<Error__c>();
-        integer i = 0;
-        for(Database.SaveResult s: SR){
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Account', accountsToUpdate.values()[i].id));                            
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }           
+
+        update accountsToUpdate.values();     
     }    
     
     //rollup Opps for a map of Contacts
@@ -454,20 +476,8 @@ public without sharing class RLLP_OppRollup{
                 }
             }                
         }
-        
-        Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        //needed to match errors to update list index
-        integer i = 0;
-        for(Database.SaveResult s: SR){         
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }
+
+        update contactsToUpdate.values();
     }    
     
     public void rollupHouseholds(map<id, npo02__Household__c> hhmap){        
@@ -607,18 +617,7 @@ public without sharing class RLLP_OppRollup{
             }                
         }
         
-        Database.SaveResult[] SR = database.update(householdsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        integer i = 0;
-        for(Database.SaveResult s: SR){
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Household', householdsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }
+        update householdsToUpdate.values();
     }  
     
     public void rollupSoftCredits(map<id, Contact> cmap){      
@@ -630,7 +629,7 @@ public without sharing class RLLP_OppRollup{
         for (id cid : cmap.keySet()) {
             contactsToUpdate.put(cid, new Contact(id = cid,                 
                 npo02__Soft_Credit_This_Year__c = 0, npo02__Soft_Credit_Last_Year__c = 0,                
-                npo02__Soft_Credit_Two_Years_Ago__c = 0, npo02__Soft_Credit_Total__c = 0
+                npo02__Soft_Credit_Two_Years_Ago__c = 0, npo02__Soft_Credit_Total__c = 0, Soft_Credit_Last_N_Days__c = 0
             ));
             // map currency across if multicurrency
             if(RLLP_OppRollup_UTIL.isMultiCurrency())
@@ -640,6 +639,8 @@ public without sharing class RLLP_OppRollup{
         list<sobject> objectList = new list<sobject>();   
         set<id> cset = cmap.keySet();        
         set<string> softCreditRoles = RLLP_OppRollup_UTIL.softCreditRoles;
+        set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
+        set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
         objectList = database.query(RLLP_OppRollup_UTIL.buildSoftCreditQuery());
             
@@ -652,6 +653,16 @@ public without sharing class RLLP_OppRollup{
                 updateSoftCreditFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
             }                
         }                
+
+        objectList.clear();
+        objectList = database.query(RLLP_OppRollup_UTIL.buildContactNDaySoftCreditQuery());
+        
+        for (sobject r : objectList){
+            id cid = (id)(r.get('ContactId'));
+            if (cid != null)
+                updateSoftCreditRollupFromResultLastNDays((sobject)(contactsToUpdate.get(cid)), r);
+        }
+
         for (id cid : cmap.keySet()) {
             contact c1 = cmap.get(cid);
             contact c2 = contactsToUpdate.get(cid);
@@ -659,23 +670,12 @@ public without sharing class RLLP_OppRollup{
             if (c1.npo02__Soft_Credit_This_Year__c == c2.npo02__Soft_Credit_This_Year__c &&
                 c1.npo02__Soft_Credit_Last_Year__c == c2.npo02__Soft_Credit_Last_Year__c &&
                 c1.npo02__Soft_Credit_Two_Years_Ago__c == c2.npo02__Soft_Credit_Two_Years_Ago__c && 
+                c1.Soft_Credit_Last_N_Days__c == c2.Soft_Credit_Last_N_Days__c &&
                 c1.npo02__Soft_Credit_Total__c == c2.npo02__Soft_Credit_Total__c)
                 contactsToUpdate.remove(cid);
         }
         
-        Database.SaveResult[] SR = database.update(contactsToUpdate.values(), false);
-        List<Error__c> elist = new List<Error__c>();
-        //needed to match errors to update list index
-        integer i = 0;
-        for(Database.SaveResult s: SR){         
-            if (!s.isSuccess()){
-                elist.add(ERR_Handler.createError(s, 'Contact', contactsToUpdate.values()[i].id));                              
-            }
-            i++;
-        }        
-        if(!elist.isEmpty()){
-            insert elist;
-        }       
+        update contactsToUpdate.values();  
     }
        
     /*************************************************************/
@@ -866,6 +866,19 @@ public without sharing class RLLP_OppRollup{
             obj.put('npo02__Soft_Credit_Total__c', amt);        
         }
     }
+
+    public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
+           
+        // get the total amount for this result row     
+        decimal amt = (decimal)(r.get('TotalOppAmount'));
+        
+        // calculate amounts into correct currency if needed
+        if(RLLP_OppRollup_UTIL.isMultiCurrency())
+           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        
+        obj.put('Soft_Credit_Last_N_Days__c', amt);               
+    }
+
     
     /*************************************************************/ 
 }

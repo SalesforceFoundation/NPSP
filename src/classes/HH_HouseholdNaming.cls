@@ -58,7 +58,7 @@ public  without sharing class HH_HouseholdNaming {
         //return them in the order of household and then household naming order
         list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, hhId__c, npo02__Naming_Exclusions__c, CreatedDate from Contact 
             where hhId__c IN :hhids and hhId__c != null 
-            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ];
+            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate];
             
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
         list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];
@@ -84,19 +84,23 @@ public  without sharing class HH_HouseholdNaming {
         //loop through the households needing name changes, if necessary, make them.
         for (SObject h : hhupdatelist){    
             ID hhId = string.valueOf(h.get('Id'));
+            list<Contact> listCon = hhIDContactMap.get(hhId);
             string customnameparam = '';
             if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
                 customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
             }            
             
             if (!customnameparam.contains('Name'))
-                h.put('Name', getHHName(hhIDContactMap.get(hhId)));   
+                h.put('Name', getHHName(listCon));   
             
             if (!customnameparam.contains('Formal_Greeting__c'))
-                h.put('npo02__Formal_Greeting__c', getFormalName(hhIDContactMap.get(hhId)));
+                h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
 
             if (!customnameparam.contains('Informal_Greeting__c'))
-                h.put('npo02__Informal_Greeting__c', getInformalName(hhIDContactMap.get(hhId)));             
+                h.put('npo02__Informal_Greeting__c', getInformalName(listCon));   
+            
+            // now we also store the number of members on the Household!
+            h.put('Number_of_Household_Members__c', listCon != null ? listCon.size() : 0);          
         } 
         
         if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);

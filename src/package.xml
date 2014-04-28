@@ -98,6 +98,7 @@
     <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
+    <members>RLLP_OppRollup_TEST2</members>
     <members>RLLP_OppRollup_UTIL</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
     <members>STG_InstallScript</members>
@@ -110,6 +111,7 @@
     <members>STG_PanelContacts_CTRL</members>
     <members>STG_PanelERR_CTRL</members>
     <members>STG_PanelErrorLog_CTRL</members>
+    <members>STG_PanelHealthCheck_CTRL</members>
     <members>STG_PanelHouseholds_CTRL</members>
     <members>STG_PanelLeads_CTRL</members>
     <members>STG_PanelMembership_CTRL</members>
@@ -175,6 +177,7 @@
     <members>HH_ManageHHAccount</members>
     <members>HH_ManageHousehold</members>
     <members>LD_LeadConvertOverride</members>
+    <members>NPSP_Resources</members>
     <members>OPP_MatchingDonationsBTN</members>
     <members>PMT_PaymentWizard</members>
     <members>RD_AddDonationsBTN</members>
@@ -186,6 +189,7 @@
     <members>STG_PanelContacts</members>
     <members>STG_PanelERR</members>
     <members>STG_PanelErrorLog</members>
+    <members>STG_PanelHealthCheck</members>
     <members>STG_PanelHome</members>
     <members>STG_PanelHouseholds</members>
     <members>STG_PanelLeads</members>
@@ -231,6 +235,7 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Account.Number_of_Household_Members__c</members>
     <members>Address_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auth_ID__c</members>
     <members>Address_Verification_Settings__c.Auth_Token__c</members>
@@ -238,7 +243,6 @@
     <members>Address_Verification_Settings__c.Class__c</members>
     <members>Address_Verification_Settings__c.Clear_Invalid_Addresses__c</members>
     <members>Address_Verification_Settings__c.Enable_Automatic_Verification__c</members>
-    <members>Address_Verification_Settings__c.HTML_Key__c</members>
     <members>Address_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
     <members>Address_Verification_Settings__c.Timeout__c</members>
     <members>Address_Verification_Settings__c.Using_SmartyStreets__c</members>
@@ -274,6 +278,7 @@
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
+    <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
@@ -299,6 +304,7 @@
     <members>Trigger_Handler__c.Load_Order__c</members>
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
+    <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
   <types>
@@ -529,6 +535,7 @@
   <types>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <name>CustomTab</name>
   </types>

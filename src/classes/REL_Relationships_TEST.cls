@@ -592,13 +592,10 @@ private class REL_Relationships_TEST {
     	
         setupRelationshipTestData(null);
         
-        try{
-            throw new MyException('TestException');
-        }
-        catch(Exception e){
-            Error__c er = ERR_Handler.createError(e);
-            system.assertEquals('TestException', er.Full_Message__c);
-        }       
+        ERR_Handler.processError(new MyException('TestException'), ERR_Handler.Context.REL);
+        List<Error__c> errors = [select Full_Message__c from Error__c];
+        System.assertEquals(1, errors.size());
+        System.assertEquals('TestException', errors[0].Full_Message__c);       
     }
     
     static testMethod void testAutoCreateDupePrevention(){

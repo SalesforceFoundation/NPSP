@@ -35,6 +35,8 @@
 */
 public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
+	public class ADDR_Validator_Exception extends Exception { }
+	
 	public static Boolean alreadyRun = false;
 	
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
@@ -43,8 +45,16 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
         if(!alreadyRun) {
 	        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
-                ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
-                alreadyRun = true;
+                if(!system.isFuture() && !system.isBatch()) {
+                    ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
+                    alreadyRun = true;
+                } else if(system.isFuture()) {
+                	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'), 
+                	                           ERR_Handler.Context.ADDR);
+                } else if(system.isBatch()) {
+                	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
+                                               ERR_Handler.Context.ADDR);
+                }
 	        }
         }
         //we cannot return records to perform DML on because the address verification has to run

@@ -38,6 +38,7 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
     public String notificationToDropDown { public get; public set; }
     public String groupId { public get; public set; }
+    public String saveErrorMessage {public get; set; }
  
     //Displays the values of the drop-down (Edit Mode only)
     public List<SelectOption> listSOERRNotifOptions {
@@ -87,10 +88,15 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public override PageReference saveSettings() {
         System.debug('****notification to drop down: ' + notificationToDropDown);
         System.debug('****group ID: ' + groupId);
-        if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && groupId != null) { 
+        if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && String.isBlank(groupId)) { 
+            saveErrorMessage = 'Please enter Chatter group name.';
+            return null;
+        } else if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && !String.isBlank(groupId)) { 
            STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = groupId;
+           saveErrorMessage = null;
         } else {
            STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = notificationToDropDown;
+           saveErrorMessage = null;
         }
         return super.saveSettings();
     }

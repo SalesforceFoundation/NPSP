@@ -43,16 +43,6 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     public list<SelectOption> sourcefields = new list<SelectOption>();
     public list<SelectOption> targetfields = new list<SelectOption>();
            
-    //called on load of the page
-    public PageReference checkSettings(){
-        //if there are invalid rollups defined, display an error 
-        if (!paymentMappingsValid()){
-            showMsg('INVALID USER SETTINGS DETECTED - Some payment mappings have been disabled',ApexPages.Severity.ERROR);
-            showMsg('Custom Payment Field Mappings reference target or source fields which do not exist.  Please update or delete the invalid mappings to re-enable.', ApexPages.Severity.WARNING);
-        }       
-        return null;
-    }
-
     //reset all instance variable and return to initial screen
     public pageReference cancelPfmEdit() {       
         this.sourcefields.clear();
@@ -80,6 +70,13 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             s = s.toLowerCase();
             targetTokenMap.remove(s);
         }
+        
+        // remove fields that are already used in a mapping
+        for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
+            string s = pfm.npe01__Payment_Field__c;
+            s = s.toLowerCase();
+            targetTokenMap.remove(s);
+        }        
         
         if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
         
@@ -138,36 +135,51 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return sourceFields;
     }
 
-    //utility to check that existing user defined rollups are valid - called onpageload
-    //NOTE: Only checks that target/source fields exist, not operation validity
-    private boolean paymentMappingsValid(){
+    //utility to check that existing user defined rollups are valid - called by Health Check
+    public static void verifyPaymentMappings(STG_PanelHealthCheck_CTRL ctrl) {
+        
+        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
+        string strSetting = Schema.Sobjecttype.npe01__Payment_Field_Mapping_Settings__c.getLabel(); 
         boolean isValid = true;
         
-        map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll(); 
-    
         for (string s : paymentMappings.keySet()){
             npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
             SobjectField paymentField;
             SobjectField opportunityField;
+            isValid = true;
             
             //check source field
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
-            if (opportunityField == null) isValid = false;
+            if (opportunityField == null) {
+            	isValid = false;
+	            ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + pfms.npe01__Opportunity_Field__c + ' does not exist.', 
+	                'Add the missing Opportunity field, or delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+            }            	
                       
             //check target fields            
             paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
-            if (paymentField == null) isValid = false;
+            if (paymentField == null) {
+                isValid = false;
+                ctrl.createDR(strSetting, 'Error', 'Payment field ' + pfms.npe01__Payment_Field__c + ' does not exist.', 
+                    'Add the missing Payment field, or delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+            }               
             
             //only if the other checks succeed, get the describe type
             if (isValid == true){
                 //check Field Types
-                string payF = UTIL_Describe.getFieldType('npe01__OppPayment__c', pfms.npe01__Payment_Field__c);
-                string oppF = UTIL_Describe.getFieldType('Opportunity', pfms.npe01__Opportunity_Field__c);
-                if (payF != oppF) isValid = false;
-            }                
-        }    
-    
-    return isValid;
+                Schema.Displaytype dtPmt = UTIL_Describe.getFieldDisplaytype('npe01__OppPayment__c', pfms.npe01__Payment_Field__c);
+                Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', pfms.npe01__Opportunity_Field__c);
+                if (!UTIL_Describe.canDisplaytypesCopy(dtOpp, dtPmt)) { 
+	                isValid = false;
+	                ctrl.createDR(strSetting, 'Error', 'Payment field ' + pfms.npe01__Payment_Field__c + ' and Opportunity field ' + pfms.npe01__Opportunity_Field__c + ' are not of compatible data types.', 
+	                    'Delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+	            }               
+            }            
+        }
+
+        if (isValid) {
+            ctrl.createDR(strSetting, 'Success', null, null);            
+        }                           
     }           
         
     //used to render error messages on the VF interface

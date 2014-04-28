@@ -143,7 +143,7 @@ private with sharing class ADDR_Addresses_TEST {
     verify:
         new default Address created
         contact address lookup updated to new address
-        only the contact gets the new Address
+        the contact gets the new Address
     **********************************************************************************************************/            
     static testMethod void insertContactWithAddress() {
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
@@ -166,6 +166,42 @@ private with sharing class ADDR_Addresses_TEST {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
             system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+        
+    /*********************************************************************************************************
+    operation:
+        insert contact w/ new address override
+    verify:
+        new non-default Address created
+        contact address lookup updated to new address
+        the contact gets the new Address
+    **********************************************************************************************************/            
+    static testMethod void insertContactWithAddressOverride() {
+        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressOverride') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+            
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
+        integer i = 1;
+        for (Contact con : listConT) {
+            con.MailingStreet = 'new street' + i;
+            con.MailingCity = 'new city' + i;
+            con.is_Address_Override__c = true;
+            i++;
+        }
+        insert listConT;        
+
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(true, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }
     }
@@ -760,12 +796,20 @@ private with sharing class ADDR_Addresses_TEST {
         }
         
         try {
+        	Test.startTest();
             insert listAddrT;
+            Test.stopTest();
         } catch (Exception ex) {
             system.assert(ex.getMessage().contains(Label.addrHHAccountOnly));
-            return;
         }
-        system.assert(false); //we shouldn't get here!
+        Integer insertedAddrCount = [select count() from Address__c];
+        System.assertEquals(0, insertedAddrCount);
+        
+        /* We cannot verify error record was created because the usage of addError causes the whole transaction
+        to be rolled back. 
+        List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
+        System.debug('****Errors: ' + JSON.serializePretty(errors));
+        System.assertEquals(1, errors.size());*/
     }
 
     /*********************************************************************************************************
