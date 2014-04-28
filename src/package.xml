@@ -98,6 +98,7 @@
     <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
+    <members>RLLP_OppRollup_TEST2</members>
     <members>RLLP_OppRollup_UTIL</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
     <members>STG_InstallScript</members>

@@ -132,25 +132,29 @@ global class STG_InstallScript implements InstallHandler {
             if(setting.startsWith('npe01')) {
                 if(npe01Settings.Id != null && npe01Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));                 
-                    npe01Settings.put(setting, false); //Deactivating flag
+                    if(npe01Settings.get(setting) == true)
+                        npe01Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npo02')) {
                 if(npo02Settings.Id != null && npo02Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));            
-                    npo02Settings.put(setting, false); //Deactivating flag
+                    if(npo02Settings.get(setting) == true)
+                        npo02Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe03')) {
                 if(npe03Settings.Id != null && npe03Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));                    
-                    npe03Settings.put(setting, false); //Deactivating flag
+                    if(npe03Settings.get(setting) == true)
+                        npe03Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe4')) {
                 if(npe04Settings.Id != null && npe04Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe04Settings.get(setting));
-                    npe04Settings.put(setting, false); //Deactivating flag
+                    if(npe04Settings.get(setting) == true)
+                        npe04Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             }
@@ -162,7 +166,10 @@ global class STG_InstallScript implements InstallHandler {
         if(npo02Settings.Id != null) npspCustomSettings.add(npo02Settings);
         if(npe03Settings.Id != null) npspCustomSettings.add(npe03Settings);
         if(npe04Settings.Id != null) npspCustomSettings.add(npe04Settings);
-        update npspCustomSettings;
+        if(npspCustomSettings.size() > 0) {
+            System.debug('****Deactivating pre-cumulus flags');
+            update npspCustomSettings;
+        }
         
         return npspExistingSettings;
     }
