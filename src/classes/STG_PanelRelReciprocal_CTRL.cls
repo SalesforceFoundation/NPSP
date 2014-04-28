@@ -115,5 +115,31 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         }
         private set;     
     }
+
+    //utility to check that existing Reciprocal Relationships are valid - called by Health Check
+    public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
+        
+        map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
+        string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
+        boolean isValid = true;
+        boolean isValidAll = true;
+        
+        for (string s : mapRL.keySet()) {
+            npe4__Relationship_Lookup__c rl = mapRL.get(s);
+            
+            if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
+                isValid = false;
+                ctrl.createDR(strSetting, 'Error', 'Reciprocal Relationship ' + rl.Name + ' should have a value in at least one of the fields for Male, Female, or Neutral.', 
+                    'Delete the Reciprocal Relationship record, and create a new one with the required information, on the ' + Label.stgNavRelReciprocal + ' tab in NPSP Settings.');    
+            }               
+            
+            if (!isValid)
+                isValidAll = false;            
+        }
+
+        if (isValidAll) {
+            ctrl.createDR(strSetting, 'Success', null, null);            
+        }                           
+    }           
     
 }

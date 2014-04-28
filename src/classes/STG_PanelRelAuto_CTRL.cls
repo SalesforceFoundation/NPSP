@@ -127,7 +127,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 	                fieldTokenMap = Schema.SObjectType.CampaignMember.fields.getMap();          
 	            }   
 	            for (String s : fieldTokenMap.keySet()) {
-	                if (s.equalsIgnoreCase('ReportsToId') || (s.endsWith('npe4____c') && !s.startsWith('npe01__') && !s.startsWith('npo02__') && !s.startsWith('npe03__'))){
+	                if (s.equalsIgnoreCase('ReportsToId') || (s.endsWith('__c') && !s.startsWith('npe01__') && !s.startsWith('npo02__') && !s.startsWith('npe03__'))){
 	                    //if we've hit the limit, throw a warning and recommend manual entry
 	                    if (system.Limits.getFieldsDescribes() == system.Limits.getLimitFieldsDescribes()) {
 	                        ApexPages.addMessage(new ApexPages.message(ApexPages.severity.WARNING, system.Label.npe4.RelationshipsCustomFieldOverload));                 
@@ -148,5 +148,54 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 	    }
 	    private set;
 	}
-   
+ 
+    //utility to check that existing auto create rels are valid - called by Health Check
+    public static void verifyAutoCreateRels(STG_PanelHealthCheck_CTRL ctrl) {
+        
+        map<string, npe4__Relationship_Auto_Create__c> mapAC = npe4__Relationship_Auto_Create__c.getAll();
+        string strSetting = Schema.Sobjecttype.npe4__Relationship_Auto_Create__c.getLabel(); 
+        boolean isValid = true;
+        boolean isValidAll = true;
+        
+        for (string s : mapAC.keySet()){
+            npe4__Relationship_Auto_Create__c ac = mapAC.get(s);
+            SobjectField conField;
+            isValid = true;
+                        
+            if (ac.npe4__Object__c == 'Contact'){
+                conField = Schema.sObjectType.Contact.fields.getMap().get(ac.npe4__Field__c); 
+                if (conField == null) { 
+	                isValid = false;
+	                ctrl.createDR(strSetting, 'Error', 'Contact field ' + ac.npe4__Field__c + ' does not exist.', 
+	                    'Add the missing Contact field, or delete the Relationships Autocreation record, on the ' + Label.stgNavRelAutoCreate + ' tab in NPSP Settings.'); 
+                }   
+            }
+            else if (ac.npe4__Object__c == 'CampaignMember'){
+                conField = Schema.sObjectType.CampaignMember.fields.getMap().get(ac.npe4__Field__c); 
+                if (conField == null) { 
+                    isValid = false;
+                    ctrl.createDR(strSetting, 'Error', 'CampaignMember field ' + ac.npe4__Field__c + ' does not exist.', 
+                        'Add the missing CampaignMember field, or delete the Relationships Autocreate record, on the ' + Label.stgNavRelAutoCreate + ' tab in NPSP Settings.'); 
+                }   
+            }
+            
+            //only if the other checks succeed, get the describe type
+            if (isValid == true){
+                //check Field Types
+                Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype(ac.npe4__Object__c, ac.npe4__Field__c);
+                if (dt != Schema.Displaytype.Reference) { 
+                    isValid = false;
+                    ctrl.createDR(strSetting, 'Error', 'Field ' + ac.npe4__Field__c + ' is not a lookup field.', 
+                        'Delete the Relationships Autocreate record, on the ' + Label.stgNavRelAutoCreate + ' tab in NPSP Settings.');    
+                }               
+            }
+            
+            if (!isValid)
+                isValidAll = false;            
+        }
+
+        if (isValidAll) {
+            ctrl.createDR(strSetting, 'Success', null, null);            
+        }                           
+    }           
 }

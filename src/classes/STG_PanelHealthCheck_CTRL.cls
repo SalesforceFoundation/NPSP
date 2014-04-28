@@ -88,6 +88,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
         STG_PanelUserRollup_CTRL.verifyUserRollups(this);
         STG_PanelRDCustomFieldMapping_CTRL.verifyRDMappings(this);
+        STG_PanelRelAuto_CTRL.verifyAutoCreateRels(this);
+        STG_PanelRelReciprocal_CTRL.verifyRelLookups(this);
+        STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -154,7 +157,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 'Add a Gender field to Contact and specify it on the ' + Label.stgNavRelationships + ' tab in NPSP Settings.');    
         } else {
             createDR(strSetting, 'Success', null, null);
-        }
+        }        
     }
     
     // check all settings that contain recordType ID's to make sure they are valid.
