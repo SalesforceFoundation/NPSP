@@ -92,6 +92,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelRelReciprocal_CTRL.verifyRelLookups(this);
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
         UTIL_GlobalSchedulable.verifyScheduledJobs(this);
+        STG_PanelADDRVerification_CTRL.verifySmartyStreets(this);
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
