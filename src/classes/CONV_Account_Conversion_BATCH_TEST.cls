@@ -131,11 +131,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
     }
 
-    public testMethod static void testPrimaryContactAssignmentForAccountConversion(){
-        
-        
-    }
-
     public testMethod static void testSingleContactAddress(){
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -164,9 +159,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household 
-        Account newHHAccount = [select npo02__TotalOppAmount__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(c.MailingStreet, newHHAccount.BillingStreet);
+        system.assertEquals(c.Id, newHHAccount.npe01__One2OneContact__c);
         Address__c add = [select Id, MailingStreet__c, Default_Address__c from Address__c where MailingStreet__c = '123 Main St.'];
         system.assertNotEquals(null, add);
         system.assertEquals(true, add.Default_Address__c);
@@ -182,7 +178,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
         insert c;
 
-        c = [select Account.Name, AccountId, npo02__Household__c, LastName, Id, MailingStreet from Contact where Id = :c.Id];
+        c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
+
         system.assertEquals(c.Account.Name, 'Test Contact');
         system.assertEquals('123 Main St.', c.MailingStreet);
 
@@ -191,6 +188,15 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingPostalCode = '21230', MailingState = 'MD', npo02__TotalOppAmount__c = 100.00,
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
+
+        //clear the values automatically copied to the household
+        npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        h.npo02__MailingStreet__c = null;
+        h.npo02__MailingCountry__c = null;
+        h.npo02__MailingPostalCode__c = null;
+        h.npo02__MailingCity__c = null;
+        h.npo02__MailingState__c = null;
+        update h;
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -206,9 +212,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
+        system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Address__c]);
         c2 = [select id, is_Address_Override__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
         system.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
