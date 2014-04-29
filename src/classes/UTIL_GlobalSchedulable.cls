@@ -82,4 +82,51 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
         }
         update jobsToUpdate;
     }
+    
+    // verify that our Global Scheduler is actually scheduled, and that all of the entries are valid - called by HealthCheck
+    public static void verifyScheduledJobs(STG_PanelHealthCheck_CTRL ctrl) {
+    	
+    	// make sure the Global Job is scheduduled
+        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+           where CronJobDetail.Name = :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];        
+        if (scheduledJobs.size() == 0) {
+            ctrl.createDR('NPSP Global Scheduler', 'Error', 'The NPSP Global Scheduled class is not scheduled.', 
+                'You must schedule the class UTIL_GlobalSchedulable to run daily with the job name ' + UTIL_GlobalSchedulable.jobName + '.');
+            return;            
+        }
+
+        // make sure the entries we expect are there.
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED','RLLP_OppRollup_SCHED','ADDR_SEASONAL_SCHED')];
+        if (numOfJobs != 3) {
+            ctrl.createDR('NPSP Global Scheduler', 'Error', 
+                'One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.', 
+                'You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.');
+            return;            
+        }
+         
+        // now make sure all entries are valid
+        boolean isValidAll = true;
+        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
+        for (Schedulable__c job : jobs) {
+            Type classType = Type.forName(job.Class_Name__c);
+            if (classType != null) {
+                Object instance = classType.newInstance();
+                if (instance != null) {
+					if (instance instanceof UTIL_IScheduled) {
+						// this entry is good!
+						continue;
+					}
+                }
+            }
+            isValidAll = false;
+            ctrl.createDR('NPSP Global Scheduler', 'Error', 
+                'The record ' + job.Class_Name__c + ' in the Schedulable__c object is not valid.', 
+                'You must update the record to have a valid Class the implements the UTIL_IScheduled interface.');
+        }            
+         
+        if (isValidAll) {
+            ctrl.createDR('NPSP Global Scheduler', 'Success', null, null);
+        }  	
+    	
+    }
 }
