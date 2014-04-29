@@ -97,23 +97,25 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference testApi() {
-        apiTestResult = strVerifySmartyStreets(addrVerifSettings, apiTestEntry);
+        apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
     
     // verify the current address settings - used by Health Check.    
-    public static void verifySmartyStreets(STG_PanelHealthCheck_CTRL ctrl) {
+    public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
         Address_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
-        string strResult = strVerifySmartyStreets(avs, '98005');
-        string strStatus = strResult.contains('zipcode') ? 'Success' : 'Error';
-        string strSolution = strStatus == 'Success' ? null : 
-            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
-        ctrl.createDR(strSetting, strStatus, strResult, strSolution); 
+        if (avs.Using_SmartyStreets__c) {
+	        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
+	        string strResult = strVerifyAddressVerificationService(avs, '98005');
+	        string strStatus = strResult.contains('zipcode') ? 'Success' : 'Error';
+	        string strSolution = strStatus == 'Success' ? null : 
+	            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
+	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
+        } 
     }
     
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
-    private static string strVerifySmartyStreets(Address_Verification_Settings__c addrVerifSettings, string strZip) {
+    private static string strVerifyAddressVerificationService(Address_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
         try {
         	encodeTokenIfNotEncoded(addrVerifSettings);
