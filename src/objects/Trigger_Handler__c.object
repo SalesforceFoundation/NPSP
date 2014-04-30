@@ -149,6 +149,16 @@
         <type>MultiselectPicklist</type>
         <visibleLines>7</visibleLines>
     </fields>
+    <fields>
+        <fullName>User_Managed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>The record is managed by the user and updates won&apos;t be pushed to it.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check it if you intent to manage the record yourself. Be aware that updates to the package won&apos;t update the record.</inlineHelpText>
+        <label>User Managed</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Trigger Handler</label>
     <listViews>
         <fullName>All</fullName>

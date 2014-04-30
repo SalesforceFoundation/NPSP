@@ -35,14 +35,16 @@
 global class STG_InstallScript implements InstallHandler {
     
     global void onInstall(InstallContext context) {
-        try {
+        try { 
 	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
 	        if(context.previousVersion() == null) {
 	            runNewOrgScript();           
 	        } else if(context.isUpgrade()) {
-	        	insertTdtmDefaults();
+	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
+	        	insertTdtmDefaults(defaultHandlers);
 	        } else if(context.isPush()) {
-	        	insertTdtmDefaults();
+	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
+	        	insertTdtmDefaults(defaultHandlers);
 	        }
         } catch(Exception e) {
 	        sendEmailOnError(e, context);
@@ -65,7 +67,7 @@ global class STG_InstallScript implements InstallHandler {
         String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
                             + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
                             + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
-                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.';
+                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.\n\n';
         bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
         + 'Error stack trace: \n' + e.getStackTraceString();
         mail.setPlainTextBody(bodyString);      
@@ -175,23 +177,36 @@ global class STG_InstallScript implements InstallHandler {
     }
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
+        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         //First we insert all TDTM records as active
-        insertTdtmDefaults();   
+        insertTdtmDefaults(defaultHandlers);   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
     
-    private static void insertTdtmDefaults() {
-    	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c from Trigger_Handler__c];
-        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
+    //Public just for testing purposes. Otherwise should be private
+    public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
+    	List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
+    	                                               from Trigger_Handler__c];
+
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
+        List<Trigger_Handler__c> handlersToUpdate = new List<Trigger_Handler__c>();
         
-        //If a handler is in the list of default handlers but it's not in the database
+        //Insert those that are in the list of default handlers but aren't in the database
         for(Trigger_Handler__c defaultHandler : defaultHandlers) {
         	Boolean alreadyExists = false;
+        	Boolean needsUpdate = false;
             for(Trigger_Handler__c existingHandler : existingHandlers) {
             	if(defaultHandler.Class__c == existingHandler.Class__c && defaultHandler.Object__c == existingHandler.Object__c) {
             		alreadyExists = true;
+            		//Determine if order or action has changed (compare old load order with new load order, old action with new action)
+                    //Filter to only those that have not been flagged as user-managed
+                    if(!existingHandler.User_Managed__c && (defaultHandler.Load_Order__c != existingHandler.Load_Order__c || 
+                    defaultHandler.Trigger_Action__c != existingHandler.Trigger_Action__c)) {
+                        existingHandler.Load_Order__c = defaultHandler.Load_Order__c;
+                        existingHandler.Trigger_Action__c = defaultHandler.Trigger_Action__c;
+                        handlersToUpdate.add(existingHandler);
+                    }
             		break;
             	}
             }
@@ -199,6 +214,7 @@ global class STG_InstallScript implements InstallHandler {
                 handlersToInsert.add(defaultHandler); 
         }    
         insert handlersToInsert;
+        update handlersToUpdate;
     }
     
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
