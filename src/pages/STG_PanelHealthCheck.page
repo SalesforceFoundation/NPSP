@@ -12,13 +12,27 @@
             
             <apex:outputPanel id="panelResults">
                 <apex:outputText value="{!strTimeMessage}" rendered="{!hasResults}" /><br/><br/>
-                <apex:pageBlockTable value="{!listDR}" var="dr" rendered="{!hasResults}">
-                    <apex:column headerValue="Test" value="{!dr.strName}" />
-                    <apex:column headerValue="Status" value="{!dr.strStatus}" />
-                    <apex:column headerValue="Details" value="{!dr.strDetails}" />
-                    <apex:column headerValue="Solution" value="{!dr.strSolution}" /> 
-                </apex:pageBlockTable>            
-            </apex:outputPanel>
+                
+                <apex:dataTable value="{!listDR}" var="dr" rendered="{!hasResults}" rules="all">
+                    <apex:column >           
+                         <apex:facet name="header">Test</apex:facet>
+                         <apex:outputText value="{!dr.strName}" style="font-weight:bold;"/>         
+                    </apex:column>
+                    <apex:column >           
+                         <apex:facet name="header">Status</apex:facet>
+                         <apex:outputText value="{!dr.strStatus}" style="color:{!IF(dr.strStatus='Error','red', 'blue')};" />          
+                    </apex:column>
+                    <apex:column >           
+                         <apex:facet name="header">Details</apex:facet>
+                         <apex:outputText value="{!dr.strDetails}" escape="false" />          
+                    </apex:column>
+                    <apex:column >           
+                         <apex:facet name="header">Solution</apex:facet>
+                         <apex:outputText value="{!dr.strSolution}"/>          
+                    </apex:column>                
+                </apex:dataTable> 
+                 
+            </apex:outputPanel> 
             
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton id="btnRun" value="Run Health Check" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
