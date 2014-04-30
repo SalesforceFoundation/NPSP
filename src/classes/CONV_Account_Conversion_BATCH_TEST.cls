@@ -67,7 +67,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         String query = CONV_Account_Conversion_CTRL.getBatchQuery();
 
-        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
 
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
@@ -118,7 +118,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         String query = CONV_Account_Conversion_CTRL.getBatchQuery();
 
-        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
 
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
@@ -153,7 +153,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         String query = CONV_Account_Conversion_CTRL.getBatchQuery();
 
-        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
 
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
@@ -205,7 +205,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         String query = CONV_Account_Conversion_CTRL.getBatchQuery();
 
-        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query);
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
 
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();

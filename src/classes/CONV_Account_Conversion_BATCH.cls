@@ -35,10 +35,14 @@
 global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
     public String query {get; set;}
+    public Map<String, String> fieldmap {get;set;}
+    public String HouseholdIdField {get;set;}
 
     /** @description constructor for the class */
-    public CONV_Account_Conversion_BATCH(string q) {
+    public CONV_Account_Conversion_BATCH(String q, String hhIdField, Map<String, String> fm) {
+        fieldmap = fm;
         query = q;
+        HouseholdIdField = hhIdField;
     }
 
     global database.Querylocator start(Database.BatchableContext bc) {
@@ -93,6 +97,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
                 a.RecordTypeId = CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+
+            if (HouseholdIdField != null && HouseholdIdField != ''){
+                a.put(HouseholdIdField, hh.Id);
+            }
 
             if (hh.npo02__MailingStreet__c != null ||
                 hh.npo02__MailingPostalCode__c != null ||
