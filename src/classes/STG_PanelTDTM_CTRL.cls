@@ -106,8 +106,8 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
         get {
             if (listTH == null) {
                 listTH = new list<Trigger_Handler__c>();
-                listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, 
-                    Object__c, Trigger_Action__c from Trigger_Handler__c order by Object__c, Load_Order__c];
+                listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, Object__c, Trigger_Action__c, 
+                            User_Managed__c from Trigger_Handler__c order by Object__c, Load_Order__c];
             } 
             return listTH;           
         }
