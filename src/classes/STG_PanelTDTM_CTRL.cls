@@ -63,6 +63,7 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
 
         Savepoint sp = Database.setSavepoint();
         try {
+        	thNew.User_Managed__c = true;
             insert thNew;
             isEditMode = false;
             listTH = null;
