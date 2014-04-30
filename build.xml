@@ -190,6 +190,16 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
       <antcall target="deployUnpackagedPre" />
 
+      <!-- Attempt to destroy any stale metadata but continue even if this fails -->
+      <trycatch>
+        <try>
+          <antcall target="destroyStaleMetadata" />
+        </try>
+        <catch>
+          <echo>First run of destroyStaleMetadata failed.  Ignoring for now but it may cause build failures in other targets.</echo>
+        </catch>
+      </trycatch>
+
       <!-- Update the package.xml to managed package mode, adding install and uninstall script classes -->
       <antcall target="updatePackageXmlManaged" />
 

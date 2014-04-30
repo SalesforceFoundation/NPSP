@@ -103,6 +103,7 @@
     <members>STG_DataBoundMultiSelect_CTRL</members>
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
+    <members>STG_InstallScript_TEST2</members>
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
@@ -304,6 +305,7 @@
     <members>Trigger_Handler__c.Load_Order__c</members>
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
+    <members>Trigger_Handler__c.User_Managed__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
