@@ -1,44 +1,137 @@
-<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c">
+<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false">
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        ul.err li {
+<style>
+    body{
+        margin:0px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .bootstrap3 h1, .bootstrap3 h2, .bootstrap3 h3, .bootstrap3 h4{
+        font-family: Vagrolight,Arial,Helvetica,sans-serif;
+    }
+    .bootstrap3 p{
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .bootstrap .jumbotron{
+        background-color: #f0f1f2;
+        margin-bottom:0px;
+    }
+
+    .bootstrap .container .jumbotron {
+        padding: 20px;
+    }
+    
+    .bootstrap .container {
+        padding-top: 10px;
+    }
+
+    /* Customize container */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 900px;
+      }
+    }  
+    
+    .bootstrap .panel .list-group .list-group-item {
+        border-width: 0;
+        padding: 5px 0px 5px 0px;        
+    }  
+    ul.err li {
         list-style-type: none;
         color: #cc0000;
         font-weight: bold; 
-        }
-    </style>
+    }
+</style>
 
-    <apex:pageMessages />
-    <apex:sectionHeader title="Account Model Conversion Utility" />
+<apex:pageMessages />
+<div class="bootstrap" >
     <apex:form >
-        <apex:pageBlock >
-            <apex:pageBlockButtons rendered="{!batching}">
-                <apex:commandButton action="{!convert}" value="Convert"
-                    disabled="{!batchRunning}" />
-                <apex:commandButton action="{!cancel}" value="Cancel" />
-            </apex:pageBlockButtons>
-            <apex:messages styleClass="err" />
-            <apex:outputText rendered="{!batching}">
-                <p>
-                This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.
-                This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
-                functionality will be temporarily disabled to 
-                avoid accidentally modifying existing data.  
+    <!-- HEADER -->
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-sm-8 col-xs-12" >
+                    <h3>Account Model Conversion Utility</h3>
+                    <h4>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</h4>
+                </div>
+                <div class="col-sm-4 col-xs-12" >
+                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
+                    <div class="panel-body">
+                    <p>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
+                functionality will be temporarily disabled to avoid accidentally modifying existing data.  
                 Before beginning this process, please make sure to go through the following checklist:</p>
                 <ul>
                     <li>Backup your data by going to Setup | Data Management | Export Data</li>
-                    <li>Test this process in your sandbox first.  More information on using sandboxes can be found here.</li>
-                    <li>Disable all workflow and any custom validation rules or required fields.</li>
-                    <li>Do something else</li>
-                    
-                    
+                    <li>Test this process in your sandbox first.  More information on using sandboxes can be found <a href="https://help.salesforce.com/HTViewHelpDoc?id=data_sandbox_create.htm&language=en_US" target="_blank">here</a>.</li>
+                    <li>Disable all workflows and any custom validation rules.</li>
+                    <li>Temporarily remove required field restrictions for custom fields.</li>
+                    <li>Consult with your local Salesforce expert for additional assistance</li>
                 </ul>
-                
-            </apex:outputText> 
-        </apex:pageBlock>
-        <apex:outputPanel rendered="{!batchRunning}">
-            <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress"
-                cNumberOfJobs="1" />
-        </apex:outputPanel>
-    </apex:form>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
+                    <div class="panel-body">
+                        <apex:selectList title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!targetAccountFields}" />
+                        </apex:selectList>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <apex:commandButton action="{!convert}" value="Begin Conversion Process" disabled="{!batchRunning}" rendered="{!batching}"/>
+            <apex:outputPanel rendered="{!batchRunning}">
+                <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
+            </apex:outputPanel>
+        </div>
+    </div>
+</apex:form>
+
+<div class="container">
+<a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">I'm ready, lets do this...</a>
+                   
+<!-------- MODAL  ------>
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Modal Body</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-------- / MODAL  ------>
+</div>
+
+</div>
+
 </apex:page>
