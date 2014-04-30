@@ -156,8 +156,9 @@ public without sharing class UTIL_CustomSettingsFacade {
                 recurringDonationsSettings.npe03__Maximum_Donations__c = 50;
                 recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = 12;
                 recurringDonationsSettings.npe03__Update_Check_Interval__c = 90;
-                id myid = [select id from RecordType where sobjecttype = 'Opportunity' limit 1].id;
-                recurringDonationsSettings.npe03__Record_Type__c = myid; 
+                List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity'];
+                if(oppRecordTypes.size() > 0)
+                    recurringDonationsSettings.npe03__Record_Type__c = oppRecordTypes[0].id; 
                 upsert recurringDonationsSettings;    
                 recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();                           
             }
