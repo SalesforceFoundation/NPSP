@@ -58,21 +58,25 @@ global class STG_InstallScript implements InstallHandler {
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
     //leave it here for future debugging purposes. 
     public void sendEmailOnError(Exception e, InstallContext context) {
-    	String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-    	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setUseSignature(false);
-        mail.setReplyTo('donotreply@salesforcefoundation.org');
-        mail.setSenderDisplayName('NPSP Install Script');
-        mail.setSubject('NPSP Install Errors');
-        String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
-                            + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
-                            + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
-                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.\n\n';
-        bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-        + 'Error stack trace: \n' + e.getStackTraceString();
-        mail.setPlainTextBody(bodyString);      
-        mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+    	try {
+	    	String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
+	    	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+	        mail.setUseSignature(false);
+	        mail.setReplyTo('donotreply@salesforcefoundation.org');
+	        mail.setSenderDisplayName('NPSP Install Script');
+	        mail.setSubject('NPSP Install Errors');
+	        String bodyString = 'Your installation was successful, but we detected a slight problem. ' 
+	                            + 'To fix the problem, simply load the NPSP Settings page in Salesforce.\n\n'
+	                            + 'Note: The NPSP Settings tab is visible in the Nonprofit CRM application. ' 
+	                            + 'If you don\'t see the tab, select Nonprofit CRM from the app menu in the upper-right corner.\n\n';
+	        bodyString += '==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+	        + 'Error stack trace: \n' + e.getStackTraceString();
+	        mail.setPlainTextBody(bodyString);      
+	        mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
+	        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+    	} catch(Exception e2) {
+    		//Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+    	}
     }
 
     /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
