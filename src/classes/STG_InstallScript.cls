@@ -99,6 +99,11 @@ global class STG_InstallScript implements InstallHandler {
     }
     
     public void scheduleGlobalJob() {
+
+    	// NOTE: if more jobs are added to this list, they must also be added to the code in
+    	// UTIL_GlobalSchedulable.verifyScheduledJobs() so that HealthCheck will include
+    	// verifying they exist.
+    	
     	//create records for the jobs that are to run recursively
         Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED', 'RLLP_OppRollup_SCHED', 
                             'ADDR_SEASONAL_SCHED')];

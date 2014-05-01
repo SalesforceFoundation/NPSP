@@ -82,7 +82,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         
             Schema.DisplayType oppType = mapFieldTypes.get(pfmNew.npe01__Opportunity_Field__c);  
             for (string s : targetTokenMap.keyset()){
-                if (s.contains('__c')){
+                if (s.contains('__c') && UTIL_Describe.isValidField('npe01__OppPayment__c', s)) {
 			        Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('npe01__OppPayment__c', s);     
 
                     // disallow formula fields and autonums
@@ -123,7 +123,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             //loop through the map, only get the describe information for fields we don't
             //already recognize, including our own and non-custom fields, we'll add those in a moment
             for (string fieldName : oppFieldTokenList.keyset()) {
-                if (fieldname.contains('__c') || knownopptyFields.contains(fieldName)) {
+                if ((fieldname.contains('__c') || knownopptyFields.contains(fieldName)) && UTIL_Describe.isValidField('Opportunity', fieldname)) {
                     Schema.DescribeFieldResult f = UTIL_Describe.getFieldDescribe('Opportunity', fieldname);                         
                     Schema.Displaytype dt = f.getType();
                     sourcefields.add(new SelectOption(f.getName(), f.getLabel()));
@@ -141,6 +141,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
         string strSetting = Schema.Sobjecttype.npe01__Payment_Field_Mapping_Settings__c.getLabel(); 
         boolean isValid = true;
+        boolean isValidAll = true;
         
         for (string s : paymentMappings.keySet()){
             npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
@@ -174,10 +175,13 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 	                ctrl.createDR(strSetting, 'Error', 'Payment field ' + pfms.npe01__Payment_Field__c + ' and Opportunity field ' + pfms.npe01__Opportunity_Field__c + ' are not of compatible data types.', 
 	                    'Delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
 	            }               
-            }            
+            }
+            
+            if (!isValid) 
+                isValidAll = false;            
         }
 
-        if (isValid) {
+        if (isValidAll) {
             ctrl.createDR(strSetting, 'Success', null, null);            
         }                           
     }           
@@ -265,8 +269,8 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             if (listPMTFieldMapping == null) {
             	listPMTFieldMapping = new list<npe01__Payment_Field_Mapping_Settings__c>();
                 for (npe01__Payment_Field_Mapping_Settings__c pfm : STG_Panel.stgService.listPMTFieldMapping) {
-                    string strOppField = getFieldLabel('Opportunity', pfm.npe01__Opportunity_Field__c);
-                    string strPmtField = getFieldLabel('npe01__OppPayment__c', pfm.npe01__Payment_Field__c);
+                    string strOppField = UTIL_Describe.getFieldLabelSafe('Opportunity', pfm.npe01__Opportunity_Field__c);
+                    string strPmtField = UTIL_Describe.getFieldLabelSafe('npe01__OppPayment__c', pfm.npe01__Payment_Field__c);
                     npe01__Payment_Field_Mapping_Settings__c pfm2 = new npe01__Payment_Field_Mapping_Settings__c();
                     pfm2.Id = pfm.Id;
                     pfm2.npe01__Opportunity_Field__c = strOppField;
@@ -279,13 +283,4 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         private set;     
     }
     
-    // cover over describe call to handle fields that no longer exist.
-    private string getFieldLabel(string strObj, string strField) {
-        try {
-            return UTIL_Describe.getFieldLabel(strObj, strField);                	
-        } catch (Exception e) {
-        	return strField;
-        }       
-    }
-        
 }
