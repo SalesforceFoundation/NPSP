@@ -60,6 +60,7 @@ global class STG_InstallScript implements InstallHandler {
     public void sendEmailOnError(Exception e, InstallContext context) {
     	try {
 	    	String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
+	    	userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
 	    	Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
 	        mail.setUseSignature(false);
 	        mail.setReplyTo('donotreply@salesforcefoundation.org');
