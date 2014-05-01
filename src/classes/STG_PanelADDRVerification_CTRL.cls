@@ -97,25 +97,46 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference testApi() {
-        try {
-        	encodeTokenIfNotEncoded(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(apiTestEntry);
-            apiTestResult = JSON.serializePretty(sz);
-        } catch (Exception e) {
-        	if(e.getMessage().startsWith('no protocol')) {
-        		apiTestResult = 'Please enter endpoint URL';
-        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
-        		apiTestResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
-        		                'authorized Remote Sites, under Setup->Security->Remote Site.';
-        	} else {
-                apiTestResult = e.getMessage();
-        	}
-        }
+        apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
     
-    private void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerifSettings) {
+    // verify the current address settings - used by Health Check.    
+    public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
+        Address_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        if (avs.Using_SmartyStreets__c) {
+	        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
+	        string strResult = strVerifyAddressVerificationService(avs, '98005');
+	        string strStatus = strResult.contains('zipcode') ? 'Success' : 'Error';
+	        string strSolution = strStatus == 'Success' ? null : 
+	            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
+	        if (strStatus == 'Success') strResult = null;
+	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
+        } 
+    }
+    
+    // verify the current address settings - used both by the UI panel, as well as Health Check.	
+    private static string strVerifyAddressVerificationService(Address_Verification_Settings__c addrVerifSettings, string strZip) {
+        string strResult;
+        try {
+        	encodeTokenIfNotEncoded(addrVerifSettings);
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
+            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
+            strResult = JSON.serializePretty(sz);
+        } catch (Exception e) {
+        	if(e.getMessage().startsWith('no protocol')) {
+        		strResult = 'Please enter endpoint URL';
+        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
+        		strResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
+        		                'authorized Remote Sites, under Setup->Security->Remote Site.';
+        	} else {
+                strResult = e.getMessage();
+        	}
+        }
+        return strResult;
+    }
+    
+    private static void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
         if(addrVerifSettings.Using_SmartyStreets__c && !String.isBlank(addrVerifSettings.Auth_Token__c) 
         && addrVerifSettings.Auth_Token__c.length() == 88)
