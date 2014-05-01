@@ -67,18 +67,20 @@
                             <h5><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></h5>
                             <p>Got questions?  Got answers?  Join the 
                             <a href="https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CkCM" target="_blank">System Administrators</a><br/> group in the 
-                            <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a>!</p>
+                            <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
                         </div>
 
                         <div class="col-sm-7">
+                            <!-- we don't have this content yet!!
                             <h5>Recommended Reading</h5>
                             <a href="">Upgrading to NPSP 3.0</a><br/>
                             <br/>
+                             -->
 
                             <h5>Salesforce Documentation &amp; Quick Starts</h5>
-                            <a href="">Getting Started Implementation Guide</a><br/>
-                            <a href="">Adding and Managing Users Quick Start</a><br/>
-                            <a href="">Importing Data Quick Start</a><br/>
+                            <a href="https://help.salesforce.com/apex/HTViewGettingStarted?id=000176053&language=en_US" target="_blank" >Getting Started Implementation Guide</a><br/>
+                            <a href="https://help.salesforce.com/apex/HTViewQuickStarts?id=000120152&language=en_US" target="_blank" >Adding and Managing Users Quick Start</a><br/>
+                            <a href="https://help.salesforce.com/apex/HTViewQuickStarts?id=000113376&language=en_US" target="_blank" >Importing Data Quick Start</a><br/>
                             <br/>
                         </div>
                     </div>
@@ -99,8 +101,8 @@
                             <br/>
 
                             <h5>Documentation</h5>
-                            <a href="">NPSP 3.0 Release Notes</a><br/>
-                            <a href="">NPSP 3.0 Documentation</a><br/>
+                            <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-RN" target="_blank" >NPSP 3.0 Release Notes</a><br/>
+                            <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank" >NPSP 3.0 Documentation</a><br/>
                             <br/>
                         </div>
                     </div>
