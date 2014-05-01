@@ -110,6 +110,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	        string strStatus = strResult.contains('zipcode') ? 'Success' : 'Error';
 	        string strSolution = strStatus == 'Success' ? null : 
 	            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
+	        if (strStatus == 'Success') strResult = null;
 	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
         } 
     }
