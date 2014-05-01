@@ -250,6 +250,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     //utility to check that existing user defined rollups are valid - called by Health Check
     public static void verifyUserRollups(STG_PanelHealthCheck_CTRL ctrl) {
         boolean isValid = true;
+        boolean isValidAll = true;
         
         map<string, npo02__User_Rollup_Field_Settings__c> userRollups = npo02__User_Rollup_Field_Settings__c.getAll(); 
         string strSetting = Schema.Sobjecttype.npo02__User_Rollup_Field_Settings__c.getLabel(); 
@@ -258,7 +259,8 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             npo02__User_Rollup_Field_Settings__c urfs = userRollups.get(s);
             SobjectField targetField;
             SobjectField sourceField;
-            
+            isValid = true;
+                        
             //check source field
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
             if (sourceField == null) {
@@ -299,10 +301,13 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                     ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + urfs.npo02__Source_Field__c + ' and ' + urfs.npo02__Object_Name__c + ' field ' + urfs.npo02__Target_Field__c + ' are not of compatible data types.', 
                         'Delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');    
                 }               
-            }            
+            }
+            
+            if (!isValid)
+                isValidAll = false;            
             
         }    
-        if (isValid) {
+        if (isValidAll) {
             ctrl.createDR(strSetting, 'Success', null, null);                    	
         }
     }           
@@ -331,13 +336,13 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         
         public string SourceFieldLabel {
         	get {
-        		return UTIL_Describe.getFieldLabel('Opportunity', SourceField);
+        		return UTIL_Describe.getFieldLabelSafe('Opportunity', SourceField);
         	}
         }
         
         public string TargetFieldLabel {
             get {
-                return UTIL_Describe.getFieldLabel(TargetObject, TargetField);
+                return UTIL_Describe.getFieldLabelSafe(TargetObject, TargetField);
             }
         }
         

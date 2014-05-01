@@ -83,11 +83,19 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         
         verifyRecordTypes(); 
         verifyAccountModel(); 
+        verifyAccountData();
+        verifyContactData();
         verifyReports(); 
         verifyFields(); 
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
         STG_PanelUserRollup_CTRL.verifyUserRollups(this);
         STG_PanelRDCustomFieldMapping_CTRL.verifyRDMappings(this);
+        STG_PanelRelAuto_CTRL.verifyAutoCreateRels(this);
+        STG_PanelRelReciprocal_CTRL.verifyRelLookups(this);
+        STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
+        verifyScheduledJobs();
+        STG_PanelADDRVerification_CTRL.verifyAddressVerificationService(this);
+        ERR_Notifier.verifyErrorSettings(this);
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -95,6 +103,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     }
     
+    // verify settings are consistent with the chosen Account Model
     private void verifyAccountModel() {
         string strAccModel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Account_Processor__c');
         
@@ -117,7 +126,59 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
         createDR(strAccModel, 'Success', null, null);
     }
+    
+    // verify Account data is consistent with the chosen Account Model
+    private void verifyAccountData() { 
+    	integer cBucket = 0;
+    	integer cOne2One = 0;
+    	integer cHH = 0;
+    	integer cOther = -1;
+        boolean isMixedAccs = false;
+    	
+    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account group by rollup(npe01__SYSTEM_AccountType__c) ];
+    	for (AggregateResult agg : listAgg) {
+            string strAccType = string.valueOf(agg.get('npe01__SYSTEM_AccountType__c'));
+            integer cAccounts = integer.valueOf(agg.get('cAccounts'));
+            if (strAccType == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+                cBucket += cAccounts;
+                if (!CAO_Constants.isBucketModel())
+                    isMixedAccs = true;
+            } else if (strAccType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                cOne2One += cAccounts;
+                if (!CAO_Constants.isOneToOne())
+                    isMixedAccs = true;
+            } else if (strAccType == CAO_Constants.HH_ACCOUNT_TYPE) {
+                cHH += cAccounts;
+                if (!CAO_Constants.isHHAccountModel())
+                    isMixedAccs = true;
+            } else if (cOther == -1) {
+                cOther = cAccounts;  
+            }          
+    	}
+    	
+        string strInfo;
+        if (isMixedAccs) {
+            strInfo = 'The Account Model is set to ' + CAO_Constants.getContactsSettings().npe01__Account_Processor__c;
+            strInfo += ', but there are a mixture of Account types being used. ';
+        }
+        strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket;
+        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One;
+        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH;        
+        
+        createDR('Account Model Data', isMixedAccs ? 'Error' : 'Success',  strInfo, null);        
+    
+    }
 
+    // verify that all Contacts have an account
+    private void verifyContactData() {
+        integer cContact = [select Count() from Contact where AccountId = null];   
+        if (cContact > 0) {
+            createDR('Contact Data', 'Error', 'There are ' + cContact + ' Contacts who have no Account.  These Contacts will be private to the user who created them only.', null);                	
+        } else {
+            createDR('Contact Data', 'Success', null, null); 
+        }  
+    }
+    
     // verify all reports exist that settings use
     private void verifyReports() {
         string rptId = null;
@@ -154,7 +215,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                 'Add a Gender field to Contact and specify it on the ' + Label.stgNavRelationships + ' tab in NPSP Settings.');    
         } else {
             createDR(strSetting, 'Success', null, null);
-        }
+        }        
     }
     
     // check all settings that contain recordType ID's to make sure they are valid.
@@ -213,6 +274,53 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } else {
             createDR(strField, 'Success', null, null);               
         }           
+    }
+
+    // verify that our Global Scheduler is actually scheduled, and that all of the entries are valid - called by HealthCheck
+    private void verifyScheduledJobs() {
+        
+        // make sure the Global Job is scheduduled
+        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+           where CronJobDetail.Name = :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];        
+        if (scheduledJobs.size() == 0) {
+            createDR('NPSP Global Scheduler', 'Error', 'The NPSP Global Scheduled class is not scheduled.', 
+                'You must schedule the class UTIL_GlobalSchedulable to run daily with the job name ' + UTIL_GlobalSchedulable.jobName + '.');
+            return;            
+        }
+
+        // make sure the entries we expect are there.
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED','RLLP_OppRollup_SCHED','ADDR_SEASONAL_SCHED')];
+        if (numOfJobs != 3) {
+            createDR('NPSP Global Scheduler', 'Error', 
+                'One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.', 
+                'You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.');
+            return;            
+        }
+         
+        // now make sure all entries are valid
+        boolean isValidAll = true;
+        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
+        for (Schedulable__c job : jobs) {
+            Type classType = Type.forName(job.Class_Name__c);
+            if (classType != null) {
+                Object instance = classType.newInstance();
+                if (instance != null) {
+                    if (instance instanceof UTIL_IScheduled) {
+                        // this entry is good!
+                        continue;
+                    }
+                }
+            }
+            isValidAll = false;
+            createDR('NPSP Global Scheduler', 'Error', 
+                'The record ' + job.Class_Name__c + ' in the Schedulable__c object is not valid.', 
+                'You must update the record to have a valid Class the implements the UTIL_IScheduled interface.');
+        }            
+         
+        if (isValidAll) {
+            createDR('NPSP Global Scheduler', 'Success', null, null);
+        }   
+        
     }
     
 }

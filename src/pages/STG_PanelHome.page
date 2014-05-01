@@ -45,7 +45,7 @@
                     <h3>Nonprofit Starter Pack Application Settings</h3>
                     <p class="h4">Customize how the Nonprofit Starter Pack works for your organization.</p>
                     <br/>
-                    <p class="h6" >Looking to customize page layouts, add fields, or add users?  Try the <a href="">Salesforce Setup</a> pages.</p>
+                    <p class="h6" >Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
                 </div>
                 <div class="col-sm-3 col-xs-12" >
                     <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
@@ -66,13 +66,12 @@
                         <div class="col-sm-5">
                             <h5><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></h5>
                             <p>Got questions?  Got answers?  Join the 
-                            <a href="">System Administrators</a><br/> group in the 
+                            <a href="https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CkCM" target="_blank">System Administrators</a><br/> group in the 
                             <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a>!</p>
                         </div>
 
                         <div class="col-sm-7">
                             <h5>Recommended Reading</h5>
-                            <a href="">NPSP 3.0 Implementation Guide</a><br/>
                             <a href="">Upgrading to NPSP 3.0</a><br/>
                             <br/>
 
@@ -93,9 +92,10 @@
                     <div class="panel-body">
                         <div class="col-sm-12">
                             <h5>Tools</h5>
-                            Use <a href="">Health Check</a> to verify your NPSP configuration!<br/>
-                            <a href="">Batch rollup donations</a><br/>
-                            <a href="">Error logs</a><br/>
+                            <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/stethoscope.png')}" style="float:left; padding-right:10px;" alt="Health Check" />
+                            Use <a href="." onclick="ShowPanel('idPanelHealthCheck');return false;">Health Check</a> to verify your NPSP configuration!<br/><br/>
+                            <a href="." onclick="ShowPanel('idPanelOppBatch');return false;">Batch rollup donations</a><br/>
+                            <a href="." onclick="ShowPanel('idPanelErrorLog');return false;">Error logs</a><br/>
                             <br/>
 
                             <h5>Documentation</h5>
