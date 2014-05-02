@@ -157,11 +157,7 @@ public with sharing class ERR_Notifier {
     	Error_Settings__c es = getErrorSettings();
         String errorNotifRecipient = es.Error_Notifications_To__c;
         string strSetting;
-        try {
-            strSetting = UTIL_Describe.getFieldLabel('Error_Settings__c', 'Error_Notifications_To__c');
-        } catch(Exception e) {
-        	strSetting = UTIL_Describe.getFieldLabel('npsp_Error_Settings__c', 'npsp_Error_Notifications_To__c');
-        }
+        strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
             
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
         	if (!(errorNotifRecipient instanceof id)) {
