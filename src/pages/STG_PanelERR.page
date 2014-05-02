@@ -17,6 +17,8 @@
         errNotif.hideChatterGroupBox =  function() { jerr$('span[id$=chatterGroupBox]').hide(); }
         errNotif.showChatterGroupBox = function() { jerr$('span[id$=chatterGroupBox]').show(); }
         
+        errNotif.hideErrorMessage = function() { jerr$('#saveError').hide(); }
+        
         //initially hiding the auto-complete chatter group textarea
         jerr$(document).ready(function() {
             errNotif.hideNotifDropDown();   
@@ -56,6 +58,7 @@
         //detecting click action on cancel button
         jerr$(document).on('click', 'input[id$=cancelNotif]', function() { 
             errNotif.hideChatterGroupBox();
+            errNotif.hideErrorMessage();
         });
 
     </script>
