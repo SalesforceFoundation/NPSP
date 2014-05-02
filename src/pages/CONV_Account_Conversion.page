@@ -15,8 +15,21 @@
             else
                 j$('#conversionBTN').attr('disabled', 'disabled');
         });
+        j$("#convertBTN").bind("click",function(){
+            //hide buttons
+            j$("#conversionBTN").hide();
+            //hide panels
+            j$(".panel").hide();
+            //render outputpanel
+            j$("#progresspanel").removeClass('hide');
+            //call conversion
+            callConversion();
+        });
     });
-    
+
+    function callConversion(){
+        runconvert() ;
+    }
 </script>
 
 <style>
@@ -63,122 +76,123 @@
 </style>
 
 <apex:pageMessages />
-<div class="bootstrap" >
-    <apex:form >
-    <!-- HEADER -->
-    <div class="container">
-        <div class="jumbotron">
+    <div class="bootstrap" >
+        <apex:form >
+        <!-- HEADER -->
+        <div class="container">
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-sm-8 col-xs-12" >
+                        <h3>Account Model Conversion Utility</h3>
+                        <h4>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</h4>
+                    </div>
+                    <div class="col-sm-4 col-xs-12" >
+                        <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" >
             <div class="row">
-                <div class="col-sm-8 col-xs-12" >
-                    <h3>Account Model Conversion Utility</h3>
-                    <h4>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</h4>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
+                        <div class="panel-body">
+                        <p>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
+                    functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and the Salesforce.com Foundation are not responsible for
+                    any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK.
+                    Before beginning this process, you'll need to confirm the following steps have been taken:</p>
+                            <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
+                            <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>My data has been backed-up by going to Setup | Data Management | Export Data</label>
+                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a sandbox.</label>
+                            <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
+                            <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
+                            <label for="check-apps"><input type="checkbox" id="check-required-fields"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
+                            <label for="check-consult"><input type="checkbox" id="check-consult"/>I've consulted with my local Salesforce expert.</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-4 col-xs-12" >
-                    <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="container" >
-        <div class="row">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
-                    <div class="panel-body">
-                    <p>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
-                functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and the Salesforce.com Foundation are not responsible for
-                any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK.
-                Before beginning this process, you'll need to confirm the following steps have been taken:</p>
-
-                    <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
-                    <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>My data has been backed-up by going to Setup | Data Management | Export Data</label>
-                    <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>This process has been tested in my sandbox first.</label>
-                    <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
-                    <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
-                    <label for="check-apps"><input type="checkbox" id="check-required-fields"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
-                    <label for="check-consult"><input type="checkbox" id="check-consult"/>I've consulted with my local Salesforce expert.</label>
-               </div>
-            </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading"><h3 class="panel-title">What This Tool Does</h3></div>
-                    <div class="panel-body">
-                    <p>The following actions are taken by the batch job associated with this tool:</p>
-                    <ul>
-                        <li>All triggers are disabled</li>
-                        <li>All existing Households are selected, along with their Contacts</li>
-                        <li>A new Household Account is created for each existing Household</li>
-                        <li>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</li>
-                        <li>All Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</li>
-                        <li>All activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</li>
-                        <li>Addresses are mapped from the existing Household and Contacts into new Address objects, then attached to the Contact and Household Account as needed</li>
-                        <li>A master Household Address is determined and defined if none currently exists based on address frequency and then Contact giving</li>
-                        <li>Address overrides are set for any Contact whose address is different from the Household Address</li>
-                        <li>Primary Contact values are set for all Households</li>
-                        <li>All triggers are re-enabled</li>
-                    </ul>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading"><h3 class="panel-title">What This Tool Does</h3></div>
+                        <div class="panel-body">
+                            <p>The following actions are taken by the batch job associated with this tool:</p>
+                            <ul>
+                                <li>All triggers are disabled</li>
+                                <li>All existing Households are selected, along with their Contacts</li>
+                                <li>New Household Accounts are created for each existing Household</li>
+                                <li>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</li>
+                                <li>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</li>
+                                <li>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</li>
+                                <li>Addresses mapped from existing Household and Contacts to new Address objects, then attached to the Contact and Household Account</li>
+                                <li>Master Household Address set or defined if none exists based on address frequency and Contact giving</li>
+                                <li>Address overrides are set for any Contact whose address is different from the Household Address</li>
+                                <li>Primary Contact values are set for all Households</li>
+                                <li>All triggers are re-enabled</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
-                    <div class="panel-body">
-                    <p>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any
-                       lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</p>
-                        <apex:outputlabel for="HHId" value="Account Field" style="padding: 5px 5px 5px 5px;"/>
-                        <apex:selectList id="HHId" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
-                            <apex:selectOptions value="{!targetAccountFields}" />
-                        </apex:selectList>
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
+                        <div class="panel-body">
+                            <p>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any
+                                lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</p>
+                            <apex:outputlabel for="HHId" value="Account Field" style="padding: 5px 5px 5px 5px;"/>
+                            <apex:selectList id="HHId" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!targetAccountFields}" />
+                            </apex:selectList>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
+
+        <div class="container hide" id="progresspanel">
+            <div class="row">
+                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel"/>
+                <apex:outputPanel id="batchpanel">
+                    <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
+                </apex:outputPanel>
+            </div>
+        </div>
+    </apex:form>
+
     <div class="container">
-        <div class="row">
-      <!--       <apex:commandButton action="{!convert}" value="Begin Conversion Process" disabled="{!batchRunning}" rendered="{!batching}"/> -->
-            <apex:outputPanel rendered="{!batchRunning}">
-                <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
-            </apex:outputPanel>
+        <div class="text-center"> 
+            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#basicModal" id="conversionBTN">
+                <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Conversion Process
+            </button>
         </div>
-    </div>
-</apex:form>
-
-<div class="container">
-    <div class="text-center"> 
-        <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#basicModal" id="conversionBTN">
-            <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Conversion Process
-        </button>
-   </div>
-    <!-------- MODAL  ------>
-    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Confirm Process Start</h4>
+        <!-------- MODAL  ------>
+        <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Warning!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h5>You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and the Salesforce.com Foundation are not responsible for any data or data integrity loss.  Do you still wish to proceed?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="convertBTN" >Proceed with Conversion</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <h3>This is serious, are you really, really sure?</h3>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Proceed</button>
             </div>
         </div>
-      </div>
+        <!-------- / MODAL  ------>
     </div>
-    <!-------- / MODAL  ------>
-</div>
-
 </div><!-- close class bootstrap-->
-
 </apex:page>
