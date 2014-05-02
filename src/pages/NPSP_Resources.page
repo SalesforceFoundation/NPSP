@@ -64,7 +64,7 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Got a Question?</h3></div>
                     <div class="panel-body"><p><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" style="float:left; padding-right:20px;" alt="Power of Us Hub" />
-                    The <a href="https://powerofus.force.com/" title="Power of Us HUB" target="_blank">Power of Us HUB</a> is a vibrant online community of Salesforce Foundation customers and partners.</p>
+                    The <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a> is a vibrant online community of Salesforce Foundation customers and partners.</p>
                     </div>
                 </div>                
             </div>
@@ -74,8 +74,8 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Quick Links</h3></div>
                     <ul class="list-group">
-                        <li class="list-group-item">See <a href="" target="_blank">what's new</a> in the Nonprofit Starter Pack 3.0</li>
-                        <li class="list-group-item">NPSP 3.0 <a href="" target="_blank">documentation</a></li>
+                        <li class="list-group-item">See <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-RN" target="_blank">what's new</a> in the Nonprofit Starter Pack 3.0</li>
+                        <li class="list-group-item">NPSP 3.0 <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank">documentation</a></li>
                         <li class="list-group-item">Join a <a href="https://powerofus.force.com/apex/PUBUserGroups" title="Find a User Group" target="_blank">Nonprofit User Group</a> in your area</li>
                         <li class="list-group-item">Ask a question at <a href="http://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
                         <li class="list-group-item">Find a <a href="http://www.salesforcefoundation.org/help/findapartner/" title="Find a partner" target="_blank">consulting partner or App</a></li>

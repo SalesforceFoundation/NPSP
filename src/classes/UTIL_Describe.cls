@@ -250,6 +250,20 @@ public with sharing class UTIL_Describe {
     }       
 
     /*******************************************************************************************************
+    * @description Gives field friendly name without throwing exception if not valid. 
+    * @param objectName the name of the object to look up
+    * @param fieldName the name of the field to look up
+    * @return string the label of the field
+    */ 
+    public static string getFieldLabelSafe(string strObj, string strField) {
+        try {
+            return getFieldLabel(strObj, strField);                   
+        } catch (Exception e) {
+            return strField;
+        }       
+    }
+        
+    /*******************************************************************************************************
     * @description checks whether the field exists
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up

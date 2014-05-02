@@ -1,7 +1,7 @@
 public with sharing virtual class STG_Panel {
 	
 	public STG_Panel() {
-		system.debug('***** STG_Panel constructor');
+		//system.debug('***** STG_Panel constructor');
 		isEditMode = false;
 	}
 	
@@ -19,7 +19,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (stgService == null)  { 
             	stgService = STG_SettingsService.stgService;
-                system.debug('***** getting STG_SettingsService.stgService: ' + stgService);
+                //system.debug('***** getting STG_SettingsService.stgService: ' + stgService);
             }
             return stgService;
         }

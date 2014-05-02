@@ -54,4 +54,8 @@ public with sharing class UTIL_Namespace_TEST {
         }       
     }               
 
+    static testmethod void testSandboxEmailToRealEmail() {
+        String fixedEmail = UTIL_Namespace.sandboxEmailToRealEmail('awheeler=universalcontainers.com@example.com');	
+        System.assertEquals('awheeler@universalcontainers.com', fixedEmail);
+    }
 }

@@ -111,5 +111,24 @@ public without sharing class UTIL_Namespace {
         Matcher match = pat.matcher(str);
         return match.replaceAll('npsp__$0');
     }
-
+    
+    /*******************************************************************************************************
+    * @description Static method that detects if we are running in a sandbox.
+    * @return true if running in sandbox. false otherwise.
+    ********************************************************************************************************/
+    public static Boolean isSandbox() {
+	    return URL.getSalesforceBaseUrl().getHost().left(2).equalsignorecase('cs');
+	}
+	
+	/*******************************************************************************************************
+    * @description Static method that returns the real email if it's a sandbox email.
+    * @return string with user's email.
+    ********************************************************************************************************/
+    public static String sandboxEmailToRealEmail(String email) {
+        if((isSandbox() || Test.isRunningTest()) && email.contains('=')) {
+          email = email.substring(0, email.indexOf('@'));
+          email = email.replace('=', '@');
+        }
+        return email;
+    }
 }

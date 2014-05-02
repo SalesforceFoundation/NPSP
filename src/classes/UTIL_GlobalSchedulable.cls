@@ -67,7 +67,7 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
             }
             
             if(classType != null && shouldRun) {     
-               Object instance = classType.newInstance();
+               Object instance = classType.newInstance(); 
                if(instance instanceof UTIL_IScheduled)
                    try {
                        ((UTIL_IScheduled)instance).execute(context);
@@ -82,4 +82,5 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
         }
         update jobsToUpdate;
     }
+    
 }
