@@ -89,7 +89,7 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
         System.debug('****notification to drop down: ' + notificationToDropDown);
         System.debug('****group ID: ' + groupId);
         if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && String.isBlank(groupId)) { 
-            saveErrorMessage = 'Please enter Chatter group name.';
+            saveErrorMessage = 'Please enter valid Chatter group name.';
             return null;
         } else if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && !String.isBlank(groupId)) { 
            STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = groupId;
@@ -99,5 +99,10 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
            saveErrorMessage = null;
         }
         return super.saveSettings();
+    }
+    
+    public override PageReference cancelEdit() {
+    	saveErrorMessage = null;
+    	return super.cancelEdit();
     }
 }
