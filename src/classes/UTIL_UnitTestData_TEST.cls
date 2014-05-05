@@ -145,6 +145,7 @@ public class UTIL_UnitTestData_TEST {
         return ContactsToAdd;
     }
     */
+
     public static List<Opportunity> OppsForContactList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
      
         // given a List of Contacts,
@@ -154,6 +155,7 @@ public class UTIL_UnitTestData_TEST {
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
         system.debug('recordtypeintest: ' + rtid);
+
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ' + thisCon.FirstName + thisCon.LastName,
@@ -162,16 +164,14 @@ public class UTIL_UnitTestData_TEST {
                 StageName = Stage,
                 CampaignId = CampId,
                 npe01__Contact_Id_for_Role__c = thisCon.Id,
-                type = oppType                
-            );  
+                type = oppType
+            );
             if(rtid != null){
                 newOpp.put('RecordTypeId',rtid);
             }
-            OppsToAdd.add (newOpp);
+            oppsToAdd.add (newOpp);
         }
-        
-        return OppsToAdd;
-        
+        return oppsToAdd;
     }
     
     public static List<Account> CreateMultipleTestAccounts (integer n, string strType) {

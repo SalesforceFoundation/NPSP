@@ -122,10 +122,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         	encodeTokenIfNotEncoded(addrVerifSettings);
             ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
-            strResult = JSON.serializePretty(sz);
+            strResult = 'Your Secret Key Pair is valid.'; //no exception thrown when deserializing it
         } catch (Exception e) {
         	if(e.getMessage().startsWith('no protocol')) {
-        		strResult = 'Please enter endpoint URL';
+        		strResult = 'Please enter the endpoint URL, including https:// at the beginning.';
         	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
         		strResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
         		                'authorized Remote Sites, under Setup->Security->Remote Site.';
