@@ -160,32 +160,33 @@ public with sharing class ERR_Notifier {
         strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
             
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
-        	if (!(errorNotifRecipient instanceof id)) {
-                ctrl.createDR(strSetting, 'Error', 'Invalid recipient', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
-                return;                             		
-        	}
-            if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
-            	// verify chatter group exists
-                list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
-                if (listCG.size() == 0) {
-                    ctrl.createDR(strSetting, 'Error', 'Invalid Chatter Group', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
-                    return;                    	
-                }            	
-            } else {
-                if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
-                	// verify user exists and is active
-                    list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient];
-                    if (listUser.size() == 0) {
-                    	ctrl.createDR(strSetting, 'Error', 'Invalid User', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
-                    	return;    
-                    }
-                    if (listUser[0].isActive == false) { 
-                        ctrl.createDR(strSetting, 'Error', 'Inactive User ' + listUser[0].name, 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
-                        return;     
-                    }
-                }
-            }
-        
+        	if (errorNotifRecipient != NotificationOptions.sysAdmins) {
+	        	if (!(errorNotifRecipient instanceof id)) {
+	                ctrl.createDR(strSetting, 'Error', 'Invalid recipient', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
+	                return;                             		
+	        	}
+	            if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
+	            	// verify chatter group exists
+	                list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
+	                if (listCG.size() == 0) {
+	                    ctrl.createDR(strSetting, 'Error', 'Invalid Chatter Group', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
+	                    return;                    	
+	                }            	
+	            } else {
+	                if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
+	                	// verify user exists and is active
+	                    list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient];
+	                    if (listUser.size() == 0) {
+	                    	ctrl.createDR(strSetting, 'Error', 'Invalid User', 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
+	                    	return;    
+	                    }
+	                    if (listUser[0].isActive == false) { 
+	                        ctrl.createDR(strSetting, 'Error', 'Inactive User ' + listUser[0].name, 'Update your settings on the ' + Label.stgNavErrorNotify + ' tab in NPSP Settings.');
+	                        return;     
+	                    }
+	                }
+	            }
+        	}        
         // settings ok.
         ctrl.createDR(strSetting, 'Success', null, null);
         }
