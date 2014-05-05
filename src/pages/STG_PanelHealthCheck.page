@@ -1,7 +1,6 @@
 <apex:page controller="STG_PanelHealthCheck_CTRL" >
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
+<!-- Bootstrap and jQuery are already included by other pages, so no need to include them again here. -->
 
     <style>
         .clsDRDetails {
@@ -30,25 +29,28 @@
     <apex:form id="form">   
         <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="Health Check" />        
         <apex:pageMessages id="pageMessages"/>
-
         <apex:pageBlock id="pbDetector" mode="maindetail">
-  
-            <h3 class="sectionBar" >Health Check</h3>
-            <apex:outputPanel layout="block" styleClass="sectionHelp">
-                    Use this page to detect any problems in your NPSP settings. 
-            </apex:outputPanel>
             
-            <apex:outputPanel id="panelResults">
-                <p style="text-align:right;"><apex:outputText value="{!strTimeMessage}" rendered="{!hasResults}" /></p>
-                
-		        <apex:outputPanel styleClass="bootstrap" rendered="{!hasResults}">
-                    <p style="text-align:right;"><input type="checkbox" onclick="ShowHidePassed();" checked="" id="cbxShowHide" /><label for="cbxShowHide"> Show Passed Tests </label></p>
-                    <br/>
+            <apex:outputPanel styleClass="bootstrap" id="panelResults">
+                <br/><p style="position:relative;left:30px;">Use this page to detect any problems in your NPSP settings.</p><br/>
+		        <apex:outputPanel rendered="{!hasResults}">
+                    <div>
+	                    <span style="position:relative;left:30px;"><input type="checkbox" onclick="ShowHidePassed();" checked="" id="cbxShowHide" /><label for="cbxShowHide"> Show Passed Tests </label></span>                        
+	                    <span style="position:absolute;right:30px;"><apex:outputText value="Last run: {!NOW()}" />&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="{!strTimeMessage}" /></span>                    
+                    </div>
                 
 			        <ul class="list-group" >
 		                <apex:repeat value="{!listDR}" var="dr" rendered="{!hasResults}"> 	       
 				            <li class="list-group-item {!IF(dr.strStatus != 'Error', 'clsPassed', '')} ">	
 				                <div class="row">		  
+                                    <div class="col-md-2">  
+                                        <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
+                                            <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> Passed </span>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!dr.strStatus == 'Error'}">
+                                            <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> Failed </span>
+                                        </apex:outputPanel>
+                                    </div>
 				                    <div class="col-md-10">
 				                        <h3 class="panel-title">
 				                        {!dr.strName}
@@ -56,26 +58,16 @@
 				                        <p class="clsDRDetails"><apex:outputText value="{!dr.strDetails}" escape="false" /></p>
 		                                <p class="clsDRSolution"><apex:outputText value="{!dr.strSolution}" escape="false" /></p>
 				                    </div>	           		
-					                <div class="col-md-2">	
-					                    <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
-			                                <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> Passed </span>
-			                            </apex:outputPanel>
-		                                <apex:outputPanel rendered="{!dr.strStatus == 'Error'}">
-		    	                            <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> Failed </span>
-		                                </apex:outputPanel>
-					                </div>
 				                </div>	               	
 				            </li>
 				        </apex:repeat>
 			        </ul>
-		        </apex:outputPanel>
-                     
+		        </apex:outputPanel>                     
             </apex:outputPanel> 
-            
-            <apex:pageBlockButtons location="bottom">
+
+            <apex:pageBlockButtons location="top">
                 <apex:commandButton id="btnRun" value="Run Health Check" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
-            </apex:pageBlockButtons>
-                                    
+            </apex:pageBlockButtons>            
         </apex:pageBlock>
     </apex:form>
 </apex:page>
