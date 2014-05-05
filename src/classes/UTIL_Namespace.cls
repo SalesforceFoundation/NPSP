@@ -87,7 +87,19 @@ public without sharing class UTIL_Namespace {
         str = 'npsp__' + str;
         return str;
     }
-  
+    
+    /*******************************************************************************************************
+    * @description Static method that takes a string
+    * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
+    * BUT it turns out that Describe Field Tokens do NOT namespace prefix fields within the package.
+    * so this helper can be used in our describe code to remove an incorrect namespace prefix.
+    * @param str token name 
+    * @return token name, with namespace prefix removed, if present.
+    ********************************************************************************************************/
+    public static string StrTokenRemoveNSPrefix(string str) {
+        return str.replace('npsp__', '');
+    }
+      
     // If we ever need to only namespace strings ending in __c, the method below should work
     /*
     public static string StrTokenNSPrefixOnlyCustom(string str) {
