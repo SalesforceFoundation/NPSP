@@ -85,6 +85,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyAccountModel(); 
         verifyAccountData();
         verifyContactData();
+        verifyNoOrphanedHouseholds();
+        verifyNoOrphanedOne2OneAccounts();
         verifyReports(); 
         verifyFields(); 
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
@@ -135,7 +137,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	integer cOther = -1;
         boolean isMixedAccs = false;
     	
-    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account group by rollup(npe01__SYSTEM_AccountType__c) ];
+    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account group by rollup(npe01__SYSTEM_AccountType__c) limit 9999];
     	for (AggregateResult agg : listAgg) {
             string strAccType = string.valueOf(agg.get('npe01__SYSTEM_AccountType__c'));
             integer cAccounts = integer.valueOf(agg.get('cAccounts'));
@@ -171,7 +173,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     // verify that all Contacts have an account
     private void verifyContactData() {
-        integer cContact = [select Count() from Contact where AccountId = null];   
+        integer cContact = [select Count() from Contact where AccountId = null limit 9999];   
         if (cContact > 0) {
             createDR('Contact Data', 'Error', 'There are ' + cContact + ' Contacts who have no Account.  These Contacts will be private to the user who created them only.', null);                	
         } else {
@@ -179,6 +181,35 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }  
     }
     
+    // verify there are no Households Accounts and Objects with no Contacts
+    private void verifyNoOrphanedHouseholds() {
+        integer cHHObj = [select Count() from npo02__Household__c where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
+        integer cHHAcc = [select Count() from Account 
+            where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and
+                Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
+        if (cHHObj > 0) {
+            createDR('Household Object Data', 'Error', 'There are ' + cHHObj + ' Household objects who have no Contacts.', 'Consider deleting these unused Household objects to save space.');                 
+        } 
+        if (cHHAcc > 0) {
+            createDR('Household Account Data', 'Error', 'There are ' + cHHAcc + ' Household Accounts who have no Contacts.', 'Consider deleting these unused Household Accounts to save space.');                 
+        }         
+        if (cHHObj == 0 && cHHAcc == 0) {
+            createDR('Household Data', 'Success', null, null); 
+        }  
+    }
+
+    // verify there are no 1:1 Accounts with no Contacts
+    private void verifyNoOrphanedOne2OneAccounts() {
+        integer cAcc = [select Count() from Account 
+            where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE and
+                Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) limit 9999];        
+        if (cAcc > 0) {
+            createDR('Account Data', 'Error', 'There are ' + cAcc + ' One-to-One Accounts who have no Contacts.', 'Consider deleting these unused One-to-One Accounts to save space.');                 
+        } else {
+            createDR('Account Data', 'Success', null, null); 
+        }  
+    }
+
     // verify all reports exist that settings use
     private void verifyReports() {
         string rptId = null;

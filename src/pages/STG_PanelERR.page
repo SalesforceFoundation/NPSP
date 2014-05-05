@@ -112,7 +112,7 @@
             </div>
               
             <br/>      
-            <apex:pageBlockButtons location="bottom" >
+            <apex:pageBlockButtons location="both" >
                 <apex:outputPanel id="commandButtons">
                     <apex:commandButton id="editNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" 
                         rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, saveError" />

@@ -68,7 +68,7 @@ public with sharing class UTIL_Describe {
     /*******************************************
     * Gets a field map for a new object/field pair
     ********************************************/
-    static void fillFieldMapsForObject(string objectName, string fieldName) {
+    private static void fillFieldMapsForObject(string objectName, string fieldName) {
         // get the object map the first time
         fillMapsForObject(objectName);
         
@@ -193,6 +193,9 @@ public with sharing class UTIL_Describe {
     * @return string the name of the of the field's type
     */  
     public static string getFieldType(String objectName, String fieldName) {
+        // fields in our own package must not have their prefix for the Describe Field Map
+        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+        
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
             fillFieldMapsForObject(objectName, fieldName);
@@ -209,6 +212,9 @@ public with sharing class UTIL_Describe {
     * @return Displaytype the Displaytype of the field
     */  
     public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
+        // fields in our own package must not have their prefix for the Describe Field Map
+        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
             fillFieldMapsForObject(objectName, fieldName);
@@ -224,8 +230,10 @@ public with sharing class UTIL_Describe {
     * @return Schema.DescribeFieldResult the describe field result for the given field
     */ 
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
+        // fields in our own package must not have their prefix for the Describe Field Map
+        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+        
         // make sure we have this field's schema mapped
-        fieldName = fieldName.toLowerCase();
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
             fillFieldMapsForObject(objectName, fieldName);
         
@@ -240,8 +248,10 @@ public with sharing class UTIL_Describe {
     * @return string the label of the field
     */ 
     public static string getFieldLabel(String objectName, String fieldName) {
+        // fields in our own package must not have their prefix for the Describe Field Map
+        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+        
         // make sure we have this field's schema mapped
-        fieldName = fieldName.toLowerCase();
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
             fillFieldMapsForObject(objectName, fieldName);
         
@@ -270,8 +280,10 @@ public with sharing class UTIL_Describe {
     * @return boolean whether the field exists
     */ 
     public static boolean isValidField(String objectName, String fieldName) {
-        // make sure we have this field's schema mapped
-        fieldName = fieldName.toLowerCase();
+        // fields in our own package must not have their prefix for the Describe Field Map
+        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+        
+        // make sure we have this field's schema mapped        
         try {
 	        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) 
 	            fillFieldMapsForObject(objectName, fieldName);
