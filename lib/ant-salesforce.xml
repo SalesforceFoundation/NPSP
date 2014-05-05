@@ -250,6 +250,9 @@
             <case value="pages">
               <property name="typename" value="ApexPage" />
             </case>
+            <case value="remoteSiteSettings">
+              <property name="typename" value="RemoteSiteSetting" />
+            </case>
             <case value="staticresources">
               <property name="typename" value="StaticResource" />
             </case>
