@@ -107,7 +107,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         if (avs.Using_SmartyStreets__c) {
 	        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
-	        string strStatus = strResult.contains('zipcode') ? 'Success' : 'Error';
+	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
 	        string strSolution = strStatus == 'Success' ? null : 
 	            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
 	        if (strStatus == 'Success') strResult = null;
