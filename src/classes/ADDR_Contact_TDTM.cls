@@ -284,8 +284,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             // if found a match
             if (addrDup != null) {
             	// record the match in the contact
-            	if (isBefore)
+            	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
+                    con.npe01__Primary_Address_Type__c = addrDup.Address_Type__c; 
+            	}
                 
                 // we aren't specifying override, so the address should become the new hh default address
                 if (!isBefore && !con.is_Address_Override__c && !addrDup.Default_Address__c) {
