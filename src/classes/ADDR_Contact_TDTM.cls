@@ -66,6 +66,17 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             i++;  
             Contact con = (Contact)so;
 
+            // we only support address management with HH Accounts being used
+            if (con.AccountId == null)
+                continue;
+            if (!isBefore && (con.HHId__c != con.AccountId))
+                continue;
+            if (isBefore) {
+                Account a = mapAccountIdAccount.get(con.AccountId);
+                if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
+                   continue;
+            }                
+
             // BEFORE INSERT
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 if (con.Current_Address__c != null) {
@@ -74,6 +85,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                     if (con.is_Address_Override__c)
                         // track which address's need their dates updated
                         mapAddrIdIsOverride.put(con.Current_Address__c, true);
+                } else if (isContactAddressEmpty(con)) {
+                	// if the contact has no address specified, pick up the hh default.
+                    listConAddrReset.add(con);                	
                 }
             }
             
@@ -111,17 +125,6 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger) 
                     continue;
 
-                // we only support address management with HH Accounts being used
-                if (con.AccountId == null)
-                    continue;
-                if (!isBefore && (con.HHId__c != con.AccountId))
-                    continue;
-                if (isBefore) {
-                	Account a = mapAccountIdAccount.get(con.AccountId);
-                	if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                	   continue;
-                }
-                
                 // if the address changed, remember the contact we want to add a new address for    
                 if (isContactAddressChanged(con, conOld)) 
                     listConCreateAddr.add(con);
@@ -205,6 +208,15 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
            con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c);
     }
 
+    // utility to see if the contact's mailing address is empty
+    private boolean isContactAddressEmpty(Contact con1) {
+        return (con1.MailingStreet == null &&
+           con1.MailingCity == null &&
+           con1.MailingState == null &&
+           con1.MailingPostalCode == null &&
+           con1.MailingCountry == null );
+    }
+       
     // for each contact, create a new address (or match an existing one).
     // BeforeInsert/Update: if they did have an override, create a new non-default address and update the override.
     // AfterInsert/Update: if they didn't have an address override, create a new default address.
@@ -330,6 +342,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 	con.MailingPostalCode = addr.MailingPostalCode__c;
                 	con.MailingCountry = addr.MailingCountry__c;
                 	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+                	con.Current_Address__c = addr.Id;
                 }        	   
         	}
         }         

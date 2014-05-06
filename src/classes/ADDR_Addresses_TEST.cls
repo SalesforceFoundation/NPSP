@@ -1438,4 +1438,75 @@ private with sharing class ADDR_Addresses_TEST {
         }                
     }
 
+    /*********************************************************************************************************
+    operation:
+        insert new contacts with no addresses to existing households that have default addresses
+    verify:
+        new contacts get the default hh address
+    **********************************************************************************************************/            
+    static testMethod void insertConWithNoAddrToExistingHH() {
+        if (strTestOnly != '*' && strTestOnly != 'insertConWithNoAddrToExistingHH') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // insert new contacts to the HH without any addresses
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listCon[i].AccountId = listAccT[i].Id;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listCon;         
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        insert new contacts with addresses to existing households that have default addresses
+    verify:
+        all contacts and hh get the new default hh address from the new contacts
+    **********************************************************************************************************/            
+    static testMethod void insertConWithAddrToExistingHH() {
+        if (strTestOnly != '*' && strTestOnly != 'insertConWithAddrToExistingHH') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // insert new contacts to the HH with new addresses
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
+        for (integer i = 0; i < cHH; i++) {
+        	listCon[i].AccountId = listAccT[i].Id;
+            listCon[i].MailingStreet = 'New Mailing Street' + i;
+        	listCon[i].MailingCity = 'New Mailing City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listCon;         
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+            system.assert(con.MailingStreet.contains('New Mailing Street'));
+            system.assert(con.MailingCity.contains('New Mailing City'));
+        }
+    }
 }
