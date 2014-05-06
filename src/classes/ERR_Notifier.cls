@@ -95,8 +95,9 @@ public with sharing class ERR_Notifier {
     private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> rdeqList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
-        mail.setSenderDisplayName('Salesforce NPSP');
-        mail.setSubject('Salesforce Errors');
+        mail.setReplyTo('donotreply@salesforcefoundation.org');
+        mail.setSenderDisplayName('Nonprofit Starter Pack');
+        mail.setSubject('NPSP Error');
         string bodyString = '';
         if (context == ERR_Handler.Context.RD)
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
