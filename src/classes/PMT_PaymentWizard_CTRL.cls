@@ -240,7 +240,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
     //list of items for picklist of the number of payments to be created
     public List<SelectOption> getItems() {
         List<SelectOption> options = new List<SelectOption>();
-        for (integer i=1; i<=12; i++) {
+        Decimal maxPayments;
+        if (PaymentsSettings.Max_Payments__c != null)
+            maxPayments = PaymentsSettings.Max_Payments__c;
+        else
+            maxPayments = 12;
+        
+        for (integer i=1; i<=maxPayments; i++) {
             string s=i.format();
             options.add(new SelectOption(s, s));
         }
