@@ -241,7 +241,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public List<SelectOption> getItems() {
         List<SelectOption> options = new List<SelectOption>();
         Decimal maxPayments;
-        if (PaymentsSettings.Max_Payments__c != null)
+        if (getPaymentsSettings().Max_Payments__c != null)
             maxPayments = PaymentsSettings.Max_Payments__c;
         else
             maxPayments = 12;
