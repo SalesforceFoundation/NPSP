@@ -442,6 +442,7 @@
     <members>stgHelpUDROperation</members>
     <members>stgHelpUDROppField</members>
     <members>stgHelpUDRTargetObject</members>
+    <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAfflSettings</members>
     <members>stgLabelAreYouSure</members>
