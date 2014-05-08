@@ -650,6 +650,14 @@
         <value>Specifies whether to create an Opportunity during Lead conversion.</value>
     </labels>
     <labels>
+        <fullName>stgHelpMaxPayments</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpMaxPayments</shortDescription>
+        <value>Set the maximum number of payments available in the Payment Creation Wizard.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpMembershipGracePeriod</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

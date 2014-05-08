@@ -180,20 +180,22 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (addr != null && addr.Default_Address__c) 
                 hhinfo.addrDefault = addr;
 
-            // go through the hh addresses storing the default and any seasonal            
-            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) { 
-            	
-            	if (hhinfo.addrDefault == null && addrHH.Default_Address__c)
-            	   hhinfo.addrDefault = addrHH;
-            	
-            	if (isSeasonalAddr(addrHH)) {
-                    Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
-                    Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
-                    Date dtToday = system.today();
-                   	if (dtToday >= dtStart && dtToday < dtEnd) {
-                   	    hhinfo.addrSeasonal = addrHH;
-                   	}                        
-                }      
+            // go through the hh addresses storing the default and any seasonal  
+            if (mapAccIdListAddrHH.get(accId) != null) {         
+	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) { 
+	            	
+	            	if (hhinfo.addrDefault == null && addrHH.Default_Address__c)
+	            	   hhinfo.addrDefault = addrHH;
+	            	
+	            	if (isSeasonalAddr(addrHH)) {
+	                    Date dtStart = dtStartOrEndOfAddrSeasonal(addrHH, true);
+	                    Date dtEnd = dtStartOrEndOfAddrSeasonal(addrHH, false);
+	                    Date dtToday = system.today();
+	                   	if (dtToday >= dtStart && dtToday < dtEnd) {
+	                   	    hhinfo.addrSeasonal = addrHH;
+	                   	}                        
+	                }      
+	            }
             }
         }
         

@@ -11,7 +11,12 @@
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" />
                 <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" />
                 <apex:outputLabel value="{!$Label.stgHelpPaymentsEnabled}" />
-                             
+               
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" />
+                <apex:outputField value="{!stgService.stgCon.Max_Payments__c}" rendered="{!isReadOnlyMode}" />                          
+                <apex:inputField value="{!stgService.stgCon.Max_Payments__c}" type="number" rendered="{!isEditMode}" id="cbxMP" />                          
+                <apex:outputLabel value="{!$Label.stgHelpMaxPayments}" />
+                              
             </apex:panelGrid> 
             
             <apex:pageBlockButtons location="both" >
