@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -306,6 +305,7 @@
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
     <members>Trigger_Handler__c.User_Managed__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
@@ -388,6 +388,7 @@
     <members>stgHelpHHObjectOverview</members>
     <members>stgHelpHHRules</members>
     <members>stgHelpLeadConvert</members>
+    <members>stgHelpMaxPayments</members>
     <members>stgHelpMembershipGracePeriod</members>
     <members>stgHelpMembershipRT</members>
     <members>stgHelpNewRDFieldMap</members>
@@ -442,6 +443,7 @@
     <members>stgHelpUDROperation</members>
     <members>stgHelpUDROppField</members>
     <members>stgHelpUDRTargetObject</members>
+    <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAfflSettings</members>
     <members>stgLabelAreYouSure</members>
