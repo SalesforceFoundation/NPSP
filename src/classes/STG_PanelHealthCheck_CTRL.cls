@@ -92,6 +92,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
         STG_PanelUserRollup_CTRL.verifyUserRollups(this);
         STG_PanelRDCustomFieldMapping_CTRL.verifyRDMappings(this);
+        STG_PanelRDCustomInstallment_CTRL.verifyRDSaving(this);
         STG_PanelRelAuto_CTRL.verifyAutoCreateRels(this);
         STG_PanelRelReciprocal_CTRL.verifyRelLookups(this);
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
@@ -137,7 +138,10 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	integer cOther = -1;
         boolean isMixedAccs = false;
     	
-    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account group by rollup(npe01__SYSTEM_AccountType__c) limit 9999];
+    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account 
+    	   where npe01__SYSTEM_AccountType__c <> null
+    	   group by rollup(npe01__SYSTEM_AccountType__c) 
+    	   limit 9999];
     	for (AggregateResult agg : listAgg) {
             string strAccType = string.valueOf(agg.get('npe01__SYSTEM_AccountType__c'));
             integer cAccounts = integer.valueOf(agg.get('cAccounts'));

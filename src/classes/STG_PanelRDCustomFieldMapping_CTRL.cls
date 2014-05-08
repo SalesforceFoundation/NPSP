@@ -164,7 +164,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         get {
             if (listSOOppFields == null) {
                 listSOOppFields = new list<SelectOption>();
-                //listSOOppFields.add(new SelectOption('','- none -'));
+                //listSOOppFields.add(new SelectOption('', Label.stgLabelNone));
             
                 // filter out opp fields already used
 	            for (npe03__Custom_Field_Mapping__c fm : STG_Panel.stgService.listRDCustomFieldMapping) {   
@@ -190,7 +190,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         get {
             if (listSORDFields == null) {
                 listSORDFields = new list<SelectOption>();
-                //listSORDFields.add(new SelectOption('','- none -'));
+                //listSORDFields.add(new SelectOption('', Label.stgLabelNone));
 
                 map<String, Schema.SObjectField> oppFieldTokenList = Schema.SObjectType.npe03__Recurring_Donation__c.fields.getMap(); 
                 for (string fieldName : oppFieldTokenList.keyset()) {
