@@ -1275,6 +1275,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>New User Defined Rollup</value>
     </labels>
     <labels>
+        <fullName>stgLabelNone</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelNone</shortDescription>
+        <value>- none -</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

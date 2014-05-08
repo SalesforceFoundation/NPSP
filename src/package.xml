@@ -466,6 +466,7 @@
     <members>stgLabelNewRelReciprocal</members>
     <members>stgLabelNewTH</members>
     <members>stgLabelNewUDR</members>
+    <members>stgLabelNone</members>
     <members>stgLabelOppBatchProgress</members>
     <members>stgLabelOppRollupRT</members>
     <members>stgLabelOppRollups</members>
