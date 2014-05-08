@@ -116,7 +116,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- deploy: Run a full deployment including running all tests.  Does not attempt to clean target org or ensure dependent package versions are correct -->
     <target name="deploy">
-      <antcall target="deployWihtoutTest" />
+      <antcall target="deployWithoutTest" />
       <antcall target="runAllTests" />
       <!-- Changed to deploy then test due to suspicion that staging the deployment to run tests was causing a failure with every other build
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="${cumulusci.maxPoll.test}" />
