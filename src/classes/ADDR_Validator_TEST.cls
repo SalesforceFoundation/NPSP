@@ -64,6 +64,7 @@ public with sharing class ADDR_Validator_TEST {
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -104,6 +105,7 @@ public with sharing class ADDR_Validator_TEST {
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -117,6 +119,7 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingPostalCode = '60606';
         Test.StartTest();
         update contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
 
         Address__c[] av = [select Verified__c from Address__c where Household_Account__c = :contact.AccountId];       
@@ -132,6 +135,7 @@ public with sharing class ADDR_Validator_TEST {
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -145,6 +149,7 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingPostalCode = '60606';
         Test.StartTest();
         update contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         Test.StopTest();
 
         Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
@@ -162,6 +167,7 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -194,6 +200,7 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
@@ -234,6 +241,7 @@ public with sharing class ADDR_Validator_TEST {
          Contact contact = new contact(firstname='Test', lastname='Person', MailingStreet = 'single-address-response', 
                                     MailingCity = 'Cupertino', MailingState = 'ca', MailingPostalCode = '95014'); 
         insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
