@@ -245,7 +245,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             createDR(strSetting, 'Error', 'Gender field ' + strField + ' does not exist on Contact', 
                 'Add a Gender field to Contact and specify it on the ' + Label.stgNavRelationships + ' tab in NPSP Settings.');    
         } else {
-            createDR(strSetting, 'Success', null, null);
+            createDR(strSetting, 'Success', null, strField);
         }        
     }
     
@@ -262,9 +262,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavHouseholds);
         checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, true,
             'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavContactRoles);            
-        checkRecordTypeMulti('Account', STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c, true,
+        checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c, false,
             'npo02__Households_Settings__c', 'npo02__Excluded_Account_Opp_Rectypes__c', Label.stgNavDonorStatistics);
-        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, true,
+        checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, false,
             'npo02__Households_Settings__c', 'npo02__Excluded_Contact_Opp_Rectypes__c', Label.stgNavDonorStatistics);
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c, false,
             'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavMembership);            
@@ -283,17 +283,19 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             }
         } else {
             string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
-            createDR(strField, 'Success', null, null);                          
+            createDR(strField, 'Success', null, '(none)');                          
         }
     }
 
     // does the work to see if the recordType Id is valid, and logs an appropriate DetectResult    
     private void checkRecordTypeId(string strObject, string rtId, string strSettingObj, string strSettingField, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
-        if (rtId != null && UTIL_RecordTypes.GetRecordTypeName(strObject, rtId) == null) {
+        string strRT = UTIL_RecordTypes.GetRecordTypeName(strObject, rtId);
+        if (rtId != null && strRT == null) {
             createDR(strField, 'Error', 'Recordtype Id ' + rtId + ' is invalid.', 'Edit the ' + strField + ' on the ' + strTabname + ' tab in NPSP Settings.');    
         } else {
-            createDR(strField, 'Success', null, null);               
+        	if (rtId == null) strRT = '(none)';
+            createDR(strField, 'Success', null, strRT);               
         }           
     }
     
@@ -303,7 +305,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(strObject, strRTName) == null) {
             createDR(strField, 'Error', 'Recordtype Name ' + strRTName + ' is invalid.', 'Edit the ' + strField + ' on the ' + strTabname + ' tab in NPSP Settings.');    
         } else {
-            createDR(strField, 'Success', null, null);               
+            createDR(strField, 'Success', null, strRTName);               
         }           
     }
 
