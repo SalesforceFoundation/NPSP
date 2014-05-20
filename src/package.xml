@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -139,6 +140,7 @@
     <members>TDTM_Runnable_TEST</members>
     <members>TDTM_TriggerActionHelper</members>
     <members>TDTM_TriggerHandler</members>
+    <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_CustomSettingsFacade</members>
     <members>UTIL_Describe</members>
@@ -214,9 +216,11 @@
     <members>TDTM_Account</members>
     <members>TDTM_Address</members>
     <members>TDTM_Affiliation</members>
+    <members>TDTM_Campaign</members>
     <members>TDTM_CampaignMember</members>
     <members>TDTM_Contact</members>
     <members>TDTM_HouseholdObject</members>
+    <members>TDTM_Lead</members>
     <members>TDTM_Opportunity</members>
     <members>TDTM_RecurringDonation</members>
     <members>TDTM_Relationship</members>
