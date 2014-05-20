@@ -47,12 +47,11 @@ public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
                 
             //if org has customFY records, disable FY settings
             if (hasCustomFYRecord > 0) {
-                ctrl.createDR(strSetting, 'Error', 'Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years', 
-                    'Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.');
+                ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidFiscalYears, label.healthSolutionInvalidFiscalYears);
                 return;
             }            
         }
-        ctrl.createDR(strSetting, 'Success', null, null);            
+        ctrl.createDR(strSetting, 'Success', null, label.healthLabelFiscalYearsValid);            
     }        
     
 }

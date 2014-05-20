@@ -226,6 +226,21 @@
         <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAutoRelInvalidLookupField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAutoRelInvalidLookupField</shortDescription>
+        <value>Field {0} is not a lookup field.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsBadRDField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsBadRDField</shortDescription>
+        <value>Recurring Donation field {0} does not exist.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsBadReportId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -274,6 +289,54 @@
         <value>There are {0} Household objects who have no Contacts.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidCMField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidCMField</shortDescription>
+        <value>CampaignMember field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidContactField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidContactField</shortDescription>
+        <value>Contact field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorChatterGroup</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorChatterGroup</shortDescription>
+        <value>Invalid Chatter Group {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorRecipient</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorRecipient</shortDescription>
+        <value>Invalid Error Notification recipient.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorUser</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorUser</shortDescription>
+        <value>Invalid User {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidFiscalYears</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
+        <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidObjectField</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -288,6 +351,14 @@
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidOppField</shortDescription>
         <value>Opportunity field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidOppStage</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidOppStage</shortDescription>
+        <value>The Opportunity stage {0} does not exist or is not active.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidPaymentField</fullName>
@@ -346,6 +417,22 @@
         <value>Payment field {0} and Opportunity field {1} are not of compatible data types.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsRDFieldsBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsRDFieldsBadDatatypes</shortDescription>
+        <value>Recurring Donation field {0} and Opportunity field {1} are not of compatible data types.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsRelReciprocalInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsRelReciprocalInvalid</shortDescription>
+        <value>Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsScheduleJobs</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -378,6 +465,14 @@
         <value>Account Model Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelAutoRelValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAutoRelValid</shortDescription>
+        <value>Automatic Relationships valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelContactData</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -386,12 +481,28 @@
         <value>Contact Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelErrorRecipientValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelErrorRecipientValid</shortDescription>
+        <value>Error Notification recipient valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelFailed</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelFiscalYearsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelFiscalYearsValid</shortDescription>
+        <value>Custom Fiscal Years are not in use.</value>
     </labels>
     <labels>
         <fullName>healthLabelHHAccData</fullName>
@@ -458,12 +569,44 @@
         <value>Payment Mappings valid.</value>
     </labels>
     <labels>
+        <fullName>healthLabelRDOppsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRDOppsValid</shortDescription>
+        <value>Recurring Donation Opportunities can be saved.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelRDValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRDValid</shortDescription>
+        <value>Recurring Donation Field Mappings valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelRelReciprocalValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRelReciprocalValid</shortDescription>
+        <value>Reciprocal Relationships valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelScheduler</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelScheduler</shortDescription>
         <value>NPSP Global Scheduler</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelSchedulerValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelSchedulerValid</shortDescription>
+        <value>NPSP Global Scheduler job scheduled.</value>
     </labels>
     <labels>
         <fullName>healthLabelShowPassedTests</fullName>
@@ -498,6 +641,37 @@
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionAutoRelInvalidCMField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidCMField</shortDescription>
+        <value>Add the missing CampaignMember field, or delete the Relationships Autocreate record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelInvalidContactField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidContactField</shortDescription>
+        <value>Add the missing Contact field, or delete the Relationships Autocreation record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelInvalidLookupField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidLookupField</shortDescription>
+        <value>Delete the Relationships Autocreate record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionBadRDField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionBadRDField</shortDescription>
+        <value>Add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionEditSetting</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -522,12 +696,28 @@
         <value>Consider deleting these unused Household objects to save space.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionInvalidFiscalYears</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
+        <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionInvalidOppField</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidOppField</shortDescription>
         <value>Add the missing Opportunity field, or delete the Payment Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidOppStage</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidOppStage</shortDescription>
+        <value>Add this Opportunity Stage value in Salesforce Setup.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidPaymentField</fullName>
@@ -575,6 +765,30 @@
         <protected>false</protected>
         <shortDescription>healthSolutionPaymentMappingBadDataTypes</shortDescription>
         <value>Delete the Payment Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRDBadOppField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRDBadOppField</shortDescription>
+        <value>Add the missing Opportunity field, or delete the Recurring Donation Field Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRDFieldsBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRDFieldsBadDatatypes</shortDescription>
+        <value>Delete the Recurring Donation Field Mapping record, on the{0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRelReciprocalInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRelReciprocalInvalid</shortDescription>
+        <value>Delete the Reciprocal Relationship record, and create a new one with the required information, on the {0} &gt; {1} tab in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>healthSolutionScheduleJobs</fullName>

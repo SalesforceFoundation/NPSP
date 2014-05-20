@@ -123,16 +123,18 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         integer x = 0;
         x = [select count() from OpportunityStage where MasterLabel = :closedoppstage and isClosed = true and isActive = true and isWon = false];
         if (x == 0) {
-            ctrl.createDR('Recurring Donations', 'Error', 'The Opportunity stage ' + closedoppstage + ' does not exist or is not active.', 
-                system.label.npe03.RecurringDonationBadLabelWarning);
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                string.format(label.healthDetailsInvalidOppStage, new string[]{closedoppstage}), 
+                label.npe03.RecurringDonationBadLabelWarning);
         }
         
         //test closed lost opp settings        
         string strPledged = system.label.npe03.RecurringDonationStageName;  // pledged
         x = [select count() from OpportunityStage where MasterLabel = :strPledged and isActive = true];
         if (x == 0) {
-            ctrl.createDR('Recurring Donations', 'Error', 'The Opportunity stage ' + strPledged + ' does not exist or is not active.', 
-                'Add this Opportunity Stage value in Salesforce Setup.');
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                string.format(label.healthDetailsInvalidOppStage, new string[]{strPledged}), 
+                label.healthSolutionInvalidOppStage);
         }
         
         Savepoint sp = Database.setSavepoint();
@@ -172,9 +174,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 }                                   
             }
 
-            ctrl.createDR('Recurring Donations', 'Error', strError, null);                            
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', strError, null);                            
         } else {   
-            ctrl.createDR('Recurring Donations', 'Success', null, null);
+            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthLabelRDOppsValid);
         }                            
     }
 }

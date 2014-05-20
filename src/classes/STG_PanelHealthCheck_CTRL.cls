@@ -81,7 +81,10 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         dr.strStatus = strStatus;
         dr.strDetails = strDetails;
         dr.strSolution = strSolution;
-        listDR.add(dr);
+        if (strStatus != 'Error' && listDR.size() > 0)
+            listDR.add(0, dr);
+        else
+            listDR.add(dr);
     }    
 
     // calls all of the specific detection routines
@@ -120,8 +123,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         if (CAO_Constants.isHHAccountModel()) {
             if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
                 string strHHRules = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Household_Rules__c');
-                createDR(strHHRules, 'Error', system.Label.healthDetailsHHAccountModel, 
-                    string.format(system.Label.healthSolutionEditSetting, new string[]{strHHRules, Label.stgNavHouseholds, Label.stgNavHouseholds} ));
+                createDR(strHHRules, 'Error', label.healthDetailsHHAccountModel, 
+                    string.format(label.healthSolutionEditSetting, new string[]{strHHRules, Label.stgNavHouseholds, Label.stgNavHouseholds} ));
                 return;                 
             }           
         } else if (CAO_Constants.isOneToOne()) {
@@ -129,8 +132,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } else if (CAO_Constants.isBucketModel()) {
             // nothing to check         
         } else {
-            createDR(strAccModel, 'Error', system.Label.healthDetailsAccountModel, 
-                string.format(system.Label.healthSolutionEditSetting, new string[]{strAccModel, Label.stgNavContacts, Label.stgNavAccountModel} ));
+            createDR(strAccModel, 'Error', label.healthDetailsAccountModel, 
+                string.format(label.healthSolutionEditSetting, new string[]{strAccModel, Label.stgNavContacts, Label.stgNavAccountModel} ));
             return;         
         }
         createDR(strAccModel, 'Success', null, STG_Panel.stgService.stgCon.npe01__Account_Processor__c);
@@ -237,7 +240,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             if (listRpt.size() == 0) {
                 createDR(strField, 'Error', 
 	                string.format(Label.healthDetailsBadReportId, new string[]{rptId}),
-	                string.format(system.Label.healthSolutionEditSetting, new string[]{strField, Label.stgNavHouseholds, Label.stgNavHouseholds}));        
+	                string.format(label.healthSolutionEditSetting, new string[]{strField, Label.stgNavHouseholds, Label.stgNavHouseholds}));        
                 return;
             }
         } else {
@@ -261,7 +264,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         if (strField != null && !UTIL_Describe.isValidField('Contact', strField)) {
             createDR(strSetting, 'Error', 
                 string.format(Label.healthDetailsGenderField, new string[]{strField}),
-                string.format(system.Label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavConnections, Label.stgNavRelationships}));        
+                string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavConnections, Label.stgNavRelationships}));        
         } else {
             createDR(strSetting, 'Success', null, strField == null ? label.healthLabelNone : strField);
         }        
@@ -311,8 +314,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         string strRT = UTIL_RecordTypes.GetRecordTypeName(strObject, rtId);
         if (rtId != null && strRT == null) {
             createDR(strField, 'Error', 
-                string.format(system.Label.healthDetailsInvalidRecordtypeId, new string[]{rtId}),        
-                string.format(system.Label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));
+                string.format(label.healthDetailsInvalidRecordtypeId, new string[]{rtId}),        
+                string.format(label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));
         } else {
         	if (rtId == null) strRT = Label.healthLabelNone;
             createDR(strField, 'Success', null, strRT);               
@@ -324,8 +327,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
         if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(strObject, strRTName) == null) {
             createDR(strField, 'Error', 
-                string.format(system.Label.healthDetailsInvalidRecordtypeName, new string[]{strRTName}),        
-                string.format(system.Label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));        
+                string.format(label.healthDetailsInvalidRecordtypeName, new string[]{strRTName}),        
+                string.format(label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));        
         } else {
         	if (strRTName == null) strRTName = Label.healthLabelNone;
             createDR(strField, 'Success', null, strRTName);               
@@ -372,7 +375,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }            
          
         if (isValidAll) {
-            createDR(Label.healthLabelScheduler, 'Success', null, null);
+            createDR(Label.healthLabelScheduler, 'Success', null, label.healthLabelSchedulerValid);
         }   
         
     }
