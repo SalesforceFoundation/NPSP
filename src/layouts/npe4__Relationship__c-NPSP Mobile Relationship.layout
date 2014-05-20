@@ -12,6 +12,10 @@
                 <field>npe4__Contact__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe4__Type__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>npe4__Relationship_Explanation__c</field>
             </layoutItems>
@@ -19,7 +23,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npe4__ReciprocalRelationship__c</field>
+                <field>npe4__RelatedContact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

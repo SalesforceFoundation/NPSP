@@ -44,7 +44,13 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <compactLayoutAssignment>NPSP_Address_Compact_Layout</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Address_Compact_Layout</fullName>
+        <fields>Household_Account__c</fields>
+        <fields>Formula_MailingAddress__c</fields>
+        <label>NPSP Address Compact Layout</label>
+    </compactLayouts>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Starter Pack.</description>
     <enableActivities>false</enableActivities>
