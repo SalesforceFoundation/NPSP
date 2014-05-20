@@ -332,6 +332,57 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>healthButtonRun</members>
+    <members>healthDetailsAccOne2OneNoContacts</members>
+    <members>healthDetailsAccountModel</members>
+    <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsBadReportId</members>
+    <members>healthDetailsContactData</members>
+    <members>healthDetailsGenderField</members>
+    <members>healthDetailsHHAccountModel</members>
+    <members>healthDetailsHHActNoContacts</members>
+    <members>healthDetailsHHObNoContacts</members>
+    <members>healthDetailsInvalidObjectField</members>
+    <members>healthDetailsInvalidOppField</members>
+    <members>healthDetailsInvalidPaymentField</members>
+    <members>healthDetailsInvalidRecordtypeId</members>
+    <members>healthDetailsInvalidRecordtypeName</members>
+    <members>healthDetailsInvalidScheduledJob</members>
+    <members>healthDetailsMailingListReportMissing</members>
+    <members>healthDetailsNothingScheduled</members>
+    <members>healthDetailsPaymentMappingBadDataTypes</members>
+    <members>healthDetailsScheduleJobs</members>
+    <members>healthDetailsUDFBadDatatypes</members>
+    <members>healthLabelAccountData</members>
+    <members>healthLabelAccountModelData</members>
+    <members>healthLabelContactData</members>
+    <members>healthLabelFailed</members>
+    <members>healthLabelHHAccData</members>
+    <members>healthLabelHHData</members>
+    <members>healthLabelHHObjData</members>
+    <members>healthLabelIntro</members>
+    <members>healthLabelLastRun</members>
+    <members>healthLabelNone</members>
+    <members>healthLabelPassed</members>
+    <members>healthLabelPaymentMappingsValid</members>
+    <members>healthLabelScheduler</members>
+    <members>healthLabelShowPassedTests</members>
+    <members>healthLabelTime</members>
+    <members>healthLabelUDFValid</members>
+    <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionEditSetting</members>
+    <members>healthSolutionHHAccNoContacts</members>
+    <members>healthSolutionHHObjNoContacts</members>
+    <members>healthSolutionInvalidOppField</members>
+    <members>healthSolutionInvalidPaymentField</members>
+    <members>healthSolutionInvalidScheduledJob</members>
+    <members>healthSolutionInvalidUDFObjectField</members>
+    <members>healthSolutionMailingListReportMissing</members>
+    <members>healthSolutionNothingScheduled</members>
+    <members>healthSolutionPaymentMappingBadDataTypes</members>
+    <members>healthSolutionScheduleJobs</members>
+    <members>healthSolutionUDFBadDatatypes</members>
+    <members>healthSolutionUDFOppField</members>
     <members>hhCmpDedupLabelReturnToCmp</members>
     <members>hhCmpDedupeBatchMessage</members>
     <members>hhCmpDedupeBatchProgressTitle</members>
@@ -501,6 +552,7 @@
     <members>stgNavDonorStatistics</members>
     <members>stgNavErrorLog</members>
     <members>stgNavErrorNotify</members>
+    <members>stgNavHealthCheck</members>
     <members>stgNavHouseholds</members>
     <members>stgNavLeads</members>
     <members>stgNavMembership</members>

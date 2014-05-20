@@ -108,8 +108,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
 	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
-	        string strSolution = strStatus == 'Success' ? null : 
-	            'Update your settings on the ' + Label.stgNavAddressVerification + ' tab in NPSP Settings.';
+	        string strSolution = strStatus == 'Success' ? strResult : 
+                string.format(system.Label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavHouseholds, Label.stgNavAddressVerification});
 	        if (strStatus == 'Success') strResult = null;
 	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
         } 
