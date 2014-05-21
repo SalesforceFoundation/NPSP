@@ -81,8 +81,9 @@
     <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>true</defaultValue>
+        <description>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If checked, address verification will mark ambiguous addresses as invalid; if unchecked, it will accept the first suggestion as the valid address.</inlineHelpText>
+        <inlineHelpText>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</inlineHelpText>
         <label>Reject Ambiguous Addresses</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -103,9 +104,9 @@
     <fields>
         <fullName>Using_SmartyStreets__c</fullName>
         <defaultValue>true</defaultValue>
-        <description>Specifies whether or not you are using default SmartyStreets address verification integration.</description>
+        <description>Specifies whether or not you are using the SmartyStreets address verification service.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Specifies whether or not you are using default SmartyStreets address verification integration.</inlineHelpText>
+        <inlineHelpText>Specifies whether or not you are using the SmartyStreets address verification service.</inlineHelpText>
         <label>Using SmartyStreets</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
