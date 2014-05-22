@@ -214,7 +214,11 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
                         //because it's the only other available status in a test that does not see all data
                         newStatus = 'Responded'; 
                     } else {
-                        newStatus =  m.Status + DupeText;
+                    	// handle long status's that would go over limit of 40 characters
+                    	integer cch = m.Status.length();
+                    	if (cch + DupeText.length() > 40)
+                    	   cch = 40 - DupeText.length();
+                        newStatus =  m.Status.left(cch) + DupeText;
                     }
                 }
             }
