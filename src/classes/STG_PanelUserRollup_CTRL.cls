@@ -265,8 +265,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
             if (sourceField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + urfs.npo02__Source_Field__c + ' does not exist.', 
-                    'Add the missing Opportunity field, or delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');    
+                ctrl.createDR(strSetting, 'Error', 
+                    string.format(label.healthDetailsInvalidOppField, new string[]{urfs.npo02__Source_Field__c}), 
+                    string.format(label.healthSolutionUDFOppField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }               
                       
             //check target fields  
@@ -287,8 +288,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
             if (!isValidTarget) {
             	isValid = false;
-                ctrl.createDR(strSetting, 'Error', urfs.npo02__Object_Name__c + ' field ' + urfs.npo02__Target_Field__c + ' does not exist.', 
-                    'Add the missing field, or delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');                        
+                ctrl.createDR(strSetting, 'Error', 
+                    string.format(label.healthDetailsInvalidObjectField, new string[]{urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
+                    string.format(label.healthSolutionInvalidUDFObjectField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }
 
             //only if the other checks succeed, check displaytypes
@@ -298,8 +300,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                 Schema.Displaytype dtTgt = UTIL_Describe.getFieldDisplaytype(urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtSrc, dtTgt)) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + urfs.npo02__Source_Field__c + ' and ' + urfs.npo02__Object_Name__c + ' field ' + urfs.npo02__Target_Field__c + ' are not of compatible data types.', 
-                        'Delete the User Rollup record, on the ' + Label.stgNavUserDefinedRollups + ' tab in NPSP Settings.');    
+                    ctrl.createDR(strSetting, 'Error', 
+                        string.format(label.healthDetailsUDFBadDatatypes, new string[]{urfs.npo02__Source_Field__c, urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
+                        string.format(label.healthSolutionUDFBadDatatypes, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
                 }               
             }
             
@@ -308,7 +311,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
         }    
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, null);                    	
+            ctrl.createDR(strSetting, 'Success', null, label.healthLabelUDFValid);                    	
         }
     }           
     
