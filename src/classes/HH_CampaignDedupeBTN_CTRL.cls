@@ -100,7 +100,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        
 	        else{
 	            dupsmarked = MarkDuplicates();
-                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
+                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + 
+                    '&scope=one&scopeid=' + EncodingUtil.urlEncode(Campaign.Name, 'UTF-8');
 	            if (dupsmarked == -1) {
 	                showMsg(Label.hhCmpDedupeBatchMessage, ApexPages.Severity.INFO);
 	                reportURL = newPageURL;	            	
