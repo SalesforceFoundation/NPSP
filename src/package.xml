@@ -336,6 +336,8 @@
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
     <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsAutoRelCampaignTypeMissing</members>
+    <members>healthDetailsAutoRelFieldsMissing</members>
     <members>healthDetailsAutoRelInvalidLookupField</members>
     <members>healthDetailsBadRDField</members>
     <members>healthDetailsBadReportId</members>
@@ -388,6 +390,7 @@
     <members>healthLabelTime</members>
     <members>healthLabelUDFValid</members>
     <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionAutoRelFieldsMissing</members>
     <members>healthSolutionAutoRelInvalidCMField</members>
     <members>healthSolutionAutoRelInvalidContactField</members>
     <members>healthSolutionAutoRelInvalidLookupField</members>

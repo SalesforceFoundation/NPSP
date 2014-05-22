@@ -226,6 +226,22 @@
         <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAutoRelCampaignTypeMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAutoRelCampaignTypeMissing</shortDescription>
+        <value>Campaign Type must be specified for Relationship Autocreation from CampaignMembers.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAutoRelFieldsMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAutoRelFieldsMissing</shortDescription>
+        <value>Relationship Autocreation requires a valid Object, Field and Relationship Type specified.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsAutoRelInvalidLookupField</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -639,6 +655,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelFieldsMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelFieldsMissing</shortDescription>
+        <value>Delete the invalid Relationship Autocreation record on the {0} &gt; {1} tab in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAutoRelInvalidCMField</fullName>

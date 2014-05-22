@@ -57,9 +57,13 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 
         // validate required fields
     	if (acNew.npe4__Object__c == null || acNew.npe4__Field__c == null || acNew.npe4__Relationship_Type__c == null) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Auto-creation requires a valid Object, Field and Relationship Type to save.'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, label.healthDetailsAutoRelFieldsMissing));
             return null;    		
-    	}      
+    	} 
+    	if (acNew.npe4__Object__c == 'CampaignMember' && acNew.npe4__Campaign_Types__c == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, label.healthDetailsAutoRelCampaignTypeMissing));
+            return null;                		
+    	}    
 
         Savepoint sp = Database.setSavepoint();
         try {
@@ -162,6 +166,14 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
             SobjectField conField;
             isValid = true;
                         
+            if (ac.npe4__Object__c == null || ac.npe4__Field__c == null || ac.npe4__Relationship_Type__c == null) {
+               isValid = false;
+               ctrl.createDR(strSetting, 'Error', 
+                   string.format(label.healthDetailsAutoRelFieldsMissing, new string[]{strSetting}), 
+                   string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
+        	
+            }
+            
             if (ac.npe4__Object__c == 'Contact'){
                 conField = Schema.sObjectType.Contact.fields.getMap().get(ac.npe4__Field__c); 
                 if (conField == null) { 
@@ -178,7 +190,13 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                     ctrl.createDR(strSetting, 'Error', 
                         string.format(label.healthDetailsInvalidCMField, new string[]{ac.npe4__Field__c}), 
                         string.format(label.healthSolutionAutoRelInvalidCMField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
-                }   
+                } else if (ac.npe4__Campaign_Types__c == null) { 
+                    isValid = false;
+                    ctrl.createDR(strSetting, 'Error', 
+                        label.healthDetailsAutoRelCampaignTypeMissing, 
+                        string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
+                } 
+                  
             }
             
             //only if the other checks succeed, get the describe type
