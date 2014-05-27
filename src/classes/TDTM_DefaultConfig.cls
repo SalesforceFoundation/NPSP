@@ -67,42 +67,42 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'ACCT_Accounts_TDTM', Load_Order__c = 1, Object__c = 'Account', 
               Trigger_Action__c = 'BeforeInsert'));
 
-        // OpportunityContactRole support
+        //OpportunityContactRole support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert'));
 
-        // HH Object support
+        //HH Object support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_HHObject_TDTM', Load_Order__c = 1, Object__c = 'npo02__Household__c', 
               Trigger_Action__c = 'BeforeUpdate;AfterUpdate'));
 
-        // HH Object contact trigger support
+        //HH Object contact trigger support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
                 
-        // RecurringDonations on Opportunity
+        //RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'RD_RecurringDonations_Opp_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterUpdate'));
 
-        // RecurringDonations on RecurringDonations
+        //RecurringDonations on RecurringDonations
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeDelete;AfterInsert;AfterUpdate'));
         
-        // OppRollups on Opportunity
+        //OppRollups on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'RLLP_OppRollup_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
 
-        // Payments on Opportunity
+        //Payments on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'PMT_Payment_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
-        // OpportunityContactRoles on Opportunity
+        //OpportunityContactRoles on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
               Trigger_Action__c = 'BeforeInsert;AfterInsert'));
@@ -126,6 +126,11 @@ public without sharing class TDTM_DefaultConfig {
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        //Opportunity/Payment Allocation on Allocation object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 1, Object__c = 'Allocation__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
         return handlers;
     }

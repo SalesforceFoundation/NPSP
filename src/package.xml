@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -27,6 +28,8 @@
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
     <members>AFFL_BulkTests_TEST</members>
+    <members>ALLO_Allocations_TDTM</members>
+    <members>ALLO_Allocations_TEST</members>
     <members>BDE_BatchDataEntry</members>
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
@@ -268,6 +271,9 @@
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
     <members>Address__c.Verified__c</members>
+    <members>Allocation__c.Fund__c</members>
+    <members>Allocation__c.Opportunity__c</members>
+    <members>Allocation__c.Payment__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -525,11 +531,13 @@
     <members>Account</members>
     <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
+    <members>Allocation__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
+    <members>Fund__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
     <members>Schedulable__c</members>
@@ -560,9 +568,11 @@
     <members>Account-Household Layout</members>
     <members>Account-Organization Layout</members>
     <members>Address__c-Address Layout</members>
+    <members>Allocation__c-Allocation Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
     <members>Error__c-Error Layout</members>
+    <members>Fund__c-Fund Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
     <members>Schedulable__c-Schedulable Layout</members>
