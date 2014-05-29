@@ -41,7 +41,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public Map<String, String> copyFieldSet {get;set;}
     public list<SelectOption> targetAccountfields = new list<SelectOption>();
 
-    public list<SelectOption> gettargetAccountFields(){
+    public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
         Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
         targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
@@ -53,20 +53,37 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
         targetAccountfields.add(new SelectOption('', '-None-'));
 
-        if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
-            for (String s : targetTokenMap.keyset()){
-                if (s.contains('__c')){
+        for (String s : targetTokenMap.keyset()){
+            if (s.endsWith('__c')){
+                List<String> nameSegs = s.split('__');
+                if (nameSegs.size() < 3 && Limits.getFieldsDescribes() < Limits.getLimitFieldsDescribes()){
                     Schema.DescribeFieldResult f = targetTokenMap.get(s).getDescribe();
-                    Schema.DisplayType payType = targetTokenMap.get(s).getDescribe().getType();
-
+                    Schema.DisplayType payType = f.getType();
                     if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String){
-                         targetAccountfields.add(new SelectOption(f.getName(), s));
+                        targetAccountfields.add(new SelectOption(f.getName(), s));
                     }
                 }
             }
         }
-
         return targetAccountfields;
+    }
+
+    @RemoteAction
+    public static Boolean verifyFieldTypeForIds(String HHField){
+        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
+        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
+
+        if (targetTokenMap.containsKey(HHField)){
+            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
+            Schema.DisplayType payType = f.getType();
+            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
+                return true;
+            else
+                return false;
+        }
+        else{
+            return false;
+        }
     }
 
     private static Set<String> HouseholdFields = new Set<String>{'Name', +
@@ -131,4 +148,6 @@ public with sharing class CONV_Account_Conversion_CTRL {
         query += ' LIMIT 200';
         return query;
     }
+    
+    public class FieldValidationException extends Exception {}
 }
