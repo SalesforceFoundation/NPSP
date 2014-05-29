@@ -212,6 +212,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
+            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
             
             insert orgErrorSettings;
         }
