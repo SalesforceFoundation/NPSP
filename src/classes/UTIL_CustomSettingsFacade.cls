@@ -212,8 +212,12 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
+            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
             
-            insert orgErrorSettings;
+            // Don't insert if we're in test mode, just return the in memory settings object
+            if (! Test.isRunningTest()) {
+                insert orgErrorSettings;
+            }
         }
         return orgErrorSettings;
     }

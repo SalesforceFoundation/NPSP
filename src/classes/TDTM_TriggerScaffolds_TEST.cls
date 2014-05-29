@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2009, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -27,13 +27,22 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.com Foundation
-* @date 2014
-* @description Controller for the Affiliations panel.
-*/
-public with sharing class STG_PanelAffiliations_CTRL  extends STG_Panel {
+@isTest
+public with sharing class TDTM_TriggerScaffolds_TEST {
+
+    public static testmethod void tdtmLead() {
+    	//Currently we don't have any Trigger_Handler__c record for Lead. This test is 
+    	//just for test coverage, and to verify no exception gets thrown.
+    	insert new Lead(Company = 'Pencil Makers', LastName = 'Smith');
+    	
+    	System.assert(true); //Just checking that we get to this point = no exception thrown
+    }
     
-    public override string idPanel() { return 'idPanelAffl'; }
-    
+    public static testmethod void tdtmCampaign() {
+    	//Currently we don't have any Trigger_Handler__c record for Campaign. This test is 
+        //just for test coverage, and to verify no exception gets thrown.
+        insert new Campaign(Name = 'Make Us Famous');
+        
+        System.assert(true); //Just checking that we get to this point = no exception thrown 
+    }
 }

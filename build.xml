@@ -208,7 +208,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="updatePackageXmlManaged" />
 
       <!-- Do a deploy skipping tests for now since the upload will run tests -->
-      <antcall target="deployWithoutTest" />
+      <antcall target="deploy" />
 
       <!-- Finally, delete any metadata from the org which is not in the repo -->
       <antcall target="destroyStaleMetadata" />
