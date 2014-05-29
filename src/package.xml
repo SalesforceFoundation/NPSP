@@ -142,6 +142,7 @@
     <members>TDTM_Runnable_TEST</members>
     <members>TDTM_TriggerActionHelper</members>
     <members>TDTM_TriggerHandler</members>
+    <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_CustomSettingsFacade</members>
     <members>UTIL_Describe</members>
@@ -217,9 +218,11 @@
     <members>TDTM_Account</members>
     <members>TDTM_Address</members>
     <members>TDTM_Affiliation</members>
+    <members>TDTM_Campaign</members>
     <members>TDTM_CampaignMember</members>
     <members>TDTM_Contact</members>
     <members>TDTM_HouseholdObject</members>
+    <members>TDTM_Lead</members>
     <members>TDTM_Opportunity</members>
     <members>TDTM_RecurringDonation</members>
     <members>TDTM_Relationship</members>
@@ -337,6 +340,87 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>healthButtonRun</members>
+    <members>healthDetailsAccOne2OneNoContacts</members>
+    <members>healthDetailsAccountModel</members>
+    <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsAutoRelCampaignTypeMissing</members>
+    <members>healthDetailsAutoRelFieldsMissing</members>
+    <members>healthDetailsAutoRelInvalidLookupField</members>
+    <members>healthDetailsBadRDField</members>
+    <members>healthDetailsBadReportId</members>
+    <members>healthDetailsContactData</members>
+    <members>healthDetailsGenderField</members>
+    <members>healthDetailsHHAccountModel</members>
+    <members>healthDetailsHHActNoContacts</members>
+    <members>healthDetailsHHObNoContacts</members>
+    <members>healthDetailsInvalidCMField</members>
+    <members>healthDetailsInvalidContactField</members>
+    <members>healthDetailsInvalidErrorChatterGroup</members>
+    <members>healthDetailsInvalidErrorRecipient</members>
+    <members>healthDetailsInvalidErrorUser</members>
+    <members>healthDetailsInvalidFiscalYears</members>
+    <members>healthDetailsInvalidObjectField</members>
+    <members>healthDetailsInvalidOppField</members>
+    <members>healthDetailsInvalidOppStage</members>
+    <members>healthDetailsInvalidPaymentField</members>
+    <members>healthDetailsInvalidRecordtypeId</members>
+    <members>healthDetailsInvalidRecordtypeName</members>
+    <members>healthDetailsInvalidScheduledJob</members>
+    <members>healthDetailsMailingListReportMissing</members>
+    <members>healthDetailsNothingScheduled</members>
+    <members>healthDetailsPaymentMappingBadDataTypes</members>
+    <members>healthDetailsRDFieldsBadDatatypes</members>
+    <members>healthDetailsRelReciprocalInvalid</members>
+    <members>healthDetailsScheduleJobs</members>
+    <members>healthDetailsUDFBadDatatypes</members>
+    <members>healthLabelAccountData</members>
+    <members>healthLabelAccountModelData</members>
+    <members>healthLabelAutoRelValid</members>
+    <members>healthLabelContactData</members>
+    <members>healthLabelErrorRecipientValid</members>
+    <members>healthLabelFailed</members>
+    <members>healthLabelFiscalYearsValid</members>
+    <members>healthLabelHHAccData</members>
+    <members>healthLabelHHData</members>
+    <members>healthLabelHHObjData</members>
+    <members>healthLabelIntro</members>
+    <members>healthLabelLastRun</members>
+    <members>healthLabelNone</members>
+    <members>healthLabelPassed</members>
+    <members>healthLabelPaymentMappingsValid</members>
+    <members>healthLabelRDOppsValid</members>
+    <members>healthLabelRDValid</members>
+    <members>healthLabelRelReciprocalValid</members>
+    <members>healthLabelScheduler</members>
+    <members>healthLabelSchedulerValid</members>
+    <members>healthLabelShowPassedTests</members>
+    <members>healthLabelTime</members>
+    <members>healthLabelUDFValid</members>
+    <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionAutoRelFieldsMissing</members>
+    <members>healthSolutionAutoRelInvalidCMField</members>
+    <members>healthSolutionAutoRelInvalidContactField</members>
+    <members>healthSolutionAutoRelInvalidLookupField</members>
+    <members>healthSolutionBadRDField</members>
+    <members>healthSolutionEditSetting</members>
+    <members>healthSolutionHHAccNoContacts</members>
+    <members>healthSolutionHHObjNoContacts</members>
+    <members>healthSolutionInvalidFiscalYears</members>
+    <members>healthSolutionInvalidOppField</members>
+    <members>healthSolutionInvalidOppStage</members>
+    <members>healthSolutionInvalidPaymentField</members>
+    <members>healthSolutionInvalidScheduledJob</members>
+    <members>healthSolutionInvalidUDFObjectField</members>
+    <members>healthSolutionMailingListReportMissing</members>
+    <members>healthSolutionNothingScheduled</members>
+    <members>healthSolutionPaymentMappingBadDataTypes</members>
+    <members>healthSolutionRDBadOppField</members>
+    <members>healthSolutionRDFieldsBadDatatypes</members>
+    <members>healthSolutionRelReciprocalInvalid</members>
+    <members>healthSolutionScheduleJobs</members>
+    <members>healthSolutionUDFBadDatatypes</members>
+    <members>healthSolutionUDFOppField</members>
     <members>hhCmpDedupLabelReturnToCmp</members>
     <members>hhCmpDedupeBatchMessage</members>
     <members>hhCmpDedupeBatchProgressTitle</members>
@@ -472,6 +556,7 @@
     <members>stgLabelNewRelReciprocal</members>
     <members>stgLabelNewTH</members>
     <members>stgLabelNewUDR</members>
+    <members>stgLabelNone</members>
     <members>stgLabelOppBatchProgress</members>
     <members>stgLabelOppRollupRT</members>
     <members>stgLabelOppRollups</members>
@@ -505,6 +590,7 @@
     <members>stgNavDonorStatistics</members>
     <members>stgNavErrorLog</members>
     <members>stgNavErrorNotify</members>
+    <members>stgNavHealthCheck</members>
     <members>stgNavHouseholds</members>
     <members>stgNavLeads</members>
     <members>stgNavMembership</members>

@@ -120,7 +120,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
-        string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
+        //string strSetting = Schema.Sobjecttype.npe4__Relationship_Lookup__c.getLabel(); 
         boolean isValid = true;
         boolean isValidAll = true;
         
@@ -129,8 +129,9 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
             
             if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 'Reciprocal Relationship ' + rl.Name + ' should have a value in at least one of the fields for Male, Female, or Neutral.', 
-                    'Delete the Reciprocal Relationship record, and create a new one with the required information, on the ' + Label.stgNavRelReciprocal + ' tab in NPSP Settings.');    
+                ctrl.createDR(Label.stgNavRelReciprocal, 'Error', 
+                    string.format(label.healthDetailsRelReciprocalInvalid, new string[]{rl.Name}), 
+                    string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));    
             }               
             
             if (!isValid)
@@ -138,7 +139,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, null);            
+            ctrl.createDR(Label.stgNavRelReciprocal, 'Success', null, label.healthLabelRelReciprocalValid);            
         }                           
     }           
     
