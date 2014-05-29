@@ -153,16 +153,18 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
             if (opportunityField == null) {
             	isValid = false;
-	            ctrl.createDR(strSetting, 'Error', 'Opportunity field ' + pfms.npe01__Opportunity_Field__c + ' does not exist.', 
-	                'Add the missing Opportunity field, or delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+	            ctrl.createDR(strSetting, 'Error', 
+	                string.format(label.healthDetailsInvalidOppField, new string[]{pfms.npe01__Opportunity_Field__c}), 
+	                string.format(label.healthSolutionInvalidOppField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
             }            	
                       
             //check target fields            
             paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
             if (paymentField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 'Payment field ' + pfms.npe01__Payment_Field__c + ' does not exist.', 
-                    'Add the missing Payment field, or delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+                ctrl.createDR(strSetting, 'Error', 
+                    string.format(label.healthDetailsInvalidPaymentField, new string[]{pfms.npe01__Payment_Field__c}), 
+                    string.format(label.healthSolutionInvalidPaymentField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
             }               
             
             //only if the other checks succeed, get the describe type
@@ -172,8 +174,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
                 Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', pfms.npe01__Opportunity_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtOpp, dtPmt)) { 
 	                isValid = false;
-	                ctrl.createDR(strSetting, 'Error', 'Payment field ' + pfms.npe01__Payment_Field__c + ' and Opportunity field ' + pfms.npe01__Opportunity_Field__c + ' are not of compatible data types.', 
-	                    'Delete the Payment Mapping record, on the ' + Label.stgNavPaymentMappings + ' tab in NPSP Settings.');    
+	                ctrl.createDR(strSetting, 'Error', 
+	                    string.format(label.healthDetailsPaymentMappingBadDataTypes, new string[]{pfms.npe01__Payment_Field__c, pfms.npe01__Opportunity_Field__c}), 
+                        string.format(label.healthSolutionPaymentMappingBadDataTypes, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
 	            }               
             }
             
@@ -182,7 +185,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, null);            
+            ctrl.createDR(strSetting, 'Success', null, label.healthLabelPaymentMappingsValid);            
         }                           
     }           
         

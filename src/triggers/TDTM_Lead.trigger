@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -26,14 +26,12 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
-*/
-/**
-* @author Salesforce.com Foundation
-* @date 2014
-* @description Controller for the Affiliations panel.
-*/
-public with sharing class STG_PanelAffiliations_CTRL  extends STG_Panel {
-    
-    public override string idPanel() { return 'idPanelAffl'; }
-    
+*/ 
+trigger TDTM_Lead on Lead (after delete, after insert, after undelete, 
+after update, before delete, before insert, before update) {
+
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Lead, 
+        new TDTM_ObjectDataGateway());
 }
