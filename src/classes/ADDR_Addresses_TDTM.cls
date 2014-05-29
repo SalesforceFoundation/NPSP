@@ -433,6 +433,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 addr.addError(Label.addrSeasonalPartial);                
             }
     	}      
+    	
+    	// if none are seasonal, we can bail out
+    	if (listAddrS.size() == 0)
+    	   return;
 
         // protect against overlaps within the set being inserted or updated
         for (Address__c addr : listAddrS) {

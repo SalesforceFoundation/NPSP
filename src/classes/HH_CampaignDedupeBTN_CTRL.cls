@@ -100,7 +100,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        
 	        else{
 	            dupsmarked = MarkDuplicates();
-                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + '&scope=one&scopeid=' + Campaign.Name;
+                newPageURL = '/' + CampaignMailingListReportId + '?retURL=/' + ActiveID + '&scopeid_lkid=' + ActiveID + 
+                    '&scope=one&scopeid=' + EncodingUtil.urlEncode(Campaign.Name, 'UTF-8');
 	            if (dupsmarked == -1) {
 	                showMsg(Label.hhCmpDedupeBatchMessage, ApexPages.Severity.INFO);
 	                reportURL = newPageURL;	            	
@@ -213,7 +214,11 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
                         //because it's the only other available status in a test that does not see all data
                         newStatus = 'Responded'; 
                     } else {
-                        newStatus =  m.Status + DupeText;
+                    	// handle long status's that would go over limit of 40 characters
+                    	integer cch = m.Status.length();
+                    	if (cch + DupeText.length() > 40)
+                    	   cch = 40 - DupeText.length();
+                        newStatus =  m.Status.left(cch) + DupeText;
                     }
                 }
             }
