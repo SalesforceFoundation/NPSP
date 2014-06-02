@@ -24,9 +24,17 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         // instantiate the controller
         CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
+        List<SelectOption> testList = controller.getTargetAccountFields();
 
         // convert up everyone
         controller.convert();
         controller.cancel();
+
+        Boolean testBool;
+        testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('garbagefield');
+        system.assertEquals(false, testBool);
+
+        testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('Name');
+        system.assert(testBool);
     }
 }

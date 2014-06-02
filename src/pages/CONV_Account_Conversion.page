@@ -30,6 +30,23 @@
     function callConversion(){
         runconvert() ;
     }
+
+    function verifyHHIdField(){
+        var selectedField = j$("[name$='HHId']").val();
+            if (selectedField != ''){
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',selectedField,function(result, event){
+                if(event.status){
+                    if (!result){
+                        alert("The selected field is not able to hold the Household Id information as required.  Please select a different Account field.");
+                        j$("[name$='HHId']").val('-None-');
+                    }
+                }
+                else{
+                    alert("An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.");
+                }
+            });
+        }
+    }
 </script>
 
 <style>
@@ -150,7 +167,7 @@
                             <p>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any
                                 lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</p>
                             <apex:outputlabel for="HHId" value="Account Field" style="padding: 5px 5px 5px 5px;"/>
-                            <apex:selectList id="HHId" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                            <apex:selectList id="HHId" onchange="verifyHHIdField();" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
                                 <apex:selectOptions value="{!targetAccountFields}" />
                             </apex:selectList>
                         </div>
