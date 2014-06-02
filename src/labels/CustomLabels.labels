@@ -194,6 +194,22 @@
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentTotalExceedsPaymentAmt</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Allocation totals must not exceed the amount of the Payment.</shortDescription>
+        <value>Payment Allocation totals must not exceed the amount of the Payment.</value>
+    </labels>
+    <labels>
+        <fullName>alloTotalExceedsOppAmt</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
+        <value>Opportunity Allocation totals must not exceed the amount of the Opportunity.</value>
+    </labels>
+    <labels>
         <fullName>hhCmpDedupLabelReturnToCmp</fullName>
         <categories>Household Campaign Dedupe</categories>
         <language>en_US</language>

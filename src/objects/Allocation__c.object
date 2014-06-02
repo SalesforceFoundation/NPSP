@@ -51,17 +51,30 @@
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
     <fields>
-        <fullName>Fund__c</fullName>
+        <fullName>Amount__c</fullName>
+        <description>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</inlineHelpText>
+        <label>Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Fund__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <description>The fund this allocation is to be applied towards.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The fund this allocation is to be applied towards.</inlineHelpText>
         <label>Fund</label>
         <referenceTo>Fund__c</referenceTo>
         <relationshipLabel>Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
-        <relationshipOrder>1</relationshipOrder>
-        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <required>true</required>
         <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Opportunity__c</fullName>
@@ -87,6 +100,18 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Percent__c</fullName>
+        <description>Percent of Opportunity or Payment to allocate to this fund.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Percent of Opportunity or Payment to allocate to this fund.</inlineHelpText>
+        <label>Percent</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
     </fields>
     <label>Allocation</label>
     <nameField>

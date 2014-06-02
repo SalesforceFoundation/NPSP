@@ -11,12 +11,12 @@
                 <field>Opportunity__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Fund__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>Name</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Fund__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -52,7 +52,6 @@
     </layoutSections>
     <miniLayout>
         <fields>Opportunity__c</fields>
-        <fields>Fund__c</fields>
     </miniLayout>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

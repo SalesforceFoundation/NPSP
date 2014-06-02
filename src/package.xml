@@ -271,9 +271,11 @@
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
     <members>Address__c.Verified__c</members>
+    <members>Allocation__c.Amount__c</members>
     <members>Allocation__c.Fund__c</members>
     <members>Allocation__c.Opportunity__c</members>
     <members>Allocation__c.Payment__c</members>
+    <members>Allocation__c.Percent__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -337,6 +339,8 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>alloPaymentTotalExceedsPaymentAmt</members>
+    <members>alloTotalExceedsOppAmt</members>
     <members>hhCmpDedupLabelReturnToCmp</members>
     <members>hhCmpDedupeBatchMessage</members>
     <members>hhCmpDedupeBatchProgressTitle</members>
