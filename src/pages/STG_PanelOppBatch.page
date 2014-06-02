@@ -3,19 +3,15 @@
     <apex:form id="form">   
         <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavRollupBatch}" />        
         <apex:pageMessages id="pageMessages"/>
+        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.stgHelpBatchOppRollup}</apex:outputPanel>
         <apex:pageBlock id="pbRelBatch" mode="maindetail">
-  
-            <h3 class="sectionBar" >{!$Label.stgLabelBatchStatus}</h3>
-            <apex:outputPanel layout="block" styleClass="sectionHelp">
-	                {!$Label.stgHelpBatchOppRollup}
-            </apex:outputPanel>
-            
+              
             <apex:outputPanel rendered="{!isRunningBatch}">
                 <br/><br/>
                 <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppBatchProgress}" cNumberOfJobs="4" bRerenderOnComplete="true" />
             </apex:outputPanel>
 
-            <apex:pageBlockButtons location="both">
+            <apex:pageBlockButtons location="top">
                 <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRelBatch" />
             </apex:pageBlockButtons>
             
