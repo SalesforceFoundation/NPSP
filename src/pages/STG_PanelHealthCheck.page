@@ -27,16 +27,26 @@
     </script>
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="Health Check" />        
+        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavHealthCheck}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbDetector" mode="maindetail">
             
             <apex:outputPanel styleClass="bootstrap" id="panelResults">
-                <br/><p style="position:relative;left:30px;">Use this page to detect any problems in your NPSP settings.</p><br/>
+                <p style="position:relative;left:30px;">{!$Label.healthLabelIntro}</p><br/>
 		        <apex:outputPanel rendered="{!hasResults}">
                     <div>
-	                    <span style="position:relative;left:30px;"><input type="checkbox" onclick="ShowHidePassed();" checked="" id="cbxShowHide" /><label for="cbxShowHide"> Show Passed Tests </label></span>                        
-	                    <span style="position:absolute;right:30px;"><apex:outputText value="Last run: {!NOW()}" />&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="{!strTimeMessage}" /></span>                    
+	                    <span style="position:relative;left:30px;">
+	                        <input type="checkbox" onclick="ShowHidePassed();" checked="" id="cbxShowHide" /><label for="cbxShowHide">&nbsp;{!$Label.healthLabelShowPassedTests}&nbsp;</label>
+	                    </span>                        
+	                    <span style="float:right;">
+						    <apex:outputText value="{!$Label.healthLabelLastRun}">
+                                <apex:param value="{!strNow}" />
+						    </apex:outputText>	                       
+	                        &nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:outputText value="{!$Label.healthLabelTime}">
+                                <apex:param value="{!strTime}" />
+                            </apex:outputText>                          
+	                    </span>                    
                     </div>
                 
 			        <ul class="list-group" >
@@ -45,10 +55,10 @@
 				                <div class="row">		  
                                     <div class="col-md-2">  
                                         <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
-                                            <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> Passed </span>
+                                            <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> {!$Label.healthLabelPassed} </span>
                                         </apex:outputPanel>
                                         <apex:outputPanel rendered="{!dr.strStatus == 'Error'}">
-                                            <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> Failed </span>
+                                            <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> {!$Label.healthLabelFailed} </span>
                                         </apex:outputPanel>
                                     </div>
 				                    <div class="col-md-10">
@@ -65,8 +75,8 @@
 		        </apex:outputPanel>                     
             </apex:outputPanel> 
 
-            <apex:pageBlockButtons location="top">
-                <apex:commandButton id="btnRun" value="Run Health Check" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
             </apex:pageBlockButtons>            
         </apex:pageBlock>
     </apex:form>
