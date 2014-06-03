@@ -16,14 +16,12 @@
 
 			<h3 class="sectionBar" >{!$Label.Addr_Settings_Intro_Title}</h3>	
             <apex:outputPanel layout="block"  styleClass="sectionHelp">
-                <apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
-                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body}" />
+                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
+                <p><apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" /></p>
+                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
             </apex:outputPanel>
             
 			<h3 class="sectionBar" >{!$Label.Addr_Settings_API_Title}</h3>
-			<apex:outputPanel layout="block" styleClass="sectionHelp">
-				<apex:outputText escape="false" value="{!$Label.Addr_Settings_API_Body}" />
-			</apex:outputPanel>
 
             <br/>
 			<apex:panelGrid id="fields" columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
@@ -118,30 +116,31 @@
             <br/>
             
 			<h3 class="sectionBar" >{!$Label.Addr_Verification_Batch_Title}</h3>
-			<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
-			<label class="checkbox"> 
-			    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
-			</label>
-			<br/>
-			<br/>
-			<div style="text-align:center">
-			    <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult"
-			    value="Verify All Addresses"/>
-			</div>
-			<br/>
-			
-			<apex:outputPanel id="bulkVerifyResult">
-				<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
-					<h4>{!$Label.Addr_Verification_Batch_Status}</h4>
-					<p>
-						<apex:outputText value="{!bulkVerifyMessage}" />
-					</p>
-					<p>
-					    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-					</p>
+			<div id="batchVerifBody" style="padding-left:20px">
+				<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
+				<label class="checkbox"> 
+				    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
+				</label>
+				<br/>
+				<br/>
+				<div style="text-align:center">
+				    <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult"
+				    value="Verify All Addresses"/>
+				</div>
+				<br/>
+				
+				<apex:outputPanel id="bulkVerifyResult">
+					<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
+						<h4>{!$Label.Addr_Verification_Batch_Status}</h4>
+						<p>
+							<apex:outputText value="{!bulkVerifyMessage}" />
+						</p>
+						<p>
+						    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+						</p>
+					</apex:outputPanel>
 				</apex:outputPanel>
-			</apex:outputPanel>
-			
+			</div>
 		</apex:pageBlock>
 	</apex:form>
 </apex:page>
