@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>Addr_Settings_API_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRICATED - Addr Settings API Title</shortDescription>
+        <value>DEPRICATED - API Account Settings</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Intro_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRICATED - Addr Settings Intro Body</shortDescription>
+        <value>DEPRICATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
