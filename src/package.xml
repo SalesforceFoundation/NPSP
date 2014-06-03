@@ -317,6 +317,8 @@
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
+    <members>Addr_Settings_Intro_Body1</members>
+    <members>Addr_Settings_Intro_Body2</members>
     <members>Addr_Settings_Intro_Title</members>
     <members>Addr_Settings_Notice</members>
     <members>Addr_Settings_Test_Body</members>
