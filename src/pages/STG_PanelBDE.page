@@ -5,7 +5,6 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <h3 class="sectionBar" >{!$Label.stgLabelBDESettings}</h3>
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" />

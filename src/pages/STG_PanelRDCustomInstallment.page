@@ -5,7 +5,6 @@
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >{!$Label.stgLabelRDPeriod}</h3>            
                 <apex:pageBlockTable value="{!stgService.listRDCustomInstallment}" var="ci" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteCi}" 
