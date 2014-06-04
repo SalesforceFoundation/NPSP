@@ -171,7 +171,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             }          
     	}
     	
-        string strInfo;
+        string strInfo = '';
         if (isMixedAccs) {
             strInfo = string.format(Label.healthDetailsAccountProcessor, new string[]{CAO_Constants.getContactsSettings().npe01__Account_Processor__c});
         }
@@ -179,7 +179,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One;
         strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH;        
         
-        createDR(Label.healthLabelAccountModelData, isMixedAccs ? 'Error' : 'Success',  strInfo, null);        
+        createDR(Label.healthLabelAccountModelData, isMixedAccs ? 'Error' : 'Success',  isMixedAccs ? strInfo : null, isMixedAccs ? null : strInfo);        
     
     }
 
