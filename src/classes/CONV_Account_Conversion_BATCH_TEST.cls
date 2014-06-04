@@ -113,6 +113,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals('Individual', [select Account.Name from Opportunity where Name = 'Test Oppty'].Account.Name);
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);
 
+/*
+        //insert a larger set of contacts, comment-out pre-merge
+        List<Contact> bulkList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(195);
+        insert bulkList;
+*/
+
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
 
@@ -133,6 +139,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
         system.assert(CAO_Constants.isHHAccountModel());
         system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        for (Contact con : [select id, Account.Name from Contact]){
+            system.assertNotEquals('Individual', con.Account.Name);
+        }
     }
 
     public testMethod static void testSingleContactAddress(){
