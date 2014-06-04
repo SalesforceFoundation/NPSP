@@ -5,7 +5,6 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbRDBatch" mode="maindetail">
   
-            <h3 class="sectionBar" >{!$Label.stgLabelBatchStatus}</h3>
             <apex:panelGrid id="panelStats" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}"/>

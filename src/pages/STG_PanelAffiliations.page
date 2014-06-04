@@ -5,7 +5,6 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  
-            <h3 class="sectionBar" >{!$Label.stgLabelAfflSettings}</h3>            
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" />

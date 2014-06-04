@@ -5,7 +5,6 @@
         <apex:pageMessages />
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >{!$Label.stgNavErrorLog}</h3>            
             <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
                                               
             <apex:pageBlockButtons location="both">
