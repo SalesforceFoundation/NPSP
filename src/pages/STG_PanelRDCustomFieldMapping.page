@@ -3,10 +3,9 @@
     <apex:form id="form" styleClass="stgForm" >  
         <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavRDFieldMap}" />
         <apex:pageMessages />
+        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.stgHelpRDFieldMap}</apex:outputPanel>
         <apex:pageBlock mode="maindetail">
 
-            <h3 class="sectionBar" >{!$Label.stgLabelRDFieldMap}</h3>            
-                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpRDFieldMap}</apex:outputPanel>
                 <apex:pageBlockTable value="{!listRDCustomFieldMapping}" var="fm" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                         <apex:commandLink action="{!deleteFm}" 

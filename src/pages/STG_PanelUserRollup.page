@@ -3,10 +3,9 @@
     <apex:form id="form">  
         <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavUserDefinedRollups}" />
         <apex:pageMessages />
+        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
         <apex:pageBlock mode="maindetail">
  
-            <h3 class="sectionBar" >{!$Label.stgLabelCurrentUDR}</h3>
-                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                         <!-- edit has some problems with current ui.  not worth supporting?

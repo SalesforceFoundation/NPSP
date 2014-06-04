@@ -5,7 +5,6 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
-            <h3 class="sectionBar" >{!$Label.stgLabelMembershipSettings}</h3>                        
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" />
