@@ -227,7 +227,7 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 <apex:selectOptions value="{!objectSettingsList}"/>
             </apex:selectList>
             &nbsp; 
-            <apex:commandButton value="New Batch" title="Create a new Batch for the selected object" action="{!openBatchEnterPage}"/>   
+            <apex:commandButton id="newBatch" value="New Batch" title="Create a new Batch for the selected object" action="{!openBatchEnterPage}"/>   
             &nbsp;
             <br/><br/>
             </apex:form>
@@ -264,7 +264,7 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 <apex:pageblocksectionitem rendered="{!currentItem.renderNPSPContact}">
                     <apex:outputLabel value="NPSP Contact" style="line-height:25px;" /> 
                     <apex:outputPanel layout="block" styleclass="sticky" >
-                        <apex:inputField value="{!currentItem.npspocr.ContactID}" required="false" styleClass="sticky-npspcontactid"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
+                        <apex:inputField id="npspcontactid" value="{!currentItem.npspocr.ContactID}" required="false" styleClass="sticky-npspcontactid"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
                         <input type="checkbox" id="sticky-npspcontactid" class="defaultCheckbox" style="display:none;" />
                         <label for="sticky-npspcontactid" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>                                                
                     </apex:outputPanel>
