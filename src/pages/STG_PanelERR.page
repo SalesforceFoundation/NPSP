@@ -68,7 +68,6 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  
-            <h3 class="sectionBar" >{!$Label.stgLabelErrorNotify}</h3>        
             <apex:panelGrid id="fields" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" />
@@ -112,7 +111,7 @@
             </div>
               
             <br/>      
-            <apex:pageBlockButtons location="bottom" >
+            <apex:pageBlockButtons location="both" >
                 <apex:outputPanel id="commandButtons">
                     <apex:commandButton id="editNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" 
                         rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, saveError" />
