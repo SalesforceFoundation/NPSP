@@ -274,7 +274,7 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 <apex:pageblocksectionitem >
                     <apex:outputLabel value="{!field.fieldLabel}" style="line-height:25px;" /> 
                     <apex:outputPanel layout="block" styleclass="sticky" >
-                        <apex:inputField id="{!field.fieldName}" value="{!currentItem.sobj[field.fieldName]}" styleClass="sticky-{!field.fieldName}"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
+                        <apex:inputField value="{!currentItem.sobj[field.fieldName]}" styleClass="sticky-{!field.fieldName}"/> <!-- onblur="storeLookupValue('{!field.fieldname}');" /> -->
                         <input type="checkbox" id="sticky-{!field.fieldName}" class="defaultCheckbox" style="display:none;" />
                         <label title="Click to make this value the default" for="sticky-{!field.fieldName}" class="ui-icon ui-icon-pin-s" style="position:relative;top:0px;">Toggle</label>                                                
                     </apex:outputPanel>
