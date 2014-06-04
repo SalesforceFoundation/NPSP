@@ -458,6 +458,20 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             updateTriggerHandlers.add(t);
         }
         update updateTriggerHandlers;
+
+        //update the custom setting
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+        ContactsSettings.npe01__Account_Processor__c = 'Household Account';
+
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+        if(householdAccount != null)
+            ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+
+        update ContactsSettings;
+
+        npo02__Households_Settings__c HHSettings = HH_Households.getHouseholdsSettings();
+        HHSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+        update HHSettings;
     }
 
     public class ContactAddress{

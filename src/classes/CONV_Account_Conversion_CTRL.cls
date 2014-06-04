@@ -145,7 +145,8 @@ public with sharing class CONV_Account_Conversion_CTRL {
         for (String s : CONV_Account_Conversion_CTRL.HouseholdFields)
             query += ', ' + s;
         query += ' FROM npo02__Household__c n';
-        query += ' LIMIT 200';
+        if (Test.isRunningTest())
+            query += ' LIMIT 200';
         return query;
     }
     
