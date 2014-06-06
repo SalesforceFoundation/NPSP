@@ -13,7 +13,6 @@
         <fullName>NPSP_Contact_Compact_Layout</fullName>
         <fields>Name</fields>
         <fields>AccountId</fields>
-        <fields>npo02__OppAmountThisYear__c</fields>
         <fields>npo02__TotalOppAmount__c</fields>
         <label>NPSP Contact Compact Layout</label>
     </compactLayouts>
