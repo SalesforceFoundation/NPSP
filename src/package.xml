@@ -227,9 +227,12 @@
     <name>ApexTrigger</name>
   </types>
   <types>
+    <members>Account.Account_Compact_Layout</members>
     <members>Account.NPSP_Account_Compact_Layout</members>
     <members>Address__c.NPSP_Address_Compact_Layout</members>
+    <members>Contact.Contact_Compact_Layout</members>
     <members>Contact.NPSP_Contact_Compact_Layout</members>
+    <members>Opportunity.Donation_Compact_Layout</members>
     <members>Opportunity.Membership_Compact_Layout</members>
     <members>Opportunity.NPSP_Donation_Compact_Layout</members>
     <name>CompactLayout</name>
