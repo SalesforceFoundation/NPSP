@@ -133,10 +133,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         /** Attaching current Household members to the new Household Account  **/
         /***********************************************************************/
 
-/*
-        TODO:  1. Ignore any Contacts that already have Household Accounts - 
-*/
-
         Map<Id, npe5__Affiliation__c> conAffMap = new Map<Id, npe5__Affiliation__c>();
 
         for (Contact c : consForUpdate){
