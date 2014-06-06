@@ -13,8 +13,8 @@
     <compactLayouts>
         <fullName>NPSP_Account_Compact_Layout</fullName>
         <fields>Name</fields>
+        <fields>Number_of_Household_Members__c</fields>
         <fields>npo02__TotalOppAmount__c</fields>
-        <fields>npo02__OppAmountThisYear__c</fields>
         <label>NPSP Account Compact Layout</label>
     </compactLayouts>
     <fieldSets>
