@@ -149,6 +149,38 @@ public with sharing class CONV_Account_Conversion_CTRL {
             query += ' LIMIT 200';
         return query;
     }
-    
+
+    public void runCheck(){
+        Integer HHAccountCount = 0;
+        Integer ContactConnectedCount;
+        String displayHHAccountCount = '';
+        String displayContactCount = '';
+
+        HHAccountCount= [select count() from Account where npe01__SYSTEM_AccountType__c = 'Household Account' and npe01__SYSTEMIsIndividual__c = true limit 9999];
+        ContactConnectedCount = [select count() from Contact where Account.npe01__System_AccountType__c = 'Household Account' limit 9999];
+
+        if (ContactConnectedCount == 9999)
+            displayContactCount = '10000+';
+        else
+            displayContactCount = ContactConnectedCount.format();
+        if (HHAccountCount == 9999)
+            displayHHAccountCount = '10000+';
+        else
+            displayHHAccountCount = HHAccountCount.format();
+
+        String errorString = '';
+        if (HHAccountCount > 0)
+            errorString += 'Your Salesforce.com Organization currently has '+ displayHHAccountCount + ' Household Account(s) already in existence.  ';
+        if (ContactConnectedCount > 0)
+            errorString += 'Your Salesforce.com Organization currently has ' + displayContactCount + ' Contact(s) associated with a Household Account.  ';
+        errorString += 'By running this converter, your Contacts will receive a NEW Household Account, and will be detached from the existing Household Account they are currently connected to.  ';
+        errorString += 'No Household Accounts will be deleted, but you may have duplicate Household Accounts if you choose to run this process again.';
+
+        if (HHAccountCount > 0 || ContactConnectedCount > 0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
+        }
+    }
+
+
     public class FieldValidationException extends Exception {}
 }
