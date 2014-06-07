@@ -69,7 +69,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         Map<Id, npo02__Household__c> addressedHouseholds = new Map<Id, npo02__Household__c>();
 
         List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
-        consForUpdate = [select AccountId, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
+        consForUpdate = [select AccountId, Account.npe01__SYSTEMIsIndividual__c, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
         ocrsForUpdate = [select Opportunity.AccountId, Contact.npo02__Household__c, Opportunity.Id from OpportunityContactRole where isPrimary = true and ContactId IN :consForUpdate and Opportunity.npe01__Is_Opp_From_Individual__c = 'true'];
 
         /********************************************************************/
@@ -133,8 +133,17 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         /** Attaching current Household members to the new Household Account  **/
         /***********************************************************************/
 
+        Map<Id, npe5__Affiliation__c> conAffMap = new Map<Id, npe5__Affiliation__c>();
+
         for (Contact c : consForUpdate){
             Account a = hh2Account.get(c.npo02__Household__c);
+
+            //generate affiliations for any non 1x1/Individual accounts associated to this Contact
+            if (!c.Account.npe01__SYSTEMIsIndividual__c){
+                npe5__Affiliation__c aff = new npe5__Affiliation__c(npe5__Status__c = 'Current', npe5__Primary__c = true, npe5__Organization__c = c.AccountId, npe5__Contact__c = c.Id);
+                conAffMap.put(c.Id, aff);
+            }
+
             c.AccountId = a.Id;
             if (!conGiving.containsKey(a.Id) || (conGiving.containsKey(a.Id) && c.npo02__TotalOppAmount__c > conGiving.get(a.Id))){
                 a.npe01__One2OneContact__c = c.Id;
@@ -150,6 +159,17 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 consWithNewHousehold.put(a.Id, new List<Contact>{c});
             }
         }
+
+        //for any contacts that have an affiliation, update the primary affiliation for the contact
+        if (!conAffMap.isEmpty()){
+            insert conAffMap.values();
+            for (Contact c : consForUpdate){
+                if (conAffMap.containsKey(c.Id)){
+                    c.Primary_Affiliation__c = conAffMap.get(c.Id).npe5__Organization__c;
+                }
+            }
+        }
+
         update consForUpdate;
         update hh2Account.values();
 

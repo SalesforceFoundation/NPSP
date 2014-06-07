@@ -91,6 +91,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
         system.assert(CAO_Constants.isHHAccountModel());
         system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testmethod static void testAccountConversionBucket(){
@@ -142,6 +143,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         for (Contact con : [select id, Account.Name from Contact]){
             system.assertNotEquals('Individual', con.Account.Name);
         }
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testMethod static void testSingleContactAddress(){
@@ -182,6 +184,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(add.Id, [select Current_Address__c from Contact where id = :c.id].Current_Address__c);
         system.assert(CAO_Constants.isHHAccountModel());
         system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testMethod static void test2ContactAddresses(){
@@ -242,6 +245,48 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(true, c.is_Address_Override__c);
         system.assert(CAO_Constants.isHHAccountModel());
         system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+    }
+
+    public testMethod static void testSettingPrimaryAffiliation(){
+        //setup individual model and test account creation
+        CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
+
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+                                MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
+                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+        insert c;
+
+        Account a = new Account(Name = 'NonIndividualAccount');
+        insert a;
+
+        c.AccountId = a.Id;
+        update c;
+
+        system.assertEquals('NonIndividualAccount', [select Account.Name from Contact where Id = :c.Id].Account.Name);
+
+        //set the HH Account model before entering the batch
+        CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
+
+        Test.StartTest();
+
+        String query = CONV_Account_Conversion_CTRL.getBatchQuery();
+
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
+
+        ID batchprocessid = Database.executeBatch(cacv);
+        Test.StopTest();
+
+        //confirm we have one new affiliation
+        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
+        //select that affiliation and confirm its linking our account and contact
+        npe5__Affiliation__c aff = [select npe5__Status__c, npe5__Primary__c, npe5__Organization__c, npe5__Contact__c from npe5__Affiliation__c limit 1];
+        system.assert(aff.npe5__Status__c == 'Current');
+        system.assert(aff.npe5__Primary__c == true);
+        system.assert(aff.npe5__Contact__c == c.Id);
+        system.assert(aff.npe5__Organization__c == a.Id);
+        //confirm that the Primary Affiliation on the Contact is set to our affiliation
+        system.assertEquals([select Primary_Affiliation__c from Contact where Id = :c.Id].Primary_Affiliation__c, aff.npe5__Organization__c);
     }
 
     /* Utility methods for setting up and tearing down data and settings */
