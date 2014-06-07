@@ -1,4 +1,4 @@
-<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false">
+<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false" action="{!runCheck}">
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
@@ -142,6 +142,7 @@
                                 <li>All triggers are disabled</li>
                                 <li>All existing Households are selected, along with their Contacts</li>
                                 <li>New Household Accounts are created for each existing Household</li>
+                                <li>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</li>
                                 <li>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</li>
                                 <li>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</li>
                                 <li>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</li>
