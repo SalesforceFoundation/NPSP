@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Settings for the allocation of Opportunities into General Accounting Units.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Allocations_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Enables all trigger based functionality for the Allocations feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables all trigger based functionality for the Allocations feature.</inlineHelpText>
+        <label>Allocations Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default_Allocations_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.</inlineHelpText>
+        <label>Default Allocations Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default__c</fullName>
+        <description>Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.</inlineHelpText>
+        <label>Default General Accounting Unit</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Allocations Settings</label>
+</CustomObject>
