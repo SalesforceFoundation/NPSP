@@ -1780,14 +1780,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Action</value>
     </labels>
     <labels>
-        <fullName>stgLabelAfflSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelAfflSettings</shortDescription>
-        <value>Affiliations Settings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelAllocationsSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1810,38 +1802,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
         <value>Automatic Contact Roles</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelBDESettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelBDESettings</shortDescription>
-        <value>Batch Data Entry Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelBatchStatus</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelBatchStatus</shortDescription>
-        <value>Batch Status</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelCurrentUDR</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelCurrentUDR</shortDescription>
-        <value>Current User Defined Rollups</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelErrorNotify</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelErrorNotify</shortDescription>
-        <value>Error Notification Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>
@@ -1898,14 +1858,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelLeadSettings</shortDescription>
         <value>Lead Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelMembershipSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelMembershipSettings</shortDescription>
-        <value>Membership Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelNewAutoRel</fullName>
@@ -1996,22 +1948,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>No Valid Field Available</value>
     </labels>
     <labels>
-        <fullName>stgLabelPaymentSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelPaymentSettings</shortDescription>
-        <value>Payment Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRDFieldMap</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDFieldMap</shortDescription>
-        <value>Custom Field Mappings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelRDNewPeriod</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2020,36 +1956,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>New Installment Period</value>
     </labels>
     <labels>
-        <fullName>stgLabelRDPeriod</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDPeriod</shortDescription>
-        <value>Custom Installment Periods</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRDSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDSettings</shortDescription>
-        <value>Recurring Donation Settings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelRDStatus</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelRDStatus</shortDescription>
         <value>Updating Recurring Donation Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRelSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRelSettings</shortDescription>
-        <value>General Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>
@@ -2066,14 +1978,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelSoftCredit</shortDescription>
         <value>Soft Credit Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelTriggerHandlers</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelTriggerHandlers</shortDescription>
-        <value>Trigger Handlers</value>
     </labels>
     <labels>
         <fullName>stgLabelTypeAhead</fullName>
