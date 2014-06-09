@@ -249,4 +249,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
         return settings;
     }
+
+    public static Allocations_Settings__c getAllocationsSettings() {
+        Allocations_Settings__c settings = Allocations_Settings__c.getOrgDefaults();
+        if (settings.Id == null) {
+            //disable allocations by default
+            settings.Allocations_Enabled__c = false;
+            settings.Default_Allocations_Enabled__c = false;
+            settings.Default__c = null;
+
+            insert settings;
+        }
+        return settings;
+    }
 }

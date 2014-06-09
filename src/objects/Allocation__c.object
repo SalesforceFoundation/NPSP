@@ -77,6 +77,20 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>General_Accounting_Unit__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The General Accounting Unit to attribute this allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The General Accounting Unit to attribute this allocation.</inlineHelpText>
+        <label>General Accounting Unit</label>
+        <referenceTo>General_Accounting_Unit__c</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Opportunity__c</fullName>
         <externalId>false</externalId>
         <label>Opportunity</label>
@@ -112,6 +126,20 @@
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Recurring_Donation__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</inlineHelpText>
+        <label>Recurring Donation</label>
+        <referenceTo>npe03__Recurring_Donation__c</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <label>Allocation</label>
     <nameField>

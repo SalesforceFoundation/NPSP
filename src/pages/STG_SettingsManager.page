@@ -258,6 +258,7 @@
                     <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
                     <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
                     <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
+                    <li class="subitem" id="idPanelAllocationsNav"><a href="." onclick="ShowPanel('idPanelAllocations');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAllocations}</a></li>
                     <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
                     <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
                     <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
@@ -329,6 +330,10 @@
                             <apex:include pageName="STG_PanelMembership" />
                         </div>
     
+                        <div class="panel" id="idPanelAllocations" style="display:none" >
+                            <apex:include pageName="STG_PanelAllocations" />
+                        </div>
+
                         <div class="panel" id="idPanelOpp" style="display:none" >
                             <apex:include pageName="STG_PanelOpps" />
                         </div>

@@ -96,6 +96,14 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    public Allocations_Settings__c stgAllo {
+        get {
+            if (stgAllo == null) stgAllo = UTIL_CustomSettingsFacade.getAllocationsSettings();
+            return stgAllo;
+        }
+        private set;
+    }
+
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
     	get {
     		if (mapRDCustomField == null) {
@@ -148,5 +156,7 @@ public with sharing class STG_SettingsService {
         upsert stgAffl;
         upsert stgBDE;
         upsert stgErr;
+        system.debug('lookhere: stgallo: ' + stgAllo);
+        upsert stgAllo;
     }
 }

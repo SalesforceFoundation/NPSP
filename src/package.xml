@@ -109,6 +109,7 @@
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
+    <members>STG_PanelAllocations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
     <members>STG_PanelContacts_CTRL</members>
@@ -188,6 +189,7 @@
     <members>REL_RelationshipsViewer</members>
     <members>STG_PanelAddrVerification</members>
     <members>STG_PanelAffiliations</members>
+    <members>STG_PanelAllocations</members>
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
     <members>STG_PanelContacts</members>
@@ -276,9 +278,14 @@
     <members>Address__c.Verified__c</members>
     <members>Allocation__c.Amount__c</members>
     <members>Allocation__c.Fund__c</members>
+    <members>Allocation__c.General_Accounting_Unit__c</members>
     <members>Allocation__c.Opportunity__c</members>
     <members>Allocation__c.Payment__c</members>
     <members>Allocation__c.Percent__c</members>
+    <members>Allocation__c.Recurring_Donation__c</members>
+    <members>Allocations_Settings__c.Allocations_Enabled__c</members>
+    <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
+    <members>Allocations_Settings__c.Default__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -321,9 +328,7 @@
     <name>CustomField</name>
   </types>
   <types>
-    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
-    <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
     <members>Addr_Settings_Intro_Body2</members>
     <members>Addr_Settings_Intro_Title</members>
@@ -461,6 +466,7 @@
     <members>stgBtnRunBatch</members>
     <members>stgBtnSave</members>
     <members>stgHelpAccountModel</members>
+    <members>stgHelpAllocationsEnabled</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>
     <members>stgHelpAutoRelField</members>
@@ -472,6 +478,8 @@
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
     <members>stgHelpContactRTExcluded</members>
+    <members>stgHelpDefaultAllocationsEnabled</members>
+    <members>stgHelpDefaultGAU</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
@@ -542,6 +550,7 @@
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAfflSettings</members>
+    <members>stgLabelAllocationsSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
     <members>stgLabelBDESettings</members>
@@ -588,6 +597,7 @@
     <members>stgNavAccountModel</members>
     <members>stgNavAddressVerification</members>
     <members>stgNavAffiliations</members>
+    <members>stgNavAllocations</members>
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
     <members>stgNavContactRoles</members>
@@ -624,12 +634,14 @@
     <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Allocation__c</members>
+    <members>Allocations_Settings__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
     <members>Fund__c</members>
+    <members>General_Accounting_Unit__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
     <members>Schedulable__c</members>
@@ -665,6 +677,7 @@
     <members>Contact-Contact Layout</members>
     <members>Error__c-Error Layout</members>
     <members>Fund__c-Fund Layout</members>
+    <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
     <members>Schedulable__c-Schedulable Layout</members>
@@ -676,6 +689,7 @@
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
+    <members>General_Accounting_Unit__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
   </types>

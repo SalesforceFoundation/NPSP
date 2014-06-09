@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
-        <fullName>Addr_Settings_API_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRICATED - Addr Settings API Title</shortDescription>
-        <value>DEPRICATED - API Account Settings</value>
-    </labels>
-    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Intro_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRICATED - Addr Settings Intro Body</shortDescription>
-        <value>DEPRICATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
@@ -1131,6 +1115,14 @@
         <value>Setting for the Account model. Should be &quot;Household Account&quot;, &quot;One-to-One&quot;, or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c. &quot;Household Account&quot; is the recommended model.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAllocationsEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAllocationsEnabled</shortDescription>
+        <value>Enables management of Opportunity Allocations into General Accounting Units, and related features.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAutoAffil</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1217,6 +1209,22 @@
         <protected>false</protected>
         <shortDescription>stgHelpContactRTExcluded</shortDescription>
         <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpDefaultAllocationsEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpDefaultAllocationsEnabled</shortDescription>
+        <value>Enables the automatic creation and management of Allocation records to the default General Accounting Unit. This feature enables better reporting on the default General Accounting Unit, but uses more data storage.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpDefaultGAU</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpDefaultGAU</shortDescription>
+        <value>Default General Accounting Unit for default allocation of unallocated Opportunities, and remainders of partially allocated Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpEnableSoftCreditRollups</fullName>
@@ -1780,6 +1788,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Affiliations Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelAllocationsSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelAllocationsSettings</shortDescription>
+        <value>Allocations Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAreYouSure</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2146,6 +2162,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavAffiliations</shortDescription>
         <value>Affiliations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavAllocations</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavAllocations</shortDescription>
+        <value>Allocations</value>
     </labels>
     <labels>
         <fullName>stgNavBDE</fullName>
