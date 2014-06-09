@@ -63,20 +63,6 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Fund__c</fullName>
-        <deleteConstraint>Restrict</deleteConstraint>
-        <description>The fund this allocation is to be applied towards.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The fund this allocation is to be applied towards.</inlineHelpText>
-        <label>Fund</label>
-        <referenceTo>Fund__c</referenceTo>
-        <relationshipLabel>Allocations</relationshipLabel>
-        <relationshipName>Allocations</relationshipName>
-        <required>true</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>General_Accounting_Unit__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The General Accounting Unit to attribute this allocation.</description>
@@ -92,16 +78,15 @@
     </fields>
     <fields>
         <fullName>Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Payment__c</fullName>
@@ -149,6 +134,6 @@
     </nameField>
     <pluralLabel>Allocations</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ControlledByParent</sharingModel>
+    <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
 </CustomObject>
