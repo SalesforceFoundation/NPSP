@@ -554,7 +554,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check will verify that all of your settings are valid, and look for any problems in your account related data.</value>
+        <value>Health Check will verify that all of your settings are valid, and look for problems in your account related data.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -666,7 +666,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAutoRelFieldsMissing</shortDescription>
-        <value>Delete the invalid Relationship Autocreation record on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the invalid Relationship Autocreation record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAutoRelInvalidCMField</fullName>
@@ -674,14 +674,14 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAutoRelInvalidCMField</shortDescription>
-        <value>Add the missing CampaignMember field, or delete the Relationships Autocreate record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing CampaignMember field, or delete the Relationships Autocreate record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAutoRelInvalidContactField</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAutoRelInvalidContactField</shortDescription>
-        <value>Add the missing Contact field, or delete the Relationships Autocreation record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Contact field, or delete the Relationships Autocreation record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAutoRelInvalidLookupField</fullName>
@@ -689,7 +689,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionAutoRelInvalidLookupField</shortDescription>
-        <value>Delete the Relationships Autocreate record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Relationship Autocreation record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionBadRDField</fullName>
@@ -697,7 +697,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionBadRDField</shortDescription>
-        <value>Add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionEditSetting</fullName>
@@ -705,7 +705,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionEditSetting</shortDescription>
-        <value>Edit the {0} setting on the {1} &gt; {2} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {1} | {2}, and edit the {0} setting.</value>
     </labels>
     <labels>
         <fullName>healthSolutionHHAccNoContacts</fullName>
@@ -737,7 +737,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidOppField</shortDescription>
-        <value>Add the missing Opportunity field, or delete the Payment Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Payment Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidOppStage</fullName>
@@ -753,7 +753,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidPaymentField</shortDescription>
-        <value>Add the missing Payment field, or delete the Payment Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Payment field, or delete the Payment Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidScheduledJob</fullName>
@@ -769,7 +769,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidUDFObjectField</shortDescription>
-        <value>Add the missing field, or delete the User Rollup record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing field, or delete the User Rollup record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionMailingListReportMissing</fullName>
@@ -792,7 +792,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionPaymentMappingBadDataTypes</shortDescription>
-        <value>Delete the Payment Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Payment Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionRDBadOppField</fullName>
@@ -800,7 +800,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionRDBadOppField</shortDescription>
-        <value>Add the missing Opportunity field, or delete the Recurring Donation Field Mapping record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Recurring Donation Field Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionRDFieldsBadDatatypes</fullName>
@@ -808,7 +808,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionRDFieldsBadDatatypes</shortDescription>
-        <value>Delete the Recurring Donation Field Mapping record, on the{0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Recurring Donation Field Mapping record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionRelReciprocalInvalid</fullName>
@@ -816,7 +816,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionRelReciprocalInvalid</shortDescription>
-        <value>Delete the Reciprocal Relationship record, and create a new one with the required information, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Reciprocal Relationship record, and create a new one with the required information.</value>
     </labels>
     <labels>
         <fullName>healthSolutionScheduleJobs</fullName>
@@ -832,7 +832,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionUDFBadDatatypes</shortDescription>
-        <value>Delete the User Rollup record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the User Rollup record.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFOppField</fullName>
@@ -840,7 +840,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionUDFOppField</shortDescription>
-        <value>Add the missing Opportunity field, or delete the User Rollup record, on the {0} &gt; {1} tab in NPSP Settings.</value>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the User Rollup record.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupLabelReturnToCmp</fullName>

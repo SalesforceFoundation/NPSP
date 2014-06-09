@@ -132,10 +132,6 @@
     
     .panelButtons {
         padding-left: 400px;
-        border-top: #6aafac;
-        border-width: 2px 0 0 0;
-        border-style: solid;        
-        margin-top: 10px;    
     }
     
     .sectionBar {
@@ -160,6 +156,11 @@
         border-color: lightblue;
     }
   
+    .panelHelp {
+        color: gray; 
+        padding: 5px 5px 10px 10px;
+    }
+
     .clsLoading {
         z-index: 99;
         position: fixed;
