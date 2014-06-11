@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -26,32 +26,12 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
-*/
-/**
-* @author Salesforce.com Foundation
-* @date 2014
-* @description Tests specific to Opportunity Allocations. 
-*/
+*/ 
+trigger TDTM_Allocation on Allocation__c (after delete, after insert, after undelete, 
+    after update, before delete, before insert, before update) {
 
-@isTest
-private with sharing class ALLO_Allocations_TEST {
-    
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
-
-    @isTest
-    static void codeCoverage() {
-        if (strTestOnly != '*' && strTestOnly != 'testSettingsManager') return;
-        Account acc = new Account(Name='foo');
-        insert acc;
-        Opportunity opp = new Opportunity(Name='foo', AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
-        insert opp;
-        Allocation__c allo = new Allocation__c(Opportunity__c=opp.id);
-        insert allo;
-
-        list<Trigger_Handler__c> th = [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, 
-                Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
-        system.debug('lookhere!' + th);
-    }
+    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
+    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete, 
+        Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Allocation__c, 
+        new TDTM_ObjectDataGateway());
 }
