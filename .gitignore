@@ -12,3 +12,4 @@ src/quickActions/LogACall.quickAction
 src/quickActions/NewNote.quickAction
 src/quickActions/NewTask.quickAction
 unpackaged/*/*/*.zip
+.*.swp
