@@ -6,6 +6,7 @@ SiteFooter.component
 SitePoweredBy.component
 SiteLogin.component
 SiteHeader.component
+Global-Global Layout.layout
 Account.object
 Contact.object
 Lead.object
