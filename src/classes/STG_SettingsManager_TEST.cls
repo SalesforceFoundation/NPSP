@@ -36,7 +36,7 @@ public with sharing class STG_SettingsManager_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'testPanelAllo';
+    private static string strTestOnly = '*';
     
     public static testMethod void testSettingsManager() {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsManager') return;
