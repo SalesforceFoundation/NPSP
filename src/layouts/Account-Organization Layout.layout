@@ -255,6 +255,9 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
+            <quickActionName>Account.Quick_Organization_Update</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>Account.New_Address</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
@@ -271,9 +274,6 @@
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
-            <quickActionName>FeedItem.MobileSmartActions</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>NewTask</quickActionName>

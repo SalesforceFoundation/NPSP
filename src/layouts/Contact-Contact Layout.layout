@@ -8,7 +8,6 @@
     <excludeButtons>EnablePrmSuperUser</excludeButtons>
     <excludeButtons>EnableSelfService</excludeButtons>
     <excludeButtons>RequestUpdate</excludeButtons>
-    <excludeButtons>RequestUseSfdc</excludeButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <excludeButtons>ViewPartnerPortalUser</excludeButtons>
@@ -412,7 +411,7 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>NewAccount</quickActionName>
+            <quickActionName>Contact.Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>Contact.New_Affiliation</quickActionName>
