@@ -227,8 +227,8 @@
     <name>ApexTrigger</name>
   </types>
   <types>
-    <members>Account.Account_Compact_Layout</members>
-    <members>Account.NPSP_Account_Compact_Layout</members>
+    <members>Account.NPSP_Household_Account</members>
+    <members>Account.NPSP_Organization_Account</members>
     <members>Address__c.NPSP_Address_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
     <members>Contact.NPSP_Contact_Compact_Layout</members>
