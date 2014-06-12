@@ -2,9 +2,6 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>NewAccount</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
             <quickActionName>New_Household_Account</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
@@ -17,13 +14,16 @@
             <quickActionName>NewOpportunity</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>FeedItem.TextPost</quickActionName>
+            <quickActionName>New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>FeedItem.ContentPost</quickActionName>
+            <quickActionName>New_Campaign</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>NewTask</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>LogACall</quickActionName>
