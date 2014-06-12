@@ -7,11 +7,6 @@
         <quickActionLayoutColumns>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>npe01__Opportunity__c</field>
-                <uiBehavior>Required</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
                 <field>npe01__Payment_Date__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
