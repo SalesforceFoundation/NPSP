@@ -82,4 +82,73 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         }
         private set;
     }
+    
+    private static list<Contact> listConExamples {
+    	get {
+            if (listConExamples == null) {
+                    listConExamples = new list<Contact>();
+                    Contact con = new Contact();
+                    con.FirstName = 'Sam';
+                    con.LastName = 'Smith';
+                    con.Salutation = 'Dr.';
+                    con.MailingCity = 'Seattle';
+                    listConExamples.add(con);
+                    
+                    con = new Contact();
+                    con.FirstName = 'Sally';
+                    con.LastName = 'Smith';
+                    con.Salutation = 'Mrs.';
+                    con.MailingCity = 'Seattle';
+                    listConExamples.add(con);
+                    
+                    con = new Contact();
+                    con.FirstName = 'Suzie';
+                    con.LastName = 'Smith';
+                    listConExamples.add(con);
+
+                    con = new Contact();
+                    con.FirstName = 'Daphne';
+                    con.LastName = 'Doe';
+                    con.Salutation = 'Ms.';
+                    con.MailingCity = 'Portland';
+                    listConExamples.add(con);
+
+                    con = new Contact();
+                    con.FirstName = 'Donald';
+                    con.LastName = 'Doe';
+                    con.Salutation = 'Mr.';
+                    con.MailingCity = 'Portland';
+                    listConExamples.add(con);
+                }
+            return listConExamples;
+        }
+    	private set;
+    }
+    
+    // Javascript remoting api to provide an Example formatted string given an instance of
+    // Household Name Settings, which type of string (Name, Formal Greeting, Informal Greeting),
+    // for the specified number of sample Contacts.
+    @RemoteAction
+    public static string strNameSpecExample(Household_Naming_Settings__c hns, string strField, integer cContact) {
+    
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
+        	listCon.add(listConExamples[i]);
+        	
+        // call INaming interface dynamically  
+        string strClass = hns.Implementing_Class__c;  
+        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
+        Type classType = Type.forName(strClass);
+        if (classType != null) {     
+            Object classInstance = classType.newInstance();
+            if (classInstance instanceof HH_INaming) {
+                HH_INaming n = (HH_INaming)classInstance;
+                return n.getExampleName(hns, strField, listCon);
+            } else {
+            	return 'Implementing Class does not implement interface HH_INaming.';
+            }
+        } else {
+        	return 'Invalid Implementing Class';
+        }
+    }    
 }

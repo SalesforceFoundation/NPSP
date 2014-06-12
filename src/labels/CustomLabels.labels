@@ -1024,7 +1024,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
-        <value>Activate Automatic Household Naming</value>
+        <value>Refresh naming on all Households</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>

@@ -91,7 +91,7 @@ public  without sharing class HH_HouseholdNaming {
             }            
             
             if (!customnameparam.contains('Name'))
-                h.put('Name', getHHName(listCon));   
+                h.put('Name', getHHName(listCon));
             
             if (!customnameparam.contains('Formal_Greeting__c'))
                 h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
@@ -110,6 +110,16 @@ public  without sharing class HH_HouseholdNaming {
     
     //get generic household name 
     public  string getHHName(list<Contact> ContactList){
+    	
+    	list<Contact> listCon = new list<Contact>();
+    	for (Contact con : ContactList) {
+    	   if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+    	       listCon.add(con);	
+    	}
+    	// DJH:UNDONE: for now just call our implementation
+    	HH_INaming n = new HH_NameSpec();
+    	return n.getHouseholdName(listCon);  
+    	
         string householdname = '';
         
         if(ContactList != null){

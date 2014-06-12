@@ -56,6 +56,14 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    public Household_Naming_Settings__c stgHN {
+        get {
+            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            return stgHN;
+        }
+        private set;
+    }
+
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
             if (stgRD == null) stgRD = RD_RecurringDonations.getRecurringDonationsSettings();
@@ -143,6 +151,7 @@ public with sharing class STG_SettingsService {
     public void saveAll() {
         upsert stgCon;
         upsert stgHH;
+        upsert stgHN;
         upsert stgRD;
         upsert stgRel;
         upsert stgAffl;
