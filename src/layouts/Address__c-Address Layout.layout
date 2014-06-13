@@ -138,10 +138,13 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>Address__c.Quick_Update</quickActionName>
+            <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>FeedItem.TextPost</quickActionName>
+            <quickActionName>Address__c.Update_Address</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Address__c.Make_Default</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>

@@ -152,7 +152,16 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
+            <quickActionName>FeedItem.TextPost</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Opportunity.Quick_Update</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>Opportunity.New_Payment</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>NewContact</quickActionName>
@@ -161,13 +170,7 @@
             <quickActionName>NewAccount</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>FeedItem.TextPost</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
-            <quickActionName>FeedItem.MobileSmartActions</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <relatedContent>
