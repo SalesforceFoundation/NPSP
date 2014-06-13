@@ -278,9 +278,9 @@
     <members>Address__c.Seasonal_Start_Month__c</members>
     <members>Address__c.Verified__c</members>
     <members>Allocation__c.Amount__c</members>
+    <members>Allocation__c.Campaign__c</members>
     <members>Allocation__c.General_Accounting_Unit__c</members>
     <members>Allocation__c.Opportunity__c</members>
-    <members>Allocation__c.Payment__c</members>
     <members>Allocation__c.Percent__c</members>
     <members>Allocation__c.Recurring_Donation__c</members>
     <members>Allocations_Settings__c.Allocations_Enabled__c</members>
@@ -349,7 +349,6 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
-    <members>alloPaymentTotalExceedsPaymentAmt</members>
     <members>alloTotalExceedsOppAmt</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
