@@ -69,16 +69,16 @@ public with sharing class HH_NameSpec implements HH_INaming {
     	set;
     }
 
-    private static string chLToken = '[';
-    private static string chRToken = ']';
+    private static string chLToken = '{!';
+    private static string chRToken = '}';
         
     // class that supports the parsing of a format string
     // from the Household Naming Settings object.
     //
     // the NameSpec looks like:
-    //      prefix [lastname] [[firstnamespec]] suffix
+    //      prefix {lastname} {{firstnamespec}} suffix
     // where firstname spec is a combo of fields and literals like:
-    //      [salutation] [firstname] ([mailingcity])
+    //      {salutation} {firstname} ({mailingcity})
     //
     private class NameSpec {
         private string strPrefix { get; set; }
@@ -109,7 +109,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             // get optional Prefix
             integer ich = strNameSpec.indexOf(chLToken);   
             if (ich > 0) {
-                // don't include any tokens immediately next to the '[' in the prefix
+                // don't include any tokens immediately next to the '{' in the prefix
                 while (ich > 0 && strNameSpec.substring(ich, ich+1) != ' ') ich--;
                 strPrefix = strNameSpec.left(ich);
                 strNameSpec = strNameSpec.substring(ich);
@@ -118,18 +118,18 @@ public with sharing class HH_NameSpec implements HH_INaming {
             // get optional Suffix
             ich = strNameSpec.lastIndexOf(chRToken);
             if (ich > 0) {
-                // don't include any tokens immediately after the ']' in the suffix
+                // don't include any tokens immediately after the '}' in the suffix
                 while (ich < strNameSpec.length()-1 && strNameSpec.substring(ich+1, ich+2) != ' ') ich++;
                 strSuffix = strNameSpec.substring(ich+1);
                 strNameSpec = strNameSpec.left(ich+1);
             }
             
-            // look for the FirstNameSpec by removing any [LastName] field references
-            string str = strNameSpec.replace('[LastName]', '');
+            // look for the FirstNameSpec by removing any {LastName} field references
+            string str = strNameSpec.replace(chLToken +  'LastName' + chRToken, '');
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
-                strFirstNameSpec = str.substring(ich+1, ichR);
+                strFirstNameSpec = str.substring(ich + chLToken.length(), ichR);
                 strFullNameSpec = strNameSpec.replace(strFirstNameSpec, 'FirstNameSpec');
             } else {
                 strFullNameSpec = strNameSpec;
@@ -167,8 +167,8 @@ public with sharing class HH_NameSpec implements HH_INaming {
             
             // now all contacts from lname should have their fname in strFname.
             string strCon = ns.strFullNameSpec;
-            strCon = strCon.replace('[LastName]', strLname);
-            strCon = strCon.replace('[FirstNameSpec]', strFname);
+            strCon = strCon.replace(chLToken + 'LastName' + chRToken, strLname);
+            strCon = strCon.replace(chLToken + 'FirstNameSpec' + chRToken, strFname);
             
             // add it to the whole name
             if (i > 0 && j < cCon) {
@@ -190,17 +190,17 @@ public with sharing class HH_NameSpec implements HH_INaming {
     private static string strConFspec(Contact con, string strFspec) {
         string str = strFspec;
         
-        // First, instantiate a new Pattern object looking for [...] without any nested ['s.
-        Pattern MyPattern = Pattern.compile('\\[[^\\[]*\\]');       
+        // First, instantiate a new Pattern object looking for {...} without any nested {'s.
+        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
         // Then instantiate a new Matcher object 
         Matcher MyMatcher = MyPattern.matcher(strFspec);
         
         while (MyMatcher.find()) {
-            // get the fieldname without the []'s
-            string strField = strFspec.substring(MyMatcher.start() + 1, MyMatcher.end()-1);
+            // get the fieldname without the {}'s
+            string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
             string val = string.valueOf(con.get(strField));
-            // add back the []'s for string substitution
-            strField = '[' + strField + ']';
+            // add back the {}'s for string substitution
+            strField = chLToken + strField + chRToken;
             if (val == null) {   // eat potential trailing space
                 str = str.replace(strField + ' ', '');
             }
@@ -208,7 +208,5 @@ public with sharing class HH_NameSpec implements HH_INaming {
         }
         return str;     
     }
-    
-
 
 }

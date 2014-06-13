@@ -1,6 +1,7 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" >
 
 <script type="text/javascript">
+    var strCurrentFormat = '';
     
     // update all our examples strings
     function setExamples() {
@@ -14,7 +15,7 @@
     // get the example name for the supplied number of contacts.
     function getExampleName(cCon) {
         // if we have no current format, clear out the example.
-        var strFormat = document.getElementById('txtFormat').value;
+        var strFormat = strCurrentFormat;
         if (strFormat == null || strFormat == '') {
             document.getElementById('example'+cCon).innerHTML = '';
             return;
@@ -44,19 +45,36 @@
     }
 
     // called when the user changes an option in the selectlist (or it gets the focus)
-    // set's the format to the current selectlist option, and refreshes the example strings.    
-    function setNameSpec(sl, strLabel) {
+    // set's the format to the current control's value, and refreshes the example strings.    
+    function setNameSpec(sl, idTxt, strLabel) {
         var strFormat = sl.value;
-        var nslabel = sl.item(sl.selectedIndex).text;        
-        var strAnd = 'and';
-        
-        document.getElementById('txtFormat').value = strFormat;
-        document.getElementById('lblExamples').innerHTML = strLabel;
-        if (nslabel.indexOf(' & ') != -1) {
-            strAnd = '&';
+        //var nslabel = sl.item(sl.selectedIndex).text;        
+        if (strFormat == 'other') {
+            j$("[id$='" + idTxt + "']").show();
+            strFormat = j$("[id$='" + idTxt + "']").val();    
+        } else if (idTxt != null) {
+            j$("[id$='" + idTxt + "']").hide();    
+            j$("[id$='" + idTxt + "']").val(strFormat);
         }
-        j$("[id$='txtAnd']").val(strAnd);
+        strCurrentFormat = strFormat;
+        document.getElementById('lblExamples').innerHTML = strLabel;
         setExamples();
+    }
+    
+    function initOtherFormats() {
+        initSelectListsForOther('slstrFormatHH', 'txtFormatHH');
+        initSelectListsForOther('slstrFormatFG', 'txtFormatFG');
+        initSelectListsForOther('slstrFormatIG', 'txtFormatIG');
+    }
+        
+    function initSelectListsForOther(idSl, idTxt) {
+        var sl = j$("[id$='" + idSl + "']");
+        var txt = j$("[id$='" + idTxt + "']");
+        
+        if (sl.val() == '' && txt.val() != '') {
+            sl.val('other');
+            txt.show();
+        } 
     }
     
 </script>
@@ -77,6 +95,23 @@
         font-style: italic;
     }
     
+    .sectionExamples {
+        color: #666;
+        padding: 5px 5px 5px 10px;
+        margin-left: 200px;
+        margin-bottom: 10px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: lightblue;
+        width: 450px;
+        border-radius: 4px;      
+        
+    } 
+    
+    .editFormat {
+        margin-left: 25px;
+        width: 200px;
+    }   
 </style>
 
     <apex:form id="form">   
@@ -124,93 +159,93 @@
                 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Household_Name_Format__c.Label}" for="slstrFormatHH" />
                 <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" 
-                    onchange="setNameSpec(this, 'Examples for Household Name Format');"
-                    onfocus="setNameSpec(this, 'Examples for Household Name Format');"
-                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
-                    <apex:selectOption itemValue="" itemLabel="- none -" />
-                    <apex:selectOption itemValue="[LastName] Household" itemLabel="Smith Household" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName] Household" itemLabel="Sam & Sally Smith Household" />
-                    <apex:selectOption itemValue="[LastName] ([[FirstName]]) Household" itemLabel="Smith (Sam & Sally) Household" />
-                    <apex:selectOption itemValue="[LastName] Family" itemLabel="Smith Family" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName] Family" itemLabel="Sam & Sally Smith Family" />
-                    <apex:selectOption itemValue="[LastName] ([[FirstName]]) Family" itemLabel="Smith (Sam & Sally) Family" />
-                    <apex:selectOption itemValue="{!stgService.stgHN.Household_Name_Format__c}" itemLabel="custom" />
-                </apex:selectList>
+                <apex:panelGroup rendered="{!isEditMode}" >
+	                <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" 
+	                    onchange="setNameSpec(this, 'txtFormatHH', 'Examples for Household Name Format');"
+	                    onfocus="setNameSpec(this, 'txtFormatHH', 'Examples for Household Name Format');"
+	                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
+	                        <apex:selectOptions value="{!listSOHouseholdNameFormats}"/>
+	                </apex:selectList>
+                    <br/>
+                    <apex:inputText value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="editFormat" 
+                        onchange="setNameSpec(this, null, 'Examples for Household Name Format');" 
+                        onfocus="setNameSpec(this, null, 'Examples for Household Name Format');" 
+                        rendered="{!isEditMode}" id="txtFormatHH" style="display:none;"/>
+                </apex:panelGroup>
                 <apex:outputLabel value="The format to use for the Household Name." />
 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Formal_Greeting_Format__c.Label}" for="slstrFormatFG" />
                 <apex:outputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" 
-                    onchange="setNameSpec(this, 'Examples for Formal Greeting Format');"  
-                    onfocus="setNameSpec(this, 'Examples for Formal Greeting Format');"  
-                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
-                    <apex:selectOption itemValue="" itemLabel="- none -" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName]" itemLabel="Sam & Sally Smith" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName]" itemLabel="Sam and Sally Smith" />
-                    <apex:selectOption itemValue="[[Salutation]] [LastName]" itemLabel="Dr. & Mrs. Smith" />
-                    <apex:selectOption itemValue="[[Salutation]] [LastName]" itemLabel="Dr. and Mrs. Smith" />
-                    <apex:selectOption itemValue="[[Salutation] [FirstName]] [LastName]" itemLabel="Dr. Sam & Mrs. Sally Smith" />
-                    <apex:selectOption itemValue="[[Salutation] [FirstName]] [LastName]" itemLabel="Dr. Sam and Mrs. Sally Smith" />
-                </apex:selectList>
+                <apex:panelGroup rendered="{!isEditMode}" >
+	                <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" 
+	                    onchange="setNameSpec(this, 'txtFormatFG', 'Examples for Formal Greeting Format');"  
+	                    onfocus="setNameSpec(this, 'txtFormatFG', 'Examples for Formal Greeting Format');"  
+	                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
+	                        <apex:selectOptions value="{!listSOFormalGreetingFormats}"/>
+	                </apex:selectList>
+	                <br/>
+	                <apex:inputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="editFormat" 
+	                    onchange="setNameSpec(this, null, 'Examples for Formal Greeting Format');" 
+                        onfocus="setNameSpec(this, null, 'Examples for Formal Greeting Format');" 
+	                    rendered="{!isEditMode}" id="txtFormatFG" style="display:none;"/>
+                </apex:panelGroup>
                 <apex:outputLabel value="The format to use for the Household Formal Greeting." />
 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Informal_Greeting_Format__c.Label}" for="slstrFormatIG" />
                 <apex:outputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" 
-                    onchange="setNameSpec(this, 'Examples for Informal Greeting Format');" 
-                    onfocus="setNameSpec(this, 'Examples for Informal Greeting Format');" 
-                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
-                    <apex:selectOption itemValue="" itemLabel="- none -" />
-                    <apex:selectOption itemValue="[[FirstName]]" itemLabel="Sam & Sally" />
-                    <apex:selectOption itemValue="[[FirstName]]" itemLabel="Sam and Sally" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName]" itemLabel="Sam & Sally Smith" />
-                    <apex:selectOption itemValue="[[FirstName]] [LastName]" itemLabel="Sam and Sally Smith" />
-                </apex:selectList>
+                <apex:panelGroup rendered="{!isEditMode}" >
+	                <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" 
+	                    onchange="setNameSpec(this, 'txtFormatIG', 'Examples for Informal Greeting Format');" 
+	                    onfocus="setNameSpec(this, 'txtFormatIG', 'Examples for Informal Greeting Format');" 
+	                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
+	                        <apex:selectOptions value="{!listSOInformalGreetingFormats}"/>
+	                </apex:selectList>
+                    <br/>
+                    <apex:inputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="editFormat" 
+                        onchange="setNameSpec(this, null, 'Examples for Informal Greeting Format');" 
+                        onfocus="setNameSpec(this, null, 'Examples for Informal Greeting Format');" 
+                        rendered="{!isEditMode}" id="txtFormatIG" style="display:none;"/>
+                </apex:panelGroup>
                 <apex:outputLabel value="The format to use for the Household Informal Greeting." />
 
-            </apex:panelGrid>
-
-            <apex:panelGrid columns="2" columnClasses="propLabel,propExamples" rendered="{!isEditMode}" >
-                <label id="lblExamples">Examples</label>
-                <apex:panelGroup >
-                    <ul class="listExamples" >
-                        <li><span id="example1"></span></li>
-                        <li><span id="example2"></span></li>
-                        <li><span id="example3"></span></li>
-                        <li><span id="example4"></span></li>
-                        <li><span id="example5"></span></li>
-                    </ul>
-                </apex:panelGroup>                                    
-
-            </apex:panelGrid>
-
-            <h3 class="sectionBar" >Advanced Household Naming Rules</h3>                        
-            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
-                
-                <apex:outputLabel value="Current Specification" />
-                <input id="txtFormat" style="width:300px;" onchange="setExamples();"/>
-                <apex:outputLabel value="" />
-                
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Connector__c.Label}" for="txtAnd" />
-                <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();"/>
+                <apex:outputText value="{!stgService.stgHN.Name_Connector__c}" rendered="{!isReadOnlyMode}" />
+                <apex:inputText value="{!stgService.stgHN.Name_Connector__c}" id="txtAnd" onchange="setExamples();" rendered="{!isEditMode}" />
                 <apex:outputLabel value="Specify what string should be used to connect pairs in a name." />
                 
+            </apex:panelGrid>
+            
+			<apex:outputPanel layout="block" styleClass="sectionExamples" rendered="{!isEditMode}">
+			    <h4><label id="lblExamples">Examples</label></h4>
+			 <ul class="listExamples" >
+			     <li><span id="example1"></span></li>
+			     <li><span id="example2"></span></li>
+			     <li><span id="example3"></span></li>
+			     <li><span id="example4"></span></li>
+			     <li><span id="example5"></span></li>
+			 </ul>
+			</apex:outputPanel>
+
+            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+                
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Overrun__c.Label}" for="txtOverrun" />
-                <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();"/>
+                <apex:outputText value="{!stgService.stgHN.Name_Overrun__c}" rendered="{!isReadOnlyMode}" />
+                <apex:inputText value="{!stgService.stgHN.Name_Overrun__c}" id="txtOverrun" onchange="setExamples();" rendered="{!isEditMode}" />
                 <apex:outputLabel value="Specify what string should be used to replace long lists of names." />
 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Contact_Overrun_Count__c.Label}" for="txtOverrunCount"/>
-                <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();"/>
+                <apex:outputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" rendered="{!isReadOnlyMode}" />
+                <apex:inputText value="{!stgService.stgHN.Contact_Overrun_Count__c}" id="txtOverrunCount" onchange="setExamples();" rendered="{!isEditMode}" />
                 <apex:outputLabel value="Specify the number of contacts to explicitly list in a name.  After that amount, the Name Overrun will be used." />
                 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Implementing_Class__c.Label}" for="txtClass" />
-                <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();"/>
+                <apex:outputText value="{!stgService.stgHN.Implementing_Class__c}" rendered="{!isReadOnlyMode}" />
+                <apex:inputText value="{!stgService.stgHN.Implementing_Class__c}" id="txtClass" onchange="setExamples();" rendered="{!isEditMode}" />
                 <apex:outputLabel value="Specify the Apex Class that implements the HH_INaming interface for Household naming." />
 
                 <apex:outputLabel value="" />
-                <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" action="{!activateHouseholdNaming}" rerender="pbHH" rendered="{! isEditMode }" />
-                <apex:outputLabel value="{!$Label.stgHelpBtnHHNaming}" rendered="{! isEditMode }" />
+                <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" action="{!activateHouseholdNaming}" rerender="pbHH" rendered="{!isEditMode}" />
+                <apex:outputLabel value="{!$Label.stgHelpBtnHHNaming}" rendered="{!isEditMode}" />
 
             </apex:panelGrid>            
 
@@ -221,7 +256,7 @@
             </apex:outputPanel>
 
             <apex:pageBlockButtons location="both" >
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" oncomplete="initOtherFormats();" rerender="form" />
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
             </apex:pageBlockButtons>

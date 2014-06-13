@@ -254,9 +254,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         Household_Naming_Settings__c settings = Household_Naming_Settings__c.getOrgDefaults();
         if (settings.Id == null) {
             settings = Household_Naming_Settings__c.getOrgDefaults();
-            settings.Household_Name_Format__c = '[LastName] ' + label.npo02.DefaultHouseholdName;
-            settings.Formal_Greeting_Format__c = '[[Salutation] [FirstName]] [LastName]';
-            settings.Informal_Greeting_Format__c = '[[FirstName]]';
+            settings.Household_Name_Format__c = '{!LastName} ' + label.npo02.DefaultHouseholdName;
+            settings.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+            settings.Informal_Greeting_Format__c = '{!{!FirstName}}';
             settings.Name_Connector__c = label.npo02.HouseholdNameConnector;
             settings.Name_Overrun__c = label.npo02.HouseholdNameOverrun;
             settings.Contact_Overrun_Count__c = 9;

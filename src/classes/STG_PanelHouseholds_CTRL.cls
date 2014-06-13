@@ -82,7 +82,54 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         }
         private set;
     }
+        
+    static public list<SelectOption> listSOHouseholdNameFormats {
+        get {    
+            if (listSOHouseholdNameFormats == null) {
+                listSOHouseholdNameFormats = new list<SelectOption>();
+                listSOHouseholdNameFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Household', '{!LastName} Household'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Household', '{!{!FirstName}} {!LastName} Household'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Household', '{!LastName} ({!{!FirstName}}) Household'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('other', 'other'));
+            }
+            return listSOHouseholdNameFormats;
+        }
+        private set;
+    }
     
+    static public list<SelectOption> listSOFormalGreetingFormats {
+        get {    
+            if (listSOFormalGreetingFormats == null) {
+                listSOFormalGreetingFormats = new list<SelectOption>();
+                listSOFormalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation}} {!LastName}', '{!{!Salutation}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('other', 'other'));
+            }
+            return listSOFormalGreetingFormats;
+        }
+        private set;
+    }
+
+    static public list<SelectOption> listSOInformalGreetingFormats {
+        get {    
+            if (listSOInformalGreetingFormats == null) {
+                listSOInformalGreetingFormats = new list<SelectOption>();
+                listSOInformalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}}', '{!{!FirstName}}'));
+                listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
+                listSOInformalGreetingFormats.add(new SelectOption('other', 'other'));
+            }
+            return listSOInformalGreetingFormats;
+        }
+        private set;
+    }
+
     private static list<Contact> listConExamples {
     	get {
             if (listConExamples == null) {
