@@ -8,6 +8,9 @@
             <quickActionName>NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
+            <quickActionName>New_Organization</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>NewOpportunity</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
