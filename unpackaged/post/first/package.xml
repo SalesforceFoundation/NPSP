@@ -12,5 +12,9 @@
     <members>*</members>
     <name>CompactLayout</name>
   </types>
+  <types>
+    <members>*</members>
+    <name>QuickAction</name>
+  </types>
   <version>29.0</version>
 </Package>
