@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldOverrides>
+        <field>IsActive</field>
+        <formula>true</formula>
+    </fieldOverrides>
     <label>New Campaign</label>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
@@ -8,11 +12,6 @@
                 <emptySpace>false</emptySpace>
                 <field>Name</field>
                 <uiBehavior>Required</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>IsActive</field>
-                <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
@@ -32,6 +31,11 @@
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
                 <field>EndDate</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Status</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
             <quickActionLayoutItems>
