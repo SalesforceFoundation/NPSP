@@ -11,6 +11,9 @@
             <quickActionName>New_Organization</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
+            <quickActionName>New_Household_Account</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>NewOpportunity</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
