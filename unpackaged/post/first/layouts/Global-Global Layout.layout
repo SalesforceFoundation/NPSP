@@ -14,9 +14,6 @@
             <quickActionName>New_Household_Account</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>NewOpportunity</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
             <quickActionName>New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
