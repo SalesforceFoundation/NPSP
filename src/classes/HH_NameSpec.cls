@@ -110,7 +110,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             integer ich = strNameSpec.indexOf(chLToken);   
             if (ich > 0) {
                 // don't include any tokens immediately next to the '{' in the prefix
-                while (ich > 0 && strNameSpec.substring(ich, ich+1) != ' ') ich--;
+                //while (ich > 0 && strNameSpec.substring(ich, ich+1) != ' ') ich--;
                 strPrefix = strNameSpec.left(ich);
                 strNameSpec = strNameSpec.substring(ich);
             }
@@ -125,7 +125,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
             
             // look for the FirstNameSpec by removing any {LastName} field references
-            string str = strNameSpec.replace(chLToken +  'LastName' + chRToken, '');
+            string str = strNameSpec.replace(chLToken + 'LastName' + chRToken, '');
             ich = str.indexOf(chLToken);
             integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
@@ -145,17 +145,22 @@ public with sharing class HH_NameSpec implements HH_INaming {
         string strName = '';
         integer cCon = listCon.size();          
         integer i = 0;
+        boolean isNoLastnames = (ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1);
 
-        while (i < cCon) {
+        // use cMaxUseOverrun to limit our naming
+        //if (cCon > ns.cMaxUseOverrun)
+        //    cCon = ns.cMaxUseOverrun;
+        
+        while (i < cCon && i < ns.cMaxUseOverrun) {
             
             string strLname = listCon[i].LastName;
             string strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
             
             // get the set of all fname's for this lname
             integer j = i + 1;
-            while (j < cCon && listCon[j].LastName == strLname) {
+            while (j < cCon && j < ns.cMaxUseOverrun && (isNoLastnames || listCon[j].LastName == strLname)) {
                 integer k = j + 1;
-                if (k == cCon || listCon[k].LastName != strLname) {
+                if (k == cCon || (!isNoLastnames && listCon[k].LastName != strLname)) {
                     strFname += ' ' + ns.strAnd + ' ' + strConFspec(listCon[j], ns.strFirstNameSpec);
                     j++;
                     break;
@@ -171,12 +176,16 @@ public with sharing class HH_NameSpec implements HH_INaming {
             strCon = strCon.replace(chLToken + 'FirstNameSpec' + chRToken, strFname);
             
             // add it to the whole name
-            if (i > 0 && j < cCon) {
+            if (i > 0 && j < cCon && j < ns.cMaxUseOverrun) {
                 strName += ', ';
-            } else if (i > 0 && j == cCon) {
+            } else if (i > 0 && (j == cCon || j == ns.cMaxUseOverrun)) {
                 strName += ' ' + ns.strAnd + ' ';
             }
             strName += strCon;
+
+            if (j == ns.cMaxUseOverrun && cCon > ns.cMaxUseOverrun && ns.strFirstNameSpec != '') {
+                strName += ' ' + ns.strAnd + ' ' + ns.strOverrun;
+            }
 
             // continue with the next person we haven't included
             i = j;

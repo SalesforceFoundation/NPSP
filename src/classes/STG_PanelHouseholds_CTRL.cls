@@ -46,7 +46,6 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         isRunningBatch = true; 
                 
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-        // DJH:UNDONE is it ok that we save all settings to perform this action?
         saveSettings();
         
         //call advanced rollup batch process
@@ -88,13 +87,13 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
             if (listSOHouseholdNameFormats == null) {
                 listSOHouseholdNameFormats = new list<SelectOption>();
                 listSOHouseholdNameFormats.add(new SelectOption('', Label.stgLabelNone));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Household', '{!LastName} Household'));
-                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Household', '{!{!FirstName}} {!LastName} Household'));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Household', '{!LastName} ({!{!FirstName}}) Household'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ' + label.npo02.DefaultHouseholdName, '{!LastName} ' + label.npo02.DefaultHouseholdName));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName, '{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName, '{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName));
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
                 listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
-                listSOHouseholdNameFormats.add(new SelectOption('other', 'other'));
+                listSOHouseholdNameFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOHouseholdNameFormats;
         }
@@ -109,7 +108,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation}} {!LastName}', '{!{!Salutation}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
-                listSOFormalGreetingFormats.add(new SelectOption('other', 'other'));
+                listSOFormalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOFormalGreetingFormats;
         }
@@ -123,7 +122,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOInformalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
                 listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}}', '{!{!FirstName}}'));
                 listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
-                listSOInformalGreetingFormats.add(new SelectOption('other', 'other'));
+                listSOInformalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOInformalGreetingFormats;
         }
@@ -192,10 +191,10 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 HH_INaming n = (HH_INaming)classInstance;
                 return n.getExampleName(hns, strField, listCon);
             } else {
-            	return 'Implementing Class does not implement interface HH_INaming.';
+            	return label.stgErrorINaming;
             }
         } else {
-        	return 'Invalid Implementing Class';
+        	return label.stgErrorInvalidClass;
         }
     }    
 }

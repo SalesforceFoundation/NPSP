@@ -64,6 +64,7 @@
     <members>HH_ManageHousehold_EXT</members>
     <members>HH_ManageHousehold_TEST</members>
     <members>HH_NameSpec</members>
+    <members>HH_NameSpec_TEST</members>
     <members>HH_OppContactRoles_TDTM</members>
     <members>HH_OppContactRoles_TEST</members>
     <members>HH_ProcessControl</members>
@@ -460,6 +461,8 @@
     <members>stgBtnRDCreateNewMap</members>
     <members>stgBtnRunBatch</members>
     <members>stgBtnSave</members>
+    <members>stgErrorINaming</members>
+    <members>stgErrorInvalidClass</members>
     <members>stgHelpAccountModel</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>
@@ -475,24 +478,31 @@
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
+    <members>stgHelpFGFormat</members>
     <members>stgHelpFiscalYearRollups</members>
     <members>stgHelpHHAccountRTID</members>
     <members>stgHelpHHExcludedRT</members>
     <members>stgHelpHHMailingListReport</members>
+    <members>stgHelpHHNameFormat</members>
     <members>stgHelpHHNaming</members>
     <members>stgHelpHHOCROn</members>
     <members>stgHelpHHObjectOverview</members>
     <members>stgHelpHHRules</members>
+    <members>stgHelpIGFormat</members>
+    <members>stgHelpINamingClass</members>
     <members>stgHelpLeadConvert</members>
     <members>stgHelpMaxPayments</members>
     <members>stgHelpMembershipGracePeriod</members>
     <members>stgHelpMembershipRT</members>
+    <members>stgHelpNameConnector</members>
+    <members>stgHelpNameOverrun</members>
     <members>stgHelpNewRDFieldMap</members>
     <members>stgHelpNewUDR</members>
     <members>stgHelpNoUDR</members>
     <members>stgHelpOCRDefaultRole</members>
     <members>stgHelpOCRRoleForHH</members>
     <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpOverrunCount</members>
     <members>stgHelpPaymentMapOppField</members>
     <members>stgHelpPaymentMapPaymentField</members>
     <members>stgHelpPaymentMapping</members>
@@ -548,6 +558,9 @@
     <members>stgLabelBatchStatus</members>
     <members>stgLabelCurrentUDR</members>
     <members>stgLabelErrorNotify</members>
+    <members>stgLabelExamplesFGFormat</members>
+    <members>stgLabelExamplesHHNameFOrmat</members>
+    <members>stgLabelExamplesIGFormat</members>
     <members>stgLabelHHGeneral</members>
     <members>stgLabelHHNaming</members>
     <members>stgLabelHHNamingProgress</members>
@@ -566,6 +579,7 @@
     <members>stgLabelOppBatchProgress</members>
     <members>stgLabelOppRollupRT</members>
     <members>stgLabelOppRollups</members>
+    <members>stgLabelOther</members>
     <members>stgLabelPaymentMapNoValidFields</members>
     <members>stgLabelPaymentSettings</members>
     <members>stgLabelRDFieldMap</members>
