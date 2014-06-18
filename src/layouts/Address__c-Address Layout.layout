@@ -144,9 +144,6 @@
             <quickActionName>Address__c.Update_Address</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Address__c.Make_Default</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
