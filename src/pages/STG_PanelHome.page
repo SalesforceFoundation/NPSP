@@ -1,19 +1,11 @@
 <apex:page controller="STG_SettingsManager_CTRL" >
 
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
-
 <style>
     body{
         margin:0px;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        padding: 0px;
     }
-    .bootstrap3 h1, .bootstrap3 h2, .bootstrap3 h3, .bootstrap3 h4{
-        font-family: Vagrolight,Arial,Helvetica,sans-serif;
-    }
-    .bootstrap3 p{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
+
     .bootstrap .jumbotron {
         background-color: #f0f1f2;
         margin-bottom: 0px;
@@ -28,9 +20,9 @@
     }
 
 	/* Customize container */
-	@media (min-width: 768px) {
+	@media (min-width: 548px) { /* 768 - sidebar (200) - margins */
 	  .container {
-	    max-width: 900px;
+	    max-width: 720px;
 	  }
 	}    
 </style>
