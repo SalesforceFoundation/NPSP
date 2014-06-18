@@ -652,6 +652,8 @@
     <name>FieldSet</name>
   </types>
   <types>
+    <members>Account-Household Layout</members>
+    <members>Account-Organization Layout</members>
     <members>Address__c-Address Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
