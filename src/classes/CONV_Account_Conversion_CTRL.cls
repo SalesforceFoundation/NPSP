@@ -173,8 +173,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
             errorString += 'Your Salesforce.com Organization currently has '+ displayHHAccountCount + ' Household Account(s) already in existence.  ';
         if (ContactConnectedCount > 0)
             errorString += 'Your Salesforce.com Organization currently has ' + displayContactCount + ' Contact(s) associated with a Household Account.  ';
-        errorString += 'By running this converter, your Contacts will receive a NEW Household Account, and will be detached from the existing Household Account they are currently connected to.  ';
-        errorString += 'No Household Accounts will be deleted, but you may have duplicate Household Accounts if you choose to run this process again.';
+        errorString += 'This converter will attempt to ignore any Contacts that already have a Household Account associated.';
 
         if (HHAccountCount > 0 || ContactConnectedCount > 0) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
