@@ -164,6 +164,49 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       </if>
     </target>
 
+    <!-- uninstallUnpackagedPre: Uninstall the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="uninstallUnpackagedPre">
+      <if>
+        <available file="${basedir}/unpackaged/pre/" type="dir" />
+        <then>
+          <for param="dir">
+            <path>
+              <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
+            </path>
+            <sequential>  
+              <echo>Uninstalling unpackaged bundle @{dir}</echo>
+              <delete dir="uninstall" />
+              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
+              <delete dir="uninstall" />
+            </sequential>
+          </for>
+        </then>
+      </if>
+    </target>
+
+    <!-- uninstallUnpackagedPost: Uninstall the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="uninstallUnpackagedPost">
+      <if>
+        <available file="${basedir}/unpackaged/post/" type="dir" />
+        <then>
+          <for param="dir">
+            <path>
+              <dirset dir="${basedir}/unpackaged/post/" includes="*" />
+            </path>
+            <sequential>  
+              <echo>Deploying unpackaged bundle @{dir}</echo>
+              <echo>Uninstalling unpackaged bundle @{dir}</echo>
+              <delete dir="uninstall" />
+              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
+              <delete dir="uninstall" />
+            </sequential>
+          </for>
+        </then>
+      </if>
+    </target>
+
     <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests --> 
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployCI">
@@ -182,6 +225,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
       <antcall target="deployUnpackagedPost" />
 
+      <!-- Uninstall unpackaged post bundles since they may reference code in the package -->
+      <antcall target="uninstallUnpackagedPost" />
     </target>
 
     <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstall.
@@ -359,6 +404,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- uninstall: Removes all metadata from the package -->
     <target name="uninstall">
+      <antcall target="uninstallUnpackagedPost" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
       <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
@@ -366,6 +412,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
+      <antcall target="uninstallUnpackagedPre" />
     </target>
 
     <!-- uninstall: Removes all non-standard unpackaged metadata from the org -->
