@@ -91,7 +91,7 @@ public  without sharing class HH_HouseholdNaming {
             }            
             
             if (!customnameparam.contains('Name'))
-                h.put('Name', getHHName(listCon));   
+                h.put('Name', getHHName(listCon));
             
             if (!customnameparam.contains('Formal_Greeting__c'))
                 h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
@@ -108,8 +108,46 @@ public  without sharing class HH_HouseholdNaming {
         HH_ProcessControl.inFutureContext = false;    
     }
     
+    
+    // our cached copy of the Household Naming Settings
+    private Household_Naming_Settings__c hns {
+        get {
+            if (hns == null) hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            return hns;
+        }
+        set;
+    }
+
+    private HH_INaming iNaming {
+    	get {
+    		if (iNaming == null) {                
+		        string strClass = hns.Implementing_Class__c;  
+		        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
+		        Type classType = Type.forName(strClass);
+		        if (classType != null) {     
+		            Object classInstance = classType.newInstance();
+		            if (classInstance instanceof HH_INaming) {
+		                iNaming = (HH_INaming)classInstance;
+		            }
+		        }
+    		}
+    		return iNaming;
+    	}
+    	set;
+    }
+    
     //get generic household name 
-    public  string getHHName(list<Contact> ContactList){
+    public string getHHName(list<Contact> ContactList){        
+        if (ContactList == null)
+            return '';
+    	list<Contact> listCon = new list<Contact>();
+    	for (Contact con : ContactList) {
+            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+                listCon.add(con);	
+    	}
+        return iNaming.getHouseholdName(listCon);  
+    }
+/***********    	
         string householdname = '';
         
         if(ContactList != null){
@@ -159,10 +197,21 @@ public  without sharing class HH_HouseholdNaming {
         }
         return householdname;
     }
+************/
     
     
     //just pile up first names for qualifying contacts
     public  string getInformalName(list<Contact> ContactList){
+        if (ContactList == null)
+            return '';
+        list<Contact> listCon = new list<Contact>();
+        for (Contact con : ContactList) {
+            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+                listCon.add(con);   
+        }
+        return iNaming.getHouseholdInformalGreeting(listCon);  
+    }
+/***********        
         string informalname = ''; 
        
         list<Contact> contactnames = new list<Contact>();
@@ -210,8 +259,20 @@ public  without sharing class HH_HouseholdNaming {
         }
         return informalname;
     }
+*****/
     
     public  string getFormalName(list<Contact> ContactList){
+        if (ContactList == null)
+            return '';
+        list<Contact> listCon = new list<Contact>();
+        for (Contact con : ContactList) {
+            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+                listCon.add(con);   
+        }
+        return iNaming.getHouseholdFormalGreeting(listCon);  
+    }
+
+/***********        
         string formalname = ''; 
        
         list<Contact> contactnames = new list<Contact>();
@@ -276,6 +337,7 @@ public  without sharing class HH_HouseholdNaming {
         }
         return formalname;  
     }
+*****/
     
     //interface for the batch jobs on advanced greeting activation
     public void ActivateAdvancedGreetings(boolean isTest){
@@ -289,6 +351,9 @@ public  without sharing class HH_HouseholdNaming {
         'npo02__household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c, ' +
         'npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Naming_Exclusions__c,  Firstname, lastname, ' +
         'salutation ' +
+        
+        // DJH:UNDONE we need to add more contact fields to the soql to support the template!
+        
         'FROM Contact where npo02__Household__c != null ' +
         (isTest ? ' and lastname=\'%LastName0%\' LIMIT 200' : '') + 
         '', true);
