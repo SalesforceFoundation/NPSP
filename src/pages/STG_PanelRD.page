@@ -1,12 +1,6 @@
 <apex:page controller="STG_PanelRD_CTRL" docType="html-5.0" action="{!init}">
-
-    <div class="page-header">
-        <img src="/s.gif" class="pageTitleIcon" />
-        <h1>{!$Label.stgNavDonations}</h1>
-        <h2>{!$Label.stgNavRecurringDonations}</h2>
-    </div>
-    <apex:outputPanel layout="block">{!$Label.npe03__RecurringDonationSettingsDescription}</apex:outputPanel>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
+    <p>{!$Label.npe03__RecurringDonationSettingsDescription}</p>
     <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   

@@ -9,11 +9,8 @@
        });
     </script>
 
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavHouseholds}</h1>
-		<h2>LiveAddress API Setup</h2>
-	</div>
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="LiveAddress API Setup" />
+
 	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
 	<apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
 	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />

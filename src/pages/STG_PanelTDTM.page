@@ -1,12 +1,6 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
-
-    <div class="page-header">
-        <img src="/s.gif" class="pageTitleIcon" />
-        <h1>{!$Label.stgNavSystem}</h1>
-        <h2>{!$Label.stgNavTriggerConfig}</h2>
-    </div>
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
     <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
-
     <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="stgForm" >  

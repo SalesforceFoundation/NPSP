@@ -1,15 +1,9 @@
 <apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavDonations}</h1>
-		<h2>{!$Label.stgNavPayments}</h2>
-	</div>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
 	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
         <apex:pageBlock mode="maindetail">
-  
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="control-label" />

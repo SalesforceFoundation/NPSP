@@ -1,11 +1,5 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
-
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavDonations}</h1>
-		<h2>{!$Label.stgNavRDBatch}</h2>
-	</div>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
 	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   

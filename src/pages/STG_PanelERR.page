@@ -62,13 +62,8 @@
             errNotif.hideChatterGroupBox();
         });
    </script>
-
-    <div class="page-header">
-        <img src="/s.gif" class="pageTitleIcon" />
-        <h1>{!$Label.stgNavSystem}</h1>
-        <h2>{!$Label.stgNavErrorNotify}</h2>
-    </div>
-
+    
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
     <apex:pageMessages id="pageMessages"/>
      
     <apex:form id="form">   

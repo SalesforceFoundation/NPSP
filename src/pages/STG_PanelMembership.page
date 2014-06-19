@@ -1,15 +1,9 @@
 <apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0">
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavDonations}</h1>
-		<h2>{!$Label.stgNavMembership}</h2>
-	</div>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavMembership}" />
 	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
         <apex:pageBlock mode="maindetail">
-  
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" styleClass="control-label" />

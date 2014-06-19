@@ -1,13 +1,6 @@
 <apex:page controller="STG_PanelContacts_CTRL" >
-
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavContacts}</h1>
-		<h2>{!$Label.stgNavAccountModel}</h2>
-	</div>
-	
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavContacts}" pageLabel="{!$Label.stgNavAccountModel}" />
 	<p>{!$Label.npe01__Contacts_Settings_Account_Model_Help_Text}</p>
-
 	<apex:pageMessages id="pageMessages"/>
     	
     <apex:form id="form">

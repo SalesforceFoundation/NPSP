@@ -1,12 +1,6 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" >
-
-    <div class="page-header">
-        <img src="/s.gif" class="pageTitleIcon" />
-        <h1>{!$Label.stgNavDonations}</h1>
-        <h2>{!$Label.stgNavUserDefinedRollups}</h2>
-    </div>
-    <apex:outputPanel layout="block">{!$Label.npo02__UDRDescription}</apex:outputPanel>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavUserDefinedRollups}" />
+    <p>{!$Label.npo02__UDRDescription}</p>
     <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">  

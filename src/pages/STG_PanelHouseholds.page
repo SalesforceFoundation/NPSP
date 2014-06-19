@@ -1,10 +1,5 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" >
-	<div class="page-header">
-		<img src="/s.gif" class="pageTitleIcon" />
-		<h1>{!$Label.stgNavHouseholds}</h1>
-		<h2>{!$Label.stgLabelHHSettings}</h2>
-	</div>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="{!$Label.stgLabelHHSettings}" />
 	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   

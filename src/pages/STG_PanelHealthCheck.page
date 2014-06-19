@@ -26,15 +26,9 @@
         }
     </script>
 
-    <div class="page-header">
-        <img src="/s.gif" class="pageTitleIcon" />
-        <h1>{!$Label.stgNavSystem}</h1>
-        <h2>{!$Label.stgNavHealthCheck}</h2>
-    </div>
-    <apex:outputPanel layout="block">{!$Label.healthLabelIntro}</apex:outputPanel>
-
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
+    <p>{!$Label.healthLabelIntro}</p>
     <apex:pageMessages id="pageMessages"/>
-
 
     <apex:form id="form">   
         <apex:pageBlock id="pbDetector" mode="maindetail">
