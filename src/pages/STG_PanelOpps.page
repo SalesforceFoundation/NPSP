@@ -1,20 +1,25 @@
 <apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
+	<div class="page-header">
+		<img src="/s.gif" class="pageTitleIcon" />
+		<h1>{!$Label.stgNavDonations}</h1>
+		<h2>{!$Label.stgNavPayments}</h2>
+	</div>
+
+	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavPayments}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" />
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" />
-                <apex:outputLabel value="{!$Label.stgHelpPaymentsEnabled}" />
+                <apex:outputText value="{!$Label.stgHelpPaymentsEnabled}" styleClass="help-block" />
                
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" />
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" styleClass="control-label" />
                 <apex:outputField value="{!stgService.stgCon.Max_Payments__c}" rendered="{!isReadOnlyMode}" />                          
                 <apex:inputField value="{!stgService.stgCon.Max_Payments__c}" type="number" rendered="{!isEditMode}" id="cbxMP" />                          
-                <apex:outputLabel value="{!$Label.stgHelpMaxPayments}" />
+                <apex:outputText value="{!$Label.stgHelpMaxPayments}" styleClass="help-block" />
                               
             </apex:panelGrid> 
             

@@ -1,23 +1,28 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
 
+	<div class="page-header">
+		<img src="/s.gif" class="pageTitleIcon" />
+		<h1>{!$Label.stgNavDonations}</h1>
+		<h2>{!$Label.stgNavRDBatch}</h2>
+	</div>
+
+	<apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavRDBatch}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbRDBatch" mode="maindetail">
-  
             <apex:panelGrid id="panelStats" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}"/>
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Last_Batch_Run__c.Label}" styleClass="control-label" />
                 <apex:outputField value="{!stgService.stgRD.npe03__Last_Batch_Run__c}" />
-                <apex:outputLabel value="{!$Label.stgHelpRDLastRun}"/>
+                <apex:outputText value="{!$Label.stgHelpRDLastRun}" styleClass="help-block" />
             
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.Label}"/>
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Failures__c.Label}" styleClass="control-label" />
                 <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Failures__c}" />
-                <apex:outputLabel value="{!$Label.stgHelpRDFailures}"/>
+                <apex:outputText value="{!$Label.stgHelpRDFailures}" styleClass="help-block" />
 
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.Label}"/>
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Number_of_Successes__c.Label}" styleClass="control-label" />
                 <apex:outputField value="{!stgService.stgRD.npe03__Number_of_Successes__c}" />
-                <apex:outputLabel value="{!$Label.stgHelpRDSuccesses}"/>
+                <apex:outputText value="{!$Label.stgHelpRDSuccesses}" styleClass="help-block" />
 
             </apex:panelGrid> 
 

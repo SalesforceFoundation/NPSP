@@ -1,9 +1,15 @@
 <apex:page controller="STG_PanelPaymentMapping_CTRL" >
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavDonations}</h1>
+        <h2>{!$Label.stgNavPaymentMappings}</h2>
+    </div>
+    <apex:outputPanel layout="block">{!$Label.stgHelpPaymentMappings}</apex:outputPanel>
+
+    <apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form">  
-	    <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavPaymentMappings}" />
-	    <apex:pageMessages />
-        <apex:outputPanel layout="block" styleClass="panelHelp" >{!$Label.stgHelpPaymentMappings}</apex:outputPanel>
 	    <apex:pageBlock mode="maindetail">
 
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
@@ -19,24 +25,26 @@
 	            </apex:pageBlockTable> 
 	        
             <apex:outputPanel rendered="{!isEditMode}" >
-            <h3 class="sectionBar" >{!$Label.stgLabelNewPaymentMapping}</h3>
-            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpPaymentMapping}</apex:outputPanel>
-            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
- 
-                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" />
-                <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" >
-                    <apex:selectOptions value="{!sourcefields}"  />
-                    <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
-                </apex:selectList>
-                <apex:outputLabel value="{!$Label.stgHelpPaymentMapOppField}"/>
-                
-                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" />
-                <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" >
-                    <apex:selectOptions value="{!targetfields}"  />
-                </apex:selectList>
-                <apex:outputLabel value="{!$Label.stgHelpPaymentMapPaymentField}"/>
-                
-            </apex:panelGrid>
+            <section>
+	            <h3 class="section-header" >{!$Label.stgLabelNewPaymentMapping}</h3>
+	            <apex:outputPanel layout="none"><p class="section-help">{!$Label.stgHelpPaymentMapping}</p></apex:outputPanel>
+	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
+	 
+	                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" styleClass="control-label" />
+	                <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" >
+	                    <apex:selectOptions value="{!sourcefields}"  />
+	                    <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
+	                </apex:selectList>
+	                <apex:outputText value="{!$Label.stgHelpPaymentMapOppField}" styleClass="help-block" />
+	                
+	                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" styleClass="control-label" />
+	                <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" >
+	                    <apex:selectOptions value="{!targetfields}"  />
+	                </apex:selectList>
+	                <apex:outputText value="{!$Label.stgHelpPaymentMapPaymentField}" styleClass="help-block" />
+	                
+	            </apex:panelGrid>
+            </section>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="both" >

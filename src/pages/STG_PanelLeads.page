@@ -1,15 +1,23 @@
 <apex:page controller="STG_PanelLeads_CTRL" >
 
+	<div class="page-header">
+		<img src="/s.gif" class="pageTitleIcon" />
+		<h1>{!$Label.stgNavContacts}</h1>
+		<h2>{!$Label.stgLabelLeadSettings}</h2>
+	</div>
+
+	<apex:pageMessages id="pageMessages"/>
+
+
+
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavLeads}" subtitle="{!$Label.stgLabelLeadSettings}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" />
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" disabled="{!isReadOnlyMode}" id="cbxDOC" />
-                <apex:outputLabel value="{!$Label.stgHelpLeadConvert}" />
+                <apex:outputText value="{!$Label.stgHelpLeadConvert}" styleClass="help-block" />
                                                           
             </apex:panelGrid>
             

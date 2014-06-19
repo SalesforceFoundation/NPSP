@@ -6,6 +6,10 @@
         padding: 20px;
     }
     
+    .bootstrap .jumbotron p.fineprint {
+    	font-size: 14px;
+    }
+    
     .bootstrap .panel-body {
         padding: 0px;
     }
@@ -18,8 +22,8 @@
 		<div class="row">
 			<div class="col-sm-9 col-xs-12">
 				<h3>Nonprofit Starter Pack Application Settings</h3>
-				<p class="h4">Customize how the Nonprofit Starter Pack works for your organization.</p>
-				<p class="h6">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
+				<p>Customize how the Nonprofit Starter Pack works for your organization.</p>
+				<p class="fineprint">Looking to customize page layouts, add fields, or add users?  Try the <a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">Salesforce Setup</a> pages.</p>
 			</div>
 			<div class="col-sm-3 col-xs-12" >
 				<img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />

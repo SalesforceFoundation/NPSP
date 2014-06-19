@@ -1,9 +1,15 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavSystem}</h1>
+        <h2>{!$Label.stgNavTriggerConfig}</h2>
+    </div>
+    <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
+
+    <apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavTriggerConfig}" />
-        <apex:pageMessages />
-        <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
         <apex:pageBlock mode="maindetail">
 
            <apex:pageBlockTable value="{!listTH}" var="th" >
@@ -25,34 +31,36 @@
            </apex:pageBlockTable>
             
             <apex:outputPanel rendered="{!isEditMode}" >
-                <h3 class="sectionBar" >{!$Label.stgLabelNewTH}</h3>
+            <section>
+                <h3 class="section-header" >{!$Label.stgLabelNewTH}</h3>
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewAc" >
      
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="control-label" />
                     <apex:inputField value="{!thNew.Object__c}" required="false" id="tbxO" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHObject}"/>
+                    <apex:outputText value="{!$Label.stgHelpTHObject}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" styleClass="control-label" />
                     <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHClass}"/>
+                    <apex:outputText value="{!$Label.stgHelpTHClass}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}" for="tbxLO" styleClass="control-label" />
                     <apex:inputField value="{!thNew.Load_Order__c}" type="number" required="false" id="tbxLO" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHLoadOrder}"/>
+                    <apex:outputText value="{!$Label.stgHelpTHLoadOrder}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}"/>
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}" styleClass="control-label" />
                     <c:STG_DataBoundMultiSelect settingObject="{!thNew}" fieldname="Trigger_Action__c" listSO="{!listSOTriggerAction}" inEditMode="{!isEditMode}" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHTriggerAction}"/> 
+                    <apex:outputText value="{!$Label.stgHelpTHTriggerAction}" styleClass="help-block" /> 
                                                                             
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}" for="cbxA" styleClass="control-label" />
                     <apex:inputField value="{!thNew.Active__c}" required="false" id="cbxA" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHActive}"/>
+                    <apex:outputText value="{!$Label.stgHelpTHActive}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" />
+                    <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}" for="cbxAs" styleClass="control-label" />
                     <apex:inputField value="{!thNew.Asynchronous__c}" required="false" id="cbxAs" />
-                    <apex:outputLabel value="{!$Label.stgHelpTHAsync}"/>
+                    <apex:outputText value="{!$Label.stgHelpTHAsync}" styleClass="help-block" />
                     
                 </apex:panelGrid>
+            </section>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="both">

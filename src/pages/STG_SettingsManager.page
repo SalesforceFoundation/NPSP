@@ -3,15 +3,19 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/CollapsibleList/CollapsibleList.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap-s1.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced-s1.css')}" />
     
 <style> 
-	/* Override Salesforce styles to remove padding for the table we're not using */
+	/* COMMON CSS FOR ALL SETTINGS PAGES */
 	.noSidebarCell { 
 		padding: 0px;
 	}
-        
+    
+    .bootstrap {
+    	background: #fff;
+    }
+    
     .bootstrap .container {
     	width: auto;
     	min-width: 800px;
@@ -31,7 +35,98 @@
     .bootstrap .container .list-unstyled li {
     	margin-left: 0;
     }
+
+	.bootstrap .page-header {
+		margin: 0 0 15px;
+		padding: 0;
+		border-bottom: none;
+	}
+	
+	.bootstrap .page-header h1, .bootstrap .page-header h2 {
+		margin: 0;
+		padding: 0;
+		color: #293f54;
+		margin-left: 36px;
+	}
+	
+	.bootstrap .noborder {
+		border: 0;
+		box-shadow: none;
+	}
+	.page-header h1 {
+		font-size: 11px;
+	}
+	
+	.page-header h2 {
+		font-size: 22px;
+		font-weight: normal;
+	}
     
+    .pageTitleIcon {
+    	float: left;
+    }
+    
+    .bootstrap h3.section-header {
+    	color: #696e71;
+    	background-color: #e8eaeb;
+    	font-size: 13px;
+    	padding: 8px 14px;
+    	text-transform: uppercase;
+    }
+    
+    .bootstrap td.propLabel { 
+        font-weight: bold;
+        width: 250px;
+        text-align: right;
+        vertical-align: top;
+    }
+    
+    .bootstrap td.propEdit {
+        width: 200px;
+        padding-left: 15px;
+        vertical-align: top;
+    }
+    
+    .bootstrap td.propHelpText {
+        vertical-align: top;
+    }
+    
+    .bootstrap .pbBody p {
+    	color: #525354;
+    	margin-bottom: 10px;
+    }
+    
+    .bootstrap .help-block {
+    	margin-top: 0;
+    }
+    
+    .sub-nav-item {
+        margin-left: 20px;
+    }
+    
+    .panelButtons {
+        padding-left: 400px;
+    }
+    
+    .clsLoading {
+        z-index: 99;
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        background: lightyellow;
+        width: 400px;
+        height: 40px; 
+        border-radius: 4px;      
+    }   
+    
+    .stgForm {
+        width: 100%;
+    }
+    
+    /* END - COMMON CSS FOR ALL SETTINGS PAGES */
+    
+    /* SIDEBAR CSS */
+        
     .sidebar ul {
         margin: 0; 
         padding: 0; 
@@ -122,76 +217,9 @@
         border-right: 4px solid transparent;
         border-left: 4px solid transparent;
     }
-         
-    .propLabel { 
-        font-weight: bold;
-        width: 250px;
-        text-align: right;
-    }
-    
-    .propEdit {
-        width: 200px;
-        padding-left: 15px;
-    }
-    
-    table .propHelpText {
-        color: gray; 
-        padding-bottom: 6px;
-    }
-    
-    .sub-nav-item {
-        margin-left: 20px;
-    }
-    
-    .panelButtons {
-        padding-left: 400px;
-    }
-    
-    .sectionBar {
-        display: block;
-        background: #E5F2F6;
-        text-indent: 10px;
-        padding: 5px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-        border-style: solid;
-        border-width: 1px;
-        border-color: lightblue;
-    }
-    
-    .sectionHelp {
-        color: gray; 
-        padding: 5px 5px 5px 10px;
-        margin-top: -11px;
-        margin-bottom: 10px;
-        border-style: solid;
-        border-width: 1px;
-        border-color: lightblue;
-    }
-  
-    .panelHelp {
-        color: gray; 
-        padding: 5px 5px 10px 10px;
-    }
 
-    .clsLoading {
-        z-index: 99;
-        position: fixed;
-        top: 30%;
-        left: 30%;
-        background: lightyellow;
-        width: 400px;
-        height: 40px; 
-        border-radius: 4px;      
-    }   
-    
-    .stgForm {
-        width: 100%;
-    }
-    
-    .noSidebarCell {
-    	padding: none;
-    }
+	/* END - SIDEBAR STYLES */         
+
 </style>
 
 <script>
@@ -310,103 +338,103 @@
 				</p>
 			</div>                                                                  
          
-			<div class="panel" id="idPanelHome" style="display:none" >
+			<div class="panel noborder" id="idPanelHome" style="display:none" >
 			    <apex:include pageName="STG_PanelHome" />                               
 			</div>
 			
-			<div class="panel" id="idPanelCon" style="display:none" >
+			<div class="panel noborder" id="idPanelCon" style="display:none" >
 			    <apex:include pageName="STG_PanelContacts" />
 			</div>
 			
-			<div class="panel" id="idPanelConRole" style="display:none" >
+			<div class="panel noborder" id="idPanelConRole" style="display:none" >
 			    <apex:include pageName="STG_PanelContactRoles" />
 			</div>
 			
-			<div class="panel" id="idPanelLeads" style="display:none" >
+			<div class="panel noborder" id="idPanelLeads" style="display:none" >
 			    <apex:include pageName="STG_PanelLeads" />
 			</div>
 			
-			<div class="panel" id="idPanelHH" style="display:none" >
+			<div class="panel noborder" id="idPanelHH" style="display:none" >
 			    <apex:include pageName="STG_PanelHouseholds" />
 			</div>
 			
-			<div class="panel" id="idPanelADDR" style="display:none" >
+			<div class="panel noborder" id="idPanelADDR" style="display:none" >
 			    <apex:include pageName="STG_PanelAddrVerification" />
 			</div>
 			
-			<div class="panel" id="idPanelAffl" style="display:none" >
+			<div class="panel noborder" id="idPanelAffl" style="display:none" >
 			    <apex:include pageName="STG_PanelAffiliations" />
 			</div>
 			
-			<div class="panel" id="idPanelMembership" style="display:none" >
+			<div class="panel noborder" id="idPanelMembership" style="display:none" >
 			    <apex:include pageName="STG_PanelMembership" />
 			</div>
 			
-			<div class="panel" id="idPanelOpp" style="display:none" >
+			<div class="panel noborder" id="idPanelOpp" style="display:none" >
 			    <apex:include pageName="STG_PanelOpps" />
 			</div>
 			
-			<div class="panel" id="idPanelOppRollup" style="display:none" >
+			<div class="panel noborder" id="idPanelOppRollup" style="display:none" >
 			    <apex:include pageName="STG_PanelOppRollups" />
 			</div>
 			
-			<div class="panel" id="idPanelOppBatch" style="display:none" >
+			<div class="panel noborder" id="idPanelOppBatch" style="display:none" >
 			    <apex:include pageName="STG_PanelOppBatch" />
 			</div>
 			
-			<div class="panel" id="idPanelRD" style="display:none" >
+			<div class="panel noborder" id="idPanelRD" style="display:none" >
 			    <apex:include pageName="STG_PanelRD" />
 			</div>
 			
-			<div class="panel" id="idPanelRDBatch" style="display:none" >
+			<div class="panel noborder" id="idPanelRDBatch" style="display:none" >
 			    <apex:include pageName="STG_PanelRDBatch" />
 			</div>
 			
-			<div class="panel" id="idPanelRDInstPd" style="display:none" >
+			<div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
 			    <apex:include pageName="STG_PanelRDCustomInstallment" />
 			</div>
 			
-			<div class="panel" id="idPanelRDFieldMap" style="display:none" >
+			<div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
 			    <apex:include pageName="STG_PanelRDCustomFieldMapping" />
 			</div>
 			
-			<div class="panel" id="idPanelRel" style="display:none" >
+			<div class="panel noborder" id="idPanelRel" style="display:none" >
 			    <apex:include pageName="STG_PanelRel" />
 			</div>
 			
-			<div class="panel" id="idPanelRelReciprocal" style="display:none" >
+			<div class="panel noborder" id="idPanelRelReciprocal" style="display:none" >
 			    <apex:include pageName="STG_PanelRelReciprocal" />
 			</div>
 			
-			<div class="panel" id="idPanelRelAuto" style="display:none" >
+			<div class="panel noborder" id="idPanelRelAuto" style="display:none" >
 			    <apex:include pageName="STG_PanelRelAuto" />
 			</div>
 			
-			<div class="panel" id="idPanelBDE" style="display:none" >
+			<div class="panel noborder" id="idPanelBDE" style="display:none" >
 			    <apex:include pageName="STG_PanelBDE" />
 			</div>
 			
-			<div class="panel" id="idPanelPaymentMapping" style="display:none" >
+			<div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
 			    <apex:include pageName="STG_PanelPaymentMapping" />
 			</div>
 			
-			<div class="panel" id="idPanelUserRollup" style="display:none" >
+			<div class="panel noborder" id="idPanelUserRollup" style="display:none" >
 			    <apex:include pageName="STG_PanelUserRollup" />
 			</div>
 			
-			<div class="panel" id="idPanelErrorLog" style="display:none" >
+			<div class="panel noborder" id="idPanelErrorLog" style="display:none" >
 			    <apex:include pageName="STG_PanelErrorLog" />
 			</div>
 			
-			<div class="panel" id="idPanelTDTM" style="display:none" >
+			<div class="panel noborder" id="idPanelTDTM" style="display:none" >
 			    <apex:include pageName="STG_PanelTDTM" />
 			</div>
 			
-			<div class="panel" id="idPanelErrorNotif" style="display:none" >
+			<div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
 			    <apex:include pageName="STG_PanelERR" />
 			</div>
 			
-			<div class="panel" id="idPanelHealthCheck" style="display:none" >
+			<div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
 			    <apex:include pageName="STG_PanelHealthCheck" />
 			</div>
 		</div>	

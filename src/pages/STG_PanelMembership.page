@@ -1,20 +1,25 @@
 <apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0">
+	<div class="page-header">
+		<img src="/s.gif" class="pageTitleIcon" />
+		<h1>{!$Label.stgNavDonations}</h1>
+		<h2>{!$Label.stgNavMembership}</h2>
+	</div>
+
+	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavMembership}"  />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" styleClass="control-label" />
                 <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Membership_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />                
-                <apex:outputLabel value="{!$Label.stgHelpMembershipRT}" />
+                <apex:outputText value="{!$Label.stgHelpMembershipRT}" styleClass="help-block" />
 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.Label}" for="tbxMGP" />
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Grace_Period__c.Label}" for="tbxMGP" styleClass="control-label" />
                 <apex:outputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" rendered="{!isReadOnlyMode}" />                          
                 <apex:inputField value="{!stgService.stgHH.npo02__Membership_Grace_Period__c}" type="number" rendered="{!isEditMode}" id="tbxMGP" />                          
-                <apex:outputLabel value="{!$Label.stgHelpMembershipGracePeriod}" />
+                <apex:outputText value="{!$Label.stgHelpMembershipGracePeriod}" styleClass="help-block" />
                                                           
             </apex:panelGrid>             
             

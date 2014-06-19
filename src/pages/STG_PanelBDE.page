@@ -1,19 +1,25 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavBDE}</h1>
+        <h2>{!$Label.stgNavBDE}</h2>
+    </div>
+
+    <apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavBDE}" subtitle="{!$Label.stgNavBDE}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
   
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
 
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" />
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
-                <apex:outputLabel value="{!$Label.stgHelpBDEOppNaming}"/>
+                <apex:outputText value="{!$Label.stgHelpBDEOppNaming}" styleClass="help-block" />
 
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" />
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
-                <apex:outputLabel value="{!$Label.stgHelpBDEAllowBlankOppNames}"/>
+                <apex:outputText value="{!$Label.stgHelpBDEAllowBlankOppNames}" styleClass="help-block" />
                                                           
             </apex:panelGrid>
 

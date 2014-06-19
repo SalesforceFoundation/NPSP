@@ -62,41 +62,45 @@
             errNotif.hideChatterGroupBox();
         });
    </script>
+
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavSystem}</h1>
+        <h2>{!$Label.stgNavErrorNotify}</h2>
+    </div>
+
+    <apex:pageMessages id="pageMessages"/>
      
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavErrorNotify}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  
             <apex:panelGrid id="fields" columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" disabled="{!isReadOnlyMode}" id="cbxSEO" />
-                <apex:outputLabel value="{!$Label.stgHelpStoreErrorsOn}" />
+                <apex:outputText value="{!$Label.stgHelpStoreErrorsOn}" styleClass="help-block" />
                 
-                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" />
+                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" disabled="{!isReadOnlyMode}" id="cbxENO" />
-                <apex:outputLabel value="{!$Label.stgHelpErrorNotifyOn}" />
+                <apex:outputText value="{!$Label.stgHelpErrorNotifyOn}" styleClass="help-block" />
                 
-                <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" />
-                
+                <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" styleClass="control-label" />
                 <apex:outputPanel id="errRecipient">
 	                <apex:outputLabel id="errorNotifDisplayName" value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
 	                <apex:selectList id="notificationOption" value="{!notificationToDropDown}" size="1" multiselect="false" rendered="{!isEditMode}">
 	                    <apex:selectOptions value="{!listSOERRNotifOptions}" />
 	                </apex:selectList>
                 </apex:outputPanel>
-                
-                <apex:outputLabel id="recipientHelp" value="{!$Label.stgHelpErrorNotifyTo}" />
+                <apex:outputText id="recipientHelp" value="{!$Label.stgHelpErrorNotifyTo}" styleClass="help-block" />
             </apex:panelGrid>
              
             <apex:outputPanel id="chatterGroupBox">
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText">
-                    <apex:outputLabel value="{!$Label.stgLabelSelectChatterGroup}" for="chatterGroupSearchBox" />
+                    <apex:outputLabel value="{!$Label.stgLabelSelectChatterGroup}" for="chatterGroupSearchBox" styleClass="control-label" />
                     <c:UTIL_Typeahead searchBoxId="chatterGroupSearchBox" object="CollaborationGroup" primaryField="Name" searchScope="NAME"
                         placeholder="{!$Label.stgLabelTypeAhead}" minSearchLength="2" destinationForSelectedId="groupId" stealFocus="false" 
                         style="width:80%;" /> 
-                    <apex:outputLabel value="{!$Label.stgHelpChatterGroup}"/>
+                    <apex:outputText value="{!$Label.stgHelpChatterGroup}" styleClass="help-block" />
                 </apex:panelGrid>
                 <apex:inputHidden id="groupId" value="{!groupId}" />
                 <br/>

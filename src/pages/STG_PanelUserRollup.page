@@ -1,9 +1,15 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" >
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavDonations}</h1>
+        <h2>{!$Label.stgNavUserDefinedRollups}</h2>
+    </div>
+    <apex:outputPanel layout="block">{!$Label.npo02__UDRDescription}</apex:outputPanel>
+
+    <apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form">  
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavUserDefinedRollups}" />
-        <apex:pageMessages />
-        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.npo02__UDRDescription}</apex:outputPanel>
         <apex:pageBlock mode="maindetail">
  
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
@@ -37,40 +43,42 @@
                 <apex:outputtext value="{!$Label.stgHelpNoUDR}" rendered="{!OR(ISNULL(udrlist), udrlist.size < 1)}"/> 
 
             <apex:outputPanel rendered="{!isEditMode}" id="udrpageblock" >
+            <section>
                 <h3 class="sectionBar" >{!$Label.stgLabelNewUDR}</h3>
 	            <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpNewUDR}<br/><br/></apex:outputPanel>
 	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
 	 
-	                <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" />
+	                <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" styleClass="control-label" />
 	                <apex:selectList value="{!activeUDR.SourceField}" rendered="{!!ISNULL(sourcefields)}" multiselect="false" size="5" id="slSF" >
 	                    <apex:selectOptions value="{!sourcefields}"/>
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForSourceField}"/>                       
 	                </apex:selectList>                                  
 	                <apex:outputText rendered="{!ISNULL(sourcefields)}">{!$Label.stgLabelUDRNoOppFields}</apex:outputText>
-	                <apex:outputLabel value="{!$Label.stgHelpUDROppField}"/>
+	                <apex:outputText value="{!$Label.stgHelpUDROppField}" styleClass="help-block" />
 	                                
-	                <apex:outputlabel value="{!$Label.stgLabelUDROp}" for="slSO" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDROp}" for="slSO" styleClass="control-label" />
 	                <apex:selectList title="Supported Operations" value="{!activeUDR.Operation}" multiselect="false"  size="4" id="slSO" >
 	                    <apex:selectOptions value="{!validoperators}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForOperation}"/>
 	                </apex:selectList>                
-	                <apex:outputLabel value="{!$Label.stgHelpUDROperation}"/>
+	                <apex:outputText value="{!$Label.stgHelpUDROperation}" styleClass="help-block" />
 	
-	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetObject}" for="slTO" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetObject}" for="slTO" styleClass="control-label" />
 	                <apex:selectList value="{!activeUDR.TargetObject}" multiselect="false"  size="3" id="slTO" >
 	                    <apex:selectOptions value="{!targetobjects}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForTargetObject}"/>
 	                </apex:selectList>
-	                <apex:outputLabel value="{!$Label.stgHelpUDRTargetObject}"/>
+	                <apex:outputText value="{!$Label.stgHelpUDRTargetObject}" styleClass="help-block" />
 	
-	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetField}" for="slSOp" />
+	                <apex:outputlabel value="{!$Label.stgLabelUDRTargetField}" for="slSOp" styleClass="control-label" />
 	                <apex:selectList title="Supported Operations" value="{!activeUDR.TargetField}" multiselect="false"  size="5" id="slSOp" >
 	                    <apex:selectOptions value="{!targetfields}" />
 	                    <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate"/>
 	                </apex:selectList>
-	                <apex:outputLabel value="{!$Label.stgLabelUDRTargetField}"/>
+	                <apex:outputText value="{!$Label.stgLabelUDRTargetField}" styleClass="help-block" />
 	
 	            </apex:panelGrid>
+	        </section>
             </apex:outputPanel>
                                     
             <apex:pageBlockButtons location="both">

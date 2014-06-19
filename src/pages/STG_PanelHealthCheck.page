@@ -26,13 +26,20 @@
         }
     </script>
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavSystem}</h1>
+        <h2>{!$Label.stgNavHealthCheck}</h2>
+    </div>
+    <apex:outputPanel layout="block">{!$Label.healthLabelIntro}</apex:outputPanel>
+
+    <apex:pageMessages id="pageMessages"/>
+
+
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavHealthCheck}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbDetector" mode="maindetail">
             
-            <apex:outputPanel styleClass="bootstrap" id="panelResults">
-                <p style="position:relative;left:30px;">{!$Label.healthLabelIntro}</p><br/>
+            <apex:outputPanel id="panelResults">
 		        <apex:outputPanel rendered="{!hasResults}">
                     <div>
 	                    <span style="position:relative;left:30px;">
@@ -75,7 +82,7 @@
 		        </apex:outputPanel>                     
             </apex:outputPanel> 
 
-            <apex:pageBlockButtons location="bottom">
+            <apex:pageBlockButtons location="top">
                 <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
             </apex:pageBlockButtons>            
         </apex:pageBlock>

@@ -1,9 +1,15 @@
 <apex:page controller="STG_PanelRelAuto_CTRL" >
 
+    <div class="page-header">
+        <img src="/s.gif" class="pageTitleIcon" />
+        <h1>{!$Label.stgNavConnections}</h1>
+        <h2>{!$Label.stgNavRelAutoCreate}</h2>
+    </div>
+    <apex:outputPanel layout="block">{!$Label.npe4__RelationshipsAutoDescription}</apex:outputPanel>
+
+    <apex:pageMessages id="pageMessages"/>
+
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="{!$Label.stgNavConnections}" subtitle="{!$Label.stgNavRelAutoCreate}" />
-        <apex:pageMessages />
-        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.npe4__RelationshipsAutoDescription}</apex:outputPanel>
         <apex:pageBlock mode="maindetail">
 
                 <apex:pageBlockTable value="{!listRelAutoCreate}" var="ac" >
@@ -22,36 +28,38 @@
                 </apex:pageBlockTable> 
             
             <apex:outputPanel rendered="{!isEditMode}" >
-                <h3 class="sectionBar" >{!$Label.stgLabelNewAutoRel}</h3>
+            <section>
+                <h3 class="section-header" >{!$Label.stgLabelNewAutoRel}</h3>
                 <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewAc" >
      
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}" for="objectinputselect" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}" for="objectinputselect" styleClass="control-label" />
                     <apex:selectList value="{!acNew.npe4__Object__c}" id="objectinputselect" multiselect="false" size="1" >
                         <apex:selectoption itemValue="" itemLabel="- none -"/>
                         <apex:selectoption itemValue="Contact" itemLabel="Contact"/>
                         <apex:selectoption itemValue="CampaignMember" itemLabel="Campaign Member"/>
                         <apex:actionSupport event="onchange" status="statusLoad" rerender="panelNewAc"/>
                     </apex:selectList>              
-                    <apex:outputLabel value="{!$Label.stgHelpAutoRelObject}"/>
+                    <apex:outputText value="{!$Label.stgHelpAutoRelObject}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Field__c.Label}" for="slF" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Field__c.Label}" for="slF" styleClass="control-label" />
                     <apex:selectList value="{!acNew.npe4__Field__c}" multiselect="false" size="1" id="slF" >
                         <apex:selectOptions value="{!listSOACfield}" />
                     </apex:selectList>              
-                    <apex:outputLabel value="{!$Label.stgHelpAutoRelField}"/>
+                    <apex:outputText value="{!$Label.stgHelpAutoRelField}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Relationship_Type__c.Label}" for="slRT" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Relationship_Type__c.Label}" for="slRT" styleClass="control-label" />
                     <apex:selectList value="{!acNew.npe4__Relationship_Type__c}" multiselect="false" size="1" id="slRT" >
                         <apex:selectOptions value="{!listSORelTypes}" />
                     </apex:selectList>                                  
-                    <apex:outputLabel value="{!$Label.stgHelpAutoRelType}"/>
+                    <apex:outputText value="{!$Label.stgHelpAutoRelType}" styleClass="help-block" />
                     
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Campaign_Types__c.Label}" for="idDBMS" styleClass="control-label" />
                     <c:STG_DataBoundMultiSelect settingObject="{!acNew}" fieldname="npe4__Campaign_Types__c" listSO="{!listSOCampaignTypes}" inEditMode="{!isEditMode}" 
                         inDisabledMode="{!acNew.npe4__Object__c != 'CampaignMember'}" />
-                    <apex:outputLabel value="{!$Label.stgHelpAutoRelCampaignRT}"/>
+                    <apex:outputText value="{!$Label.stgHelpAutoRelCampaignRT}" styleClass="help-block" />
                                                                             
                 </apex:panelGrid>
+            </section>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="both">

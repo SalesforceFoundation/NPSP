@@ -1,15 +1,21 @@
 <apex:page controller="STG_PanelAffiliations_CTRL" >
+	
+	<div class="page-header">
+		<img src="/s.gif" class="pageTitleIcon" />
+		<h1>{!$Label.stgNavConnections}</h1>
+		<h2>{!$Label.stgNavAffiliations}</h2>
+	</div>
+
+	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavConnections}" subtitle="{!$Label.stgNavAffiliations}" />        
-        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
  
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
-                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" />
+                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" styleClass="control-label" />
                 <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" disabled="{!isReadOnlyMode}" id="cbxAACTO" />
-                <apex:outputLabel value="{!$Label.stgHelpAutoAffil}" />
+                <apex:outputText value="{!$Label.stgHelpAutoAffil}" styleClass="help-block" />
                                 
             </apex:panelGrid>
  
