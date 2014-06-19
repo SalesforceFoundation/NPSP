@@ -18,6 +18,14 @@
         <fields>npe01__Member_Level__c</fields>
         <label>Membership Compact Layout</label>
     </compactLayouts>
+    <compactLayouts>
+        <fullName>NPSP_Donation_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>Amount</fields>
+        <fields>CloseDate</fields>
+        <fields>StageName</fields>
+        <label>NPSP Donation Compact Layout</label>
+    </compactLayouts>
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
         <description>Batch Data Entry</description>

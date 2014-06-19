@@ -155,16 +155,22 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
+            <quickActionName>Opportunity.Quick_Update</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Opportunity.New_Payment</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>New_Recurring_Donation</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>NewContact</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>NewAccount</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
-            <quickActionName>FeedItem.MobileSmartActions</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
-            <quickActionName>FeedItem.LinkPost</quickActionName>
-        </quickActionListItems>
-        <quickActionListItems>
-            <quickActionName>FeedItem.PollPost</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <relatedContent>
@@ -227,7 +233,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000001iSoO</masterLabel>
+        <masterLabel>00hi0000003BFZ8</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

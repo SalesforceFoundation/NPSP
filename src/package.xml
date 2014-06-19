@@ -227,10 +227,16 @@
     <name>ApexTrigger</name>
   </types>
   <types>
-    <members>Account.Account_Compact_Layout</members>
+    <members>Address__c.NPSP_Address_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
+    <members>Contact.NPSP_Contact_Compact_Layout</members>
     <members>Opportunity.Donation_Compact_Layout</members>
     <members>Opportunity.Membership_Compact_Layout</members>
+    <members>Opportunity.NPSP_Donation_Compact_Layout</members>
+    <members>npe01__OppPayment__c.NPSP_Payment_Compact_Layout</members>
+    <members>npe03__Recurring_Donation__c.NPSP_Recurring_Donation_Compact_Layout</members>
+    <members>npe4__Relationship__c.NPSP_Relationship_Compact_Layout</members>
+    <members>npe5__Affiliation__c.NPSP_Affiliation_Compact_Layout</members>
     <name>CompactLayout</name>
   </types>
   <types>
@@ -646,12 +652,11 @@
     <name>FieldSet</name>
   </types>
   <types>
-    <members>Account-Household Layout</members>
-    <members>Account-Organization Layout</members>
     <members>Address__c-Address Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
     <members>Error__c-Error Layout</members>
+    <members>Global-Global Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
     <members>Schedulable__c-Schedulable Layout</members>
