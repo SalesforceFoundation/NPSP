@@ -104,6 +104,7 @@
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
     <members>STG_InstallScript_TEST2</members>
+    <members>STG_PageHeader</members>
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
@@ -164,6 +165,7 @@
   </types>
   <types>
     <members>STG_DataBoundMultiSelect</members>
+    <members>STG_PageHeader</members>
     <members>UTIL_JobProgress</members>
     <members>UTIL_SoqlListView</members>
     <members>UTIL_Typeahead</members>
