@@ -120,7 +120,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             hh2Account.put(hh.id, a);
         }
 
-        insert hh2Account.values();
+        Database.insert(hh2Account.values(), true);
 
         //save the contact giving amount to determine the primary contact
         Map<Id, Double> conGiving = new Map<Id, Double>();
@@ -162,7 +162,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         //for any contacts that have an affiliation, update the primary affiliation for the contact
         if (!conAffMap.isEmpty()){
-            insert conAffMap.values();
+            Database.insert(conAffMap.values(), true);
             for (Contact c : consForUpdate){
                 if (conAffMap.containsKey(c.Id)){
                     c.Primary_Affiliation__c = conAffMap.get(c.Id).npe5__Organization__c;
@@ -170,8 +170,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             }
         }
 
-        update consForUpdate;
-        update hh2Account.values();
+        Database.update(consForUpdate, true);
+        Database.update(hh2Account.values(), true);
 
         /***************************************************************/
         /** Porting all existing opportunities to the new hh accounts **/
@@ -183,7 +183,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             oppsForUpdate.add(o);
         }
         if (!oppsForUpdate.isEmpty())
-            update oppsForUpdate;
+            Database.update(oppsForUpdate, true);
 
         /******************************************************************************/
         /** Moving any activities and tasks from the Household object to the Account **/
@@ -195,7 +195,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         for (Task t : tasksForUpdate)
             t.WhatId = hh2Account.get(t.WhatId).Id; 
 
-        update tasksForUpdate;
+        Database.update(tasksForUpdate, true);
 
         /**********************************************************************/
         /** Address Mapping from existing Contacts to new Household Accounts **/
@@ -337,7 +337,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 Integer addresscount = uniqueContactAddress.keySet().size();
                 Integer counter = 0;
                 String masteraddresshash = '';
-                
+
                 for (String MD5Hash : uniqueContactAddress.keySet()){
                     ContactAddress cadd = uniqueContactAddress.get(MD5Hash);
                     counter ++;
@@ -363,11 +363,11 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             }
                         }
                     }
-                    
+
                     //finally, if this is the last address adn we still don't have a default, use this one
                     if(!hasDefaultAddr && counter == addresscount)
                         hasDefaultAddr = true;
-                        
+
                         Address__c a = new Address__c(
                                             MailingStreet__c = cadd.MailingStreet,
                                             MailingState__c = cadd.MailingState,
@@ -415,9 +415,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             }//close else
         }//close for household
 
-        if (consForUpdate.size() > 0) update consForUpdate;
-        if (addressesForInsert.values().size() > 0) insert addressesForInsert.values();
-        if (hhAccountsForUpdate.size() > 0) update hhAccountsForUpdate;
+        if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
+        if (addressesForInsert.values().size() > 0) Database.insert(addressesForInsert.values(), true);
+        if (hhAccountsForUpdate.size() > 0) Database.update(hhAccountsForUpdate, true);
 
         consForUpdate.clear();
         hhAccountsForUpdate.clear();
@@ -464,8 +464,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
 
         //update the contacts with the correct address lookup
-        if (consForUpdate.size() > 0) update consForUpdate;
-        if (hhAccountsForUpdate.size() > 0) update hhAccountsForUpdate;
+        if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
+        if (hhAccountsForUpdate.size() > 0) Database.update(hhAccountsForUpdate, true);
 
     }//close execute method
 

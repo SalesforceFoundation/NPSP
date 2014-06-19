@@ -417,6 +417,9 @@
             <quickActionName>Contact.Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
+            <quickActionName>Contact.New_Relationship</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>Contact.New_Affiliation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
