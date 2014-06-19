@@ -261,6 +261,12 @@
             <quickActionName>NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
+            <quickActionName>Account.Quick_Household_Update</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Account.New_Address</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
@@ -318,7 +324,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000003BFZ0</masterLabel>
+        <masterLabel>00hi0000003BQQB</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
