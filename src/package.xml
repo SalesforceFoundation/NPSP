@@ -673,21 +673,26 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Account.New_Address</members>
     <members>Account.New_Affiliation</members>
-    <members>Address__c.Make_Default</members>
     <members>Address__c.Update_Address</members>
     <members>Contact.New_Affiliation</members>
     <members>Contact.New_Recurring_Donation</members>
     <members>Contact.New_Relationship</members>
     <members>Contact.Quick_Update</members>
+    <members>LogACall</members>
     <members>NewAccount</members>
     <members>NewContact</members>
+    <members>NewNote</members>
     <members>NewOpportunity</members>
+    <members>NewTask</members>
     <members>New_Campaign</members>
     <members>New_Recurring_Donation</members>
     <members>Opportunity.New_Payment</members>
     <members>Opportunity.Quick_Update</members>
+    <members>npe01__OppPayment__c.Quick_Update</members>
+    <members>npe03__Recurring_Donation__c.New_Opportunity</members>
+    <members>npe03__Recurring_Donation__c.Quick_Update</members>
+    <members>npo02__Household__c.Update_Household</members>
     <name>QuickAction</name>
   </types>
   <types>
