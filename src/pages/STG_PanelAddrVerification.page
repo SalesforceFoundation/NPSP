@@ -21,6 +21,7 @@
 
 	<apex:form id="form" styleClass="form-horizontal">
 		<apex:pageBlock mode="maindetail">
+		<apex:outputPanel layout="block" id="fields">
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
 			<div class="form-group">
@@ -96,6 +97,7 @@
                 </div>
             </div>
 		</section>
+		</apex:outputPanel>
          
             <apex:outputPanel id="addrValidationTest">
                 <apex:outputPanel rendered="{!isEditMode}">
