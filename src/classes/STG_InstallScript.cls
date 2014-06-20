@@ -97,6 +97,7 @@ global class STG_InstallScript implements InstallHandler {
         
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings();
+        UTIL_CustomSettingsFacade.getAllocationsSettings();
         
         scheduleGlobalJob();      
     }
