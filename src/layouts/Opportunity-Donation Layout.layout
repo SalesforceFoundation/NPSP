@@ -188,6 +188,20 @@
         </relatedContentItems>
     </relatedContent>
     <relatedLists>
+        <relatedList>RelatedContactRoleList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <customButtons>npe01__Schedule_Payments</customButtons>
+        <customButtons>npe01__Writeoff_Payments</customButtons>
+        <fields>NAME</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Payment_Date__c</fields>
+        <fields>npe01__Payment_Method__c</fields>
+        <fields>npe01__Paid__c</fields>
+        <fields>npe01__Written_Off__c</fields>
+        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -207,20 +221,6 @@
         <relatedList>RelatedHistoryList</relatedList>
     </relatedLists>
     <relatedLists>
-        <relatedList>RelatedContactRoleList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <customButtons>npe01__Schedule_Payments</customButtons>
-        <customButtons>npe01__Writeoff_Payments</customButtons>
-        <fields>NAME</fields>
-        <fields>npe01__Payment_Amount__c</fields>
-        <fields>npe01__Payment_Date__c</fields>
-        <fields>npe01__Payment_Method__c</fields>
-        <fields>npe01__Paid__c</fields>
-        <fields>npe01__Written_Off__c</fields>
-        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
-    </relatedLists>
-    <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
     </relatedLists>
     <relatedLists>
@@ -233,7 +233,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000003BFZ8</masterLabel>
+        <masterLabel>00hi0000003BQoW</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
