@@ -638,6 +638,7 @@
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <members>npe4__Relationship__c</members>
+    <members>npe5__Affiliation__c</members>
     <name>CustomTab</name>
   </types>
   <types>
