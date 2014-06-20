@@ -53,8 +53,10 @@
 		border: 0;
 		box-shadow: none;
 	}
+	
 	.page-header h1 {
-		font-size: 11px;
+		font-size: 12px;
+		font-weight: bold;
 	}
 	
 	.page-header h2 {
@@ -72,6 +74,7 @@
     	font-size: 13px;
     	padding: 8px 14px;
     	text-transform: uppercase;
+    	clear: both;
     }
     
     .bootstrap td.propLabel { 
@@ -91,13 +94,26 @@
         vertical-align: top;
     }
     
-    .bootstrap .pbBody p {
+    .bootstrap .pbBody {
     	color: #525354;
-    	margin-bottom: 10px;
+    }
+    
+    .bootstrap .pbBody p {
+        margin-bottom: 10px;
+    }
+    
+    .bootstrap .form-control-column {
+        margin-top: 7px;
     }
     
     .bootstrap .help-block {
+        padding-top: 7px;
     	margin-top: 0;
+    	margin-bottom: 0;
+    }
+    
+    .bootstrap .button-block {
+        margin: 10px;
     }
     
     .sub-nav-item {

@@ -3,7 +3,7 @@
     <p>{!$Label.stgHelpPaymentMappings}</p>
     <apex:pageMessages id="pageMessages"/>
 
-    <apex:form id="form">  
+    <apex:form id="form" styleClass="form-horizontal">>  
 	    <apex:pageBlock mode="maindetail">
 
 	            <apex:pageBlockTable value="{!listPMTFieldMapping}" var="pfm" >
@@ -21,30 +21,39 @@
             <apex:outputPanel rendered="{!isEditMode}" >
             <section>
 	            <h3 class="section-header" >{!$Label.stgLabelNewPaymentMapping}</h3>
-	            <apex:outputPanel layout="none"><p class="section-help">{!$Label.stgHelpPaymentMapping}</p></apex:outputPanel>
-	            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
-	 
-	                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" styleClass="control-label" />
-	                <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" >
-	                    <apex:selectOptions value="{!sourcefields}"  />
-	                    <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
-	                </apex:selectList>
-	                <apex:outputText value="{!$Label.stgHelpPaymentMapOppField}" styleClass="help-block" />
-	                
-	                <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" styleClass="control-label" />
-	                <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" >
-	                    <apex:selectOptions value="{!targetfields}"  />
-	                </apex:selectList>
-	                <apex:outputText value="{!$Label.stgHelpPaymentMapPaymentField}" styleClass="help-block" />
-	                
-	            </apex:panelGrid>
+	            <p class="section-help">{!$Label.stgHelpPaymentMapping}</p>
+	            <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Opportunity_Field__c.Label}" for="slOF" styleClass="col-md-3 control-label" />
+	                <div class="col-md-9 form-control-column">
+	                    <apex:selectList value="{!pfmNew.npe01__Opportunity_Field__c}" multiselect="false" size="5" id="slOF" styleClass="form-control" >
+	                        <apex:selectOptions value="{!sourcefields}"  />
+	                        <apex:actionSupport event="onchange" action="{!onSelectSourceField}" rerender="slTargetField,panelButtons" status="statusLoad"/>                
+	                    </apex:selectList>
+	                </div>
+	                <div class="col-md-offset-3 col-md-9 help-block">
+                        <apex:outputText value="{!$Label.stgHelpPaymentMapOppField}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe01__Payment_Field_Mapping_Settings__c.Fields.npe01__Payment_Field__c.Label}" for="slTargetField" styleClass="col-md-3 control-label" />
+	                <div class="col-md-9 form-control-column">
+	                    <apex:selectList value="{!pfmNew.npe01__Payment_Field__c}" id="slTargetField" multiselect="false" size="5" styleClass="form-control">
+	                        <apex:selectOptions value="{!targetfields}"  />
+	                    </apex:selectList>
+	                </div>
+	                <div class="col-md-offset-3 col-md-9 help-block">
+                        <apex:outputText value="{!$Label.stgHelpPaymentMapPaymentField}" />
+	                </div>
+	            </div>
             </section>
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="both" >
-                <apex:commandButton value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCreateMapping}" status="statusLoad" action="{!savePfm}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelPfmEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </div>
             </apex:pageBlockButtons>
  
         </apex:pageBlock> 

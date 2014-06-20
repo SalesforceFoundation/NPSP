@@ -3,7 +3,7 @@
 	<p>{!$Label.stgHelpRDFieldMap}</p>
 	<apex:pageMessages id="pageMessages"/>
 
-    <apex:form id="form" styleClass="stgForm" >  
+    <apex:form id="form" styleClass="stgForm form-horizontal" >  
         <apex:pageBlock mode="maindetail">
 
                 <apex:pageBlockTable value="{!listRDCustomFieldMapping}" var="fm" >
@@ -19,32 +19,41 @@
                     <apex:column value="{!fm.npe03__Opportunity_Field__c}" />
                 </apex:pageBlockTable> 
             
-            <apex:outputPanel rendered="{!isEditMode}" >
+            <apex:outputPanel layout="none" rendered="{!isEditMode}" >
             <section>
                 <h3 class="section-header" >{!$Label.stgLabelNewRDFieldMap}</h3>
-                <apex:outputPanel layout="block" styleClass="sectionHelp">{!$Label.stgHelpNewRDFieldMap}</apex:outputPanel>
-                <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" id="panelNewPfm" >
-     
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.Label}" for="slRDF" styleClass="control-label" />
-                    <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slRDF" >
-                        <apex:selectOptions value="{!listSORDFields}"  />
-                    </apex:selectList>
-                    <apex:outputText value="{!$Label.stgHelpRDFieldMapRDField}" styleClass="help-block" />
-                                    
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.Label}" for="slOF" styleClass="control-label" />
-                    <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slOF" >
-                        <apex:selectOptions value="{!listSOOppFields}"  />
-                    </apex:selectList>
-                    <apex:outputText value="{!$Label.stgHelpRDFieldMapOppField}" styleClass="help-block" />
-
-                </apex:panelGrid>
+                <p styleClass="section-help">{!$Label.stgHelpNewRDFieldMap}</p>
+	            <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Recurring_Donation_Field__c.Label}" for="slRDF" styleClass="col-md-3 control-label" />
+	                <div class="col-md-9 form-control-column">
+                        <apex:selectList value="{!fmNew.npe03__Recurring_Donation_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slRDF" styleClass="form-control">
+                            <apex:selectOptions value="{!listSORDFields}"  />
+                        </apex:selectList>
+	                </div>
+	                <div class="col-md-offset-3 col-md-9 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRDFieldMapRDField}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Field_Mapping__c.Fields.npe03__Opportunity_Field__c.Label}" for="slOF" styleClass="col-md-3 control-label" />
+	                <div class="col-md-9 form-control-column">
+                        <apex:selectList value="{!fmNew.npe03__Opportunity_Field__c}" multiselect="false" size="5" rendered="{!isEditMode}" id="slOF" styleClass="form-control">
+                            <apex:selectOptions value="{!listSOOppFields}"  />
+                        </apex:selectList>
+	                </div>
+	                <div class="col-md-offset-3 col-md-9 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRDFieldMapOppField}" />
+	                </div>
+	            </div>
             </section>    
             </apex:outputPanel>
                   
             <apex:pageBlockButtons location="both">
-                <apex:commandButton value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnRDCreateNewMap}" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnRDCreateNewMap}" action="{!createCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </div>
             </apex:pageBlockButtons>
  
         </apex:pageBlock> 

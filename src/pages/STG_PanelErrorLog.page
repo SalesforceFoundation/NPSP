@@ -8,7 +8,9 @@
             <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
                                               
             <apex:pageBlockButtons location="both">
-                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </div>
             </apex:pageBlockButtons>
 
         </apex:pageBlock> 

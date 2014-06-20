@@ -16,7 +16,6 @@
         li.list-group-item.clsPassed {
             display: none;
         }
-        
     </style>
     
     <script>
@@ -33,7 +32,7 @@
     <apex:form id="form">   
         <apex:pageBlock id="pbDetector" mode="maindetail">
             
-            <apex:outputPanel id="panelResults">
+            <apex:outputPanel layout="block" id="panelResults">
 		        <apex:outputPanel rendered="{!hasResults}">
                     <div>
 	                    <span style="position:relative;left:30px;">
@@ -77,7 +76,9 @@
             </apex:outputPanel> 
 
             <apex:pageBlockButtons location="top">
-                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
+            <div class="button-block">
+                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" styleClass="btn-sm btn-primary"/>
+            </div>
             </apex:pageBlockButtons>            
         </apex:pageBlock>
     </apex:form>
