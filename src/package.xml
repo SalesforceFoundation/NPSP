@@ -104,7 +104,6 @@
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
     <members>STG_InstallScript_TEST2</members>
-    <members>STG_PageHeader</members>
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
@@ -667,6 +666,12 @@
     <members>Batch__c.Open_Batches</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
+  </types>
+  <types>
+    <members>LogACall</members>
+    <members>NewNote</members>
+    <members>NewTask</members>
+    <name>QuickAction</name>
   </types>
   <types>
     <members>SmartyStreets</members>
