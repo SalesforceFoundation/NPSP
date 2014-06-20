@@ -632,10 +632,12 @@
     <name>CustomObject</name>
   </types>
   <types>
+    <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
+    <members>npe4__Relationship__c</members>
     <name>CustomTab</name>
   </types>
   <types>
