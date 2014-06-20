@@ -77,23 +77,6 @@
     	clear: both;
     }
     
-    .bootstrap td.propLabel { 
-        font-weight: bold;
-        width: 250px;
-        text-align: right;
-        vertical-align: top;
-    }
-    
-    .bootstrap td.propEdit {
-        width: 200px;
-        padding-left: 15px;
-        vertical-align: top;
-    }
-    
-    .bootstrap td.propHelpText {
-        vertical-align: top;
-    }
-    
     .bootstrap .pbBody {
     	color: #525354;
     }
@@ -140,11 +123,7 @@
         height: 40px; 
         border-radius: 4px;      
     }   
-    
-    .stgForm {
-        width: 100%;
-    }
-    
+
     /* END - COMMON CSS FOR ALL SETTINGS PAGES */
     
     /* SIDEBAR CSS */
