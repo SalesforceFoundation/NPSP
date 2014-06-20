@@ -2,24 +2,24 @@
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
 	<apex:pageMessages id="pageMessages"/>
 
-    <apex:form id="form" styleClass="form-horizontal">>   
+    <apex:form id="form" styleClass="form-horizontal"> 
         <apex:pageBlock mode="maindetail">
             <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputCheckbox value="{!stgService.stgCon.npe01__Payments_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxPE" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpPaymentsEnabled}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Max_Payments__c.Label}" for="cbxMP" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:outputField value="{!stgService.stgCon.Max_Payments__c}" rendered="{!isReadOnlyMode}" />                          
                     <apex:inputField value="{!stgService.stgCon.Max_Payments__c}" type="number" rendered="{!isEditMode}" id="cbxMP" styleClass="form-control" />                          
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpMaxPayments}" />
                 </div>
             </div>

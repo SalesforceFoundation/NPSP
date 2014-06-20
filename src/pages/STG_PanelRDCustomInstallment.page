@@ -22,31 +22,31 @@
             <section>
 	            <h3 class="section-header" >{!$Label.stgLabelRDNewPeriod}</h3>
 	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" styleClass="col-md-3 control-label" />
-	                <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" styleClass="col-md-4 control-label" />
+	                <div class="col-md-8 form-control-column">
 	                    <apex:inputField value="{!ciNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
 	                </div>
-	                <div class="col-md-6 help-block">
+	                <div class="col-md-offset-4 col-md-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpRDPeriodName}" />
 	                </div>
 	            </div>
 	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" styleClass="col-md-3 control-label" />
-	                <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}" for="tbxV" styleClass="col-md-4 control-label" />
+	                <div class="col-md-8 form-control-column">
                         <apex:inputField value="{!ciNew.npe03__Value__c}" type="number" rendered="{!isEditMode}" required="false" id="tbxV" styleClass="form-control" />
 	                </div>
-	                <div class="col-md-6 help-block">
+	                <div class="col-md-offset-4 col-md-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpRDPeriodFrequency}" />
 	                </div>
 	            </div>
 	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" styleClass="col-md-3 control-label" />
-	                <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Increment__c.Label}" for="slI" styleClass="col-md-4 control-label" />
+	                <div class="col-md-8 form-control-column">
                         <apex:selectList value="{!ciNew.npe03__Increment__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slI" styleClass="form-control" >
                             <apex:selectOptions value="{!listSORDCustomPeriod}"/>
                         </apex:selectList>
 	                </div>
-	                <div class="col-md-6 help-block">
+	                <div class="col-md-offset-4 col-md-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpRDPeriodType}" />
 	                </div>
 	            </div>

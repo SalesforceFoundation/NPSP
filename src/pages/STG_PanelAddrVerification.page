@@ -24,74 +24,74 @@
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
 			<div class="form-group">
-                <apex:outputLabel value="Using Smarty Streets" for="iUsing_SmartyStreets__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Using Smarty Streets" for="iUsing_SmartyStreets__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" id="iUsing_SmartyStreets__c" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
                 </div>
 			</div>
             <div class="form-group">
-                <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputText value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" id="iAuth_ID__c" styleClass="form-control" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-md-3 control-label"/>
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-sm-4 control-label"/>
+                <div class="col-sm-8 form-control-column">
                     <apex:inputText value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" id="iAuth_Token__c" styleClass="form-control" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Address Verification URL" for="iAddress_Verification_Endpoint__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Address Verification URL" for="iAddress_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iAddress_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Zipcode Verification URL" for="iZipcode_Verification_Endpoint__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Zipcode Verification URL" for="iZipcode_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iZipcode_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Implementing Class" for="iClass__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Implementing Class" for="iClass__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" id="iClass__c" styleClass="form-control" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
                     <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="Reject Ambiguous Addresses" for="iReject_Ambiguous_Addresses__c" styleClass="col-md-3 control-label"/>
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="Reject Ambiguous Addresses" for="iReject_Ambiguous_Addresses__c" styleClass="col-sm-4 control-label"/>
+                <div class="col-sm-8 form-control-column">
                     <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" id="iReject_Ambiguous_Addresses__c" />
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                 </div>
             </div>

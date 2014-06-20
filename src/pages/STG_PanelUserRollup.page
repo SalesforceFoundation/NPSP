@@ -40,51 +40,51 @@
                 <h3 class="section-header" >{!$Label.stgLabelNewUDR}</h3>
                 <p class="section-help">{!$Label.stgHelpNewUDR}</p>
                 <div class="form-group">
-                    <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" styleClass="col-md-3 control-label" />
-                    <div class="col-md-9 form-control-column">
+                    <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <apex:selectList value="{!activeUDR.SourceField}" rendered="{!!ISNULL(sourcefields)}" multiselect="false" size="5" id="slSF" styleClass="form-control" >
                             <apex:selectOptions value="{!sourcefields}"/>
                             <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForSourceField}"/>                       
                         </apex:selectList>                                  
                         <apex:outputText rendered="{!ISNULL(sourcefields)}">{!$Label.stgLabelUDRNoOppFields}</apex:outputText>
                     </div>
-                    <div class="col-md-offset-3 col-md-9 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpUDROppField}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputlabel value="{!$Label.stgLabelUDROp}" for="slSO" styleClass="col-md-3 control-label" />
-                    <div class="col-md-9 form-control-column">
+                    <apex:outputlabel value="{!$Label.stgLabelUDROp}" for="slSO" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <apex:selectList title="Supported Operations" value="{!activeUDR.Operation}" multiselect="false"  size="4" id="slSO" styleClass="form-control" >
                             <apex:selectOptions value="{!validoperators}" />
                             <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForOperation}"/>
                         </apex:selectList>                
                     </div>
-                    <div class="col-md-offset-3 col-md-9 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpUDROperation}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputlabel value="{!$Label.stgLabelUDRTargetObject}" for="slTO" styleClass="col-md-3 control-label" />
-                    <div class="col-md-9 form-control-column">
+                    <apex:outputlabel value="{!$Label.stgLabelUDRTargetObject}" for="slTO" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <apex:selectList value="{!activeUDR.TargetObject}" multiselect="false"  size="3" id="slTO" styleClass="form-control">
                             <apex:selectOptions value="{!targetobjects}" />
                             <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate" action="{!clearForTargetObject}"/>
                         </apex:selectList>
                     </div>
-                    <div class="col-md-offset-3 col-md-9 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpUDRTargetObject}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputlabel value="{!$Label.stgLabelUDRTargetField}" for="slSOp" styleClass="col-md-3 control-label" />
-                    <div class="col-md-9 form-control-column">
+                    <apex:outputlabel value="{!$Label.stgLabelUDRTargetField}" for="slSOp" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <apex:selectList title="Supported Operations" value="{!activeUDR.TargetField}" multiselect="false"  size="5" id="slSOp" styleClass="form-control" >
                             <apex:selectOptions value="{!targetfields}" />
                             <apex:actionSupport status="statusLoad" event="onchange" rerender="udrpageblock,btnCreate"/>
                         </apex:selectList>
                     </div>
-                    <div class="col-md-offset-3 col-md-9 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgLabelUDRTargetField}" />
                     </div>
                 </div>

@@ -6,36 +6,36 @@
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageBlock mode="maindetail">
             <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
 	                <apex:outputField value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" rendered="{!isReadOnlyMode}" />
 	                <apex:selectList value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slRM" styleClass="form-control" >
 	                    <apex:selectOption itemValue="List Setting" itemLabel="List Settings"/>
 	                    <apex:selectOption itemValue="Value Inversion" itemLabel="Value Inversion" />
 	                </apex:selectList>                
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-md-offset-4 col-md-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpRelReciprocalMethod}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Gender_Field__c.Label}" for="slGF" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Gender_Field__c.Label}" for="slGF" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
 	                <apex:outputText value="{!strGenderFieldLabel}" rendered="{!isReadOnlyMode}" />
 	                <apex:selectList value="{!stgService.stgRel.npe4__Gender_Field__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slGF" styleClass="form-control">
 	                    <apex:SelectOptions value="{!listSOGenderFieldOptions}" />
 	                </apex:selectList>                
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-md-offset-4 col-md-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpRelGenderField}" />
                 </div>
             </div>
             <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Allow_AutoCreated_Duplicates__c.Label}" for="cbxAACD" styleClass="col-md-3 control-label" />
-                <div class="col-md-3 form-control-column">
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Allow_AutoCreated_Duplicates__c.Label}" for="cbxAACD" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
                     <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" disabled="{!isReadOnlyMode}" id="cbxAACD" />                           
                 </div>
-                <div class="col-md-6 help-block">
+                <div class="col-md-offset-4 col-md-8 help-block">
                     <apex:outputText value="{!$Label.stgHelpRelAutoCreatedDup}" />
                 </div>
             </div>

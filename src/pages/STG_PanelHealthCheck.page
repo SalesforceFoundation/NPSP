@@ -53,7 +53,7 @@
 		                <apex:repeat value="{!listDR}" var="dr" rendered="{!hasResults}"> 	       
 				            <li class="list-group-item {!IF(dr.strStatus != 'Error', 'clsPassed', '')} ">	
 				                <div class="row">		  
-                                    <div class="col-md-2">  
+                                    <div class="col-sm-2">  
                                         <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
                                             <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> {!$Label.healthLabelPassed} </span>
                                         </apex:outputPanel>
@@ -61,7 +61,7 @@
                                             <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> {!$Label.healthLabelFailed} </span>
                                         </apex:outputPanel>
                                     </div>
-				                    <div class="col-md-10">
+				                    <div class="col-sm-10">
 				                        <h3 class="panel-title">
 				                        {!dr.strName}
 				                        </h3>

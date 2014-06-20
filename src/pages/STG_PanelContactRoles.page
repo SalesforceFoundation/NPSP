@@ -8,14 +8,14 @@
 	            <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>            
 	            <p class="section-help">{!$Label.npe01__Contacts_Settings_Contact_Roles_Help_Text}</p>
 	            <div class="form-group">
-	                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-md-3 control-label" />
-	                <div class="col-md-3 form-control-column">
+	                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
 		                <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" />
 		                <apex:selectList value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOCRDR" styleClass="form-control" >
 		                    <apex:selectOptions value="{!listSOContactRoles}"/>
 		                </apex:selectList>
 	                </div>
-	                <div class="col-md-6 help-block">
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
 	                    <apex:outputText value="{!$Label.stgHelpOCRDefaultRole}" />
 	                </div>
 	            </div>
@@ -24,32 +24,32 @@
 	            <h3 class="section-header">{!$Label.stgLabelHHOCR}</h3>            
 	            <p class="section-help">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
                 <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="col-md-3 control-label" />
-                    <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" disabled="{!isReadOnlyMode}" id="cbxHCRO" />
                     </div>
-                    <div class="col-md-6 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpHHOCROn}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="col-md-3 control-label" />
-                    <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Member_Contact_Role__c.Label}" for="slHMCR" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
 	                    <apex:outputField value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" rendered="{!isReadOnlyMode}" />
 	                    <apex:selectList value="{!stgService.stgHH.npo02__Household_Member_Contact_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMCR" styleClass="form-control" >
 	                        <apex:selectOptions value="{!listSOOppContactRoles}"/>
 	                    </apex:selectList>
 	                </div>
-                    <div class="col-md-6 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpOCRRoleForHH}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="col-md-3 control-label" />
-                    <div class="col-md-3 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_OCR_Excluded_Recordtypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
                         <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Household_OCR_Excluded_Recordtypes__c" listSO="{!listSOContactRecTypes}" inEditMode="{!isEditMode}" />
                     </div>
-                    <div class="col-md-6 help-block">
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpContactRTExcluded}" />
                     </div>
                 </div>

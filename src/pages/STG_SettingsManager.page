@@ -101,15 +101,21 @@
     .bootstrap .pbBody p {
         margin-bottom: 10px;
     }
-    
     .bootstrap .form-control-column {
         margin-top: 7px;
     }
     
-    .bootstrap .help-block {
-        padding-top: 7px;
-    	margin-top: 0;
-    	margin-bottom: 0;
+    .bootstrap .form-control-column input[type="text"],
+    .bootstrap .form-control-column input[type="number"],
+    .bootstrap .form-control-column input[type="password"],
+    .bootstrap .form-control-column input[type="datetime"],
+    .bootstrap .form-control-column input[type="url"] {
+        margin-top: -7px;
+    }
+    
+    .bootstrap .form-control-column input[type="number"],
+    .bootstrap .form-control-column input[type="datetime"] {
+        max-width: 12em;
     }
     
     .bootstrap .button-block {
