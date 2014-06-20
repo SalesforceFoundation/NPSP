@@ -69,12 +69,17 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         Map<Id, npo02__Household__c> addressedHouseholds = new Map<Id, npo02__Household__c>();
 
         List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
-        consForUpdate = [select AccountId, Account.npe01__SYSTEMIsIndividual__c, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
-        ocrsForUpdate = [select Opportunity.AccountId, Contact.npo02__Household__c, Opportunity.Id from OpportunityContactRole where isPrimary = true and ContactId IN :consForUpdate and Opportunity.npe01__Is_Opp_From_Individual__c = 'true'];
+
+        consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
 
         /********************************************************************/
         /** Generating a new Household Account for each Household in scope **/
         /********************************************************************/
+
+        //remove hh that have existing hh accounts
+        hhscope = removeHouseholdAccountsFromList(hhscope, consForUpdate);
+        //use the filtered list of accounts to remove the cons 
+        consForUpdate = removeContactsWithHouseholdAccount(hhscope, consForUpdate);
 
         for (npo02__Household__c hh : hhscope){
             Account a = new Account(
@@ -176,6 +181,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         /***************************************************************/
         /** Porting all existing opportunities to the new hh accounts **/
         /***************************************************************/
+
+        ocrsForUpdate = [select Opportunity.AccountId, Contact.npo02__Household__c, Opportunity.Id from OpportunityContactRole where isPrimary = true and ContactId IN :consForUpdate and Opportunity.npe01__Is_Opp_From_Individual__c = 'true'];
 
         for (OpportunityContactRole ocr : ocrsForUpdate) {
             Opportunity o = new Opportunity (id = ocr.OpportunityId);
@@ -492,6 +499,33 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         npo02__Households_Settings__c HHSettings = HH_Households.getHouseholdsSettings();
         HHSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         update HHSettings;
+    }
+
+    //remove households that already have a household account associated
+    private List<npo02__Household__c> removeHouseholdAccountsFromList(List<npo02__Household__c> hhList, List<Contact> conList){
+        Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
+        for (Contact c : conList){
+            if (c.Account.RecordTypeID == CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c &&
+                c.Account.npe01__SYSTEM_AccountType__c == 'Household Account' &&
+                c.Account.npe01__SYSTEMIsIndividual__c == true &&
+                c.Account.Type == 'Household' &&
+                hhScopeMap.containsKey(c.npo02__Household__c)){
+                    hhScopeMap.remove(c.npo02__Household__c);
+            }
+        }
+        return hhScopeMap.values();
+    }
+
+    private List<Contact> removeContactsWithHouseholdAccount(List<npo02__Household__c> hhList, List<Contact> cList){
+        Map<Id, Contact> filteredMap = new Map<Id, Contact>(cList);
+        Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
+
+        for (Contact c : cList){
+            if (!hhScopeMap.containsKey(c.npo02__Household__c)){
+                filteredMap.remove(c.Id);
+            }
+        }
+        return filteredMap.values();
     }
 
     public class ContactAddress{
