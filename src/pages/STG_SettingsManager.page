@@ -54,6 +54,10 @@
 		box-shadow: none;
 	}
 	
+	.bootstrap span.caret {
+	   border-top: 0;
+	}
+	
 	.page-header h1 {
 		font-size: 12px;
 		font-weight: bold;
