@@ -16,7 +16,6 @@
         li.list-group-item.clsPassed {
             display: none;
         }
-        
     </style>
     
     <script>
@@ -26,13 +25,14 @@
         }
     </script>
 
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
+    <p>{!$Label.healthLabelIntro}</p>
+
     <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavHealthCheck}" />        
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbDetector" mode="maindetail">
             
-            <apex:outputPanel styleClass="bootstrap" id="panelResults">
-                <p style="position:relative;left:30px;">{!$Label.healthLabelIntro}</p><br/>
+            <apex:outputPanel layout="block" id="panelResults">
 		        <apex:outputPanel rendered="{!hasResults}">
                     <div>
 	                    <span style="position:relative;left:30px;">
@@ -53,7 +53,7 @@
 		                <apex:repeat value="{!listDR}" var="dr" rendered="{!hasResults}"> 	       
 				            <li class="list-group-item {!IF(dr.strStatus != 'Error', 'clsPassed', '')} ">	
 				                <div class="row">		  
-                                    <div class="col-md-2">  
+                                    <div class="col-sm-2">  
                                         <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
                                             <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> {!$Label.healthLabelPassed} </span>
                                         </apex:outputPanel>
@@ -61,7 +61,7 @@
                                             <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> {!$Label.healthLabelFailed} </span>
                                         </apex:outputPanel>
                                     </div>
-				                    <div class="col-md-10">
+				                    <div class="col-sm-10">
 				                        <h3 class="panel-title">
 				                        {!dr.strName}
 				                        </h3>
@@ -75,8 +75,10 @@
 		        </apex:outputPanel>                     
             </apex:outputPanel> 
 
-            <apex:pageBlockButtons location="bottom">
-                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" />
+            <apex:pageBlockButtons location="top">
+            <div class="button-block">
+                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" styleClass="btn-sm btn-primary"/>
+            </div>
             </apex:pageBlockButtons>            
         </apex:pageBlock>
     </apex:form>

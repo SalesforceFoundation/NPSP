@@ -9,59 +9,96 @@
        });
     </script>
 
-	<apex:form id="form">
-		<apex:sectionHeader title="SmartyStreets" subtitle="LiveAddress API Setup" />
-		<apex:pageMessages id="pageMessages" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="LiveAddress API Setup" />
+
+	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
+	<apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
+	<div>
+	   <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
+	</div>
+	
+
+	<apex:form id="form" styleClass="form-horizontal">
+        <apex:pageMessages id="pageMessages"/>
 		<apex:pageBlock mode="maindetail">
-
-			<h3 class="sectionBar" >{!$Label.Addr_Settings_Intro_Title}</h3>	
-            <apex:outputPanel layout="block"  styleClass="sectionHelp">
-                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
-                <p><apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" /></p>
-                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
-            </apex:outputPanel>
-            
-			<h3 class="sectionBar" >{!$Label.Addr_Settings_API_Title}</h3>
-
-            <br/>
-			<apex:panelGrid id="fields" columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
-			 
-				<apex:outputLabel value="Using Smarty Streets" />
-                <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
-                
-				<apex:outputLabel value="Auth ID" />
-				<apex:inputText value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" />
-	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
-	            
-				<apex:outputLabel value="Auth Token" />
-				<apex:inputText value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" />
-	            <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
-	            
-	            <apex:outputLabel value="Address Verification URL" />
-                <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
-                
-                <apex:outputLabel value="Zipcode Verification URL" />
-                <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}"/>
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
-                
-                <apex:outputLabel value="Implementing Class" />
-                <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
-			    
-			    <apex:outputLabel value="Enable Automatic Verification"/>
-                <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
-                
-                <apex:outputLabel value="Reject Ambiguous Addresses"/>
-                <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" />
-                <apex:outputLabel value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
-                    
-            </apex:panelGrid>
-
-            <br/>
-            
+		<apex:outputPanel layout="block" id="fields">
+		<section>
+			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
+			<div class="form-group">
+                <apex:outputLabel value="Using Smarty Streets" for="iUsing_SmartyStreets__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" id="iUsing_SmartyStreets__c" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
+                </div>
+			</div>
+            <div class="form-group">
+                <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputText value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" id="iAuth_ID__c" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-sm-4 control-label"/>
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputText value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" id="iAuth_Token__c" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Address Verification URL" for="iAddress_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iAddress_Verification_Endpoint__c" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Zipcode Verification URL" for="iZipcode_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iZipcode_Verification_Endpoint__c" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Implementing Class" for="iClass__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" id="iClass__c" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="Reject Ambiguous Addresses" for="iReject_Ambiguous_Addresses__c" styleClass="col-sm-4 control-label"/>
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" id="iReject_Ambiguous_Addresses__c" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
+                </div>
+            </div>
+		</section>
+		</apex:outputPanel>
+         
             <apex:outputPanel id="addrValidationTest">
                 <apex:outputPanel rendered="{!isEditMode}">
 	                <h4>{!$Label.Addr_Settings_Test_Title}</h4>
@@ -85,13 +122,11 @@
             
             <br/>
 			
-			<div style="text-align:center">
-				<apex:outputPanel id="commandButtons">
-	                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
-	                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
-	                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" />
-	            </apex:outputPanel>
-			</div>
+			<apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
+            </apex:outputPanel>
 			
 			<!-- 
 			<div style="text-align:center; font-weight:bold; color: green;">
@@ -114,33 +149,28 @@
             </div>
             
             <br/>
-            
-			<h3 class="sectionBar" >{!$Label.Addr_Verification_Batch_Title}</h3>
-			<div id="batchVerifBody" style="padding-left:20px">
-				<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
-				<label class="checkbox"> 
-				    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
-				</label>
-				<br/>
-				<br/>
-				<div style="text-align:center">
-				    <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult"
-				    value="Verify All Addresses"/>
-				</div>
-				<br/>
-				
-				<apex:outputPanel id="bulkVerifyResult">
-					<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
-						<h4>{!$Label.Addr_Verification_Batch_Status}</h4>
-						<p>
-							<apex:outputText value="{!bulkVerifyMessage}" />
-						</p>
-						<p>
-						    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-						</p>
-					</apex:outputPanel>
+		<section>
+			<h3 class="section-header" >{!$Label.Addr_Verification_Batch_Title}</h3>
+			<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
+            <label class="checkbox" style="margin-left: 15px"> 
+                    <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
+            </label>
+            <div style="text-align:center; margin-top: 15px;">
+	            <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult" value="Verify All Addresses" styleClass="btn-sm btn-default" />
+	        </div>
+					
+			<apex:outputPanel id="bulkVerifyResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
+					<h4>{!$Label.Addr_Verification_Batch_Status}</h4>
+					<p>
+						<apex:outputText value="{!bulkVerifyMessage}" />
+					</p>
+					<p>
+					    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+					</p>
 				</apex:outputPanel>
-			</div>
+			</apex:outputPanel>
+		</section>
 		</apex:pageBlock>
 	</apex:form>
 </apex:page>

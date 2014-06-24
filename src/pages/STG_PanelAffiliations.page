@@ -1,22 +1,23 @@
 <apex:page controller="STG_PanelAffiliations_CTRL" >
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavConnections}" pageLabel="{!$Label.stgNavAffiliations}" />
 
-    <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavConnections}" subtitle="{!$Label.stgNavAffiliations}" />        
+    <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
- 
-            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
-                
-                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" />
-                <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" disabled="{!isReadOnlyMode}" id="cbxAACTO" />
-                <apex:outputLabel value="{!$Label.stgHelpAutoAffil}" />
-                                
-            </apex:panelGrid>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" disabled="{!isReadOnlyMode}" id="cbxAACTO" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpAutoAffil}" />
+                </div>
+            </div>
  
             <apex:pageBlockButtons location="both" >
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
             </apex:pageBlockButtons>
      
         </apex:pageBlock>
