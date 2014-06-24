@@ -581,6 +581,9 @@
     <members>stgLabelOppRollupRT</members>
     <members>stgLabelOppRollups</members>
     <members>stgLabelOther</members>
+    <members>stgLabelOtherFormalGreetingFormat</members>
+    <members>stgLabelOtherHHNameFormat</members>
+    <members>stgLabelOtherInformalGreetingFormat</members>
     <members>stgLabelPaymentMapNoValidFields</members>
     <members>stgLabelPaymentSettings</members>
     <members>stgLabelRDFieldMap</members>

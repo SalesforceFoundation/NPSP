@@ -2060,6 +2060,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>other</value>
     </labels>
     <labels>
+        <fullName>stgLabelOtherFormalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherFormalGreetingFormat</shortDescription>
+        <value>Other Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelOtherHHNameFormat</shortDescription>
+        <value>Other Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherInformalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
+        <value>Other Informal Greeting Format</value>
+    </labels>    
+    <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
