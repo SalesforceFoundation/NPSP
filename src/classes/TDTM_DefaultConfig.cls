@@ -127,10 +127,15 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
-        //Opportunity/Payment Allocation on Allocation object
+        //Payment Allocation on Allocation object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 1, Object__c = 'Allocation__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
+
+        //Payment Allocation on Opportunity object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 2, Object__c = 'Opportunity', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
         return handlers;
     }

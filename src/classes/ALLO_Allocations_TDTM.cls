@@ -73,6 +73,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        System.debug('LookHere: settings: ' + settings);
+        System.debug('LookHere: Entering trigger: ' + objResult.getName() + ' ' + triggerAction);
+        if (objResult.getName() == 'Allocation__c') 
+            system.debug('LookHere: equals for allo, hasRunForAllocations: ' + hasRunForAllocations);
         
         //if allocations are not enabled, do nothing
         if (!settings.Allocations_Enabled__c)
@@ -87,13 +91,19 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult == Schema.SObjectType.Allocation__c && !hasRunForAllocations) {
+        if (objResult.getName() == 'Allocation__c' && !hasRunForAllocations) {
+            System.debug('LookHere: newlist before changes: ' + newlist);
             DmlWrapper wrapper = runAllocationTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAllocations = true;
+            System.debug('LookHere: newlist after changes: ' + newlist);
+            system.debug('LookHere: wrapper ' + wrapper);
+
             return wrapper;
-        } else if (objResult == Schema.SObjectType.Opportunity && !hasRunForOpportunities) {
+        } else if (objResult.getName() == 'Opportunity' && !hasRunForOpportunities) {
             DmlWrapper wrapper = runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForOpportunities = true;
+            //we're recalculating allocations amounts in the opportunity trigger handler and don't want to run twice
+            hasRunForAllocations = true;
             return wrapper;
         } else {
             return null;
@@ -103,6 +113,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private DmlWrapper runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
+
+        System.debug('LookHere: Made it to Opportunity trigger.' + newList[0].get('Amount') + ' ' + triggerAction);
 
         //list of opps for processing when the opportunity amount changes
         list<Opportunity> listOppsForProcessing = new list<Opportunity>();
@@ -126,70 +138,44 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Opportunity oldOpp = (Opportunity) oldlist[i];
                 if (opp.Amount != oldOpp.Amount)
-                    //we're using the old opp here so we know the previous amount during processing
-                    listOppsForProcessing.add(oldOpp);
+                    listOppsForProcessing.add(opp);
             }
         }
+
+        system.debug('LookHere: listOppsForProcessing ' + listOppsForProcessing);
 
         if (!listOppsForProcessing.isEmpty()) {
             //get related opportunity data
             mapWrapper = fillMapWrapper(listOppsForProcessing);
-            for (Opportunity oldOpp : listOppsForProcessing) {
-                alloWrapper wrap = mapWrapper.get(oldOpp.id);
+            system.debug('LookHere: mapWrapper ' + mapWrapper);
+            for (Opportunity opp : listOppsForProcessing) {
+                alloWrapper wrap = mapWrapper.get(opp.id);
                 //update percentage based allocations, adjust default allocations if enabled, and enforce that total allocations don't exceed the opportunity amount
-                //cases: old amount < new amount, new amount increased
-                //          percentage based: update percentages
-                //          partially percentage based, default enabled: update percentages
-                //          no percentage based, default enabled: update default to cover amount
-                //          no percentage based, default disabled: do nothing
-                //       old amount > new amount, new amount decreased
-                //          percentage based: update percentages
-                //          not percentage based, default enabled
-                //              default covers: change default
-                //              default doesn't cover: throw an error
-                //          not percent, default disabled
-                //              if we're below the total amount, do nothing
-                //              if we're above the total amount, throw an error
-                //the Opportunity amount has increased, so we don't risk having the allocation amount that's greater than the opportunity amount
-                if (oldOpp.Amount > wrap.parentAmount) {
-                    //if some allocations are percentage based, recalculate those percentages and update them
-                    if (wrap.totalPercent > 0) {
-                        for (Allocation__c allo : wrap.listAllo) {
-                            if (allo.Percent__c!=null) {
-                                //remove the previous amount, recalculate the amount, and add it back
-                                wrap.totalAmount -= allo.Amount__c;
-                                allo.Amount__c = wrap.parentAmount * allo.Percent__c * .01;
-                                wrap.totalAmount += allo.Amount__c;
-                                dmlWrapper.objectsToUpdate.put(allo.id, allo);
-                            }
-                        }
-                    }
-                    //if the Default allocation handling is enabled, update the amount to cover 100% of the opportunity
-                    if (settings.Default_Allocations_Enabled__c) {
-                        wrap.defaultAllo.Amount__c = wrap.parentAmount - wrap.totalAmount;
-                        dmlWrapper.objectsToUpdate.put(wrap.defaultAllo.id, wrap.defaultAllo);
-                    }
-                //the Opportunity amount has decreased, we could have allocations exceeding the total opportunity amount
-                } else if (oldOpp.Amount < wrap.parentAmount) {
-                    //if all allocations are percentage based, send them to be automatically recalculated updated by the trigger handler
-                    if (wrap.isPercentOnly)
-                        dmlWrapper.objectsToUpdate.putAll(wrap.listAllo);
-                    else {
-                        decimal amountChanged = wrap.parentAmount - oldOpp.Amount;
-                        //if default allocations are enabled and the default allocation is greater than the amount the opportunity has decreased
-                        if (settings.Default_Allocations_Enabled__c) {
-                            if (wrap.defaultAllo.Amount__c > amountChanged) {
-                                //update the default allocation
-                                wrap.defaultAllo.Amount__c -= amountChanged;
-                                dmlWrapper.objectsToUpdate.put(wrap.defaultAllo.id, wrap.defaultAllo);
-                            } else 
-                                throw new AllocationsException('The allocations for this opportunity are greater than the amount of the opportunity. Please update the allocations before reducing the amount of the Opportunity.');
-                        } else {
-                            if (wrap.totalAmount > wrap.parentAmount)
-                                throw new AllocationsException('The allocations for this opportunity are greater than the amount of the opportunity. Please update the allocations before reducing the amount of the Opportunity.');
+
+                //if some allocations are percentage based, recalculate those percentages and update them
+                if (wrap.totalPercent > 0) {
+                    for (Allocation__c allo : wrap.listAllo) {
+                        if (allo.Percent__c!=null && allo.Percent__c>0) {
+                            //remove the previous amount, recalculate the amount, and add it back
+                            wrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c = wrap.parentAmount * allo.Percent__c * .01;
+                            wrap.totalAmount += allo.Amount__c;
+                            dmlWrapper.objectsToUpdate.put(allo.id, allo);
+                            system.debug('LookHere: Recalc Amt: ' + allo);
                         }
                     }
                 }
+                //if the Default allocation handling is enabled, update the amount to cover 100% of the opportunity
+                if (settings.Default_Allocations_Enabled__c) {
+                    wrap.totalAmount -= wrap.defaultAllo.Amount__c;
+                    wrap.defaultAllo.Amount__c = wrap.parentAmount - wrap.totalAmount;
+                    wrap.totalAmount += wrap.defaultAllo.Amount__c;
+                    dmlWrapper.objectsToUpdate.put(wrap.defaultAllo.id, wrap.defaultAllo);
+                }
+                //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
+                if (wrap.totalAmount > wrap.parentAmount)
+                    //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
+                    opp.Amount.addError('The allocations for this opportunity are greater than the amount of the opportunity. Please update the allocations before reducing the amount of the Opportunity.');
             }
         }
 
@@ -208,7 +194,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we don't have a parent, or have more than one parent, exception thrown
             if (parentError(allo)) {
                 //can I throw an error for the specific trigger row?
-                throw new AllocationsException('Each Allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.');
+                allo.AddError('Each Allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.');
             }
         }
 
@@ -224,7 +210,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             
             //if we exceed 100%
             if (wrap.totalPercent > 100) {
-                throw new AllocationsException('Allocations cannot exceed 100%.');
+                allo.addError('Allocations cannot exceed 100%.');
             }
 
             //verify the total allocations don't exceed the parent amount
@@ -234,9 +220,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if default is enabled and we're not at exactly 100%
             if (settings.Default_Allocations_Enabled__c) {
                 if (wrap.isPercentOnly && wrap.totalPercent != 100)
-                    throw new AllocationsException('If default allocations are enabled, allocations must equal 100% of the parent amount.');
+                    allo.addError('If default allocations are enabled, allocations must equal 100% of the parent amount.');
                 if (!wrap.isPercentOnly && wrap.totalAmount != wrap.parentAmount)
-                    throw new AllocationsException('If default allocations are enabled, allocations must equal 100% of the parent amount.');
+                    allo.addError('If default allocations are enabled, allocations must equal 100% of the parent amount.');
             }
         }
 
@@ -279,7 +265,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //fill wrapper with all allocations for this opportunity
         //getting payment and opportunity info here to avoid excess queries
-        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c FROM Allocation__c WHERE Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId]) {
+        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId]) {
             //do we need the default allocation object for anything? if (allo.id == defaultGAU) {}
 
             alloWrapper wrap = mapIdToWrapper.get(getParentId(allo));
@@ -331,7 +317,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             setParentId.add(opp.id);
             mapIdToWrapper.put(opp.id, new alloWrapper());
         }
-        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c FROM Allocation__c WHERE Opportunity__c IN :setParentId ]) {
+        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c IN :setParentId ]) {
             alloWrapper wrap = mapIdToWrapper.get(allo.Opportunity__c);
             
             //add this allocation to the list

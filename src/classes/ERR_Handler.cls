@@ -116,9 +116,9 @@ public with sharing class ERR_Handler {
 	                errors.add(err);
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
+                     or error notification sent. */
 	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);*/
+	                   addErrorMessage(sObjects[i], message);
 	                try {
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
 	                } catch(Exception ex) {
@@ -149,8 +149,8 @@ public with sharing class ERR_Handler {
                    System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
                    /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
-                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
+                     or error notification sent. */
+                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); 
                    try {
                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
                    } catch(Exception ex) {
