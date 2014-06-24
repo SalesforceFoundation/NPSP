@@ -7,33 +7,29 @@
 * Usage:
 *       <c:batchJobs strBatchComponentLabel="Batch Progress" cNumberOfJobs="1" />
 -->  
+    <style type="text/css">
+	    .progress, .bootstrap .progress {
+	        border: 1px solid #dfe0e1;
+	        margin-bottom: 0;
+	        padding: 3px;
+	        height: auto;
+	        background-color: #fff;
+	        border-radius: 8px;
+	        -webkit-box-shadow: none;
+	        box-shadow: none;
+	    }
+	    
+	    .progress-bar, .bootstrap .progress-bar {
+	        color: #fff;
+	        border-radius: 5px;
+	        -webkit-box-shadow: none;
+	        box-shadow: none;
+	    }
+    </style>
 
     <apex:attribute name="cNumberOfJobs" type="Integer" assignTo="{!numberOfJobs}" description="The number of batch jobs to display in the table."/>
     <apex:attribute name="strBatchComponentLabel" type="String" assignTo="{!batchComponentLabel}" description="The label of the progress bar section."/>
     <apex:attribute name="bRerenderOnComplete" type="Boolean" assignTo="{!rerenderoncomplete}" description="Causes a full page rerender when progress bar equals 100%"/>
-    
-    <!-- Here is the css styles that will be used for the progress bars -->
-    <style>
-        .progressBar{
-            background-color: #f8f8f8;
-            border:1px solid #DDDDDD;
-            height: 19px;
-            width: 300px;
-            -moz-border-radius: 5px; 
-            -webkit-border-radius: 5px;
-        }
-        .progress{
-            background-color: #F7B64B;
-            border:1px solid #E78F08;
-            height: 100%;
-            margin: -1px;
-            text-align: center;
-            -moz-border-radius: 5px; 
-            -webkit-border-radius: 5px;
-            line-height: 18px;
-        }
-    </style>
- 
     
     <!-- This action poller will check the status of the batch jobs every 5 seconds -->
     <!-- DH: note that it used to just rerender jobs, but i had to change it to rerender the pageblock to get it working in STG_SettingsManager panels. -->
@@ -47,14 +43,11 @@
             <apex:column value="{!b.job.CreatedById}"/>
             <apex:column value="{!b.job.Status}"/>            
             <apex:column value="{!b.job.ExtendedStatus}"/>            
-            <apex:column width="320px" >
+            <apex:column width="320px">
  
-                <!-- Here with have two divs that construct our progresses bar. An outer which is the entire bar,
-                and and inner that represents the percent complete. We simply pass the percentComplete value to
-                the inner div width and this will show how far along the job is. Brilliant! -->
-            
-                <div class="progressBar">
-                    <div class="progress" style="width: {!b.percentComplete}%;">
+                <!--  Modified to use the Salesforce1 Bootstrap styles for progress bars (included in STG_SettingsManager), and add aria support -->            
+                <div class="progress">
+                    <div class="progress-bar" aria-valuenow="{!b.percentComplete}" aria-valuemin="0" aria-valuemax="100" style="width: {!b.percentComplete}%;">
                         {!b.percentComplete}%
                     </div>
                 </div>

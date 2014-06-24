@@ -1,71 +1,117 @@
 <apex:page controller="STG_PanelOppRollups_CTRL" docType="html-5.0">
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavDonorStatistics}" />
 
-    <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavDonorStatistics}" />        
+    <apex:form id="form" styleClass="form-horizontal"> 
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
- 
-            <h3 class="sectionBar" >{!$Label.stgLabelOppRollups}</h3>
-            <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
-                
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" />
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" disabled="{!isReadOnlyMode}" id="cbxARPC" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupPrimaryContact}" />
+	 		<section>
+	            <h3 class="section-header" >{!$Label.stgLabelOppRollups}</h3>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" disabled="{!isReadOnlyMode}" id="cbxARPC" />
+	                </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupPrimaryContact}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Rollup_N_Day_Value__c.Label}" for="tbxRNDV" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <apex:outputField value="{!stgService.stgHH.npo02__Rollup_N_Day_Value__c}" rendered="{!isReadOnlyMode}" />
+		                <apex:inputfield value="{!stgService.stgHH.npo02__Rollup_N_Day_Value__c}" type="number" rendered="{!isEditMode}" id="tbxRNDV" styleClass="form-control" />
+	                </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupNDayValue}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxUFYFR" />
+	                </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpFiscalYearRollups}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Batch_Size__c.Label}" for="tbxBS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <apex:outputField value="{!stgService.stgHH.npo02__Batch_Size__c}" rendered="{!isReadOnlyMode}" />
+		                <apex:inputField value="{!stgService.stgHH.npo02__Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxBS" styleClass="form-control" />
+	                </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupBatchSize}" />
+	                </div>
+	            </div>
+			</section>
+			<section>
+	            <h3 class="section-header" >{!$Label.stgLabelOppRollupRT}</h3>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Account_Opp_Rectypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupExcludeAccountOppRT}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Account_Opp_Types__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupExcludeAccountOppType}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Contact_Opp_Rectypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+	                    <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupExcludeContactOppRT}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Contact_Opp_Types__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpRollupExcludeContactOppType}" />
+	                </div>
+	            </div>
+			</section>
+			<section>
+	            <h3 class="section-header" >{!$Label.stgLabelSoftCredit}</h3>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxESCR" />
+	                </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpEnableSoftCreditRollups}" />
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Soft_Credit_Roles__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+		                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Soft_Credit_Roles__c" listSO="{!listSOOppContactRoles}" inEditMode="{!isEditMode}" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$Label.stgHelpSoftCreditRoles}" />
+	                </div>
+	            </div>
+			</section>            
 
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Rollup_N_Day_Value__c.Label}" for="tbxRNDV" />
-                <apex:outputField value="{!stgService.stgHH.npo02__Rollup_N_Day_Value__c}" rendered="{!isReadOnlyMode}" />
-                <apex:inputfield value="{!stgService.stgHH.npo02__Rollup_N_Day_Value__c}" type="number" rendered="{!isEditMode}" id="tbxRNDV" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupNDayValue}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" />
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxUFYFR" />
-                <apex:outputLabel value="{!$Label.stgHelpFiscalYearRollups}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Batch_Size__c.Label}" for="tbxBS" />
-                <apex:outputField value="{!stgService.stgHH.npo02__Batch_Size__c}" rendered="{!isReadOnlyMode}" />
-                <apex:inputField value="{!stgService.stgHH.npo02__Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxBS" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupBatchSize}" />
-
-            </apex:panelGrid>
-
-            <h3 class="sectionBar" >{!$Label.stgLabelOppRollupRT}</h3>
-            <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Account_Opp_Rectypes__c.Label}" for="idDBMS" />
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeAccountOppRT}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Account_Opp_Types__c.Label}" for="idDBMS" />
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Account_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeAccountOppType}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Contact_Opp_Rectypes__c.Label}" for="idDBMS" />
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Rectypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeContactOppRT}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Excluded_Contact_Opp_Types__c.Label}" for="idDBMS" />
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Excluded_Contact_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeContactOppType}" />
-
-            </apex:panelGrid>
-
-            <h3 class="sectionBar" >{!$Label.stgLabelSoftCredit}</h3>
-            <apex:panelGrid columns="3"  columnClasses="propLabel, propEdit, propHelpText" >
-                
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" />
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxESCR" />
-                <apex:outputLabel value="{!$Label.stgHelpEnableSoftCreditRollups}" />
-
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Soft_Credit_Roles__c.Label}" for="idDBMS" />
-                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Soft_Credit_Roles__c" listSO="{!listSOOppContactRoles}" inEditMode="{!isEditMode}" />
-                <apex:outputLabel value="{!$Label.stgHelpSoftCreditRoles}" />
-            
-            </apex:panelGrid>
-            
             <apex:pageBlockButtons location="both" >
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </div>
             </apex:pageBlockButtons>
             
         </apex:pageBlock>
