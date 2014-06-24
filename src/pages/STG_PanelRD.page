@@ -1,51 +1,79 @@
 <apex:page controller="STG_PanelRD_CTRL" docType="html-5.0" action="{!init}">
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
+    <p>{!$Label.npe03__RecurringDonationSettingsDescription}</p>
 
-    <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavDonations}" subtitle="{!$Label.stgNavRecurringDonations}" />        
+    <apex:form id="form" styleClass="form-horizontal">
         <apex:pageMessages id="pageMessages"/>
-        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.npe03__RecurringDonationSettingsDescription}</apex:outputPanel>
         <apex:pageBlock mode="maindetail">
-  
-            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
-
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.Label}" for="tbxOFM" />
-                <apex:outputField value="{!stgService.stgRD.npe03__Opportunity_Forecast_Months__c}" rendered="{!isReadOnlyMode}" />
-                <apex:inputField value="{!stgService.stgRD.npe03__Opportunity_Forecast_Months__c}" type="number" rendered="{!isEditMode}" id="tbxOFM" />
-                <apex:outputLabel value="{!$Label.stgHelpRDOppForecastMonths}"/>
-                
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Open_Opportunity_Behavior__c.Label}" for="slOOB" />
-                <apex:outputField value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slOOB" >
-                    <apex:selectOptions value="{!listSORDCloseOptions}" />
-                </apex:selectList>
-                <apex:outputLabel value="{!$Label.stgHelpRDOpenOppBehavior}"/>
-
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Maximum_Donations__c.Label}" for="tbxMD" />
-                <apex:outputField value="{!stgService.stgRD.npe03__Maximum_Donations__c}" rendered="{!isReadOnlyMode}" />
-                <apex:inputField value="{!stgService.stgRD.npe03__Maximum_Donations__c}" type="number" rendered="{!isEditMode}" id="tbxMD" />
-                <apex:outputLabel value="{!$Label.stgHelpRDMaxDonations}"/>
-
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Add_Campaign_to_All_Opportunites__c.Label}" for="cbxACAO" />
-                <apex:inputCheckbox value="{!stgService.stgRD.npe03__Add_Campaign_to_All_Opportunites__c}" disabled="{!isReadOnlyMode}" id="cbxACAO" />
-                <apex:outputLabel value="{!$Label.stgHelpRDAddCampaign}"/>
-
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.Label}" for="slRT" />
-                <apex:outputText value="{!strRDOppRecordTypeLabel}" rendered="{!isReadOnlyMode}" />
-                <apex:selectList value="{!stgService.stgRD.npe03__Record_Type__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slRT" >
-                    <apex:selectOptions value="{!listSOOppRecTypesIds}" />
-                </apex:selectList>
-                <apex:outputLabel value="{!$Label.stgHelpRDOppRT}"/>
-
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}" for="cbxDNJ" />
-                <apex:inputCheckbox value="{!isRDScheduleDisabled}" disabled="{!isReadOnlyMode}" id="cbxDNJ" />
-                <apex:outputLabel value="{!$Label.stgHelpRDDisableScheduling}"/>
-
-            </apex:panelGrid> 
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.Label}" for="tbxOFM" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:outputField value="{!stgService.stgRD.npe03__Opportunity_Forecast_Months__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputField value="{!stgService.stgRD.npe03__Opportunity_Forecast_Months__c}" type="number" rendered="{!isEditMode}" id="tbxOFM" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDOppForecastMonths}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Open_Opportunity_Behavior__c.Label}" for="slOOB" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:outputField value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:selectList value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slOOB" styleClass="form-control" >
+                        <apex:selectOptions value="{!listSORDCloseOptions}" />
+                    </apex:selectList>
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDOpenOppBehavior}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Maximum_Donations__c.Label}" for="tbxMD" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:outputField value="{!stgService.stgRD.npe03__Maximum_Donations__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputField value="{!stgService.stgRD.npe03__Maximum_Donations__c}" type="number" rendered="{!isEditMode}" id="tbxMD" styleClass="form-control" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDMaxDonations}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Add_Campaign_to_All_Opportunites__c.Label}" for="cbxACAO" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgRD.npe03__Add_Campaign_to_All_Opportunites__c}" disabled="{!isReadOnlyMode}" id="cbxACAO" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDAddCampaign}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.Label}" for="slRT" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:outputText value="{!strRDOppRecordTypeLabel}" rendered="{!isReadOnlyMode}" />
+                    <apex:selectList value="{!stgService.stgRD.npe03__Record_Type__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slRT" styleClass="form-control" >
+                        <apex:selectOptions value="{!listSOOppRecTypesIds}" />
+                    </apex:selectList>
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDOppRT}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Disable_Nightly_Job__c.Label}" for="cbxDNJ" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!isRDScheduleDisabled}" disabled="{!isReadOnlyMode}" id="cbxDNJ" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpRDDisableScheduling}" />
+                </div>
+            </div>
 
             <apex:pageBlockButtons location="both">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </div>
             </apex:pageBlockButtons>
 
         </apex:pageBlock>
