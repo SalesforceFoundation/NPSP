@@ -109,7 +109,7 @@
         margin: 10px;
     }
     
-.bootstrap .btn-primary[disabled] {
+    .bootstrap .btn-primary[disabled] {
         color: #919293;
         border: 1px solid #ccc;
         font-weight: normal;
