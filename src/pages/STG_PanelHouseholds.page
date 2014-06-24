@@ -162,10 +162,8 @@
             <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
                 
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" />
-                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" 
-                    rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" id="cbxAHN" />
-                <apex:outputLabel value="{!$Label.stgHelpHHNaming}"
-                    rendered="{! isReadOnlyMode || stgService.stgHH.npo02__Advanced_Household_Naming__c}" />
+                <apex:inputcheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxAHN" />
+                <apex:outputLabel value="{!$Label.stgHelpHHNaming}" />
                 
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Household_Name_Format__c.Label}" for="slstrFormatHH" />
                 <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" />
@@ -254,7 +252,7 @@
                 <apex:outputLabel value="{!$Label.stgHelpINamingClass}" />
 
                 <apex:outputLabel value="" />
-                <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" action="{!activateHouseholdNaming}" rerender="pbHH" rendered="{!isEditMode}" />
+                <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" />
                 <apex:outputLabel value="{!$Label.stgHelpBtnHHNaming}" rendered="{!isEditMode}" />
 
             </apex:panelGrid>            

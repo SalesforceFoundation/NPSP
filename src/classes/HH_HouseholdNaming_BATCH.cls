@@ -30,7 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
-* @description Class provides a batchable wrapper for Household naming functionality. Generally called only on initial activation.
+* @description Class provides a batchable wrapper for Household naming functionality. Called on initial activation of
+* automatic household naming, or to refresh all household naming (when the user changes their custom format).
 */
 public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
 // batch apex class to name households in existing orgs
@@ -39,108 +40,124 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
     public boolean isActivation {get; set;} 
     
     /** @description constructor for the class */
+    // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
     public HH_HouseholdNaming_BATCH(string q, boolean isA) {          
         isActivation = isA;     
         query = q; 
     }
+    
     /** @description default old constructor to skip activation sequence */    
+    // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
     public HH_HouseholdNaming_BATCH(string q) {
         query = q;
         isActivation = false;       
-    }    
+    }
+        
     /** @description Start method of batch class */
     public database.Querylocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(query);      
     }
+    
     /** @description The execution logic for the batch. Includes seperate paths for initial activations */
+    // result SObject array is a list of Contact's with just Id, LastName, HHId__c available.
     public void execute(Database.BatchableContext bc, Sobject[] result) {
-        // run rollups for this batch  
         HH_ProcessControl.inFutureContext = true;     
         
-        //first, if this is coming from the VF settings interface, we need to markup
-        //all of the houesholds that have existing names        
-        if (isActivation){
-            
+        //first, if this is coming from the VF settings interface, and the user just enabled
+        //automatic household naming for the first time, we need to markup
+        //all of the households that have existing names.        
+        if (isActivation) {
+        	
+	        set<ID> setHHId = new set<ID>();
+	        for (Contact con : (list<Contact>)result) {
+	            setHHId.add(con.HHId__c);
+	        }
+	        list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c 
+	           from npo02__Household__c where id IN : setHHId];
+	        list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c 
+	           from Account where id IN : setHHId];
+	
+	        // handle two types of households by using an SObject    
+	        list<SObject> listHH = new list<SObject>();
+	        listHH.addAll(listHHObj);
+	        listHH.addAll(listHHAcct);     
+           
             //sort our contacts objects into a map of 
             //household id and list of contacts
             map<id, list<Contact>> hhIDContactMap = new map<id, list<Contact>>();
             //sort contacts by household
-            for (sobject s : result){               
+            for (sobject s : result) {               
                 Contact c = (Contact)s; 
-                if (!hhIDContactMap.containskey(c.npo02__Household__r.id))
-                    hhidContactMap.put(c.npo02__Household__r.id, new list<Contact>{c});
+                if (!hhIDContactMap.containskey(c.HHId__c))
+                    hhidContactMap.put(c.HHId__c, new list<Contact>{c});
                 else{
-                    list<Contact> clist = hhidContactMap.get(c.npo02__Household__r.id);
+                    list<Contact> clist = hhidContactMap.get(c.HHId__c);
                     clist.add(c);
                 }
             }
         
-            //get the actual household objects being operating on so we can update them if needed
-            map<id, npo02__Household__c> Householdsforupdate = new map<id, npo02__Household__c>([select id, npo02__SYSTEM_CUSTOM_NAMING__c, Name, npo02__Formal_Greeting__c, 
-            npo02__Informal_Greeting__c from npo02__Household__c where id IN :hhidContactMap.keyset()]);
-            
-            list<npo02__Household__c> updatelist = new list<npo02__Household__c>();
+            list<SObject> updatelist = new list<SObject>();
         
-            for (id hhid : hhidContactMap.keyset()){
-                boolean needsupdate = false;
+            for (SObject h : listHH) {
+                boolean needsupdate = false;                
+                string strSystemCustomNaming = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
                 
-                npo02__Household__c h = new npo02__Household__c();
-                h = Householdsforupdate.get(hhid);
-                
-                if (h.npo02__SYSTEM_CUSTOM_NAMING__c != null)
-                    h.npo02__SYSTEM_CUSTOM_NAMING__c += ';';                                         
+                if (strSystemCustomNaming != null)
+                    strSystemCustomNaming += ';';                                         
                 else
-                    h.npo02__SYSTEM_CUSTOM_NAMING__c = '';                                      
+                    strSystemCustomNaming = '';                                      
                 
-                if(h.npo02__Formal_Greeting__c != null && !h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Formal_Greeting__c')){
-                    h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Formal_Greeting__c' + ';';
+                if (h.get('npo02__Formal_Greeting__c') != null && !strSystemCustomNaming.contains('Formal_Greeting__c')) {
+                    strSystemCustomNaming += 'Formal_Greeting__c' + ';';
                     needsupdate = true;                     
                 }
-                if (h.npo02__Informal_Greeting__c != null && !h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Informal_Greeting__c')){
-                    h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Informal_Greeting__c' + ';';
+                if (h.get('npo02__Informal_Greeting__c') != null && !strSystemCustomNaming.contains('Informal_Greeting__c')) {
+                    strSystemCustomNaming += 'Informal_Greeting__c' + ';';
                     needsupdate = true;                 
                 }    
 
                 //pile up a list of all the lastnames in the household
                 set<string> hhlastnames = new set<string>();
-                for (Contact c : hhidcontactmap.get(hhid))
+                ID HHId = string.valueOf(h.get('Id'));
+                for (Contact c : hhidcontactmap.get(HHId))
                     hhlastnames.add(c.LastName);    
                 
                 boolean hasnamematch = false;
-                for (string s : hhlastnames){
-                    if (h.Name == s + ' ' + system.label.npo02.DefaultHouseholdName)
+                for (string s : hhlastnames) {
+                    if (h.get('Name') == s + ' ' + system.label.npo02.DefaultHouseholdName)
                        hasnamematch = true;                 
                 }
                 
                 //if we never found a matching default name its been customized, so
                 //add them to the update list and mark the custom naming field accordingly
-                if (!hasnamematch){
-                    if (!h.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'))
-                       h.npo02__SYSTEM_CUSTOM_NAMING__c += 'Name' + ';';
-                    
+                if (!hasnamematch && !strSystemCustomNaming.contains('Name')) {
+                    strSystemCustomNaming += 'Name' + ';';
                     needsupdate = true;                 
                 }
                 
-                if (needsupdate)
-                    updatelist.add(h);                
+                if (needsupdate) {
+                    h.put('npo02__SYSTEM_CUSTOM_NAMING__c', strSystemCustomNaming);
+                    updatelist.add(h);
+                }                
             }
         
-            if(updatelist.size() > 0)
+            if (updatelist.size() > 0)
                 Database.Saveresult[] sr = database.update(updatelist, false);
         }
 
         //now run the regular process for completing the batch run                
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         set<id> hhids = new set<id>();
-        for (sobject s : result){
+        for (sobject s : result) {
             Contact c = (Contact)s;        
-            hhids.add(c.npo02__household__r.id);
+            hhids.add(c.HHId__c);
         }
         list<id> hhidlist = new list<id>();
         hhidlist.addall(hhids);
         
         hn.UpdateNames(hhidlist);
     }
+    
     /** @description Finish method for the batchable class. */
     public void finish(Database.BatchableContext bc) {
     }

@@ -34,7 +34,7 @@
 * NOTE: This class handles both household naming for the Household__c object
 * as well as for HH Account objects. 
 */
-public  without sharing class HH_HouseholdNaming {
+public without sharing class HH_HouseholdNaming {
       
     @future  
     public static void FutureUpdateNames(list<id> hhids){       
@@ -48,18 +48,21 @@ public  without sharing class HH_HouseholdNaming {
         hn.UpdateNames(hhids);      
         HH_ProcessControl.inFutureContext = false;    
     }
-    public  string getOtherName(list<Contact> ContactList){return null;}
-    public  void UpdateNames(list<id> hhids){
+
+    public void UpdateNames(list<id> hhids){
         
         //we need this turned on to prevent recursive triggering on household creation        
         HH_ProcessControl.inFutureContext = true;    
         
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
-        list<Contact> contactlist = [select id, Firstname, toLabel(Salutation), LastName, hhId__c, npo02__Naming_Exclusions__c, CreatedDate from Contact 
-            where hhId__c IN :hhids and hhId__c != null 
-            ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate];
-            
+        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+        string strSoql = strContactSelectStmtAllFields;
+        string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
+        strSoql += ' WHERE ' + strHHId + ' IN :hhids AND ' + strHHId + ' != null ' +
+            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';     
+        list<Contact> contactlist = Database.Query(strSoql); 
+        
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
         list<SObject> listHHAcct = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from Account where id IN : hhids];
 
@@ -339,25 +342,47 @@ public  without sharing class HH_HouseholdNaming {
     }
 *****/
     
-    //interface for the batch jobs on advanced greeting activation
-    public void ActivateAdvancedGreetings(boolean isTest){
-        
-        //shamelessly borrowed from opprollups      
+    //interface for the batch jobs on Refresh Household Naming
+    public static void refreshAllHouseholdNaming(boolean isActivation) {                        
+        // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
+        string strSoql = 'SELECT Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' FROM Contact WHERE ' +
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' != NULL ';    
+        HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(strSoql, isActivation);
         integer batchSize = 200;
-        
-        //start the activation batch process, used only once, on initial click
-        //to enable batch rollups
-        HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH('SELECT id, npo02__Household__r.id, ' + 
-        'npo02__household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c, ' +
-        'npo02__household__r.npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Naming_Exclusions__c,  Firstname, lastname, ' +
-        'salutation ' +
-        
-        // DJH:UNDONE we need to add more contact fields to the soql to support the template!
-        
-        'FROM Contact where npo02__Household__c != null ' +
-        (isTest ? ' and lastname=\'%LastName0%\' LIMIT 200' : '') + 
-        '', true);
         id batchProcessId = database.executeBatch(batch, batchSize);                 
     }
-    
+
+    private static list<string> listStrContactFields { 
+        get {
+            if (listStrContactFields == null) {
+                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap(); //.clone();
+                //mapS.remove('mailingaddress');
+                //mapS.remove('otheraddress');
+                listStrContactFields = new list<string>();
+                listStrContactFields.addAll(mapS.keySet());                         
+            }
+            return listStrContactFields;
+        }
+        set;
+    }    
+
+    public static string strContactSelectStmtAllFields {
+        get {
+	        if (strContactSelectStmtAllFields == null) {
+		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+		        string strSoql = 'SELECT ';
+		        string strComma = '';
+		        for (string strF : listStrContactFields) {
+		            if (strF == 'Salutation') strF = 'toLabel(Salutation)';
+		            strSoql += strComma + strF;
+		            strComma = ', ';
+		        }
+		        strSoql += ' FROM Contact ';
+		        strContactSelectStmtAllFields = strSoql;
+	        }
+	        return strContactSelectStmtAllFields;
+        }
+        private set;        
+    }    
+   
 }

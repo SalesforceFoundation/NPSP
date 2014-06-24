@@ -80,7 +80,8 @@ public class HH_HouseholdNaming_TEST {
         system.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
-        'select npo02__household__r.id from Contact where npo02__household__r.id = \'' + hhid + '\' limit 200', true
+        'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' = \'' + hhid + '\' limit 200', true
         );
             
         Test.StartTest(); 
@@ -141,9 +142,6 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
         system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
         
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        //test for coverage
-        hn.ActivateAdvancedGreetings(true);
     }
     
     static testMethod void HouseholdNamingUpdateTest(){

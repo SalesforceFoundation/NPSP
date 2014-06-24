@@ -44,17 +44,20 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
 
     public PageReference activateHouseholdNaming() {
         isRunningBatch = true; 
+        boolean isActivation = (HH_Households.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
                 
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
         saveSettings();
         
-        //call advanced rollup batch process
-        HH_HouseholdNaming hn = new HH_Householdnaming();
-        hn.ActivateAdvancedGreetings(false);
-        
+        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);        
         return null;
     }
 
+    public override PageReference editSettings() {
+        isRunningBatch = false;
+        return super.editSettings();
+    }
+    
     public override PageReference saveSettings() {
     	
     	// add some extra error detection
@@ -106,7 +109,6 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
                 listSOFormalGreetingFormats = new list<SelectOption>();
                 listSOFormalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
-                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation}} {!LastName}', '{!{!Salutation}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
                 listSOFormalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
