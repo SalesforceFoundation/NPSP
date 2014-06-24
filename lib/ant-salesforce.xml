@@ -250,6 +250,9 @@
             <case value="pages">
               <property name="typename" value="ApexPage" />
             </case>
+            <case value="quickActions">
+              <property name="typename" value="QuickAction" />
+            </case>
             <case value="remoteSiteSettings">
               <property name="typename" value="RemoteSiteSetting" />
             </case>
@@ -276,7 +279,7 @@
               <for param="file">
                 <path>
                   <!-- exclude xml files and namespaced metadata files as well as any manual excludes -->
-                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml *__*__c.* @{exclude}" />
+                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml *__*__c.object @{exclude}" />
                 </path>
                 <sequential>
                   <!-- get basename and basename without suffix for file. propertyregex is used since we don't know the file suffix from only the dir name (i.e. classes vs .class) -->
