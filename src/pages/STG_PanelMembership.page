@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavMembership}" />
-	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal">
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" styleClass="col-sm-4 control-label" />

@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
-	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal"> 
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="col-sm-4 control-label" />

@@ -17,9 +17,9 @@
 	   <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
 	</div>
 	
-	<apex:pageMessages id="pageMessages"/>
 
 	<apex:form id="form" styleClass="form-horizontal">
+        <apex:pageMessages id="pageMessages"/>
 		<apex:pageBlock mode="maindetail">
 		<apex:outputPanel layout="block" id="fields">
 		<section>

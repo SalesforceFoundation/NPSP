@@ -1,9 +1,9 @@
 <apex:page controller="STG_PanelUserRollup_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavUserDefinedRollups}" />
     <p>{!$Label.npo02__UDRDescription}</p>
-    <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal">  
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
                 <apex:pageBlockTable value="{!udrlist}" var="udr" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >

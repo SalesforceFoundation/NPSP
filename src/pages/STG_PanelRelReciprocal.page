@@ -1,9 +1,9 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavConnections}" pageLabel="{!$Label.stgNavRelReciprocal}" />
     <p>{!$Label.npe4__RelationshipsLookupDescription}</p>
-    <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal stgForm">  
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
             <apex:pageBlockTable value="{!listRelLookup}" var="rl" >
                 <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >

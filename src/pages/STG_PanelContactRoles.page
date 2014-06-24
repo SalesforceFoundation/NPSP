@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelContactRoles_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavContacts}" pageLabel="{!$Label.stgNavContactRoles}" />
-	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal">   
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
 	        <section>
 	            <h3 class="section-header">{!$Label.stgLabelAutoContactRoles}</h3>            

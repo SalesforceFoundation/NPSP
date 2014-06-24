@@ -109,6 +109,12 @@
         margin: 10px;
     }
     
+.bootstrap .btn-primary[disabled] {
+        color: #919293;
+        border: 1px solid #ccc;
+        font-weight: normal;
+    }
+    
     .sub-nav-item {
         margin-left: 20px;
     }

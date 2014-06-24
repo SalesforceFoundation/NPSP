@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavBDE}" pageLabel="{!$Label.stgNavBDE}" />
-    <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="form-horizontal">>   
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="col-md-4 control-label" />

@@ -27,9 +27,9 @@
 
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
     <p>{!$Label.healthLabelIntro}</p>
-    <apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form">   
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbDetector" mode="maindetail">
             
             <apex:outputPanel layout="block" id="panelResults">

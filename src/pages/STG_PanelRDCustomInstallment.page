@@ -1,8 +1,8 @@
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0"  >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
-	<apex:pageMessages id="pageMessages"/>
 
     <apex:form id="form" styleClass="stgForm form-horizontal">  
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
                 <apex:pageBlockTable value="{!stgService.listRDCustomInstallment}" var="ci" >
                     <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
