@@ -1,26 +1,34 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavBDE}" pageLabel="{!$Label.stgNavBDE}" />
 
-    <apex:form id="form">   
-        <apex:sectionHeader title="{!$Label.stgNavBDE}" subtitle="{!$Label.stgNavBDE}" />        
+    <apex:form id="form" styleClass="form-horizontal">>   
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
-  
-            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
-
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" />
-                <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
-                <apex:outputLabel value="{!$Label.stgHelpBDEOppNaming}"/>
-
-                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" />
-                <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
-                <apex:outputLabel value="{!$Label.stgHelpBDEAllowBlankOppNames}"/>
-                                                          
-            </apex:panelGrid>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Opportunity_Naming__c.Label}" for="cbxONC" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgBDE.Opportunity_Naming__c}" disabled="{!isReadOnlyMode}" id="cbxONC" />
+                </div>
+                <div class="col-md-offset-4 col-md-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpBDEOppNaming}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.Batch_Data_Entry_Settings__c.Fields.Allow_Blank_Opportunity_Names__c.Label}" for="cbxABON" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgBDE.Allow_Blank_Opportunity_Names__c}" disabled="{!isReadOnlyMode}" id="cbxABON" />
+                </div>
+                <div class="col-md-offset-4 col-md-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpBDEAllowBlankOppNames}" />
+                </div>
+            </div>
 
             <apex:pageBlockButtons location="both">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" />
+            <div class="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </div>
             </apex:pageBlockButtons>
             
         </apex:pageBlock>
