@@ -318,4 +318,71 @@ private with sharing class HH_NameSpec_TEST {
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         system.assertEquals('John Dude, Jane Dude, Sally Dude, Clay Dude, Cloe Dude & Friends', ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));   
     }
+    
+    /*********************************************************************************************************
+    operation:
+        several households with naming
+        update name specs, and do a refreshAllHouseholdNaming 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void testRefreshAllHHNaming() {
+        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNaming') return;
+
+        Contact c1 = new Contact(
+            Salutation = 'Skipper',
+            Firstname = 'John',
+            Lastname = 'Doe'
+        );
+        insert c1;
+        c1 = [select Id, AccountId from Contact where Id = :c1.Id];
+        system.assertNotEquals(null, c1.AccountId);
+        
+        Contact c2 = new Contact(
+            Firstname = 'Jane',
+            Lastname = 'Doe',
+            AccountId = c1.AccountId
+        );
+        insert c2;
+                
+        Contact c3 = new Contact(
+            Firstname = 'Sally',
+            Lastname = 'Smith'
+        );
+        insert c3;
+        c3 = [select Id, AccountId from Contact where Id = :c3.Id];
+        system.assertNotEquals(null, c3.AccountId);
+
+        Contact c4 = new Contact(
+            Firstname = 'Sam',
+            Lastname = 'Smith',
+            AccountId = c3.AccountId
+        );
+        insert c4;
+        
+        // update our name formats
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Household_Name_Format__c = 'HH - {!LastName}, {!{!FirstName}} Family';
+        hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+        hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
+        hns.Name_Connector__c = '&';
+        update hns;    
+
+        // refresh all names
+        Test.startTest();
+        HH_HouseholdNaming.refreshAllHouseholdNaming(false);
+        Test.stopTest();
+        
+        // verify the results
+        Account hh1 = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c1.AccountId];
+        system.assertEquals('HH - Doe, John & Jane Family', hh1.Name);    
+        system.assertEquals('Skipper John & Jane Doe', hh1.npo02__Formal_Greeting__c);    
+        system.assertEquals('John Dude & Jane Dude', hh1.npo02__Informal_Greeting__c);    
+
+        Account hh2 = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c3.AccountId];
+        system.assertEquals('HH - Smith, Sally & Sam Family', hh2.Name);    
+        system.assertEquals('Sally & Sam Smith', hh2.npo02__Formal_Greeting__c);    
+        system.assertEquals('Sally Dude & Sam Dude', hh2.npo02__Informal_Greeting__c);   
+    }
+     
 }
