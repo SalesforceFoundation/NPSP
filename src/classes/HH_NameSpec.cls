@@ -210,8 +210,11 @@ public with sharing class HH_NameSpec implements HH_INaming {
             string val = string.valueOf(con.get(strField));
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
-            if (val == null) {   // eat potential trailing space
+            if (val == null) {   
+                // eat potential trailing space
                 str = str.replace(strField + ' ', '');
+                // eat potential leading space
+                str = str.replace(' ' + strField, '');
             }
             str = str.replace(strField, val == null ? '' : val);
         }
