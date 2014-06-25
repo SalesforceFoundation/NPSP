@@ -182,6 +182,20 @@
         </relatedContentItems>
     </relatedContent>
     <relatedLists>
+        <relatedList>RelatedContactRoleList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <customButtons>npe01__Schedule_Payments</customButtons>
+        <customButtons>npe01__Writeoff_Payments</customButtons>
+        <fields>NAME</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Payment_Date__c</fields>
+        <fields>npe01__Payment_Method__c</fields>
+        <fields>npe01__Paid__c</fields>
+        <fields>npe01__Written_Off__c</fields>
+        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -199,20 +213,6 @@
         <fields>CORE.USERS.FULL_NAME</fields>
         <fields>TASK.LAST_UPDATE</fields>
         <relatedList>RelatedHistoryList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <relatedList>RelatedContactRoleList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <customButtons>npe01__Schedule_Payments</customButtons>
-        <customButtons>npe01__Writeoff_Payments</customButtons>
-        <fields>NAME</fields>
-        <fields>npe01__Payment_Amount__c</fields>
-        <fields>npe01__Payment_Date__c</fields>
-        <fields>npe01__Payment_Method__c</fields>
-        <fields>npe01__Paid__c</fields>
-        <fields>npe01__Written_Off__c</fields>
-        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
