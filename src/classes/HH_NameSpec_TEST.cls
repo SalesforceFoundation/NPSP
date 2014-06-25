@@ -385,4 +385,110 @@ private with sharing class HH_NameSpec_TEST {
         system.assertEquals('Sally Dude & Sam Dude', hh2.npo02__Informal_Greeting__c);   
     }
      
+    /*********************************************************************************************************
+    operation:
+        several households with custom naming
+        update name specs, and do a refreshAllHouseholdNaming 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+        names that were previously customized do not get updated
+    **********************************************************************************************************/            
+    static testMethod void testRefreshAllHHNamingWithCustom() {
+        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+    
+        // turn off household naming        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null,
+                npo02__Advanced_Household_Naming__c = false
+            ));
+        
+        
+        Contact c1 = new Contact(
+            Salutation = 'Skipper',
+            Firstname = 'John',
+            Lastname = 'Doe'
+        );
+        insert c1;
+        c1 = [select Id, AccountId from Contact where Id = :c1.Id];
+        system.assertNotEquals(null, c1.AccountId);
+        
+        Contact c2 = new Contact(
+            Firstname = 'Jane',
+            Lastname = 'Doe',
+            AccountId = c1.AccountId
+        );
+        insert c2;
+                
+        Contact c3 = new Contact(
+            Firstname = 'Sally',
+            Lastname = 'Smith'
+        );
+        insert c3;
+        c3 = [select Id, AccountId from Contact where Id = :c3.Id];
+        system.assertNotEquals(null, c3.AccountId);
+
+        Contact c4 = new Contact(
+            Firstname = 'Sam',
+            Lastname = 'Smith',
+            AccountId = c3.AccountId
+        );
+        insert c4;
+        
+        // give our household accounts some custom names
+        Account hh1 = [select Id, Name, npe01__SYSTEM_AccountType__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c1.AccountId];
+        system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, hh1.npe01__SYSTEM_AccountType__c);
+        system.assertEquals('Doe Household', hh1.Name);
+        system.assertEquals(null, hh1.npo02__Formal_Greeting__c);
+        system.assertEquals(null, hh1.npo02__Informal_Greeting__c);
+        hh1.Name = 'My Custom HH Name';
+        update hh1;
+        
+        Account hh2 = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c3.AccountId];
+        hh2.Name = 'Smith Household';
+        hh2.npo02__Informal_Greeting__c = 'The gang';
+        update hh2;
+                
+        // update our name formats
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Household_Name_Format__c = 'HH - {!LastName}, {!{!FirstName}} Family';
+        hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+        hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
+        hns.Name_Connector__c = '&';
+        update hns;    
+        
+        // turn on hh naming
+        householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
+        update householdSettingsForTests;
+        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update HH_Households.householdsSettings;
+
+        // refresh all names
+        Test.startTest();
+        HH_ProcessControl.inFutureContext = false;             
+        HH_HouseholdNaming.refreshAllHouseholdNaming(true);
+        Test.stopTest();
+        
+        // verify the results
+        hh1 = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c1.AccountId];
+        system.assertEquals('My Custom HH Name', hh1.Name);    
+        system.assertEquals('Skipper John & Jane Doe', hh1.npo02__Formal_Greeting__c);    
+        system.assertEquals('John Dude & Jane Dude', hh1.npo02__Informal_Greeting__c);    
+
+        hh2 = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account where Id =:c3.AccountId];
+        system.assertEquals('HH - Smith, Sally & Sam Family', hh2.Name);    
+        system.assertEquals('Sally & Sam Smith', hh2.npo02__Formal_Greeting__c);    
+        system.assertEquals('The gang', hh2.npo02__Informal_Greeting__c);   
+    }
+
 }
