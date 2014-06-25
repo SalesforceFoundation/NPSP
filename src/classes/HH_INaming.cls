@@ -34,7 +34,9 @@
 */
 public Interface HH_INaming {
 
-    // methods to get the appropriate name for the passed in list of Contacts from a single Household.
+    // Methods to get the appropriate name/greeting for the passed in list of Contacts from a single Household.
+    // Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name/greeting, are not included in the list of Contacts.
+    // If the list of Contacts is empty, return the appropriate 'anonymous' name/greeting.
     string getHouseholdName(list<Contact> listCon);
     string getHouseholdFormalGreeting(list<Contact> listCon);
     string getHouseholdInformalGreeting(list<Contact> listCon);

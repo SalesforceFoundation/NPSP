@@ -491,4 +491,40 @@ private with sharing class HH_NameSpec_TEST {
         system.assertEquals('The gang', hh2.npo02__Informal_Greeting__c);   
     }
 
+    /*********************************************************************************************************
+    operation:
+        1 anonymous contact in household 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void OneAnonymousContact() {
+        if (strTestOnly != '*' && strTestOnly != 'OneContact') return;
+        
+        list<Contact> listCon = new list<Contact>();
+        Contact c1 = new Contact (
+            Salutation = 'Skipper',
+            FirstName = 'John',
+            LastName = 'Doe',
+            npo02__Naming_Exclusions__c = 'Name;Formal_Greeting__c;Informal_Greeting__c'
+        );
+        // don't add the contact to the list we pass in, since the INaming interface assumes
+        // appropriate contacts are already filtered out by Household Naming code.
+        //listCon.add(c1);
+               
+        HH_NameSpec ns = new HH_NameSpec();
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        
+        hns.Household_Name_Format__c = '{!LastName} Family';
+        system.assertEquals(label.npo02.HouseholdAnonymousName + ' Family', ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Household_Name_Format__c = 'HH - {!LastName}, {!{!FirstName}}';
+        system.assertEquals('HH - ' + label.npo02.HouseholdAnonymousName, ns.getExampleName(hns, 'Household_Name_Format__c', listCon));
+
+        hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+        system.assertEquals(label.npo02.HouseholdAnonymousGreeting, ns.getExampleName(hns, 'Formal_Greeting_Format__c', listCon));
+
+        hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
+        system.assertEquals(label.npo02.HouseholdAnonymousGreeting, ns.getExampleName(hns, 'Informal_Greeting_Format__c', listCon));
+
+    }
 }

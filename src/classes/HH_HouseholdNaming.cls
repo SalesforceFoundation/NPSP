@@ -209,7 +209,7 @@ public without sharing class HH_HouseholdNaming {
             return '';
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c'))
                 listCon.add(con);   
         }
         return iNaming.getHouseholdInformalGreeting(listCon);  
@@ -269,7 +269,7 @@ public without sharing class HH_HouseholdNaming {
             return '';
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
-            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
+            if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
                 listCon.add(con);   
         }
         return iNaming.getHouseholdFormalGreeting(listCon);  

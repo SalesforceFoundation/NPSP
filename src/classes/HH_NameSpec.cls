@@ -88,8 +88,10 @@ public with sharing class HH_NameSpec implements HH_INaming {
         private string strAnd { get; set; }
         private string strOverrun { get; set; }
         private integer cMaxUseOverrun { get; set; }
+        private string strHNSField { get; set; }
         
         private NameSpec(Household_Naming_Settings__c hns, string strField) {
+        	strHNSField = strField; 
         	string strNameSpec = string.valueOf(hns.get(strField));
         	strAnd = hns.Name_Connector__c;
         	strOverrun = hns.Name_Overrun__c;
@@ -146,10 +148,13 @@ public with sharing class HH_NameSpec implements HH_INaming {
         integer cCon = listCon.size();          
         integer i = 0;
         boolean isNoLastnames = (ns.strFullNameSpec.indexOf(chLToken + 'LastName' + chRToken) == -1);
-
-        // use cMaxUseOverrun to limit our naming
-        //if (cCon > ns.cMaxUseOverrun)
-        //    cCon = ns.cMaxUseOverrun;
+        
+        if (cCon == 0) {
+        	if (ns.strHNSField == 'Household_Name_Format__c')
+        	   strName = label.npo02.HouseholdAnonymousName;
+            else 
+        	   strName = label.npo02.HouseholdAnonymousGreeting;
+        }
         
         while (i < cCon && i < ns.cMaxUseOverrun) {
             
