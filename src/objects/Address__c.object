@@ -44,11 +44,18 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <compactLayoutAssignment>NPSP_Address_Compact_Layout</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Address_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>Household_Account__c</fields>
+        <fields>Formula_MailingAddress__c</fields>
+        <label>NPSP Address Compact Layout</label>
+    </compactLayouts>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Starter Pack.</description>
     <enableActivities>false</enableActivities>
-    <enableFeeds>false</enableFeeds>
+    <enableFeeds>true</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
     <fields>
@@ -58,6 +65,7 @@
         <inlineHelpText>Contains the raw response or an error message.</inlineHelpText>
         <label>API Response</label>
         <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>6</visibleLines>
@@ -85,6 +93,7 @@
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -95,6 +104,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether more than on valid address was found when attempting to validate it through an external service.</inlineHelpText>
         <label>Ambiguous</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -106,6 +116,7 @@
         <label>Congressional District</label>
         <length>12</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -118,6 +129,7 @@
         <label>County Name</label>
         <length>50</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -128,6 +140,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Is this the Default Address to use for the Household and its Contacts?</inlineHelpText>
         <label>Default Address</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -153,6 +166,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Geolocation</label>
         <required>false</required>
         <scale>6</scale>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Location</type>
     </fields>
@@ -166,6 +180,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <relationshipName>Addresses</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>MasterDetail</type>
         <writeRequiresMasterRead>true</writeRequiresMasterRead>
@@ -176,6 +191,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <inlineHelpText>The most recent ending date that this Address was used for this Household.</inlineHelpText>
         <label>Latest End Date</label>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
@@ -185,6 +201,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <inlineHelpText>The most recent starting date that this Address was used for this Household.</inlineHelpText>
         <label>Latest Start Date</label>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
@@ -194,6 +211,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Mailing City</label>
         <length>255</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -204,6 +222,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Mailing Country</label>
         <length>255</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -214,6 +233,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Mailing Zip/Postal Code</label>
         <length>255</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -224,6 +244,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Mailing State/Province</label>
         <length>255</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -234,6 +255,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <label>Mailing Street</label>
         <length>255</length>
         <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -370,6 +392,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -429,6 +452,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -564,6 +588,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -623,6 +648,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
             </picklistValues>
             <sorted>false</sorted>
         </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
@@ -633,6 +659,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the address has been verified by an external address verification service.</inlineHelpText>
         <label>Verified</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -640,6 +667,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <nameField>
         <displayFormat>A-{00000}</displayFormat>
         <label>Address ID</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Addresses</pluralLabel>

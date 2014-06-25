@@ -228,10 +228,14 @@
     <name>ApexTrigger</name>
   </types>
   <types>
-    <members>Account.Account_Compact_Layout</members>
+    <members>Address__c.NPSP_Address_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
-    <members>Opportunity.Donation_Compact_Layout</members>
-    <members>Opportunity.Membership_Compact_Layout</members>
+    <members>Contact.NPSP_Contact_Compact_Layout</members>
+    <members>Opportunity.NPSP_Donation_Compact_Layout</members>
+    <members>npe01__OppPayment__c.NPSP_Payment_Compact_Layout</members>
+    <members>npe03__Recurring_Donation__c.NPSP_Recurring_Donation_Compact_Layout</members>
+    <members>npe4__Relationship__c.NPSP_Relationship_Compact_Layout</members>
+    <members>npe5__Affiliation__c.NPSP_Affiliation_Compact_Layout</members>
     <name>CompactLayout</name>
   </types>
   <types>
@@ -627,10 +631,14 @@
     <name>CustomObject</name>
   </types>
   <types>
+    <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
+    <members>npe01__OppPayment__c</members>
+    <members>npe4__Relationship__c</members>
+    <members>npe5__Affiliation__c</members>
     <name>CustomTab</name>
   </types>
   <types>
@@ -668,9 +676,29 @@
     <name>ListView</name>
   </types>
   <types>
+    <members>Account.New_Address</members>
+    <members>Account.New_Affiliation</members>
+    <members>Account.Quick_Household_Update</members>
+    <members>Account.Quick_Organization_Update</members>
+    <members>Address__c.Update_Address</members>
+    <members>Contact.New_Affiliation</members>
+    <members>Contact.New_Recurring_Donation</members>
+    <members>Contact.New_Relationship</members>
+    <members>Contact.Quick_Update</members>
     <members>LogACall</members>
+    <members>NewAccount</members>
+    <members>NewContact</members>
     <members>NewNote</members>
+    <members>NewOpportunity</members>
     <members>NewTask</members>
+    <members>New_Campaign</members>
+    <members>New_Recurring_Donation</members>
+    <members>Opportunity.New_Payment</members>
+    <members>Opportunity.Quick_Update</members>
+    <members>npe01__OppPayment__c.Quick_Update</members>
+    <members>npe03__Recurring_Donation__c.New_Opportunity</members>
+    <members>npe03__Recurring_Donation__c.Quick_Update</members>
+    <members>npo02__Household__c.Update_Household</members>
     <name>QuickAction</name>
   </types>
   <types>
