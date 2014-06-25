@@ -257,11 +257,12 @@ private with sharing class HH_NameSpec_TEST {
     /*********************************************************************************************************
     operation:
         6 contacts, 1 lastnames in household 
+        Contact overrun set to 5
     verify:
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
-    static testMethod void SixContactsOneLastnames() {
-        if (strTestOnly != '*' && strTestOnly != 'SixContactsOneLastnames') return;
+    static testMethod void SixContactsOneLastnamesContactOverrun() {
+        if (strTestOnly != '*' && strTestOnly != 'SixContactsOneLastnamesContactOverrun') return;
                 
         list<Contact> listCon = new list<Contact>();
         Contact c1 = new Contact (
