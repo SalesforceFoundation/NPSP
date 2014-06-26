@@ -182,6 +182,46 @@
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>alloDefaultEqual100</fullName>
+        <categories>Allocation error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloDefaultEqual100</shortDescription>
+        <value>If default allocations are enabled, allocations must equal 100% of the parent amount.</value>
+    </labels>
+    <labels>
+        <fullName>alloDefaultGAUMissing</fullName>
+        <categories>Allocation error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
+        <value>Default Allocations are enabled, but no default General Accounting Unit is selected.</value>
+    </labels>
+    <labels>
+        <fullName>alloExceedsOppAmount</fullName>
+        <categories>Allocation error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The allocations for this opportunity are greater than the amount of the opportun</shortDescription>
+        <value>The allocations for this opportunity are greater than the amount of the opportunity. Please update the allocations before reducing the amount of the Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>alloPercentExceed100</fullName>
+        <categories>Allocation error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Percent based Allocations cannot exceed 100%.</shortDescription>
+        <value>Percent based Allocations cannot exceed 100%.</value>
+    </labels>
+    <labels>
+        <fullName>alloSingleParent</fullName>
+        <categories>Allocation error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
+        <value>Each Allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
+    </labels>
+    <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>

@@ -349,6 +349,11 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>alloDefaultEqual100</members>
+    <members>alloDefaultGAUMissing</members>
+    <members>alloExceedsOppAmount</members>
+    <members>alloPercentExceed100</members>
+    <members>alloSingleParent</members>
     <members>alloTotalExceedsOppAmt</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
