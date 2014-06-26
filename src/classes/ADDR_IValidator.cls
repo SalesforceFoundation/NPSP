@@ -35,5 +35,5 @@
 */
 public Interface ADDR_IValidator {
 
-    List<Address__c> verifyRecords(list<Address__c> addresses, Address_Verification_Settings__c settings);
+    List<Address__c> verifyRecords(list<Address__c> addresses, Addr_Verification_Settings__c settings);
 }

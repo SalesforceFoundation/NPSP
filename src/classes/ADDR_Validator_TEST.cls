@@ -45,7 +45,7 @@ public with sharing class ADDR_Validator_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api settings
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
@@ -232,7 +232,7 @@ public with sharing class ADDR_Validator_TEST {
         createDefaultSettings();
         //Turn off automatic verification to avoid getting the address verified as we create the contact. 
         //We want the batch process to do it.
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
         settings.Enable_Automatic_Verification__c = false;
         update settings;
         
