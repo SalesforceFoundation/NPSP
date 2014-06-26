@@ -3,12 +3,7 @@
     <compactLayouts>
         <fullName>Account_Compact_Layout</fullName>
         <fields>Name</fields>
-        <fields>RecordTypeId</fields>
-        <fields>npo02__NumberOfClosedOpps__c</fields>
-        <fields>npo02__TotalOppAmount__c</fields>
-        <fields>npo02__LastCloseDate__c</fields>
-        <fields>npo02__LastOppAmount__c</fields>
-        <label>Account Compact Layout</label>
+        <label>DEPRICATED: Account Compact Layout</label>
     </compactLayouts>
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
