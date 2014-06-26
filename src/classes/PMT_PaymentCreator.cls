@@ -74,19 +74,19 @@ public without sharing class PMT_PaymentCreator {
             
                 //check Opp fields
                 opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
-                if (opportunityField == null) isValid = false;
                           
                 //check Payment fields            
                 paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
-                if (paymentField == null) isValid = false;
-                
-                //check Field Types
-                Schema.DisplayType payF = paymentField.getDescribe().getType();
-                Schema.DisplayType oppF = opportunityField.getDescribe().getType();
-                isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
-                
-                if (isValid == false) paymentMappings.keyset().remove(s);
-                                
+                    
+                if (paymentField != null && opportunityField != null) {
+                	Schema.DisplayType payF = paymentField.getDescribe().getType();
+                	Schema.DisplayType oppF = opportunityField.getDescribe().getType();
+                	isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
+                } else {
+                    isValid = false;
+                }
+
+                if (isValid == false) paymentMappings.keyset().remove(s);                         
             }
             
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.

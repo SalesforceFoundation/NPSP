@@ -9,6 +9,13 @@
         <fields>npo02__LastCloseDate__c</fields>
         <label>Contact Compact Layout</label>
     </compactLayouts>
+    <compactLayouts>
+        <fullName>NPSP_Contact_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>AccountId</fields>
+        <fields>npo02__TotalOppAmount__c</fields>
+        <label>NPSP Contact Compact Layout</label>
+    </compactLayouts>
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
         <description>Batch Data Entry</description>
