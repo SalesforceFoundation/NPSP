@@ -3,7 +3,6 @@
     <compactLayouts>
         <fullName>NPSP_Household_Account</fullName>
         <fields>Name</fields>
-        <fields>Number_of_Household_Members__c</fields>
         <fields>npo02__TotalOppAmount__c</fields>
         <label>NPSP Household Account</label>
     </compactLayouts>
