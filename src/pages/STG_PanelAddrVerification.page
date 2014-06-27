@@ -110,13 +110,9 @@
 	                <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
 	                </p>
 	                <br/>
-	                <br/>
 	                <apex:outputPanel id="testResult">
 	                    <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
-	                        <h5>{!$Label.Addr_Settings_Test_Response_Title}</h5>
-	                        <p>
-	                            <apex:outputText value="{!apiTestResult}" />
-	                        </p>
+	                        <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
 	                    </apex:outputPanel>
 	                </apex:outputPanel>
 	           </apex:outputPanel>

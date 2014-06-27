@@ -124,7 +124,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                }
 	            }
 	            for (Address__c av : avList) {             
-	                if (av.API_Response__c == null) {   
+	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
+	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
 	                }
 	            }

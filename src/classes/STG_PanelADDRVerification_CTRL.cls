@@ -126,7 +126,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
             strResult = 'Your Secret Key Pair is valid.'; //no exception thrown when deserializing it
         } catch (Exception e) {
-        	if(e.getMessage().startsWith('no protocol')) {
+        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
+        		strResult = 'Please verify SmartyStreet checkbox is checked, and credentials entered.';
+        	} else if(e.getMessage().startsWith('no protocol')) {
         		strResult = 'Please enter the endpoint URL, including https:// at the beginning.';
         	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
         		strResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
