@@ -48,6 +48,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
         // create the basic api authentication settings
         settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
