@@ -36,13 +36,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
-    public Addr_Verification_Settings__c addrVerifSettings { 
-        get {
-            if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-            return addrVerifSettings;
-        }
-        
-        public set; 
+    public transient Addr_Verification_Settings__c addrVerifSettings;
+    
+    public Addr_Verification_Settings__c getAddrVerifSettings() { 
+        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        return addrVerifSettings;
+    }
+    
+    public void setAddrVerifSettings(Addr_Verification_Settings__c settings) {
+    	addrVerifSettings = settings;
     }
     
     public String apiSettingsErrorMessage { get; private set; }
