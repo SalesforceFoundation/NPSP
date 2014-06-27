@@ -36,7 +36,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
-    public transient Addr_Verification_Settings__c addrVerifSettings;
+    private transient Addr_Verification_Settings__c addrVerifSettings;
     
     public Addr_Verification_Settings__c getAddrVerifSettings() { 
         if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
