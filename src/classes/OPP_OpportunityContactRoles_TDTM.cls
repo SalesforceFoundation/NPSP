@@ -159,10 +159,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //add the contact id from the Account. if it's not valid it won't error
             if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){
             	Account acc = primaryAccounts.get(o.AccountId);
-                o.npe01__Contact_Id_for_role__c = acc.npe01__One2OneContact__c;
+                if(acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
+                    acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
+                    o.npe01__Contact_Id_for_role__c = acc.npe01__One2OneContact__c;
+                }
             }
             
-            if(o.AccountId == null && o.npe01__Contact_Id_for_role__c != null){                //using the contact id, pull the account from the map
+            if(o.AccountId == null && o.npe01__Contact_Id_for_role__c != null){ //using the contact id, pull the account from the map
                 
                 if(contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c))!=null){
                     Account accountForContact = contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c));
