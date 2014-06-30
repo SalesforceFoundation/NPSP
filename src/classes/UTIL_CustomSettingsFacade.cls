@@ -234,10 +234,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         return bdeSettings;
     }
     
-    public static Address_Verification_Settings__c getAddressValidationSettings() {        
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
         if(settings.Id == null) {
-        	settings = Address_Verification_Settings__c.getOrgDefaults();
+        	settings = Addr_Verification_Settings__c.getOrgDefaults();
         	settings.Using_SmartyStreets__c = false;
             settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
             settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';

@@ -45,7 +45,8 @@ public with sharing class ADDR_Validator_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api settings
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
@@ -232,7 +233,7 @@ public with sharing class ADDR_Validator_TEST {
         createDefaultSettings();
         //Turn off automatic verification to avoid getting the address verified as we create the contact. 
         //We want the batch process to do it.
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
         settings.Enable_Automatic_Verification__c = false;
         update settings;
         
@@ -275,10 +276,10 @@ public with sharing class ADDR_Validator_TEST {
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         
-        sc.addrVerifSettings.Using_SmartyStreets__c = true;
-        sc.addrVerifSettings.Auth_ID__c = 'testID';
-        sc.addrVerifSettings.Auth_Token__c = 'testToken';
-        sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
+        sc.getAddrVerifSettings().Using_SmartyStreets__c = true;
+        sc.getAddrVerifSettings().Auth_ID__c = 'testID';
+        sc.getAddrVerifSettings().Auth_Token__c = 'testToken';
+        sc.getAddrVerifSettings().Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
 
@@ -299,7 +300,7 @@ public with sharing class ADDR_Validator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
         
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
-        sc.addrVerifSettings.Using_SmartyStreets__c = true;
+        sc.getAddrVerifSettings().Using_SmartyStreets__c = true;
         
         Test.startTest();
         sc.saveSettings();
