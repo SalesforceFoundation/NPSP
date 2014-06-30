@@ -239,8 +239,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(settings.Id == null) {
         	settings = Addr_Verification_Settings__c.getOrgDefaults();
         	settings.Using_SmartyStreets__c = false;
-            settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
-            settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
+            settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';
+            settings.Zipcode_Verification_Endpoint__c = 'api.smartystreets.com/zipcode';
             settings.Class__c = 'ADDR_SmartyStreets_Validator';
             settings.Enable_Automatic_Verification__c = true;
             settings.Reject_Ambiguous_Addresses__c = true;
