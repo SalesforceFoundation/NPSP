@@ -493,6 +493,68 @@ private with sharing class HH_NameSpec_TEST {
 
     /*********************************************************************************************************
     operation:
+        many households with custom naming
+        update name specs, and do a refreshAllHouseholdNaming 
+    verify:
+        HH Name, Formal Greeting, and Informal Greeting are correct
+    **********************************************************************************************************/            
+    static testMethod void testRefreshAllHHNamingManyHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+    
+        // turn off household naming        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null,
+                npo02__Advanced_Household_Naming__c = false
+            ));
+        
+        // create lots of contacts w/ households
+        integer cHH = 200;  // CAUTION: this cannot be larger than our single batch size, or Salesforce gives a error in test mode not allowing multiple batches.
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHH);
+        insert listCon;
+                    
+        // update our name formats
+        Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+        hns.Household_Name_Format__c = 'HH - {!LastName}, {!{!FirstName}} Family';
+        hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+        hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
+        hns.Name_Connector__c = '&';
+        update hns;    
+        
+        // turn on hh naming
+        householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
+        update householdSettingsForTests;
+        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update HH_Households.householdsSettings;
+
+        // refresh all names
+        Test.startTest();
+        HH_ProcessControl.inFutureContext = false;             
+        HH_HouseholdNaming.refreshAllHouseholdNaming(true);
+        Test.stopTest();
+        
+        // verify the results
+        list<Account> listHH = [select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
+            npe01__One2OneContact__c, npe01__One2OneContact__r.FirstName, npe01__One2OneContact__r.LastName from Account];
+        for (Account hh : listHH) {
+	        system.assertEquals('HH - ' + hh.npe01__One2OneContact__r.LastName + ', ' + hh.npe01__One2OneContact__r.FirstName + ' Family', hh.Name);   
+	        system.assertEquals(hh.npe01__One2OneContact__r.FirstName + ' ' + hh.npe01__One2OneContact__r.LastName, hh.npo02__Formal_Greeting__c);    
+	        system.assertEquals(hh.npe01__One2OneContact__r.FirstName + ' Dude', hh.npo02__Informal_Greeting__c);    
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
         1 anonymous contact in household 
     verify:
         HH Name, Formal Greeting, and Informal Greeting are correct
