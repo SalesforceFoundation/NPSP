@@ -36,13 +36,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
-    public Address_Verification_Settings__c addrVerifSettings { 
-        get {
-            if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-            return addrVerifSettings;
-        }
-        
-        public set; 
+    private transient Addr_Verification_Settings__c addrVerifSettings;
+    
+    public Addr_Verification_Settings__c getAddrVerifSettings() { 
+        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        return addrVerifSettings;
+    }
+    
+    public void setAddrVerifSettings(Addr_Verification_Settings__c settings) {
+    	addrVerifSettings = settings;
     }
     
     public String apiSettingsErrorMessage { get; private set; }
@@ -103,9 +105,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     // verify the current address settings - used by Health Check.    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
-        Address_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
         if (avs.Using_SmartyStreets__c) {
-	        string strSetting = Schema.Sobjecttype.Address_Verification_Settings__c.getLabel(); 
+	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
 	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
 	        string strSolution = strStatus == 'Success' ? strResult : 
@@ -116,7 +118,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
-    private static string strVerifyAddressVerificationService(Address_Verification_Settings__c addrVerifSettings, string strZip) {
+    private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
         try {
         	encodeTokenIfNotEncoded(addrVerifSettings);
@@ -124,7 +126,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
             strResult = 'Your Secret Key Pair is valid.'; //no exception thrown when deserializing it
         } catch (Exception e) {
-        	if(e.getMessage().startsWith('no protocol')) {
+        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
+        		strResult = 'Please verify SmartyStreet checkbox is checked, and credentials entered.';
+        	} else if(e.getMessage().startsWith('no protocol')) {
         		strResult = 'Please enter the endpoint URL, including https:// at the beginning.';
         	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
         		strResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
@@ -136,7 +141,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         return strResult;
     }
     
-    private static void encodeTokenIfNotEncoded(Address_Verification_Settings__c addrVerifSettings) {
+    private static void encodeTokenIfNotEncoded(Addr_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
         if(addrVerifSettings.Using_SmartyStreets__c && !String.isBlank(addrVerifSettings.Auth_Token__c) 
         && addrVerifSettings.Auth_Token__c.length() == 88)
