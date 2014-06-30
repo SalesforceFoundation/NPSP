@@ -223,7 +223,7 @@ public with sharing class STG_InstallScript_TEST {
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
         npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults(); 
         Error_Settings__c errorSettings = Error_Settings__c.getOrgDefaults();
-        Address_Verification_Settings__c addrVerificationSetgs = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c addrVerificationSetgs = Addr_Verification_Settings__c.getOrgDefaults();
         Batch_Data_Entry_Settings__c batchDataEntrySetgs = Batch_Data_Entry_Settings__c.getOrgDefaults();
         
         //If it's a new install we want to set the Household model by default

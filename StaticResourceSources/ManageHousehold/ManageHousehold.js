@@ -71,8 +71,11 @@ j$(function () {
 	   	select: function (event, ui) {
 	   		j$(this).val(ui.item.label);
 	   		return false;
-	   	},
-	   _renderItem: function( ul, item ) {
+	   	}
+    });
+	   
+	   
+	j$('#hhSearch-input').data('ui-autocomplete')._renderItem = function( ul, item ) {
         	var address = gwManageHH.addressStringify(item.contact);
         	
         	var linode = j$( '<li class="hhSearch-item"></li>' ).data( "item.autocomplete", item ).append( '<span class="hhSearch-item-name">' + item.label + '</span><span class="hhSearch-item-address">'+address+'</span>' );
@@ -90,8 +93,7 @@ j$(function () {
         	linode.prepend('<div class="hhCard-icon">Contact</div>');
         	
     		return linode.appendTo(ul);
-		}
-	})
+		};
 	
 	// setup search item add buttons
 	j$('.hhSearch-item-add').live('click', gwManageHH.dialogAddMember);
