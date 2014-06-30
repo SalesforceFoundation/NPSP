@@ -39,7 +39,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
 
-    private static Address_Verification_Settings__c settings;
+    private static Addr_Verification_Settings__c settings;
     
     public static void createDefaultSettings() {
         // use the household account model
@@ -47,7 +47,8 @@ public with sharing class ADDR_Validation_Gateway_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api authentication settings
-        settings = Address_Verification_Settings__c.getOrgDefaults();
+        settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';

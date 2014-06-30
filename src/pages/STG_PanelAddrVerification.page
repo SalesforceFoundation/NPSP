@@ -30,25 +30,27 @@
                     <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" id="iUsing_SmartyStreets__c" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
                 </div>
 			</div>
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputText value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" id="iAuth_ID__c" styleClass="form-control" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" rendered="{!isEditMode}" id="iAuth_ID__c" styleClass="form-control" />
+                    <apex:outputText value="****************************" rendered="{!isReadOnlyMode}" id="iAuth_ID__c_text" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
                 <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-sm-4 control-label"/>
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputText value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" id="iAuth_Token__c" styleClass="form-control" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" rendered="{!isEditMode}" id="iAuth_Token__c" styleClass="form-control" />
+                    <apex:outputText value="****************************" rendered="{!isReadOnlyMode}" id="iAuth_Token__c_text" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -57,7 +59,7 @@
                     <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iAddress_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -66,7 +68,7 @@
                     <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iZipcode_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -75,7 +77,7 @@
                     <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" id="iClass__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -84,7 +86,7 @@
                     <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -93,7 +95,7 @@
                     <apex:inputCheckbox value="{!addrVerifsettings.Reject_Ambiguous_Addresses__c}" disabled="{!isReadOnlyMode}" id="iReject_Ambiguous_Addresses__c" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Address_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                 </div>
             </div>
 		</section>
@@ -108,13 +110,9 @@
 	                <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
 	                </p>
 	                <br/>
-	                <br/>
 	                <apex:outputPanel id="testResult">
 	                    <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
-	                        <h5>{!$Label.Addr_Settings_Test_Response_Title}</h5>
-	                        <p>
-	                            <apex:outputText value="{!apiTestResult}" />
-	                        </p>
+	                        <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
 	                    </apex:outputPanel>
 	                </apex:outputPanel>
 	           </apex:outputPanel>

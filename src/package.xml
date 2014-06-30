@@ -248,6 +248,15 @@
   <types>
     <members>Account.Batch__c</members>
     <members>Account.Number_of_Household_Members__c</members>
+    <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
+    <members>Addr_Verification_Settings__c.Auth_ID__c</members>
+    <members>Addr_Verification_Settings__c.Auth_Token__c</members>
+    <members>Addr_Verification_Settings__c.Class__c</members>
+    <members>Addr_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+    <members>Addr_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
+    <members>Addr_Verification_Settings__c.Timeout__c</members>
+    <members>Addr_Verification_Settings__c.Using_SmartyStreets__c</members>
+    <members>Addr_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auth_ID__c</members>
     <members>Address_Verification_Settings__c.Auth_Token__c</members>
@@ -621,6 +630,7 @@
   <types>
     <members>Account</members>
     <members>Address_Verification_Settings__c</members>
+    <members>Addr_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
