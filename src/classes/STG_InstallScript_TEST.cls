@@ -273,8 +273,8 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(ERR_Notifier.NotificationOptions.sysAdmins, errorSettings.Error_Notifications_To__c);
 
         System.assertEquals(false, addrVerificationSetgs.Using_SmartyStreets__c);        
-        System.assertEquals('https://api.smartystreets.com/street-address', addrVerificationSetgs.Address_Verification_Endpoint__c);
-        System.assertEquals('https://api.smartystreets.com/zipcode', addrVerificationSetgs.Zipcode_Verification_Endpoint__c);
+        System.assertEquals('api.smartystreets.com/street-address', addrVerificationSetgs.Address_Verification_Endpoint__c);
+        System.assertEquals('api.smartystreets.com/zipcode', addrVerificationSetgs.Zipcode_Verification_Endpoint__c);
         System.assertEquals('ADDR_SmartyStreets_Validator', addrVerificationSetgs.Class__c);
         System.assertEquals(true, addrVerificationSetgs.Enable_Automatic_Verification__c);
         System.assertEquals(true, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);

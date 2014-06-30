@@ -123,7 +123,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setMethod('POST');
 	        req.setHeader('Content-Type','application/json');
 	        req.setHeader('Accept','application/json');
-	        req.setEndpoint(baseURL + auth);  
+	        req.setEndpoint('https://' + baseURL + auth); 
 	        req.setBody(body);
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
 	        System.debug('****Request body: \n' + req.getBody());
@@ -141,7 +141,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     	} else {
     		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
     	}
-    	return response;  
+    	return response;
     }
     
     /* ADDRESS REQUEST DATA */
