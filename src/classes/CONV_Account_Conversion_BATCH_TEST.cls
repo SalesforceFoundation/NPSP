@@ -174,8 +174,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household 
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
         system.assertNotEquals(null, newHHAccount);
+        system.assertEquals(1, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c.MailingStreet, newHHAccount.BillingStreet);
         system.assertEquals(c.Id, newHHAccount.npe01__One2OneContact__c);
         Address__c add = [select Id, MailingStreet__c, Default_Address__c from Address__c where MailingStreet__c = '123 Main St.'];
@@ -230,8 +231,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
         system.assertNotEquals(null, newHHAccount);
+        system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
         system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Address__c]);

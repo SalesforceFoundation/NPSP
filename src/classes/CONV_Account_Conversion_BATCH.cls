@@ -139,9 +139,19 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         /***********************************************************************/
 
         Map<Id, npe5__Affiliation__c> conAffMap = new Map<Id, npe5__Affiliation__c>();
+        Map<Id, Integer> hhMemberCount = new Map<Id, Integer>();
 
         for (Contact c : consForUpdate){
             Account a = hh2Account.get(c.npo02__Household__c);
+
+            if (hhMemberCount.containsKey(a.Id)){
+                Integer currCount = hhMemberCount.get(a.Id);
+                currCount++;
+                hhMemberCount.put(a.Id, currCount);
+            }
+            else{
+                hhMemberCount.put(a.Id, 1);
+            }
 
             //generate affiliations for any non 1x1/Individual accounts associated to this Contact
             if (!c.Account.npe01__SYSTEMIsIndividual__c){
@@ -173,6 +183,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     c.Primary_Affiliation__c = conAffMap.get(c.Id).npe5__Organization__c;
                 }
             }
+        }
+
+        for (Account a : hh2Account.values()){
+            a.Number_of_Household_Members__c = hhMemberCount.get(a.Id); 
         }
 
         Database.update(consForUpdate, true);
