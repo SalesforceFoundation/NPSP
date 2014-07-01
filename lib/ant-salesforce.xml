@@ -697,4 +697,94 @@
       <delete file="lib/update_meta_xml.xsl.rendered" />
     </sequential>
   </macrodef>
+
+  <macrodef name="deployMetadataBundles" description="Deploys all subfolders of a given dir as individual metadata bundles replacing %%%NAMESPACE%%% with either blank or a namespace prefix in all files">
+    <attribute name="dir" description="The parent directory containing subfolders each representing an individual metadata bundle" />
+    <attribute name="stagedir" description="The directory where rendered bundles should be staged for deployment.  This directory is created and deleted by the macro" />
+    <attribute name="nsprefix" description="The string to replace all instances of %%%NAMESPACE%%% in the source files" default="" />
+    
+    <sequential>
+      <if>
+        <available file="@{dir}" type="dir" />
+        <then>
+          <for param="subdir">
+            <path>
+              <dirset dir="@{dir}/" includes="*" />
+            </path>
+            <sequential>
+              <echo>Injecting namespace prefix "@{namespace_prefix}" into bundle @{subdir}</echo>
+
+              <!-- Copy the bundle to the staging directory so we can do the replacement there without affecting the original source files -->
+              <delete dir="@{stagedir}" />
+              <copy todir="@{stagedir}">
+                <fileset dir="@{subdir}"/>
+              </copy>
+              <replaceNamespacePrefix dir="@{stagedir}" nsprefix="@{nsprefix}" />
+                
+              <echo>Deploying unpackaged bundle @{subdir}</echo>
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{stagedir}" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
+            </sequential>
+          </for>
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="zipMetadataBundles" description="Zips all subfolders of a given dir as individual metadata bundles replacing %%%NAMESPACE%%% with either blank or a namespace prefix in all files">
+    <attribute name="dir" description="The parent directory containing subfolders each representing an individual metadata bundle" />
+    <attribute name="stagedir" description="The directory where rendered bundles should be staged for deployment.  This directory is created and deleted by the macro" />
+    <attribute name="zipdir" description="The directory where zipped bundles should be stored" />
+    <attribute name="nsprefix" description="The string to replace all instances of %%%NAMESPACE%%% in the source files" default="" />
+
+    <sequential>
+      <mkdir dir="@{zipdir}" />
+      <if>
+        <available file="@{dir}" type="dir" />
+        <then>
+          <for param="subdir">
+            <path>
+              <dirset dir="@{dir}/" includes="*" />
+            </path>
+            <sequential>
+              <echo>Injecting namespace prefix "@{namespace_prefix}" into bundle @{subdir}</echo>
+
+              <!-- Copy the bundle to the staging directory so we can do the replacement there without affecting the original source files -->
+              <delete dir="@{stagedir}" />
+              <copy todir="@{stagedir}">
+                <fileset dir="@{subdir}"/>
+              </copy>
+              <replaceNamespacePrefix dir="@{stagedir}" nsprefix="@{nsprefix}" />
+            
+              <var name="bundle_dirname" unset="true" />
+              <var name="bundle_dir" unset="true" />
+              <var name="bundle_basename" unset="true" />
+              <dirname property="bundle_dirname" file="@{subdir}" />
+              <basename property="bundle_dir" file="${bundle_dirname}" />
+              <basename property="bundle_basename" file="@{subdir}" />
+
+              <echo>Zipping bundle @{subdir} to @{zipdir}/${bundle_dir}/${bundle_basename}.zip</echo> 
+              <mkdir dir="@{zipdir}/${bundle_dir}" />
+              <zip destfile="@{zipdir}/${bundle_dir}/${bundle_basename}.zip" basedir="@{stagedir}" />
+            </sequential>
+          </for>
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="replaceNamespacePrefix" description="Replaces all instances of the string %%%NAMESPACE%%% with the provided namespace prefix in the target directory">
+    <attribute name="dir" description="A directory containing metadata files to inject the namespace into" />
+    <attribute name="nsprefix" description="The string to use for the namespace prefix" />
+    <sequential>
+      <for param="file">
+        <path>
+          <fileset dir="@{dir}/" includes="**/*" />
+        </path>
+        <sequential>
+          <replaceregexp file="@{file}" match="%%%NAMESPACE%%%" replace="@{nsprefix}" flags="g" />
+        </sequential>
+      </for>
+    </sequential>
+  </macrodef>
+
 </project>

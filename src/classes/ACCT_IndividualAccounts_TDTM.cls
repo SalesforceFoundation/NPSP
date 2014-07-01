@@ -360,6 +360,11 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
+
+        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        if (hs != null && hs.npo02__Advanced_Household_Naming__c == false)
+            return;    	
+    	
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);

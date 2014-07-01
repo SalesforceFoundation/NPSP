@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate FROM Contact ';
+    public static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllFields;
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -482,7 +482,7 @@ global with sharing class HH_ManageHousehold_EXT {
             removeContacts.remove(con[0].id);
             // check for household then find and add contacts
             if (con[0].HHId__c != null) {
-                whereClause = 'WHERE HHId__c = \''+con[0].HHId__c+'\'';
+                whereClause = 'WHERE ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' = \''+con[0].HHId__c+'\'';
                 q = conSelect + whereClause;
                 list<Contact> hhcons = Database.query(q);
                 if (!hhcons.isEmpty()) {
@@ -617,6 +617,7 @@ global with sharing class HH_ManageHousehold_EXT {
         if (isHHAccount && hh.Id != null) {
 	        q = 'select MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
 	           ' where Household_Account__c = \'' + hh.Id + '\''; 
+	        q = UTIL_Namespace.StrAllNSPrefix(q);
 	        list<Address__c> listAddr = Database.query(q);	        
 	        
 	        for (Address__c addr : listAddr) {
@@ -744,12 +745,13 @@ global with sharing class HH_ManageHousehold_EXT {
     ********************************************************************************************************/
     public list<Contact> getHHMembers() {
         String q = conSelect;
+        string strHHId = UTIL_Namespace.StrTokenNSPrefix('hhId__c');
         
         if (conId != null || hh.id != null) q += ' WHERE';
         if (conId != null) q += ' Id=\''+conId+'\'';
         if (conId != null && hh.id != null) q += ' or';
-        if (hh.id != null) q += ' HHId__c = \''+hh.id+'\'';
-        q += ' ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate LIMIT 500';
+        if (hh.id != null) q += ' ' + strHHId + ' = \''+hh.id+'\'';
+        q += ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate LIMIT 500';
         String qry = q;
         return Database.query(qry);
     }
