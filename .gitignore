@@ -9,4 +9,8 @@ Referenced Packages
 /installdeploy
 /installedPackages
 unpackaged/*/*/*.zip
+unpackaged/namespaced_zipped
+unpackaged/zipped
+unpackaged_stage
+packaged
 .*.swp

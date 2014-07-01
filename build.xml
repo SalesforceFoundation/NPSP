@@ -23,6 +23,9 @@
     <!-- Load up the version.properties file to get desired versions -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 
+    <!-- Setup a blank namespace prefix string.  Managed deployments need to override this property before calling deployUnpackagedPost -->
+    <property name="cumulusci.namespace.prefix" value="" />
+
     <!-- Cumulus specific macros -->
     <macrodef name="getPackageVersions" description="Gets the version for all installed packages">
       <sequential>
@@ -130,39 +133,36 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackagedPre">
-      <if>
-        <available file="${basedir}/unpackaged/pre/" type="dir" />
-        <then>
-          <for param="dir">
-            <path>
-              <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
-            </path>
-            <sequential>  
-              <echo>Deploying unpackaged bundle @{dir}</echo>
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
-            </sequential>
-          </for>
-        </then>
-      </if>
+      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" />
     </target>
 
     <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackagedPost">
-      <if>
-        <available file="${basedir}/unpackaged/post/" type="dir" />
-        <then>
-          <for param="dir">
-            <path>
-              <dirset dir="${basedir}/unpackaged/post/" includes="*" />
-            </path>
-            <sequential>  
-              <echo>Deploying unpackaged bundle @{dir}</echo>
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
-            </sequential>
-          </for>
-        </then>
-      </if>
+      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" />
     </target>
+
+    <!-- deployManagedUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
+    <target name="deployManagedUnpackagedPre">
+      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
+    <!-- deployManagedUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
+    <target name="deployManagedUnpackagedPost">
+      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with non-namespaced versions of all pre and post deployment bundles -->
+    <target name="zipUnpackagedBundles">
+      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
+      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
+    </target>
+
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with namespaced versions of all pre and post deployment bundles -->
+    <target name="zipManagedUnpackagedBundles">
+      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
+      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
 
     <!-- uninstallUnpackagedPre: Uninstall the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="uninstallUnpackagedPre">
@@ -312,7 +312,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <updateDependentPackages />
 
       <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-      <antcall target="deployUnpackagedPre" />
+      <antcall target="deployManagedUnpackagedPre" />
 
       <!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
       <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
@@ -322,7 +322,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="updateDependentPackages" />
 
       <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-      <antcall target="deployUnpackagedPost" />
+      <antcall target="deployManagedUnpackagedPost" />
+
+      <antcall target="uninstallUnpackagedPost" />
 
     </target>
 
@@ -470,5 +472,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     <target name="testXml">
       <xmlproperty file="src/package.xml" />
       <echoproperties />
+    </target>
+
+    <target name="deployPassingTest">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged/pre/passing_test" runAllTests="false" maxPoll="${cumulusci.maxPoll.test}">
+        <runTest>NPSPAlwaysPassingTest</runTest>
+      </sf:deploy>
     </target>
 </project>
