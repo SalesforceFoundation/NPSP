@@ -80,7 +80,8 @@ public class HH_HouseholdNaming_TEST {
         system.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
-        'select npo02__household__r.id from Contact where npo02__household__r.id = \'' + hhid + '\' limit 200', true
+        'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' = \'' + hhid + '\' limit 200', true
         );
             
         Test.StartTest(); 
@@ -141,9 +142,6 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
         system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
         
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        //test for coverage
-        hn.ActivateAdvancedGreetings(true);
     }
     
     static testMethod void HouseholdNamingUpdateTest(){
@@ -351,7 +349,7 @@ public class HH_HouseholdNaming_TEST {
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Jones ' + system.label.npo02.HouseholdNameConnector + ' Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
-        system.assertequals('John Jones, Jim Test ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
+        system.assertequals('John Jones ' + system.label.npo02.HouseholdNameConnector + ' Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
         system.assertequals('John, Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe', hh.npo02__Informal_greeting__c);
         
         con0.npo02__Household_Naming_Order__c = null;
@@ -365,7 +363,7 @@ public class HH_HouseholdNaming_TEST {
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Test ' + system.label.npo02.HouseholdNameConnector + ' Jones ' + system.label.npo02.DefaultHouseholdName, hh.Name);
-        system.assertequals('Jim Test, Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
+        system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
         Test.stopTest();

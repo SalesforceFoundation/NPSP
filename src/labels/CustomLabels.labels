@@ -1024,7 +1024,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
-        <value>Activate Automatic Household Naming</value>
+        <value>Refresh naming on all Households</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -1105,6 +1105,22 @@
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorINaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorINaming</shortDescription>
+        <value>Implementing Class does not implement interface HH_INaming.</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorInvalidClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorInvalidClass</shortDescription>
+        <value>Invalid Implementing Class.</value>
     </labels>
     <labels>
         <fullName>stgHelpAccountModel</fullName>
@@ -1227,6 +1243,14 @@
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpFGFormat</shortDescription>
+        <value>The format to use for the Household Formal Greeting</value>
+    </labels>
+    <labels>
         <fullName>stgHelpFiscalYearRollups</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1257,6 +1281,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
         <value>The Household Mailing List Report used for Household-deduplicated Campaign mailing lists. The report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHNameFormat</shortDescription>
+        <value>The format to use for the Household Name.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNaming</fullName>
@@ -1291,6 +1323,22 @@
         <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.  If your Account Model is set to &quot;Household Account&quot;, this setting will always be reset to &quot;No Contacts&quot;.</value>
     </labels>
     <labels>
+        <fullName>stgHelpIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpIGFormat</shortDescription>
+        <value>The format to use for the Household Informal Greeting.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpINamingClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpINamingClass</shortDescription>
+        <value>Specify the Apex Class that implements the HH_INaming interface for Household naming.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpLeadConvert</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1321,6 +1369,22 @@
         <protected>false</protected>
         <shortDescription>stgHelpMembershipRT</shortDescription>
         <value>Names of Opportunity Record Types, such as Membership, that you want to roll up separately from other Opportunity Record Types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameConnector</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameConnector</shortDescription>
+        <value>Specify what string should be used to connect pairs in a name.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameOverrun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameOverrun</shortDescription>
+        <value>Specify what string should be used to replace long lists of names.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewRDFieldMap</fullName>
@@ -1369,6 +1433,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOverrunCount</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOverrunCount</shortDescription>
+        <value>Specify the number of contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapOppField</fullName>
@@ -1812,6 +1884,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Error Notification Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelExamplesFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesFGFormat</shortDescription>
+        <value>Examples for Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesHHNameFOrmat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesHHNameFOrmat</shortDescription>
+        <value>Examples for Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesIGFormat</shortDescription>
+        <value>Examples for Informal Greeting Format</value>
+    </labels>
+    <labels>
         <fullName>stgLabelHHGeneral</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1955,6 +2051,38 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <shortDescription>stgLabelOppRollups</shortDescription>
         <value>Opportunity Rollups</value>
     </labels>
+    <labels>
+        <fullName>stgLabelOther</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOther</shortDescription>
+        <value>other</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherFormalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherFormalGreetingFormat</shortDescription>
+        <value>Other Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelOtherHHNameFormat</shortDescription>
+        <value>Other Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherInformalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
+        <value>Other Informal Greeting Format</value>
+    </labels>    
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
         <categories>Settings</categories>

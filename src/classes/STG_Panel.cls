@@ -75,7 +75,7 @@ public with sharing virtual class STG_Panel {
         
     }
 
-    public PageReference editSettings() { 
+    public virtual PageReference editSettings() { 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = true;
         return null;
