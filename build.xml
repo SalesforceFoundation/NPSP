@@ -141,21 +141,23 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" />
     </target>
 
-    <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
+    <!-- deployManagedUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
     <target name="deployManagedUnpackagedPre">
       <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
     </target>
 
-    <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
+    <!-- deployManagedUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
     <target name="deployManagedUnpackagedPost">
       <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
     </target>
 
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with non-namespaced versions of all pre and post deployment bundles -->
     <target name="zipUnpackagedBundles">
       <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
       <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
     </target>
 
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with namespaced versions of all pre and post deployment bundles -->
     <target name="zipManagedUnpackagedBundles">
       <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
       <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
