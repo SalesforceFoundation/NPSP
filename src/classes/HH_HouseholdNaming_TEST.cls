@@ -314,7 +314,7 @@ public class HH_HouseholdNaming_TEST {
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
         system.assert(hh.npo02__Formal_greeting__c.contains('Joe'));
@@ -322,6 +322,7 @@ public class HH_HouseholdNaming_TEST {
         system.assert(hh.npo02__Formal_greeting__c.endswith('Test'));
         system.assert(hh.npo02__Informal_greeting__c.contains('Joe'));
         system.assert(hh.npo02__Informal_greeting__c.contains('Jim'));
+        system.assertEquals(2, hh.Number_of_Household_Members__c);
 
         con1.npo02__Household_Naming_Order__c = 0;
         con2.npo02__Household_Naming_Order__c = 1;
@@ -346,11 +347,12 @@ public class HH_HouseholdNaming_TEST {
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Jones ' + system.label.npo02.HouseholdNameConnector + ' Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
         system.assertequals('John Jones ' + system.label.npo02.HouseholdNameConnector + ' Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
         system.assertequals('John, Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe', hh.npo02__Informal_greeting__c);
+        system.assertEquals(3, hh.Number_of_Household_Members__c);
         
         con0.npo02__Household_Naming_Order__c = null;
         con1.npo02__Household_Naming_Order__c = 2;
