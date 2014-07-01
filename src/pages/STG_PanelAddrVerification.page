@@ -36,8 +36,7 @@
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" rendered="{!isEditMode}" id="iAuth_ID__c" styleClass="form-control" />
-                    <apex:outputText value="****************************" rendered="{!isReadOnlyMode}" id="iAuth_ID__c_text" styleClass="form-control" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" id="iAuth_ID__c" redisplay="true" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
@@ -46,8 +45,7 @@
             <div class="form-group">
                 <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-sm-4 control-label"/>
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" rendered="{!isEditMode}" id="iAuth_Token__c" styleClass="form-control" />
-                    <apex:outputText value="****************************" rendered="{!isReadOnlyMode}" id="iAuth_Token__c_text" styleClass="form-control" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" id="iAuth_Token__c" redisplay="true" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
