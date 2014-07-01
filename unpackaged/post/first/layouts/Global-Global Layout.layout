@@ -5,28 +5,28 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>NewContact</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>New_Organization</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Organization</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>New_Household_Account</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Household_Account</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>New_Recurring_Donation</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>New_Campaign</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Campaign</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>LogACall</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%LogACall</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <showEmailCheckbox>false</showEmailCheckbox>
