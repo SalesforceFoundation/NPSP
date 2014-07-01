@@ -103,7 +103,7 @@ public without sharing class HH_HouseholdNaming {
                 h.put('npo02__Informal_Greeting__c', getInformalName(listCon));   
             
             // now we also store the number of members on the Household!
-            h.put('Number_of_Household_Members__c', listCon != null ? listCon.size() : 0);          
+            h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'), listCon != null ? listCon.size() : 0);          
         } 
         
         if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);
