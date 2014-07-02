@@ -57,7 +57,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         Account a = new Account(OwnerId = u.Id, Name= 'Test Account');
         insert a;
 
-        Task t = new Task(WhatId = c.Id, OwnerId = u.Id, Status = 'Completed', Subject = 'Other');
+        Task t = new Task(WhatId = a.Id, OwnerId = u.Id, Status = 'Completed', Subject = 'Other');
         insert t;
 
         system.assertEquals(u.Id, [select OwnerId from Account where Id = :a.Id].OwnerId);
