@@ -90,7 +90,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             Test.stopTest();
 
             //assert the warning exists
-            system.assertEquals(false, controller.noInactiveUserError);
+            system.assertEquals(true, controller.runCheckErrorState);
         }
     }
 }
