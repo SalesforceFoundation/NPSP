@@ -7,10 +7,27 @@
 <script type="text/javascript">
     var j$ = jQuery.noConflict();
 
+    //add some show handlers
+    jQuery(function(j$) {
+        var _oldShow = j$.fn.show;
+        j$.fn.show = function(speed, oldCallback) {
+            return j$(this).each(function() {
+                var obj = j$(this), newCallback = function() {
+                    if (j$.isFunction(oldCallback)) {
+                        oldCallback.apply(obj);
+                    }
+                    obj.trigger('afterShow');
+                };
+                obj.trigger('beforeShow');
+                _oldShow.apply(obj, [speed, newCallback]);
+            });
+        }
+    });
+
     j$(document).ready(function(){
         j$('#conversionBTN').attr('disabled', 'disabled');
         j$("input[type='checkbox']").click(function() {
-            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length && {!noInactiveUserError})
+            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length && !{!runCheckErrorState})
                 j$('#conversionBTN').removeAttr('disabled');
             else
                 j$('#conversionBTN').attr('disabled', 'disabled');
@@ -25,6 +42,9 @@
             //call conversion
             callConversion();
         });
+        j$("#resultpaneldefault").bind("beforeShow", function() {
+            alert('beforeShow');
+        }) 
     });
 
     function callConversion(){
@@ -190,7 +210,13 @@
                     <div class="panel panel-default" id="resultpaneldefault">
                         <div class="panel-heading"><h3 class="panel-title">Conversion Results</h3></div>
                         <div class="panel-body">
-                            <p>The conversion process has resulted in x# of new Household Accounts.  You had y# of failures.  Failures are listed below. rerun. etc.</p>
+                            <p>Results:  </p>
+                            <ul>
+                                <li>All triggers are disabled</li>
+                                <li>All existing Households are selected, along with their Contacts</li>
+                                <li>New Household Accounts are created for each existing Household</li>
+                                <li>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

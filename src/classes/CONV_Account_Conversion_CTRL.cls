@@ -39,7 +39,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public Boolean batchRunning { get; set; }
     public String AccountHouseholdIdField {get;set;}
     public Map<String, String> copyFieldSet {get;set;}
-    public Boolean noInactiveUserError {get;set;}
+    public Boolean runCheckErrorState {get;set;}
     public list<SelectOption> targetAccountfields = new list<SelectOption>();
 
     public list<SelectOption> getTargetAccountFields(){
@@ -115,7 +115,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public CONV_Account_Conversion_CTRL() {
         batching = true;
         batchRunning = false;
-        noInactiveUserError = true;
+        runCheckErrorState = false;
     }
 
     public PageReference convert() {
@@ -199,7 +199,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
 
         if ((accountCount + contactCount + opptyCount + taskCount) > 0){
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
-            noInactiveUserError = false;
+            runCheckErrorState = true;
         }
 
         //set the recordtype if its not already set
@@ -213,6 +213,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         //check the running user's profile access to the account rec type to be used for HH accounts
         if (!Schema.Sobjecttype.Account.getRecordTypeInfosById().get(CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c).isAvailable()){
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'The currently selected Household Account recordtype is not accessible to your current profile.  You will need to modify your profile to include this record type prior to running the conversion process. The conversion process will not be available until the record type is made available to your profile, or a different record type is set in the NPSP Settings tab.'));
+            runCheckErrorState = true;
         }
     }
 
