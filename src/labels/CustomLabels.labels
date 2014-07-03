@@ -976,7 +976,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateMapping</shortDescription>
-        <value>Create Mapping</value>
+        <value>Create Custom Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRDPeriod</fullName>
@@ -984,7 +984,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateRDPeriod</shortDescription>
-        <value>Create Installment Period</value>
+        <value>Create Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRelReciprocal</fullName>
@@ -1048,7 +1048,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRDPeriod</fullName>
@@ -1056,7 +1056,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDPeriod</shortDescription>
-        <value>New Installment Period</value>
+        <value>New Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRelReciprocal</fullName>
@@ -1088,7 +1088,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnRDCreateNewMap</shortDescription>
-        <value>Create Field Mapping</value>
+        <value>Create Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnRunBatch</fullName>
@@ -1544,7 +1544,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50. Larger values may result in DML errors.</value>
+        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -1993,7 +1993,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgLabelNewRelReciprocal</fullName>
@@ -2385,7 +2385,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDFieldMap</shortDescription>
-        <value>Recurring Donation Field Mappings</value>
+        <value>Recurring Donation Custom Field Mappings</value>
     </labels>
     <labels>
         <fullName>stgNavRDInstallmentPeriods</fullName>
@@ -2393,7 +2393,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDInstallmentPeriods</shortDescription>
-        <value>Recurring Donation Installment Periods</value>
+        <value>Recurring Donation Custom Installment Periods</value>
     </labels>
     <labels>
         <fullName>stgNavRecurringDonations</fullName>
