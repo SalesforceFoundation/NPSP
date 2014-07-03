@@ -41,6 +41,14 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public Map<String, String> copyFieldSet {get;set;}
     public Boolean runCheckErrorState {get;set;}
     public list<SelectOption> targetAccountfields = new list<SelectOption>();
+    public AsyncApexJob apexjob {get{
+            apexjob = [select a.TotalJobItems, a.Status, a.NumberOfErrors, 
+                                a.JobType, a.JobItemsProcessed, a.ExtendedStatus, 
+                                a.CompletedDate, a.ApexClassId From AsyncApexJob a 
+                                where a.Status = 'Completed' and a.JobType = 'BatchApex' 
+                                order by CompletedDate desc limit 1];
+        return apexjob;
+    }set;}
 
     public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
@@ -67,24 +75,6 @@ public with sharing class CONV_Account_Conversion_CTRL {
             }
         }
         return targetAccountfields;
-    }
-
-    @RemoteAction
-    public static Boolean verifyFieldTypeForIds(String HHField){
-        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
-        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
-
-        if (targetTokenMap.containsKey(HHField)){
-            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
-            Schema.DisplayType payType = f.getType();
-            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
-                return true;
-            else
-                return false;
-        }
-        else{
-            return false;
-        }
     }
 
     private static Set<String> HouseholdFields = new Set<String>{'Name', +
@@ -218,4 +208,22 @@ public with sharing class CONV_Account_Conversion_CTRL {
     }
 
     public class FieldValidationException extends Exception {}
+
+    @RemoteAction
+    public static Boolean verifyFieldTypeForIds(String HHField){
+        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
+        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
+
+        if (targetTokenMap.containsKey(HHField)){
+            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
+            Schema.DisplayType payType = f.getType();
+            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
+                return true;
+            else
+                return false;
+        }
+        else{
+            return false;
+        }
+    }
 }
