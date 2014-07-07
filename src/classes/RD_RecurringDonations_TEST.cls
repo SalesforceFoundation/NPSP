@@ -821,7 +821,7 @@ public class RD_RecurringDonations_TEST {
         
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
         
-        system.assert(27 <= [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
+        system.assert(26 <= [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     

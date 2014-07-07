@@ -571,6 +571,8 @@ public with sharing class RD_RecurringDonations {
         for (id RDid : RDOppMap.keySet()){
             
             date PaymentDate = RDMap.get(RDid).npe03__Next_Payment_Date__c;
+            if (PaymentDate == null)
+                PaymentDate = RDMap.get(RDid).npe03__Date_Established__c;
             
             for (Opportunity o : RDOppMap.get(RDid)){
                 
@@ -682,6 +684,8 @@ public with sharing class RD_RecurringDonations {
     }
     
     /** Returns the number of records that failed to be processed. **/
+    // called from the Refresh Opportunities button on both Open and Non-Open RD's, 
+    // as well as the Batch process for extending Open Ended RD's (no Non-Open)
     public static Integer evaluateRecurringDonationsForNewOppInsert(list<npe03__Recurring_Donation__c> recurringDonationsToEvaluate){
         
         npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
@@ -734,9 +738,11 @@ public with sharing class RD_RecurringDonations {
             
             //only proceed if there are some opps, otherwise we need to start over from scratch 
             if (oppCountMap.containsKey(rd.id)){
-                integer oppCounter = oppCountMap.get(rd.id) + 1;                    
+                integer oppCounter = oppCountMap.get(rd.id) + 1;          
+                
+                Date dtForecast =  system.today().toStartOfMonth().addMonths(forecast_months);         
                            
-                if (system.today().addMonths(forecast_months) > lastOppMap.get(rd.id)){
+                if (dtForecast > lastOppMap.get(rd.id)){
                     date oppclosedate = lastOppMap.get(rd.id);
                     do{
                         Opportunity o = new Opportunity();
@@ -778,7 +784,7 @@ public with sharing class RD_RecurringDonations {
                     
                         oppCounter++;
                         oppInsertList.add(o);                   
-                    }while(oppclosedate < system.today().addMonths(forecast_months));
+                    }while(oppclosedate < dtForecast);
                 }
             }
             else{

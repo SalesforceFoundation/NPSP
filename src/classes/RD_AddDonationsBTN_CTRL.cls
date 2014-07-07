@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.2)
-* @description The controller for the VF page invoked by using the check for new opps button
+* @description The controller for the VF page invoked by using the Refresh Opportunities button
 */
 public with sharing class RD_AddDonationsBTN_CTRL {
 
