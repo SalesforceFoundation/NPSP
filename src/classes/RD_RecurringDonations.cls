@@ -781,7 +781,11 @@ public with sharing class RD_RecurringDonations {
                         if (rd.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || oppCounter == 1)){
                             o.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
                         }
-                    
+                        
+	                    if (rds.npe03__Record_Type__c != null){
+	                        o.put('RecordTypeId', rds.npe03__Record_Type__c);
+	                    }
+                                            
                         oppCounter++;
                         oppInsertList.add(o);                   
                     }while(oppclosedate < dtForecast);
