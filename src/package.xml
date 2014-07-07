@@ -357,6 +357,7 @@
     <members>Addr_Verification_Batch_Title</members>
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
+    <members>RecurringDonationAccountAndContactError</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
     <members>addrCopyConAddBtnHHObjOnly</members>

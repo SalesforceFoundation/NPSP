@@ -142,6 +142,14 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>RecurringDonationAccountAndContactError</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
+        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
