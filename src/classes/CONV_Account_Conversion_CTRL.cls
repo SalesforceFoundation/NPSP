@@ -39,7 +39,18 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public Boolean batchRunning { get; set; }
     public String AccountHouseholdIdField {get;set;}
     public Map<String, String> copyFieldSet {get;set;}
+    public Boolean runCheckErrorState {get;set;}
     public list<SelectOption> targetAccountfields = new list<SelectOption>();
+    private AsyncApexJob aaj;
+    public AsyncApexJob apexjob {get{
+            if (aaj == null)
+                aaj = [select a.TotalJobItems, a.Status, a.NumberOfErrors, 
+                                a.JobType, a.JobItemsProcessed, a.ExtendedStatus, 
+                                a.CompletedDate, a.ApexClassId From AsyncApexJob a 
+                                where (a.Status = 'Completed' or a.Status = 'Aborted' or a.Status = 'Failed') and a.JobType = 'BatchApex' 
+                                order by CompletedDate desc limit 1];
+        return aaj;
+    }set;}
 
     public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
@@ -66,24 +77,6 @@ public with sharing class CONV_Account_Conversion_CTRL {
             }
         }
         return targetAccountfields;
-    }
-
-    @RemoteAction
-    public static Boolean verifyFieldTypeForIds(String HHField){
-        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
-        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
-
-        if (targetTokenMap.containsKey(HHField)){
-            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
-            Schema.DisplayType payType = f.getType();
-            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
-                return true;
-            else
-                return false;
-        }
-        else{
-            return false;
-        }
     }
 
     private static Set<String> HouseholdFields = new Set<String>{'Name', +
@@ -114,10 +107,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public CONV_Account_Conversion_CTRL() {
         batching = true;
         batchRunning = false;
+        runCheckErrorState = false;
     }
 
     public PageReference convert() {
-        Savepoint sp = Database.setSavepoint();
+
         try {
             batchRunning = true;
             String query = CONV_Account_Conversion_CTRL.getBatchQuery();
@@ -127,7 +121,6 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ID batchprocessid = Database.executeBatch(cacv);
 
         } catch(Exception e) {
-            Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler.Context.CONV);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
@@ -178,8 +171,61 @@ public with sharing class CONV_Account_Conversion_CTRL {
         if (HHAccountCount > 0 || ContactConnectedCount > 0) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
         }
+
+        List<User> inactiveUsers = new List<User>();
+        inactiveUsers = [select id from User where isActive = false order by LastModifiedDate desc limit 9999];
+        Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
+        Integer contactCount = [select count() from Contact where OwnerId IN :inactiveUsers limit 200];
+        Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
+        Integer taskCount = [select count() from Task where OwnerId IN :inactiveUsers limit 200];
+
+        String inactiveUserWarning = 'You have records owned by inactive Users.  You will need to transfer these records to an active user prior to running the conversion process.  The conversion process will not be available until these records have been reassigned.';
+        if (accountCount > 0)
+            inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
+        if (contactCount > 0)
+            inactiveUserWarning += '\n ' + contactCount + ' Contacts are currently owned by an inactive user. ';
+        if (opptyCount > 0)
+            inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
+        if (taskCount > 0)
+            inactiveUserWarning += '\n ' + taskCount + ' Tasks are currently owned by an inactive user. ';
+
+        if ((accountCount + contactCount + opptyCount + taskCount) > 0){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
+            runCheckErrorState = true;
+        }
+
+        //set the recordtype if its not already set
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+        if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
+            npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+            ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+            update ContactsSettings;
+        }
+
+        //check the running user's profile access to the account rec type to be used for HH accounts
+        if (!Schema.Sobjecttype.Account.getRecordTypeInfosById().get(CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c).isAvailable()){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'The currently selected Household Account recordtype is not accessible to your current profile.  You will need to modify your profile to include this record type prior to running the conversion process. The conversion process will not be available until the record type is made available to your profile, or a different record type is set in the NPSP Settings tab.'));
+            runCheckErrorState = true;
+        }
     }
 
-
     public class FieldValidationException extends Exception {}
+
+    @RemoteAction
+    public static Boolean verifyFieldTypeForIds(String HHField){
+        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
+        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
+
+        if (targetTokenMap.containsKey(HHField)){
+            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
+            Schema.DisplayType payType = f.getType();
+            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
+                return true;
+            else
+                return false;
+        }
+        else{
+            return false;
+        }
+    }
 }
