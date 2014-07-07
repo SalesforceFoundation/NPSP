@@ -106,8 +106,6 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
             sz = (list<ZipResponse>)(JSON.deserialize(res.getBody(), list<ZipResponse>.class));
-        else
-            throw new LiveAddressException(res.getStatus());
         
         if (sz == null || sz.isEmpty()) return null;
         else return sz;
