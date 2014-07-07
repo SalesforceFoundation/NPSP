@@ -30,6 +30,11 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         controller.convert();
         controller.cancel();
 
+        Test.stopTest();
+
+        AsyncApexJob aaj = controller.apexjob;
+        system.assertNotEquals(null, aaj);
+        system.assertEquals('Completed', aaj.Status);
         Boolean testBool;
         testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('garbagefield');
         system.assertEquals(false, testBool);
