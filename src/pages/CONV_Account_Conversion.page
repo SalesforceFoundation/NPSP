@@ -214,9 +214,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
-                        <div class="panel-heading"><h3 class="panel-title">{!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
                         <div class="panel-body">
-                             {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processedr/>
+                             {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
                              {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' batches were not converted due to errors and have been rolled back to their previous state. You should address these errors, rerun the converter, then check your data for consistency.', '')}<br/><br/>
                              {!IF(ISBLANK(apexjob.ExtendedStatus), '', 'The first error recorded was: ' + apexjob.ExtendedStatus)}<br/> 
                              <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
