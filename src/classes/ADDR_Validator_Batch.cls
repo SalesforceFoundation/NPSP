@@ -39,12 +39,20 @@
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
     private String query;
-    Addr_Verification_Settings__c settings;
-    Boolean usingSmartyStreet;
+    static Addr_Verification_Settings__c settings;
+    static Boolean usingSmartyStreet;
     
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
-        // query for all US addresses
-        query = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' +
+    	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
+    	settings = Addr_Verification_Settings__c.getOrgDefaults();
+    	usingSmartyStreet = settings.Using_SmartyStreets__c;
+    	if(!usingSmartyStreet) {
+    		settings.Using_SmartyStreets__c = true;
+            update settings;
+    	}
+        
+        //query for all US addresses
+        query = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' + 
             ' from Address__c where ' +
             '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
             'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
@@ -58,23 +66,21 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     }
 
     public void execute(Database.BatchableContext bc, List<Address__c> scope) {
-        settings = Addr_Verification_Settings__c.getOrgDefaults();
-        usingSmartyStreet = settings.Using_SmartyStreets__c;
-        settings.Using_SmartyStreets__c = true;
-        update settings;
-        
         list<Address__c> addressesToVerify = new list<Address__c>();
         for (Address__c a : scope)
             if (isUS(a)) addressesToVerify.add(a); 
         
-        // verify and update this batch of addresses
+        //verify and update this batch of addresses
         if (!addressesToVerify.isEmpty())
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
-    public void finish(Database.BatchableContext bc) { 
-        settings.Using_SmartyStreets__c = usingSmartyStreet;
-        update settings;
+    public void finish(Database.BatchableContext bc) {
+    	//set the checkbox value back to false, if it was false  
+    	if(!usingSmartyStreet) {
+            settings.Using_SmartyStreets__c = usingSmartyStreet;
+            update settings;
+    	}
     }
     
     //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
