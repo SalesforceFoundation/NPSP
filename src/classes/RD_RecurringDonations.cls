@@ -258,10 +258,19 @@ public with sharing class RD_RecurringDonations {
         
                 Decimal installs = r.npe03__Installments__c;
                 Integer installments = (installs == null ? 0 : installs.intValue());
+                date OppCloseDate;
+              
+                if (r.npe03__Next_Payment_Date__c != null)                     
+                    OppCloseDate = r.npe03__Next_Payment_Date__c;
+                else{
+                    OppCloseDate = r.npe03__Date_Established__c;                                                                        
+                }                                             
+                
                 
                 for ( Integer j=0;j<installments;j++ )
                 {
                     Opportunity opp = new Opportunity();
+                    opp.CloseDate = OppCloseDate;
                 
                     if ( r.npe03__Organization__c != null )
                     {
@@ -292,6 +301,7 @@ public with sharing class RD_RecurringDonations {
                         opp.Amount = r.npe03__Installment_Amount__c;
                     }
                 
+                    /************ we now share the routine to calc the next opp date **********
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodYearly)
                     {
                         opp.CloseDate = (r.npe03__Date_Established__c).addYears(j);
@@ -313,6 +323,9 @@ public with sharing class RD_RecurringDonations {
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c);
                     }
+                    *********************************/
+                                        
+                    OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
                 
                     String oName = '';
                     oName += r.npe03__Donor_Name__c; 
@@ -424,7 +437,7 @@ public with sharing class RD_RecurringDonations {
                         }
                         opportunityInserts.add(o);    
                         rdcounter++;                                                                                       
-                    }while (OppCloseDate < incrementdate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c));                                        
+                    }while (OppCloseDate < incrementdate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c));                                                            
                 }
             }                 
         }
@@ -701,6 +714,7 @@ public with sharing class RD_RecurringDonations {
         string openlabel = system.label.npe03.RecurringDonationOpenStatus;
         
         //get the existing donations
+        //DJH:BUG: can be called with Non-Open RD's, but only queries for Opps from Open RD's.
         list<sobject> sobjs = [select count(id) oppCount, MAX(CloseDate) MaxDate,
                                   npe03__Recurring_Donation__r.id rdid
                                   from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel 
