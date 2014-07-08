@@ -64,23 +64,20 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'single-address';
+        contact.MailingCity = 'Cupertino';
+        contact.MailingState = 'ca';
+        contact.MailingPostalCode = '95014';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'single-address';
-        contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'ca';
-        contact.MailingPostalCode = '95014';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
         
         Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
                 from Address__c where Household_Account__c = :accountId];
@@ -105,23 +102,20 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'invalid-address';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'il';
+        contact.MailingPostalCode = '60606';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'invalid-address';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
 
         Address__c[] av = [select Verified__c from Address__c where Household_Account__c = :contact.AccountId];       
         System.assertEquals(1, av.size());
@@ -135,23 +129,20 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'ambiguous-address';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'il';
+        contact.MailingPostalCode = '60606';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'ambiguous-address';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
 
         Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
                             where Household_Account__c = :accountId];       
@@ -168,6 +159,7 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingPostalCode = 'single-zip';
+        
         Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -198,6 +190,7 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingCity = 'single-zip';
         contact.MailingState = 'IL';
+        
         Test.startTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
