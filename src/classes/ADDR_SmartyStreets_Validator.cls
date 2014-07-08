@@ -44,28 +44,34 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         
         List<Address__c> shortList = new List<Address__c>();
         List<Address__c> shortListZipOnly = new List<Address__c>();
+        List<Address__c> addressesToUpdate = new List<Address__c>();
+        
         for (Address__c av : avList) {
-            if (av.MailingStreet__c == null && (av.MailingPostalCode__c != null || 
-                (av.MailingCity__c != null && av.MailingState__c != null))) {
-
-                // has no address, but can be verified and geocoded by the zipcode api
-                shortListZipOnly.add(av);
-                if (shortListZipOnly.size() == 100) {
-                    verifyZipRecords100(shortListZipOnly);
-                    shortListZipOnly = new List<Address__c>();
-                }
-            } else if (av.MailingStreet__c != null) {
+            //has address   
+            if (av.MailingStreet__c != null) {
                 shortList.add(av);
                 if (shortList.size() == 100) {
-                    return verifyRecords100(shortList); 
+                    addressesToUpdate.addAll(verifyRecords100(shortList));
+                    shortList = new List<Address__c>(); 
+                }
+            // has no address, but can be verified and geocoded by the zipcode api
+            } else if (av.MailingStreet__c == null && (av.MailingPostalCode__c != null || 
+                (av.MailingCity__c != null && av.MailingState__c != null))) {
+                shortListZipOnly.add(av);
+                if (shortListZipOnly.size() == 100) {
+                    addressesToUpdate.addAll(verifyZipRecords100(shortListZipOnly));
+                    shortListZipOnly = new List<Address__c>();
                 }
             }
         }
+        
         if (!shortListZipOnly.isEmpty())
-            return verifyZipRecords100(shortListZipOnly);
+            addressesToUpdate.addAll(verifyZipRecords100(shortListZipOnly));
+        
         if (!shortList.isEmpty())
-            return verifyRecords100(shortList);
-        return new List<Address__c>();
+            addressesToUpdate.addAll(verifyRecords100(shortList));
+        
+        return addressesToUpdate;        
     }
 
     private List<Address__c> verifyRecords100(List<Address__c> avList) {
