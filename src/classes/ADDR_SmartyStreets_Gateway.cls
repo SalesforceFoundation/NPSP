@@ -131,7 +131,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        //after another)
 	        if(Test.isRunningTest() && System.isBatch()) {  
 	            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
-	            req.setBody('single-address-response');
+	            req.setBody('single-address');
 	            response = mockResponseGenerator.respond(req);
 	        } else {
 	        	// execute the request

@@ -73,7 +73,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'single-address-response';
+        contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'ca';
         contact.MailingPostalCode = '95014';
@@ -98,8 +98,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('CA', contact.MailingState);
     }
 
-    static testMethod void testContactBadAddress() {
-    	if (strTestOnly != '*' && strTestOnly != 'testContactBadAddress') return;
+    static testMethod void testContactInvalidAddress() {
+    	if (strTestOnly != '*' && strTestOnly != 'testContactInvalidAddress') return;
     	
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -114,7 +114,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'bogus-address-for-test';
+        contact.MailingStreet = 'invalid-address';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'il';
         contact.MailingPostalCode = '60606';
@@ -144,7 +144,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertNotEquals(null, accountId);
          
         // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'ambiguous-address-for-test';
+        contact.MailingStreet = 'ambiguous-address';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'il';
         contact.MailingPostalCode = '60606';
@@ -167,21 +167,17 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingPostalCode = 'single-zip';
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with postal code to get the Address__c record created
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-                        
+   
         Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
                             from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
@@ -200,21 +196,17 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingCity = 'single-zip';
+        contact.MailingState = 'IL';
+        Test.startTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-         
-        // update contact with to get the Address__c record created
-        contact.MailingCity = 'Clinton';
-        contact.MailingState = 'WA';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
+        System.assertNotEquals(null, accountId); 
 
         Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
                             where Household_Account__c = :contact.AccountId];        
