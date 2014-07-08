@@ -39,6 +39,8 @@
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
     private String query;
+    Addr_Verification_Settings__c settings;
+    Boolean usingSmartyStreet;
     
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
         // query for all US addresses
@@ -56,7 +58,11 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     }
 
     public void execute(Database.BatchableContext bc, List<Address__c> scope) {
-
+        settings = Addr_Verification_Settings__c.getOrgDefaults();
+        usingSmartyStreet = settings.Using_SmartyStreets__c;
+        settings.Using_SmartyStreets__c = true;
+        update settings;
+        
         list<Address__c> addressesToVerify = new list<Address__c>();
         for (Address__c a : scope)
             if (isUS(a)) addressesToVerify.add(a); 
@@ -66,7 +72,10 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
-    public void finish(Database.BatchableContext bc) { }
+    public void finish(Database.BatchableContext bc) { 
+        settings.Using_SmartyStreets__c = usingSmartyStreet;
+        update settings;
+    }
     
     //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
     //class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
