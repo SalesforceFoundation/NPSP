@@ -92,7 +92,7 @@ public with sharing class RD_RecurringDonations {
                                                                                      npe03__Installment_Period__c, npe03__Installments__c,
                                                                                      npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c,
                                                                                      npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c,
-                                                                                     npe03__Donor_Name__c
+                                                                                     npe03__Donor_Name__c, OwnerId
                                                                                   from npe03__Recurring_Donation__c 
                                                                                   where npe03__Open_Ended_Status__c = :openLabel
                                                                                   and id IN :RDids]);
@@ -185,7 +185,7 @@ public with sharing class RD_RecurringDonations {
                                                        'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
                                                        'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
                                                        'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c'};
+                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};
         
         String queryRCD = 'select id';
         for (string s : existingFields){
@@ -271,6 +271,7 @@ public with sharing class RD_RecurringDonations {
                 {
                     Opportunity opp = new Opportunity();
                     opp.CloseDate = OppCloseDate;
+                    opp.OwnerId = r.OwnerId;
                 
                     if ( r.npe03__Organization__c != null )
                     {
@@ -389,6 +390,8 @@ public with sharing class RD_RecurringDonations {
                     do{
                         Opportunity o = new Opportunity();
                         o.CloseDate = OppCloseDate;
+                        o.OwnerId = r.OwnerId;
+                        
                                                                                                           
                         if(isMultiCurrency){
                             //set the donation currency field to equal the recurring donation currency
@@ -553,7 +556,7 @@ public with sharing class RD_RecurringDonations {
                                                                                      npe03__Installment_Period__c, npe03__Installments__c,
                                                                                      npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c,
                                                                                      npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c,
-                                                                                     npe03__Donor_Name__c
+                                                                                     npe03__Donor_Name__c, OwnerId
                                                                                   from npe03__Recurring_Donation__c 
                                                                                   where npe03__Open_Ended_Status__c = :openLabel 
                                                                                   and id IN :recIDs]);        
@@ -760,6 +763,7 @@ public with sharing class RD_RecurringDonations {
                     date oppclosedate = lastOppMap.get(rd.id);
                     do{
                         Opportunity o = new Opportunity();
+                        o.OwnerId = rd.OwnerId;
 
                         //multicurrency?
                         if(isMultiCurrency)

@@ -55,7 +55,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
 	                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
 	                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
 	                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c'};                                                                       
+	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};                                                                       
             String qString = 'select id';
             for (string s : existingFields){
                 qString += ', ' + s;               
