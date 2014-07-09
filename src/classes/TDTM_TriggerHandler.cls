@@ -150,17 +150,17 @@ public with sharing class TDTM_TriggerHandler {
         
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
-        System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
+        //System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate.values()));
+        //System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate.values()));
         List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
         
-        System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
+        //System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
         //Not yet using this one, as far as I know, but no reason not to support them
-        System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
+        //System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        

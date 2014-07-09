@@ -75,6 +75,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
 
     private List<Address__c> verifyRecords100(List<Address__c> avList) {
+    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList.size() + ' address records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.AddressRequest> srList = new List<ADDR_SmartyStreets_Gateway.AddressRequest>();
         
@@ -149,6 +150,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
 
     private List<Address__c> verifyZipRecords100(List<Address__c> avList) {
+    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList + ' zip records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.ZipRequest> zrList = new List<ADDR_SmartyStreets_Gateway.ZipRequest>();
         
@@ -187,6 +189,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                            // if there is at least one city/state, fill in city state
 	                            if (sr.city_states != null && sr.city_states.size() > 0) {
 	                                System.debug('****Populating city and estate.');
+	                                av.Verified__c = true;
 	                                av.MailingCity__c = sr.city_states[0].city;
 	                                av.MailingState__c = sr.city_states[0].state_abbreviation;
 	                                av.MailingCountry__c = 'US';

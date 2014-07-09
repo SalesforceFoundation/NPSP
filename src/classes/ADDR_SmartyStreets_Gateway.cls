@@ -124,20 +124,31 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setEndpoint('https://' + baseURL + auth); 
 	        req.setBody(body);
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-	        System.debug('****Request body: \n' + req.getBody());
+	        System.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
-	        //calling out" error. I believe the issue is that the test it performing DML (to set things up)
+	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
 	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
 	        //after another)
 	        if(Test.isRunningTest() && System.isBatch()) {  
 	            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
-	            req.setBody('single-address');
+	            if(req.getBody().contains('single-address')) 
+	               req.setBody('single-address');
+	            else if(req.getBody().contains('multiple-address'))
+	               req.setBody('multiple-address');
+	            else if(req.getBody().contains('invalid-address'))
+	               req.setBody('invalid-address');
+	            else if(req.getBody().contains('ambiguous-address'))
+	               req.setBody('ambiguous-address');
+	            else if(req.getBody().contains('single-zip'))
+	               req.setBody('single-zip');
+	            else if(req.getBody().contains('invalid-zip'))
+	               req.setBody('invalid-zip');
 	            response = mockResponseGenerator.respond(req);
 	        } else {
 	        	// execute the request
 	        	response = h.send(req);
 	        }
-	        System.debug('****Response body: \n' + response.getBody());    
+	        System.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
     	} else {
     		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
     	}

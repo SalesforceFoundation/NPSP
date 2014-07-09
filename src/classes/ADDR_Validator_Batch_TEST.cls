@@ -37,9 +37,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'multipleValidAddresses';
+    private static string strTestOnly = '*';
     
-    public static Addr_Verification_Settings__c createDefaultSettings() {
+    public static void createDefaultSettings() {
     	// use the household account model
         CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
@@ -57,14 +57,12 @@ public with sharing class ADDR_Validator_Batch_TEST {
         insert settings;
    
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        
-        return settings;
     }
     
     public static testmethod void oneValidAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
     	
-    	Addr_Verification_Settings__c settings = createDefaultSettings();
+    	createDefaultSettings();
         
         //create contact 
         Contact contact = new contact(firstname='Test', lastname='Person');
@@ -125,7 +123,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     public static testmethod void multipleValidAddresses() {
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
     	
-    	Addr_Verification_Settings__c settings = createDefaultSettings();
+    	createDefaultSettings();
         
         //create contacts
         List<Contact> contacts = new List<Contact>();
@@ -142,12 +140,17 @@ public with sharing class ADDR_Validator_Batch_TEST {
         
         //check households got created for contacts
         List<Id> AccountIDs = new List<Id>();
-        for(Contact c : contacts) {
-	        Contact contact = [select Account.Id from Contact where Id = :c.Id];
-	        Id accountId = contact.Account.Id;
+        List<Contact> contactsWithAccId = [select Account.Id from Contact where Id IN :contacts];
+        System.assertEquals(200, contactsWithAccId.size());
+        for(Contact c : contactsWithAccId) {    
+	        Id accountId = c.Account.Id;
 	        System.assertNotEquals(null, accountId);
 	        AccountIDs.add(accountId);
         }
+        
+        //check address records got created for households
+        List<Address__c> addresses = [select Id from Address__c where Household_Account__c IN :AccountIDs];
+        System.assertEquals(200, addresses.size());
         
         //run batch address verification
         Test.StartTest();
@@ -156,14 +159,17 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Test.stopTest();
         
         //check address records were verified
-        for(Id accountId : accountIds) {
-	        List<Address__c> av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
-	                from Address__c where Household_Account__c = :accountId];
-	        System.assertEquals(1, av.size());
-	        System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
-	        System.assertEquals('CA', av[0].MailingState__c);
-	        System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
-	        System.assertEquals(true, av[0].Verified__c);
+        addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                    from Address__c where Household_Account__c IN :AccountIDs];
+        System.assertEquals(200, addresses.size());
+        Integer i = 1;
+        for(Address__c addr : addresses) {
+        	System.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
+	        System.assertEquals('1 Infinite Loop', addr.MailingStreet__c);
+	        System.assertEquals('CA', addr.MailingState__c);
+	        System.assertEquals('95014-2083', addr.MailingPostalCode__c);
+	        System.assertEquals(true, addr.Verified__c);
+	        i++;
         }
     }
     
@@ -182,7 +188,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     public static testmethod void validAddressInvalidZipcode() {
         if (strTestOnly != '*' && strTestOnly != 'validAddressInvalidZipcode') return;
         
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         
         //create contacts 
         Contact contact1 = new contact(firstname='Test1', lastname='Person1');
