@@ -22,6 +22,7 @@
     <members>ADDR_Validation_Gateway_TEST</members>
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
+    <members>ADDR_Validator_Batch_TEST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
