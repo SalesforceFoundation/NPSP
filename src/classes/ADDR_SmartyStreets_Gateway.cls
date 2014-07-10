@@ -70,7 +70,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(addresses, settings.Address_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(addresses, settings.Address_Verification_Endpoint__c);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
@@ -101,7 +101,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
 
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
@@ -111,7 +111,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else return sz;
     }
     
-    private HTTPResponse prepareRequest(List<Object> payload, String baseURL) {
+    private HTTPResponse sendRequest(List<Object> payload, String baseURL) {
     	HttpResponse response = new HttpResponse();
     	if(auth != null && settings.Using_SmartyStreets__c) {
 	    	// prepare the request

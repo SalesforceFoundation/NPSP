@@ -41,7 +41,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
     private static Addr_Verification_Settings__c settings;
     
-    public static void createDefaultSettings() {
+    public static ADDR_SmartyStreets_Gateway createDefaultSettings() {
         // use the household account model
         CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
@@ -57,16 +57,19 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
         insert settings;
+        
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+        return new ADDR_SmartyStreets_Gateway(settings);
+        
     }
     
     public static testMethod void testOneAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'testOneAddress') return;
-    	
-    	createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
-        ADDR_SmartyStreets_Gateway.AddressResponse sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+        
+        Test.startTest();
+        ADDR_SmartyStreets_Gateway.AddressResponse sr = gateway.verifyAddress('single-address');
+        Test.stopTest();
 
         system.assert(sr != null);
         system.assertEquals(sr.delivery_line_1, '1 Infinite Loop');
@@ -76,53 +79,48 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
     public static testMethod void testMultiAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'testMultiAddress') return;
+    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
     	
-    	createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
-        list<ADDR_SmartyStreets_Gateway.AddressResponse> srs = la.verifyAddresses( new list<String>{'One Infinite Loop Cupertino, CA', 'Two Infinite Loop Cupertino, CA'} );
-
-        system.assert(srs != null && srs.size() == 2);
+        Test.startTest();
+        list<ADDR_SmartyStreets_Gateway.AddressResponse> srs = gateway.verifyAddresses(
+            new list<String>{'One Infinite Loop Cupertino multiple-address, CA', 'Two Infinite Loop Cupertino, CA'} );
+        Test.stopTest();
+        
         system.assertEquals('1 Infinite Loop', srs[0].delivery_line_1);
         system.assertEquals(37.33118, srs[0].metadata.latitude);
-        system.assertEquals('2 Infinite Loop', srs[1].delivery_line_1);
+        system.assertEquals('1 Infinite Loop', srs[1].delivery_line_1);
     }
 
     public static testMethod void testZip() {
     	if (strTestOnly != '*' && strTestOnly != 'testZip') return;
-    	
-    	createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        Test.StartTest();
-        ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
-        ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip( '98236' );
+    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+
+        Test.startTest();
+        ADDR_SmartyStreets_Gateway.ZipResponse sz = gateway.verifyZip('single-zip');
+        Test.stopTest();
 
         system.assert(sz != null);
         system.assertEquals(3, sz.city_states.size());
         system.assertEquals(1, sz.zipcodes.size());
         system.assertEquals(47.957763, sz.zipcodes[0].latitude);
-
-        sz = la.verifyZip( 'Clinton', 'WA' );
     }
 
     public static testMethod void testBadAuth() {
     	if (strTestOnly != '*' && strTestOnly != 'testBadAuth') return;
+    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
     	
-    	createDefaultSettings();
     	settings.Address_Verification_Endpoint__c = 'bad-authentication-for-test';
         update settings;
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
-        Test.StartTest();
+        Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
-            sr = la.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+            sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
         	System.debug('****' + e.getStackTraceString());
             system.assertEquals('Not authenticated.', e.getMessage());
         }
+        Test.stopTest();
         system.assertEquals(null, sr);
     }
 }
