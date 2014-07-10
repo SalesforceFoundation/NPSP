@@ -239,29 +239,34 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             acc.BillingCountry = addr.MailingCountry__c;
             listAccUpdate.add(acc);
 
-            // check other addresses on this household that are no longer the default
-            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
-                if (addrHH.Id == addrDefault.Id)
-                    continue;
-                if (addrHH.Default_Address__c) {
-                    addrHH.Default_Address__c = false;
-                    addrHH.Latest_End_Date__c = system.today();
-                    listAddrUpdate.add(addrHH);
-                }   
+            
+	        // check other addresses on this household that are no longer the default
+	        if(mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
+	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
+	                if (addrHH.Id == addrDefault.Id)
+	                    continue;
+	                if (addrHH.Default_Address__c) {
+	                    addrHH.Default_Address__c = false;
+	                    addrHH.Latest_End_Date__c = system.today();
+	                    listAddrUpdate.add(addrHH);
+	                }   
+	            }
             }
 
             // check the Contacts on this household
-            for (Contact con : mapAccIdListCon.get(accId)) {
-                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-                    con.MailingStreet = addr.MailingStreet__c;
-                    con.MailingCity = addr.MailingCity__c;
-                    con.MailingState = addr.MailingState__c;
-                    con.MailingPostalCode = addr.MailingPostalCode__c;
-                    con.MailingCountry = addr.MailingCountry__c;
-                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-                    con.Current_Address__c = addr.Id;
-                    listConUpdate.add(con);
-                }   
+            if(mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
+	            for (Contact con : mapAccIdListCon.get(accId)) {
+	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
+	                    con.MailingStreet = addr.MailingStreet__c;
+	                    con.MailingCity = addr.MailingCity__c;
+	                    con.MailingState = addr.MailingState__c;
+	                    con.MailingPostalCode = addr.MailingPostalCode__c;
+	                    con.MailingCountry = addr.MailingCountry__c;
+	                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+	                    con.Current_Address__c = addr.Id;
+	                    listConUpdate.add(con);
+	                }   
+	            }
             }
         }  
                     

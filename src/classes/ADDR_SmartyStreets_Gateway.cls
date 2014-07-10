@@ -128,7 +128,9 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
 	        System.debug('****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
-	        //calling out" error.
+	        //calling out" error. I believe the issue is that the test it performing DML (to set things up)
+	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
+	        //after another)
 	        if(Test.isRunningTest() && System.isBatch()) {  
 	            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
 	            req.setBody('single-address-response');
