@@ -70,12 +70,7 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
-    public void finish(Database.BatchableContext bc) { 
-        //turn smartystreets verification off
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
-        settings.Using_SmartyStreets__c = false;
-        update settings;
-    }
+    public void finish(Database.BatchableContext bc) { }
     
     //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
     //class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
