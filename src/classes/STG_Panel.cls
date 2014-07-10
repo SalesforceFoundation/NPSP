@@ -49,7 +49,7 @@ public with sharing virtual class STG_Panel {
 		}
 	}
     
-    static public STG_SettingsService stgService { 
+    static public STG_SettingsService stgService {
         get {
             if (stgService == null)  { 
             	stgService = STG_SettingsService.stgService;

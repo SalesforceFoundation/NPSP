@@ -272,15 +272,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     
         if (listAccUpdate.size() > 0) {
             //system.debug('DJH**** listAccUpdate: ' + listAccUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listAccUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
             //system.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listAddrUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
             //system.debug('DJH**** listConUpdate: ' + listConUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listConUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
         return mapAccIdHHInfo;
@@ -339,7 +339,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             con.MailingPostalCode = addr.MailingPostalCode__c;
             con.MailingCountry = addr.MailingCountry__c;
             con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-            dmlWrapper.objectsToUpdate.put(con.Id, con);    		
+            dmlWrapper.objectsToUpdate.add(con);    		
     	}
     }
     
@@ -503,7 +503,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (addrDup != null) {
                if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
                    addrDup.Default_Address__c = true;
-                   dmlWrapper.objectsToUpdate.put(addrDup.Id, addrDup);
+                   dmlWrapper.objectsToUpdate.add(addrDup);
                }
             } else {
                 dmlWrapper.objectsToInsert.add(addrNew);

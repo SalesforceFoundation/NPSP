@@ -290,7 +290,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             listAccount.add(a);
         }
         if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.putAll(listAccount);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccount);
             //Database.SaveResult[] lsr = Database.update(listAccount, false);
         }      
     }
@@ -331,7 +331,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         
         // now do the update
-        dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);
+        dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);
         //update listAccToUpdate;
     }
     
@@ -555,7 +555,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }   
 
         if (listAccount.size() > 0) {
-        	dmlWrapper.objectsToUpdate.putAll((list<SObject>)listAccount);
+        	dmlWrapper.objectsToUpdate.addAll((list<SObject>)listAccount);
             //Database.SaveResult[] lsr = Database.update(listAccount, false);
         }
     }
@@ -626,7 +626,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }   
             }
             // add all accounts needing updating to our list
-            dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);                        
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);                        
         }
     }
     
@@ -648,7 +648,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (listOpp.size() > 0) {
             // since our rollup code isn't using dmlWrapper,
             // we must commit now.
-            //dmlWrapper.objectsToUpdate.putAll(listOpp);
+            //dmlWrapper.objectsToUpdate.addAll(listOpp);
             update listOpp;
         }
     }
