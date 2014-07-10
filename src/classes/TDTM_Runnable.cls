@@ -97,6 +97,8 @@ global abstract class TDTM_Runnable {
         	objectsToUndelete = groupSObjects(objectsToUndelete);
         }
         
+        //To avoid the "Cannot have more than 10 chunks in a single operation. Please rearrange 
+        //the data to reduce chunking" error.
         private List<SObject> groupSObjects(List<SObject> sobjects) {
         	List<SObject> sorted = new List<SObject>();
         	
