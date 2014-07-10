@@ -30,6 +30,8 @@
     <members>AFFL_BulkTests_TEST</members>
     <members>ALLO_Allocations_TDTM</members>
     <members>ALLO_Allocations_TEST</members>
+    <members>ALLO_RollupBTN_CTRL</members>
+    <members>ALLO_Rollup_SCHED</members>
     <members>BDE_BatchDataEntry</members>
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
@@ -109,6 +111,7 @@
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
+    <members>STG_PanelAlloBatch_CTRL</members>
     <members>STG_PanelAllocations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
@@ -145,6 +148,7 @@
     <members>TDTM_TriggerHandler</members>
     <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
+    <members>UTIL_AbstractRollup_BATCH</members>
     <members>UTIL_CustomSettingsFacade</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
@@ -175,6 +179,7 @@
   <types>
     <members>ACCT_ViewOverride</members>
     <members>ADDR_CopyAddrHHObjBTN</members>
+    <members>ALLO_RollupBTN</members>
     <members>BDE_BatchEntry</members>
     <members>CONV_Account_Conversion</members>
     <members>CON_ContactMerge</members>
@@ -189,6 +194,7 @@
     <members>REL_RelationshipsViewer</members>
     <members>STG_PanelAddrVerification</members>
     <members>STG_PanelAffiliations</members>
+    <members>STG_PanelAlloBatch</members>
     <members>STG_PanelAllocations</members>
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
@@ -286,6 +292,10 @@
     <members>Allocations_Settings__c.Allocations_Enabled__c</members>
     <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
     <members>Allocations_Settings__c.Default__c</members>
+    <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
+    <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
+    <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
+    <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
@@ -310,6 +320,20 @@
     <members>Error__c.Posted_in_Chatter__c</members>
     <members>Error__c.Record_URL__c</members>
     <members>Error__c.Stack_Trace__c</members>
+    <members>General_Accounting_Unit__c.First_Allocation_Date__c</members>
+    <members>General_Accounting_Unit__c.Largest_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Last_Allocation_Date__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_This_Year__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c</members>
+    <members>General_Accounting_Unit__c.Smallest_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Last_Year__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_This_Year__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations__c</members>
+    <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
     <members>Schedulable__c.Active__c</members>
@@ -470,6 +494,8 @@
     <members>stgBtnRunBatch</members>
     <members>stgBtnSave</members>
     <members>stgHelpAccountModel</members>
+    <members>stgHelpAlloFiscalYearRollups</members>
+    <members>stgHelpAlloNDayValue</members>
     <members>stgHelpAllocationsEnabled</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>
@@ -478,6 +504,7 @@
     <members>stgHelpAutoRelType</members>
     <members>stgHelpBDEAllowBlankOppNames</members>
     <members>stgHelpBDEOppNaming</members>
+    <members>stgHelpBatchAlloRollup</members>
     <members>stgHelpBatchOppRollup</members>
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
@@ -535,6 +562,8 @@
     <members>stgHelpRollupBatchSize</members>
     <members>stgHelpRollupExcludeAccountOppRT</members>
     <members>stgHelpRollupExcludeAccountOppType</members>
+    <members>stgHelpRollupExcludeAlloOppRecType</members>
+    <members>stgHelpRollupExcludeAlloOppType</members>
     <members>stgHelpRollupExcludeContactOppRT</members>
     <members>stgHelpRollupExcludeContactOppType</members>
     <members>stgHelpRollupNDayValue</members>
@@ -553,6 +582,8 @@
     <members>stgHelpUDRTargetObject</members>
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
+    <members>stgLabelAlloBatchProgress</members>
+    <members>stgLabelAllocationsRollupSettings</members>
     <members>stgLabelAllocationsSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
@@ -611,6 +642,7 @@
     <members>stgNavRelAutoCreate</members>
     <members>stgNavRelReciprocal</members>
     <members>stgNavRelationships</members>
+    <members>stgNavRollupAlloBatch</members>
     <members>stgNavRollupBatch</members>
     <members>stgNavSystem</members>
     <members>stgNavTriggerConfig</members>
@@ -695,6 +727,7 @@
   </types>
   <types>
     <members>Contact.Merge_Contacts</members>
+    <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
     <name>WebLink</name>
   </types>
   <version>29.0</version>

@@ -1147,6 +1147,22 @@
         <value>Setting for the Account model. Should be &quot;Household Account&quot;, &quot;One-to-One&quot;, or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c. &quot;Household Account&quot; is the recommended model.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAlloFiscalYearRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
+        <value>Checking this box will cause Opportunity rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAlloNDayValue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAlloNDayValue</shortDescription>
+        <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAllocationsEnabled</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1209,6 +1225,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpBDEOppNaming</shortDescription>
         <value>This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBatchAlloRollup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBatchAlloRollup</shortDescription>
+        <value>Use this page to rollup totals for all closed Opportunities with Allocations, saving the results in General Accounting Unit records. The process may take some time; you can close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpBatchOppRollup</fullName>
@@ -1667,6 +1691,22 @@
         <value>Values for the Opportunity Type field to exclude from statistics when rolling up Account Opportunities.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRollupExcludeAlloOppRecType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeAlloOppRecType</shortDescription>
+        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Allocations.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRollupExcludeAlloOppType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupExcludeAlloOppType</shortDescription>
+        <value>Values for the Opportunity Type field to exclude from statistics when rolling up.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRollupExcludeContactOppRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1810,6 +1850,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelActionColumn</shortDescription>
         <value>Action</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAlloBatchProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAlloBatchProgress</shortDescription>
+        <value>Rollup Allocations Batch Progress</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAllocationsRollupSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
+        <value>Allocations Rollup Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAllocationsSettings</fullName>
@@ -2274,6 +2330,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavRelationships</shortDescription>
         <value>Relationships</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRollupAlloBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavRollupAlloBatch</shortDescription>
+        <value>Rollup Allocations Batch</value>
     </labels>
     <labels>
         <fullName>stgNavRollupBatch</fullName>

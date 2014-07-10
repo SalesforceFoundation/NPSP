@@ -279,6 +279,7 @@
                     <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
                     <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
                     <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
+                    <li class="subitem" id="idPanelAlloBatchNav"><a href="." onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
                     <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
                     </ul>
                     </ul>
@@ -397,6 +398,10 @@
                         
                         <div class="panel" id="idPanelErrorNotif" style="display:none" >
                             <apex:include pageName="STG_PanelERR" />
+                        </div>
+
+                        <div class="panel" id="idPanelAlloBatch" style="display:none" >
+                            <apex:include pageName="STG_PanelAlloBatch" />
                         </div>
 
                         <div class="panel" id="idPanelHealthCheck" style="display:none" >

@@ -1,0 +1,20 @@
+<apex:page controller="STG_PanelAlloBatch_CTRL" >
+
+    <apex:form id="form">   
+        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavRollupAlloBatch}" />        
+        <apex:pageMessages id="pageMessages"/>
+        <apex:outputPanel layout="block" styleClass="panelHelp">{!$Label.stgHelpBatchAlloRollup}</apex:outputPanel>
+        <apex:pageBlock id="pbRelBatch" mode="maindetail">
+              
+            <apex:outputPanel rendered="{!isRunningBatch}">
+                <br/><br/>
+                <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+            </apex:outputPanel>
+
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="pbRelBatch" />
+            </apex:pageBlockButtons>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

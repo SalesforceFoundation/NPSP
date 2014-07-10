@@ -257,9 +257,16 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.Allocations_Enabled__c = false;
             settings.Default_Allocations_Enabled__c = false;
             settings.Default__c = null;
+            settings.Excluded_Opp_RecTypes__c = null;
+            settings.Excluded_Opp_Types__c = null;
+            settings.Rollup_N_Day_Value__c = 365;
+            settings.Use_Fiscal_Year_for_Rollups__c = false;
 
             insert settings;
         }
+
+        if (settings.Rollup_N_Day_Value__c == null)
+            settings.Rollup_N_Day_Value__c = 365;
         return settings;
     }
 }

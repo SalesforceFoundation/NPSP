@@ -26,6 +26,26 @@
                 <apex:outputLabel value="{!$Label.stgHelpDefaultGAU}" />
             </apex:panelGrid> 
             
+            <h3 class="sectionBar" >{!$Label.stgLabelAllocationsRollupSettings}</h3>                        
+            <apex:panelGrid columns="3" columnClasses="propLabel, propEdit, propHelpText" >
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" />
+                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeAlloOppRecType}" />
+
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_Types__c.Label}" for="idDBMS" />
+                <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_Types__c" listSO="{!listSOOppTypes}" inEditMode="{!isEditMode}" />
+                <apex:outputLabel value="{!$Label.stgHelpRollupExcludeAlloOppType}" />
+
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Rollup_N_Day_Value__c.Label}" for="tbxRNDV" />
+                <apex:outputField value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" rendered="{!isReadOnlyMode}" />
+                <apex:inputfield value="{!stgService.stgAllo.Rollup_N_Day_Value__c}" type="number" rendered="{!isEditMode}" id="tbxRNDV" />
+                <apex:outputLabel value="{!$Label.stgHelpAlloNDayValue}" />
+
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" />
+                <apex:inputcheckbox value="{!stgService.stgAllo.Use_Fiscal_Year_for_Rollups__c}" disabled="{!isReadOnlyMode}" id="cbxUFYFR" />
+                <apex:outputLabel value="{!$Label.stgHelpAlloFiscalYearRollups}" />
+            </apex:panelGrid> 
+
             <apex:pageBlockButtons location="both" >
                 <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" />
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" />
