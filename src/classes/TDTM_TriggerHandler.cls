@@ -156,9 +156,7 @@ public with sharing class TDTM_TriggerHandler {
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
         //System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate));
-        //From a list to a set to remove duplicates and avoid the "Duplicate id in list" error. From set to list because that's the 
-        //parameter type the database.update method accepts.
-        List<Database.SaveResult> updateResults = Database.update(new List<SObject>(new Set<SObject>(dmlWrapper.objectsToUpdate)), false);
+        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate, false);
         
         //System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        

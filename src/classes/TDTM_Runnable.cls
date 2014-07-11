@@ -100,6 +100,9 @@ global abstract class TDTM_Runnable {
         //To avoid the "Cannot have more than 10 chunks in a single operation. Please rearrange 
         //the data to reduce chunking" error.
         private List<SObject> groupSObjects(List<SObject> sobjects) {
+        	//First remove duplicates to avoid the "Duplicate id in list" error
+        	sobjects = new List<SObject>(new Set<SObject>(sobjects));
+        	        	
         	List<SObject> sorted = new List<SObject>();
         	
         	List<SObject> accounts = new List<SObject>();
