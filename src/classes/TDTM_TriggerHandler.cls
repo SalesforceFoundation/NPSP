@@ -148,7 +148,7 @@ public with sharing class TDTM_TriggerHandler {
         //Create transaction
         Savepoint sp = Database.setSavepoint();
         
-        dmlWrapper.groupByType(); //sort thryself!
+        dmlWrapper.groupByType(); //sort thyself!
         
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
