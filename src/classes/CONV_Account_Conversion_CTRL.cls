@@ -40,11 +40,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public String AccountHouseholdIdField {get;set;}
     public Map<String, String> copyFieldSet {get;set;}
     public Boolean runCheckErrorState {get;set;}
-    public list<SelectOption> targetAccountfields = new list<SelectOption>();
-    private AsyncApexJob aaj;
+    public List<SelectOption> targetAccountfields = new list<SelectOption>();
+    private AsyncApexJob aaj = new AsyncApexJob();
     public AsyncApexJob apexjob {get{
-            if (aaj == null)
-                aaj = [select a.TotalJobItems, a.Status, a.NumberOfErrors, 
+            if (aaj.Id == null)
+                aaj = [select a.Id, a.TotalJobItems, a.Status, a.NumberOfErrors, 
                                 a.JobType, a.JobItemsProcessed, a.ExtendedStatus, 
                                 a.CompletedDate, a.ApexClassId From AsyncApexJob a 
                                 where (a.Status = 'Completed' or a.Status = 'Aborted' or a.Status = 'Failed') and a.JobType = 'BatchApex' 
