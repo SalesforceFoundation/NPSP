@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Controller for button that recalculates Allocations rollups for a single General Accounting Unit
+* @description Controller for button that recalculates Allocations rollups for a single General Accounting Unit.
  */
 public with sharing class ALLO_RollupBTN_CTRL {
 	public ALLO_RollupBTN_CTRL() {}
@@ -38,8 +38,8 @@ public with sharing class ALLO_RollupBTN_CTRL {
 	public PageReference buttonClick() {
 		String parentId = ApexPages.currentPage().getParameters().get('id');
         if (parentId != null && parentId != '') {
+        	//run rollups for this General Accouting Unit
 			ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(parentId);
-			//do we need this?:
 			rollup.runRollups();
 
 	        PageReference pageRef = new PageReference('/' + parentId);
