@@ -56,17 +56,20 @@ public with sharing class RLLP_OppRollup_Chained_BATCH implements Database.Batch
     }
     
     public void finish(Database.BatchableContext bc) {
-        if(canRunBatch()) {
-        	Database.executeBatch(new RLLP_OppRollup_Chained_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
-        } else {
-        	//Try again in a minute
-            System.scheduleBatch(this, 'RLLP_OppRollup_Chained_BATCH', 1); 
-        }	
+    	//if there are rollups left to do
+    	if(!accountsRolled || !contactsRolled || !householdsRolled || ! softCreditsRolled) {
+	        if(canRunBatch()) {
+	        	Database.executeBatch(new RLLP_OppRollup_Chained_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+	        } else {
+	        	//Try again in a minute
+	            System.scheduleBatch(this, 'RLLP_OppRollup_Chained_BATCH', 1); 
+	        }
+    	}
     }
     
     private Boolean canRunBatch() {
-    	Integer jobs = [Select count() From AsyncApexJob Where JobType = 'BatchApex' and ( Status = 'Queued' or Status = 'Processing' 
-                       or Status = 'Preparing' )];
+    	Integer jobs = [Select count() From AsyncApexJob Where JobType = 'BatchApex' and (Status = 'Queued' or Status = 'Processing' 
+                       or Status = 'Preparing')];
         if(jobs < 5)
         	return true;
         return false;           
