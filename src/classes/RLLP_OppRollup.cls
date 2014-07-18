@@ -690,27 +690,32 @@ public without sharing class RLLP_OppRollup{
         rollupAllContacts(); 
         rollupAllHouseholds();        
         
-        system.debug(RLLP_OppRollup_UTIL.hh_settings.npo02__Enable_Soft_Credit_Rollups__c);
         if (RLLP_OppRollup_UTIL.useSoftCredits()){ 
             rollupAllSoftCredits();
         }            
+    }
+    public void rollupAllAccounts() {
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+    }
+    public void rollupAllContacts() { 
+        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.ContactType);
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
     }
     public void rollupAllHouseholds(){
         RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildHouseholdQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.HouseholdType);
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     }
-    public void rollupAllAccounts() {
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType);
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
-    }           
-    public void rollupAllContacts() { 
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.ContactType);
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
-    }
     public void rollupAllSoftCredits(){
         RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.SoftCreditType);
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     } 
+    
+    public void rollupAllChained() {
+     	//clear the error queue from any previous runs
+        delete [select id from Error__c where Context_Type__c = 'RLLP'];
+        Database.executeBatch(new RLLP_OppRollup_Chained_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+    }
     /*************************************************************/
     
     /*** Methods for writing from aggregate results to objects ***/    

@@ -36,6 +36,6 @@ public class RLLP_OppRollup_SCHED implements UTIL_IScheduled {
 
     public void execute(SchedulableContext SC) { 
         RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();    
+        rg.rollupAllChained();
     }  
 }

@@ -99,6 +99,7 @@
     <members>RLLP_OppRollup</members>
     <members>RLLP_OppRollupBATCH_TEST</members>
     <members>RLLP_OppRollup_BATCH</members>
+    <members>RLLP_OppRollup_Chained_BATCH</members>
     <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
