@@ -36,14 +36,13 @@ public without sharing class RD_RecurringDonations_BATCH implements Database.Bat
 UTIL_IScheduled {
 	
     public String query { get; set; } 
-    public Integer recCount;
+    public Integer recCount = 0;
     public Integer failuresCount = 0;
     
     public RD_RecurringDonations_BATCH() {
     	query = RD_RecurringDonations.strQueryRDNoWhere();
         query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
     	RD_ProcessControl.batchButton = true;
-        recCount = 0;
     }
     
     public void execute(SchedulableContext sc) {
