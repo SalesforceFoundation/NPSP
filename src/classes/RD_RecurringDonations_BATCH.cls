@@ -39,19 +39,16 @@ UTIL_IScheduled {
     public Integer recCount;
     public Integer failuresCount = 0;
     
-    // constructors
-    public RD_RecurringDonations_BATCH(string q) {
-        RD_ProcessControl.batchButton = true;
-        query = q;
+    public RD_RecurringDonations_BATCH() {
+    	query = RD_RecurringDonations.strQueryRDNoWhere();
+        query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
+    	RD_ProcessControl.batchButton = true;
         recCount = 0;
     }
     
     public void execute(SchedulableContext sc) {
-        if(UTIL_JobScheduler.canRunBatch()) {
-            string queryRCD = RD_RecurringDonations.strQueryRDNoWhere();
-            queryRCD += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
-            Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(queryRCD), 50);  
-        }
+        if(UTIL_JobScheduler.canRunBatch())
+            Id batchInstanceId = Database.executeBatch(this, 50);  
     }
     
     public database.Querylocator start(Database.BatchableContext bc){
