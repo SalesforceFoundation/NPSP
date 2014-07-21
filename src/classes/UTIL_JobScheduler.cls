@@ -19,4 +19,11 @@ public without sharing class UTIL_JobScheduler {
         return null;
     }
     
+    public static Boolean canRunBatch() {
+        Integer jobs = [Select count() From AsyncApexJob Where JobType = 'BatchApex' and (Status = 'Queued' or Status = 'Processing' 
+                       or Status = 'Preparing')];
+        if(jobs < 5)
+            return true;
+        return false;           
+    }
 }
