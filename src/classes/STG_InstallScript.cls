@@ -112,7 +112,7 @@ global class STG_InstallScript implements InstallHandler {
                             'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED')];
         if(numOfJobs == 0) {
             List<Schedulable__c> jobs = new List<Schedulable__c>();
-            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                         Active__c = true, Frequency__c = 'Daily'));
             jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
                     Active__c = true, Frequency__c = 'Daily'));
