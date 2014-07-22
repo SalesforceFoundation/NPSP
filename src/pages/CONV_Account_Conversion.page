@@ -42,9 +42,10 @@
             //call conversion
             callConversion();
         });
-        j$("#resultpaneldefault").bind("beforeShow", function() {
-            j$("div[class^='message']").hide();
-        })
+     
+     //   j$("#progresspanel").bind("beforeShow", function() {
+     //       j$("div[class^='message']").hide();
+     //   })
     });
 
     function callConversion(){
@@ -52,9 +53,7 @@
     }
 
     function renderResults(){
-        j$("#resultspanel").removeClass('hide');
-        j$("#resultpaneldefault").show();
-        j$("#progresspanel").hide();
+        j$("div[class^='message']").hide();
     }
 
     function refreshPage(){location.reload(true);}
