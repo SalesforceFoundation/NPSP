@@ -34,9 +34,12 @@
 */
 public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
 	
-	public void execute(SchedulableContext sc) {
-        if(UTIL_JobScheduler.canRunBatch())
+	public Boolean execute(SchedulableContext sc) {
+        if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);  
+            return true;
+        }
+        return false;
     }
     
 	public database.Querylocator start(Database.BatchableContext bc) {
@@ -51,7 +54,7 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
         // get rolled back, and the logging will be erased!
         
         RLLP_OppRollup oppRoller = new RLLP_OppRollup();
-        oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));    
+        oppRoller.RollupSoftCredits(new Map<id, Contact>((List<Contact>)result));    
     }
 
     public void finish(Database.BatchableContext bc) {}

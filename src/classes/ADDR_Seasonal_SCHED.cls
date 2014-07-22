@@ -36,20 +36,21 @@ public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Databa
 
     public String strQuery { get; set; }
 
-    public void execute(SchedulableContext SC) { 
-    	
-    	integer iMonth = system.today().month();
-    	integer iDay = system.today().day();
-        
-        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-            ' from Address__c ' +
-            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-        //call the batch job, processing 10 at a time
+    public Boolean execute(SchedulableContext SC) { 
+    	//call the batch job, processing 10 at a time
         if(UTIL_JobScheduler.canRunBatch()) {
+	    	integer iMonth = system.today().month();
+	    	integer iDay = system.today().day();
+	        
+	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
+	            ' from Address__c ' +
+	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
+	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
+        
             Id batchInstanceId = Database.executeBatch(this, 10);
-        }    
+            return true;
+        }
+        return false;
     }
 
 

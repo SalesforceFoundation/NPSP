@@ -34,9 +34,12 @@
 */
 public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
 	
-	public void execute(SchedulableContext sc) {
-        if(UTIL_JobScheduler.canRunBatch())
-            Database.executeBatch(this);  
+	public Boolean execute(SchedulableContext sc) {
+        if(UTIL_JobScheduler.canRunBatch()) {
+            Database.executeBatch(this);
+            return true;
+        }
+        return false;
     }
     
 	public database.Querylocator start(Database.BatchableContext bc) {       
