@@ -40,7 +40,7 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
     }
     
 	public database.Querylocator start(Database.BatchableContext bc) {
-        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildSoftCreditQuery());      
+        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildContactQuery());      
     }
     
     public void execute(Database.BatchableContext bc, List<Contact> result) {
