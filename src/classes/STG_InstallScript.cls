@@ -126,8 +126,10 @@ global class STG_InstallScript implements InstallHandler {
                     Active__c = true, Frequency__c = 'Daily'));
             insert jobs;
         }
-        //schedule master cron job
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 0 * * * ?', 'UTIL_GlobalSchedulable');  
+        //schedule master cron jobs
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler1', '0 0 23 * * ?', 'UTIL_GlobalSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler2', '0 0 1 * * ?', 'UTIL_GlobalSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler3', '0 0 2 * * ?', 'UTIL_GlobalSchedulable');
     }
     
     public void setTriggerConfig() {
