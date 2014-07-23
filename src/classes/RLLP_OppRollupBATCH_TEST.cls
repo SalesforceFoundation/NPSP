@@ -77,10 +77,7 @@ private class RLLP_OppRollupBATCH_TEST {
             Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
             String contactAccountId = insertedContact.accountid;
         
-            RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery() + 
-                ' where Id =\'' + contactAccountId + '\' limit 200',
-                RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType
-            );
+            RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
              
             Test.StartTest(); 
             id batchProcessId = database.executeBatch(batch);

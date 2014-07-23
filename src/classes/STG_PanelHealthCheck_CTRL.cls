@@ -338,12 +338,13 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     // verify that our Global Scheduler is actually scheduled, and that all of the entries are valid - called by HealthCheck
     private void verifyScheduledJobs() {
         
-        // make sure the Global Job is scheduduled
+        // make sure the Global Jobs are scheduduled
+        String[] schedulers = new String[] {'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
         List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name = :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];        
-        if (scheduledJobs.size() == 0) {
+           where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];        
+        if (scheduledJobs.size() != 3) {
             createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsNothingScheduled, 
-                string.format(label.healthSolutionNothingScheduled, new string[]{UTIL_GlobalSchedulable.jobName}));
+                string.format(label.healthSolutionNothingScheduled, schedulers));
             return;            
         }
 

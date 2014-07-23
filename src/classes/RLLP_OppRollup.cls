@@ -32,7 +32,7 @@
 * @date 2011 (2.0) 
 * @description Resposible for rollups of all opportunities to the requisite Account/Household/Contact 
 */
-public without sharing class RLLP_OppRollup{
+public without sharing class RLLP_OppRollup {
 
     /*** Constructor ***/
     public RLLP_OppRollup(){
@@ -690,27 +690,26 @@ public without sharing class RLLP_OppRollup{
         rollupAllContacts(); 
         rollupAllHouseholds();        
         
-        system.debug(RLLP_OppRollup_UTIL.hh_settings.npo02__Enable_Soft_Credit_Rollups__c);
         if (RLLP_OppRollup_UTIL.useSoftCredits()){ 
             rollupAllSoftCredits();
         }            
     }
-    public void rollupAllHouseholds(){
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildHouseholdQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.HouseholdType);
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
-    }
     public void rollupAllAccounts() {
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType);
+        RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
-    }           
+    }
     public void rollupAllContacts() { 
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.ContactType);
+        RLLP_OppContactRollup_BATCH batch = new RLLP_OppContactRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+    }
+    public void rollupAllHouseholds(){
+        RLLP_OppHouseholdRollup_BATCH batch = new RLLP_OppHouseholdRollup_BATCH();
+        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     }
     public void rollupAllSoftCredits(){
-        RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildContactQuery(), RLLP_OppRollup_BATCH.BATCH_TYPE.SoftCreditType);
+        RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
-    } 
+    }
     /*************************************************************/
     
     /*** Methods for writing from aggregate results to objects ***/    
