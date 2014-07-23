@@ -36,7 +36,9 @@ public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Databa
 
     public String strQuery { get; set; }
 
-    public Boolean execute(SchedulableContext SC) { 
+    public void execute (SchedulableContext SC) { }
+    
+    public Boolean executeIfYouCan(SchedulableContext SC) { 
     	//call the batch job, processing 10 at a time
         if(UTIL_JobScheduler.canRunBatch()) {
 	    	integer iMonth = system.today().month();
