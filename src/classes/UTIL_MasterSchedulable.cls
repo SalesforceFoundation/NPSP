@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2014 Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,42 +29,16 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2014
-* @description Supports the automatic scheduling of Seasonal Address updates  
-*/ 
-public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+* @date 2014 
+* @description Master Schedulable for the NPSP package. This should be the only
+* class that implements schedulable that exists in the package. UTIL_GlobalSchedulable
+* is deprecated and should not be used.
+*/
+public with sharing class UTIL_MasterSchedulable implements Schedulable {
 
-    public String strQuery { get; set; }
-    
-    public Boolean executeReturnStatus() { 
-    	//call the batch job, processing 10 at a time
-        if(UTIL_JobScheduler.canRunBatch()) {
-	    	integer iMonth = system.today().month();
-	    	integer iDay = system.today().day();
-	        
-	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-	            ' from Address__c ' +
-	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-            Id batchInstanceId = Database.executeBatch(this, 10);
-            return true;
-        }
-        return false;
-    }
-
-
-    //***** Methods for Database.Batchable interface *****
-    public database.Querylocator start(Database.BatchableContext bc){       
-        return Database.getQueryLocator(strQuery);      
+    public static void execute(SchedulableContext context) {
+    	Type classType = Type.forName('UTIL_MasterSchedulableHelper');
+    	Object instance = classType.newInstance();
     }
     
-    public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-    	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
-    }
-
-    public void finish(Database.BatchableContext bc) {
-
-    }   
-       
 }
