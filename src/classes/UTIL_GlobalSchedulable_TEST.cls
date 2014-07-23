@@ -17,7 +17,7 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         //Schedule a job
         String jobName = 'Global Scheduler'; 
         String fireTime = '0 15 23 * * ?';
-        System.schedule(jobName, fireTime, new UTIL_GlobalSchedulable());
+        System.schedule(jobName, fireTime, new UTIL_MasterSchedulable());
         
         List<CronTrigger> triggers = [select Id, CronExpression, TimesTriggered from CronTrigger 
                             where CronJobDetail.Name = :jobName and CronJobDetail.JobType = '7'];
@@ -45,7 +45,7 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         insert jobs;
         
         Test.startTest();
-        UTIL_GlobalSchedulable.execute(null);
+        UTIL_MasterSchedulable.execute(null);
         Test.stopTest();
         
         jobs = [select Last_Time_Run__c from Schedulable__c];
@@ -69,7 +69,7 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         insert jobs;
         
         Test.startTest();
-        UTIL_GlobalSchedulable.execute(null);
+        UTIL_MasterSchedulable.execute(null);
         Test.stopTest();
         
         jobs = [select Last_Time_Run__c from Schedulable__c];
@@ -94,7 +94,7 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         insert jobs;
         
         Test.startTest();
-        UTIL_GlobalSchedulable.execute(null);
+        UTIL_MasterSchedulable.execute(null);
         Test.stopTest();
         
         jobs = [select Last_Time_Run__c from Schedulable__c];
