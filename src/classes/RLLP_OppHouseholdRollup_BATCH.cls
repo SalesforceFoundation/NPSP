@@ -34,7 +34,9 @@
 */
 public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
 
-    public Boolean execute(SchedulableContext sc) {
+    public void execute (SchedulableContext SC) { }
+    
+    public Boolean executeReturnStatus(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);
             return true;  

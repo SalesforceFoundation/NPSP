@@ -45,7 +45,9 @@ UTIL_IScheduled {
     	RD_ProcessControl.batchButton = true;
     }
     
-    public Boolean execute(SchedulableContext sc) {
+    public void execute (SchedulableContext SC) { }
+    
+    public Boolean executeReturnStatus(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
             Id batchInstanceId = Database.executeBatch(this, 50); 
             return true;
