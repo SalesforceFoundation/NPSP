@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -29,17 +29,33 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2012 (2.0)
-* @description Supports the automatic scheduling of recurring donation updates  
-*/ 
-public class RD_RecurringDonations_SCHED implements UTIL_IScheduled {
-
-    public void execute(SchedulableContext SC) { 
-        string queryRCD = RD_RecurringDonations.strQueryRDNoWhere();
-        queryRCD += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
-        
-        //call the batch job, processing 50 at a time 
-        Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(queryRCD), 50);    
+* @date 2014
+* @description Batch class for opportunity account rollups. 
+*/
+public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
+	
+	public Boolean execute(SchedulableContext sc) {
+        if(UTIL_JobScheduler.canRunBatch()) {
+            Database.executeBatch(this);
+            return true;
+        }
+        return false;
     }
-       
+    
+	public database.Querylocator start(Database.BatchableContext bc) {       
+        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildAccountQuery());      
+    }
+    
+    public void execute(Database.BatchableContext bc, List<Account> result) {
+        
+        // NOTE: we don't capture exception and log errors here, because if we don't let the 
+        // exception percolate up the call stack, then the batch will think it all succeeded.
+        // but if we were to log it, and then proprogate the exception, the transaction will 
+        // get rolled back, and the logging will be erased!
+        
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupAccounts(new Map<id, Account>((List<Account>)result));    
+    }
+
+    public void finish(Database.BatchableContext bc) {}
 }

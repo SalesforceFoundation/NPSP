@@ -437,9 +437,9 @@ private with sharing class ACCT_HHAccounts_TEST {
             }
             // 2 contacts, different lastname
             if (acc.Id == listCon[2].AccountId) {
-                system.assertEquals(listCon[2].LastName + ' and ' + listCon[3].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[2].FirstName + ' and ' + listCon[3].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[2].FirstName + ' ' + listCon[2].LastName + ' and ' + listCon[3].FirstName + ' ' + listCon[3].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[3].LastName + ' and ' + listCon[2].LastName + ' Household', acc.Name);
+                system.assertEquals(listCon[3].FirstName + ' and ' + listCon[2].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[3].FirstName + ' ' + listCon[3].LastName + ' and ' + listCon[2].FirstName + ' ' + listCon[2].LastName, acc.npo02__Formal_Greeting__c);
             }
         }
     }
@@ -593,8 +593,8 @@ private with sharing class ACCT_HHAccounts_TEST {
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
             }
         }
     
