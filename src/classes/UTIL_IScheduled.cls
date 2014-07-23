@@ -35,9 +35,19 @@
 */
 global Interface UTIL_IScheduled {
 
-     //Keeping the method just because it won't let us change the signature of an existing method
-     //of a global class in a managed package. We wanted to change the return type.
+     /**
+      * DO NOT USE! 
+      * This method will not be called from UTIL_GlobalSchedulable. Keeping the method just 
+      * because it won't let us change the signature of an existing method of a global class 
+      * in a managed package. We wanted to change the return type.
+      **/
      void execute(SchedulableContext context);
      
-     Boolean executeIfYouCan(SchedulableContext context);
+     /**
+      * Use this method instead. This method will be called from UTIL_GlobalSchedulable. If 
+      * it returns true the scheduler will assume the class was run, and will not try to run
+      * it again in the same window. If it returns false the scheduler assume the class needs
+      * to be run again in the current window.
+      **/
+     Boolean executeReturnStatus(SchedulableContext context);
 }

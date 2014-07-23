@@ -47,7 +47,7 @@ UTIL_IScheduled {
     
     public void execute (SchedulableContext SC) { }
     
-    public Boolean executeIfYouCan(SchedulableContext sc) {
+    public Boolean executeReturnStatus(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
             Id batchInstanceId = Database.executeBatch(this, 50); 
             return true;

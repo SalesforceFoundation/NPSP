@@ -36,7 +36,7 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
 
     public void execute (SchedulableContext SC) { }
     
-    public Boolean executeIfYouCan(SchedulableContext sc) {
+    public Boolean executeReturnStatus(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);
             return true;  

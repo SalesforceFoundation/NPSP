@@ -36,7 +36,7 @@ public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batcha
 	
 	public void execute (SchedulableContext SC) { }
 	
-	public Boolean executeIfYouCan(SchedulableContext sc) {
+	public Boolean executeReturnStatus(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);
             return true;  
