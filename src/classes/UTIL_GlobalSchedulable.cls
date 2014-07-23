@@ -69,7 +69,7 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
                if(instance instanceof UTIL_IScheduled) {
                    try {
                    	   System.debug(LoggingLevel.WARN, '****Running ' + instance);
-                       Boolean wasRun = ((UTIL_IScheduled)instance).execute(context);
+                       Boolean wasRun = ((UTIL_IScheduled)instance).executeIfYouCan(context);
                        //Update last time run
                        if(wasRun) {
                            job.Last_Time_Run__c = System.now();
