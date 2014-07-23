@@ -86,7 +86,6 @@
     <members>RD_RecurringDonations</members>
     <members>RD_RecurringDonations_BATCH</members>
     <members>RD_RecurringDonations_Opp_TDTM</members>
-    <members>RD_RecurringDonations_SCHED</members>
     <members>RD_RecurringDonations_TDTM</members>
     <members>RD_RecurringDonations_TEST</members>
     <members>REL_ProcessControl</members>
@@ -96,14 +95,16 @@
     <members>REL_Relationships_TDTM</members>
     <members>REL_Relationships_TEST</members>
     <members>REL_Utils</members>
+    <members>RLLP_OppAccRollup_BATCH</members>
+    <members>RLLP_OppContactRollup_BATCH</members>
+    <members>RLLP_OppHouseholdRollup_BATCH</members>
     <members>RLLP_OppRollup</members>
     <members>RLLP_OppRollupBATCH_TEST</members>
-    <members>RLLP_OppRollup_BATCH</members>
-    <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_TEST2</members>
     <members>RLLP_OppRollup_UTIL</members>
+    <members>RLLP_OppSoftCreditRollup_BATCH</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>

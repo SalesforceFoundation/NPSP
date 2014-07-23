@@ -13,7 +13,7 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -30,41 +30,32 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Supports the automatic scheduling of Seasonal Address updates  
-*/ 
-public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Database.Batchable<SObject>  {
+* @description Batch class for opportunity household rollups. 
+*/
+public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
 
-    public String strQuery { get; set; }
-
-    public Boolean execute(SchedulableContext SC) { 
-    	//call the batch job, processing 10 at a time
+    public Boolean execute(SchedulableContext sc) {
         if(UTIL_JobScheduler.canRunBatch()) {
-	    	integer iMonth = system.today().month();
-	    	integer iDay = system.today().day();
-	        
-	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-	            ' from Address__c ' +
-	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-            Id batchInstanceId = Database.executeBatch(this, 10);
-            return true;
+            Database.executeBatch(this);
+            return true;  
         }
         return false;
     }
-
-
-    //***** Methods for Database.Batchable interface *****
-    public database.Querylocator start(Database.BatchableContext bc){       
-        return Database.getQueryLocator(strQuery);      
+    
+    public database.Querylocator start(Database.BatchableContext bc) {       
+        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildHouseholdQuery());      
     }
     
-    public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-    	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
+    public void execute(Database.BatchableContext bc, List<npo02__Household__c> result) {
+        
+        // NOTE: we don't capture exception and log errors here, because if we don't let the 
+        // exception percolate up the call stack, then the batch will think it all succeeded.
+        // but if we were to log it, and then proprogate the exception, the transaction will 
+        // get rolled back, and the logging will be erased!
+        
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
     }
 
-    public void finish(Database.BatchableContext bc) {
-
-    }   
-       
+    public void finish(Database.BatchableContext bc) {}
 }
