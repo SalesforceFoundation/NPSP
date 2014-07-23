@@ -34,9 +34,7 @@
 * schedulable that exists in the package.
 */
 public with sharing class UTIL_GlobalSchedulable implements Schedulable {
-	
-	public static String jobName = 'NPSP Global Scheduler';
-    
+	    
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
     public static void execute(SchedulableContext context) {
@@ -68,16 +66,20 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
             
             if(classType != null && shouldRun) {     
                Object instance = classType.newInstance(); 
-               if(instance instanceof UTIL_IScheduled)
+               if(instance instanceof UTIL_IScheduled) {
                    try {
-                       ((UTIL_IScheduled)instance).execute(context);
+                   	   System.debug(LoggingLevel.WARN, '****Running ' + instance);
+                       Boolean wasRun = ((UTIL_IScheduled)instance).execute(context);
                        //Update last time run
-                       job.Last_Time_Run__c = System.now();
-                       jobsToUpdate.add(job);
+                       if(wasRun) {
+                           job.Last_Time_Run__c = System.now();
+                           jobsToUpdate.add(job);
+                       }
                    } catch (Exception e) {
                        //The class itself should handle any errors. We don't want to have a reference to ERR_Handler
                        //here because then we won't be able to push updates that modify it if the job is scheduled
                    }
+               }
             }
         }
         update jobsToUpdate;

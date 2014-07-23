@@ -9,8 +9,8 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         if (strTestOnly != '*' && strTestOnly != 'scheduleJob') return;
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', Active__c = true));
+        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', Active__c = true));
+        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', Active__c = true));
         insert jobs;
     
         Test.startTest();
@@ -38,9 +38,9 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         if (strTestOnly != '*' && strTestOnly != 'needsToRun') return;
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                     Active__c = true, Frequency__c = 'Hourly'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
                 Active__c = true, Frequency__c = 'Daily'));
         insert jobs;
         
@@ -62,9 +62,9 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         if (strTestOnly != '*' && strTestOnly != 'needsToRun') return;
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                     Active__c = true, Frequency__c = 'Hourly', Last_Time_Run__c = System.now().addHours(-2)));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
                 Active__c = true, Frequency__c = 'Daily', Last_Time_Run__c = System.now().addDays(-2)));
         insert jobs;
         
@@ -87,9 +87,9 @@ public with sharing class UTIL_GlobalSchedulable_TEST {
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();
         Datetime lastTimeRun = System.now().addMinutes(-30);
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                     Active__c = true, Frequency__c = 'Hourly', Last_Time_Run__c = lastTimeRun));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+        jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
                 Active__c = true, Frequency__c = 'Daily', Last_Time_Run__c = lastTimeRun));
         insert jobs;
         

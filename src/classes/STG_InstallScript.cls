@@ -108,20 +108,28 @@ global class STG_InstallScript implements InstallHandler {
     	// verifying they exist.
     	
     	//create records for the jobs that are to run recursively
-        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED', 'RLLP_OppRollup_SCHED', 
-                            'ADDR_SEASONAL_SCHED')];
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 
+                            'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED')];
         if(numOfJobs == 0) {
             List<Schedulable__c> jobs = new List<Schedulable__c>();
-            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_SCHED', 
+            jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                         Active__c = true, Frequency__c = 'Daily'));
-            jobs.add(new Schedulable__c(Name = 'Opportunity Rollups', Class_Name__c = 'RLLP_OppRollup_SCHED', 
+            jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
                     Active__c = true, Frequency__c = 'Daily'));
-            jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED', 
+            jobs.add(new Schedulable__c(Name = 'Opportunity Contact Rollups', Class_Name__c = 'RLLP_OppContactRollup_BATCH', 
+                    Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Opportunity Household Rollups', Class_Name__c = 'RLLP_OppHouseholdRollup_BATCH', 
+                    Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Opportunity Soft Credit Rollups', Class_Name__c = 'RLLP_OppSoftCreditRollup_BATCH', 
+                    Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED',
                     Active__c = true, Frequency__c = 'Daily'));
             insert jobs;
         }
-        //schedule master cron job
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(UTIL_GlobalSchedulable.jobName, '0 45 23 * * ?', 'UTIL_GlobalSchedulable');  
+        //schedule master cron jobs
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler1', '0 0 23 * * ?', 'UTIL_GlobalSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler2', '0 0 1 * * ?', 'UTIL_GlobalSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler3', '0 0 2 * * ?', 'UTIL_GlobalSchedulable');
     }
     
     public void setTriggerConfig() {
