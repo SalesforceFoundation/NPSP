@@ -41,8 +41,13 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     private String query;
     
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
-        // query for all US addresses
-        query = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' +
+    	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
+    	Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+    	settings.Using_SmartyStreets__c = true;
+        update settings;
+        
+        //query for all US addresses
+        query = 'select id, name, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' + 
             ' from Address__c where ' +
             '(MailingCountry__c = null or MailingCountry__c in (\'US\', \'USA\', \'United States\', \'United States of America\')) ' +
             'and (MailingStreet__c != null or MailingPostalCode__c != null or (MailingCity__c != null and MailingState__c != null))';
@@ -56,12 +61,11 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     }
 
     public void execute(Database.BatchableContext bc, List<Address__c> scope) {
-
         list<Address__c> addressesToVerify = new list<Address__c>();
         for (Address__c a : scope)
             if (isUS(a)) addressesToVerify.add(a); 
         
-        // verify and update this batch of addresses
+        //verify and update this batch of addresses
         if (!addressesToVerify.isEmpty())
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
