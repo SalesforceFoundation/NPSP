@@ -1590,7 +1590,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
         //Schedule the test job 
         insert new Schedulable__c(Name = 'test Opp Sched', Class_Name__c = 'RLLP_OppRollup_SCHED', Active__c = true);
-        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_GlobalSchedulable());
+        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_MasterSchedulable());
 
         CronTrigger ct =[SELECT id,CronExpression,TimesTriggered,NextFireTime 
         FROM CronTrigger WHERE id=:jobId]; 
