@@ -1141,7 +1141,7 @@ private with sharing class ADDR_Addresses_TEST {
         // run the scheduled batch directly
         ADDR_Seasonal_SCHED sch = new ADDR_Seasonal_SCHED();
         //Test.startTest(); already called by createHHTestData() 
-        sch.execute(null);
+        sch.executeReturnStatus();
         system.debug('DJH**** about to call stopTest!');
         Test.stopTest();
         
