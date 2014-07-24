@@ -35,7 +35,11 @@
 @isTest
 public with sharing class ADDR_Validator_Batch_TEST {
 
-    public static testmethod void testBatch() {
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
+    public static void createDefaultSettings() {
     	// use the household account model
         CAO_Constants.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
@@ -53,10 +57,15 @@ public with sharing class ADDR_Validator_Batch_TEST {
         insert settings;
    
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+    }
+    
+    public static testmethod void oneValidAddress() {
+    	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
+    	createDefaultSettings();
         
         //create contact 
         Contact contact = new contact(firstname='Test', lastname='Person');
-        contact.MailingStreet = 'single-address-response';
+        contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'ca';
         contact.MailingPostalCode = '95014'; 
@@ -72,14 +81,10 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
-        System.assertEquals('single-address-response', av[0].MailingStreet__c);
+        System.assertEquals('single-address', av[0].MailingStreet__c);
         System.assertEquals('ca', av[0].MailingState__c);
         System.assertEquals('95014', av[0].MailingPostalCode__c);
         System.assertEquals(false, av[0].Verified__c);
-        
-        //turn SmartyStreets verification on
-        settings.Using_SmartyStreets__c = true;
-        update settings;
         
         //run batch address verification
         Test.StartTest();
@@ -113,4 +118,174 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals('95014-2083', account.BillingPostalCode);
         System.assertEquals('CA', account.BillingState);*/
     }
+    
+    public static testmethod void multipleValidAddresses() {
+    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
+    	createDefaultSettings();
+        
+        //create contacts
+        List<Contact> contacts = new List<Contact>();
+        for(integer i = 0; i< 200; i++) {
+	        Contact contact = new contact(firstname='Test', lastname='Person' + i);
+	        contact.MailingStreet = 'multiple-address';
+	        contact.MailingCity = 'Cupertino';
+	        contact.MailingState = 'ca';
+	        contact.MailingPostalCode = '95014';
+	        contacts.add(contact);
+        }
+        insert contacts;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        //check households got created for contacts
+        List<Id> AccountIDs = new List<Id>();
+        List<Contact> contactsWithAccId = [select Account.Id from Contact where Id IN :contacts];
+        System.assertEquals(200, contactsWithAccId.size());
+        for(Contact c : contactsWithAccId) {    
+	        Id accountId = c.Account.Id;
+	        System.assertNotEquals(null, accountId);
+	        AccountIDs.add(accountId);
+        }
+        
+        //check address records got created for households, but have not yet been verified
+        List<Address__c> addresses = [select Verified__c from Address__c where Household_Account__c IN :AccountIDs];
+        System.assertEquals(200, addresses.size());
+        for(Address__c addr : addresses) {
+        	System.assertEquals(false, addr.Verified__c);
+        }
+        
+        //run batch address verification
+        Test.StartTest();
+        ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
+        Database.executeBatch(b);
+        Test.stopTest();
+        
+        //check address records were verified
+        addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                    from Address__c where Household_Account__c IN :AccountIDs];
+        System.assertEquals(200, addresses.size());
+        Integer i = 1;
+        for(Address__c addr : addresses) {
+        	System.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
+	        System.assertEquals('1 Infinite Loop', addr.MailingStreet__c);
+	        System.assertEquals('CA', addr.MailingState__c);
+	        System.assertEquals('95014-2083', addr.MailingPostalCode__c);
+	        System.assertEquals(true, addr.Verified__c);
+	        i++;
+        }
+    }
+    
+    public static testmethod void oneValidZipcode() {
+        if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
+        createDefaultSettings();
+        
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingPostalCode = 'single-zip';
+        insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+        
+        //check address record got created for household
+        Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
+                             from Address__c where Household_Account__c = :accountId];
+        System.assertEquals(1, av.size());
+        System.assertEquals('single-zip', av[0].MailingPostalCode__c);
+        System.assertEquals(false, av[0].Verified__c);
+        
+        //run batch address verification
+        Test.StartTest();
+        ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
+        Database.executeBatch(b);
+        Test.stopTest();
+        
+        //check address record was verified
+        av = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                from Address__c where Household_Account__c = :accountId];
+        System.assertEquals(1, av.size());
+        System.assertEquals('98236', av[0].MailingPostalCode__c);
+        System.assertEquals('Clinton', av[0].MailingCity__c);
+        System.assertEquals('WA', av[0].MailingState__c);
+        System.assertEquals(true, av[0].Verified__c);
+    }
+    
+    public static testmethod void multipleValidZipcodes() {
+        if (strTestOnly != '*' && strTestOnly != 'multipleValidZipcodes') return;
+        createDefaultSettings();
+    }
+    
+    public static testmethod void multipleValidAddressessZipcodes() {
+    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
+    	createDefaultSettings();
+    	
+    	//create contacts 
+        Contact addressContact = new contact(firstname='Test', lastname='Person');
+        addressContact.MailingStreet = 'single-address';
+        addressContact.MailingCity = 'Cupertino';
+        addressContact.MailingState = 'ca';
+        addressContact.MailingPostalCode = '95014'; 
+        
+        Contact zipContact = new contact(firstname='Test', lastname='Person'); 
+        zipContact.MailingPostalCode = 'single-zip';
+        
+        insert new Contact[] {addressContact, zipContact};
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        
+        //check household got created for contact
+        addressContact = [select Account.Id from Contact where Id = :addressContact.Id];
+        Id addrAccountId = addressContact.Account.Id;
+        System.assertNotEquals(null, addrAccountId);
+        
+        //check household got created for contact
+        zipContact = [select Account.Id from Contact where Id = :zipContact.Id];
+        Id zipAccountId = zipContact.Account.Id;
+        System.assertNotEquals(null, zipAccountId);
+        
+        //check address record got created for household
+        Address__c[] av1 = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
+                             from Address__c where Household_Account__c = :addrAccountId];
+        System.assertEquals(1, av1.size());
+        System.assertEquals('single-address', av1[0].MailingStreet__c);
+        System.assertEquals('ca', av1[0].MailingState__c);
+        System.assertEquals('95014', av1[0].MailingPostalCode__c);
+        System.assertEquals(false, av1[0].Verified__c);
+
+        //check address record got created for household
+        Address__c[] av2 = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
+                             from Address__c where Household_Account__c = :zipAccountId];
+        System.assertEquals(1, av2.size());
+        System.assertEquals('single-zip', av2[0].MailingPostalCode__c);
+        System.assertEquals(false, av2[0].Verified__c);
+        
+        //run batch address verification
+        Test.StartTest();
+        ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
+        Database.executeBatch(b);
+        Test.stopTest();
+        
+        //check address record was verified
+        av1 = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                from Address__c where Household_Account__c = :addrAccountId];
+        System.assertEquals(1, av1.size());
+        System.assertEquals('1 Infinite Loop', av1[0].MailingStreet__c);
+        System.assertEquals('CA', av1[0].MailingState__c);
+        System.assertEquals('95014-2083', av1[0].MailingPostalCode__c);
+        System.assertEquals(true, av1[0].Verified__c);
+        
+        //check address record was verified
+        av2 = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c 
+                from Address__c where Household_Account__c = :zipAccountId];
+        System.assertEquals(1, av2.size());
+        System.assertEquals('98236', av2[0].MailingPostalCode__c);
+        System.assertEquals('Clinton', av2[0].MailingCity__c);
+        System.assertEquals('WA', av2[0].MailingState__c);
+        System.assertEquals(true, av2[0].Verified__c);
+    }
+    
+    public static testmethod void validAddressInvalidZipcode() {
+        if (strTestOnly != '*' && strTestOnly != 'validAddressInvalidZipcode') return;     
+        createDefaultSettings();
+    }     
 }
