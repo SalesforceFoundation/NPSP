@@ -103,6 +103,17 @@ global class STG_InstallScript implements InstallHandler {
     
     public void scheduleMasterJobs() {
   	
+  	    //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014)
+  	    //Also abort the scheduled jobs from the old NPSP packages
+  	    String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates'};
+  	    List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+           where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
+  	    if(scheduledJobs != null && scheduledJobs.size() > 0) {
+  	        for(CronTrigger job : scheduledJobs) {
+  	             System.abortJob(job.Id);
+  	        }
+  	    }
+  	    
     	// clean table, in case it's a push upgrate and we have added or removed entries from the table.
     	delete [select id from Schedulable__c where Name != null];
     	
