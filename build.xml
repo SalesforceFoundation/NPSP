@@ -411,7 +411,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete dir="uninstall" />
       <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
       <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="${cumulusci.package.name}" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="false" maxPoll="${cumulusci.maxPoll.notest}" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
       <antcall target="uninstallUnpackagedPre" />
