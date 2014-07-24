@@ -787,7 +787,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>You must schedule the class UTIL_GlobalSchedulable to run daily with the job name {0}.</value>
+        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>

@@ -5,7 +5,7 @@ public with sharing class UTIL_JobScheduler_TEST {
         
         String fireTime = '0 15 23 * * ?';
         String jobName = 'testJob';
-        String className = 'UTIL_GlobalSchedulable';
+        String className = 'UTIL_MasterSchedulable';
     
         Test.startTest();
         //Schedule a job
@@ -26,7 +26,7 @@ public with sharing class UTIL_JobScheduler_TEST {
         
         String fireTime = '0 15 23 * * ?';
         String jobName = 'testJob';
-        String className = 'UTIL_GlobalSchedulable';
+        String className = 'UTIL_MasterSchedulable';
     
         //Schedule a job
         String jobId1 = UTIL_JobScheduler.scheduleJobIfNotScheduled(jobName, fireTime, className);

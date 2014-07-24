@@ -30,18 +30,22 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
-* @description Global Schedulable for the NPSP package. This will be the only
-* schedulable that exists in the package.
+* @description Calls all classes to execute at a specific run of the master scheduler.
 */
-public with sharing class UTIL_GlobalSchedulable implements Schedulable {
+public with sharing class UTIL_MasterSchedulableHelper {
 
-    public static String jobName = 'NPSP Global Scheduler';
-    
+    public interface UTIL_IRecurring {
+        Boolean executeReturnStatus();
+    }
+
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
-    public static void execute(SchedulableContext context) {
-        
-        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
+    public UTIL_MasterSchedulableHelper() {
+    	runRecurringJobs();
+    }
+    
+    public void runRecurringJobs() {
+    	List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
                                        from Schedulable__c where Active__c = true];
         
         List<Schedulable__c> jobsToUpdate = new List<Schedulable__c>();
@@ -68,19 +72,22 @@ public with sharing class UTIL_GlobalSchedulable implements Schedulable {
             
             if(classType != null && shouldRun) {     
                Object instance = classType.newInstance(); 
-               if(instance instanceof UTIL_IScheduled)
+               if(instance instanceof UTIL_IRecurring) {
                    try {
-                       ((UTIL_IScheduled)instance).execute(context);
+                       System.debug(LoggingLevel.WARN, '****Running ' + instance);
+                       Boolean wasRun = ((UTIL_IRecurring)instance).executeReturnStatus();
                        //Update last time run
-                       job.Last_Time_Run__c = System.now();
-                       jobsToUpdate.add(job);
+                       if(wasRun) {
+                           job.Last_Time_Run__c = System.now();
+                           jobsToUpdate.add(job);
+                       }
                    } catch (Exception e) {
                        //The class itself should handle any errors. We don't want to have a reference to ERR_Handler
                        //here because then we won't be able to push updates that modify it if the job is scheduled
                    }
+               }
             }
         }
         update jobsToUpdate;
     }
-    
 }
