@@ -283,10 +283,11 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
         
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(3, scheduledJobs.size());
-        List<CronTrigger> globalJob = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name = 
-        :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];
-        System.assertEquals(1, globalJob.size());
+        System.assertEquals(6, scheduledJobs.size());
+        String[] schedulers = new String[] {'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
+        List<CronTrigger> globalJob = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
+        :schedulers and CronJobDetail.JobType = '7'];
+        System.assertEquals(3, globalJob.size());
     }
 
     public static void deleteAllCustomSettings() {
