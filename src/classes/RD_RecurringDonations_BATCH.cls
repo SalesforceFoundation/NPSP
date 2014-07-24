@@ -33,7 +33,7 @@
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
 public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
-UTIL_IScheduled {
+UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	
     public String query { get; set; } 
     public Integer recCount = 0;
@@ -44,8 +44,8 @@ UTIL_IScheduled {
         query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
     	RD_ProcessControl.batchButton = true;
     }
-    
-    public Boolean execute(SchedulableContext sc) {
+        
+    public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
             Id batchInstanceId = Database.executeBatch(this, 50); 
             return true;

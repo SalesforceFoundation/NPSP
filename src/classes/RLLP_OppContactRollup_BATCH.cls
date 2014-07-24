@@ -32,9 +32,9 @@
 * @date 2014
 * @description Batch class for contact account rollups. 
 */
-public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, UTIL_IScheduled {
-	
-	public Boolean execute(SchedulableContext sc) {
+public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+		
+	public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);
             return true;  
