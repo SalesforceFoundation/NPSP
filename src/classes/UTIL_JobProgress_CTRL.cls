@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
-* @description The controller for the VF progress indicator component used in recurring donation update  
+* @description The controller for the VF progress indicator component  
 */
 public with sharing class UTIL_JobProgress_CTRL {
  
@@ -45,7 +45,6 @@ public with sharing class UTIL_JobProgress_CTRL {
     public String batchComponentLabel {get; set;}
     public Boolean rerenderoncomplete {get; set;}
     public Boolean hasExtendedStatus {get; set;}
-    public Boolean isMultiJob{get; set;}
     public Boolean allCompleted{get; set;}
 
     public List<BatchJob> getBatchJobs() {
@@ -109,7 +108,8 @@ public with sharing class UTIL_JobProgress_CTRL {
         }
         if (completedCount == numberOfJobs)
             allCompleted = true;
-        bj = batchJobs[0];
+        if (!batchJobs.isEmpty())
+            bj = batchJobs[0];
         return batchJobs;
     }
 
