@@ -41,7 +41,7 @@
         <value>To get started using SmartyStreets:
 
 &lt;ol&gt;
-&lt;li&gt;Open a free &lt;a href=&quot;https://smartystreets.com&quot; target=&quot;_blank&quot;&gt;SmartyStreets.com&lt;/a&gt; account.&lt;/li&gt;
+&lt;li&gt;Open a &lt;a href=&quot;https://smartystreets.com&quot; target=&quot;_blank&quot;&gt;SmartyStreets.com&lt;/a&gt; account. (Free for nonprofits.)&lt;/li&gt;
 
 &lt;li&gt;In SmartyStreets, go to the API Keys section of the website, and create a Secret Key Pair by giving it a label and clicking Add. &lt;br/&gt;Once created, the Secret Key Pair will include an Auth ID and an Auth Token.&lt;/li&gt;
 
@@ -105,10 +105,8 @@
         <shortDescription>Addr Verification Batch Body</shortDescription>
         <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
         The mass verification process uses the settings from above.&lt;/p&gt;
-        &lt;p&gt;&lt;b&gt;Make sure the &quot;Using Smarty Streets&quot; checkbox is checked if you plan on using this service for the batch verification.&lt;/b&gt;&lt;/p&gt;
-
 &lt;p&gt;NOTE: Address Verifications consume credits from your SmartyStreets account.&lt;/p&gt;
-
+&lt;p&gt;NOTE: Running Batch Address Verification will check the &quot;Using SmartyStreets&quot; checkbox.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
     <labels>

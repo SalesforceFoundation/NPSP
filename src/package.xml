@@ -660,8 +660,8 @@
   </types>
   <types>
     <members>Account</members>
-    <members>Address_Verification_Settings__c</members>
     <members>Addr_Verification_Settings__c</members>
+    <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
