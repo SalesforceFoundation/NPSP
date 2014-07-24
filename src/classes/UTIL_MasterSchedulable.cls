@@ -38,6 +38,10 @@ public with sharing class UTIL_MasterSchedulable implements Schedulable {
 
     public static void execute(SchedulableContext context) {
     	Type classType = Type.forName('UTIL_MasterSchedulableHelper');
+    	//The work in UTIL_MasterSchedulableHelper is being done in a method that is being called
+    	//from the constructor. We don't want to cast the instance of make the class implement an
+    	//interface because then we'll have a dependency on that class or interface, which is what
+    	//we wanted to avoid.
     	Object instance = classType.newInstance();
     }
     
