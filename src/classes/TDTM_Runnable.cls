@@ -86,9 +86,77 @@ global abstract class TDTM_Runnable {
         
     global class DmlWrapper {
         public List<SObject> objectsToInsert = new List<SObject>(); 
-        public Map<Id, SObject> objectsToUpdate = new Map<Id, SObject>();
+        public List<SObject> objectsToUpdate = new List<SObject>();
         public List<SObject> objectsToDelete = new List<SObject>();
         public List<SObject> objectsToUndelete = new List<SObject>();
+        
+        public void groupByType() {
+        	objectsToInsert = groupSObjects(objectsToInsert);
+        	objectsToUpdate = groupSObjects(objectsToUpdate);
+        	objectsToDelete = groupSObjects(objectsToDelete);
+        	objectsToUndelete = groupSObjects(objectsToUndelete);
+        }
+        
+        //To avoid the "Cannot have more than 10 chunks in a single operation. Please rearrange 
+        //the data to reduce chunking" error.
+        private List<SObject> groupSObjects(List<SObject> sobjects) {
+        	//First remove duplicates to avoid the "Duplicate id in list" error
+        	sobjects = new List<SObject>(new Set<SObject>(sobjects));
+        	        	
+        	List<SObject> sorted = new List<SObject>();
+        	
+        	List<SObject> accounts = new List<SObject>();
+            List<SObject> contacts = new List<SObject>();
+            List<SObject> opps = new List<SObject>();
+            List<SObject> addresses = new List<SObject>();
+            List<SObject> affiliations = new List<SObject>();
+            List<SObject> errors = new List<SObject>();
+            List<SObject> households = new List<SObject>();
+            List<SObject> payments = new List<SObject>();
+            List<SObject> recDonations = new List<SObject>();
+            List<SObject> relationships = new List<SObject>();
+            List<SObject> unknown = new List<SObject>();
+            
+            for(SObject o : sobjects) {
+                if(o instanceof Account) {
+                	accounts.add(o);
+                } else if(o instanceof Contact) {
+                	contacts.add(o);
+                } else if(o instanceof Opportunity) {
+                	opps.add(o);
+                } else if(o instanceof Address__c) {
+                    addresses.add(o);
+                } else if(o instanceof npe5__Affiliation__c) {
+                    affiliations.add(o);
+                } else if(o instanceof Error__c) {
+                    errors.add(o);
+                } else if(o instanceof npo02__Household__c) {
+                    households.add(o);
+                } else if(o instanceof npe01__OppPayment__c) {
+                    payments.add(o);
+                } else if(o instanceof npe03__Recurring_Donation__c) {
+                    recDonations.add(o);
+                } else if(o instanceof npe4__Relationship__c) {
+                    relationships.add(o);
+                } else {
+                	System.debug(LoggingLevel.WARN, '****Not one of our basic object types');
+                	unknown.add(o);
+                }
+            }
+            sorted.addAll(accounts);
+            sorted.addAll(contacts);
+            sorted.addAll(opps);
+            sorted.addAll(addresses);
+            sorted.addAll(affiliations);
+            sorted.addAll(errors);
+            sorted.addAll(households);
+            sorted.addAll(payments);
+            sorted.addAll(recDonations);
+            sorted.addAll(relationships);
+            sorted.addAll(unknown);
+            
+            return sorted;
+        }
     }
     
     global enum Action {   

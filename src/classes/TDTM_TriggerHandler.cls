@@ -70,7 +70,7 @@ public with sharing class TDTM_TriggerHandler {
 	                	if(dmlWrapperLocal.objectsToInsert != null && !dmlWrapperLocal.objectsToInsert.isEmpty())
 	                        dmlWrapper.objectsToInsert.addAll(dmlWrapperLocal.objectsToInsert);
 	                    if(dmlWrapperLocal.objectsToUpdate != null && !dmlWrapperLocal.objectsToUpdate.isEmpty())
-	                        dmlWrapper.objectsToUpdate.putAll(dmlWrapperLocal.objectsToUpdate);
+	                        dmlWrapper.objectsToUpdate.addAll(dmlWrapperLocal.objectsToUpdate);
 	                    if(dmlWrapperLocal.objectsToDelete != null && !dmlWrapperLocal.objectsToDelete.isEmpty())
 	                        dmlWrapper.objectsToDelete.addAll(dmlWrapperLocal.objectsToDelete);
 	                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
@@ -148,13 +148,15 @@ public with sharing class TDTM_TriggerHandler {
         //Create transaction
         Savepoint sp = Database.setSavepoint();
         
+        dmlWrapper.groupByType(); //sort thyself!
+        
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
         //System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        //System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate.values()));
-        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate.values(), false);
+        //System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate));
+        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate, false);
         
         //System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
@@ -168,7 +170,7 @@ public with sharing class TDTM_TriggerHandler {
         
         //Process the results
         Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
-            dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate.values(), dmlWrapper.objectsToDelete, 
+            dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
             dmlWrapper.objectsToUndelete, ERR_Handler.Context.TDTM);
             
         if(errorsExist) {

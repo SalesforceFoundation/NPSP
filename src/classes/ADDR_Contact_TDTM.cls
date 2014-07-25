@@ -319,7 +319,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         if (listAddrUpdateDefault.size() > 0 && !isBefore) {
             for (Address__c addr : listAddrUpdateDefault)
-                dmlWrapper.objectsToUpdate.put(addr.Id, addr);
+                dmlWrapper.objectsToUpdate.add(addr);
         }
             
         if (listAddrInsertDefault.size() > 0 && !isBefore) {
@@ -339,7 +339,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             } else {
                 addr.Latest_End_Date__c = system.today();
             }
-            dmlWrapper.objectsToUpdate.put(id, addr);
+            dmlWrapper.objectsToUpdate.add(addr);
         }        
     }
 
