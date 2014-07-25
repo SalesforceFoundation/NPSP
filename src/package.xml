@@ -156,6 +156,9 @@
     <members>UTIL_JobProgress_CTRL</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
+    <members>UTIL_MasterSchedulable</members>
+    <members>UTIL_MasterSchedulableHelper</members>
+    <members>UTIL_MasterSchedulable_TEST</members>
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
@@ -658,8 +661,8 @@
   </types>
   <types>
     <members>Account</members>
-    <members>Address_Verification_Settings__c</members>
     <members>Addr_Verification_Settings__c</members>
+    <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>

@@ -265,12 +265,12 @@ public without sharing class PMT_PaymentCreator {
                 }
                 //try{
                     // update or delete payments     
-                    if (!paymentsToUpdate.isEmpty()) 
-                        dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>(paymentsToUpdate));
-                    if (!paymentsToDelete.isEmpty()) 
-                        dmlWrapper.objectsToDelete.addAll(new map<Id, SObject>(paymentsToDelete).values());
-                    if (!paymentsToInsert.isEmpty()) 
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
+                    if (!paymentsToUpdate.isEmpty())
+                        dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
+                    if (!paymentsToDelete.isEmpty())
+                        dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
+                    if (!paymentsToInsert.isEmpty())
+                        dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
                 //}
                 /*catch (DMLException e){
                     for (npe01__OppPayment__c opay : paymentsToUpdate) {
