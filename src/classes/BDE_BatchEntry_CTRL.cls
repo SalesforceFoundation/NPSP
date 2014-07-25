@@ -317,7 +317,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                     if (batch.id == null)
                         dmlWrapper.objectsToInsert.add(batch);
                     else
-                        dmlWrapper.objectsToUpdate.put(batch.Id, batch);
+                        dmlWrapper.objectsToUpdate.add(batch);
                 }
                 TDTM_TriggerHandler.processDML(dmlWrapper);
         	
