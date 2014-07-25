@@ -107,21 +107,21 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         if (relationshipsToCreate.size() > 0 ) {
         	DmlWrapper wrapper = createRelationship(relationshipsToCreate);
             mainWrapper.objectsToInsert.addAll(wrapper.objectsToInsert);
-            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
+            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToUpdate.size() > 0 ) {
             DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
-            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
+            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
         }
         if (reciprocalsToUpdate.size() > 0 ) {
             DmlWrapper wrapper = reciprocate(reciprocalsToUpdate);
-            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
+            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
             
         }
         //@TODO: Why are we doing this twice? Is it a bug?
         if (relationshipsToUpdate.size() > 0 ) {
             DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
-            mainWrapper.objectsToUpdate.putAll(wrapper.objectsToUpdate);
+            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToDelete.size() > 0 ) {
             DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);
@@ -162,14 +162,14 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <param name="Relationships">  </param>
     public static DmlWrapper reciprocate(npe4__Relationship__c[] Relationships) {
     	DmlWrapper dmlWrapper = new DmlWrapper();
-        Map<Id, SObject> relationshipsToUpdate = new Map<Id, SObject>();
+        List<SObject> relationshipsToUpdate = new List<SObject>();
         for(npe4__Relationship__c r : Relationships) {
         	System.debug('****Creating reciprocal relatioship');
             npe4__Relationship__c copy = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c, 
                                                                     npe4__ReciprocalRelationship__c = r.Id);
-            relationshipsToUpdate.put(copy.Id, copy);
+            relationshipsToUpdate.add(copy);
         }
-        dmlWrapper.objectsToUpdate.putAll(relationshipsToUpdate);
+        dmlWrapper.objectsToUpdate.addAll(relationshipsToUpdate);
         return dmlWrapper;
     }
     
@@ -212,7 +212,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper dmlWrapper = new DmlWrapper();
     	
         List<npe4__Relationship__c> originalRelationships = new List<npe4__Relationship__c>();
-        Map<Id, SObject> relationshipsToUpdate = new Map<Id, SObject>();
+        List<SObject> relationshipsToUpdate = new List<SObject>();
         Integer counter = 0;                                            // processing counter       
 
         for(npe4__Relationship__c r : Relationships) {
@@ -231,15 +231,15 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 }
                 copy.npe4__Status__c = r.npe4__Status__c;
                 copy.npe4__Description__c = r.npe4__Description__c;
-                relationshipsToUpdate.put(copy.Id, copy);
+                relationshipsToUpdate.add(copy);
                 originalRelationships.add(r);
             }
             counter++;
         }
         //add type info as needed
         if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()) {
-            addType(originalRelationships, relationshipstoUpdate.values());
-            dmlWrapper.objectsToUpdate.putAll(relationshipsToUpdate);        
+            addType(originalRelationships, relationshipstoUpdate);
+            dmlWrapper.objectsToUpdate.addAll(relationshipsToUpdate);        
             //inspectSaveResults(sr, relationshipsToUpdate);
         }
         return dmlWrapper;

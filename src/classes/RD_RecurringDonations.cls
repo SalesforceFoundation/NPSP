@@ -158,9 +158,9 @@ public with sharing class RD_RecurringDonations {
             }                            
         }
         
-        if (!updateMap.isEmpty()){
+        if (!updateMap.isEmpty()) {
         	if (dmlWrapper != null)
-                dmlWrapper.objectsToUpdate.putAll((map<Id, SObject>) updateMap);
+                dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateMap.values());
         	else
                 update updateMap.values();
         }
@@ -607,7 +607,7 @@ public with sharing class RD_RecurringDonations {
         
         if (!updateOppsList.isEmpty()) {
             if (dmlWrapper != null)
-                dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>((list<SObject>) updateOppsList));
+                dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateOppsList);
             else
                 update updateOppsList;
         }
@@ -887,7 +887,7 @@ public with sharing class RD_RecurringDonations {
                     o.StageName = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
                 }            
                 if (dmlWrapper != null)
-                    dmlWrapper.objectsToUpdate.putAll((map<Id, SObject>) mapIdOpp); 
+                    dmlWrapper.objectsToUpdate.addAll((list<SObject>) mapIdOpp.values()); 
                 else
                     update mapIdOpp.values();
             }
