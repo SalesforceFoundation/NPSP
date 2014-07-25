@@ -154,6 +154,7 @@
     <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_IScheduled</members>
     <members>UTIL_JobProgress_CTRL</members>
+    <members>UTIL_JobProgress_CTRL_TEST</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
     <members>UTIL_MasterSchedulable</members>

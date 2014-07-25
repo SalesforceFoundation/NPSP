@@ -42,9 +42,10 @@
             //call conversion
             callConversion();
         });
-        j$("#resultpaneldefault").bind("beforeShow", function() {
-            j$("div[class^='message']").hide();
-        })
+     
+     //   j$("#progresspanel").bind("beforeShow", function() {
+     //       j$("div[class^='message']").hide();
+     //   })
     });
 
     function callConversion(){
@@ -52,9 +53,7 @@
     }
 
     function renderResults(){
-        j$("#resultspanel").removeClass('hide');
-        j$("#resultpaneldefault").show();
-        j$("#progresspanel").hide();
+        j$("div[class^='message']").hide();
     }
 
     function refreshPage(){location.reload(true);}
@@ -151,7 +150,7 @@
                     Before beginning this process, you'll need to confirm the following steps have been taken:</p>
                             <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
                             <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>My data has been backed-up by going to Setup | Data Management | Export Data</label>
-                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a sandbox.</label>
+                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a fresh sandbox.</label>
                             <label for="check-inactiveuser"><input type="checkbox" id="check-inactiveuser"/>All record ownership has been transferred from any inactive users.</label>
                             <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
                             <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
@@ -210,29 +209,32 @@
             </div>
         </div>
 
-        <div class="container hide" id="resultspanel">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
-                        <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
-                        <div class="panel-body">
-                             {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
-                             {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' batches were not converted due to errors and have been rolled back to their previous state. You should address these errors, rerun the converter, then check your data for consistency.', '')}<br/><br/>
-                             {!IF(ISBLANK(apexjob.ExtendedStatus), '', 'The first error recorded was: ' + apexjob.ExtendedStatus)}<br/> 
-                             <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
-                                <button type="button" class="btn btn-warning btn-lg" onclick="refreshPage()" id="reloadBTN">
-                                    <span class="glyphicon glyphicon-refresh"></span> Reload the Converter
-                                </button>
+        <apex:outputpanel rendered="{!NOT(ISNULL(apexjob))}" layout="block" id="resultspanelwrapper">
+            <div class="container hide" id="resultspanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
+                            <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
+                            <div class="panel-body">
+                                 Completed on {!apexjob.CompletedDate}<br/>
+                                 {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
+                                 {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' batches were not converted due to errors and have been rolled back to their previous state. You should address these errors, rerun the converter, then check your data for consistency.', '')}<br/><br/>
+                                 {!IF(ISBLANK(apexjob.ExtendedStatus), '', 'The first error recorded was: ' + apexjob.ExtendedStatus)}<br/> 
+                                 <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
+                                    <button type="button" class="btn btn-warning btn-lg" onclick="refreshPage()" id="reloadBTN">
+                                        <span class="glyphicon glyphicon-refresh"></span> Reload the Converter
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </apex:outputpanel>
 
         <div class="container hide" id="progresspanel">
             <div class="row">
-                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel" oncomplete="renderResults()"/>
+                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel, resultspanelwrapper" oncomplete="renderResults()"/>
                 <apex:outputPanel id="batchpanel">
                     <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
                 </apex:outputPanel>
