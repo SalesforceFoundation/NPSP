@@ -303,7 +303,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             if (contactUpdates.size() > 0) {
                 // using dmlWrapper here caused too many errors with other 
                 // trigger handlers on contact, so do the update directly.
-                //dmlWrapper.objectsToUpdate.putAll(contactUpdates);
+                //dmlWrapper.objectsToUpdate.addAll(contactUpdates);
                 Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
                 // DJH:UNDONE error handling
             }
