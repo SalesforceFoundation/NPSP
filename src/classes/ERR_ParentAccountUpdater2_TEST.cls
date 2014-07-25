@@ -29,7 +29,7 @@
 */
 @isTest
 public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
-
+	
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
      TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
          
@@ -44,14 +44,14 @@ public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
 	        for(SObject o : contactsWithParentId) {
 	        	Contact contact = (Contact)o;
 	        	contact.FirstName = 'New First Name';
-	        	dmlWrapper.objectsToUpdate.put(contact.Id, contact);
+	        	dmlWrapper.objectsToUpdate.add(contact);
 	        	parentAccIds.add(contact.AccountId);
 	        }
 
 	        List<Account> parentAccs = [select Id, Name from Account where Id in :parentAccIds];
 	        for(Account acc : parentAccs) {
 	            acc.Name = 'New Acc Name';
-	            dmlWrapper.objectsToUpdate.put(acc.Id, acc);
+	            dmlWrapper.objectsToUpdate.add(acc);
 	        }
         //If we are not in a future setting the name of the parent account does not throw a null pointer exception.	
         } else {
@@ -60,7 +60,7 @@ public with sharing class ERR_ParentAccountUpdater2_TEST extends TDTM_Runnable {
         		Contact contact = (Contact)o;
         		contact.FirstName = 'New First Name';
         		contact.Account.Name = 'New Acc Name';
-        		dmlWrapper.objectsToUpdate.put(contact.Account.Id, contact.Account);
+        		dmlWrapper.objectsToUpdate.add(contact.Account);
         	}
         }
 

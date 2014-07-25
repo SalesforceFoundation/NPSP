@@ -44,7 +44,7 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
         
         set<id> rdIDs = new set<id>();        
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            integer i = 0;       
+            integer i = 0;
             for (SObject sobj : newlist) {
                 Opportunity o = (Opportunity)sobj;
                 //does it have a recurring donation reference?
@@ -63,7 +63,7 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
         rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel and id IN :RDids];
                                                                                           
         //recurring donations that need to be updated      
-        if (rdcount > 0){
+        if (rdcount > 0) {
             if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_ProcessControl.batchButton)
                 RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
             else

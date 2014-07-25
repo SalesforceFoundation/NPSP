@@ -120,7 +120,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             cr.Role = getDefaultRole();
         }
         //Database.SaveResult[] lsr = Database.update(CRs, false);
-        dmlWrapper.objectsToUpdate.putAll(new map<Id, SObject>(CRs));
+        dmlWrapper.objectsToUpdate.addAll((List<SObject>)CRs);
     }
     
     //truncate string representation of an ID to 15 chars
