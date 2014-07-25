@@ -24,6 +24,8 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         // instantiate the controller
         CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
+        AsyncApexJob aaj = controller.apexjob;
+        system.assertEquals(null, aaj);
         List<SelectOption> testList = controller.getTargetAccountFields();
 
         // convert up everyone
@@ -32,8 +34,8 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         Test.stopTest();
 
-        AsyncApexJob aaj = controller.apexjob;
-        system.assertNotEquals(null, aaj);
+        aaj = controller.apexjob;
+        system.assertNotEquals(null, aaj.Id);
         system.assertEquals('Completed', aaj.Status);
         Boolean testBool;
         testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('garbagefield');
