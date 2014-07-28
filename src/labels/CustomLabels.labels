@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>Addr_Id_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Id Error</shortDescription>
+        <value>Auth ID cannot be blank.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
@@ -98,6 +105,27 @@
         <value>Skip previously verified records</value>
     </labels>
     <labels>
+        <fullName>Addr_Token_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Token Error</shortDescription>
+        <value>Auth Token cannot be blank.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Unauthorized_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Unauthorized Endpoint</shortDescription>
+        <value>Unauthorized endpoint. Please add https://api.smartystreets.com to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Valid_Key_Pair</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Valid Key Pair</shortDescription>
+        <value>Your Secret Key Pair is valid.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Batch_Body</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -126,6 +154,27 @@
         <value>Mass Verify Existing Addresses</value>
     </labels>
     <labels>
+        <fullName>Addr_Verify_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Endpoint</shortDescription>
+        <value>Please enter the endpoint URL.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Settings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Settings</shortDescription>
+        <value>Please verify SmartyStreet checkbox is checked, and credentials entered.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verifying</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verifying</shortDescription>
+        <value>Verifying addresses.</value>
+    </labels>
+    <labels>
         <fullName>Address_Not_Found</fullName>
         <categories>address, error</categories>
         <language>en_US</language>
@@ -140,6 +189,20 @@
         <protected>true</protected>
         <shortDescription>Address Verification Limit</shortDescription>
         <value>You cannot verify more than 100 addresses at a time.</value>
+    </labels>
+    <labels>
+        <fullName>Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saved</shortDescription>
+        <value>Saved.</value>
+    </labels>
+    <labels>
+        <fullName>Settings_not_Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Settings not Saved</shortDescription>
+        <value>Settings not saved</value>
     </labels>
     <labels>
         <fullName>Zip_Not_Found</fullName>
