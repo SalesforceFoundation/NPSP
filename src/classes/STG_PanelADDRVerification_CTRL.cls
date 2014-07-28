@@ -65,13 +65,13 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
             if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_ID__c)) {
-                apiSettingsErrorMessage = 'Auth ID cannot be blank. ';
+                apiSettingsErrorMessage = Label.Addr_Id_Error;
                 apiSettingsSaveMessage = null;
                 validationError = true;
             }
             
             if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_Token__c)) {
-                String validationMessage = 'Auth Token cannot be blank.';
+                String validationMessage = Label.Addr_Token_Error;
                 apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
                 apiSettingsSaveMessage = null;
                 validationError = true;
@@ -79,12 +79,12 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             
             if(!validationError) {
                 upsert addrVerifSettings;
-                apiSettingsSaveMessage = 'Saved.\n';
+                apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;
                 return super.saveSettings();
             }
         } catch (Exception e) {
-            apiSettingsErrorMessage = 'Did not save settings: ' + e.getMessage();
+            apiSettingsErrorMessage = Label.Settings_not_Saved + ': ' + e.getMessage();
         }
         return null;
     }
@@ -123,16 +123,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         	encodeTokenIfNotEncoded(addrVerifSettings);
             ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
             ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
-            strResult = 'Your Secret Key Pair is valid.'; //no exception thrown when deserializing it
+            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
         } catch (Exception e) {
         	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
         	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
-        		strResult = 'Please verify SmartyStreet checkbox is checked, and credentials entered.';
+        		strResult = Label.Addr_Verify_Settings;
         	} else if(e.getMessage().startsWith('no protocol')) {
-        		strResult = 'Please enter the endpoint URL, including https:// at the beginning.';
+        		strResult = Label.Addr_Verify_Endpoint;
         	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
-        		strResult = 'Unauthorized endpoint. Please add https://api.smartystreets.com to your list of ' + 
-        		                'authorized Remote Sites, under Setup->Security->Remote Site.';
+        		strResult = Label.Addr_Unauthorized_Endpoint;
         	} else {
                 strResult = e.getMessage();
         	}
@@ -151,7 +150,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     	ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(skipPreviouslyVerifiedObjects);
         Database.executeBatch(b); 
         nowVerifying = true;
-        bulkVerifyMessage = 'Verifying addresses.';
+        bulkVerifyMessage = Label.Addr_Verifying;
         return null;
     }
 }

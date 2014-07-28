@@ -348,6 +348,7 @@
   </types>
   <types>
     <members>Addr_Settings_API_Body</members>
+    <members>Addr_Id_Error</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
@@ -358,11 +359,19 @@
     <members>Addr_Settings_Test_Response_Title</members>
     <members>Addr_Settings_Test_Title</members>
     <members>Addr_Skip_Verified</members>
+    <members>Addr_Token_Error</members>
+    <members>Addr_Unauthorized_Endpoint</members>
+    <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
     <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verify_Endpoint</members>
+    <members>Addr_Verify_Settings</members>
+    <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
+    <members>Saved</members>
+    <members>Settings_not_Saved</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
