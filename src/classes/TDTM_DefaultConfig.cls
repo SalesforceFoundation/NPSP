@@ -65,7 +65,7 @@ public without sharing class TDTM_DefaultConfig {
         //Account Management on Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ACCT_Accounts_TDTM', Load_Order__c = 1, Object__c = 'Account', 
-              Trigger_Action__c = 'BeforeInsert'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterUpdate'));
 
         // OpportunityContactRole support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
@@ -90,7 +90,7 @@ public without sharing class TDTM_DefaultConfig {
         // RecurringDonations on RecurringDonations
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
-              Trigger_Action__c = 'BeforeInsert;BeforeDelete;AfterInsert;AfterUpdate'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;BeforeDelete;AfterInsert;AfterUpdate'));
         
         // OppRollups on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
