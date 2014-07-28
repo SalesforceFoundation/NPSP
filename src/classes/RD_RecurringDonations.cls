@@ -92,7 +92,7 @@ public with sharing class RD_RecurringDonations {
                                                                                      npe03__Installment_Period__c, npe03__Installments__c,
                                                                                      npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c,
                                                                                      npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c,
-                                                                                     npe03__Donor_Name__c
+                                                                                     npe03__Donor_Name__c, OwnerId
                                                                                   from npe03__Recurring_Donation__c 
                                                                                   where npe03__Open_Ended_Status__c = :openLabel
                                                                                   and id IN :RDids]);
@@ -185,7 +185,7 @@ public with sharing class RD_RecurringDonations {
                                                        'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
                                                        'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
                                                        'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c'};
+                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};
         
         String queryRCD = 'select id';
         for (string s : existingFields){
@@ -258,10 +258,20 @@ public with sharing class RD_RecurringDonations {
         
                 Decimal installs = r.npe03__Installments__c;
                 Integer installments = (installs == null ? 0 : installs.intValue());
+                date OppCloseDate;
+              
+                if (r.npe03__Next_Payment_Date__c != null)                     
+                    OppCloseDate = r.npe03__Next_Payment_Date__c;
+                else{
+                    OppCloseDate = r.npe03__Date_Established__c;                                                                        
+                }                                             
+                
                 
                 for ( Integer j=0;j<installments;j++ )
                 {
                     Opportunity opp = new Opportunity();
+                    opp.CloseDate = OppCloseDate;
+                    opp.OwnerId = r.OwnerId;
                 
                     if ( r.npe03__Organization__c != null )
                     {
@@ -292,6 +302,7 @@ public with sharing class RD_RecurringDonations {
                         opp.Amount = r.npe03__Installment_Amount__c;
                     }
                 
+                    /************ we now share the routine to calc the next opp date **********
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodYearly)
                     {
                         opp.CloseDate = (r.npe03__Date_Established__c).addYears(j);
@@ -313,6 +324,9 @@ public with sharing class RD_RecurringDonations {
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c);
                     }
+                    *********************************/
+                                        
+                    OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
                 
                     String oName = '';
                     oName += r.npe03__Donor_Name__c; 
@@ -376,6 +390,8 @@ public with sharing class RD_RecurringDonations {
                     do{
                         Opportunity o = new Opportunity();
                         o.CloseDate = OppCloseDate;
+                        o.OwnerId = r.OwnerId;
+                        
                                                                                                           
                         if(isMultiCurrency){
                             //set the donation currency field to equal the recurring donation currency
@@ -424,7 +440,7 @@ public with sharing class RD_RecurringDonations {
                         }
                         opportunityInserts.add(o);    
                         rdcounter++;                                                                                       
-                    }while (OppCloseDate < incrementdate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c));                                        
+                    }while (OppCloseDate < incrementdate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c));                                                            
                 }
             }                 
         }
@@ -540,7 +556,7 @@ public with sharing class RD_RecurringDonations {
                                                                                      npe03__Installment_Period__c, npe03__Installments__c,
                                                                                      npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c,
                                                                                      npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c,
-                                                                                     npe03__Donor_Name__c
+                                                                                     npe03__Donor_Name__c, OwnerId
                                                                                   from npe03__Recurring_Donation__c 
                                                                                   where npe03__Open_Ended_Status__c = :openLabel 
                                                                                   and id IN :recIDs]);        
@@ -571,6 +587,8 @@ public with sharing class RD_RecurringDonations {
         for (id RDid : RDOppMap.keySet()){
             
             date PaymentDate = RDMap.get(RDid).npe03__Next_Payment_Date__c;
+            if (PaymentDate == null)
+                PaymentDate = RDMap.get(RDid).npe03__Date_Established__c;
             
             for (Opportunity o : RDOppMap.get(RDid)){
                 
@@ -682,6 +700,8 @@ public with sharing class RD_RecurringDonations {
     }
     
     /** Returns the number of records that failed to be processed. **/
+    // called from the Refresh Opportunities button on both Open and Non-Open RD's, 
+    // as well as the Batch process for extending Open Ended RD's (no Non-Open)
     public static Integer evaluateRecurringDonationsForNewOppInsert(list<npe03__Recurring_Donation__c> recurringDonationsToEvaluate){
         
         npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
@@ -697,6 +717,7 @@ public with sharing class RD_RecurringDonations {
         string openlabel = system.label.npe03.RecurringDonationOpenStatus;
         
         //get the existing donations
+        //DJH:BUG: can be called with Non-Open RD's, but only queries for Opps from Open RD's.
         list<sobject> sobjs = [select count(id) oppCount, MAX(CloseDate) MaxDate,
                                   npe03__Recurring_Donation__r.id rdid
                                   from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel 
@@ -734,12 +755,15 @@ public with sharing class RD_RecurringDonations {
             
             //only proceed if there are some opps, otherwise we need to start over from scratch 
             if (oppCountMap.containsKey(rd.id)){
-                integer oppCounter = oppCountMap.get(rd.id) + 1;                    
+                integer oppCounter = oppCountMap.get(rd.id) + 1;          
+                
+                Date dtForecast =  system.today().toStartOfMonth().addMonths(forecast_months);         
                            
-                if (system.today().addMonths(forecast_months) > lastOppMap.get(rd.id)){
+                if (dtForecast > lastOppMap.get(rd.id)){
                     date oppclosedate = lastOppMap.get(rd.id);
                     do{
                         Opportunity o = new Opportunity();
+                        o.OwnerId = rd.OwnerId;
 
                         //multicurrency?
                         if(isMultiCurrency)
@@ -775,10 +799,14 @@ public with sharing class RD_RecurringDonations {
                         if (rd.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || oppCounter == 1)){
                             o.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
                         }
-                    
+                        
+	                    if (rds.npe03__Record_Type__c != null){
+	                        o.put('RecordTypeId', rds.npe03__Record_Type__c);
+	                    }
+                                            
                         oppCounter++;
                         oppInsertList.add(o);                   
-                    }while(oppclosedate < system.today().addMonths(forecast_months));
+                    }while(oppclosedate < dtForecast);
                 }
             }
             else{

@@ -61,7 +61,7 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         	newlist = oldlist;
         }
 
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert)
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate)
             RD_ProcessControl.hasRun = true;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
@@ -71,9 +71,12 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         for (SObject sobj : newlist) {
             npe03__Recurring_Donation__c r = (npe03__Recurring_Donation__c)sobj;                   
 
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 if (r.npe03__Organization__c == null && r.npe03__Contact__c == null) {
                     r.addError(system.label.npe03.RecurringDonationMissingDataError);
+                }
+                if (r.npe03__Organization__c != null && r.npe03__Contact__c != null) {
+                    r.addError(system.label.RecurringDonationAccountAndContactError);
                 }
                 if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c) {
                     r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
