@@ -85,7 +85,11 @@ public with sharing class RD_RecurringDonations {
         //Get the open label for opps
         string openLabel = system.label.npe03.RecurringDonationOpenStatus;
         
-        //get all possible rd records that may need updating, exclude ones not in an open state  
+        //before we query for any RD's, we must make sure that all previous changes to them have been committed!
+        if (dmlWrapper != null)
+            TDTM_TriggerHandler.processDML(dmlWrapper);
+        
+        //get all possible rd records that may need updating, exclude ones that are closed.  
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>([select id, npe03__Paid_Amount__c, npe03__Next_Payment_Date__c, 
                                                                                     npe03__Contact__c, npe03__Organization__c, npe03__Amount__c, 
                                                                                     npe03__Date_Established__c, npe03__Recurring_Donation_Campaign__c,
@@ -632,7 +636,7 @@ public with sharing class RD_RecurringDonations {
         
         
         if (system.isFuture() || RDOppMap.keySet().size() == 1 || system.isBatch() || RD_ProcessControl.batchButton){
-            updateRecurringDonationOnOppChange(RDOppMap.keySet(), null);
+            updateRecurringDonationOnOppChange(RDOppMap.keySet(), dmlWrapper);
         }          
         else{
             updateRecurringDonationOnOppChangeFuture(RDOppMap.keySet());            
