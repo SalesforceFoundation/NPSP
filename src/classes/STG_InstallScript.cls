@@ -85,15 +85,15 @@ global class STG_InstallScript implements InstallHandler {
         
         setTriggerConfig();
 
-        //set default settings
+        //Set default settings.
         UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
         UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 'Mark_Opportunities_Closed_Lost');
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        // The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
-        // when run in a test environment.  This code should always insert even if in a test
+        //The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
+        //when run in a test environment.  This code should always insert even if in a test.
         if (errorSettings.id == null) {
             insert errorSettings;
         }
@@ -134,10 +134,10 @@ global class STG_InstallScript implements InstallHandler {
                 Active__c = true, Frequency__c = 'Daily'));
         insert jobs;
 
-        // schedule master cron jobs.
-        // NOTE: if more jobs are added to this list, they must also be added to the code in
-        // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
-        // verifying they exist.
+        //Schedule master cron jobs.
+        //NOTE: if more jobs are added to this list, they must also be added to the code in
+        //STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
+        //verifying they exist.
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler1', '0 0 23 ? * *', 'UTIL_MasterSchedulable');
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler2', '0 0 1 ? * *', 'UTIL_MasterSchedulable');
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler3', '0 0 2 ? * *', 'UTIL_MasterSchedulable');
