@@ -104,8 +104,8 @@ global class STG_InstallScript implements InstallHandler {
     
     public void scheduleMasterJobs() {
   	
-  	    //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014)
-  	    //Also abort the scheduled jobs from the old NPSP packages
+  	    //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
+  	    //Also abort the scheduled jobs from the old NPSP packages.
   	    String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates'};
   	    List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
@@ -115,10 +115,10 @@ global class STG_InstallScript implements InstallHandler {
   	        }
   	    }
   	    
-    	// clean table, in case it's a push upgrate and we have added or removed entries from the table.
+    	//Clean table, in case it's a push upgrade and we have added or removed entries from the table.
     	delete [select id from Schedulable__c where Name != null];
     	
-    	// create records for the jobs that are to run recursively
+    	//Create records for the jobs that are to run recursively.
         List<Schedulable__c> jobs = new List<Schedulable__c>();
         jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                     Active__c = true, Frequency__c = 'Daily'));
