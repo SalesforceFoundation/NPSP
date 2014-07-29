@@ -38,13 +38,16 @@ global class STG_InstallScript implements InstallHandler {
         try { 
 	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
 	        if(context.previousVersion() == null) {
-	            runNewOrgScript();           
+	            runNewOrgScript();
+	            scheduleMasterJobs();
 	        } else if(context.isUpgrade()) {
 	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
 	        	insertTdtmDefaults(defaultHandlers);
+	        	scheduleMasterJobs();
 	        } else if(context.isPush()) {
 	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
 	        	insertTdtmDefaults(defaultHandlers);
+	        	scheduleMasterJobs();
 	        }
         } catch(Exception e) {
 	        sendEmailOnError(e, context);
@@ -97,8 +100,6 @@ global class STG_InstallScript implements InstallHandler {
         
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings();
-        
-        scheduleMasterJobs();
     }
     
     public void scheduleMasterJobs() {
