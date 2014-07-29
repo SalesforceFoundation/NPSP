@@ -385,4 +385,90 @@ public without sharing class HH_HouseholdNaming {
         private set;        
     }    
    
+    public static void handleHHNameUpdates(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+            
+        list<SObject> listHHNew = newlist;
+        list<SObject> listHHOld = oldlist;  
+        map<ID, SObject> mapIdHHOld = new map<ID, SObject>(listHHOld);       
+    
+        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        
+        //updates household records to indicate where/if user changes to the household record are happening
+        //and marks them as such so they won't be updated
+        //need to use a process control class to avoid recursion when async updates occur
+        //in non async updates, this won't fire again, so we don't need to worry
+        if (!HH_ProcessControl.inFutureContext && 
+            (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
+            
+            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
+
+                // AfterUpdate data
+                list<id> hhlist = new list<id>();
+                                       
+                for (SObject h : listHHNew) {
+                    string customname = '';
+            
+                    if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') == null)
+                        customname = ';';                    
+                    else  
+                        customname = h.get('npo02__SYSTEM_CUSTOM_NAMING__c') + ';';
+                
+                    // BeforeUpdate data
+                    list<string> customnamelist = new list<string>();
+                    set<string> customnameset = new set<string>();
+                    customnamelist = customname.split(';');
+                    customnameset.addall(customnamelist);
+                    
+                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                    	string hName = (string)h.get('Name');                
+                        if (hName != null && hName != mapIdHHOld.get(h.id).get('Name') && !customnameset.contains('Name')) {
+                            customname += 'Name' + ';';
+                        } else if ((hName == null || hName == '' || hName == system.Label.npo02.NameReplacementText) && customnameset.contains('Name')) {
+                            customname = customname.replace('Name;', ';');
+                            h.put('Name', system.Label.npo02.NameReplacementText);
+                        }
+                
+                        string informalGreeting = (string)h.get('npo02__Informal_Greeting__c');
+                        if (informalGreeting != null && 
+                            informalGreeting != mapIdHHOld.get(h.id).get('npo02__Informal_Greeting__c') && 
+                            !customnameset.contains('Informal_Greeting__c')) {
+                            customname += 'Informal_Greeting__c' + ';';
+                        } else if ((informalGreeting == null || informalGreeting == '' || informalGreeting == system.Label.npo02.NameReplacementText) && 
+                            customnameset.contains('Informal_Greeting__c')) {                
+                            customname = customname.replace('Informal_Greeting__c;', ';');
+                            h.put('npo02__Informal_Greeting__c', system.Label.npo02.NameReplacementText);
+                        }
+                
+                        string formalGreeting = (string)h.get('npo02__Formal_Greeting__c');
+                        if (formalGreeting != null && 
+                            formalGreeting != mapIdHHOld.get(h.id).get('npo02__Formal_Greeting__c') && 
+                            !customnameset.contains('Formal_Greeting__c')) {
+                            customname += 'Formal_Greeting__c' + ';';
+                        } else if ((formalGreeting == null || formalGreeting == '' || formalGreeting == system.Label.npo02.NameReplacementText) && 
+                            customnameset.contains('Formal_Greeting__c')) {
+                            customname = customname.replace('Formal_Greeting__c;', ';');
+                            h.put('npo02__Formal_Greeting__c', system.Label.npo02.NameReplacementText);
+                        }
+                        h.put('npo02__SYSTEM_CUSTOM_NAMING__c', customname);
+                    } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                        if (h.get('Name') == system.Label.npo02.NameReplacementText)
+                           hhlist.add(h.id);
+                        else if (h.get('npo02__Informal_Greeting__c') == system.Label.npo02.NameReplacementText)
+                           hhlist.add(h.id);
+                        else if (h.get('npo02__Formal_Greeting__c') == system.Label.npo02.NameReplacementText)
+                            hhlist.add(h.id);       
+                        else if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != mapIdHHOld.get(h.id).get('npo02__SYSTEM_CUSTOM_NAMING__c'))
+                            hhlist.add(h.id);                        
+                    }
+                }
+                if (!hhlist.isEmpty()){
+                    HH_HouseholdNaming hn = new HH_HouseholdNaming();
+                    hn.UpdateNames(hhlist);
+                }
+            }
+        } 
+    
+    }
+   
 }
