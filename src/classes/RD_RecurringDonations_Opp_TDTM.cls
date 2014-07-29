@@ -58,9 +58,9 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
         }           
         
         //Get the open label for opps
-        string openLabel = system.label.npe03.RecurringDonationOpenStatus;
+        string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         Integer rdcount = 0;
-        rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel and id IN :RDids];
+        rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids];
                                                                                           
         //recurring donations that need to be updated      
         if (rdcount > 0) {
