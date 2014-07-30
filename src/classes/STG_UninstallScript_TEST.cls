@@ -2,8 +2,9 @@
 public with sharing class STG_UninstallScript_TEST {
 
     public testmethod static void rununinstall() {
-    	//Run install script
-    	Test.testInstall(new STG_InstallScript(), null);
+    	//The scheduled jobs are being set when the settings page loads
+    	STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+    	ctrl.setTriggerSchedConfig();
     	
     	//Check jobs were scheduled
     	String[] schedulers = new String[] {'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
