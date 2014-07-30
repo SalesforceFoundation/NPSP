@@ -117,6 +117,15 @@ public with sharing class RD_RecurringDonations {
                 //the one we're already working on 
                 if (!updateMap.containsKey(rdid)) {
                     rd = rdMap.get(rdid);
+
+                    //initialize fields to null that might not get set
+                    rd.npe03__Next_Payment_Date__c = null;
+                    rd.npe03__Last_Payment_Date__c = null;
+                    rd.npe03__Paid_Amount__c = null;     
+                    if (isMultiCurrency)                         
+                        rd.put(RDCurrencyField, null);                        
+                    rd.npe03__Total_Paid_Installments__c = null;
+                    updateMap.put(rdid, rd);                        
                 } else {
                     rd = updateMap.get(rdid);
                 }

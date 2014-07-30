@@ -48,9 +48,9 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
             for (SObject sobj : newlist) {
                 Opportunity o = (Opportunity)sobj;
                 //does it have a recurring donation reference?
-                //has it moved into a closed state?
+                //has it changed closed state or amount?
                 Opportunity oppOld = (Opportunity)oldlist[i];
-                if (o.npe03__Recurring_Donation__c != null && o.isClosed && !oppOld.isClosed) {
+                if (o.npe03__Recurring_Donation__c != null && (o.isClosed != oppOld.isClosed || o.Amount != oppOld.Amount)){
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;
