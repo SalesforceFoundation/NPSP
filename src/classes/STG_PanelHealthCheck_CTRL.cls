@@ -349,8 +349,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
 
         // make sure the entries we expect are there.
-        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED','RLLP_OppRollup_SCHED','ADDR_SEASONAL_SCHED')];
-        if (numOfJobs != 3) {
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN :UTIL_MasterSchedulableHelper.scheduledClasses];
+        if (numOfJobs != UTIL_MasterSchedulableHelper.scheduledClasses.size()) {
             createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsScheduleJobs, Label.healthSolutionScheduleJobs);
             return;            
         }
