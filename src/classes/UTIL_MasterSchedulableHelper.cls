@@ -40,6 +40,9 @@ public with sharing class UTIL_MasterSchedulableHelper {
 
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
+    public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 
+    	'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED'};
+    
     public UTIL_MasterSchedulableHelper() {
         runRecurringJobs();
     }
@@ -105,24 +108,29 @@ public with sharing class UTIL_MasterSchedulableHelper {
     }
     
     public static void setSchedulableTable() {
-        // clean table, in case it's a push upgrate and we have added or removed entries from the table.
-        delete [select id from Schedulable__c where Name != null];
-        
-        // create records for the jobs that are to run recursively
-        List<Schedulable__c> jobs = new List<Schedulable__c>();
-        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
-                    Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
-                Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Contact Rollups', Class_Name__c = 'RLLP_OppContactRollup_BATCH', 
-                Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Household Rollups', Class_Name__c = 'RLLP_OppHouseholdRollup_BATCH', 
-                Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Opportunity Soft Credit Rollups', Class_Name__c = 'RLLP_OppSoftCreditRollup_BATCH', 
-                Active__c = true, Frequency__c = 'Daily'));
-        jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED',
-                Active__c = true, Frequency__c = 'Daily'));
-        insert jobs;    
+    	
+    	Integer numOfExistingSchedClasses = [select count() from Schedulable__c where Class_Name__c IN :scheduledClasses];
+    	
+    	if(numOfExistingSchedClasses != scheduledClasses.size()) {
+	        // clean table, in case it's a push upgrate and we have added or removed entries from the table.
+	        delete [select id from Schedulable__c where Name != null];
+	        
+	        // create records for the jobs that are to run recursively
+	        List<Schedulable__c> jobs = new List<Schedulable__c>();
+	        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = scheduledClasses[0], 
+	                    Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = scheduledClasses[1], 
+	                Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Opportunity Contact Rollups', Class_Name__c = scheduledClasses[2], 
+	                Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Opportunity Household Rollups', Class_Name__c = scheduledClasses[3], 
+	                Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Opportunity Soft Credit Rollups', Class_Name__c = scheduledClasses[4], 
+	                Active__c = true, Frequency__c = 'Daily'));
+	        jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = scheduledClasses[5],
+	                Active__c = true, Frequency__c = 'Daily'));
+	        insert jobs;
+    	}    
     }
     
     public static void scheduleMasterJobs() {
