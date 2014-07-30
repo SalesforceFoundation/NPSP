@@ -73,15 +73,9 @@ public with sharing class RD_RecurringDonations {
     public static void updateRecurringDonationOnOppChangeFuture(set<id> RDids){updateRecurringDonationOnOppChange(RDids, null);} 
     public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){
   
-        //Use NPSP OCR Support?
-        Sobjectfield ConIDForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
-        
         //set of RDs to be updated         
         map<id, npe03__Recurring_Donation__c> updateMap = new map<id, npe03__Recurring_Donation__c>();
         
-        //Get our settings
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();     
-         
         //Get the closed label for opps
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         
@@ -108,46 +102,37 @@ public with sharing class RD_RecurringDonations {
                                   and npe03__Recurring_Donation__r.id IN :rdMap.keySet()
                                   group by rollup(npe03__Recurring_Donation__r.id, isClosed, isWon)]; 
         
-        //holds the rdid of all evaluated closed sets, allows us to figure out the various summary rows
-        //this is a workaorund for the null boolean aggregate result bug
-        set<id> isClosedEvaluatedSet = new set<id>();
-        map<id, date> maxOpenPaymentMap = new map<id, date>();
         
-        //we want this outside of the loop so the grand summary row (null id) always refers to the 
-        //rdids before it
-        npe03__Recurring_Donation__c rd;        
         //update the rc next payment date 
-        //and add new donation objects needed 
-        for (sobject obj : sobjs){
+        //and the paid ammounts and paid installments 
+        for (sobject obj : sobjs) {
             id rdid = (id)obj.get('rdid'); 
             
-            //the summary isclosed row will contain a null boolean
-            //which is evaluated as false, so we'll need to mark 
-            //this rdid as having had the nonsummary false isclosed value 
-            //already used, so we don't accidentally use the summary row below
             boolean isClosed = (boolean)obj.get('isClosed');
             boolean isWon = (boolean)obj.get('isWon');            
-            if (isClosed == null) isClosed = false;
-            if (isWon == null) isWon = false;
             
-            if (rdid != null){
+            if (rdid != null) {
+                npe03__Recurring_Donation__c rd;        
                 //if we already have values for this RD, get it from our rdid map, otherwise just grab
                 //the one we're already working on 
-                if (!updateMap.containsKey(rdid)){
+                if (!updateMap.containsKey(rdid)) {
                     rd = rdMap.get(rdid);
-                }
-                else{
+                } else {
                     rd = updateMap.get(rdid);
                 }
-                //if this is the open set for this rd
-                if (!isClosed && !isWon && !isClosedEvaluatedSet.contains(rdid)){
-                    rd.npe03__Next_Payment_Date__c = (date)obj.get('MinDate');
-                    maxOpenPaymentMap.put(rdid, (date)obj.get('MaxDate'));
-                    isClosedEvaluatedSet.add(rdid);
+                
+                //if this is the summary row for this rd
+                if (isClosed == null && isWon == null) {
+                    rd.npe03__Installments__c = (integer)obj.get('oppcount'); 
                     updateMap.put(rdid, rd);                                       
                 }
-                //if this is the closed set     
-                else if (isClosed && isWon){
+                //if this is the open set of opps
+                else if (isClosed == false && isWon == null) {
+                    rd.npe03__Next_Payment_Date__c = (date)obj.get('MinDate');
+                    updateMap.put(rdid, rd);                                                       	
+                }
+                //if this is the closed set of opps    
+                else if (isClosed == true && isWon == true) {
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
                     rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');     
                     if (isMultiCurrency)                         
@@ -156,10 +141,6 @@ public with sharing class RD_RecurringDonations {
                     updateMap.put(rdid, rd);                        
                 }                   
             }
-            else{          
-                rd.npe03__Installments__c = (integer)obj.get('oppcount'); 
-                updateMap.put(rd.id, rd);               
-            }                            
         }
         
         if (!updateMap.isEmpty()) {
