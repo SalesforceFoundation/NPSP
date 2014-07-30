@@ -54,8 +54,9 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     }
     
     public database.Querylocator start(Database.BatchableContext bc){
-        //clear any existing errors from the queue
-        delete [select id from Error__c where Context_Type__c = 'RD'];
+        //clear any existing errors from the queue?
+        //now with our error log, DJH thinks we should leave the errors alone.
+        //delete [select id from Error__c where Context_Type__c = 'RD'];
         return Database.getQueryLocator(query);      
     }
     public void execute(Database.BatchableContext bc, Sobject[] result){
