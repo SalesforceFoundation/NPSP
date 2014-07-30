@@ -67,9 +67,8 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
     public virtual override list<RollupSpec> setRollupSpecs() {
         /* TODO:
-fiscal / calendar year settings
-multi currency support
-*/
+            multi currency support
+        */
 
         //get allocations settings
         Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();

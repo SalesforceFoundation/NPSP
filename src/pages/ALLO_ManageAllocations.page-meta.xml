@@ -3,7 +3,7 @@
     <apiVersion>28.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>STG_PanelOppRollups</label>
+    <label>ALLO_ManageAllocations</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
         <minorNumber>0</minorNumber>
@@ -25,8 +25,8 @@
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>99</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>

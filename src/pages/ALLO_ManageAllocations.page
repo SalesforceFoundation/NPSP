@@ -1,0 +1,249 @@
+<apex:page controller="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false">
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
+
+    <!--<apex:stylesheet value="https://developer.salesforcefoundation.org/bootstrap-sf1/dist/css/bootstrap.css" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .bootstrap .jumbotron {
+            padding: 10px;
+            font-size: 15px;
+        }
+        .input-group {
+            text-align: right;
+        }
+        input.lookupInput {
+            display: inline-block;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            color: #555555;
+            background-color: #ffffff;
+            background-image: none;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        }
+        table.centertable {
+            max-width: 600px;
+            margin-left: auto; 
+            margin-right: auto;
+        }
+    </style>
+    <script type="text/javascript">
+/*TODO:
+defaultGAU, automatic uneditable handling of the default
+*/
+    (function($) {
+
+        var sumAmount;
+        var sumPercent;
+        
+        var parentAmount = {!parentAmount};
+        var dollarSign = '{!$Label.npe01__DefaultContactTransactionCurrency}';
+
+        $(document).on("ready",document,function(){
+        })
+
+        //adds all amount fields together
+        var calcAmount = function() {
+            sumAmount = 0;
+            $('.alloAmount').each(function(i,o){
+                var thisRowAmount = $('.amount'+i);
+                var thisRowPercent = $('.percent'+i);
+
+                //if amount and percent are blank, enable them both
+                if (isBlankOrEmpty(thisRowAmount)){
+                    if (isBlankOrEmpty(thisRowPercent)) {
+                        //make amount field editable, nulled out
+                        thisRowPercent.prop('disabled', false);
+                        thisRowAmount.prop('disabled', false);    
+                    }
+                    
+                } else {
+                //if amount is full and percent is blank, disable percent
+                    if (isBlankOrEmpty(thisRowPercent)) {
+                        thisRowPercent.prop('disabled', true);
+                    }
+                }
+                if (parseInt($(o).val()))
+                    sumAmount += parseInt($(o).val());
+               
+            });
+
+            //write total amount. if we have a parent amount, include the unallocated remainder. 
+            //if we're over the parent amount, make it red.
+            if (parentAmount > 0) {
+                var unallocated = parentAmount - sumAmount;
+                $('#totalAmount').text(dollarSign + sumAmount + ' (' + dollarSign + unallocated + ' {!$Label.alloUnallocated})');
+                if (unallocated < 0)
+                    $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
+                else
+                    $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
+            } else {
+                $('#totalAmount').text(dollarSign + sumAmount);
+            }
+            
+        }
+
+        //adds all percent fields together
+        var calcPercent = function() {
+            sumPercent = 0;
+            $('.alloPercent').each(function(i,o){
+                //selector variable for each row
+                var thisRowAmount = $('.amount'+i);
+                var thisRowPercent = $('.percent'+i);
+
+                //grey out amount field if needed
+                if (thisRowPercent.val() == '' || !thisRowPercent.val()){
+                    //calc amount here if possible
+                    thisRowAmount.prop('disabled', false);
+                } else {
+                    thisRowAmount.prop('disabled', true);
+                    //if we have a parent amount, set the calculated amount based on the percent
+                    if (parentAmount > 0)
+                        thisRowAmount.val(thisRowPercent.val() * parentAmount * .01);
+                }
+
+                //if we have an integer value, add it to the total
+                if (parseInt($(o).val()))
+                    sumPercent += parseInt($(o).val());
+            });
+            $('#totalPercent').text(sumPercent + '%');
+            
+            //validates percentage, toggles button and adds CSS to show invalid precentages
+            if (sumPercent > 100) {
+                //grey out save button
+                //set a message
+                $('#totalPercent').css({ "color": "red", "font-weight": "bold" });
+            } else {
+                $('#totalPercent').css({ "color": "black", "font-weight": "normal" });
+                //make sure save button is not greyed out
+                //unset a message?
+            }
+        }
+
+        var changePercent = function(i) {
+            var thisRowAmount = $('.amount'+i);
+            var thisRowPercent = $('.percent'+i);
+            if (isBlankOrEmpty(thisRowPercent)) {
+                thisRowAmount.val('');
+            }
+            initOrReload();
+        }
+
+        var isBlankOrEmpty = function (selector){
+            return (selector.val() == '' || !selector.val());
+        }
+
+        var initOrReload = function() {
+            calcPercent();
+            calcAmount();
+        }
+        
+        //bind functions to window that are needed in the page
+        window.initOrReload = initOrReload;
+        window.changePercent = changePercent;
+
+    })(jQuery);
+
+    </script>
+    <apex:form id="theForm">
+        <apex:pageBlock title="{!$Label.alloManageOppAllocations}" rendered="{!opp<>null}">
+            <apex:pageBlockSection title="Opportunity Information">
+                <apex:outputField value="{!opp.name}"/>
+                <apex:outputField value="{!opp.stagename}"/>
+                <apex:outputField value="{!opp.amount}"/>
+                <apex:outputField value="{!opp.closeDate}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="{!$Label.alloManageCampaignAllocations}" rendered="{!cam<>null}">
+            <apex:pageBlockSection title="Campaign Information">
+                <apex:outputField value="{!cam.name}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="{!$Label.alloManageRecurringDonationAllocations}" rendered="{!rd<>null}">
+            <apex:pageBlockSection title="Recurring Donation Information">
+                <apex:outputField value="{!rd.name}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <div> 
+            <apex:pageMessages id="messages"/>
+        </div>
+        <div class="bootstrap">
+            <div class="bootstrap table-responsive">
+                <table class="centertable table table-bordered table-hover table-condensed" >
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</th>
+                            <th>{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</th>
+                            <th>{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:variable var="cnt" value="{!0}" /> 
+                        <apex:repeat var="allo" value="{!listAllo}" >
+                            <tr>
+                                <td width="80px">
+                                    <div class="btn-toolbar">
+                                        <apex:commandButton styleClass="btn btn-danger" value="×" id="delRowBTN" title="Delete Row" action="{!delRow}" reRender="theForm">
+                                            <span class="sr-only">Delete Row {!cnt}</span>
+                                            <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                        </apex:commandButton>
+                                        <apex:commandButton styleClass="btn btn-info" value="+" id="addRowBTN" title="Add Row" action="{!addRow}" reRender="theForm">
+                                            <span class="sr-only">Add Row at Position {!cnt}</span>
+                                            <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                        </apex:commandButton>
+                                    </div>
+                                </td>
+                                <td width="90px">
+                                        <apex:inputField styleClass="lookupInput" id="alloInputGAU" value="{!Allo.General_Accounting_Unit__c}"/>
+                                </td>
+                                <td width="150px">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{!$Label.npe01__DefaultContactTransactionCurrency}</span>
+                                        <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onChange="window.initOrReload" id="alloInputAmount" value="{!Allo.Amount__c}"/>
+                                    </div>
+                                </td>
+                                <td width="100px">
+                                    <div class="input-group">
+                                        <apex:inputField styleClass="form-control alloPercent percent{!cnt}" onChange="window.changePercent({!cnt})" id="alloInputPercent" value="{!Allo.Percent__c}"/>
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <apex:variable var="cnt" value="{!cnt+1}"/>
+                        </apex:repeat>
+                        <tr>
+                            <th scope="row">
+                                {!$Label.alloTotals}
+                            </th>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                <div id="totalAmount"></div>
+                            </td>
+                            <td>
+                                <div id="totalPercent"></div>
+                            </td>
+                        </tr>
+                   </tbody>
+                </table>
+            </div>
+            <script>
+                window.initOrReload();
+            </script>
+            <div class="btn-toolbar">
+                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}"/>
+                    <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}"/>
+            </div>
+        </div>
+    </apex:form>
+</apex:page>
