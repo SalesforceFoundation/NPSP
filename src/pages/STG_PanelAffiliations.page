@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelAffiliations_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavConnections}" pageLabel="{!$Label.stgNavAffiliations}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavAffiliations}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>

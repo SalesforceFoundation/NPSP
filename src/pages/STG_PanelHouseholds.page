@@ -116,7 +116,7 @@
 </style>
 
 
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="{!$Label.stgLabelHHSettings}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>

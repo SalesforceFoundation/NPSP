@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelOppBatch_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavRollupBatch}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRollupBatch}" />
 	<p>{!$Label.stgHelpBatchOppRollup}</p>
 
     <apex:form id="form" styleClass="form-horizontal">   

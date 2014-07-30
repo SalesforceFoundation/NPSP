@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelRDBatch_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>

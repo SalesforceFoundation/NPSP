@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelContactRoles_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavContacts}" pageLabel="{!$Label.stgNavContactRoles}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavContactRoles}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>

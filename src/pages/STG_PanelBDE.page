@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelBDE_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavBDE}" pageLabel="{!$Label.stgNavBDE}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavBDE}" />
 
-    <apex:form id="form" styleClass="form-horizontal">>   
+    <apex:form id="form" styleClass="form-horizontal">  
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
             <div class="form-group">

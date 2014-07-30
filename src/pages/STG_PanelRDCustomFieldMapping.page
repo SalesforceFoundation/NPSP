@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelRDCustomFieldMapping_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRDFieldMap}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDFieldMap}" />
 	<p>{!$Label.stgHelpRDFieldMap}</p>
 
     <apex:form id="form" styleClass="stgForm form-horizontal" >  

@@ -1,5 +1,5 @@
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0"  >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
 
     <apex:form id="form" styleClass="stgForm form-horizontal">  
         <apex:pageMessages id="pageMessages"/>
