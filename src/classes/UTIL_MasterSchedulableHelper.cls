@@ -41,11 +41,11 @@ public with sharing class UTIL_MasterSchedulableHelper {
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
     public UTIL_MasterSchedulableHelper() {
-    	runRecurringJobs();
+        runRecurringJobs();
     }
     
     public void runRecurringJobs() {
-    	List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
+        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
                                        from Schedulable__c where Active__c = true];
         
         List<Schedulable__c> jobsToUpdate = new List<Schedulable__c>();
@@ -89,5 +89,49 @@ public with sharing class UTIL_MasterSchedulableHelper {
             }
         }
         update jobsToUpdate;
+    }
+    
+    public static void abortOldScheduledJobs() {
+        //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014)
+        //Also abort the scheduled jobs from the old NPSP packages
+        String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates'};
+        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+           where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
+        if(scheduledJobs != null && scheduledJobs.size() > 0) {
+            for(CronTrigger job : scheduledJobs) {
+                 System.abortJob(job.Id);
+            }
+        }   
+    }
+    
+    public static void setSchedulableTable() {
+        // clean table, in case it's a push upgrate and we have added or removed entries from the table.
+        delete [select id from Schedulable__c where Name != null];
+        
+        // create records for the jobs that are to run recursively
+        List<Schedulable__c> jobs = new List<Schedulable__c>();
+        jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
+                    Active__c = true, Frequency__c = 'Daily'));
+        jobs.add(new Schedulable__c(Name = 'Opportunity Account Rollups', Class_Name__c = 'RLLP_OppAccRollup_BATCH', 
+                Active__c = true, Frequency__c = 'Daily'));
+        jobs.add(new Schedulable__c(Name = 'Opportunity Contact Rollups', Class_Name__c = 'RLLP_OppContactRollup_BATCH', 
+                Active__c = true, Frequency__c = 'Daily'));
+        jobs.add(new Schedulable__c(Name = 'Opportunity Household Rollups', Class_Name__c = 'RLLP_OppHouseholdRollup_BATCH', 
+                Active__c = true, Frequency__c = 'Daily'));
+        jobs.add(new Schedulable__c(Name = 'Opportunity Soft Credit Rollups', Class_Name__c = 'RLLP_OppSoftCreditRollup_BATCH', 
+                Active__c = true, Frequency__c = 'Daily'));
+        jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = 'ADDR_SEASONAL_SCHED',
+                Active__c = true, Frequency__c = 'Daily'));
+        insert jobs;    
+    }
+    
+    public static void scheduleMasterJobs() {
+        // schedule master cron jobs.
+        // NOTE: if more jobs are added to this list, they must also be added to the code in
+        // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
+        // verifying they exist.
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler1', '0 0 23 ? * *', 'UTIL_MasterSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler2', '0 0 1 ? * *', 'UTIL_MasterSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler3', '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
     }
 }

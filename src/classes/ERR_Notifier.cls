@@ -37,32 +37,32 @@ public with sharing class ERR_Notifier {
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
     public class NotificationOptions {
-    	public final String sysAdmins = 'All Sys Admins';
-    	public final String user = '005';  //specific user (should be a system admin)
-    	public final String chatterGroup = '0F9'; //chatter group
+        public final String sysAdmins = 'All Sys Admins';
+        public final String user = '005';  //specific user (should be a system admin)
+        public final String chatterGroup = '0F9'; //chatter group
     }
     
     public static void sendErrorNotifications(ERR_Handler.Context context) {
-    	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
+        String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
             
         if (Error_Settings__c.getOrgDefaults().Error_Notifications_On__c == true && errorNotifRecipient != null) {
-        	//We will post to chatter, if enabled
-        	if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
-        	&& Schema.SObjectType.User.isFeedEnabled()) {
-        		postErrorsToChatter(errorNotifRecipient);
-        	//We will send email
-        	} else {
-        		List<String> sendList = new List<String>();
+            //We will post to chatter, if enabled
+            if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
+            && Schema.SObjectType.User.isFeedEnabled()) {
+                postErrorsToChatter(errorNotifRecipient);
+            //We will send email
+            } else {
+                List<String> sendList = new List<String>();
                 if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
                     sendList.add([select email from User where id = :errorNotifRecipient].email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
                     list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator'];
-		            for (User u : sysadminlist) {
-		                sendList.add(u.email);              
-		            }
+                    for (User u : sysadminlist) {
+                        sendList.add(u.email);              
+                    }
                 }
                 sendEmailNotifications(context, sendList);
-        	}
+            }
         }
     }
     
@@ -76,7 +76,7 @@ public with sharing class ERR_Notifier {
     
     @future
     private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
-    	sendErrorQueueEmailNotification(null, sendList); 
+        sendErrorQueueEmailNotification(null, sendList); 
     }
     
     private static void sendErrorQueueEmailNotification(ERR_Handler.Context context, List<String> sendList) {
@@ -113,39 +113,39 @@ public with sharing class ERR_Notifier {
     }
     
     public static void postErrorsToChatter(String chatterGroupId) {
-    	
-    	if(chatterGroupId instanceof Id) {
-	    	SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
-	        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
-	                                    Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
-	        
-	        if (!errors.isEmpty()) {
-	        	List<SObject> postsToInsert = new List<SObject>();
-	        	for(Error__c error : errors) {
-	        		SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
-	        		post.put('Title', 'NPSP Error');
-	        		String body = getErrorMessageBody(error);
-	        		post.put('Body', body);
-	        		post.put('ParentId', collaborationGroup.Id);
-	        		postsToInsert.add(post);
-	        		error.Posted_in_Chatter__c = true;
-	        	}
-	        	insert postsToInsert;
-	        	update errors; //we don't want to post the same errors again	
-	        }  
-    	}
+        
+        if(chatterGroupId instanceof Id) {
+            SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
+            List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
+                                        Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
+            
+            if (!errors.isEmpty()) {
+                List<SObject> postsToInsert = new List<SObject>();
+                for(Error__c error : errors) {
+                    SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
+                    post.put('Title', 'NPSP Error');
+                    String body = getErrorMessageBody(error);
+                    post.put('Body', body);
+                    post.put('ParentId', collaborationGroup.Id);
+                    postsToInsert.add(post);
+                    error.Posted_in_Chatter__c = true;
+                }
+                insert postsToInsert;
+                update errors; //we don't want to post the same errors again    
+            }  
+        }
     }
     
     private static String getErrorMessageBody(Error__c error) {
-    	String body = '\nError Type: ' + error.Error_Type__c;
-	    body += '\nError Date: ' + error.Datetime__c;
-	    body += '\nMessage: "' + error.Full_Message__c + '"';
-	    if(error.Record_URL__c != null)
-	        body += '\n' + error.Record_URL__c;
-	    if(error.Context_Type__c != null)
-	        body += '\nContext: ' + error.Context_Type__c;
-	    body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
-	    return body;
+        String body = '\nError Type: ' + error.Error_Type__c;
+        body += '\nError Date: ' + error.Datetime__c;
+        body += '\nMessage: "' + error.Full_Message__c + '"';
+        if(error.Record_URL__c != null)
+            body += '\n' + error.Record_URL__c;
+        if(error.Context_Type__c != null)
+            body += '\nContext: ' + error.Context_Type__c;
+        body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
+        return body;
     }
     
     public static Error_Settings__c getErrorSettings() {
@@ -154,49 +154,71 @@ public with sharing class ERR_Notifier {
     
     // verify error settings are still valid - called by Health Check
     public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
-    	
-    	Error_Settings__c es = getErrorSettings();
+        
+        Error_Settings__c es = getErrorSettings();
         String errorNotifRecipient = es.Error_Notifications_To__c;
         string strSetting;
         strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
             
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
-        	if (errorNotifRecipient != NotificationOptions.sysAdmins) {
-	        	if (!(errorNotifRecipient instanceof id)) {
-	                ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
+            if (errorNotifRecipient != NotificationOptions.sysAdmins) {
+                if (!(errorNotifRecipient instanceof id)) {
+                    ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
                         string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-	                return;                             		
-	        	}
-	            if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
-	            	// verify chatter group exists
-	                list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
-	                if (listCG.size() == 0) {
-	                    ctrl.createDR(strSetting, 'Error', 
+                    return;                                     
+                }
+                if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
+                    // verify chatter group exists
+                    list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
+                    if (listCG.size() == 0) {
+                        ctrl.createDR(strSetting, 'Error', 
                             string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
                             string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-	                    return;                    	
-	                }            	
-	            } else {
-	                if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
-	                	// verify user exists and is active
-	                    list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient];
-	                    if (listUser.size() == 0) {
-	                    	ctrl.createDR(strSetting, 'Error', 
-	                            string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
-	                            string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-	                    	return;    
-	                    }
-	                    if (listUser[0].isActive == false) { 
-	                        ctrl.createDR(strSetting, 'Error', 
+                        return;                     
+                    }               
+                } else {
+                    if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
+                        // verify user exists and is active
+                        list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient];
+                        if (listUser.size() == 0) {
+                            ctrl.createDR(strSetting, 'Error', 
+                                string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
+                                string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
+                            return;    
+                        }
+                        if (listUser[0].isActive == false) { 
+                            ctrl.createDR(strSetting, 'Error', 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-	                        return;     
-	                    }
-	                }
-	            }
-        	}        
+                            return;     
+                        }
+                    }
+                }
+            }        
         // settings ok.
         ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
+        }
+    }
+    
+    //For some reason this method does not seem to be working when the installation of the package fails. We'll
+    //leave it here for future debugging purposes. 
+    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
+        try {
+            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
+            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setUseSignature(false);
+            mail.setReplyTo('donotreply@salesforcefoundation.org');
+            mail.setSenderDisplayName('Nonprofit Starter Pack');
+            mail.setSubject('NPSP Install Errors');
+            String bodyString = Label.stgInstallScriptError;
+            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
+            + 'Error stack trace: \n' + e.getStackTraceString();
+            mail.setPlainTextBody(bodyString);      
+            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
+            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+        } catch(Exception e2) {
+            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
         }
     }
 }
