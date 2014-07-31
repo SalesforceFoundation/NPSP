@@ -2,6 +2,7 @@
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>29.0</apiVersion>
     <availableInTouch>true</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>NPSP Resources</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
