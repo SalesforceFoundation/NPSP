@@ -1,10 +1,61 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavConnections}" pageLabel="{!$Label.stgNavRelReciprocal}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
     <p>{!$Label.npe4__RelationshipsLookupDescription}</p>
 
     <apex:form id="form" styleClass="form-horizontal stgForm">  
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="inline-form-block">
+            <section>
+                <h3 class="section-header" >{!$Label.stgLabelNewRelReciprocal}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}" for="tbxN" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRelReciprocalName}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}" for="tbxM" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" id="tbxM" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRelReciprocalMale}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}" for="tbxF" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" id="tbxF" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRelReciprocalFemale}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}" for="tbxNe" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" id="tbxNe" styleClass="form-control" />
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpRelReciprocalNeutral}" />
+                    </div>
+                </div>
+            </section>
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+            </apex:outputPanel>
+
+            </apex:outputPanel>
+            
             <apex:pageBlockTable value="{!listRelLookup}" var="rl" >
                 <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                     <apex:commandLink action="{!deleteRl}" 
@@ -19,57 +70,6 @@
                 <apex:column value="{!rl.npe4__Female__c}" />
                 <apex:column value="{!rl.npe4__Neutral__c}" />
             </apex:pageBlockTable> 
-
-            <apex:outputPanel layout="none" rendered="{!isEditMode}" >
-            <section>
-                <h3 class="section-header" >{!$Label.stgLabelNewRelReciprocal}</h3>
-	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.Name.Label}" for="tbxN" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.Name}" rendered="{!isEditMode}" required="false" id="tbxN" styleClass="form-control" />
-	                </div>
-	                <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalName}" />
-	                </div>
-	            </div>
-	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Male__c.Label}" for="tbxM" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.npe4__Male__c}" rendered="{!isEditMode}" required="false" id="tbxM" styleClass="form-control" />
-	                </div>
-	                <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalMale}" />
-	                </div>
-	            </div>
-	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Female__c.Label}" for="tbxF" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-                        <apex:inputField value="{!rlNew.npe4__Female__c}" rendered="{!isEditMode}" required="false" id="tbxF" styleClass="form-control" />
-	                </div>
-	                <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalFemale}" />
-	                </div>
-	            </div>
-	            <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Lookup__c.Fields.npe4__Neutral__c.Label}" for="tbxNe" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-	                    <apex:inputField value="{!rlNew.npe4__Neutral__c}" rendered="{!isEditMode}" required="false" id="tbxNe" styleClass="form-control" />
-	                </div>
-	                <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="{!$Label.stgHelpRelReciprocalNeutral}" />
-	                </div>
-	            </div>
-            </section>
-            </apex:outputPanel>
-            
-                  
-            <apex:pageBlockButtons location="both">
-            <div class="button-block">
-                <apex:commandButton value="{!$Label.stgBtnNewRelReciprocal}" action="{!newRelLookup}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCreateRelReciprocal}" action="{!createRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelRelLookup}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </div>
-            </apex:pageBlockButtons>
  
         </apex:pageBlock> 
     </apex:form>
