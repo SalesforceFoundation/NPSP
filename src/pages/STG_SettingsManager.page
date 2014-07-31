@@ -107,6 +107,11 @@
     
     .bootstrap .button-block {
         margin: 10px;
+        text-align: center;
+    }
+    
+    .inline-form-block {
+        margin-bottom: 24px;
     }
     
     .bootstrap .btn-primary[disabled] {

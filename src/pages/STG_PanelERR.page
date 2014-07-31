@@ -65,10 +65,19 @@
     
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
      
-    <apex:form id="form" styleClass="form-horizontal">>   
+    <apex:form id="form" styleClass="form-horizontal">  
         <apex:pageMessages id="pageMessages"/>
+        <apex:outputPanel id="saveError" style="padding-left:25%; font-weight:bold; color: red;">
+            <apex:outputPanel rendered="{!NOT(ISNULL(saveErrorMessage))}">
+                <apex:outputText value="{!saveErrorMessage}" />
+            </apex:outputPanel>
+        </apex:outputPanel>
         <apex:pageBlock mode="maindetail">
             <apex:outputPanel id="fields">
+                <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                    <apex:commandButton id="editNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" 
+                        rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, saveError" styleClass="btn-sm btn-primary" />
+                </apex:outputPanel>
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" styleClass="col-sm-4 control-label" />
                    <div class="col-sm-8 form-control-column">
@@ -88,7 +97,7 @@
                    </div>
                </div>
                <div class="form-group">
-                    <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" styleClass="col-sm-4 control-label" />
+                   <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" styleClass="col-sm-4 control-label" />
                    <div class="col-sm-8 form-control-column">
                         <apex:outputPanel id="errRecipient">
                             <apex:outputText id="errorNotifDisplayName" value="{!strErrorNotifDisplayName}" rendered="{!isReadOnlyMode}" />
@@ -118,26 +127,14 @@
                 <apex:inputHidden id="groupId" value="{!groupId}" />
             </apex:outputPanel>  
             
-            <div style="padding-left:25%; font-weight:bold; color: red;">
-            <apex:outputPanel id="saveError">
-                <apex:outputPanel rendered="{!NOT(ISNULL(saveErrorMessage))}">
-                    <apex:outputText value="{!saveErrorMessage}" />
-                </apex:outputPanel>
-            </apex:outputPanel>
-            </div>
-
-            <apex:pageBlockButtons location="both" >
             <div class="button-block">
                 <apex:outputPanel id="commandButtons">
-                    <apex:commandButton id="editNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" 
-                        rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, saveError" styleClass="btn-sm btn-primary" />
                     <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" 
                         rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, saveError" styleClass="btn-sm btn-primary" />
                     <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" 
                         rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, saveError" styleClass="btn-sm btn-default" />
                 </apex:outputPanel>
             </div>
-            </apex:pageBlockButtons>
      
         </apex:pageBlock>
     </apex:form>
