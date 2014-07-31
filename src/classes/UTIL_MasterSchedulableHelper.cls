@@ -144,7 +144,7 @@ public with sharing class UTIL_MasterSchedulableHelper {
         // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
         // verifying they exist.
         UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 23 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 1 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[1], '0 0 1 ? * *', 'UTIL_MasterSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[2], '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
     }
 }
