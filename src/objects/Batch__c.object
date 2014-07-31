@@ -186,9 +186,9 @@
     </nameField>
     <pluralLabel>Batches</pluralLabel>
     <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
-        <excludedStandardButtons>New</excludedStandardButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>
