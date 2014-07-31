@@ -7,9 +7,8 @@ public with sharing class STG_UninstallScript_TEST {
     	ctrl.setTriggerSchedConfig();
     	
     	//Check jobs were scheduled
-    	String[] schedulers = new String[] {'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
     	List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];
+           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
     	System.assertEquals(3, scheduledJobs.size());
     	
     	//Run uninstall script
@@ -17,7 +16,7 @@ public with sharing class STG_UninstallScript_TEST {
     	
     	//Confirm scheduled job was deleted
     	scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name IN :schedulers  and CronJobDetail.JobType = '7'];
+           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs  and CronJobDetail.JobType = '7'];
         System.assertEquals(0, scheduledJobs.size());
     }
 }

@@ -43,6 +43,8 @@ public with sharing class UTIL_MasterSchedulableHelper {
     public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 
     	'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED'};
     
+    public static String[] scheduledJobs = new String[] {'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
+    
     public UTIL_MasterSchedulableHelper() {
         runRecurringJobs();
     }
@@ -101,10 +103,10 @@ public with sharing class UTIL_MasterSchedulableHelper {
         //slightly (added a space) to that they get rescheduled (with diffrent name when a user visits the settings page).
         String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
             'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};     
-        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
+        List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
-        if(scheduledJobs != null && scheduledJobs.size() > 0) {
-            for(CronTrigger job : scheduledJobs) {
+        if(oldScheduledJobs != null && oldScheduledJobs.size() > 0) {
+            for(CronTrigger job : oldScheduledJobs) {
                  System.abortJob(job.Id);
             }
         }   
@@ -141,8 +143,8 @@ public with sharing class UTIL_MasterSchedulableHelper {
         // NOTE: if more jobs are added to this list, they must also be added to the code in
         // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
         // verifying they exist.
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler 1', '0 0 23 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler 2', '0 0 1 ? * *', 'UTIL_MasterSchedulable');
-        UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler 3', '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 23 ? * *', 'UTIL_MasterSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 1 ? * *', 'UTIL_MasterSchedulable');
+        UTIL_JobScheduler.scheduleJobIfNotScheduled(scheduledJobs[0], '0 0 2 ? * *', 'UTIL_MasterSchedulable');    
     }
 }
