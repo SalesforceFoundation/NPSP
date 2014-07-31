@@ -467,6 +467,7 @@
     <members>hhCmpDedupeLabelOpenReport</members>
     <members>hhCmpDedupeNoReport</members>
     <members>hhCmpDedupeStatus</members>
+    <members>HiddenForSecurity</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -584,6 +585,7 @@
     <members>stgHelpUDRTargetObject</members>
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
+    <members>stgLabelAddressVerification</members>
     <members>stgLabelAfflSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
@@ -650,6 +652,7 @@
     <members>stgNavHouseholds</members>
     <members>stgNavLeads</members>
     <members>stgNavMembership</members>
+    <members>stgNavPeople</members>
     <members>stgNavPaymentMappings</members>
     <members>stgNavPayments</members>
     <members>stgNavRDBatch</members>
