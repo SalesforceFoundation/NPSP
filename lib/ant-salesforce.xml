@@ -698,6 +698,32 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="updateMetaXmlApi" description="Updates all apiVersion elements in all *-meta.xml files in target directory">
+    <attribute name="dir" description="The package directory containing the *-meta.xml files to update" />
+    <attribute name="apiVersion" description="The apiVersion value (i.e. 31.0)" />
+    <sequential>
+
+      <for param="file">
+        <path>
+          <fileset dir="@{dir}" includes="**/*-meta.xml" />
+        </path>
+        <sequential>
+          <xslt in="@{file}" out="@{file}.updated" style="lib/update_meta_xml_api.xsl">
+            <param name="apiVersion" expression="@{apiVersion}" />
+          </xslt>
+          <if>
+            <not><filesmatch file1="@{file}" file2="@{file}.updated" /></not>
+            <then>
+              <echo>@{file} updated for @{namespace}</echo>
+              <move file="@{file}.updated" tofile="@{file}" />
+            </then>
+          </if>
+          <delete file="@{file}.updated" />
+        </sequential>
+      </for>
+    </sequential>
+  </macrodef>
+
   <macrodef name="deployMetadataBundles" description="Deploys all subfolders of a given dir as individual metadata bundles replacing %%%NAMESPACE%%% with either blank or a namespace prefix in all files">
     <attribute name="dir" description="The parent directory containing subfolders each representing an individual metadata bundle" />
     <attribute name="stagedir" description="The directory where rendered bundles should be staged for deployment.  This directory is created and deleted by the macro" />
