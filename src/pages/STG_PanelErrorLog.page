@@ -4,15 +4,12 @@
     <apex:form id="form" styleClass="stgForm" >  
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
 
             <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
                                               
-            <apex:pageBlockButtons location="both">
-            <div class="button-block">
-                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
-            </div>
-            </apex:pageBlockButtons>
-
         </apex:pageBlock> 
     </apex:form>
 </apex:page>

@@ -9,7 +9,7 @@
        });
     </script>
 
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="LiveAddress API Setup" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
 
 	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
 	<apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
@@ -22,6 +22,9 @@
         <apex:pageMessages id="pageMessages"/>
 		<apex:pageBlock mode="maindetail">
 		<apex:outputPanel layout="block" id="fields">
+		<apex:outputPanel layout="block" styleClass="button-block" rendered="{!isReadOnlyMode}">
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+        </apex:outputPanel>
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
 			<div class="form-group">
@@ -36,7 +39,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" disabled="{!isReadOnlyMode}" id="iAuth_ID__c" redisplay="true" styleClass="form-control" />
+                    <apex:outputText value="{!IF(ISBLANK(addrVerifsettings.Auth_ID__c) || LEN(addrVerifsettings.Auth_ID__c) = 0, '', $Label.HiddenForSecurity)}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" rendered="{!isEditMode}" id="iAuth_ID__c" redisplay="true" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_ID__c.inlineHelpText}" />
@@ -45,7 +49,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Auth Token" for="iAuth_Token__c" styleClass="col-sm-4 control-label"/>
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" disabled="{!isReadOnlyMode}" id="iAuth_Token__c" redisplay="true" styleClass="form-control" />
+                    <apex:outputText value="{!IF(ISBLANK(addrVerifsettings.Auth_Token__c) || LEN(addrVerifsettings.Auth_Token__c) = 0, '', $Label.HiddenForSecurity)}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputSecret value="{!addrVerifsettings.Auth_Token__c}" rendered="{!isEditMode}" id="iAuth_Token__c" redisplay="true" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Auth_Token__c.inlineHelpText}" />
@@ -54,7 +59,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Address Verification URL" for="iAddress_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iAddress_Verification_Endpoint__c" styleClass="form-control" />
+                    <apex:outputField value="{!addrVerifsettings.Address_Verification_Endpoint__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputText value="{!addrVerifsettings.Address_Verification_Endpoint__c}" rendered="{!isEditMode}" id="iAddress_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Address_Verification_Endpoint__c.inlineHelpText}" />
@@ -63,7 +69,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Zipcode Verification URL" for="iZipcode_Verification_Endpoint__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" disabled="{!isReadOnlyMode}" id="iZipcode_Verification_Endpoint__c" styleClass="form-control" />
+                    <apex:outputField value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputText value="{!addrVerifsettings.Zipcode_Verification_Endpoint__c}" rendered="{!isEditMode}" id="iZipcode_Verification_Endpoint__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Zipcode_Verification_Endpoint__c.inlineHelpText}" />
@@ -72,7 +79,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Implementing Class" for="iClass__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputText value="{!addrVerifsettings.Class__c}" disabled="{!isReadOnlyMode}" id="iClass__c" styleClass="form-control" />
+                    <apex:outputField value="{!addrVerifsettings.Class__c}" rendered="{!isReadOnlyMode}" />
+                    <apex:inputText value="{!addrVerifsettings.Class__c}" rendered="{!isEditMode}" id="iClass__c" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
@@ -119,7 +127,6 @@
             <br/>
 			
 			<apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
                 <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
                 <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
             </apex:outputPanel>

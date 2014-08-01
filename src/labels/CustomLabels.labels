@@ -12,8 +12,8 @@
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRICATED - Addr Settings API Title</shortDescription>
-        <value>DEPRICATED - API Account Settings</value>
+        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
+        <value>DEPRECATED - API Account Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_API_Title</fullName>
@@ -28,8 +28,8 @@
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRICATED - Addr Settings Intro Body</shortDescription>
-        <value>DEPRICATED</value>
+        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
+        <value>DEPRECATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
@@ -191,6 +191,22 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>HiddenForSecurity</fullName>
+        <categories>settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HiddenForSecurity</shortDescription>
+        <value>Hidden for security</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationAccountAndContactError</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
+        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
+    </labels>
+    <labels>
         <fullName>Saved</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -203,14 +219,6 @@
         <protected>true</protected>
         <shortDescription>Settings not Saved</shortDescription>
         <value>Settings not saved</value>
-    </labels>
-    <labels>
-        <fullName>RecurringDonationAccountAndContactError</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
-        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
     </labels>
     <labels>
         <fullName>Zip_Not_Found</fullName>
@@ -1899,6 +1907,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Action</value>
     </labels>
     <labels>
+        <fullName>stgLabelAddressVerification</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAddressVerification</shortDescription>
+        <value>Address Verification (LiveAddress API Setup)</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAfflSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2153,7 +2169,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
         <value>Other Informal Greeting Format</value>
-    </labels>    
+    </labels>
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
         <categories>Settings</categories>
@@ -2368,7 +2384,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavDonations</shortDescription>
-        <value>Donations &amp; Money</value>
+        <value>Donations</value>
     </labels>
     <labels>
         <fullName>stgNavDonorStatistics</fullName>
@@ -2443,6 +2459,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Payments</value>
     </labels>
     <labels>
+        <fullName>stgNavPeople</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavPeople</shortDescription>
+        <value>People</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2512,7 +2536,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavSystem</shortDescription>
-        <value>System</value>
+        <value>System Tools</value>
     </labels>
     <labels>
         <fullName>stgNavTriggerConfig</fullName>
