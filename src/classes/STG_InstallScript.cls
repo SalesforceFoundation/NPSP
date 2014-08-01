@@ -38,13 +38,16 @@ global class STG_InstallScript implements InstallHandler {
         try { 
 	        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
 	        if(context.previousVersion() == null) {
-	            runNewOrgScript();           
+	            runNewOrgScript();
+	            scheduleMasterJobs();
 	        } else if(context.isUpgrade()) {
 	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
 	        	insertTdtmDefaults(defaultHandlers);
+	        	scheduleMasterJobs();
 	        } else if(context.isPush()) {
 	        	List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
 	        	insertTdtmDefaults(defaultHandlers);
+	        	scheduleMasterJobs();
 	        }
         } catch(Exception e) {
 	        sendEmailOnError(e, context);
@@ -82,29 +85,27 @@ global class STG_InstallScript implements InstallHandler {
         
         setTriggerConfig();
 
-        //set default settings
+        //Set default settings.
         UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
         UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 'Mark_Opportunities_Closed_Lost');
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        // The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
-        // when run in a test environment.  This code should always insert even if in a test
+        //The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
+        //when run in a test environment.  This code should always insert even if in a test.
         if (errorSettings.id == null) {
             insert errorSettings;
         }
         
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings();
-        
-        scheduleMasterJobs();
     }
     
     public void scheduleMasterJobs() {
   	
-  	    //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014)
-  	    //Also abort the scheduled jobs from the old NPSP packages
+  	    //Abort the old schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
+  	    //Also abort the scheduled jobs from the old NPSP packages.
   	    String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates'};
   	    List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
            where CronJobDetail.Name IN :jobNames and CronJobDetail.JobType = '7'];
@@ -114,10 +115,10 @@ global class STG_InstallScript implements InstallHandler {
   	        }
   	    }
   	    
-    	// clean table, in case it's a push upgrate and we have added or removed entries from the table.
+    	//Clean table, in case it's a push upgrade and we have added or removed entries from the table.
     	delete [select id from Schedulable__c where Name != null];
     	
-    	// create records for the jobs that are to run recursively
+    	//Create records for the jobs that are to run recursively.
         List<Schedulable__c> jobs = new List<Schedulable__c>();
         jobs.add(new Schedulable__c(Name = 'Recurring Donation Updates', Class_Name__c = 'RD_RecurringDonations_BATCH', 
                     Active__c = true, Frequency__c = 'Daily'));
@@ -133,10 +134,10 @@ global class STG_InstallScript implements InstallHandler {
                 Active__c = true, Frequency__c = 'Daily'));
         insert jobs;
 
-        // schedule master cron jobs.
-        // NOTE: if more jobs are added to this list, they must also be added to the code in
-        // STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
-        // verifying they exist.
+        //Schedule master cron jobs.
+        //NOTE: if more jobs are added to this list, they must also be added to the code in
+        //STG_PanelHealthCheck_CTRL.verifyScheduledJobs() so that HealthCheck will include
+        //verifying they exist.
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler1', '0 0 23 ? * *', 'UTIL_MasterSchedulable');
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler2', '0 0 1 ? * *', 'UTIL_MasterSchedulable');
         UTIL_JobScheduler.scheduleJobIfNotScheduled('NPSP Scheduler3', '0 0 2 ? * *', 'UTIL_MasterSchedulable');
