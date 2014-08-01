@@ -1,9 +1,12 @@
 <apex:page controller="STG_PanelLeads_CTRL" >
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavContacts}" pageLabel="{!$Label.stgLabelLeadSettings}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelLeadSettings}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
@@ -14,14 +17,10 @@
                 </div>
             </div>
                         
-            <apex:pageBlockButtons location="both" >
-            <div class="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </div>
-            </apex:pageBlockButtons>
-            
+            </apex:outputPanel>
         </apex:pageBlock>
     </apex:form>
 </apex:page>

@@ -116,11 +116,14 @@
 </style>
 
 
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavHouseholds}" pageLabel="{!$Label.stgLabelHHSettings}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
 
     <apex:form id="form" styleClass="form-horizontal">   
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbHH" mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
 	        <section>
 	            <h3 class="section-header" >{!$Label.stgLabelHHObject}</h3> 
 	            <p class="section-help">{!$Label.stgHelpHHObjectOverview}</p>
@@ -311,13 +314,10 @@
 	            <br/>
 	        </apex:outputPanel>
 
-            <apex:pageBlockButtons location="both" >
-            <div class="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </div>
-            </apex:pageBlockButtons>
+            </apex:outputPanel>
 
         </apex:pageBlock>
     </apex:form>
