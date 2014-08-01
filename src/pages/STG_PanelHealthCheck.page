@@ -31,6 +31,9 @@
     <apex:form id="form">   
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbDetector" mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" styleClass="btn-sm btn-primary"/>
+            </apex:outputPanel>
             
             <apex:outputPanel layout="block" id="panelResults">
 		        <apex:outputPanel rendered="{!hasResults}">
@@ -74,12 +77,6 @@
 			        </ul>
 		        </apex:outputPanel>                     
             </apex:outputPanel> 
-
-            <apex:pageBlockButtons location="top">
-            <div class="button-block">
-                <apex:commandButton id="btnRun" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="panelResults" styleClass="btn-sm btn-primary"/>
-            </div>
-            </apex:pageBlockButtons>            
         </apex:pageBlock>
     </apex:form>
 </apex:page>

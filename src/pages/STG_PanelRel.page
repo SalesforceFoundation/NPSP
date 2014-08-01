@@ -1,10 +1,13 @@
 <apex:page controller="STG_PanelRel_CTRL" docType="html-5.0">
-    <c:STG_PageHeader sectionLabel="{!$Label.stgNavConnections}" pageLabel="{!$Label.stgNavRelationships}" />
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
     <p>{!$Label.npe4__RelationshipsSettingsDescription}</p>
 
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM" styleClass="col-md-4 control-label" />
                 <div class="col-md-8 form-control-column">
@@ -40,11 +43,10 @@
                 </div>
             </div>
   
-            <apex:pageBlockButtons location="both" >
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:pageBlockButtons>
+            </apex:outputPanel>
             
         </apex:pageBlock>
     </apex:form>
