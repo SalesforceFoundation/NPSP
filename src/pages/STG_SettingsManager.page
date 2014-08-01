@@ -7,82 +7,82 @@
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced-s1.css')}" />
     
 <style> 
-	/* COMMON CSS FOR ALL SETTINGS PAGES */
-	.noSidebarCell { 
-		padding: 0px;
-	}
+    /* COMMON CSS FOR ALL SETTINGS PAGES */
+    .noSidebarCell { 
+        padding: 0px;
+    }
     
     .bootstrap {
-    	background: #fff;
+        background: #fff;
     }
     
     .bootstrap .container {
-    	width: auto;
-    	min-width: 800px;
-    	padding-left: 0px;
-    	padding-right: 0px;
+        width: auto;
+        min-width: 800px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 
     .bootstrap .container .sidebar {
-    	padding-left: 0;
-    	padding-right: 0;
+        padding-left: 0;
+        padding-right: 0;
     }
     
     .bootstrap .container .content {
-    	padding: 15px;
+        padding: 15px;
     }
     
     .bootstrap .container .list-unstyled li {
-    	margin-left: 0;
+        margin-left: 0;
     }
 
-	.bootstrap .page-header {
-		margin: 0 0 15px;
-		padding: 0;
-		border-bottom: none;
-	}
-	
-	.bootstrap .page-header h1, .bootstrap .page-header h2 {
-		margin: 0;
-		padding: 0;
-		color: #293f54;
-		margin-left: 36px;
-	}
-	
-	.bootstrap .noborder {
-		border: 0;
-		box-shadow: none;
-	}
-	
-	.bootstrap span.caret {
-	   border-top: 0;
-	}
-	
-	.page-header h1 {
-		font-size: 12px;
-		font-weight: bold;
-	}
-	
-	.page-header h2 {
-		font-size: 22px;
-		font-weight: normal;
-	}
+    .bootstrap .page-header {
+        margin: 0 0 15px;
+        padding: 0;
+        border-bottom: none;
+    }
+    
+    .bootstrap .page-header h1, .bootstrap .page-header h2 {
+        margin: 0;
+        padding: 0;
+        color: #293f54;
+        margin-left: 36px;
+    }
+    
+    .bootstrap .noborder {
+        border: 0;
+        box-shadow: none;
+    }
+    
+    .bootstrap span.caret {
+       border-top: 0;
+    }
+    
+    .page-header h1 {
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .page-header h2 {
+        font-size: 22px;
+        font-weight: normal;
+    }
     
     .pageTitleIcon {
-    	float: left;
+        float: left;
     }
     
     .bootstrap h3.section-header {
-    	color: #696e71;
-    	background-color: #e8eaeb;
-    	font-size: 13px;
-    	padding: 8px 14px;
-    	text-transform: uppercase;
-    	clear: both;
+        color: #696e71;
+        background-color: #e8eaeb;
+        font-size: 13px;
+        padding: 8px 14px;
+        text-transform: uppercase;
+        clear: both;
     }
     
     .bootstrap .pbBody {
-    	color: #525354;
+        color: #525354;
     }
     
     .bootstrap .pbBody p {
@@ -107,6 +107,11 @@
     
     .bootstrap .button-block {
         margin: 10px;
+        text-align: center;
+    }
+    
+    .inline-form-block {
+        margin-bottom: 24px;
     }
     
     .bootstrap .btn-primary[disabled] {
@@ -229,7 +234,7 @@
         border-left: 4px solid transparent;
     }
 
-	/* END - SIDEBAR STYLES */         
+    /* END - SIDEBAR STYLES */         
 
 </style>
 
@@ -274,181 +279,177 @@
     }
 </script>
 <apex:form >
-	<apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
-		<apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
-	</apex:actionFunction>
+    <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
+        <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
+    </apex:actionFunction>
 </apex:form>
 
 <div class="bootstrap">
-	<div class="container">
-		<div class="sidebar col-xs-12 col-sm-3 col-md-3">
-			<div class="navbar" >
-				<nav role="navigation">
-					<ul id="mynavbar" >
-						<li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">{!$Label.stgNPSPSettingsTitle}</a></li>
+    <div class="container">
+        <div class="sidebar col-xs-12 col-sm-3 col-md-3">
+            <div class="navbar" >
+                <nav role="navigation">
+                    <ul id="mynavbar" >
+                        <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">{!$Label.stgNPSPSettingsTitle}</a></li>
 
-						<li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavContacts}<span class="caret"></span></a></li>
-	                    <ul>
-		                    <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAccountModel}</a></li>
-		                    <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
-		                    <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">{!$Label.stgNavLeads}</a></li>
-	                    </ul>
+                        <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavPeople}<span class="caret"></span></a></li>
+                        <ul>
+                            <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAccountModel}</a></li>
+                            <li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHouseholds}</a></li>
+                            <li class="subitem" id="idPanelADDRVerifNav"><a href="." onclick="ShowPanel('idPanelADDR');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAddressVerification}</a></li>
+                            <li class="subitem" id="idPanelLeadsNav"><a href="." onclick="ShowPanel('idPanelLeads');return false;" class="nav-item sub-nav-item">{!$Label.stgNavLeads}</a></li>
+                        </ul>
 
-	                    <li class="header" id="idPanelHHHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavHouseholds}<span class="caret"></span></a></li>
-						<ul>
-							<li class="subitem" id="idPanelHHNav"><a href="." onclick="ShowPanel('idPanelHH');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHouseholds}</a></li>
-							<li class="subitem" id="idPanelADDRVerifNav"><a href="." onclick="ShowPanel('idPanelADDR');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAddressVerification}</a></li>
-						</ul>
-                    
-						<li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">{!$Label.stgNavConnections}<span class="caret"></span></a></li>
-						<ul>
-							<li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAffiliations}</a></li>
-							<li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelationships}</a></li>
-							<li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
-							<li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
-						</ul>
-						
-						<li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavDonations}<span class="caret"></span></a></li>
-						<ul>
-							<li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
-							<li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
-							<li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
-							<li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
-							<li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
-							<li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
-							<li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDInstallmentPeriods}</a></li>
-							<li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDFieldMap}</a></li>
-						</ul>
-						
-						<li class="header" id="idPanelBDEHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavBDE}<span class="caret"></span></a></li>
-						<ul>
-							<li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
-						</ul>
-						
-						<li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">{!$Label.stgNavSystem}<span class="caret"></span></a></li>
-						<ul>
-							<li class="subitem" id="idPanelHealthCheckNav"><a href="." onclick="ShowPanel('idPanelHealthCheck');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHealthCheck}</a></li>
-							<li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
-							<li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
-							<li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
-							<li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
-							<li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
-						</ul>
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<div class="content col-xs-12 col-sm-9 col-md-9" >
-			<apex:actionStatus id="statusLoad" 
-				onstart="document.getElementById('divLoading').style.display = 'block';" 
-				onstop="document.getElementById('divLoading').style.display = 'none';" />
-			<div class="loading clsLoading" id="divLoading" style="display:none" >
-				<p style="vertical-align: middle;" >
-					<img src="/img/loading.gif" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" style="vertical-align: middle;"/>
-					<span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
-				</p>
-			</div>                                                                  
+                        <li class="header" id="idPanelConnectionsNav"><a class="nav-item nav-section-title">{!$Label.stgNavRelationships}<span class="caret"></span></a></li>
+                        <ul>
+                            <li class="subitem" id="idPanelAfflNav"><a href="." onclick="ShowPanel('idPanelAffl');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAffiliations}</a></li>
+                            <li class="subitem" id="idPanelRelNav"><a href="." onclick="ShowPanel('idPanelRel');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelationships}</a></li>
+                            <li class="subitem" id="idPanelRelReciprocalNav"><a href="." onclick="ShowPanel('idPanelRelReciprocal');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelReciprocal}</a></li>
+                            <li class="subitem" id="idPanelRelAutoNav"><a href="." onclick="ShowPanel('idPanelRelAuto');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRelAutoCreate}</a></li>
+                        </ul>
+                        
+                        <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavDonations}<span class="caret"></span></a></li>
+                        <ul>
+                            <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
+                            <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
+                            <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
+                            <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
+                            <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
+                            <li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
+                            <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
+                            <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
+                        </ul>
+                        
+                        <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavRecurringDonations}<span class="caret"></span></a></li>
+                        <ul>
+                            <li class="subitem" id="idPanelRDNav"><a href="." onclick="ShowPanel('idPanelRD');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRecurringDonations}</a></li>
+                            <li class="subitem" id="idPanelRDInstPdNav"><a href="." onclick="ShowPanel('idPanelRDInstPd');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDInstallmentPeriods}</a></li>
+                            <li class="subitem" id="idPanelRDFieldMapNav"><a href="." onclick="ShowPanel('idPanelRDFieldMap');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDFieldMap}</a></li>
+                            <li class="subitem" id="idPanelRDBatchNav"><a href="." onclick="ShowPanel('idPanelRDBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRDBatch}</a></li>
+                        </ul>
+                        
+                        <li class="header" id="idPanelSystemNav"><a class="nav-item nav-section-title">{!$Label.stgNavSystem}<span class="caret"></span></a></li>
+                        <ul>
+                            <li class="subitem" id="idPanelHealthCheckNav"><a href="." onclick="ShowPanel('idPanelHealthCheck');return false;" class="nav-item sub-nav-item">{!$Label.stgNavHealthCheck}</a></li>
+                            <li class="subitem" id="idPanelErrorLogNav"><a href="." onclick="ShowPanel('idPanelErrorLog');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorLog}</a></li>
+                            <li class="subitem" id="idPanelErrorNotifNav"><a href="." onclick="ShowPanel('idPanelErrorNotif');return false;" class="nav-item sub-nav-item">{!$Label.stgNavErrorNotify}</a></li>
+                            <li class="subitem" id="idPanelTDTMNav"><a href="." onclick="ShowPanel('idPanelTDTM');return false;" class="nav-item sub-nav-item">{!$Label.stgNavTriggerConfig}</a></li>
+                        </ul>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="content col-xs-12 col-sm-9 col-md-9" >
+            <apex:actionStatus id="statusLoad" 
+                onstart="document.getElementById('divLoading').style.display = 'block';" 
+                onstop="document.getElementById('divLoading').style.display = 'none';" />
+            <div class="loading clsLoading" id="divLoading" style="display:none" >
+                <p style="vertical-align: middle;" >
+                    <img src="/img/loading.gif" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" style="vertical-align: middle;"/>
+                    <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
+                </p>
+            </div>                                                                  
          
-			<div class="panel noborder" id="idPanelHome" style="display:none" >
-			    <apex:include pageName="STG_PanelHome" />                               
-			</div>
-			
-			<div class="panel noborder" id="idPanelCon" style="display:none" >
-			    <apex:include pageName="STG_PanelContacts" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelConRole" style="display:none" >
-			    <apex:include pageName="STG_PanelContactRoles" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelLeads" style="display:none" >
-			    <apex:include pageName="STG_PanelLeads" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelHH" style="display:none" >
-			    <apex:include pageName="STG_PanelHouseholds" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelADDR" style="display:none" >
-			    <apex:include pageName="STG_PanelAddrVerification" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelAffl" style="display:none" >
-			    <apex:include pageName="STG_PanelAffiliations" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelMembership" style="display:none" >
-			    <apex:include pageName="STG_PanelMembership" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelOpp" style="display:none" >
-			    <apex:include pageName="STG_PanelOpps" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelOppRollup" style="display:none" >
-			    <apex:include pageName="STG_PanelOppRollups" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelOppBatch" style="display:none" >
-			    <apex:include pageName="STG_PanelOppBatch" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRD" style="display:none" >
-			    <apex:include pageName="STG_PanelRD" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRDBatch" style="display:none" >
-			    <apex:include pageName="STG_PanelRDBatch" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
-			    <apex:include pageName="STG_PanelRDCustomInstallment" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
-			    <apex:include pageName="STG_PanelRDCustomFieldMapping" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRel" style="display:none" >
-			    <apex:include pageName="STG_PanelRel" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRelReciprocal" style="display:none" >
-			    <apex:include pageName="STG_PanelRelReciprocal" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelRelAuto" style="display:none" >
-			    <apex:include pageName="STG_PanelRelAuto" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelBDE" style="display:none" >
-			    <apex:include pageName="STG_PanelBDE" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
-			    <apex:include pageName="STG_PanelPaymentMapping" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelUserRollup" style="display:none" >
-			    <apex:include pageName="STG_PanelUserRollup" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelErrorLog" style="display:none" >
-			    <apex:include pageName="STG_PanelErrorLog" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelTDTM" style="display:none" >
-			    <apex:include pageName="STG_PanelTDTM" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
-			    <apex:include pageName="STG_PanelERR" />
-			</div>
-			
-			<div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
-			    <apex:include pageName="STG_PanelHealthCheck" />
-			</div>
-		</div>	
-	</div>
+            <div class="panel noborder" id="idPanelHome" style="display:none" >
+                <apex:include pageName="STG_PanelHome" />                               
+            </div>
+            
+            <div class="panel noborder" id="idPanelCon" style="display:none" >
+                <apex:include pageName="STG_PanelContacts" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelConRole" style="display:none" >
+                <apex:include pageName="STG_PanelContactRoles" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelLeads" style="display:none" >
+                <apex:include pageName="STG_PanelLeads" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelHH" style="display:none" >
+                <apex:include pageName="STG_PanelHouseholds" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelADDR" style="display:none" >
+                <apex:include pageName="STG_PanelAddrVerification" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelAffl" style="display:none" >
+                <apex:include pageName="STG_PanelAffiliations" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelMembership" style="display:none" >
+                <apex:include pageName="STG_PanelMembership" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelOpp" style="display:none" >
+                <apex:include pageName="STG_PanelOpps" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
+                <apex:include pageName="STG_PanelOppRollups" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelOppBatch" style="display:none" >
+                <apex:include pageName="STG_PanelOppBatch" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRD" style="display:none" >
+                <apex:include pageName="STG_PanelRD" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
+                <apex:include pageName="STG_PanelRDBatch" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRDInstPd" style="display:none" >
+                <apex:include pageName="STG_PanelRDCustomInstallment" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
+                <apex:include pageName="STG_PanelRDCustomFieldMapping" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRel" style="display:none" >
+                <apex:include pageName="STG_PanelRel" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRelReciprocal" style="display:none" >
+                <apex:include pageName="STG_PanelRelReciprocal" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
+                <apex:include pageName="STG_PanelRelAuto" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelBDE" style="display:none" >
+                <apex:include pageName="STG_PanelBDE" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
+                <apex:include pageName="STG_PanelPaymentMapping" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
+                <apex:include pageName="STG_PanelUserRollup" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelErrorLog" style="display:none" >
+                <apex:include pageName="STG_PanelErrorLog" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelTDTM" style="display:none" >
+                <apex:include pageName="STG_PanelTDTM" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelErrorNotif" style="display:none" >
+                <apex:include pageName="STG_PanelERR" />
+            </div>
+            
+            <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
+                <apex:include pageName="STG_PanelHealthCheck" />
+            </div>
+        </div>  
+    </div>
 </div>
 </apex:page>
