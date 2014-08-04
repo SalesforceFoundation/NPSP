@@ -476,6 +476,14 @@
         <value>Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriodPIcklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriodPIcklist</shortDescription>
+        <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -857,6 +865,14 @@
         <protected>true</protected>
         <shortDescription>healthSolutionInvalidRDCustomPeriod</shortDescription>
         <value>Add this Recurring Donation Installment Period picklist value in Salesforce Setup.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriodPicklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriodPicklist</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidScheduledJob</fullName>

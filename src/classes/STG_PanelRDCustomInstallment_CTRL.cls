@@ -128,7 +128,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         }
         //now iterate through all the custom installment periods and make sure they have a matching picklist value
         boolean isValid = true;
+        set<string> setPeriods = new set<string>();    
         for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
+        	setPeriods.add(ci.Name);
         	if (!setValues.contains(ci.Name)) {
         		isValid = false;
 	            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
@@ -136,6 +138,20 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
 	                label.healthSolutionInvalidRDCustomPeriod);
         	}
         }
+        //now iterate through the picklist values to make sure they match a valid period
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodYearly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriod1stand15th);
+        for (Schema.PicklistEntry plistentry: P) {
+            if (!setPeriods.contains(plistentry.getLabel())) {
+            	isValid = false;
+                ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                    string.format(label.healthDetailsInvalidRDCustomPeriodPIcklist, new string[]{plistentry.getLabel()}), 
+                    string.format(label.healthSolutionInvalidRDCustomPeriodPicklist, new string[]{label.stgNavRecurringDonations, label.stgNavRDInstallmentPeriods}));            	
+            }
+        }       
         if (isValid)
             ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthDetailsValidRDCustomPeriod);
         

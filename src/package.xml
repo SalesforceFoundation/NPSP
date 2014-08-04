@@ -405,6 +405,7 @@
     <members>healthDetailsInvalidOppStage</members>
     <members>healthDetailsInvalidPaymentField</members>
     <members>healthDetailsInvalidRDCustomPeriod</members>
+    <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
     <members>healthDetailsInvalidRecordtypeId</members>
     <members>healthDetailsInvalidRecordtypeName</members>
     <members>healthDetailsInvalidScheduledJob</members>
@@ -453,6 +454,7 @@
     <members>healthSolutionInvalidOppStage</members>
     <members>healthSolutionInvalidPaymentField</members>
     <members>healthSolutionInvalidRDCustomPeriod</members>
+    <members>healthSolutionInvalidRDCustomPeriodPicklist</members>
     <members>healthSolutionInvalidScheduledJob</members>
     <members>healthSolutionInvalidUDFObjectField</members>
     <members>healthSolutionMailingListReportMissing</members>
