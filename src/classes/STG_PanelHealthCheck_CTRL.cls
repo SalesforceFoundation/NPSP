@@ -144,40 +144,25 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	integer cBucket = 0;
     	integer cOne2One = 0;
     	integer cHH = 0;
-    	integer cOther = -1;
         boolean isMixedAccs = false;
-    	
-    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account 
-    	   where npe01__SYSTEM_AccountType__c <> null
-    	   group by rollup(npe01__SYSTEM_AccountType__c) 
-    	   limit 9999];
-    	for (AggregateResult agg : listAgg) {
-            string strAccType = string.valueOf(agg.get('npe01__SYSTEM_AccountType__c'));
-            integer cAccounts = integer.valueOf(agg.get('cAccounts'));
-            if (strAccType == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                cBucket += cAccounts;
-                if (!CAO_Constants.isBucketModel())
-                    isMixedAccs = true;
-            } else if (strAccType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                cOne2One += cAccounts;
-                if (!CAO_Constants.isOneToOne())
-                    isMixedAccs = true;
-            } else if (strAccType == CAO_Constants.HH_ACCOUNT_TYPE) {
-                cHH += cAccounts;
-                if (!CAO_Constants.isHHAccountModel())
-                    isMixedAccs = true;
-            } else if (cOther == -1) {
-                cOther = cAccounts;  
-            }          
-    	}
+    	    	
+    	cBucket = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE limit 9999];
+        cOne2One = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE limit 9999];
+        cHH = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE limit 9999];
+        if (cBucket > 0 && !CAO_Constants.isBucketModel())
+            isMixedAccs = true;    	
+        if (cOne2One > 0 && !CAO_Constants.isOneToOne())
+            isMixedAccs = true;     
+        if (cHH > 0 && !CAO_Constants.isHHAccountModel())
+            isMixedAccs = true;     
     	
         string strInfo = '';
         if (isMixedAccs) {
             strInfo = string.format(Label.healthDetailsAccountProcessor, new string[]{CAO_Constants.getContactsSettings().npe01__Account_Processor__c});
         }
-        strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket;
-        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One;
-        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH;        
+        strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket + (cBucket == 9999 ? '+' : '');
+        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One + (cOne2One == 9999 ? '+' : '');
+        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH + (cHH == 9999 ? '+' : '');        
         
         createDR(Label.healthLabelAccountModelData, isMixedAccs ? 'Error' : 'Success',  isMixedAccs ? strInfo : null, isMixedAccs ? null : strInfo);        
     
@@ -195,7 +180,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     
     // verify there are no Households Accounts and Objects with no Contacts
     private void verifyNoOrphanedHouseholds() {
-        integer cHHObj = [select Count() from npo02__Household__c where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
+        integer cHHObj = [select Count() from npo02__Household__c 
+            where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
         integer cHHAcc = [select Count() from Account 
             where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and
                 Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
