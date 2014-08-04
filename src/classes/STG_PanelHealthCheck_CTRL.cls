@@ -335,31 +335,30 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }           
     }
 
-    // verify that our Global Scheduler is actually scheduled, and that all of the entries are valid - called by HealthCheck
+    // verify that our Master Scheduler jobs are actually scheduled, and that all of the entries are valid - called by HealthCheck
     private void verifyScheduledJobs() {
         
-        // make sure the Global Jobs are scheduduled
-        String[] schedulers = new String[] {'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
-        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];        
-        if (scheduledJobs.size() != 3) {
+        // make sure the Master Jobs are scheduduled
+        List<CronTrigger> jobs = [select Id, CronJobDetail.Id from CronTrigger 
+           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];        
+        if (jobs.size() != 3) {
             createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsNothingScheduled, 
-                string.format(label.healthSolutionNothingScheduled, schedulers));
+                String.format(label.healthSolutionNothingScheduled, UTIL_MasterSchedulableHelper.scheduledJobs));
             return;            
         }
 
         // make sure the entries we expect are there.
-        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED','RLLP_OppRollup_SCHED','ADDR_SEASONAL_SCHED')];
-        if (numOfJobs != 3) {
+        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN :UTIL_MasterSchedulableHelper.scheduledClasses];
+        if (numOfJobs != UTIL_MasterSchedulableHelper.scheduledClasses.size()) {
             createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsScheduleJobs, Label.healthSolutionScheduleJobs);
             return;            
         }
          
         // now make sure all entries are valid
         boolean isValidAll = true;
-        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
-        for (Schedulable__c job : jobs) {
-            Type classType = Type.forName(job.Class_Name__c);
+        List<Schedulable__c> schedClasses = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
+        for (Schedulable__c schedClass : schedClasses) {
+            Type classType = Type.forName(schedClass.Class_Name__c);
             if (classType != null) {
                 Object instance = classType.newInstance();
                 if (instance != null) {
@@ -371,7 +370,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             }
             isValidAll = false;
             createDR(Label.healthLabelScheduler, 'Error', 
-                string.format(label.healthDetailsInvalidScheduledJob, new string[]{job.Class_Name__c}),
+                string.format(label.healthDetailsInvalidScheduledJob, new string[]{schedClass.Class_Name__c}),
                 label.healthSolutionInvalidScheduledJob);
         }            
          
