@@ -370,9 +370,10 @@
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
+    <members>HiddenForSecurity</members>
+    <members>RecurringDonationAccountAndContactError</members>
     <members>Saved</members>
     <members>Settings_not_Saved</members>
-    <members>RecurringDonationAccountAndContactError</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
@@ -467,7 +468,6 @@
     <members>hhCmpDedupeLabelOpenReport</members>
     <members>hhCmpDedupeNoReport</members>
     <members>hhCmpDedupeStatus</members>
-    <members>HiddenForSecurity</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
@@ -652,9 +652,9 @@
     <members>stgNavHouseholds</members>
     <members>stgNavLeads</members>
     <members>stgNavMembership</members>
-    <members>stgNavPeople</members>
     <members>stgNavPaymentMappings</members>
     <members>stgNavPayments</members>
+    <members>stgNavPeople</members>
     <members>stgNavRDBatch</members>
     <members>stgNavRDFieldMap</members>
     <members>stgNavRDInstallmentPeriods</members>
@@ -772,5 +772,5 @@
     <members>Contact.Merge_Contacts</members>
     <name>WebLink</name>
   </types>
-  <version>30.0</version>
+  <version>31.0</version>
 </Package>
