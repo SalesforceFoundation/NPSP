@@ -355,9 +355,12 @@ public without sharing class HH_HouseholdNaming {
     private static list<string> listStrContactFields { 
         get {
             if (listStrContactFields == null) {
-                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap(); //.clone();
-                //mapS.remove('mailingaddress');
-                //mapS.remove('otheraddress');
+                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap().clone();
+                // due to a Salesforce bug, we get these new fields if our caller is api 30 or greater,
+                // but we will hit an error if we soql for them since we are api 28.
+                // this workaround will no longer be needed when we move up to version 30 or greater.
+                mapS.remove('mailingaddress');
+                mapS.remove('otheraddress');
                 listStrContactFields = new list<string>();
                 listStrContactFields.addAll(mapS.keySet());                         
             }
