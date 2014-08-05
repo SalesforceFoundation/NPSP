@@ -355,7 +355,7 @@ public without sharing class HH_HouseholdNaming {
     private static list<string> listStrContactFields { 
         get {
             if (listStrContactFields == null) {
-                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap(); .clone();
+                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.Contact.fields.getMap().clone();
                 // Skip compound address fields which cause a json deserialization error
                 mapS.remove('mailingaddress');
                 mapS.remove('otheraddress');
