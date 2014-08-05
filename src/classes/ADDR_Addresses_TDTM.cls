@@ -306,8 +306,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
         } else {
-            dtStart = date.newInstance(dtToday.year(), endMonth, endDay);                           
-            dtEnd = date.newInstance(dtToday.year()+1, startMonth, startDay);
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);                           
+            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
         }
         return (fStart ? dtStart : dtEnd);
     }
