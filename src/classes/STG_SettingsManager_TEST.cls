@@ -44,6 +44,22 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
     }
+    
+    public static testMethod void testSetTriggerSchedConfig() {
+        if (strTestOnly != '*' && strTestOnly != 'testSetTriggerSchedConfig') return;
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        
+        Test.startTest();
+        ctrl.setTriggerSchedConfig();
+        Test.stopTest();
+        
+        List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
+        System.assertEquals(6, scheduledJobs.size());
+        
+        List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
+        :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
+        System.assertEquals(3, masterJobs.size());
+    }
      
     public static testMethod void testDataBoundMultiSelect() {
         if (strTestOnly != '*' && strTestOnly != 'testDataBoundMultiSelect') return;
