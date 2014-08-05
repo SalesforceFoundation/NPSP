@@ -49,7 +49,6 @@ public with sharing class BDE_DescribeHelper_TEST {
         system.assert(BDE_DescribeHelper_UTIL.isObjectIdThisType(a.id, 'Account'));
         
         s = BDE_DescribeHelper_UTIL.getFieldLabel('Account', 'LastModifiedDate');
-        integer calls = limits.getfieldsdescribes();
         
         Schema.DescribeFieldResult fr = BDE_DescribeHelper_UTIL.getFieldDescribe('Account', 'CreatedDate');      
         s = BDE_DescribeHelper_UTIL.getFieldLabel('Account', 'CreatedDate');
@@ -63,9 +62,6 @@ public with sharing class BDE_DescribeHelper_TEST {
         // should be able to cast to account
         account acct = (account)(acctObj);
 
-        // another call should not use another describe
-        system.assertEquals(limits.getfieldsdescribes(), calls);
-        
         s = BDE_DescribeHelper_UTIL.getFieldType('Account', 'CreatedDate');
         system.assertEquals('DATETIME', s);
         
