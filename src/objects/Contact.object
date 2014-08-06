@@ -64,16 +64,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>EmailBouncedDate</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>EmailBouncedReason</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Fax</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -100,11 +90,6 @@
         </availableFields>
         <availableFields>
             <field>npo02__Household__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>IsEmailBounced</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -379,16 +364,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>EmailBouncedDate</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>EmailBouncedReason</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Fax</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -455,11 +430,6 @@
         </availableFields>
         <availableFields>
             <field>IsDeleted</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>IsEmailBounced</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
