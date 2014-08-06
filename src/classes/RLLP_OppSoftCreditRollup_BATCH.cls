@@ -33,7 +33,7 @@
 * @description Batch class for opportunity soft credit rollups. 
 */
 public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-		
+		    
 	public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
             Database.executeBatch(this);  
@@ -43,6 +43,8 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
     }
     
 	public database.Querylocator start(Database.BatchableContext bc) {
+        // we must initialize the opp rollup class before using the OppRollupUtil class!
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
         return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildContactQuery());      
     }
     
@@ -53,7 +55,7 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
         // but if we were to log it, and then proprogate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
         
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
         oppRoller.RollupSoftCredits(new Map<id, Contact>((List<Contact>)result));    
     }
 
