@@ -468,6 +468,22 @@
         <value>Payment field {0} does not exist.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriod</shortDescription>
+        <value>Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriodPIcklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriodPIcklist</shortDescription>
+        <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -546,6 +562,14 @@
         <protected>false</protected>
         <shortDescription>healthDetailsUDFBadDatatypes</shortDescription>
         <value>Opportunity field {0} and {1} field {2} are not of compatible data types.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsValidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsValidRDCustomPeriod</shortDescription>
+        <value>Recurring Donation Custom Installment Periods are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelAccountData</fullName>
@@ -833,6 +857,22 @@
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidPaymentField</shortDescription>
         <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Payment field, or delete the Payment Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriod</shortDescription>
+        <value>Add this Recurring Donation Installment Period picklist value in Salesforce Setup.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriodPicklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriodPicklist</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidScheduledJob</fullName>
@@ -1351,7 +1391,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHExcludedRT</shortDescription>
-        <value>Contact Record Types excluded from Household creation. This setting is ignored if you are using the Household Account model.</value>
+        <value>Specifies which Contact record types Salesforce will exclude from Household object creation. (Applies to One-to-One or Individual Account Models only.)</value>
     </labels>
     <labels>
         <fullName>stgHelpHHMailingListReport</fullName>
@@ -1391,7 +1431,11 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.</value>
+        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.
+&lt;br/&gt;&lt;br/&gt;
+The Household Object and its associated account models are no longer recommended. However, if you are still using the One-to-One or Individual (&quot;Bucket&quot;) account models from previous versions of the Nonprofit Starter Pack, you can change settings for the Household Object here.
+&lt;br/&gt;&lt;br/&gt;
+To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>
@@ -1399,7 +1443,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHRules</shortDescription>
-        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.  If your Account Model is set to &quot;Household Account&quot;, this setting will always be reset to &quot;No Contacts&quot;.</value>
+        <value>Specifies for which contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
     </labels>
     <labels>
         <fullName>stgHelpIGFormat</fullName>
