@@ -394,7 +394,10 @@ global with sharing class HH_ManageHousehold_EXT {
     * @return Account.
     ********************************************************************************************************/
     public Account getHHA(Id hhId) {
-        Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Account.fields.getMap();
+        Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Account.fields.getMap().clone();
+        // Remove compount address fields available in API 30 and up
+        fieldMap.remove('billingaddress');
+
         list<String> fields = new list<String>();
         fields.addAll(fieldMap.keySet());
         String hhq = 'SELECT ';
