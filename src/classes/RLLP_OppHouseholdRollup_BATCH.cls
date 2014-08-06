@@ -43,6 +43,8 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
     }
     
     public database.Querylocator start(Database.BatchableContext bc) {       
+        // we must initialize the opp rollup class before using the OppRollupUtil class!
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
         return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildHouseholdQuery());      
     }
     
@@ -53,7 +55,7 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
         // but if we were to log it, and then proprogate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
         
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
         oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
     }
 
