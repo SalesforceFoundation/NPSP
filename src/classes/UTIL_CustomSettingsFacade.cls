@@ -169,12 +169,12 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe4__Relationship_Settings__c getRelationshipSettings(npe4__Relationship_Settings__c RelationshipSettings) {
         if (RelationshipSettings == null){
             //retrive the lowest level hierachy setting
-            RelationshipSettings = npe4__Relationship_Settings__c.getInstance();
+            RelationshipSettings = npe4__Relationship_Settings__c.getOrgDefaults();
 
             //check for an org wide setting and insert if required
             if (RelationshipSettings.Id == null){
                 npe4__Relationship_Settings__c newRS;
-                newRS = npe4__Relationship_Settings__c.getInstance();
+                newRS = npe4__Relationship_Settings__c.getOrgDefaults();
                 //will return an empty object is it does not exist
                 if (newRS.Id == null){
                     newRS.npe4__Reciprocal_Method__c = 'List Settings';
@@ -191,8 +191,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (affiliationsSettings == null) {
             //first see if we already have settings
-            affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
-            system.debug(npe5__Affiliations_Settings__c.getInstance());
+            affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+            system.debug(npe5__Affiliations_Settings__c.getOrgDefaults());
             if (affiliationsSettings.id == null) { 
                 //affiliationsSettings = new npe5__Affiliations_Settings__c();
                 affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
