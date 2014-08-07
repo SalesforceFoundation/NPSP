@@ -43,7 +43,7 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
         
         if(!alreadyRun) {
-	        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+	        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
                 if(!system.isFuture() && !system.isBatch()) {
                     ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());

@@ -43,7 +43,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (ContactsSettings == null) {
             //first see if we already have settings
-            ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+            ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
             
             if (ContactsSettings.Id == null) { 
                 ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                    
@@ -72,7 +72,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (householdsSettings == null) {
             //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
+            householdsSettings = npo02__Households_Settings__c.getInstance();
             
             //modified to check again the Id instead of the object
             if (householdsSettings.Id == null) { 
@@ -145,7 +145,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (recurringDonationsSettings == null) {
             //first see if we already have settings
-            recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+            recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             //if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its 
             //the only field w/o a default defined
             if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null){  
@@ -160,7 +160,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 if(oppRecordTypes.size() > 0)
                     recurringDonationsSettings.npe03__Record_Type__c = oppRecordTypes[0].id; 
                 upsert recurringDonationsSettings;    
-                recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();                           
+                recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();                           
             }
         }         
         return recurringDonationsSettings;
@@ -174,7 +174,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             //check for an org wide setting and insert if required
             if (RelationshipSettings.Id == null){
                 npe4__Relationship_Settings__c newRS;
-                newRS = npe4__Relationship_Settings__c.getOrgDefaults();
+                newRS = npe4__Relationship_Settings__c.getInstance();
                 //will return an empty object is it does not exist
                 if (newRS.Id == null){
                     newRS.npe4__Reciprocal_Method__c = 'List Settings';
@@ -191,8 +191,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (affiliationsSettings == null) {
             //first see if we already have settings
-            affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
-            system.debug(npe5__Affiliations_Settings__c.getOrgDefaults());
+            affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+            system.debug(npe5__Affiliations_Settings__c.getInstance());
             if (affiliationsSettings.id == null) { 
                 //affiliationsSettings = new npe5__Affiliations_Settings__c();
                 affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
@@ -206,7 +206,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
+        Error_Settings__c orgErrorSettings = Error_Settings__c.getInstance();
         
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
@@ -223,7 +223,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Batch_Data_Entry_Settings__c getBDESettings() {
-        Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
+        Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
         
         if(bdeSettings.Id == null) {
             bdeSettings.Allow_Blank_Opportunity_Names__c = true;
@@ -235,9 +235,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Addr_Verification_Settings__c getAddressValidationSettings() {        
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
         if(settings.Id == null) {
-        	settings = Addr_Verification_Settings__c.getOrgDefaults();
+        	settings = Addr_Verification_Settings__c.getInstance();
         	settings.Using_SmartyStreets__c = false;
             settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';
             settings.Zipcode_Verification_Endpoint__c = 'api.smartystreets.com/zipcode';
@@ -251,9 +251,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
-        Household_Naming_Settings__c settings = Household_Naming_Settings__c.getOrgDefaults();
+        Household_Naming_Settings__c settings = Household_Naming_Settings__c.getInstance();
         if (settings.Id == null) {
-            settings = Household_Naming_Settings__c.getOrgDefaults();
+            settings = Household_Naming_Settings__c.getInstance();
             settings.Household_Name_Format__c = '{!LastName} ' + label.npo02.DefaultHouseholdName;
             settings.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
             settings.Informal_Greeting_Format__c = '{!{!FirstName}}';

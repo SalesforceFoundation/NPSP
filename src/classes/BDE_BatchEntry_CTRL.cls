@@ -91,7 +91,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         
         public void initializeBatchEntry(){
                
-            bdec = Batch_Data_Entry_Settings__c.getOrgDefaults();
+            bdec = Batch_Data_Entry_Settings__c.getInstance();
             
             //no defaults yet loaded, create one
             if (bdec == null){

@@ -95,11 +95,11 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
-        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
+        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
+        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getInstance();
         
         for(String setting : npspToCumulusMap.keySet()) {
             if(setting.startsWith('npe01')) {
@@ -133,7 +133,7 @@ global class STG_InstallScript implements InstallHandler {
             }
         }
         
-        //Deactivate NPSP flags - getOrgDefaults returns an empty object if the custom setting has no records
+        //Deactivate NPSP flags - getInstance returns an empty object if the custom setting has no records
         List<SObject> npspCustomSettings = new List<SObject>();
         if(npe01Settings.Id != null) npspCustomSettings.add(npe01Settings);
         if(npo02Settings.Id != null) npspCustomSettings.add(npo02Settings);

@@ -810,7 +810,7 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testSettingsObjectWithJustOrgDefaults') return;
     	
         npe4__Relationship_Settings__c newRS;
-        newRS = npe4__Relationship_Settings__c.getOrgDefaults();
+        newRS = npe4__Relationship_Settings__c.getInstance();
         system.assertNotEquals(null, newRS);
         system.assertEquals(null, newRS.Id);   
         system.assertEquals(null, newRS.npe4__Reciprocal_Method__c);  

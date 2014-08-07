@@ -513,7 +513,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         update updateTriggerHandlers;
 
         //update the custom setting
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
         ContactsSettings.npe01__Account_Processor__c = 'Household Account';
 
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');

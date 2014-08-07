@@ -129,12 +129,12 @@ public with sharing class STG_InstallScript_TEST {
         //Create NPSP custom settings with some disable flags on
         List<SObject> settingsToInsert = new List<SObject>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
         settingsToInsert.add(npe01Settings);    
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
         settingsToInsert.add(npo02Settings); 
         insert settingsToInsert;
@@ -156,14 +156,14 @@ public with sharing class STG_InstallScript_TEST {
     
     private static void setAllNpspFlags(Boolean flagValue) {
         List<SObject> settingsToInsert = new List<SObject>();
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = flagValue;
         settingsToInsert.add(npe01Settings);
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c = flagValue;
@@ -171,12 +171,12 @@ public with sharing class STG_InstallScript_TEST {
         npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
         settingsToInsert.add(npo02Settings);
         
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
         npe03Settings.npe03__DISABLE_Donations_trigger__c = flagValue;
         npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = flagValue;
         settingsToInsert.add(npe03Settings);
         
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
+        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
         npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
@@ -186,24 +186,24 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     private static void assertNpspFlagsDeactivated() {
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
         System.assertEquals(false, npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c);
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Households_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c);
         
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
         System.assertEquals(false, npe03Settings.npe03__DISABLE_Donations_trigger__c);
         System.assertEquals(false, npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c);
         
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
+        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
         System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c);
         System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c);
         System.assertEquals(false, npe04Settings.npe4__DISABLE_Relationships_trigger__c);
@@ -217,14 +217,14 @@ public with sharing class STG_InstallScript_TEST {
                        
         Test.testInstall(new STG_InstallScript(), null);
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
-        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults(); 
-        Error_Settings__c errorSettings = Error_Settings__c.getOrgDefaults();
-        Addr_Verification_Settings__c addrVerificationSetgs = Addr_Verification_Settings__c.getOrgDefaults();
-        Batch_Data_Entry_Settings__c batchDataEntrySetgs = Batch_Data_Entry_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
+        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
+        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getInstance(); 
+        Error_Settings__c errorSettings = Error_Settings__c.getInstance();
+        Addr_Verification_Settings__c addrVerificationSetgs = Addr_Verification_Settings__c.getInstance();
+        Batch_Data_Entry_Settings__c batchDataEntrySetgs = Batch_Data_Entry_Settings__c.getInstance();
         
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
@@ -287,12 +287,12 @@ public with sharing class STG_InstallScript_TEST {
     }
 
     public static void deleteAllCustomSettings() {
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
-        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults();
-        Error_Settings__c errorSettings = Error_Settings__c.getOrgDefaults(); 
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
+        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
+        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getInstance();
+        Error_Settings__c errorSettings = Error_Settings__c.getInstance(); 
         if(npe01Settings.Id != null) delete npe01Settings;               
         if(npo02Settings.Id != null) delete npo02Settings;
         if(npe03Settings.Id != null) delete npe03Settings;

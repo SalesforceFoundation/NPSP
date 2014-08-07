@@ -45,7 +45,7 @@ public with sharing class ADDR_Validator_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api settings
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
