@@ -688,11 +688,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Active__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Description</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
