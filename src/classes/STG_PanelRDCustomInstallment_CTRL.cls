@@ -118,6 +118,43 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     // test an opp insert with a recurring donation to find problems - called by Health Check
     public static void verifyRDSaving(STG_PanelHealthCheck_CTRL ctrl) {
         
+        //verify that custom installment periods are specified on the picklist field
+        //first put all the picklist values in a set
+        Schema.DescribeFieldResult F = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get('npe03__Installment_Period__c').getDescribe();
+        list<Schema.PicklistEntry> P = F.getPicklistValues();
+        set<string> setValues = new set<string>();    
+        for (Schema.PicklistEntry plistentry: P) {
+            setValues.add(plistentry.getLabel());
+        }
+        //now iterate through all the custom installment periods and make sure they have a matching picklist value
+        boolean isValid = true;
+        set<string> setPeriods = new set<string>();    
+        for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
+        	setPeriods.add(ci.Name);
+        	if (!setValues.contains(ci.Name)) {
+        		isValid = false;
+	            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name}), 
+	                label.healthSolutionInvalidRDCustomPeriod);
+        	}
+        }
+        //now iterate through the picklist values to make sure they match a valid period
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodYearly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriod1stand15th);
+        for (Schema.PicklistEntry plistentry: P) {
+            if (!setPeriods.contains(plistentry.getLabel())) {
+            	isValid = false;
+                ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                    string.format(label.healthDetailsInvalidRDCustomPeriodPIcklist, new string[]{plistentry.getLabel()}), 
+                    string.format(label.healthSolutionInvalidRDCustomPeriodPicklist, new string[]{label.stgNavRecurringDonations, label.stgNavRDInstallmentPeriods}));            	
+            }
+        }       
+        if (isValid)
+            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthDetailsValidRDCustomPeriod);
+        
         //test closed lost opp settings        
         string closedoppstage = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
         integer x = 0;
@@ -128,7 +165,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 label.npe03.RecurringDonationBadLabelWarning);
         }
         
-        //test closed lost opp settings        
+        //test pledged opp settings        
         string strPledged = system.label.npe03.RecurringDonationStageName;  // pledged
         x = [select count() from OpportunityStage where MasterLabel = :strPledged and isActive = true];
         if (x == 0) {
