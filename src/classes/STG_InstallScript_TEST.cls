@@ -218,7 +218,7 @@ public with sharing class STG_InstallScript_TEST {
         Test.testInstall(new STG_InstallScript(), null);
         
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
         npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
         npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getInstance(); 

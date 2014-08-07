@@ -43,7 +43,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (ContactsSettings == null) {
             //first see if we already have settings
-            ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
+            ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
             
             if (ContactsSettings.Id == null) { 
                 ContactsSettings.npe01__Account_Processor__c = HH_ACCOUNT_PROCESSOR;                    
