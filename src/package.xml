@@ -404,6 +404,8 @@
     <members>healthDetailsInvalidOppField</members>
     <members>healthDetailsInvalidOppStage</members>
     <members>healthDetailsInvalidPaymentField</members>
+    <members>healthDetailsInvalidRDCustomPeriod</members>
+    <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
     <members>healthDetailsInvalidRecordtypeId</members>
     <members>healthDetailsInvalidRecordtypeName</members>
     <members>healthDetailsInvalidScheduledJob</members>
@@ -414,6 +416,7 @@
     <members>healthDetailsRelReciprocalInvalid</members>
     <members>healthDetailsScheduleJobs</members>
     <members>healthDetailsUDFBadDatatypes</members>
+    <members>healthDetailsValidRDCustomPeriod</members>
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
     <members>healthLabelAutoRelValid</members>
@@ -450,6 +453,8 @@
     <members>healthSolutionInvalidOppField</members>
     <members>healthSolutionInvalidOppStage</members>
     <members>healthSolutionInvalidPaymentField</members>
+    <members>healthSolutionInvalidRDCustomPeriod</members>
+    <members>healthSolutionInvalidRDCustomPeriodPicklist</members>
     <members>healthSolutionInvalidScheduledJob</members>
     <members>healthSolutionInvalidUDFObjectField</members>
     <members>healthSolutionMailingListReportMissing</members>
@@ -652,9 +657,9 @@
     <members>stgNavHouseholds</members>
     <members>stgNavLeads</members>
     <members>stgNavMembership</members>
-    <members>stgNavPeople</members>
     <members>stgNavPaymentMappings</members>
     <members>stgNavPayments</members>
+    <members>stgNavPeople</members>
     <members>stgNavRDBatch</members>
     <members>stgNavRDFieldMap</members>
     <members>stgNavRDInstallmentPeriods</members>
