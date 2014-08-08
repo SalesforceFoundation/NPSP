@@ -45,7 +45,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api settings - SmartyStreets off
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
         settings.Using_SmartyStreets__c = false;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';

@@ -43,9 +43,9 @@ public with sharing class ERR_Notifier {
     }
     
     public static void sendErrorNotifications(ERR_Handler.Context context) {
-        String errorNotifRecipient = Error_Settings__c.getInstance().Error_Notifications_To__c;
+        String errorNotifRecipient = UTIL_CustomSettingsFacade.getErrorSettings(null).Error_Notifications_To__c;
             
-        if (Error_Settings__c.getInstance().Error_Notifications_On__c == true && errorNotifRecipient != null) {
+        if (UTIL_CustomSettingsFacade.getErrorSettings(null).Error_Notifications_On__c == true && errorNotifRecipient != null) {
             //We will post to chatter, if enabled
             if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
             && Schema.SObjectType.User.isFeedEnabled()) {

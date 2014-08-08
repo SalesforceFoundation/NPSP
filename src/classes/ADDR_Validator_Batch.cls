@@ -42,7 +42,7 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
     	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
-    	Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
+    	Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
     	settings.Using_SmartyStreets__c = true;
         update settings;
         
