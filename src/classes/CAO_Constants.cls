@@ -43,7 +43,7 @@ public with sharing class CAO_Constants {
     //Buck org type value
     public static final String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
-    public static  String BUCKET_ACCOUNT_NAME = 'Individual';
+    public static  final String BUCKET_ACCOUNT_NAME = 'Individual';
 
     //HH_Account value for system processor field
     public static final String HH_ACCOUNT_PROCESSOR = 'Household Account';
@@ -85,7 +85,7 @@ public with sharing class CAO_Constants {
             npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c,
             npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c
             );
-        insert ContactsSettings;
+        upsert ContactsSettings;
         return ContactsSettings;
     }
 

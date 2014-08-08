@@ -43,7 +43,7 @@ public with sharing class HH_Households {
     
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npo02__Households_Settings__c getHouseholdsSettings() {
-        householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings(householdsSettings, ALL_PROCESSOR, ALL_INDIVIDUALS_PROCESSOR, NO_HOUSEHOLDS_PROCESSOR);
+        householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings(householdsSettings);
         return householdsSettings;
     }
     
@@ -74,7 +74,7 @@ public with sharing class HH_Households {
             npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c,
             npo02__Schedule_Job_Limit__c = 25
             );
-        insert householdsSettings;
+        upsert householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings.npo02__Household_Rules__c != NO_HOUSEHOLDS_PROCESSOR) {

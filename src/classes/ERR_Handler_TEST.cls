@@ -43,17 +43,15 @@ public with sharing class ERR_Handler_TEST {
 	    	chatterGroup.put('CollaborationType', 'Private');
 	    	insert chatterGroup;
 	    	chatterGroupId = chatterGroup.Id;
-	    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
-	    	                               Error_Notifications_To__c = chatterGroup.Id);
+	    	UTIL_CustomSettingsFacade.getErrorSettings(chatterGroup.Id);
     	} else {
-    		insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true);
+    		UTIL_CustomSettingsFacade.getErrorSettings(null);
     	}
     }
     
     private static void setupWithEmailNotifications() {
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
-        insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
-                                       Error_Notifications_To__c = user.Id);
+        UTIL_CustomSettingsFacade.getErrorSettings(user.Id);
     }
     
     /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation

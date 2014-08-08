@@ -127,17 +127,18 @@ public with sharing class STG_InstallScript_TEST {
         if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptCustomConfigOnInstallSomeFlags') return;
         
         //Create NPSP custom settings with some disable flags on
-        List<SObject> settingsToInsert = new List<SObject>();
+        List<SObject> settingsToUpdate = new List<SObject>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings(null, CAO_Constants.HH_ACCOUNT_PROCESSOR);
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
-        settingsToInsert.add(npe01Settings);    
+        settingsToUpdate.add(npe01Settings);    
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings(null);
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
-        settingsToInsert.add(npo02Settings); 
-        insert settingsToInsert;
+        settingsToUpdate.add(npo02Settings); 
+        
+        update settingsToUpdate;
 
         Test.testInstall(new STG_InstallScript(), null);
         

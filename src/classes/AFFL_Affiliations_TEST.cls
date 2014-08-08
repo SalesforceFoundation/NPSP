@@ -211,9 +211,7 @@ public class AFFL_Affiliations_TEST {
         delete [select id from npe5__Affiliations_Settings__c limit 100];
         
         //create our own based on what's passed in from the test
-        npe5__Affiliations_Settings__c affiliationsSettings = new npe5__Affiliations_Settings__c (
-            npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c);
-        insert affiliationsSettings;
+        npe5__Affiliations_Settings__c affiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
             
         return affiliationsSettings;
     }

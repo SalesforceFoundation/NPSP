@@ -66,9 +66,9 @@ global class STG_InstallScript implements InstallHandler {
         setTriggerConfig();
 
         //set default settings
-        UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
-        UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 'Mark_Opportunities_Closed_Lost');
+        UTIL_CustomSettingsFacade.getContactsSettings(null, CAO_Constants.HH_ACCOUNT_TYPE);
+        UTIL_CustomSettingsFacade.getHouseholdsSettings(null);
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');

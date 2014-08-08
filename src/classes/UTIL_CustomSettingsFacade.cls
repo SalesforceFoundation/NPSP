@@ -66,8 +66,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     //get the settings. handles the case where the managed value doesn't exist yet
-    public static npo02__Households_Settings__c getHouseholdsSettings(npo02__Households_Settings__c householdsSettings, String ALL_PROCESSOR, 
-    String ALL_INDIVIDUALS_PROCESSOR, String NO_HOUSEHOLDS_PROCESSOR) {
+    public static npo02__Households_Settings__c getHouseholdsSettings(npo02__Households_Settings__c householdsSettings) {
         String oldProcessor = '';
         //if no settings exist, create defaults
         if (householdsSettings == null) {
@@ -82,25 +81,25 @@ public without sharing class UTIL_CustomSettingsFacade {
                 
                 for(Schema.PicklistEntry pe : P){
                     if (pe.isDefaultValue()){
-                        if(pe.getValue()==ALL_PROCESSOR){
-                            oldProcessor = ALL_PROCESSOR;
-                        } else if(pe.getValue()==ALL_INDIVIDUALS_PROCESSOR){
-                            oldProcessor = ALL_INDIVIDUALS_PROCESSOR;
-                        } else if(pe.getValue()==NO_HOUSEHOLDS_PROCESSOR){
-                            oldProcessor = NO_HOUSEHOLDS_PROCESSOR;
+                        if(pe.getValue() == HH_Households.ALL_PROCESSOR){
+                            oldProcessor = HH_Households.ALL_PROCESSOR;
+                        } else if(pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+                            oldProcessor = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
+                        } else if(pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+                            oldProcessor = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                         }
                         break;
                     }
                 }
                 //set them up with their old setting in the new settings object
-                if(oldProcessor==ALL_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_PROCESSOR;
-                } else if(oldProcessor==ALL_INDIVIDUALS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = ALL_INDIVIDUALS_PROCESSOR;
-                } else if(oldProcessor==NO_HOUSEHOLDS_PROCESSOR){
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                if(oldProcessor == HH_Households.ALL_PROCESSOR){
+                    householdsSettings.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
+                } else if(oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+                    householdsSettings.npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
+                } else if(oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+                    householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                 } else {
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                 }
  
                 householdsSettings.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
@@ -125,7 +124,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 
                 // new HH Account model overrides having HH objects
                 if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-                    householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+                    householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
 
                 upsert householdsSettings;
             }
