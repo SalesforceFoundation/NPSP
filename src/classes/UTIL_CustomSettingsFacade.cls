@@ -132,7 +132,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         
         // new HH Account model overrides having HH objects
         if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
+            householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
 
         return householdsSettings;
     }
