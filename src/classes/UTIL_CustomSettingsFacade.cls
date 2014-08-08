@@ -160,7 +160,6 @@ public without sharing class UTIL_CustomSettingsFacade {
                 if(oppRecordTypes.size() > 0)
                     recurringDonationsSettings.npe03__Record_Type__c = oppRecordTypes[0].id; 
                 upsert recurringDonationsSettings;    
-                recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();                           
             }
         }         
         return recurringDonationsSettings;
@@ -173,14 +172,8 @@ public without sharing class UTIL_CustomSettingsFacade {
 
             //check for an org wide setting and insert if required
             if (RelationshipSettings.Id == null){
-                npe4__Relationship_Settings__c newRS;
-                newRS = npe4__Relationship_Settings__c.getOrgDefaults();
-                //will return an empty object is it does not exist
-                if (newRS.Id == null){
-                    newRS.npe4__Reciprocal_Method__c = 'List Settings';
-                    upsert newRS;
-                }
-                RelationshipSettings = newRS;
+                RelationshipSettings.npe4__Reciprocal_Method__c = 'List Settings';
+                upsert RelationshipSettings;
             }
         }
         return RelationshipSettings;
@@ -192,11 +185,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (affiliationsSettings == null) {
             //first see if we already have settings
             affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
-            system.debug(npe5__Affiliations_Settings__c.getOrgDefaults());
             if (affiliationsSettings.id == null) { 
-                //affiliationsSettings = new npe5__Affiliations_Settings__c();
-                affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
-               
+                affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;               
                 affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();
 
                 upsert affiliationsSettings;
