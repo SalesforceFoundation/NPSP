@@ -59,7 +59,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                     ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
                 
                 //this is not allowed...
-                insert ContactsSettings;
+                upsert ContactsSettings;
             }
         }
         return ContactsSettings;
@@ -128,7 +128,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
                     householdsSettings.npo02__Household_Rules__c = NO_HOUSEHOLDS_PROCESSOR;
 
-                insert householdsSettings;
+                upsert householdsSettings;
             }
         }
         
@@ -178,7 +178,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 //will return an empty object is it does not exist
                 if (newRS.Id == null){
                     newRS.npe4__Reciprocal_Method__c = 'List Settings';
-                    insert newRS;
+                    upsert newRS;
                 }
                 RelationshipSettings = newRS;
             }
@@ -199,7 +199,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                
                 affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();
 
-                insert affiliationsSettings;
+                upsert affiliationsSettings;
             }
         }
         return affiliationsSettings;
@@ -216,7 +216,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             
             // Don't insert if we're in test mode, just return the in memory settings object
             if (! Test.isRunningTest()) {
-                insert orgErrorSettings;
+                upsert orgErrorSettings;
             }
         }
         return orgErrorSettings;
@@ -229,7 +229,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             bdeSettings.Allow_Blank_Opportunity_Names__c = true;
             bdeSettings.Opportunity_Naming__c = true;
             
-            insert bdeSettings;
+            upsert bdeSettings;
         }
         return bdeSettings;
     }
@@ -245,7 +245,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.Enable_Automatic_Verification__c = true;
             settings.Reject_Ambiguous_Addresses__c = true;
             
-            insert settings;
+            upsert settings;
         }
         return settings;
     }
@@ -262,7 +262,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.Contact_Overrun_Count__c = 9;
             settings.Implementing_Class__c = 'HH_NameSpec';
             
-            insert settings;
+            upsert settings;
         }
         return settings;
     }
