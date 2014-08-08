@@ -72,7 +72,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (householdsSettings == null) {
             //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getInstance();
+            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
             
             //modified to check again the Id instead of the object
             if (householdsSettings.Id == null) { 
@@ -92,7 +92,6 @@ public without sharing class UTIL_CustomSettingsFacade {
                         break;
                     }
                 }
-                householdsSettings = new npo02__Households_Settings__c();
                 //set them up with their old setting in the new settings object
                 if(oldProcessor==ALL_PROCESSOR){
                     householdsSettings.npo02__Household_Rules__c = ALL_PROCESSOR;
