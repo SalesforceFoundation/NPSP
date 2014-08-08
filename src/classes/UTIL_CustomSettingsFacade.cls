@@ -206,7 +206,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Error_Settings__c orgErrorSettings = Error_Settings__c.getInstance();
+        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
         
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
