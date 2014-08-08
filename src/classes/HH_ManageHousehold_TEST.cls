@@ -28,7 +28,7 @@ public with sharing class HH_ManageHousehold_TEST {
     // TEST METHOD
     public static testMethod void testExistingHH() { 
         
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();           
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();           
         if (ContactsSettings.Id == null)
             ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         insert ContactsSettings;
@@ -98,7 +98,7 @@ public with sharing class HH_ManageHousehold_TEST {
     public static testMethod void testHHAddrToContact() {
         //tests writing the household address to the contact if the flag is ticked
         
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();           
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();           
         if (ContactsSettings.Id == null)
             ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         insert ContactsSettings;
@@ -162,7 +162,7 @@ public with sharing class HH_ManageHousehold_TEST {
     public static testMethod void testRemoveContactActiveAddress() {
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
         
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();           
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();           
         if (ContactsSettings.Id == null)
             ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         insert ContactsSettings;
@@ -563,7 +563,7 @@ public with sharing class HH_ManageHousehold_TEST {
     
     public static testMethod void testRemoveReAdd() {
         
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();           
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();           
         if (ContactsSettings.Id == null)
             ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         insert ContactsSettings;
