@@ -56,7 +56,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        insert settings;
+        upsert settings;
         
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         return new ADDR_SmartyStreets_Gateway(settings);
