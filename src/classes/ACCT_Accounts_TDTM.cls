@@ -39,7 +39,7 @@ public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         
         ID rtIdAccountHH;
         ID rtIdAccountOne2One;
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {        
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {        
             rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
             rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
         }
@@ -50,12 +50,14 @@ public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         for (SObject so : listNew) {
             Account acc = (Account)so;
             
-	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-	            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
+	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+	            if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null && 
+	               (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true)) {
 	            	acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
 	            	acc.Type = CAO_Constants.HH_TYPE;
 	            	acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
-	            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null && acc.npe01__SYSTEM_AccountType__c == null) {
+	            } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null && 
+	               (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true)) {
 	                acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
 	                acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
 	            }    
