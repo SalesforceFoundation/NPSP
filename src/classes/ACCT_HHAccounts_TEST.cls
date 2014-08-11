@@ -860,6 +860,52 @@ private with sharing class ACCT_HHAccounts_TEST {
         } 
     }
         
+    /*********************************************************************************************************
+    operation:
+        create a new account with HH record type
+    verify:
+        the system fields on the account are set correctly
+    **********************************************************************************************************/            
+    static testMethod void newHHAccountWithRecordTypeOnly() {
+        if (strTestOnly != '*' && strTestOnly != 'newHHAccountWithRecordTypeOnly') return;
+        
+        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        if (rtIdAccountHH != null) {
+            Account acc = new Account(name='test', RecordTypeId = rtIdAccountHH);
+            insert acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertEquals(true, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update an existing account to the HH record type
+    verify:
+        the system fields on the account are set correctly
+    **********************************************************************************************************/            
+    static testMethod void updateAccountToHHRecordType() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccountToHHRecordType') return;
+        
+        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        if (rtIdAccountHH != null) {
+            Account acc = new Account(name='test');
+            insert acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertNotEquals(rtIdAccountHH, acc.RecordTypeId);
+            system.assertEquals(false, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(null, acc.npe01__SYSTEM_AccountType__c);
+            acc.RecordTypeId = rtIdAccountHH;
+            update acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertEquals(true, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);            
+        }
+    }
 
     /*********************************************************************************************************
     WHAT IS NOT TESTED:
