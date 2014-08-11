@@ -309,6 +309,14 @@
         <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccountRTIssue</shortDescription>
+        <value>{0} Account records using the {1} record type do not have their System fields correctly set.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsAutoRelCampaignTypeMissing</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -588,6 +596,14 @@
         <value>Account Model Data</value>
     </labels>
     <labels>
+        <fullName>healthLabelAccountRTIssueValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAccountRTIssueValid</shortDescription>
+        <value>Account system fields for any Household Accounts and One-to-One Accounts are set correctly.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelAutoRelValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -762,6 +778,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccountRTIssue</shortDescription>
+        <value>For Household Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;Household Account&apos;. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;One-to-One Individual&apos;. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAutoRelFieldsMissing</fullName>

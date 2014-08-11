@@ -385,6 +385,7 @@
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
     <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsAccountRTIssue</members>
     <members>healthDetailsAutoRelCampaignTypeMissing</members>
     <members>healthDetailsAutoRelFieldsMissing</members>
     <members>healthDetailsAutoRelInvalidLookupField</members>
@@ -420,6 +421,7 @@
     <members>healthDetailsValidRDCustomPeriod</members>
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
+    <members>healthLabelAccountRTIssueValid</members>
     <members>healthLabelAutoRelValid</members>
     <members>healthLabelContactData</members>
     <members>healthLabelErrorRecipientValid</members>
@@ -442,6 +444,7 @@
     <members>healthLabelTime</members>
     <members>healthLabelUDFValid</members>
     <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionAccountRTIssue</members>
     <members>healthSolutionAutoRelFieldsMissing</members>
     <members>healthSolutionAutoRelInvalidCMField</members>
     <members>healthSolutionAutoRelInvalidContactField</members>

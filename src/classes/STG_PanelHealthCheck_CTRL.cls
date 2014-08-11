@@ -95,6 +95,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyRecordTypes(); 
         verifyAccountModel(); 
         verifyAccountData();
+        verifyAccountData2();
         verifyContactData();
         verifyNoOrphanedHouseholds();
         verifyNoOrphanedOne2OneAccounts();
@@ -166,6 +167,40 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         
         createDR(Label.healthLabelAccountModelData, isMixedAccs ? 'Error' : 'Success',  isMixedAccs ? strInfo : null, isMixedAccs ? null : strInfo);        
     
+    }
+
+    // verify Account data is consistent with the chosen Account Model
+    // this one ensures that system fields match account record types
+    private void verifyAccountData2() { 
+        integer cOne2One = 0;
+        integer cHH = 0;
+        string strError = '';
+                        
+        ID rectype = STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c;
+        if (rectype != null) {
+            cHH = [select count() from Account where RecordTypeId = :rectype and
+                (npe01__SYSTEM_AccountType__c != :CAO_Constants.HH_ACCOUNT_TYPE or npe01__SYSTEMISINDIVIDUAL__c = false)
+                limit 9999]; 
+            if (cHH > 0) {
+                strError += string.format(Label.healthDetailsAccountRTIssue, new string[]{string.valueOf(cHH), CAO_Constants.HH_ACCOUNT_TYPE});                
+            }
+        }
+        rectype = STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c;
+        if (rectype != null) {
+            cOne2One = [select count() from Account where RecordTypeId = :rectype and
+                (npe01__SYSTEM_AccountType__c != :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or npe01__SYSTEMISINDIVIDUAL__c = false)
+                limit 9999];
+            if (cOne2One > 0) {
+            	if (cHH > 0) strError += '<BR/>';
+                strError += string.format(Label.healthDetailsAccountRTIssue, new string[]{string.valueOf(cOne2One), CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE});                
+            }
+        }
+        
+        if (cHH > 0 || cOne2One > 0) {
+            createDR(Label.healthLabelAccountModelData, 'Error', strError, Label.healthSolutionAccountRTIssue);
+        } else {          
+            createDR(Label.healthLabelAccountModelData, 'Success', null, Label.healthLabelAccountRTIssueValid);
+        }            
     }
 
     // verify that all Contacts have an account
