@@ -149,7 +149,7 @@ public with sharing class ERR_Notifier {
     }
     
     public static Error_Settings__c getErrorSettings() {
-        return UTIL_CustomSettingsFacade.getErrorSettings(NotificationOptions.sysAdmins);
+        return UTIL_CustomSettingsFacade.getErrorSettings(null);
     }
     
     // verify error settings are still valid - called by Health Check
