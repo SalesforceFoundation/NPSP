@@ -178,45 +178,39 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe5__Affiliations_Settings__c getAffiliationsSettings(npe5__Affiliations_Settings__c affiliationsSettings) {
-        //if no settings exist, create defaults
-        if (affiliationsSettings == null) {
-            //first see if we already have settings
-            affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
-            if (affiliationsSettings.id == null) { 
-                affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;               
-                affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();
-
-                upsert affiliationsSettings;
-            }
-        }
+    public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliationOn) {		
+		npe5__Affiliations_Settings__c affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+        
+        if (affiliationsSettings.id == null)
+            affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();        
+   
+        if(automaticAffiliationOn != null)
+            affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;
+        
+        upsert affiliationsSettings;                
         return affiliationsSettings;
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();
-        
+        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();      
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
+            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();  
+        }  
+        
+        if(notificationsTo != null)
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
-            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
             
-            // Don't insert if we're in test mode, just return the in memory settings object
-            if (! Test.isRunningTest()) {
-                upsert orgErrorSettings;
-            }
-        }
+        upsert orgErrorSettings; 
         return orgErrorSettings;
     }
     
     public static Batch_Data_Entry_Settings__c getBDESettings() {
-        Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
-        
+        Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getInstance();      
         if(bdeSettings.Id == null) {
             bdeSettings.Allow_Blank_Opportunity_Names__c = true;
             bdeSettings.Opportunity_Naming__c = true;
-            
             upsert bdeSettings;
         }
         return bdeSettings;
@@ -232,7 +226,6 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.Class__c = 'ADDR_SmartyStreets_Validator';
             settings.Enable_Automatic_Verification__c = true;
             settings.Reject_Ambiguous_Addresses__c = true;
-            
             upsert settings;
         }
         return settings;
@@ -249,7 +242,6 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.Name_Overrun__c = label.npo02.HouseholdNameOverrun;
             settings.Contact_Overrun_Count__c = 9;
             settings.Implementing_Class__c = 'HH_NameSpec';
-            
             upsert settings;
         }
         return settings;

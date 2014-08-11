@@ -82,7 +82,7 @@ public with sharing class STG_SettingsService {
     
     public npe5__Affiliations_Settings__c stgAffl {
         get {
-            if (stgAffl == null) stgAffl = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+            if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
             return stgAffl;
         }
         private set;

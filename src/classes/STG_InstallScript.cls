@@ -70,7 +70,7 @@ global class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getHouseholdsSettings(null);
         UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
         UTIL_CustomSettingsFacade.getRelationshipSettings(null);
-        UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
+        UTIL_CustomSettingsFacade.getAffiliationsSettings(true);
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
         // The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
         // when run in a test environment.  This code should always insert even if in a test

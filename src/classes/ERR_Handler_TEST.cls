@@ -218,8 +218,7 @@ public with sharing class ERR_Handler_TEST {
     
         setupWithChatterNotifications();
         
-        AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(
-                                           npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(true);
                     
         //Create account
         Account acc1 = new Account(Name='test1');
