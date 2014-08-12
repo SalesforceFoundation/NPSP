@@ -181,13 +181,15 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliationOn) {		
 		npe5__Affiliations_Settings__c affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
         
-        //if (affiliationsSettings.id == null)
-            //affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();        
+        if(affiliationsSettings.Id == null && automaticAffiliationOn != null) {
+        	affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;        
+            insert affiliationsSettings; 
+        }       
    
-        if(automaticAffiliationOn != null)
+        if(affiliationsSettings.Id != null && automaticAffiliationOn != null) {
             affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;
-        
-        upsert affiliationsSettings;                
+            update affiliationsSettings;     
+        }           
         return affiliationsSettings;
     }
     
@@ -196,7 +198,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
-            //orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();  
+            //orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
+            orgErrorSettings.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;  
         }  
         
         if(notificationsTo != null)

@@ -156,34 +156,35 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     private static void setAllNpspFlags(Boolean flagValue) {
-        List<SObject> settingsToInsert = new List<SObject>();
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        List<SObject> settingsToUpdate = new List<SObject>();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings(null, CAO_Constants.HH_ACCOUNT_PROCESSOR);
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = flagValue;
         npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = flagValue;
-        settingsToInsert.add(npe01Settings);
+        settingsToUpdate.add(npe01Settings);
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings(null);
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_Households_trigger__c = flagValue;
         npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
-        settingsToInsert.add(npo02Settings);
+        settingsToUpdate.add(npo02Settings);
         
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 
+                                                            RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
         npe03Settings.npe03__DISABLE_Donations_trigger__c = flagValue;
         npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = flagValue;
-        settingsToInsert.add(npe03Settings);
+        settingsToUpdate.add(npe03Settings);
         
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings(null);
         npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
-        settingsToInsert.add(npe04Settings);
+        settingsToUpdate.add(npe04Settings);
         
-        insert settingsToInsert;
+        update settingsToUpdate;
     }
     
     private static void assertNpspFlagsDeactivated() {
