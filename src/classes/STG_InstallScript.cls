@@ -75,13 +75,12 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings(null, CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings(null);
-        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 
-                                                            RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
-        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings(null);
-        npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getAffiliationsSettings(true);
-        UTIL_CustomSettingsFacade.getErrorSettings(null);
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings();
+        npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
+        UTIL_CustomSettingsFacade.getErrorSettings();
         UTIL_CustomSettingsFacade.getAddressValidationSettings();
         UTIL_CustomSettingsFacade.getBDESettings(); 
         

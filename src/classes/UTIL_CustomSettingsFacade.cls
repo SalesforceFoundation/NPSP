@@ -35,6 +35,11 @@
 */
 public without sharing class UTIL_CustomSettingsFacade {
 
+    //zero-arguments method that will set custom setting defaults
+    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
+    	return getContactsSettings(null, CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+ 
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings(npe01__Contacts_And_Orgs_Settings__c ContactsSettings, 
     String HH_ACCOUNT_PROCESSOR) {
@@ -65,6 +70,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return ContactsSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
+    public static npo02__Households_Settings__c getHouseholdsSettings() {
+        return getHouseholdsSettings(null);
+    }
+
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npo02__Households_Settings__c getHouseholdsSettings(npo02__Households_Settings__c householdsSettings) {
         String oldProcessor = '';
@@ -137,6 +147,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return householdsSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
+    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
+        return getRecurringDonationsSettings(null, RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
+    }
+
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c recurringDonationsSettings, 
     String defaultBehavior) {
@@ -163,6 +178,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return recurringDonationsSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
+    public static npe4__Relationship_Settings__c getRelationshipSettings() {
+        return getRelationshipSettings(null);
+    }
+
     public static npe4__Relationship_Settings__c getRelationshipSettings(npe4__Relationship_Settings__c RelationshipSettings) {
         if (RelationshipSettings == null){
             //retrive the lowest level hierachy setting
@@ -175,6 +195,11 @@ public without sharing class UTIL_CustomSettingsFacade {
             }
         }
         return RelationshipSettings;
+    }
+    
+    //zero-arguments method that will set custom setting defaults
+    public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
+        return getAffiliationsSettings(true);
     }
     
     //get the settings. handles the case where the managed value doesn't exist yet
@@ -193,6 +218,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return affiliationsSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
+    public static Error_Settings__c getErrorSettings() {
+        return getErrorSettings(null);	
+    }
+    
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
         Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();      
         if(orgErrorSettings.Id == null) {
@@ -209,6 +239,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgErrorSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
     public static Batch_Data_Entry_Settings__c getBDESettings() {
         Batch_Data_Entry_Settings__c bdeSettings = Batch_Data_Entry_Settings__c.getInstance();      
         if(bdeSettings.Id == null) {
@@ -219,6 +250,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return bdeSettings;
     }
     
+    //zero-arguments method that will set custom setting defaults
     public static Addr_Verification_Settings__c getAddressValidationSettings() {        
         Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
         if(settings.Id == null) {
@@ -234,6 +266,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return settings;
     }
 
+    //zero-arguments method that will set custom setting defaults
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
         Household_Naming_Settings__c settings = Household_Naming_Settings__c.getInstance();
         if (settings.Id == null) {
