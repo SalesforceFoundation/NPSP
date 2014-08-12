@@ -52,6 +52,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         return !aaj.isEmpty() ? aaj[0] : null;
     }set;}
     private Map<String, String> pageParams = new Map<String, String>();
+    private Integer scopesize = 200;
 
     public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
@@ -110,26 +111,22 @@ public with sharing class CONV_Account_Conversion_CTRL {
         batchRunning = false;
         runCheckErrorState = false;
         pageParams = ApexPages.currentPage().getParameters();
+
+        if (pageParams.containsKey('scopesize')){
+            try{
+                scopesize = Integer.valueOf(pageParams.get('scopesize'));
+            }
+            catch (Exception e){
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Could not retrieve scope size from the URL.  Please check that the scope size is in the form of an integer'));
+            }
+        }
     }
 
     public PageReference convert() {
-
         try {
             batchRunning = true;
             String query = CONV_Account_Conversion_CTRL.getBatchQuery();
-
             CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, AccountHouseholdIdField, null);
-
-            Integer scopesize = 200;
-            if (pageParams.containsKey('scopesize')){
-                try{
-                    scopesize = Integer.valueOf(pageParams.get('scopesize'));
-                }
-                catch (Exception e){
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Could not retrieve scope size from the URL.  Please check that the scope size is in the form of an integer'));
-                }
-            }
-
             ID batchprocessid = Database.executeBatch(cacv, scopesize);
 
         } catch(Exception e) {
