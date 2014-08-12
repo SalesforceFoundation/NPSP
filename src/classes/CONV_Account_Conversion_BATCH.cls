@@ -105,8 +105,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c, Type = 'Household', npe01__SYSTEM_AccountType__c = 'Household Account',
                 npe01__SYSTEMIsIndividual__c = true);
 
-                if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
-                    a.RecordTypeId = CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+                if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
+                    a.RecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
 
                 if (HouseholdIdField != null && HouseholdIdField != ''){
                     a.put(HouseholdIdField, hh.Id);
@@ -531,7 +531,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     private List<npo02__Household__c> removeHouseholdAccountsFromList(List<npo02__Household__c> hhList, List<Contact> conList){
         Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
         for (Contact c : conList){
-            if (c.Account.RecordTypeID == CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c &&
+            if (c.Account.RecordTypeID == UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c &&
                 c.Account.npe01__SYSTEM_AccountType__c == 'Household Account' &&
                 c.Account.npe01__SYSTEMIsIndividual__c == true &&
                 c.Account.Type == 'Household' &&

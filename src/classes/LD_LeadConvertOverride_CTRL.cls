@@ -67,7 +67,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     private npe01__Contacts_And_Orgs_Settings__c ContactsSettings; 
     
     public LD_LeadConvertOverride_CTRL(ApexPages.StandardController controller) {
-        ContactsSettings = CAO_Constants.getContactsSettings();
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                             
         // get the lead
         l = [select id, name, firstname, lastname, company, email, ownerId from lead

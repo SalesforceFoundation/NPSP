@@ -85,7 +85,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     /// <name> getDefaultRole </name>
     /// <summary> Return the default role from the custom setting.  Use custom setting for default role value.</summary>
     private static String getDefaultRole(){
-        return CAO_Constants.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
+        return UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
     }
 
     /// <name> insertCR </name>

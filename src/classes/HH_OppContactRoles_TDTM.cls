@@ -45,7 +45,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
    
         DmlWrapper dmlWrapper = new DmlWrapper();
              
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
         
         // bail out if the user has disabled household contact roles.

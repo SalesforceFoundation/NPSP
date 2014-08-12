@@ -196,14 +196,14 @@ public with sharing class CONV_Account_Conversion_CTRL {
 
         //set the recordtype if its not already set
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
-        if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
-            npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
+            npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
             update ContactsSettings;
         }
 
         //check the running user's profile access to the account rec type to be used for HH accounts
-        if (!Schema.Sobjecttype.Account.getRecordTypeInfosById().get(CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c).isAvailable()){
+        if (!Schema.Sobjecttype.Account.getRecordTypeInfosById().get(UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c).isAvailable()){
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'The currently selected Household Account recordtype is not accessible to your current profile.  You will need to modify your profile to include this record type prior to running the conversion process. The conversion process will not be available until the record type is made available to your profile, or a different record type is set in the NPSP Settings tab.'));
             runCheckErrorState = true;
         }

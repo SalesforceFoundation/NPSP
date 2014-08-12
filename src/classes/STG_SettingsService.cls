@@ -42,7 +42,7 @@ public with sharing class STG_SettingsService {
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
-            if (stgCon == null) stgCon = CAO_Constants.getContactsSettings();
+            if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getContactsSettings();
             return stgCon;
         }
         private set;

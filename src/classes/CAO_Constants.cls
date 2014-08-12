@@ -64,12 +64,6 @@ public with sharing class CAO_Constants {
     
     public static  string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
 
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
-        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings(ContactsSettings, HH_ACCOUNT_PROCESSOR);
-        return ContactsSettings;
-    }
-
     public static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
 
         //clear out whatever settings exist
@@ -91,7 +85,7 @@ public with sharing class CAO_Constants {
 
     public static boolean isOneToOne() {
         //if no settings exist, create defaults
-        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
             return true;
         } else {
             return false;
@@ -99,11 +93,11 @@ public with sharing class CAO_Constants {
     }
 
     public static boolean isBucketModel() {
-        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
+        return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
     }
 
     public static boolean isHHAccountModel() {
-        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
+        return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
     }
     
     /// <name> triggerAction </name>

@@ -78,7 +78,7 @@ public with sharing class HH_Households {
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings.npo02__Household_Rules__c != NO_HOUSEHOLDS_PROCESSOR) {
-        	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+        	npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             if (ContactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
                 ContactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
                 upsert ContactsSettings;	

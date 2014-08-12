@@ -133,7 +133,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 householdsSettings.npo02__Household_Contact_Roles_On__c = true;
                 
                 // new HH Account model overrides having HH objects
-                if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+                if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
                     householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
 
                 upsert householdsSettings;
@@ -141,7 +141,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
         
         // new HH Account model overrides having HH objects
-        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
             householdsSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
 
         return householdsSettings;
