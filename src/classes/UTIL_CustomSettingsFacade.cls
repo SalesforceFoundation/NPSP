@@ -52,7 +52,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 ContactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
                 ContactsSettings.npe01__Payments_Enabled__c  = true;
                 ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
-                ContactsSettings.Setupownerid = UserInfo.getOrganizationId();
+                //ContactsSettings.Setupownerid = UserInfo.getOrganizationId();
                 
                 Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
                 if(householdAccount != null)
@@ -114,7 +114,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 householdsSettings.npo02__Membership_Grace_Period__c = 30;
                 householdsSettings.npo02__Advanced_Household_Naming__c = true;
                 householdsSettings.npo02__Async_Household_Naming__c = false;
-                householdsSettings.Setupownerid = UserInfo.getOrganizationId();
+                //householdsSettings.Setupownerid = UserInfo.getOrganizationId();
                 householdsSettings.npo02__Schedule_Job_Limit__c = 25;
                 householdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c = null;
                 householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = null;
@@ -181,8 +181,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliationOn) {		
 		npe5__Affiliations_Settings__c affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
         
-        if (affiliationsSettings.id == null)
-            affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();        
+        //if (affiliationsSettings.id == null)
+            //affiliationsSettings.Setupownerid = UserInfo.getOrganizationId();        
    
         if(automaticAffiliationOn != null)
             affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;
@@ -196,7 +196,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
-            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();  
+            //orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();  
         }  
         
         if(notificationsTo != null)
