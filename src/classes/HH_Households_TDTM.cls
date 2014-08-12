@@ -279,13 +279,11 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             // ideally, we'd do this all with dmlWrapper.  But since we
             // need to update the contact's hhId, we can't defer creating the HH's.
             
-            //DJH:UNDONE: error handling needs to be added
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
                        
             Integer i = 0;
             for (Contact c : contacts)
             {
-                //TODO: if household insert fails, there is no notification to the user
                 if (lsr[i].isSuccess() == true)
                 {
                     //write the new Household Ids to the Contacts
@@ -304,8 +302,9 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 // using dmlWrapper here caused too many errors with other 
                 // trigger handlers on contact, so do the update directly.
                 //dmlWrapper.objectsToUpdate.addAll(contactUpdates);
-                Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
-                // DJH:UNDONE error handling
+                //Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
+                // all or nothing so errors not lost.
+                update contactUpdates;
             }
         
             //SETTING CHECK HERE!!!
