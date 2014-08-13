@@ -96,7 +96,7 @@
             </div>
 		</section>
 		</apex:outputPanel>
-         
+            <!--  
             <apex:outputPanel id="addrValidationTest">
                 <apex:outputPanel rendered="{!isEditMode}">
 	                <h4>{!$Label.Addr_Settings_Test_Title}</h4>
@@ -120,7 +120,7 @@
                 <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
                 <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
             </apex:outputPanel>
-			
+		    -->	
 			<!-- 
 			<div style="text-align:center; font-weight:bold; color: green;">
 			<apex:outputPanel id="saveApiSettingsSuccess">

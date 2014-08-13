@@ -60,6 +60,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         try {
         	apiTestResult = null;
         	
+        	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
+        		addrVerifSettings.Using_SmartyStreets__c = true;
+        	}
+        	
         	encodeTokenIfNotEncoded(addrVerifSettings);
                         
             Boolean validationError = false;
@@ -98,6 +102,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference testApi() {
+    	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
+            addrVerifSettings.Using_SmartyStreets__c = true;
+        }
         apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
