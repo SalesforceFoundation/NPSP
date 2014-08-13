@@ -498,16 +498,22 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (accountInserts.size() > 0) {
             // DJH: with current TDTM design, we can't use dmlWrapper
             // because we need to get the new AccountID's into the Contacts.
-            Database.SaveResult[] lsr = Database.insert(accountInserts, false);
+            
+            //Database.SaveResult[] lsr = Database.insert(accountInserts, false);
+            // we do want it to be all or nothing, so errors won't get lost.
+            insert(accountInserts);
             Integer i = 0;
             for (Contact c : listContactNewAcct) {
-                // for each success, write the new AccountId to the Contact. 
+                // for each success, write the new AccountId to the Contact.
+                c.AccountId = accountInserts[i].Id;
+                /**** 
                 if (lsr[i].isSuccess() == true) {
                     c.AccountId = lsr[i].getId();
                 } else {
                     system.debug('Error inserting Accounts');
                     // DJH:UNDONE - need to use error class to log DML errors
                 }
+                *****/
                 i += 1;
             }
         }
