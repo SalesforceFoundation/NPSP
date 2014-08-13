@@ -369,7 +369,9 @@ public with sharing class RD_RecurringDonations {
                     opportunityInserts.add(opp);
                     if ( opportunityInserts.size() == 100 )
                     {
-                       Database.SaveResult[] lsr = Database.insert(opportunityInserts, false);
+                       //Database.SaveResult[] lsr = Database.insert(opportunityInserts, false);
+                       //all or nothing so errors not lost
+                       insert opportunityInserts;
                        opportunityInserts.clear();
                     }
                 }
@@ -540,7 +542,9 @@ public with sharing class RD_RecurringDonations {
                     contactRoleInserts.add(ocr);
                     if ( contactRoleInserts.size() == 100 )
                     {
-                        Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+                        //Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+                        // all or nothing so errors not lost
+                        insert contactRoleInserts;
                         contactRoleInserts.clear();
                     }
                 }
@@ -548,7 +552,9 @@ public with sharing class RD_RecurringDonations {
         }
         if ( contactRoleInserts.size() > 0 )
         {
-            Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+            //Database.SaveResult[] osr = Database.insert(contactRoleInserts, false);
+            // all or nothing so errors not lost
+            insert contactRoleInserts;
         }
     }
     
