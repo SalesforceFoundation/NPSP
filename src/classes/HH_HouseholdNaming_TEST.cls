@@ -168,8 +168,8 @@ public class HH_HouseholdNaming_TEST {
         integer i;
         
         list<Contact> insertlist = new list<Contact>();
-        for (i = 0; i < 200; i++){
-            Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
+        for (i = 0; i < 20; i++){
+            Contact c = new Contact(LastName = 'L' + i, FirstName = 'F' + i, Salutation = 'Mr.');
             if (i == 1){
                 c.npo02__Naming_Exclusions__c = 'Household Name';
             }
