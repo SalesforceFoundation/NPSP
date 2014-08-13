@@ -12,7 +12,6 @@
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
 
 	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
-	<apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
 	<div>
 	   <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
 	</div>
