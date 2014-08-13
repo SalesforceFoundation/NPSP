@@ -106,7 +106,11 @@ public without sharing class HH_HouseholdNaming {
             h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'), listCon != null ? listCon.size() : 0);          
         } 
         
-        if (!hhupdatelist.isEmpty()) Database.update(hhupdatelist, false);
+        if (!hhupdatelist.isEmpty()) {
+        	//Database.SaveResult[] listSR = Database.update(hhupdatelist, false);
+        	// all or nothing, so errors not lost
+        	update hhupdatelist;
+        }
 
         HH_ProcessControl.inFutureContext = false;    
     }
