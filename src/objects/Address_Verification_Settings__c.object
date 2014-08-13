@@ -54,7 +54,7 @@
         <inlineHelpText>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</inlineHelpText>
         <label>Class-DEPRECATED</label>
         <length>124</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
