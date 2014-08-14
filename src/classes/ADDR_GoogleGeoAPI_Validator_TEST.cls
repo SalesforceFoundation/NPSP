@@ -35,9 +35,6 @@
 @isTest
 public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
 
-
-
-
     public static testMethod void testParse() {
         String json = '{'+
         '   \"results\" : ['+

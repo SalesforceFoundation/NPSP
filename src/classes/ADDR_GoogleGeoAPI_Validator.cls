@@ -50,24 +50,16 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         else
             this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
-        
- //   Select a.Zipcode_Verification_Endpoint__c, a.Using_SmartyStreets__c, a.Timeout__c, a.Reject_Ambiguous_Addresses__c, a.Enable_Automatic_Verification__c, a.Class__c, a.Auth_Token__c, a.Auth_ID__c, a.Address_Verification_Endpoint__c From Addr_Verification_Settings__c a
-
-
-        if (addresses.size() == 1){
-            checked_addresses.add(verifyAddress(addresses[0]));
+        if (!addresses.isEmpty()){
+            for (Address__c a : addresses){
+                checked_addresses.add(verifyAddress(a));
+            }
         }
-        else{
-            
-        }
-    	
-    	
-    	
         return checked_addresses;
     }
 
     private Address__c verifyAddress(Address__c a){
-    
+
         String address_request_string = '';
         if (a.MailingStreet__c != null)
             address_request_string += a.MailingStreet__c.replace(' ', '+') + '+';
@@ -81,91 +73,113 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             address_request_string += a.MailingCountry__c;
 
         HttpResponse response = new HttpResponse();
-            if(AUTH_TOKEN != null && END_POINT != null) {
-            // prepare the request
+
+        if(AUTH_TOKEN != null && END_POINT != null) {
             Http h = new Http();
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
-            req.setHeader('Content-Type','application/json');
             req.setHeader('Accept','application/json');
             req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN); 
-            req.setTimeout((TIMEOUT == null) ? 5000 : (TIMEOUT * 1000).intValue());
-            // execute the request
             response = h.send(req);
-            system.debug('GOOGLE RESPONDS WITH: ' + response.getBody());
-            a.API_Response__c = response.getBody();
+/* TODO: CHECK FOR STATUSES AND HANDLE
+HANDLE ERRORS IN DESERIALIZATION
+            if response.getStatus()
+            response.getStatusCode()
+*/
             ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
 
             String verified_street = '';
+            if (googresp.status == 'OK' && googresp.results.size() == 1){
 
-            for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
-                Set<String> type_set = new Set<String>();
-                type_set.addAll(add.types);
+                for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
+                    Set<String> type_set = new Set<String>();
+                    type_set.addAll(add.types);
 
-                if(type_set.contains('postal_code')){
-                    a.MailingPostalCode__c = add.long_name;
-                } else if (type_set.contains('country')){
-                    a.MailingCountry__c = add.short_name;
-                } else if (type_set.contains('administratrive_area_level_1')){
-                    a.MailingState__c = add.short_name;
-                } else if (type_set.contains('administrative_area_level_2')){
-                    a.County_Name__c = add.long_name;
-                } else if (type_set.contains('street_number')){
-                    verified_street = add.long_name + ' ' + verified_street;
-                } else if (type_set.contains('route')){
-                    verified_street += add.long_name;
-                }else if (type_set.contains('intersection')){
-                    verified_street += add.long_name;
-                }else if (type_set.contains('locality')){
-                    a.MailingCity__c = add.long_name;
+                    if(type_set.contains('postal_code')){
+                        a.MailingPostalCode__c = add.long_name;
+                    } else if (type_set.contains('country')){
+                        a.MailingCountry__c = add.short_name;
+                    } else if (type_set.contains('administratrive_area_level_1')){
+                        a.MailingState__c = add.short_name;
+                    } else if (type_set.contains('administrative_area_level_2')){
+                        a.County_Name__c = add.long_name;
+                    } else if (type_set.contains('administrative_area_level_3')){
+                        a.Administrative_Area__c = add.long_name;
+                    } else if (type_set.contains('street_number')){
+                        verified_street = add.long_name + ' ' + verified_street;
+                    } else if (type_set.contains('route')){
+                        verified_street += add.long_name;
+                    } else if (type_set.contains('intersection')){
+                        verified_street += add.long_name;
+                    } else if (type_set.contains('locality')){
+                        a.MailingCity__c = add.long_name;
+                    }
                 }
+                a.MailingStreet__c = verified_street;
+                a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
+                a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
+                a.Verified__c = true;
+                a.API_Response__c = response.getBody();
             }
-            a.MailingStreet__c = verified_street;
-            a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
-            a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
-            a.Verified__c = true;
+            else if (googresp.status == 'OK' && googresp.results.size() > 1){
+                a.Ambiguous__c = true;
+                a.API_Response__c = response.getBody();
             }
+            else if (googresp.status == 'OVER_QUERY_LIMIT'){
+                a.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
+            }
+            else if (googresp.status == 'REQUEST_DENIED'){
+                a.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
+            }
+            else if (googresp.status == 'UNKNOWN_ERROR'){
+                a.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
+            }
+            else if (googresp.status == 'INVALID_REQUEST'){
+                a.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
+            }
+            else if (googresp.status == 'ZERO_RESULTS'){
+                a.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
+            }
+            else{
+                a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+            }
+        }
+        else{
+            a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
+        }
         return a;
     }
 
-public class GoogleGeoResponse {
-    public List<ADDR_GoogleGeoAPI_Validator.Results> results;
-    public String status;
-    
-}
+/* Apex JSON model of Google response */
+    public class GoogleGeoResponse {
+        public List<ADDR_GoogleGeoAPI_Validator.Results> results;
+        public String status;
+    }
     public class Address_components {
         public String long_name;
         public String short_name;
         public List<String> types;
     }
-
     public class Location {
         public Double lat;
         public Double lng;
     }
-
     public class Geometry {
         public Location location;
         public String location_type;
         public Viewport viewport;
     }
-
     public class Results {
         public List<ADDR_GoogleGeoAPI_Validator.Address_components> address_components;
         public String formatted_address;
         public Geometry geometry;
         public List<String> types;
     }
-
     public class Viewport {
         public Location northeast;
         public Location southwest;
     }
-
-    
     public static GoogleGeoResponse parse(String json) {
         return (GoogleGeoResponse) System.JSON.deserialize(json, GoogleGeoResponse.class);
     }
-    
-    
 }
