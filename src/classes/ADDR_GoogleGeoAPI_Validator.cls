@@ -80,72 +80,87 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             req.setMethod('GET');
             req.setHeader('Accept','application/json');
             req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN); 
-            response = h.send(req);
-/* TODO: CHECK FOR STATUSES AND HANDLE
-HANDLE ERRORS IN DESERIALIZATION
-            if response.getStatus()
-            response.getStatusCode()
-*/
-            ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
+            try{
+                response = h.send(req);
+            } catch (Exception e){
+                a.Verified__c = false;
+                a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
+            }
 
-            String verified_street = '';
-            if (googresp.status == 'OK' && googresp.results.size() == 1){
-
-                for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
-                    Set<String> type_set = new Set<String>();
-                    type_set.addAll(add.types);
-
-                    if(type_set.contains('postal_code')){
-                        a.MailingPostalCode__c = add.long_name;
-                    } else if (type_set.contains('country')){
-                        a.MailingCountry__c = add.short_name;
-                    } else if (type_set.contains('administratrive_area_level_1')){
-                        a.MailingState__c = add.short_name;
-                    } else if (type_set.contains('administrative_area_level_2')){
-                        a.County_Name__c = add.long_name;
-                    } else if (type_set.contains('administrative_area_level_3')){
-                        a.Administrative_Area__c = add.long_name;
-                    } else if (type_set.contains('street_number')){
-                        verified_street = add.long_name + ' ' + verified_street;
-                    } else if (type_set.contains('route')){
-                        verified_street += add.long_name;
-                    } else if (type_set.contains('intersection')){
-                        verified_street += add.long_name;
-                    } else if (type_set.contains('locality')){
-                        a.MailingCity__c = add.long_name;
-                    }
+            if (response.getStatusCode() == 200){
+                ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googresp;
+                try{
+                    googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
+                }catch (Exception e){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
                 }
-                a.MailingStreet__c = verified_street;
-                a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
-                a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
-                a.Verified__c = true;
-                a.API_Response__c = response.getBody();
-            }
-            else if (googresp.status == 'OK' && googresp.results.size() > 1){
-                a.Ambiguous__c = true;
-                a.API_Response__c = response.getBody();
-            }
-            else if (googresp.status == 'OVER_QUERY_LIMIT'){
-                a.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
-            }
-            else if (googresp.status == 'REQUEST_DENIED'){
-                a.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
-            }
-            else if (googresp.status == 'UNKNOWN_ERROR'){
-                a.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
-            }
-            else if (googresp.status == 'INVALID_REQUEST'){
-                a.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
-            }
-            else if (googresp.status == 'ZERO_RESULTS'){
-                a.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
+
+                String verified_street = '';
+                if (googresp.status == 'OK' && googresp.results.size() == 1){
+
+                    for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
+                        Set<String> type_set = new Set<String>();
+                        type_set.addAll(add.types);
+
+                        if(type_set.contains('postal_code')){
+                            a.MailingPostalCode__c = add.long_name;
+                        } else if (type_set.contains('country')){
+                            a.MailingCountry__c = add.short_name;
+                        } else if (type_set.contains('administratrive_area_level_1')){
+                            a.MailingState__c = add.short_name;
+                        } else if (type_set.contains('administrative_area_level_2')){
+                            a.County_Name__c = add.long_name;
+                        } else if (type_set.contains('administrative_area_level_3')){
+                            a.Administrative_Area__c = add.long_name;
+                        } else if (type_set.contains('street_number')){
+                            verified_street = add.long_name + ' ' + verified_street;
+                        } else if (type_set.contains('route')){
+                            verified_street += add.long_name;
+                        } else if (type_set.contains('intersection')){
+                            verified_street += add.long_name;
+                        } else if (type_set.contains('locality')){
+                            a.MailingCity__c = add.long_name;
+                        }
+                    }
+                    a.MailingStreet__c = verified_street;
+                    a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
+                    a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
+                    a.Verified__c = true;
+                    a.API_Response__c = response.getBody();
+                } else if (googresp.status == 'OK' && googresp.results.size() > 1){
+                    a.Ambiguous__c = true;
+                    a.Verified__c = false;
+                    a.API_Response__c = response.getBody();
+                } else if (googresp.status == 'OVER_QUERY_LIMIT'){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
+                } else if (googresp.status == 'REQUEST_DENIED'){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
+                } else if (googresp.status == 'UNKNOWN_ERROR'){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
+                } else if (googresp.status == 'INVALID_REQUEST'){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
+                } else if (googresp.status == 'ZERO_RESULTS'){
+                    a.Verified__c = false;
+                    a.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
+                }
+                else{
+                    a.Verified__c = false;
+                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+                }
             }
             else{
-                a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+                a.Verified__c = false;
+                a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
             }
         }
         else{
-            a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
+            a.Verified__c = false;
+            a.API_Response__c = response.getStatusCode() + ': ' + response.getStatus();
         }
         return a;
     }
