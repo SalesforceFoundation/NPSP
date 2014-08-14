@@ -52,6 +52,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         STG_InstallScript installScript = new STG_InstallScript();
         installScript.setTriggerConfig();
         //Set master schedulables config
+        UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
         UTIL_MasterSchedulableHelper.setSchedulableTable();
         UTIL_MasterSchedulableHelper.scheduleMasterJobs();
     }
