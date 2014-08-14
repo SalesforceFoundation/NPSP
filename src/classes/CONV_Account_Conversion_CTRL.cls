@@ -51,6 +51,8 @@ public with sharing class CONV_Account_Conversion_CTRL {
                                 order by CompletedDate desc limit 1];
         return !aaj.isEmpty() ? aaj[0] : null;
     }set;}
+    private Map<String, String> pageParams = new Map<String, String>();
+    private Integer scopesize = 200;
 
     public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
@@ -108,17 +110,24 @@ public with sharing class CONV_Account_Conversion_CTRL {
         batching = true;
         batchRunning = false;
         runCheckErrorState = false;
+        pageParams = ApexPages.currentPage().getParameters();
+
+        if (pageParams.containsKey('scopesize')){
+            try{
+                scopesize = Integer.valueOf(pageParams.get('scopesize'));
+            }
+            catch (Exception e){
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Could not retrieve scope size from the URL.  Please check that the scope size is in the form of an integer'));
+            }
+        }
     }
 
     public PageReference convert() {
-
         try {
             batchRunning = true;
             String query = CONV_Account_Conversion_CTRL.getBatchQuery();
-
             CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, AccountHouseholdIdField, null);
-
-            ID batchprocessid = Database.executeBatch(cacv);
+            ID batchprocessid = Database.executeBatch(cacv, scopesize);
 
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler.Context.CONV);
