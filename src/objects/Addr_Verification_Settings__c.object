@@ -40,9 +40,9 @@
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</description>
+        <description>Salesforce class responsible for contacting the web service and verifying addresses.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</inlineHelpText>
+        <inlineHelpText>Salesforce class responsible for contacting the web service and verifying addresses.</inlineHelpText>
         <label>Class</label>
         <length>255</length>
         <required>false</required>
