@@ -904,7 +904,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidScheduledJob</shortDescription>
-        <value>You must update the record to have a valid Class the implements the UTIL_IScheduled interface.</value>
+        <value>You must update the record to have a valid Class the implements the UTIL_MasterSchedulableHelper.UTIL_IRecurring interface.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidUDFObjectField</fullName>

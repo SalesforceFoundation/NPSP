@@ -383,7 +383,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             if (classType != null) {
                 Object instance = classType.newInstance();
                 if (instance != null) {
-                    if (instance instanceof UTIL_IScheduled) {
+                    if (instance instanceof UTIL_MasterSchedulableHelper.UTIL_IRecurring) {
                         // this entry is good!
                         continue;
                     }
