@@ -158,20 +158,26 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public PageReference bulkVerify() {
     	String classToRunName = String.valueOf(addrVerifSettings.get('Class__c'));
-        Type classType = Type.forName(classToRunName);
-        if(classType != null) {     
-            Object classInstance = classType.newInstance();
-            if(classInstance instanceof ADDR_IValidator) {
-                ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-                if(validator.supportsBatch()) {
-                    ADDR_Validator_Batch b = new ADDR_Validator_Batch(skipPreviouslyVerifiedObjects);
-			        Database.executeBatch(b); 
-			        nowVerifying = true;
-			        bulkVerifyMessage = Label.Addr_Verifying;	
-                } else {
-                    bulkVerifyMessage = Label.Addr_No_Batch;	
-                }
-            }
+        if(!String.isBlank(classToRunName)) {
+	        Type classType = Type.forName(classToRunName);
+	        if(classType != null) {     
+	            Object classInstance = classType.newInstance();
+	            if(classInstance instanceof ADDR_IValidator) {
+	                ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+	                if(validator.supportsBatch()) {
+	                    ADDR_Validator_Batch b = new ADDR_Validator_Batch(skipPreviouslyVerifiedObjects);
+				        Database.executeBatch(b); 
+				        nowVerifying = true;
+				        bulkVerifyMessage = Label.Addr_Verifying;	
+	                } else {
+	                    bulkVerifyMessage = Label.Addr_No_Batch;	
+	                }
+	            }
+	        } else {
+	        	bulkVerifyMessage = Label.Addr_No_Batch;
+	        }
+        } else {
+            bulkVerifyMessage = Label.Addr_No_Batch;
         }
         return null;
     }

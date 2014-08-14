@@ -158,9 +158,11 @@
 					<p>
 						<apex:outputText value="{!bulkVerifyMessage}" />
 					</p>
-					<p>
-					    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-					</p>
+					<apex:outputPanel rendered="{!bulkVerifyMessage!=$Label.Addr_No_Batch}">
+						<p>
+						    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+						</p>
+                    </apex:outputPanel>
 				</apex:outputPanel>
 			</apex:outputPanel>
 		</section>
