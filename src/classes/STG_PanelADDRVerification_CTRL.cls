@@ -126,22 +126,25 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
-        try {
-        	encodeTokenIfNotEncoded(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
-            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
-        } catch (Exception e) {
-        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
-        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
-        		strResult = Label.Addr_Verify_Settings;
-        	} else if(e.getMessage().startsWith('no protocol')) {
-        		strResult = Label.Addr_Verify_Endpoint;
-        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
-        		strResult = Label.Addr_Unauthorized_Endpoint;
-        	} else {
-                strResult = e.getMessage();
-        	}
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        if (avs.Using_SmartyStreets__c) {
+	        try {
+	        	encodeTokenIfNotEncoded(addrVerifSettings);
+	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
+	            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
+	            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
+	        } catch (Exception e) {
+	        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+	        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
+	        		strResult = Label.Addr_Verify_Settings;
+	        	} else if(e.getMessage().startsWith('no protocol')) {
+	        		strResult = Label.Addr_Verify_Endpoint;
+	        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
+	        		strResult = Label.Addr_Unauthorized_Endpoint;
+	        	} else {
+	                strResult = e.getMessage();
+	        	}
+	        }
         }
         return strResult;
     }
