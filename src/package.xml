@@ -11,6 +11,8 @@
     <members>ADDR_Account_TDTM</members>
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
+    <members>ADDR_Cicero_TEST</members>
+    <members>ADDR_Cicero_Validator</members>
     <members>ADDR_Contact_TDTM</members>
     <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
     <members>ADDR_CopyAddrHHObjBTN_TEST</members>
