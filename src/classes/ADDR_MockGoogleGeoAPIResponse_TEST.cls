@@ -56,11 +56,6 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
         '               \"types\" : [ \"locality\", \"political\" ]'+
         '            },'+
         '            {'+
-        '               \"long_name\" : \"Broad & Pattison\",'+
-        '               \"short_name\" : \"Broad & Pattison\",'+
-        '               \"types\" : [ \"intersection\"]'+
-        '            },'+
-        '            {'+
         '               \"long_name\" : \"Santa Clara\",'+
         '               \"short_name\" : \"Santa Clara\",'+
         '               \"types\" : [ \"administrative_area_level_2\", \"political\" ]'+
@@ -269,17 +264,17 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
 
             if(req.getEndPoint().contains('single-address')) {
                 res.setBody(singleAddressResponse);
-            } else if(req.getBody().contains('ambiguous-address')) {
+            } else if(req.getEndPoint().contains('ambiguous-address')) {
                 res.setBody(ambiguousAddressResponse);
-            } else if(req.getBody().contains('invalid-request')) {
+            } else if(req.getEndPoint().contains('invalid-request')) {
                 res.setBody(invalidRequestResponse);
-            } else if(req.getBody().contains('over-query-limit')) {
+            } else if(req.getEndPoint().contains('over-query-limit')) {
                 res.setBody(overQueryLimitResponse);
-            } else if(req.getBody().contains('request-denied')) {
+            } else if(req.getEndPoint().contains('request-denied')) {
                 res.setBody(requestDeniedResponse);
-            } else if(req.getBody().contains('unknown-error')) {
+            } else if(req.getEndPoint().contains('unknown-error')) {
                 res.setBody(unknownErrorResponse);
-            } else if(req.getBody().contains('zero-results')) {
+            } else if(req.getEndPoint().contains('zero-results')) {
                 res.setBody(zeroResultsResponse);
             }
         }
