@@ -45,7 +45,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>The Address Verification API lets you verify US addresses as you add them to Salesforce. The API also standardizes addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
+        <value>The Address Verification API lets you verify addresses as you add them to Salesforce. The API also lets you standardize addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body2</fullName>
