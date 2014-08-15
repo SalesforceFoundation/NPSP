@@ -26,6 +26,15 @@
         </apex:outputPanel>
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
+			<div class="form-group">
+                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
+                <div class="col-sm-8 form-control-column">
+                    <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
+                </div>
+                <div class="col-sm-offset-4 col-sm-8 help-block">
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
+                </div>
+            </div>
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
@@ -74,15 +83,6 @@
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
