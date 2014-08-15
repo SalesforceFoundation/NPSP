@@ -88,7 +88,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             }
 
             if (response.getStatusCode() == 200){
-                ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googresp;
+                ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googresp = new ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse();
                 try{
                     googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
                 }catch (Exception e){
@@ -155,12 +155,12 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             }
             else{
                 a.Verified__c = false;
-                a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
+                a.API_Response__c = response.getStatusCode() + ': ' + response.getStatus();
             }
         }
         else{
             a.Verified__c = false;
-            a.API_Response__c = response.getStatusCode() + ': ' + response.getStatus();
+            a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
         }
         return a;
     }
