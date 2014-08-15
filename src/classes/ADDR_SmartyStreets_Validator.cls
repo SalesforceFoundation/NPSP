@@ -46,7 +46,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
     
     public String getHelpText() {
-    	return 'Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.';
+    	return Label.SmartyStreets_Help_Text;
     }
     
     public Boolean supportsBatch() {

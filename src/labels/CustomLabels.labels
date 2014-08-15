@@ -227,6 +227,13 @@
         <value>Settings not saved</value>
     </labels>
     <labels>
+        <fullName>SmartyStreets_Help_Text</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SmartyStreets Help Test</shortDescription>
+        <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
