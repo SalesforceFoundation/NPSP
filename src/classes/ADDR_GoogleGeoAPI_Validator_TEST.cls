@@ -196,4 +196,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         System.assertEquals(1, returnedAddress.size());
         System.assertEquals('MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information', returnedAddress[0].API_Response__c);
     }
+    static testMethod void testInterfaceStrings(){
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        system.assertEquals('The Google Geocoding API', testValidator.getServiceName());
+        system.assertEquals('https://maps.googleapis.com/maps/api/geocode/json?', testValidator.getDefaultURL());
+        system.assertNotEquals(null, testValidator.getHelpText());
+    }
 }

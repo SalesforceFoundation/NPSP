@@ -39,6 +39,15 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
 
+    public String getServiceName(){return 'The Google Geocoding API';} 
+    public String getDefaultURL(){return 'https://maps.googleapis.com/maps/api/geocode/json?';}
+    public String getHelpText(){return 'The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to ' +
+    'Visit the APIs console at https://code.google.com/apis/console and log in with your Google Account.' + 
+    'Click the Services link from the left-hand menu in the APIs Console, then activate the Geocoding API service.' +
+    'Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section.' +
+    'More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/';
+    }
+
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings){
 
         this.checked_addresses = new List<Address__c>();
