@@ -55,10 +55,25 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public String bulkVerifyMessage { get; set; }
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
-            
-    public String validatorSelection { public get; }
+    
+    public String validatorHelpText { public get; public set; }    
+    
+    public String validatorSelection; 
+    
+    public String getValidatorSelection() { return validatorSelection; }
+    
     public void setValidatorSelection(String validatorSelection) {
 		addrVerifSettings.Class__c = validatorSelection;
+		if(!String.isBlank(validatorSelection)) {
+			Type classType = Type.forName(validatorSelection);
+			if(classType != null) { 
+				Object classInstance = classType.newInstance();
+				if(classInstance instanceof ADDR_IValidator) {
+				  this.validatorSelection = validatorSelection;
+				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+				}
+			}
+		}
     }
     
     public List<SelectOption> validators {
@@ -79,6 +94,11 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     	}
     	
     	set;
+    }
+    
+    public STG_PanelADDRVerification_CTRL() {
+    	String validator = addrVerifSettings.Class__c;
+    	setValidatorSelection(validator);
     }
     
     public override PageReference saveSettings() {

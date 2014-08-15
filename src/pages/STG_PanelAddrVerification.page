@@ -96,55 +96,56 @@
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                 </div>
             </div>
+            <div id="helpText" class="col-sm-16 form-control-column">
+                <apex:outputText id="validatorHelpText" value="{!validatorHelpText}" />
+            </div>
 		</section>
 		</apex:outputPanel>
-            <!--  
-            <apex:outputPanel id="addrValidationTest">
-                <apex:outputPanel rendered="{!isEditMode}">
-	                <h4>{!$Label.Addr_Settings_Test_Title}</h4>
-	                <p>
-	                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
-	                <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
-	                <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
-	                </p>
-	                <br/>
-	                <apex:outputPanel id="testResult">
-	                    <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
-	                        <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
-	                    </apex:outputPanel>
-	                </apex:outputPanel>
-	           </apex:outputPanel>
-            </apex:outputPanel>
-            -->
-            
-            <br/>
-			
-			<apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
-                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
-                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-		    	
-			<!-- 
-			<div style="text-align:center; font-weight:bold; color: green;">
+        <!--  
+        <apex:outputPanel id="addrValidationTest">
+            <apex:outputPanel rendered="{!isEditMode}">
+             <h4>{!$Label.Addr_Settings_Test_Title}</h4>
+             <p>
+             <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
+             <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
+             <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
+             </p>
+             <br/>
+             <apex:outputPanel id="testResult">
+                 <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
+                     <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
+                 </apex:outputPanel>
+             </apex:outputPanel>
+        </apex:outputPanel>
+        </apex:outputPanel>
+        -->
+        <br/>
+        <apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
+            <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+            <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
+        </apex:outputPanel>
+  	
+		<!-- 
+		<div style="text-align:center; font-weight:bold; color: green;">
 			<apex:outputPanel id="saveApiSettingsSuccess">
 				<apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsSaveMessage))}">
 					<apex:outputText value="{!apiSettingsSaveMessage}" />
 					<br/>
 				</apex:outputPanel>
 			</apex:outputPanel>
-            </div>
-             -->
-            
-            <div style="text-align:center; font-weight:bold; color: red;">
-            <apex:outputPanel id="saveApiSettingsFailure">
-                <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
-                    <apex:outputText value="{!apiSettingsErrorMessage}" />
-                    <br/>
-                </apex:outputPanel>
+		</div>
+        -->
+        
+        <div style="text-align:center; font-weight:bold; color: red;">
+        <apex:outputPanel id="saveApiSettingsFailure">
+            <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
+                <apex:outputText value="{!apiSettingsErrorMessage}" />
+                <br/>
             </apex:outputPanel>
-            </div>
-            
-            <br/>
+        </apex:outputPanel>
+        </div>
+        
+        <br/>
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Verification_Batch_Title}</h3>
 			<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
