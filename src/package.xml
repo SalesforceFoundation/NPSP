@@ -16,6 +16,7 @@
     <members>ADDR_GoogleGeoAPI_Validator</members>
     <members>ADDR_GoogleGeoAPI_Validator_TEST</members>
     <members>ADDR_IValidator</members>
+    <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
     <members>ADDR_SmartyStreets_Gateway</members>
@@ -238,10 +239,6 @@
     <name>ApexTrigger</name>
   </types>
   <types>
-    <members>Opportunity.dummyBP</members>
-    <name>BusinessProcess</name>
-  </types>
-  <types>
     <members>Account.Account_Compact_Layout</members>
     <members>Address__c.NPSP_Address_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
@@ -354,9 +351,12 @@
   </types>
   <types>
     <members>Addr_Id_Error</members>
+    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
+    <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
     <members>Addr_Settings_Intro_Body2</members>
+    <members>Addr_Settings_Intro_Title</members>
     <members>Addr_Settings_Notice</members>
     <members>Addr_Settings_Test_Body</members>
     <members>Addr_Settings_Test_Response_Title</members>
@@ -388,6 +388,7 @@
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
     <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsAccountRTIssue</members>
     <members>healthDetailsAutoRelCampaignTypeMissing</members>
     <members>healthDetailsAutoRelFieldsMissing</members>
     <members>healthDetailsAutoRelInvalidLookupField</members>
@@ -408,6 +409,8 @@
     <members>healthDetailsInvalidOppField</members>
     <members>healthDetailsInvalidOppStage</members>
     <members>healthDetailsInvalidPaymentField</members>
+    <members>healthDetailsInvalidRDCustomPeriod</members>
+    <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
     <members>healthDetailsInvalidRecordtypeId</members>
     <members>healthDetailsInvalidRecordtypeName</members>
     <members>healthDetailsInvalidScheduledJob</members>
@@ -418,8 +421,10 @@
     <members>healthDetailsRelReciprocalInvalid</members>
     <members>healthDetailsScheduleJobs</members>
     <members>healthDetailsUDFBadDatatypes</members>
+    <members>healthDetailsValidRDCustomPeriod</members>
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
+    <members>healthLabelAccountRTIssueValid</members>
     <members>healthLabelAutoRelValid</members>
     <members>healthLabelContactData</members>
     <members>healthLabelErrorRecipientValid</members>
@@ -442,6 +447,7 @@
     <members>healthLabelTime</members>
     <members>healthLabelUDFValid</members>
     <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionAccountRTIssue</members>
     <members>healthSolutionAutoRelFieldsMissing</members>
     <members>healthSolutionAutoRelInvalidCMField</members>
     <members>healthSolutionAutoRelInvalidContactField</members>
@@ -454,6 +460,8 @@
     <members>healthSolutionInvalidOppField</members>
     <members>healthSolutionInvalidOppStage</members>
     <members>healthSolutionInvalidPaymentField</members>
+    <members>healthSolutionInvalidRDCustomPeriod</members>
+    <members>healthSolutionInvalidRDCustomPeriodPicklist</members>
     <members>healthSolutionInvalidScheduledJob</members>
     <members>healthSolutionInvalidUDFObjectField</members>
     <members>healthSolutionMailingListReportMissing</members>
@@ -589,8 +597,13 @@
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAddressVerification</members>
+    <members>stgLabelAfflSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
+    <members>stgLabelBDESettings</members>
+    <members>stgLabelBatchStatus</members>
+    <members>stgLabelCurrentUDR</members>
+    <members>stgLabelErrorNotify</members>
     <members>stgLabelExamplesFGFormat</members>
     <members>stgLabelExamplesHHNameFOrmat</members>
     <members>stgLabelExamplesIGFormat</members>
@@ -601,6 +614,7 @@
     <members>stgLabelHHObject</members>
     <members>stgLabelHHSettings</members>
     <members>stgLabelLeadSettings</members>
+    <members>stgLabelMembershipSettings</members>
     <members>stgLabelNewAutoRel</members>
     <members>stgLabelNewPaymentMapping</members>
     <members>stgLabelNewRDFieldMap</members>
@@ -616,10 +630,16 @@
     <members>stgLabelOtherHHNameFormat</members>
     <members>stgLabelOtherInformalGreetingFormat</members>
     <members>stgLabelPaymentMapNoValidFields</members>
+    <members>stgLabelPaymentSettings</members>
+    <members>stgLabelRDFieldMap</members>
     <members>stgLabelRDNewPeriod</members>
+    <members>stgLabelRDPeriod</members>
+    <members>stgLabelRDSettings</members>
     <members>stgLabelRDStatus</members>
+    <members>stgLabelRelSettings</members>
     <members>stgLabelSelectChatterGroup</members>
     <members>stgLabelSoftCredit</members>
+    <members>stgLabelTriggerHandlers</members>
     <members>stgLabelTypeAhead</members>
     <members>stgLabelUDRNoOppFields</members>
     <members>stgLabelUDROp</members>
@@ -750,17 +770,6 @@
     <members>npe03__Recurring_Donation__c.Quick_Update</members>
     <members>npo02__Household__c.Update_Household</members>
     <name>QuickAction</name>
-  </types>
-  <types>
-    <members>Account.HH_Account</members>
-    <members>Account.Organization</members>
-    <members>Opportunity.Donation</members>
-    <members>Opportunity.Grant</members>
-    <members>Opportunity.MajorGift</members>
-    <members>Opportunity.MatchingDonation</members>
-    <members>Opportunity.dummyRT</members>
-    <members>Opportunity.membership</members>
-    <name>RecordType</name>
   </types>
   <types>
     <members>SmartyStreets</members>
