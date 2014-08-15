@@ -34,70 +34,166 @@
  */
 @isTest
 public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
+    public static Addr_Verification_Settings__c getDefaultSettings() {
+        // use the household account model
+        CAO_Constants.getContactsSettingsForTests(
+        new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
-    public static testMethod void testParse() {
-        String json = '{'+
-        '   \"results\" : ['+
-        '      {'+
-        '         \"address_components\" : ['+
-        '            {'+
-        '               \"long_name\" : \"1600\",'+
-        '               \"short_name\" : \"1600\",'+
-        '               \"types\" : [ \"street_number\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"Amphitheatre Pkwy\",'+
-        '               \"short_name\" : \"Amphitheatre Pkwy\",'+
-        '               \"types\" : [ \"route\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"Mountain View\",'+
-        '               \"short_name\" : \"Mountain View\",'+
-        '               \"types\" : [ \"locality\", \"political\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"Santa Clara\",'+
-        '               \"short_name\" : \"Santa Clara\",'+
-        '               \"types\" : [ \"administrative_area_level_2\", \"political\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"California\",'+
-        '               \"short_name\" : \"CA\",'+
-        '               \"types\" : [ \"administrative_area_level_1\", \"political\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"United States\",'+
-        '               \"short_name\" : \"US\",'+
-        '               \"types\" : [ \"country\", \"political\" ]'+
-        '            },'+
-        '            {'+
-        '               \"long_name\" : \"94043\",'+
-        '               \"short_name\" : \"94043\",'+
-        '               \"types\" : [ \"postal_code\" ]'+
-        '            }'+
-        '         ],'+
-        '         \"formatted_address\" : \"1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA\",'+
-        '         \"geometry\" : {'+
-        '            \"location\" : {'+
-        '               \"lat\" : 37.42291810,'+
-        '               \"lng\" : -122.08542120'+
-        '            },'+
-        '            \"location_type\" : \"ROOFTOP\",'+
-        '            \"viewport\" : {'+
-        '               \"northeast\" : {'+
-        '                  \"lat\" : 37.42426708029149,'+
-        '                  \"lng\" : -122.0840722197085'+
-        '               },'+
-        '               \"southwest\" : {'+
-        '                  \"lat\" : 37.42156911970850,'+
-        '                  \"lng\" : -122.0867701802915'+
-        '               }'+
-        '            }'+
-        '         },'+
-        '         \"types\" : [ \"street_address\" ]'+
-        '      }'+
-        '   ],'+
-        '   \"status\" : \"OK\"'+
-        '}';
+        // create the basic api settings
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Using_SmartyStreets__c = false;
+        settings.Auth_ID__c = 'hey';
+        settings.Auth_Token__c = 'there';
+        settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
+        settings.Zipcode_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
+        settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
+        settings.Enable_Automatic_Verification__c = true;
+        settings.Reject_Ambiguous_Addresses__c = true;
+        insert settings;
+        return settings;
+    }
+
+    static testMethod void testSingleAddress() {
+
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'single-address');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('1600 Amphitheatre Pkwy', returnedAddress[0].MailingStreet__c);
+        System.assertEquals('CA', returnedAddress[0].MailingState__c);
+        System.assertEquals('Mountain View', returnedAddress[0].MailingCity__c);
+        System.assertEquals('94043', returnedAddress[0].MailingPostalCode__c);
+        System.assertEquals(true, returnedAddress[0].Verified__c);
+    }
+
+    static testMethod void testAmbiguousAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'ambiguous-address');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals(false, returnedAddress[0].Verified__c);
+        System.assertEquals(true, returnedAddress[0].Ambiguous__c);
+    }
+
+    static testMethod void testOverQueryLimitAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'over-query-limit');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+        
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('OVER_QUERY_LIMIT: indicates that you are over your quota.', returnedAddress[0].API_Response__c);
+        System.assertEquals(false, returnedAddress[0].Verified__c);
+    }
+    
+        static testMethod void testRequestDeniedAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'request-denied');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('REQUEST_DENIED: indicates that your request was denied.', returnedAddress[0].API_Response__c);
+    }
+
+    static testMethod void testUnknownErrorAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'unknown-error');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.', returnedAddress[0].API_Response__c);
+    }
+
+    static testMethod void testInvalidRequestAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'invalid-request');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.', returnedAddress[0].API_Response__c);
+    }
+
+    static testMethod void testZeroResultsAddress() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'zero-results');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.', returnedAddress[0].API_Response__c);
+    }
+    static testMethod void testBadResponse() {
+        Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'bad-authentication-for-test');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('401: Not authenticated.', returnedAddress[0].API_Response__c);
+    }
+    static testMethod void testNullAuthToken() {
+        // create settings w/o a token
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
+        settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
+        settings.Enable_Automatic_Verification__c = true;
+        insert settings;
+
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino');
+
+        Test.StartTest();
+        ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
+        List<Address__c> returnedAddress = testValidator.verifyRecords(new List<Address__c>{a}, settings);
+        Test.StopTest();
+
+        System.assertEquals(1, returnedAddress.size());
+        System.assertEquals('MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information', returnedAddress[0].API_Response__c);
     }
 }
