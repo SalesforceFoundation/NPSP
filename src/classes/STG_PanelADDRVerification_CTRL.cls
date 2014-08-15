@@ -37,12 +37,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
     public Addr_Verification_Settings__c addrVerifSettings {
-    
 	    public get { 
 	        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
 	        return addrVerifSettings;
 	    }
-	    
 	    public set;
     }
     
@@ -56,7 +54,35 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public Boolean nowVerifying { get; private set; } { nowVerifying = false; } 
     public String bulkVerifyMessage { get; set; }
 
+    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
+            
+    public String validatorSelection { public get; }
+    public void setValidatorSelection(String validatorSelection) {
+		addrVerifSettings.Class__c = validatorSelection;
+    }
+    
+    public List<SelectOption> validators {
+    	get {
+    		List<SelectOption> result = new List<SelectOption>();
+    		result.add(new SelectOption('', ''));
+    		ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
+    		          and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
+    		          and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
+            for(ApexClass c : classes) {
+            	Type classType = Type.forName(c.Name);
+            	Object classInstance = classType.newInstance();
+                if(classInstance instanceof ADDR_IValidator) {
+                    result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                }
+            }
+            return result;
+    	}
+    	
+    	set;
+    }
+    
     public override PageReference saveSettings() {
+        System.debug('****Settings: ' + JSON.serializePretty(addrVerifSettings));
         try {
         	apiTestResult = null;
         	

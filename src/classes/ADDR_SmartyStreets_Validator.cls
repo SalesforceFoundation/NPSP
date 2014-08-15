@@ -37,6 +37,18 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 
     private Addr_Verification_Settings__c settings;
     
+    public String getServiceName() {
+    	return 'SmartyStreets';
+    }
+    
+    public String getDefaultURL() {
+        return 'api.smartystreets.com/street-address';	
+    }
+    
+    public String getHelpText() {
+    	return 'Please enter both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.';
+    }
+    
     public Boolean supportsBatch() {
         return true;	
     }
