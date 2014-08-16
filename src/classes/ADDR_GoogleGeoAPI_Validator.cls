@@ -39,6 +39,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
 
+    public Boolean supportsBatch(){return false;}
     public String getServiceName(){return 'The Google Geocoding API';} 
     public String getDefaultURL(){return 'https://maps.googleapis.com/maps/api/geocode/json?';}
     public String getHelpText(){return 'The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to ' +
