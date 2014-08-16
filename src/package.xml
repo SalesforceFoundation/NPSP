@@ -349,6 +349,7 @@
   <types>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Id_Error</members>
+    <members>Addr_No_Batch</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
@@ -373,6 +374,7 @@
     <members>Saved</members>
     <members>Settings_not_Saved</members>
     <members>RecurringDonationAccountAndContactError</members>
+    <members>SmartyStreets_Help_Text</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
     <members>addrCopyConAddBtnHHObjOnly</members>

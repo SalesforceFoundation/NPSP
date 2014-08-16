@@ -37,12 +37,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
     public Addr_Verification_Settings__c addrVerifSettings {
-    
 	    public get { 
 	        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
 	        return addrVerifSettings;
 	    }
-	    
 	    public set;
     }
     
@@ -56,9 +54,61 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public Boolean nowVerifying { get; private set; } { nowVerifying = false; } 
     public String bulkVerifyMessage { get; set; }
 
+    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
+    
+    public String validatorHelpText { public get; public set; }    
+    
+    public String validatorSelection; 
+    
+    public String getValidatorSelection() { return validatorSelection; }
+    
+    public void setValidatorSelection(String validatorSelection) {
+		addrVerifSettings.Class__c = validatorSelection;
+		if(!String.isBlank(validatorSelection)) {
+			Type classType = Type.forName(validatorSelection);
+			if(classType != null) { 
+				Object classInstance = classType.newInstance();
+				if(classInstance instanceof ADDR_IValidator) {
+				  this.validatorSelection = validatorSelection;
+				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+				}
+			}
+		}
+    }
+    
+    public List<SelectOption> validators {
+    	get {
+    		List<SelectOption> result = new List<SelectOption>();
+    		result.add(new SelectOption('', ''));
+    		ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
+    		          and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
+    		          and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
+            for(ApexClass c : classes) {
+            	Type classType = Type.forName(c.Name);
+            	Object classInstance = classType.newInstance();
+                if(classInstance instanceof ADDR_IValidator) {
+                    result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                }
+            }
+            return result;
+    	}
+    	
+    	set;
+    }
+    
+    public STG_PanelADDRVerification_CTRL() {
+    	String validator = addrVerifSettings.Class__c;
+    	setValidatorSelection(validator);
+    }
+    
     public override PageReference saveSettings() {
+        System.debug('****Settings: ' + JSON.serializePretty(addrVerifSettings));
         try {
         	apiTestResult = null;
+        	
+        	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
+        		addrVerifSettings.Using_SmartyStreets__c = true;
+        	}
         	
         	encodeTokenIfNotEncoded(addrVerifSettings);
                         
@@ -98,6 +148,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference testApi() {
+    	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
+            addrVerifSettings.Using_SmartyStreets__c = true;
+        }
         apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
@@ -119,22 +172,25 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
-        try {
-        	encodeTokenIfNotEncoded(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
-            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
-            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
-        } catch (Exception e) {
-        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
-        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
-        		strResult = Label.Addr_Verify_Settings;
-        	} else if(e.getMessage().startsWith('no protocol')) {
-        		strResult = Label.Addr_Verify_Endpoint;
-        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
-        		strResult = Label.Addr_Unauthorized_Endpoint;
-        	} else {
-                strResult = e.getMessage();
-        	}
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        if (avs.Using_SmartyStreets__c) {
+	        try {
+	        	encodeTokenIfNotEncoded(addrVerifSettings);
+	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
+	            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
+	            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
+	        } catch (Exception e) {
+	        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+	        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
+	        		strResult = Label.Addr_Verify_Settings;
+	        	} else if(e.getMessage().startsWith('no protocol')) {
+	        		strResult = Label.Addr_Verify_Endpoint;
+	        	} else if(e.getMessage().startsWith('Unauthorized endpoint')) {
+	        		strResult = Label.Addr_Unauthorized_Endpoint;
+	        	} else {
+	                strResult = e.getMessage();
+	        	}
+	        }
         }
         return strResult;
     }
@@ -147,10 +203,28 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
 
     public PageReference bulkVerify() {
-    	ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(skipPreviouslyVerifiedObjects);
-        Database.executeBatch(b); 
-        nowVerifying = true;
-        bulkVerifyMessage = Label.Addr_Verifying;
+    	String classToRunName = String.valueOf(addrVerifSettings.get('Class__c'));
+        if(!String.isBlank(classToRunName)) {
+	        Type classType = Type.forName(classToRunName);
+	        if(classType != null) {     
+	            Object classInstance = classType.newInstance();
+	            if(classInstance instanceof ADDR_IValidator) {
+	                ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+	                if(validator.supportsBatch()) {
+	                    ADDR_Validator_Batch b = new ADDR_Validator_Batch(skipPreviouslyVerifiedObjects);
+				        Database.executeBatch(b); 
+				        nowVerifying = true;
+				        bulkVerifyMessage = Label.Addr_Verifying;	
+	                } else {
+	                    bulkVerifyMessage = Label.Addr_No_Batch;	
+	                }
+	            }
+	        } else {
+	        	bulkVerifyMessage = Label.Addr_No_Batch;
+	        }
+        } else {
+            bulkVerifyMessage = Label.Addr_No_Batch;
+        }
         return null;
     }
 }

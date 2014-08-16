@@ -12,7 +12,6 @@
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
 
 	<apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
-	<apex:pageMessage summary="{!$Label.Addr_Settings_Notice}" severity="info" strength="1" />
 	<div>
 	   <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
 	</div>
@@ -28,14 +27,14 @@
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
 			<div class="form-group">
-                <apex:outputLabel value="Using Smarty Streets" for="iUsing_SmartyStreets__c" styleClass="col-sm-4 control-label" />
+                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:inputCheckbox value="{!addrVerifsettings.Using_SmartyStreets__c}" disabled="{!isReadOnlyMode}" id="iUsing_SmartyStreets__c" />
+                    <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Using_SmartyStreets__c.inlineHelpText}" />
+                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 </div>
-			</div>
+            </div>
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
@@ -78,21 +77,14 @@
             </div>
             <div class="form-group">
                 <apex:outputLabel value="Implementing Class" for="iClass__c" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
+                <div class="col-sm-8 form-control-column">               
                     <apex:outputField value="{!addrVerifsettings.Class__c}" rendered="{!isReadOnlyMode}" />
-                    <apex:inputText value="{!addrVerifsettings.Class__c}" rendered="{!isEditMode}" id="iClass__c" styleClass="form-control" />
+                    <apex:selectList value="{!validatorSelection}" rendered="{!isEditMode}" multiselect="false" size="1" id="iClass__c" styleClass="form-control">
+                        <apex:selectOptions value="{!validators}"/>
+                    </apex:selectList>
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Class__c.inlineHelpText}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <apex:outputLabel value="Enable Automatic Verification" for="iEnable_Automatic_Verification__c" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:inputCheckbox value="{!addrVerifsettings.Enable_Automatic_Verification__c}" disabled="{!isReadOnlyMode}" id="Enable_Automatic_Verification__c" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.inlineHelpText}" />
                 </div>
             </div>
             <div class="form-group">
@@ -104,54 +96,56 @@
                     <apex:outputText value="{!$ObjectType.Addr_Verification_Settings__c.fields.Reject_Ambiguous_Addresses__c.inlineHelpText}" />
                 </div>
             </div>
+            <div id="helpText" class="col-sm-16 form-control-column">
+                <apex:outputText id="validatorHelpText" value="{!validatorHelpText}" />
+            </div>
 		</section>
 		</apex:outputPanel>
-         
-            <apex:outputPanel id="addrValidationTest">
-                <apex:outputPanel rendered="{!isEditMode}">
-	                <h4>{!$Label.Addr_Settings_Test_Title}</h4>
-	                <p>
-	                <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
-	                <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
-	                <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
-	                </p>
-	                <br/>
-	                <apex:outputPanel id="testResult">
-	                    <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
-	                        <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
-	                    </apex:outputPanel>
-	                </apex:outputPanel>
-	           </apex:outputPanel>
-            </apex:outputPanel>
-            
-            <br/>
-			
-			<apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
-                <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
-                <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>
-			
-			<!-- 
-			<div style="text-align:center; font-weight:bold; color: green;">
+        <!--  
+        <apex:outputPanel id="addrValidationTest">
+            <apex:outputPanel rendered="{!isEditMode}">
+             <h4>{!$Label.Addr_Settings_Test_Title}</h4>
+             <p>
+             <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
+             <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
+             <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>        
+             </p>
+             <br/>
+             <apex:outputPanel id="testResult">
+                 <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
+                     <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
+                 </apex:outputPanel>
+             </apex:outputPanel>
+        </apex:outputPanel>
+        </apex:outputPanel>
+        -->
+        <br/>
+        <apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
+            <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+            <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
+        </apex:outputPanel>
+  	
+		<!-- 
+		<div style="text-align:center; font-weight:bold; color: green;">
 			<apex:outputPanel id="saveApiSettingsSuccess">
 				<apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsSaveMessage))}">
 					<apex:outputText value="{!apiSettingsSaveMessage}" />
 					<br/>
 				</apex:outputPanel>
 			</apex:outputPanel>
-            </div>
-             -->
-            
-            <div style="text-align:center; font-weight:bold; color: red;">
-            <apex:outputPanel id="saveApiSettingsFailure">
-                <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
-                    <apex:outputText value="{!apiSettingsErrorMessage}" />
-                    <br/>
-                </apex:outputPanel>
+		</div>
+        -->
+        
+        <div style="text-align:center; font-weight:bold; color: red;">
+        <apex:outputPanel id="saveApiSettingsFailure">
+            <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
+                <apex:outputText value="{!apiSettingsErrorMessage}" />
+                <br/>
             </apex:outputPanel>
-            </div>
-            
-            <br/>
+        </apex:outputPanel>
+        </div>
+        
+        <br/>
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Verification_Batch_Title}</h3>
 			<apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
@@ -168,9 +162,11 @@
 					<p>
 						<apex:outputText value="{!bulkVerifyMessage}" />
 					</p>
-					<p>
-					    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-					</p>
+					<apex:outputPanel rendered="{!bulkVerifyMessage!=$Label.Addr_No_Batch}">
+						<p>
+						    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+						</p>
+                    </apex:outputPanel>
 				</apex:outputPanel>
 			</apex:outputPanel>
 		</section>

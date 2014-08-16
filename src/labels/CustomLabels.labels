@@ -8,6 +8,14 @@
         <value>Auth ID cannot be blank.</value>
     </labels>
     <labels>
+        <fullName>Addr_No_Batch</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Address Verification Not Supported</shortDescription>
+        <value>The specified service does not support batch address verification.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
@@ -37,7 +45,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>The SmartyStreets.com LiveAddress API lets you verify US addresses as you add them to Salesforce. The API also standardizes addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
+        <value>The Address Verification API lets you verify addresses as you add them to Salesforce. The API also lets you standardize addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body2</fullName>
@@ -45,16 +53,16 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>To get started using SmartyStreets:
+        <value>&lt;br/&gt;To get started:
 
 &lt;ol&gt;
-&lt;li&gt;Open a &lt;a href=&quot;https://smartystreets.com&quot; target=&quot;_blank&quot;&gt;SmartyStreets.com&lt;/a&gt; account. (Free for nonprofits.)&lt;/li&gt;
+&lt;li&gt;Open a third-party address verification account. (Some are free for nonprofits.)&lt;/li&gt;
 
-&lt;li&gt;In SmartyStreets, go to the API Keys section of the website, and create a Secret Key Pair by giving it a label and clicking Add. &lt;br/&gt;Once created, the Secret Key Pair will include an Auth ID and an Auth Token.&lt;/li&gt;
+&lt;li&gt;In your address verification service, create the required authentication ID and/or token.&lt;/li&gt;
 
-&lt;li&gt;Return to this tab, click the Edit button below, and paste the Auth ID and the Auth Token into the appropriate fields.&lt;/li&gt;
+&lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
-&lt;li&gt;Accept the rest of the default settings and click Save.&lt;/li&gt;</value>
+&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
@@ -70,7 +78,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Notice</shortDescription>
-        <value>Address verification using SmartyStreets will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
+        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Body</fullName>
@@ -78,7 +86,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>To test your SmartyStreets Secret Key Pair, enter any US Zip Code:</value>
+        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Response_Title</fullName>
@@ -86,7 +94,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Response Title</shortDescription>
-        <value>SmartyStreets API Response</value>
+        <value>API Response</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Title</fullName>
@@ -116,7 +124,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Unauthorized Endpoint</shortDescription>
-        <value>Unauthorized endpoint. Please add https://api.smartystreets.com to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
+        <value>Unauthorized endpoint. Please add endpoint URL to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
     </labels>
     <labels>
         <fullName>Addr_Valid_Key_Pair</fullName>
@@ -133,8 +141,6 @@
         <shortDescription>Addr Verification Batch Body</shortDescription>
         <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
         The mass verification process uses the settings from above.&lt;/p&gt;
-&lt;p&gt;NOTE: Address Verifications consume credits from your SmartyStreets account.&lt;/p&gt;
-&lt;p&gt;NOTE: Running Batch Address Verification will check the &quot;Using SmartyStreets&quot; checkbox.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
     <labels>
@@ -165,7 +171,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verify Settings</shortDescription>
-        <value>Please verify SmartyStreet checkbox is checked, and credentials entered.</value>
+        <value>Please verify you have entered your credentials.</value>
     </labels>
     <labels>
         <fullName>Addr_Verifying</fullName>
@@ -219,6 +225,13 @@
         <protected>true</protected>
         <shortDescription>Settings not Saved</shortDescription>
         <value>Settings not saved</value>
+    </labels>
+    <labels>
+        <fullName>SmartyStreets_Help_Text</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SmartyStreets Help Test</shortDescription>
+        <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
     </labels>
     <labels>
         <fullName>Zip_Not_Found</fullName>
@@ -1980,7 +1993,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAddressVerification</shortDescription>
-        <value>Address Verification (LiveAddress API Setup)</value>
+        <value>Address Verification (API Setup)</value>
     </labels>
     <labels>
         <fullName>stgLabelAfflSettings</fullName>
