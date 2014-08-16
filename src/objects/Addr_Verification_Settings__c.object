@@ -16,9 +16,9 @@
     </fields>
     <fields>
         <fullName>Auth_ID__c</fullName>
-        <description>The Auth ID from your Secret Pair Key.</description>
+        <description>The Authentication ID.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Auth ID from your Secret Pair Key.</inlineHelpText>
+        <inlineHelpText>The Authentication ID.</inlineHelpText>
         <label>Auth ID</label>
         <length>255</length>
         <required>false</required>
@@ -28,9 +28,9 @@
     </fields>
     <fields>
         <fullName>Auth_Token__c</fullName>
-        <description>The Auth Token from your Secret Pair Key.</description>
+        <description>The Authentication Token.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Auth Token from your Secret Pair Key.</inlineHelpText>
+        <inlineHelpText>The Authentication Token.</inlineHelpText>
         <label>Auth Token</label>
         <length>255</length>
         <required>false</required>
@@ -40,12 +40,12 @@
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</description>
+        <description>Salesforce class responsible for contacting the web service and verifying addresses.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</inlineHelpText>
+        <inlineHelpText>Salesforce class responsible for contacting the web service and verifying addresses.</inlineHelpText>
         <label>Class</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -89,7 +89,7 @@
         <description>Specifies whether or not you are using the SmartyStreets address verification service.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies whether or not you are using the SmartyStreets address verification service.</inlineHelpText>
-        <label>Using SmartyStreets</label>
+        <label>DEPRECATED - Using SmartyStreets</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
