@@ -93,6 +93,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             	Object classInstance = classType.newInstance();
                 if(classInstance instanceof ADDR_IValidator) {
                     result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                    servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
                 }
             }
             return result;
@@ -100,6 +101,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     	
     	set;
     }
+    
+    public static Map<String, String> servicesHelpTextMap { public get; set; }
     
     public STG_PanelADDRVerification_CTRL() {
     	String validator = addrVerifSettings.Class__c;
@@ -151,6 +154,11 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	    apiTestEntry = null;
 	    apiTestResult = null;
     	return super.cancelEdit();
+    }
+    
+    @RemoteAction
+    public static String getHelpTextForService(String service) {
+    	return servicesHelpTextMap.get(service);
     }
 
     public PageReference testApi() {
