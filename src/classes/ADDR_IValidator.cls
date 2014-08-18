@@ -35,13 +35,23 @@
 */
 public Interface ADDR_IValidator {
 
+    /** Return the service name to be displayed in the drop-down list. **/
     String getServiceName();
     
+    /** Return the default endpoint URL. **/
     String getDefaultURL();
     
+    /** Return the help text to be shown when the user selects the service from the drop-down. It
+    may specify things such as the required fields. **/
     String getHelpText();
     
+    /** Return true if batch address validation is supported. If not, the batch address validation button
+    will be disabled. **/
     Boolean supportsBatch();
     
+    /** Return explanatory text, if any, regarding batch address verification. **/
+    String getBatchHelpText();
+    
+    /** Return verified Address__c records. **/
     List<Address__c> verifyRecords(list<Address__c> addresses, Addr_Verification_Settings__c settings);
 }

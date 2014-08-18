@@ -53,6 +53,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         return true;	
     }
     
+    public String getBatchHelpText() {
+    	return null; //No special warning to be given to users of this verification service.
+    }
+    
     // verify a List of custom object records - split them up into those we are
     // sending for address and those for zip only - max of 100 at a time for each
     public List<Address__c> verifyRecords(List<Address__c> avList, Addr_Verification_Settings__c settings) {
