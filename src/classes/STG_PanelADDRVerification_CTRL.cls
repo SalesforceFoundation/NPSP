@@ -56,13 +56,17 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
     
-    public String validatorHelpText { public get; public set; }    
+    public String validatorHelpText { public get; public set; }
     
+    public Boolean batchVerifEnabled { public get; set; }
+        
     public String validatorSelection; 
     
     public String getValidatorSelection() { return validatorSelection; }
     
     public void setValidatorSelection(String validatorSelection) {
+    	batchVerifEnabled = false;
+    	validatorHelpText = '';
 		addrVerifSettings.Class__c = validatorSelection;
 		if(!String.isBlank(validatorSelection)) {
 			Type classType = Type.forName(validatorSelection);
@@ -71,6 +75,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 				if(classInstance instanceof ADDR_IValidator) {
 				  this.validatorSelection = validatorSelection;
 				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+				  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
 				}
 			}
 		}
@@ -131,6 +136,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                 upsert addrVerifSettings;
                 apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;
+                setValidatorSelection(addrVerifSettings.Class__c);
                 return super.saveSettings();
             }
         } catch (Exception e) {

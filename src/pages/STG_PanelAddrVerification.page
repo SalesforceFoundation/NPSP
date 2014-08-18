@@ -22,7 +22,8 @@
 		<apex:pageBlock mode="maindetail">
 		<apex:outputPanel layout="block" id="fields">
 		<apex:outputPanel layout="block" styleClass="button-block" rendered="{!isReadOnlyMode}">
-            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
+            <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" 
+                                rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
         </apex:outputPanel>
 		<section>
 			<h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
@@ -38,7 +39,8 @@
             <div class="form-group">
                 <apex:outputLabel value="Auth ID" for="iAuth_ID__c" styleClass="col-sm-4 control-label" />
                 <div class="col-sm-8 form-control-column">
-                    <apex:outputText value="{!IF(ISBLANK(addrVerifsettings.Auth_ID__c) || LEN(addrVerifsettings.Auth_ID__c) = 0, '', $Label.HiddenForSecurity)}" rendered="{!isReadOnlyMode}" />
+                    <apex:outputText value="{!IF(ISBLANK(addrVerifsettings.Auth_ID__c) || LEN(addrVerifsettings.Auth_ID__c) = 0, '', $Label.HiddenForSecurity)}" 
+                                        rendered="{!isReadOnlyMode}" />
                     <apex:inputSecret value="{!addrVerifsettings.Auth_ID__c}" rendered="{!isEditMode}" id="iAuth_ID__c" redisplay="true" styleClass="form-control" />
                 </div>
                 <div class="col-sm-offset-4 col-sm-8 help-block">
@@ -121,8 +123,10 @@
         -->
         <br/>
         <apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
-            <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
-            <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
+            <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" 
+                        immediate="false" rerender="fields, commandButtons, saveApiSettingsFailure, bulkVerify" styleClass="btn-sm btn-primary" />
+            <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" 
+                        immediate="true" rerender="fields, commandButtons, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
         </apex:outputPanel>
   	
 		<!-- 
@@ -153,7 +157,8 @@
                     <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
             </label>
             <div style="text-align:center; margin-top: 15px;">
-	            <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult" value="Verify All Addresses" styleClass="btn-sm btn-default" />
+	            <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult" value="Verify All Addresses" 
+	                               disabled="{!NOT batchVerifEnabled}"/> 
 	        </div>
 					
 			<apex:outputPanel id="bulkVerifyResult">
