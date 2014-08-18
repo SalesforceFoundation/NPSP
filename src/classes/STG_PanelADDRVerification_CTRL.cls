@@ -58,6 +58,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public String validatorHelpText { public get; public set; }
     
+    public String validatorBatchHelpText { public get; public set; }
+    
     public Boolean batchVerifEnabled { public get; set; }
         
     public String validatorSelection; 
@@ -67,6 +69,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public void setValidatorSelection(String validatorSelection) {
     	batchVerifEnabled = false;
     	validatorHelpText = '';
+    	validatorBatchHelpText = '';
+    	Map<String, String> servicesHelpTextMap = new Map<String, String>();
+        Map<String, String> servicesURLMap = new Map<String, String>();
 		addrVerifSettings.Class__c = validatorSelection;
 		if(!String.isBlank(validatorSelection)) {
 			Type classType = Type.forName(validatorSelection);
@@ -76,6 +81,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 				  this.validatorSelection = validatorSelection;
 				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
 				  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
+				  validatorBatchHelpText = ((ADDR_IValidator)classInstance).getBatchHelpText();
+				  servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
+                  servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
 				}
 			}
 		}
@@ -84,6 +92,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public List<SelectOption> validators {
     	get {
     		List<SelectOption> result = new List<SelectOption>();
+    		
     		result.add(new SelectOption('', ''));
     		ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
     		          and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
@@ -93,7 +102,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             	Object classInstance = classType.newInstance();
                 if(classInstance instanceof ADDR_IValidator) {
                     result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-                    servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
                 }
             }
             return result;
@@ -103,6 +111,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     public static Map<String, String> servicesHelpTextMap { public get; set; }
+    
+    public static Map<String, String> servicesURLMap { public get; set; }
     
     public STG_PanelADDRVerification_CTRL() {
     	String validator = addrVerifSettings.Class__c;
@@ -159,6 +169,11 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     @RemoteAction
     public static String getHelpTextForService(String service) {
     	return servicesHelpTextMap.get(service);
+    }
+    
+    @RemoteAction
+    public static String getURLForService(String service) {
+        return servicesURLMap.get(service);
     }
 
     public PageReference testApi() {
