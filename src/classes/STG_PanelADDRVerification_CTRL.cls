@@ -106,9 +106,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         try {
         	apiTestResult = null;
         	
-        	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
-        		addrVerifSettings.Using_SmartyStreets__c = true;
-        	}
+        	addrVerifSettings.Using_SmartyStreets__c = (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator');
         	
         	encodeTokenIfNotEncoded(addrVerifSettings);
                         

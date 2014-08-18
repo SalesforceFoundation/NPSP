@@ -39,6 +39,22 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private String strEndPoint;
     private Double dblTimeout;
 
+    public String getServiceName() {
+    	return 'Cicero';
+    }
+    
+    public String getDefaultURL() {
+    	return 'https://cicero.azavea.com/v3.1/legislative_district';
+    }
+    
+    public String getHelpText() {
+    	return Label.stgHelpCiceroAddrVerification; 
+    }
+    
+    public Boolean supportsBatch() {
+    	return false;
+    }
+    
     public List<Address__c> verifyRecords(List<Address__c> listAddr, Addr_Verification_Settings__c settings) {
 
         List<Address__c> listAddrChecked = new List<Address__c>();

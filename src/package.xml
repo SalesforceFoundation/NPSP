@@ -520,6 +520,7 @@
     <members>stgHelpBatchOppRollup</members>
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
+    <members>stgHelpCiceroAddrVerification</members>
     <members>stgHelpContactRTExcluded</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>

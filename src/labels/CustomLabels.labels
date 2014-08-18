@@ -1367,6 +1367,14 @@
         <value>Chatter group where error notifications will be posted.</value>
     </labels>
     <labels>
+        <fullName>stgHelpCiceroAddrVerification</fullName>
+        <categories>Address Verification Settings page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCiceroAddrVerification</shortDescription>
+        <value>Make sure you enter your Cicero API Key in the Auth Token settings field. You will find your API Key on your Cicero My Profile page at cicero.azavea.com</value>
+    </labels>
+    <labels>
         <fullName>stgHelpContactRTExcluded</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
