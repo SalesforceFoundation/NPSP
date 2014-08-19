@@ -615,15 +615,15 @@ global with sharing class HH_ManageHousehold_EXT {
 
         // for HH Accounts, also include all Address objects
         if (isHHAccount && hh.Id != null) {
-	        q = 'select MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
+	        q = 'select MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
 	           ' where Household_Account__c = \'' + hh.Id + '\''; 
 	        q = UTIL_Namespace.StrAllNSPrefix(q);
 	        list<Address__c> listAddr = Database.query(q);	        
 	        
 	        for (Address__c addr : listAddr) {
-	            if (addr.MailingStreet__c != null || addr.MailingCity__c != null || addr.MailingState__c != null || addr.MailingPostalCode__c != null || addr.MailingCountry__c != null) {
+	            if (addr.MailingStreet__c != null || addr.MailingStreet2__c != null || addr.MailingCity__c != null || addr.MailingState__c != null || addr.MailingPostalCode__c != null || addr.MailingCountry__c != null) {
 	                
-	                string addressString = addr.MailingStreet__c + '#' + addr.MailingCity__c + '#' + addr.MailingState__c + '#' + addr.MailingPostalCode__c + '#' + addr.MailingCountry__c;
+	                string addressString = ADDR_Addresses_TDTM.getMultilineStreet(addr) + '#' + addr.MailingCity__c + '#' + addr.MailingState__c + '#' + addr.MailingPostalCode__c + '#' + addr.MailingCountry__c;
 	                
 	                // regex pattern for getting all white space
 	                pattern whtspc = pattern.compile('[\\s]');
@@ -638,7 +638,7 @@ global with sharing class HH_ManageHousehold_EXT {
 	                {
 	                    viableAddress va = new viableAddress();
 	                    va.AddressKey = addressString;
-	                    va.MailingStreet = addr.MailingStreet__c;
+	                    va.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
 	                    va.MailingCity = addr.MailingCity__c;
 	                    va.MailingState = addr.MailingState__c;
 	                    va.MailingPostalCode = addr.MailingPostalCode__c;

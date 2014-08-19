@@ -80,8 +80,8 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
     
         String strRequest = '?';
-        if (addr.MailingStreet__c != null)
-            strRequest += 'search_address=' + addr.MailingStreet__c.replace(' ', '+') + '&';
+        if (addr.Formula_MailingStreetAddress__c != null)
+            strRequest += 'search_address=' + addr.Formula_MailingStreetAddress__c.replace(' ', '+') + '&';
         if (addr.MailingCity__c != null)
             strRequest += 'search_city=' + addr.MailingCity__c.replace(' ', '+') + '&';
         if (addr.MailingState__c != null)
@@ -138,6 +138,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 list<string> listParts = candidate.match_addr.split(',');
                 if (listParts.size() == 4) {
                     addr.MailingStreet__c = listParts[0].trim();
+                    ADDR_Addresses_TDTM.handleMultilineStreet(addr);
                     addr.MailingCity__c = listParts[1].trim();
                     addr.MailingState__c = listParts[2].trim();
                     addr.MailingPostalCode__c = listParts[3].trim();

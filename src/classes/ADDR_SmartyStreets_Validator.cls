@@ -99,7 +99,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         for (Address__c av : avList) {
             ADDR_SmartyStreets_Gateway.AddressRequest sr = new ADDR_SmartyStreets_Gateway.AddressRequest();
             sr.street = av.MailingStreet__c;
-            // sr.street2 =     // SHOULD WE SPLIT STREET WHEN MULTILINE??
+            sr.street2 = av.MailingStreet2__c;
             sr.city = av.MailingCity__c;
             sr.state = av.MailingState__c;
             sr.zipcode = av.MailingPostalCode__c;
@@ -125,8 +125,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        System.debug('****Flagging address as verified. Address ID: ' + av.Id);
 	                        av.Verified__c = true;
-	                        av.MailingStreet__c = sr.delivery_line_1 + 
-	                            ((sr.delivery_line_2 != null && sr.delivery_line_2 != '') ? ('\n' + sr.delivery_line_2) : '');
+	                        av.MailingStreet__c = sr.delivery_line_1;
+	                        av.MailingStreet2__c = sr.delivery_line_2;
 	                        av.MailingCity__c = sr.components.city_name;
 	                        av.MailingState__c = sr.components.state_abbreviation;
 	                        av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
