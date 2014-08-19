@@ -56,22 +56,20 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
     
-    public String validatorHelpText { public get; public set; }
-    
+    public String settingsHelpText { public get; public set; }    
     public String validatorBatchHelpText { public get; public set; }
     
     public Boolean batchVerifEnabled { public get; set; }
-        
-    public String validatorSelection; 
     
-    public String getValidatorSelection() { return validatorSelection; }
+    public Map<String, String> servicesHelpTextMap { public get; set; }
+    public Map<String, String> servicesURLMap  { public get; set; }
     
+    public String validatorSelection;     
+    public String getValidatorSelection() { return validatorSelection; }  
     public void setValidatorSelection(String validatorSelection) {
     	batchVerifEnabled = false;
-    	validatorHelpText = '';
+    	settingsHelpText = '';
     	validatorBatchHelpText = '';
-    	Map<String, String> servicesHelpTextMap = new Map<String, String>();
-        Map<String, String> servicesURLMap = new Map<String, String>();
 		addrVerifSettings.Class__c = validatorSelection;
 		if(!String.isBlank(validatorSelection)) {
 			Type classType = Type.forName(validatorSelection);
@@ -79,44 +77,38 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 				Object classInstance = classType.newInstance();
 				if(classInstance instanceof ADDR_IValidator) {
 				  this.validatorSelection = validatorSelection;
-				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+				  settingsHelpText = ((ADDR_IValidator)classInstance).getHelpText();
 				  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
 				  validatorBatchHelpText = ((ADDR_IValidator)classInstance).getBatchHelpText();
-				  servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
-                  servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
 				}
 			}
 		}
     }
     
-    public List<SelectOption> validators {
-    	get {
-    		List<SelectOption> result = new List<SelectOption>();
-    		
-    		result.add(new SelectOption('', ''));
-    		ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
-    		          and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
-    		          and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
-            for(ApexClass c : classes) {
-            	Type classType = Type.forName(c.Name);
-            	Object classInstance = classType.newInstance();
-                if(classInstance instanceof ADDR_IValidator) {
-                    result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-                }
-            }
-            return result;
-    	}
-    	
-    	set;
-    }
-    
-    public static Map<String, String> servicesHelpTextMap { public get; set; }
-    
-    public static Map<String, String> servicesURLMap { public get; set; }
+    public List<SelectOption> validators { public get; set; }
     
     public STG_PanelADDRVerification_CTRL() {
     	String validator = addrVerifSettings.Class__c;
     	setValidatorSelection(validator);
+    	
+    	servicesHelpTextMap = new Map<String, String>();
+        servicesURLMap = new Map<String, String>();
+    
+        validators = new List<SelectOption>();
+        validators.add(new SelectOption('', ''));
+        ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
+                  and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
+                  and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
+        
+        for(ApexClass c : classes) {
+            Type classType = Type.forName(c.Name);
+            Object classInstance = classType.newInstance();
+            if(classInstance instanceof ADDR_IValidator) {
+                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
+                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+            }
+        }         
     }
     
     public override PageReference saveSettings() {
@@ -164,16 +156,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	    apiTestEntry = null;
 	    apiTestResult = null;
     	return super.cancelEdit();
-    }
-    
-    @RemoteAction
-    public static String getHelpTextForService(String service) {
-    	return servicesHelpTextMap.get(service);
-    }
-    
-    @RemoteAction
-    public static String getURLForService(String service) {
-        return servicesURLMap.get(service);
     }
 
     public PageReference testApi() {
