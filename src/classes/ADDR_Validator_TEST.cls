@@ -239,8 +239,9 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testControllerMissingSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
-        
+
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         
         Test.startTest();

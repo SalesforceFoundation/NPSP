@@ -232,7 +232,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            acc.BillingStreet = addr.MailingStreet__c;
+            acc.BillingStreet = getMultilineStreet(addr);
             acc.BillingCity = addr.MailingCity__c;
             acc.BillingState = addr.MailingState__c;
             acc.BillingPostalCode = addr.MailingPostalCode__c;
@@ -257,7 +257,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if(mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-	                    con.MailingStreet = addr.MailingStreet__c;
+	                    con.MailingStreet = getMultilineStreet(addr);
 	                    con.MailingCity = addr.MailingCity__c;
 	                    con.MailingState = addr.MailingState__c;
 	                    con.MailingPostalCode = addr.MailingPostalCode__c;
@@ -333,7 +333,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
     		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            con.MailingStreet = addr.MailingStreet__c;
+            con.MailingStreet = getMultilineStreet(addr);
             con.MailingCity = addr.MailingCity__c;
             con.MailingState = addr.MailingState__c;
             con.MailingPostalCode = addr.MailingPostalCode__c;
@@ -347,7 +347,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     private static map<Id, list<Address__c>> getMapAccIdListAddrHH(list<Id> listAccId) {
         map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
         list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
-            MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
+            MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
             Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
             from Address__c 
             where Household_Account__c in :listAccId];
@@ -379,6 +379,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            return false;        
         return (
            addrNew.MailingStreet__c != addrOld.MailingStreet__c ||
+           addrNew.MailingStreet2__c != addrOld.MailingStreet2__c ||
            addrNew.MailingCity__c != addrOld.MailingCity__c ||
            addrNew.MailingState__c != addrOld.MailingState__c ||
            addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
@@ -542,5 +543,23 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         
         return mapAddrDupAddr;               
+    }
+    
+    public static void handleMultilineStreet(Address__c addr) {
+    
+        if (addr.MailingStreet__c == null)
+            return;
+        integer ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+        }
+    }
+    
+    public static string getMultilineStreet(Address__c addr) {
+        string str = addr.MailingStreet__c;
+        if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0)
+            str += '\n' + addr.MailingStreet2__c;
+        return str;
     }
 }
