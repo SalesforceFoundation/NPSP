@@ -171,14 +171,14 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     		  setAddrId.add(con.Current_Address__c);
     	}
     
-        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, MailingStreet__c, MailingCity__c, MailingState__c, 
+        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, 
             MailingPostalCode__c, MailingCountry__c from Address__c where Id in :setAddrId]);
             
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (addr != null) {
             	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-            	con.MailingStreet = addr.MailingStreet__c;
+            	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
             	con.MailingCity = addr.MailingCity__c;
             	con.MailingState = addr.MailingState__c;
             	con.MailingPostalCode = addr.MailingPostalCode__c;
@@ -266,6 +266,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	addr.MailingPostalCode__c = con.MailingPostalCode;
         	addr.MailingCountry__c = con.MailingCountry;
         	addr.Address_Type__c = con.npe01__Primary_Address_Type__c;
+        	ADDR_Addresses_TDTM.handleMultilineStreet(addr);
             mapConAddr.put(con, addr);
         }
 
@@ -362,7 +363,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         		if (addr == null)
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
-                	con.MailingStreet = addr.MailingStreet__c;
+                	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
                 	con.MailingCity = addr.MailingCity__c;
                 	con.MailingState = addr.MailingState__c;
                 	con.MailingPostalCode = addr.MailingPostalCode__c;

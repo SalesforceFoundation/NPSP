@@ -242,6 +242,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                         Default_Address__c = true,
                         Address_Type__c = 'Home',
                         Household_Account__c = a.Id);
+                    ADDR_Addresses_TDTM.handleMultilineStreet(ad);
 
                     addressesForInsert.put(a.Id, ad);
                 }
@@ -284,6 +285,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                 Default_Address__c = true,
                                 Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
                                 Household_Account__c = accountId);
+                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
 
                             addressesForInsert.put(conList[0].Id, a);
                         }
@@ -301,6 +303,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             Default_Address__c = true,
                             Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
                             Household_Account__c = accountId);
+                        ADDR_Addresses_TDTM.handleMultilineStreet(a);
                         addressesForInsert.put(AccountId, a);
 
                         myHHAccount.BillingStreet = cadd.MailingStreet;
@@ -403,6 +406,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                                 Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
                                                 Household_Account__c = cadd.contact.AccountId
                                                 );
+                            ADDR_Addresses_TDTM.handleMultilineStreet(a);                                                
 
                         if (hasDefaultAddr){
                             masteraddresshash = MD5Hash;
@@ -591,7 +595,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
 
         public Boolean isSameAddress(Address__c add){
-            if(this.MailingStreet == add.MailingStreet__c && 
+        	string strStreet = add.MailingStreet__c;
+        	if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0)
+        	   strStreet += '\n' + add.MailingStreet2__c;
+            if(this.MailingStreet == strStreet && 
                this.MailingCity == add.MailingCity__c && 
                this.MailingState == add.MailingState__c &&
                this.MailingZip == add.MailingPostalCode__c &&
