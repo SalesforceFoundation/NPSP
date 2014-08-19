@@ -66,12 +66,8 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         else
             this.strEndPoint = 'https://cicero.azavea.com/v3.1/legislative_district';
 
-        try {
-            for (Address__c addr : listAddr)	{
-                listAddrChecked.add(verifyAddress(addr, settings));
-            }
-        } catch (exception ex) {
-        	// eat the error and stop verifying, in case some of the validations went thru.
+        for (Address__c addr : listAddr)	{
+            listAddrChecked.add(verifyAddress(addr, settings));
         }
 
         return listAddrChecked;
@@ -91,70 +87,79 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         if (addr.MailingCountry__c != null)
             strRequest += 'search_country=' + addr.MailingCountry__c + '&';
 
-        if (strAuthToken != null && strEndPoint != null) {
-            // prepare the request
-            Http h = new Http();
-            HttpRequest req = new HttpRequest();
-            req.setMethod('GET');  
-            req.setHeader('Content-Type','application/json');
-            req.setHeader('Accept','application/json');
-            req.setEndpoint(strEndPoint + strRequest + '&key=' + strAuthToken + '&format=json'); 
-            req.setTimeout((dblTimeout == null) ? 5000 : (dblTimeout * 1000).intValue());
-
-            // execute the request
-            HttpResponse response = new HttpResponse();
-            if (Test.isRunningTest())
-                response = ADDR_Cicero_Test.respond(req);
-            else
-                response = h.send(req);
-            system.debug('****CICERO RESPONDS WITH: ' + response.getBody());
-            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
-            Object objResp = JSON.deserializeUntyped(response.getBody());
-            addr.API_Response__c = JSON.serializePretty(objResp);
-            system.debug('****CiceroResponse is: ' + cresp);
-            
-            boolean foundData = false;
-            if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
-                list<Candidates> listCandidates = cresp.response.results.candidates;  
-
-                // more than one candidate means should mark as ambiguous
-                if (listCandidates.size() > 1)
-                    addr.Ambiguous__c = true;
-                              
-	            // find the congressional legislative district
-	            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
-                    Candidates candidate = listCandidates[0];
-                    for (Districts district : candidate.districts) {
-	                    if (district.district_type == 'NATIONAL_LOWER') {
-	                        addr.Congressional_District__c = district.district_id;
-	                        addr.MailingCountry__c = 'US';
-	                        foundData = true;
-	                        break;
-	                    }
+        try {
+	        if (strAuthToken != null && strEndPoint != null) {
+	            // prepare the request
+	            Http h = new Http();
+	            HttpRequest req = new HttpRequest();
+	            req.setMethod('GET');  
+	            req.setHeader('Content-Type','application/json');
+	            req.setHeader('Accept','application/json');
+	            req.setEndpoint(strEndPoint + strRequest + '&key=' + strAuthToken + '&format=json'); 
+	            req.setTimeout((dblTimeout == null) ? 5000 : (dblTimeout * 1000).intValue());
+	
+	            // execute the request
+	            HttpResponse response = new HttpResponse();
+	            if (Test.isRunningTest())
+	                response = ADDR_Cicero_Test.respond(req);
+	            else
+	                response = h.send(req);
+	            //system.debug('****CICERO RESPONDS WITH: ' + response.getBody());
+	            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
+	            Object objResp = JSON.deserializeUntyped(response.getBody());
+	            addr.API_Response__c = JSON.serializePretty(objResp);
+	            
+	            boolean foundData = false;
+	            if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
+	                list<Candidates> listCandidates = cresp.response.results.candidates;  
+	
+	                // more than one candidate means should mark as ambiguous
+	                if (listCandidates.size() > 1)
+	                    addr.Ambiguous__c = true;
+	                              
+		            // find the congressional legislative district
+		            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
+	                    Candidates candidate = listCandidates[0];
+	                    for (Districts district : candidate.districts) {
+		                    if (district.district_type == 'NATIONAL_LOWER') {
+		                        addr.Congressional_District__c = district.district_id;
+		                        addr.MailingCountry__c = 'US';
+		                        foundData = true;
+		                        break;
+		                    }
+		                }
+	                
+	                // parse match_addr to get normalized form
+	                // we assume it looks like 'street, city, state, zip'
+	                list<string> listParts = candidate.match_addr.split(',');
+	                if (listParts.size() == 4) {
+	                    addr.MailingStreet__c = listParts[0].trim();
+	                    ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+	                    addr.MailingCity__c = listParts[1].trim();
+	                    addr.MailingState__c = listParts[2].trim();
+	                    addr.MailingPostalCode__c = listParts[3].trim();
 	                }
-                
-                // parse match_addr to get normalized form
-                // we assume it looks like 'street, city, state, zip'
-                list<string> listParts = candidate.match_addr.split(',');
-                if (listParts.size() == 4) {
-                    addr.MailingStreet__c = listParts[0].trim();
-                    ADDR_Addresses_TDTM.handleMultilineStreet(addr);
-                    addr.MailingCity__c = listParts[1].trim();
-                    addr.MailingState__c = listParts[2].trim();
-                    addr.MailingPostalCode__c = listParts[3].trim();
-                }
-                
-                // save location
-                addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
-                addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
-	            }
-            }	
-            addr.Verified__c = foundData;
-            return addr;
+	                
+	                // save location
+	                addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
+	                addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
+		            }
+	            }	
+	            addr.Verified__c = foundData;
+	            return addr;
+	        } else {
+	        	throw(new CiceroException(Label.addrCiceroMissingAPIKey));
+	        }
+        } catch (Exception ex) {
+	        addr.Verified__c = false;
+	        addr.API_Response__c = 'Error: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
+            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
         }
-        return null;
+        return addr;
     }
-    
+
+    public class CiceroException extends Exception {}
+        
     // The following classes represent the response object from Cicero
 
 	public class CiceroResponse {
