@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -14,7 +13,10 @@
     <members>ADDR_Contact_TDTM</members>
     <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
     <members>ADDR_CopyAddrHHObjBTN_TEST</members>
+    <members>ADDR_GoogleGeoAPI_Validator</members>
+    <members>ADDR_GoogleGeoAPI_Validator_TEST</members>
     <members>ADDR_IValidator</members>
+    <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
     <members>ADDR_SmartyStreets_Gateway</members>
@@ -279,6 +281,7 @@
     <members>Address_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>
+    <members>Address__c.Administrative_Area__c</members>
     <members>Address__c.Ambiguous__c</members>
     <members>Address__c.Congressional_District__c</members>
     <members>Address__c.County_Name__c</members>
@@ -347,8 +350,8 @@
     <name>CustomField</name>
   </types>
   <types>
-    <members>Addr_Settings_API_Body</members>
     <members>Addr_Id_Error</members>
+    <members>Addr_Settings_API_Body</members>
     <members>Addr_No_Batch</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -371,9 +374,10 @@
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
+    <members>HiddenForSecurity</members>
+    <members>RecurringDonationAccountAndContactError</members>
     <members>Saved</members>
     <members>Settings_not_Saved</members>
-    <members>RecurringDonationAccountAndContactError</members>
     <members>SmartyStreets_Help_Text</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
@@ -477,7 +481,6 @@
     <members>hhCmpDedupeLabelOpenReport</members>
     <members>hhCmpDedupeNoReport</members>
     <members>hhCmpDedupeStatus</members>
-    <members>HiddenForSecurity</members>
     <members>labelListViewFirst</members>
     <members>labelListViewLast</members>
     <members>labelListViewNext</members>
