@@ -98,6 +98,19 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Administrative_Area__c</fullName>
+        <description>Depending on the country and area, could be a city, township, municipality or other civic region associated with this address.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Depending on the country and area, could be a city, township, municipality or other civic region associated with this address.</inlineHelpText>
+        <label>Administrative Area</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Ambiguous__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether more than on valid address was found when attempting to validate it through an external service.</description>
