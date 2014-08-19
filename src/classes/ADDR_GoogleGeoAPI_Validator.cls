@@ -73,6 +73,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         String address_request_string = '';
         if (a.MailingStreet__c != null)
             address_request_string += a.MailingStreet__c.replace(' ', '+') + '+';
+        if (a.MailingStreet2__c != null)
+            address_request_string += a.MailingStreet2__c.replace(' ', '+') + '+';
         if (a.MailingCity__c != null)
             address_request_string += a.MailingCity__c.replace(' ', '+') + '+';
         if (a.MailingState__c != null)
@@ -134,6 +136,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                         }
                     }
                     a.MailingStreet__c = verified_street;
+                    ADDR_Addresses_TDTM.handleMultilineStreet(a);                    
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
                     a.Verified__c = true;
