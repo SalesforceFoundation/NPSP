@@ -286,6 +286,7 @@
     <members>Address__c.County_Name__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
+    <members>Address__c.Formula_MailingStreetAddress__c</members>
     <members>Address__c.Geolocation__c</members>
     <members>Address__c.Household_Account__c</members>
     <members>Address__c.Latest_End_Date__c</members>
@@ -294,6 +295,7 @@
     <members>Address__c.MailingCountry__c</members>
     <members>Address__c.MailingPostalCode__c</members>
     <members>Address__c.MailingState__c</members>
+    <members>Address__c.MailingStreet2__c</members>
     <members>Address__c.MailingStreet__c</members>
     <members>Address__c.Seasonal_End_Day__c</members>
     <members>Address__c.Seasonal_End_Month__c</members>
