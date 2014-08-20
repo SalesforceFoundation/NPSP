@@ -250,6 +250,14 @@
         <value>You cannot verify more than 100 zipcodes at a time.</value>
     </labels>
     <labels>
+        <fullName>addrCiceroMissingAPIKey</fullName>
+        <categories>Cicero address verification service</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>addrCiceroMissingAPIKey</shortDescription>
+        <value>The Cicero API Key must be specified in the Auth Token setting in the Address Verification Settings.</value>
+    </labels>
+    <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
@@ -1365,6 +1373,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpChatterGroup</shortDescription>
         <value>Chatter group where error notifications will be posted.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCiceroAddrVerification</fullName>
+        <categories>Address Verification Settings page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCiceroAddrVerification</shortDescription>
+        <value>Make sure you enter your Cicero API Key in the Auth Token settings field. You will find your API Key on your Cicero My Profile page at cicero.azavea.com</value>
     </labels>
     <labels>
         <fullName>stgHelpContactRTExcluded</fullName>
