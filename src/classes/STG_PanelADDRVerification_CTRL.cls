@@ -67,38 +67,30 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public String validatorSelection;     
     public String getValidatorSelection() { return validatorSelection; }  
     public void setValidatorSelection(String validatorSelection) {
-    	batchVerifEnabled = false;
-    	settingsHelpText = '';
-    	validatorBatchHelpText = '';
 		addrVerifSettings.Class__c = validatorSelection;
+		clearDynamicFields();
 		if(!String.isBlank(validatorSelection)) {
 			Type classType = Type.forName(validatorSelection);
 			if(classType != null) { 
 				Object classInstance = classType.newInstance();
 				if(classInstance instanceof ADDR_IValidator) {
 				  this.validatorSelection = validatorSelection;
-				  settingsHelpText = ((ADDR_IValidator)classInstance).getHelpText();
-				  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
-				  validatorBatchHelpText = ((ADDR_IValidator)classInstance).getBatchHelpText();
+				  setDynamicFields((ADDR_IValidator)classInstance);
 				}
 			}
 		}
     }
     
-    public PageReference initTextFields() {
+    public PageReference initDynamicFields() {
     	String validator = Addr_Verification_Settings__c.getOrgDefaults().Class__c;
         if(validator != null) {           
-	        batchVerifEnabled = false;
-	        settingsHelpText = '';
-	        validatorBatchHelpText = '';
+	        clearDynamicFields();
 	        if(!String.isBlank(validatorSelection)) {
 	            Type classType = Type.forName(validatorSelection);
 	            if(classType != null) { 
 	                Object classInstance = classType.newInstance();
 	                if(classInstance instanceof ADDR_IValidator) {
-	                  settingsHelpText = ((ADDR_IValidator)classInstance).getHelpText();
-	                  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
-	                  validatorBatchHelpText = ((ADDR_IValidator)classInstance).getBatchHelpText();
+	                   setDynamicFields((ADDR_IValidator)classInstance);
 	                }
 	            }
 	        }
@@ -106,10 +98,22 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         return null;
     }
     
+    private void clearDynamicFields() {
+    	batchVerifEnabled = false;
+        settingsHelpText = '';
+        validatorBatchHelpText = '';
+    }
+    
+    private void setDynamicFields(ADDR_IValidator validator) {
+        settingsHelpText = validator.getHelpText();
+        batchVerifEnabled = validator.supportsBatch();
+        validatorBatchHelpText = validator.getBatchHelpText();	
+    }
+    
     public List<SelectOption> validators { public get; set; }
     
     public STG_PanelADDRVerification_CTRL() {
-        initTextFields();
+        initDynamicFields();
         
     	servicesHelpTextMap = new Map<String, String>();
         servicesURLMap = new Map<String, String>();
