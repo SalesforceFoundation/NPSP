@@ -48,6 +48,9 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     'Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section.' +
     'More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/';
     }
+    public String getBatchHelpText() {
+        return 'The Google Geocoding API does not support Batch Address Validation.';
+    }
 
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings){
 
