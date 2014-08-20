@@ -160,6 +160,11 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
+            	if(addrVerifSettings.Address_Verification_Endpoint__c.contains('http:')) {
+            	   addrVerifSettings.Address_Verification_Endpoint__c = addrVerifSettings.Address_Verification_Endpoint__c.replaceFirst('http:', 'https:');
+            	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {
+            	   addrVerifSettings.Address_Verification_Endpoint__c = 'https://' + addrVerifSettings.Address_Verification_Endpoint__c;
+            	}
                 upsert addrVerifSettings;
                 apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;

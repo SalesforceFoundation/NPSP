@@ -17,9 +17,11 @@
 			  if(!selection) {
 			     j$('[id$=iSettingsHelpText]').html('');
 			     j$('[id$=iAddress_Verification_Endpoint__c]').val('');
+			     j$('[id$=Enable_Automatic_Verification__c').prop('checked', false);
 			  } else {
 			     j$('[id$=iSettingsHelpText]').html(settingsHelpText[selection]);
 			     j$('[id$=iAddress_Verification_Endpoint__c]').val(endpointURLs[selection]);
+			     j$('[id$=Enable_Automatic_Verification__c').prop('checked', true);
 			  }
 		  });           
        });
