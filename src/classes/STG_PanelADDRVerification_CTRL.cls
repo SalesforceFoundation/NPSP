@@ -160,6 +160,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
+            	if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Zipcode_Verification_Endpoint__c == null) {
+            		ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+            		addrVerifSettings.Zipcode_Verification_Endpoint__c = validator.getDefaultZipcodeURL();
+            	}
             	if(addrVerifSettings.Address_Verification_Endpoint__c.contains('http:')) {
             	   addrVerifSettings.Address_Verification_Endpoint__c = addrVerifSettings.Address_Verification_Endpoint__c.replaceFirst('http:', 'https:');
             	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {

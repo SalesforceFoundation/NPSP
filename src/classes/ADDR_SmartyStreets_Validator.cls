@@ -45,6 +45,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         return 'https://api.smartystreets.com/street-address';	
     }
     
+    public String getDefaultZipcodeURL() {
+        return 'https://api.smartystreets.com/street-address';  
+    }
+    
     public String getHelpText() {
     	return Label.SmartyStreets_Help_Text;
     }
