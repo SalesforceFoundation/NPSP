@@ -85,12 +85,32 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 		}
     }
     
+    public PageReference initTextFields() {
+    	String validator = Addr_Verification_Settings__c.getOrgDefaults().Class__c;
+        if(validator != null) {           
+	        batchVerifEnabled = false;
+	        settingsHelpText = '';
+	        validatorBatchHelpText = '';
+	        if(!String.isBlank(validatorSelection)) {
+	            Type classType = Type.forName(validatorSelection);
+	            if(classType != null) { 
+	                Object classInstance = classType.newInstance();
+	                if(classInstance instanceof ADDR_IValidator) {
+	                  settingsHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+	                  batchVerifEnabled = ((ADDR_IValidator)classInstance).supportsBatch();
+	                  validatorBatchHelpText = ((ADDR_IValidator)classInstance).getBatchHelpText();
+	                }
+	            }
+	        }
+        }
+        return null;
+    }
+    
     public List<SelectOption> validators { public get; set; }
     
     public STG_PanelADDRVerification_CTRL() {
-    	String validator = addrVerifSettings.Class__c;
-    	setValidatorSelection(validator);
-    	
+        initTextFields();
+        
     	servicesHelpTextMap = new Map<String, String>();
         servicesURLMap = new Map<String, String>();
     
