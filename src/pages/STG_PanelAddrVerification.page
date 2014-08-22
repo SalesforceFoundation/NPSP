@@ -213,9 +213,7 @@
 						<apex:outputText value="{!batchVerifyMessage}" />
 					</p>
 					<apex:outputPanel rendered="{!isRunningBatch}">
-						<p>
-						    <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-						</p>
+					   <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                     </apex:outputPanel>
 				</apex:outputPanel>
 			</apex:outputPanel>
