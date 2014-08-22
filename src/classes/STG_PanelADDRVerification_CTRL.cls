@@ -36,13 +36,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
-    public Addr_Verification_Settings__c addrVerifSettings {
-	    public get { 
-	        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-	        return addrVerifSettings;
-	    }
-	    public set;
-    }
+    public Addr_Verification_Settings__c addrVerifSettings { public get; public set; }
     
     public String apiSettingsErrorMessage { get; private set; }
     public String apiSettingsSaveMessage { get; private set; }
@@ -82,18 +76,18 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     public PageReference initDynamicFields() {
-    	String validator = Addr_Verification_Settings__c.getOrgDefaults().Class__c;
+    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    	String validator = addrVerifSettings.Class__c;
+        clearDynamicFields();
         if(validator != null) {           
-	        clearDynamicFields();
-	        if(!String.isBlank(validatorSelection)) {
-	            Type classType = Type.forName(validatorSelection);
-	            if(classType != null) { 
-	                Object classInstance = classType.newInstance();
-	                if(classInstance instanceof ADDR_IValidator) {
-	                   setDynamicFields((ADDR_IValidator)classInstance);
-	                }
-	            }
-	        }
+            Type classType = Type.forName(validator);
+            if(classType != null) { 
+                Object classInstance = classType.newInstance();
+                if(classInstance instanceof ADDR_IValidator) {
+                   setDynamicFields((ADDR_IValidator)classInstance);
+                   setValidatorSelection(addrVerifSettings.Class__c);
+                }
+            }
         }
         return null;
     }
@@ -112,9 +106,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public List<SelectOption> validators { public get; set; }
     
-    public STG_PanelADDRVerification_CTRL() {
-        initDynamicFields();
-        
+    public STG_PanelADDRVerification_CTRL() {        
     	servicesHelpTextMap = new Map<String, String>();
         servicesURLMap = new Map<String, String>();
     
@@ -136,7 +128,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     public override PageReference saveSettings() {
-        System.debug('****Settings: ' + JSON.serializePretty(addrVerifSettings));
         try {
         	apiTestResult = null;
         	
