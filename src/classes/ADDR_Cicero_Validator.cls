@@ -56,7 +56,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     }
     
     public String getBatchHelpText() {
-    	return 'The Cicero API does not support Batch Address Validation.';
+    	return Label.Addr_Verification_Batch_Not_Supported;
     }
     
     public List<Address__c> verifyRecords(List<Address__c> listAddr, Addr_Verification_Settings__c settings) {

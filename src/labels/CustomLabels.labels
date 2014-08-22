@@ -152,6 +152,22 @@
         <value>Mass Verification Status</value>
     </labels>
     <labels>
+        <fullName>Addr_Verification_Batch_Not_Supported</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Batch Support</shortDescription>
+        <value>The selected service does not support Batch Address Validation.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_SmartyStreets_Message</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batches of 100</shortDescription>
+        <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -165,6 +181,13 @@
         <protected>true</protected>
         <shortDescription>Addr Verify Endpoint</shortDescription>
         <value>Please enter the endpoint URL.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Google_Help</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Google API Helpt Text</shortDescription>
+        <value>The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to Visit the APIs console at https://code.google.com/apis/console and log in with your Google Account. Click the Services link from the left-hand menu in the APIs Console, then activate the Geocoding API service. Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section. More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/.</value>
     </labels>
     <labels>
         <fullName>Addr_Verify_Settings</fullName>

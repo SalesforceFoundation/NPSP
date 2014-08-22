@@ -58,7 +58,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
     
     public String getBatchHelpText() {
-    	return 'SmartyStreets will verify addresses in batches of 100.';
+    	return Label.Addr_Verification_Batch_SmartyStreets_Message;
     }
     
     // verify a List of custom object records - split them up into those we are

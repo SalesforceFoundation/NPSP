@@ -373,8 +373,11 @@
     <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
     <members>Addr_Verification_Batch_Status</members>
+    <members>Addr_Verification_Batch_Not_Supported</members>
+    <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Title</members>
     <members>Addr_Verify_Endpoint</members>
+    <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
