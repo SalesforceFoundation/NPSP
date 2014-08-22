@@ -216,6 +216,7 @@ public with sharing class ADDR_Validator_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testController') return;
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
         
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         sc.addrVerifSettings.Auth_ID__c = 'testID';
@@ -240,8 +241,10 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testControllerMissingSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
-
+        
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
+        
         sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         
