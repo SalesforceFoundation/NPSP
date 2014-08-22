@@ -168,7 +168,7 @@
         <br/>
         <apex:outputPanel layout="block" style="text-align: center;" id="commandButtons">
             <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" 
-                        immediate="false" rerender="fields, commandButtons, saveApiSettingsFailure, bulkVerify, validatorBatchHelpText" styleClass="btn-sm btn-primary" />
+                        immediate="false" rerender="fields, commandButtons, saveApiSettingsFailure, batchVerify, validatorBatchHelpText" styleClass="btn-sm btn-primary" />
             <apex:commandButton id="cancelNotif" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" 
                         immediate="true" rerender="fields, commandButtons, saveApiSettingsFailure" styleClass="btn-sm btn-default" />
         </apex:outputPanel>
@@ -202,19 +202,19 @@
                     <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" />{!$Label.Addr_Skip_Verified}
             </label>
             <div style="text-align:center; margin-top: 15px;">
-	            <apex:commandButton id="bulkVerify" action="{!bulkVerify}" rerender="bulkVerifyResult" value="Verify All Addresses" 
+	            <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" 
 	                               disabled="{!NOT batchVerifEnabled}"/> 
 	        </div>
 					
-			<apex:outputPanel id="bulkVerifyResult">
-				<apex:outputPanel rendered="{!NOT(ISNULL(bulkVerifyMessage))}">
+			<apex:outputPanel id="batchVerifyResult">
+				<apex:outputPanel rendered="{!NOT(ISNULL(batchVerifyMessage))}">
 					<h4>{!$Label.Addr_Verification_Batch_Status}</h4>
 					<p>
-						<apex:outputText value="{!bulkVerifyMessage}" />
+						<apex:outputText value="{!batchVerifyMessage}" />
 					</p>
-					<apex:outputPanel rendered="{!bulkVerifyMessage!=$Label.Addr_No_Batch}">
+					<apex:outputPanel rendered="{!isRunningBatch}">
 						<p>
-						    <c:UTIL_JobProgress strBatchComponentLabel="{!bulkVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+						    <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
 						</p>
                     </apex:outputPanel>
 				</apex:outputPanel>

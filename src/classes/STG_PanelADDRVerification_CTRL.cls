@@ -45,8 +45,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public String apiTestResult { get; set; }
 
     public Boolean skipPreviouslyVerifiedObjects { get; set; } { skipPreviouslyVerifiedObjects = true; } 
-    public Boolean nowVerifying { get; private set; } { nowVerifying = false; } 
-    public String bulkVerifyMessage { get; set; }
+    public boolean isRunningBatch { get; set; }
+    public String batchVerifyMessage { get; set; }
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
     
@@ -106,7 +106,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public List<SelectOption> validators { public get; set; }
     
-    public STG_PanelADDRVerification_CTRL() {        
+    public STG_PanelADDRVerification_CTRL() {
+    	isRunningBatch = false;    
     	servicesHelpTextMap = new Map<String, String>();
         servicesURLMap = new Map<String, String>();
     
@@ -235,7 +236,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }
 
-    public PageReference bulkVerify() {
+    public PageReference batchVerify() {
     	String classToRunName = String.valueOf(addrVerifSettings.get('Class__c'));
         if(!String.isBlank(classToRunName)) {
 	        Type classType = Type.forName(classToRunName);
@@ -246,17 +247,17 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	                if(validator.supportsBatch()) {
 	                    ADDR_Validator_Batch b = new ADDR_Validator_Batch(skipPreviouslyVerifiedObjects);
 				        Database.executeBatch(b); 
-				        nowVerifying = true;
-				        bulkVerifyMessage = Label.Addr_Verifying;	
+				        isRunningBatch = true;
+				        batchVerifyMessage = Label.Addr_Verifying;	
 	                } else {
-	                    bulkVerifyMessage = Label.Addr_No_Batch;	
+	                    batchVerifyMessage = Label.Addr_No_Batch;	
 	                }
 	            }
 	        } else {
-	        	bulkVerifyMessage = Label.Addr_No_Batch;
+	        	batchVerifyMessage = Label.Addr_No_Batch;
 	        }
         } else {
-            bulkVerifyMessage = Label.Addr_No_Batch;
+            batchVerifyMessage = Label.Addr_No_Batch;
         }
         return null;
     }

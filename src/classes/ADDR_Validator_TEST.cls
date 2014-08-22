@@ -231,12 +231,12 @@ public with sharing class ADDR_Validator_TEST {
         system.assertNotEquals(null, sc.apiTestResult);
 
         Test.startTest();
-        sc.bulkVerify();
+        sc.batchVerify();
         Test.stopTest();
         
         //The batch has its own test. This basically tests that no exception was thrown
         //since it got to set the status variable.
-        System.assertEquals(true, sc.nowVerifying);
+        System.assertEquals(true, sc.isRunningBatch);
     }
     
     static testMethod void testControllerMissingSetting() {
