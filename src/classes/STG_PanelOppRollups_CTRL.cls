@@ -40,7 +40,7 @@ public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
     public static void verifyFiscalYearRollups(STG_PanelHealthCheck_CTRL ctrl) {
         string strSetting = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Use_Fiscal_Year_for_Rollups__c');    	
         if (STG_Panel.stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c == true) {
-            String fyQuery = 'select id from FiscalYearSettings';            
+            String fyQuery = 'select id from FiscalYearSettings where IsStandardYear = false';            
             List<SObject> fySettings = new List<SObject>();
             fySettings = Database.query(fyQuery);
             integer hasCustomFYRecord = fySettings.size();
