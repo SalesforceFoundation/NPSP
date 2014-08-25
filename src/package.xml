@@ -316,6 +316,7 @@
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
+    <members>Contact.Primary_Contact__c</members>
     <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -356,8 +357,8 @@
   </types>
   <types>
     <members>Addr_Id_Error</members>
-    <members>Addr_Settings_API_Body</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
