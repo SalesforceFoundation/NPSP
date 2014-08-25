@@ -396,8 +396,7 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void testRefreshAllHHNamingWithCustom() {
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         // turn off household naming        
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -501,8 +500,7 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void testRefreshAllHHNamingManyHH() {
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         // turn off household naming        
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(

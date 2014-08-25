@@ -43,8 +43,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     
     public static ADDR_SmartyStreets_Gateway createDefaultSettings() {
         // use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api authentication settings
         settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();

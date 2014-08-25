@@ -41,8 +41,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static void createDefaultSettings() {
     	// use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings - SmartyStreets off
         Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
