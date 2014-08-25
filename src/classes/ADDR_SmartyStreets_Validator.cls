@@ -37,6 +37,30 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 
     private Addr_Verification_Settings__c settings;
     
+    public String getServiceName() {
+    	return 'SmartyStreets';
+    }
+    
+    public String getDefaultURL() {
+        return 'https://api.smartystreets.com/street-address';	
+    }
+    
+    public String getDefaultZipcodeURL() {
+        return 'https://api.smartystreets.com/street-address';  
+    }
+    
+    public String getHelpText() {
+    	return Label.SmartyStreets_Help_Text;
+    }
+    
+    public Boolean supportsBatch() {
+        return true;	
+    }
+    
+    public String getBatchHelpText() {
+    	return Label.Addr_Verification_Batch_SmartyStreets_Message;
+    }
+    
     // verify a List of custom object records - split them up into those we are
     // sending for address and those for zip only - max of 100 at a time for each
     public List<Address__c> verifyRecords(List<Address__c> avList, Addr_Verification_Settings__c settings) {
@@ -83,7 +107,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         for (Address__c av : avList) {
             ADDR_SmartyStreets_Gateway.AddressRequest sr = new ADDR_SmartyStreets_Gateway.AddressRequest();
             sr.street = av.MailingStreet__c;
-            // sr.street2 =     // SHOULD WE SPLIT STREET WHEN MULTILINE??
+            sr.street2 = av.MailingStreet2__c;
             sr.city = av.MailingCity__c;
             sr.state = av.MailingState__c;
             sr.zipcode = av.MailingPostalCode__c;
@@ -109,8 +133,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        System.debug('****Flagging address as verified. Address ID: ' + av.Id);
 	                        av.Verified__c = true;
-	                        av.MailingStreet__c = sr.delivery_line_1 + 
-	                            ((sr.delivery_line_2 != null && sr.delivery_line_2 != '') ? ('\n' + sr.delivery_line_2) : '');
+	                        av.MailingStreet__c = sr.delivery_line_1;
+	                        av.MailingStreet2__c = sr.delivery_line_2;
 	                        av.MailingCity__c = sr.components.city_name;
 	                        av.MailingState__c = sr.components.state_abbreviation;
 	                        av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +

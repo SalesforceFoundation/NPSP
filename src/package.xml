@@ -11,10 +11,15 @@
     <members>ADDR_Account_TDTM</members>
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
+    <members>ADDR_Cicero_TEST</members>
+    <members>ADDR_Cicero_Validator</members>
     <members>ADDR_Contact_TDTM</members>
     <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
     <members>ADDR_CopyAddrHHObjBTN_TEST</members>
+    <members>ADDR_GoogleGeoAPI_Validator</members>
+    <members>ADDR_GoogleGeoAPI_Validator_TEST</members>
     <members>ADDR_IValidator</members>
+    <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
     <members>ADDR_SmartyStreets_Gateway</members>
@@ -279,11 +284,13 @@
     <members>Address_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>
+    <members>Address__c.Administrative_Area__c</members>
     <members>Address__c.Ambiguous__c</members>
     <members>Address__c.Congressional_District__c</members>
     <members>Address__c.County_Name__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
+    <members>Address__c.Formula_MailingStreetAddress__c</members>
     <members>Address__c.Geolocation__c</members>
     <members>Address__c.Household_Account__c</members>
     <members>Address__c.Latest_End_Date__c</members>
@@ -292,6 +299,7 @@
     <members>Address__c.MailingCountry__c</members>
     <members>Address__c.MailingPostalCode__c</members>
     <members>Address__c.MailingState__c</members>
+    <members>Address__c.MailingStreet2__c</members>
     <members>Address__c.MailingStreet__c</members>
     <members>Address__c.Seasonal_End_Day__c</members>
     <members>Address__c.Seasonal_End_Month__c</members>
@@ -348,6 +356,7 @@
   </types>
   <types>
     <members>Addr_Id_Error</members>
+    <members>Addr_No_Batch</members>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -364,8 +373,11 @@
     <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
     <members>Addr_Verification_Batch_Status</members>
+    <members>Addr_Verification_Batch_Not_Supported</members>
+    <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Title</members>
     <members>Addr_Verify_Endpoint</members>
+    <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
@@ -374,8 +386,10 @@
     <members>RecurringDonationAccountAndContactError</members>
     <members>Saved</members>
     <members>Settings_not_Saved</members>
+    <members>SmartyStreets_Help_Text</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
+    <members>addrCiceroMissingAPIKey</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
@@ -516,6 +530,7 @@
     <members>stgHelpBatchOppRollup</members>
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
+    <members>stgHelpCiceroAddrVerification</members>
     <members>stgHelpContactRTExcluded</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
@@ -769,6 +784,8 @@
     <name>QuickAction</name>
   </types>
   <types>
+    <members>Cicero</members>
+    <members>GoogleAPI</members>
     <members>SmartyStreets</members>
     <name>RemoteSiteSetting</name>
   </types>

@@ -6,19 +6,19 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Address_Verification_Endpoint__c</fullName>
-        <description>URL used for address verification.</description>
+        <description>Address Verification URL</description>
         <externalId>false</externalId>
         <inlineHelpText>URL used for address verification.</inlineHelpText>
-        <label>Address Verification Endpoint</label>
+        <label>Address Verification URL</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
     <fields>
         <fullName>Auth_ID__c</fullName>
-        <description>The Auth ID from your Secret Pair Key.</description>
+        <description>Auth ID</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Auth ID from your Secret Pair Key.</inlineHelpText>
+        <inlineHelpText>The Authentication ID.</inlineHelpText>
         <label>Auth ID</label>
         <length>255</length>
         <required>false</required>
@@ -28,9 +28,9 @@
     </fields>
     <fields>
         <fullName>Auth_Token__c</fullName>
-        <description>The Auth Token from your Secret Pair Key.</description>
+        <description>Auth Token</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Auth Token from your Secret Pair Key.</inlineHelpText>
+        <inlineHelpText>The Authentication Token.</inlineHelpText>
         <label>Auth Token</label>
         <length>255</length>
         <required>false</required>
@@ -40,12 +40,12 @@
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</description>
+        <description>Verification Service</description>
         <externalId>false</externalId>
-        <inlineHelpText>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</inlineHelpText>
-        <label>Class</label>
+        <inlineHelpText>Salesforce class responsible for contacting the web service and verifying addresses.</inlineHelpText>
+        <label>Verification Service</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -53,7 +53,7 @@
     <fields>
         <fullName>Enable_Automatic_Verification__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Enables automatic address verification for new addresses.</description>
+        <description>Enable Automatic Verification</description>
         <externalId>false</externalId>
         <inlineHelpText>Enables automatic address verification for new addresses.</inlineHelpText>
         <label>Enable Automatic Verification</label>
@@ -63,7 +63,7 @@
     <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</description>
+        <description>Reject Ambiguous Addresses</description>
         <externalId>false</externalId>
         <inlineHelpText>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</inlineHelpText>
         <label>Reject Ambiguous Addresses</label>
@@ -89,13 +89,13 @@
         <description>Specifies whether or not you are using the SmartyStreets address verification service.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies whether or not you are using the SmartyStreets address verification service.</inlineHelpText>
-        <label>Using SmartyStreets</label>
+        <label>DEPRECATED - Using SmartyStreets</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Zipcode_Verification_Endpoint__c</fullName>
-        <description>URL used for zip code verification.</description>
+        <description>Zipcode Verification URL</description>
         <externalId>false</externalId>
         <inlineHelpText>URL used for zip code verification.</inlineHelpText>
         <label>Zipcode Verification Endpoint</label>

@@ -48,7 +48,7 @@ public with sharing class ADDR_Validator {
     	System.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
-            MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
+            MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
             Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
             Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
 

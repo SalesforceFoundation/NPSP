@@ -1560,4 +1560,135 @@ private with sharing class ADDR_Addresses_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    operation:
+        insert contact w/ multiline street address
+    verify:
+        new default Address created and the street address is broken up into street and street2
+        the HH Account gets the new multiline address
+    **********************************************************************************************************/            
+    static testMethod void insertContactWithMultilineStreetAddress() {
+        if (strTestOnly != '*' && strTestOnly != 'insertContactWithMultilineStreetAddress') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+            
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
+        for (Contact con : listConT) {
+            con.MailingStreet = 'new street\nsecond line';
+            con.MailingCity = 'new city';
+        }
+        insert listConT;        
+        
+        // verify the Address objects split street.
+        list<Address__c> listAddr = [select Id, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c from Address__c];
+        for (Address__c addr : listAddr) {
+            system.assertEquals('new street', addr.MailingStreet__c);
+            system.assertEquals('second line', addr.MailingStreet2__c);
+            system.assertEquals('new street, second line', addr.Formula_MailingStreetAddress__c);
+        }
+
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals('new street\nsecond line', con.MailingStreet);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        insert new default multiline street addresses to HH w/ existing default addresses  
+    verify:
+        contact's && hh address matches new default
+        street & street2 combined into contact and account single street field
+    **********************************************************************************************************/            
+    static testMethod void insertNewDefaultMultilineStreetAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultMultilineStreetAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        // create additional addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = true;
+            listAddrT[i].MailingStreet__c = 'New Default Street';
+            listAddrT[i].MailingStreet2__c = 'Second Line';
+            listAddrT[i].MailingCity__c = 'New Default City' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+        Test.stopTest();
+
+        // verify that the HH and Contacts share the same address and it's new!
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        system.assertEquals(cHH * cCon, listCon.size());
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals('New Default Street\nSecond Line', con.MailingStreet);
+            system.assertEquals('New Default Street\nSecond Line', acc.BillingStreet);
+        }
+        
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        update accounts' billing address with multiline street address  
+    verify:
+        new Default Address created
+        HH and Contacts get new Address
+        new Addresss has multiline street split into Street and Street2 fields
+    **********************************************************************************************************/            
+    static testMethod void updateAccMultilineStreetAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the account addresses directly
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'Direct Street Edit\nSecond Line';
+            acc.BillingCity = 'Direct City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals('Direct Street Edit\nSecond Line', acc.BillingStreet);
+            system.assertEquals('Direct Street Edit\nSecond Line', con.MailingStreet);
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify the Address objects split street.
+        list<Address__c> listAddr = [select Id, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, Default_Address__c from Address__c];
+        for (Address__c addr : listAddr) {
+        	if (addr.Default_Address__c) {
+	            system.assertEquals('Direct Street Edit', addr.MailingStreet__c);
+	            system.assertEquals('Second Line', addr.MailingStreet2__c);
+	            system.assertEquals('Direct Street Edit, Second Line', addr.Formula_MailingStreetAddress__c);
+        	}
+        }
+
+    }
+
 }
