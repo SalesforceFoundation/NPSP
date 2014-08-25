@@ -52,7 +52,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';
         settings.Zipcode_Verification_Endpoint__c = 'api.smartystreets.com/zipcode';
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
-        settings.Enable_Automatic_Verification__c = true;
+        settings.Enable_Automatic_Verification__c = false;
         settings.Reject_Ambiguous_Addresses__c = true;
         upsert settings;
    
