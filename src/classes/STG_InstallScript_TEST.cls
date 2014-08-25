@@ -188,24 +188,24 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     private static void assertNpspFlagsDeactivated() {
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings();
         System.assertEquals(false, npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c);
         System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c);
         
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_Households_trigger__c);
         System.assertEquals(false, npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c);
         
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getInstance();
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         System.assertEquals(false, npe03Settings.npe03__DISABLE_Donations_trigger__c);
         System.assertEquals(false, npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c);
         
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getInstance();
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings();
         System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c);
         System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c);
         System.assertEquals(false, npe04Settings.npe4__DISABLE_Relationships_trigger__c);
