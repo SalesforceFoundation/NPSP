@@ -39,7 +39,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings
-        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Using_SmartyStreets__c = false;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
@@ -179,7 +179,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
     }
     static testMethod void testNullAuthToken() {
         // create settings w/o a token
-        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;

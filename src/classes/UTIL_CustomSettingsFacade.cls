@@ -251,7 +251,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     //zero-arguments method that will set custom setting defaults
-    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
+    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
         Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getInstance();
         if(settings.Id == null) {
         	settings = Addr_Verification_Settings__c.getInstance();

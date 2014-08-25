@@ -81,7 +81,7 @@ global class STG_InstallScript implements InstallHandler {
         npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings();
         npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
         UTIL_CustomSettingsFacade.getErrorSettings();
-        UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         UTIL_CustomSettingsFacade.getBDESettings(); 
         
         System.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));

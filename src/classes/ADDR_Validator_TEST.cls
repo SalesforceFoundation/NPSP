@@ -44,7 +44,7 @@ public with sharing class ADDR_Validator_TEST {
         UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings
-        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
