@@ -121,7 +121,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setMethod('POST');
 	        req.setHeader('Content-Type','application/json');
 	        req.setHeader('Accept','application/json');
-	        req.setEndpoint('https://' + baseURL + auth); 
+	        req.setEndpoint(baseURL + auth); 
 	        req.setBody(body);
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
 	        System.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());

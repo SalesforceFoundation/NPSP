@@ -36,13 +36,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
-    public Addr_Verification_Settings__c addrVerifSettings {
-	    public get { 
-	        if(addrVerifSettings == null) addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
-	        return addrVerifSettings;
-	    }
-	    public set;
-    }
+    public Addr_Verification_Settings__c addrVerifSettings { public get; public set; }
     
     public String apiSettingsErrorMessage { get; private set; }
     public String apiSettingsSaveMessage { get; private set; }
@@ -51,58 +45,90 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public String apiTestResult { get; set; }
 
     public Boolean skipPreviouslyVerifiedObjects { get; set; } { skipPreviouslyVerifiedObjects = true; } 
-    public Boolean nowVerifying { get; private set; } { nowVerifying = false; } 
-    public String bulkVerifyMessage { get; set; }
+    public boolean isRunningBatch { get; set; }
+    public String batchVerifyMessage { get; set; }
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
     
-    public String validatorHelpText { public get; public set; }    
+    public String settingsHelpText { public get; public set; }    
+    public String validatorBatchHelpText { public get; public set; }
     
-    public String validatorSelection; 
+    public Boolean batchVerifEnabled { public get; set; }
     
-    public String getValidatorSelection() { return validatorSelection; }
+    public Map<String, String> servicesHelpTextMap { public get; set; }
+    public Map<String, String> servicesURLMap  { public get; set; }
     
+    public String validatorSelection;     
+    public String getValidatorSelection() { return validatorSelection; }  
     public void setValidatorSelection(String validatorSelection) {
 		addrVerifSettings.Class__c = validatorSelection;
+		clearDynamicFields();
 		if(!String.isBlank(validatorSelection)) {
 			Type classType = Type.forName(validatorSelection);
 			if(classType != null) { 
 				Object classInstance = classType.newInstance();
 				if(classInstance instanceof ADDR_IValidator) {
 				  this.validatorSelection = validatorSelection;
-				  validatorHelpText = ((ADDR_IValidator)classInstance).getHelpText();
+				  setDynamicFields((ADDR_IValidator)classInstance);
 				}
 			}
 		}
     }
     
-    public List<SelectOption> validators {
-    	get {
-    		List<SelectOption> result = new List<SelectOption>();
-    		result.add(new SelectOption('', ''));
-    		ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
-    		          and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
-    		          and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
-            for(ApexClass c : classes) {
-            	Type classType = Type.forName(c.Name);
-            	Object classInstance = classType.newInstance();
+    public PageReference initDynamicFields() {
+    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    	String validator = addrVerifSettings.Class__c;
+        clearDynamicFields();
+        if(validator != null) {           
+            Type classType = Type.forName(validator);
+            if(classType != null) { 
+                Object classInstance = classType.newInstance();
                 if(classInstance instanceof ADDR_IValidator) {
-                    result.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                   setDynamicFields((ADDR_IValidator)classInstance);
+                   setValidatorSelection(addrVerifSettings.Class__c);
                 }
             }
-            return result;
-    	}
-    	
-    	set;
+        }
+        return null;
     }
     
+    private void clearDynamicFields() {
+    	batchVerifEnabled = false;
+        settingsHelpText = '';
+        validatorBatchHelpText = '';
+    }
+    
+    private void setDynamicFields(ADDR_IValidator validator) {
+        settingsHelpText = validator.getHelpText();
+        batchVerifEnabled = validator.supportsBatch();
+        validatorBatchHelpText = validator.getBatchHelpText();	
+    }
+    
+    public List<SelectOption> validators { public get; set; }
+    
     public STG_PanelADDRVerification_CTRL() {
-    	String validator = addrVerifSettings.Class__c;
-    	setValidatorSelection(validator);
+    	isRunningBatch = false;    
+    	servicesHelpTextMap = new Map<String, String>();
+        servicesURLMap = new Map<String, String>();
+    
+        validators = new List<SelectOption>();
+        validators.add(new SelectOption('', ''));
+        ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
+                  and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
+                  and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
+        
+        for(ApexClass c : classes) {
+            Type classType = Type.forName(c.Name);
+            Object classInstance = classType.newInstance();
+            if(classInstance instanceof ADDR_IValidator) {
+                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
+                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+            }
+        }         
     }
     
     public override PageReference saveSettings() {
-        System.debug('****Settings: ' + JSON.serializePretty(addrVerifSettings));
         try {
         	apiTestResult = null;
         	
@@ -126,9 +152,19 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
+            	if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Zipcode_Verification_Endpoint__c == null) {
+            		ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+            		addrVerifSettings.Zipcode_Verification_Endpoint__c = validator.getDefaultZipcodeURL();
+            	}
+            	if(addrVerifSettings.Address_Verification_Endpoint__c.contains('http:')) {
+            	   addrVerifSettings.Address_Verification_Endpoint__c = addrVerifSettings.Address_Verification_Endpoint__c.replaceFirst('http:', 'https:');
+            	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {
+            	   addrVerifSettings.Address_Verification_Endpoint__c = 'https://' + addrVerifSettings.Address_Verification_Endpoint__c;
+            	}
                 upsert addrVerifSettings;
                 apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;
+                setValidatorSelection(addrVerifSettings.Class__c);
                 return super.saveSettings();
             }
         } catch (Exception e) {
@@ -200,7 +236,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }
 
-    public PageReference bulkVerify() {
+    public PageReference batchVerify() {
     	String classToRunName = String.valueOf(addrVerifSettings.get('Class__c'));
         if(!String.isBlank(classToRunName)) {
 	        Type classType = Type.forName(classToRunName);
@@ -211,17 +247,17 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	                if(validator.supportsBatch()) {
 	                    ADDR_Validator_Batch b = new ADDR_Validator_Batch(skipPreviouslyVerifiedObjects);
 				        Database.executeBatch(b); 
-				        nowVerifying = true;
-				        bulkVerifyMessage = Label.Addr_Verifying;	
+				        isRunningBatch = true;
+				        batchVerifyMessage = Label.Addr_Verifying;	
 	                } else {
-	                    bulkVerifyMessage = Label.Addr_No_Batch;	
+	                    batchVerifyMessage = Label.Addr_No_Batch;	
 	                }
 	            }
 	        } else {
-	        	bulkVerifyMessage = Label.Addr_No_Batch;
+	        	batchVerifyMessage = Label.Addr_No_Batch;
 	        }
         } else {
-            bulkVerifyMessage = Label.Addr_No_Batch;
+            batchVerifyMessage = Label.Addr_No_Batch;
         }
         return null;
     }

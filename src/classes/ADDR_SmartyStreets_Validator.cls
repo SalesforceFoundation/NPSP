@@ -42,7 +42,11 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
     
     public String getDefaultURL() {
-        return 'api.smartystreets.com/street-address';	
+        return 'https://api.smartystreets.com/street-address';	
+    }
+    
+    public String getDefaultZipcodeURL() {
+        return 'https://api.smartystreets.com/street-address';  
     }
     
     public String getHelpText() {
@@ -51,6 +55,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     
     public Boolean supportsBatch() {
         return true;	
+    }
+    
+    public String getBatchHelpText() {
+    	return Label.Addr_Verification_Batch_SmartyStreets_Message;
     }
     
     // verify a List of custom object records - split them up into those we are

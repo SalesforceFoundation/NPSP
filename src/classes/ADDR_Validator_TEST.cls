@@ -49,8 +49,8 @@ public with sharing class ADDR_Validator_TEST {
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
-        settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';
-        settings.Zipcode_Verification_Endpoint__c = 'api.smartystreets.com/zipcode';
+        settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
+        settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
@@ -216,10 +216,12 @@ public with sharing class ADDR_Validator_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testController') return;
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
         
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
+        sc.addrVerifSettings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
         sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
@@ -229,18 +231,20 @@ public with sharing class ADDR_Validator_TEST {
         system.assertNotEquals(null, sc.apiTestResult);
 
         Test.startTest();
-        sc.bulkVerify();
+        sc.batchVerify();
         Test.stopTest();
         
         //The batch has its own test. This basically tests that no exception was thrown
         //since it got to set the status variable.
-        System.assertEquals(true, sc.nowVerifying);
+        System.assertEquals(true, sc.isRunningBatch);
     }
     
     static testMethod void testControllerMissingSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
-
+        
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
+        
         sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         

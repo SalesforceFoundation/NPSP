@@ -6,17 +6,17 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Address_Verification_Endpoint__c</fullName>
-        <description>URL used for address verification.</description>
+        <description>Address Verification URL</description>
         <externalId>false</externalId>
         <inlineHelpText>URL used for address verification.</inlineHelpText>
-        <label>Address Verification Endpoint</label>
+        <label>Address Verification URL</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
     <fields>
         <fullName>Auth_ID__c</fullName>
-        <description>The Authentication ID.</description>
+        <description>Auth ID</description>
         <externalId>false</externalId>
         <inlineHelpText>The Authentication ID.</inlineHelpText>
         <label>Auth ID</label>
@@ -28,7 +28,7 @@
     </fields>
     <fields>
         <fullName>Auth_Token__c</fullName>
-        <description>The Authentication Token.</description>
+        <description>Auth Token</description>
         <externalId>false</externalId>
         <inlineHelpText>The Authentication Token.</inlineHelpText>
         <label>Auth Token</label>
@@ -40,10 +40,10 @@
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Salesforce class responsible for contacting the web service and verifying addresses.</description>
+        <description>Verification Service</description>
         <externalId>false</externalId>
         <inlineHelpText>Salesforce class responsible for contacting the web service and verifying addresses.</inlineHelpText>
-        <label>Class</label>
+        <label>Verification Service</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -53,7 +53,7 @@
     <fields>
         <fullName>Enable_Automatic_Verification__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Enables automatic address verification for new addresses.</description>
+        <description>Enable Automatic Verification</description>
         <externalId>false</externalId>
         <inlineHelpText>Enables automatic address verification for new addresses.</inlineHelpText>
         <label>Enable Automatic Verification</label>
@@ -63,7 +63,7 @@
     <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</description>
+        <description>Reject Ambiguous Addresses</description>
         <externalId>false</externalId>
         <inlineHelpText>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</inlineHelpText>
         <label>Reject Ambiguous Addresses</label>
@@ -95,7 +95,7 @@
     </fields>
     <fields>
         <fullName>Zipcode_Verification_Endpoint__c</fullName>
-        <description>URL used for zip code verification.</description>
+        <description>Zipcode Verification URL</description>
         <externalId>false</externalId>
         <inlineHelpText>URL used for zip code verification.</inlineHelpText>
         <label>Zipcode Verification Endpoint</label>
