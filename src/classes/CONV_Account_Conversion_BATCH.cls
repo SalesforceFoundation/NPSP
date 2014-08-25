@@ -526,7 +526,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         update ContactsSettings;
 
-        npo02__Households_Settings__c HHSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c HHSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         HHSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         update HHSettings;
     }

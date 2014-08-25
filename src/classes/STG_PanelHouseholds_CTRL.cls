@@ -44,7 +44,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
 
     public PageReference activateHouseholdNaming() {
         isRunningBatch = true; 
-        boolean isActivation = (HH_Households.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
+        boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
                 
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
         saveSettings();

@@ -149,7 +149,7 @@ public with sharing class HH_Households_TEST {
      static testMethod void noHouseholdSetting() {
         
         delete [select id from npo02__Households_Settings__c];
-        HH_Households.getHouseholdsSettings();
+        UTIL_CustomSettingsFacade.getHouseholdsSettings();
         system.Assert(!HH_Households.householdsSettings.npo02__Always_Rollup_to_Primary_Contact__c);
      }
 

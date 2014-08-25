@@ -361,7 +361,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
 
-        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         if (hs != null && hs.npo02__Advanced_Household_Naming__c == false)
             return;    	
     	

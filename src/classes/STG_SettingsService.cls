@@ -50,7 +50,7 @@ public with sharing class STG_SettingsService {
     
     public npo02__Households_Settings__c stgHH {
         get {
-            if (stgHH == null) stgHH = HH_Households.getHouseholdsSettings();
+            if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getHouseholdsSettings();
             return stgHH;
         }
         private set;

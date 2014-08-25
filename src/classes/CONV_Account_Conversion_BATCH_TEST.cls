@@ -90,7 +90,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //assert the task was ported as well
         system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
@@ -139,7 +139,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         for (Contact con : [select id, Account.Name from Contact]){
             system.assertNotEquals('Individual', con.Account.Name);
         }
@@ -184,7 +184,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(true, add.Default_Address__c);
         system.assertEquals(add.Id, [select Current_Address__c from Contact where id = :c.id].Current_Address__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
@@ -246,7 +246,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(true, c.is_Address_Override__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
