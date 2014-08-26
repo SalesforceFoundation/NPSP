@@ -35,6 +35,8 @@
 */
 public without sharing class UTIL_CustomSettingsFacade {
 
+    static Error_Settings__c orgErrorSettings;
+    
     //zero-arguments method that will set custom setting defaults
     public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
     	return getContactsSettings(null, CAO_Constants.HH_ACCOUNT_PROCESSOR);
@@ -222,22 +224,31 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     //zero-arguments method that will set custom setting defaults
     public static Error_Settings__c getErrorSettings() {
-        return getErrorSettings(null);	
+    	if(orgErrorSettings == null)
+            return getErrorSettings(null);
+        return orgErrorSettings;
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();   
+        if(orgErrorSettings == null)
+            orgErrorSettings = Error_Settings__c.getOrgDefaults();   
+        
+        Boolean needsDml = false;
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
             //orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
-            orgErrorSettings.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;  
+            orgErrorSettings.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+            needsDml = true;
         }  
         
-        if(notificationsTo != null)
+        if(notificationsTo != null) {
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
+            needsDml = true;
+        }
             
-        upsert orgErrorSettings; 
+        if(needsDml)
+            upsert orgErrorSettings;
         
         return orgErrorSettings;
     }
