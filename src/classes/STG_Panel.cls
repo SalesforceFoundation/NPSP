@@ -35,7 +35,6 @@
 public with sharing virtual class STG_Panel {
 	
 	public STG_Panel() {
-		//system.debug('***** STG_Panel constructor');
 		isEditMode = false;
 	}
 	

@@ -199,22 +199,24 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     //zero-arguments method that will set custom setting defaults
     public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        return getAffiliationsSettings(true);
+        return getAffiliationsSettings(null);
     }
     
     //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliationOn) {		
+    public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliation) {		
 		npe5__Affiliations_Settings__c affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+        //if a value is passed  
+        if(automaticAffiliation != null) {
+            affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliation;        
+        }
+        //if no value is passed and it had no value
+        if(automaticAffiliation == null && affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c == null) {
+        	affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;        
+        }
+        //if no value is passed, and it had a value --> we leave it alone
         
-        if(affiliationsSettings.Id == null && automaticAffiliationOn != null) {
-        	affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;        
-            insert affiliationsSettings; 
-        }       
-   
-        if(affiliationsSettings.Id != null && automaticAffiliationOn != null) {
-            affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliationOn;
-            update affiliationsSettings;     
-        }           
+        upsert affiliationsSettings;
+        
         return affiliationsSettings;
     }
     
@@ -224,7 +226,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();      
+        Error_Settings__c orgErrorSettings = Error_Settings__c.getOrgDefaults();   
         if(orgErrorSettings.Id == null) {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
@@ -236,6 +238,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
             
         upsert orgErrorSettings; 
+        
         return orgErrorSettings;
     }
     

@@ -129,10 +129,10 @@ public with sharing class STG_SettingsManager_TEST {
     	system.assertEquals('idPanelAffl', panel.idPanel());
     	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     	panel.saveSettings();
-    	system.assertEquals(true, npe5__Affiliations_Settings__c.getInstance().npe5__Automatic_Affiliation_Creation_Turned_On__c);
+    	system.assertEquals(true, UTIL_CustomSettingsFacade.getAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
         STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npe5__Affiliations_Settings__c.getInstance().npe5__Automatic_Affiliation_Creation_Turned_On__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
     }
 
     public static testMethod void testPanelBDE() {
@@ -141,10 +141,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelBDE', panel.idPanel());
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = true;
         panel.saveSettings();
-        system.assertEquals(true, Batch_Data_Entry_Settings__c.getInstance().Opportunity_Naming__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getBDESettings().Opportunity_Naming__c);
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = false;
         panel.saveSettings();
-        system.assertEquals(false, Batch_Data_Entry_Settings__c.getInstance().Opportunity_Naming__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getBDESettings().Opportunity_Naming__c);
     }
 
     public static testMethod void testPanelContactRoles() {
@@ -153,10 +153,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelConRoles', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
         panel.saveSettings();
-        system.assertEquals(true, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
     }
 
     public static testMethod void testPanelContacts() {
@@ -165,10 +165,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelCon', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         panel.saveSettings();
-        system.assertEquals('Household Account', npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Account_Processor__c);
+        system.assertEquals('Household Account', UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c);
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         panel.saveSettings();
-        system.assertEquals('One-to-One', npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Account_Processor__c);
+        system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c);
     }
 
     public static testMethod void testPanelHouseholds() {
@@ -178,9 +178,9 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isRunningBatch);
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npo02__Households_Settings__c.getInstance().npo02__Advanced_Household_Naming__c);        
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c);        
         panel.activateHouseholdNaming();
-        system.assertEquals(true, npo02__Households_Settings__c.getInstance().npo02__Advanced_Household_Naming__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c);
     }
 
     public static testMethod void testPanelLeads() {
@@ -189,10 +189,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelLeads', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = true;
         panel.saveSettings();
-        system.assertEquals(true, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Default_Opp_on_Convert__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Default_Opp_on_Convert__c);
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Default_Opp_on_Convert__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Default_Opp_on_Convert__c);
     }
 
     public static testMethod void testPanelMembership() {
@@ -201,10 +201,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, npo02__Households_Settings__c.getInstance().npo02__Membership_Grace_Period__c);        
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Membership_Grace_Period__c);        
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 20;
         panel.saveSettings();
-        system.assertEquals(20, npo02__Households_Settings__c.getInstance().npo02__Membership_Grace_Period__c);
+        system.assertEquals(20, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Membership_Grace_Period__c);
     }
 
     public static testMethod void testPanelOppBatch() {
@@ -222,10 +222,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, npo02__Households_Settings__c.getInstance().npo02__Batch_Size__c);        
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Batch_Size__c);        
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 20;
         panel.saveSettings();
-        system.assertEquals(20, npo02__Households_Settings__c.getInstance().npo02__Batch_Size__c);
+        system.assertEquals(20, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Batch_Size__c);
     }
 
     public static testMethod void testPanelOpps() {
@@ -234,10 +234,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelOpp', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = true;
         panel.saveSettings();
-        system.assertEquals(true, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Payments_Enabled__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c);
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npe01__Contacts_And_Orgs_Settings__c.getInstance().npe01__Payments_Enabled__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c);
     }
 
     public static testMethod void testPanelPaymentMapping() {
@@ -390,10 +390,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
         panel.saveSettings();
-        system.assertEquals(true, npe4__Relationship_Settings__c.getInstance().npe4__Allow_AutoCreated_Duplicates__c);
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c);
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = false;
         panel.saveSettings();
-        system.assertEquals(false, npe4__Relationship_Settings__c.getInstance().npe4__Allow_AutoCreated_Duplicates__c);
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c);
         system.assertNotEquals(null, panel.listSOGenderFieldOptions);
     }
 
