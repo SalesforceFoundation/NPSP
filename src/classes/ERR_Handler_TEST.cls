@@ -37,6 +37,9 @@ public with sharing class ERR_Handler_TEST {
     private static Id chatterGroupId;
     
     private static void setupWithChatterNotifications() {
+    	UTIL_CustomSettingsFacade.getContactsSettings();
+    	UTIL_CustomSettingsFacade.getHouseholdsSettings();
+    	
     	if(Schema.SObjectType.User.isFeedEnabled()) {
 	    	SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
 	    	chatterGroup.put('Name', 'ChatterTestGroup');
@@ -50,6 +53,9 @@ public with sharing class ERR_Handler_TEST {
     }
     
     private static void setupWithEmailNotifications() {
+        UTIL_CustomSettingsFacade.getContactsSettings();
+        UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
         UTIL_CustomSettingsFacade.getErrorSettings(user.Id);
     }
@@ -218,7 +224,7 @@ public with sharing class ERR_Handler_TEST {
     
         setupWithChatterNotifications();
         
-        AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(true);
+        UTIL_CustomSettingsFacade.getAffiliationsSettings(true);
                     
         //Create account
         Account acc1 = new Account(Name='test1');
@@ -253,6 +259,7 @@ public with sharing class ERR_Handler_TEST {
         //gets rolled back and then run again only with records that succeed. No error is saved.
         //**Note that we have not created a Trigger_Handler__c record with the test class that would throw an exception**
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
+        System.debug('****ERROR: ' + JSON.serializePretty(errors));
         System.assertEquals(0, errors.size());                                    
     }
     

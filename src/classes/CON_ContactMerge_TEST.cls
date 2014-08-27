@@ -45,7 +45,7 @@ private class CON_ContactMerge_TEST {
     //exercise the many UI variables
     static void exerciseUI(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 3 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -143,7 +143,7 @@ private class CON_ContactMerge_TEST {
     // Try selecting a deleted record for merge
     static void failNextStepWithDeletedRecordSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 2 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -196,7 +196,7 @@ private class CON_ContactMerge_TEST {
         // Try selecting a deleted record for merge
     static void failMergeWithDeletedRecordSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 2 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -254,7 +254,7 @@ private class CON_ContactMerge_TEST {
     }    
     static void tooFewContactsSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 1 contact for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -290,7 +290,7 @@ private class CON_ContactMerge_TEST {
     }    
     static void tooManyContactsSelected(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         //set up 4 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -351,7 +351,7 @@ private class CON_ContactMerge_TEST {
     //the second contact's org should be deleted
     static void merge2OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
@@ -408,7 +408,7 @@ private class CON_ContactMerge_TEST {
     //the second contact's org shouldn't be deleted because it has open opportunities
     static void merge2OneToOneOpps(string strProcessor) {
         
-        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -475,7 +475,7 @@ private class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     static void merge2Organizations(string strProcessor) {
     
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -542,7 +542,7 @@ private class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     static void merge2PrivateContacts(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.npe01__Private__c = true;
@@ -597,7 +597,7 @@ private class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     static void merge2Individuals(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
@@ -647,7 +647,7 @@ private class CON_ContactMerge_TEST {
     //the individual organization shouldn't be deleted
     static testMethod void merge1Individual1OneToOne() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
@@ -697,7 +697,7 @@ private class CON_ContactMerge_TEST {
     //the individual organization shouldn't be deleted
     static testMethod void merge1OneToOne1Individual() {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
@@ -755,7 +755,7 @@ private class CON_ContactMerge_TEST {
     //the individual organization shouldn't be deleted
     static void merge1Org1OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -815,7 +815,7 @@ private class CON_ContactMerge_TEST {
     }    
     static void merge3OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
@@ -880,7 +880,7 @@ private class CON_ContactMerge_TEST {
     //the second contact's org should be deleted
     static void merge2OneToOneInSameAccount(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -946,7 +946,7 @@ private class CON_ContactMerge_TEST {
     }    
     static void ghIssue6(string strProcessor){
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.LastName = 'O\'Sullivan';
@@ -996,7 +996,7 @@ private class CON_ContactMerge_TEST {
     }
   
     public static testmethod  void householdDifferentFromMaster() {
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
@@ -1054,7 +1054,7 @@ private class CON_ContactMerge_TEST {
     //check a standard set controller passed into the page is handled correctly
     static testMethod void testStandardSetSelected(){
         
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();        
@@ -1084,7 +1084,7 @@ private class CON_ContactMerge_TEST {
     //check a search term passed into the page is handled correctly
     static testMethod void testSearchSpecPassed(){
         
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();        
@@ -1113,7 +1113,7 @@ private class CON_ContactMerge_TEST {
     //check a comma separated list of Ids are handled correctly
     static testMethod void testGoodIdsPassed(){
         
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();        
@@ -1140,7 +1140,7 @@ private class CON_ContactMerge_TEST {
     //check invalid Ids are handled
     static testMethod void testBadIdsPassed(){
         
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();        

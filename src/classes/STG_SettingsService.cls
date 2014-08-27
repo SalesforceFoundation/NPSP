@@ -66,7 +66,7 @@ public with sharing class STG_SettingsService {
 
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
-            if (stgRD == null) stgRD = RD_RecurringDonations.getRecurringDonationsSettings();
+            if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
             return stgRD;
         }
         private set;
@@ -74,7 +74,7 @@ public with sharing class STG_SettingsService {
     
     public npe4__Relationship_Settings__c stgRel {
         get {
-            if (stgRel == null) stgRel = REL_Utils.getRelationshipSettings();
+            if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getRelationshipSettings();
             return stgRel;
         }
         private set;

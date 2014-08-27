@@ -469,8 +469,9 @@ private with sharing class HH_NameSpec_TEST {
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
         update householdSettingsForTests;
-        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update HH_Households.householdsSettings;
+        npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update householdsSettings;
 
         // refresh all names
         Test.startTest();
@@ -532,8 +533,9 @@ private with sharing class HH_NameSpec_TEST {
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
         update householdSettingsForTests;
-        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update HH_Households.householdsSettings;
+         npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update householdsSettings;
 
         // refresh all names
         Test.startTest();

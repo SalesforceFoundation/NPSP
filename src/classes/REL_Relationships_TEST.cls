@@ -561,7 +561,7 @@ private class REL_Relationships_TEST {
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
     }
     
-    static testMethod void testErrorRecordCreation(){
+    static testMethod void testErrorRecordCreation() {
     	if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
     	
     	UTIL_CustomSettingsFacade.getErrorSettings(null);
@@ -627,9 +627,9 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testRelationshipUTILS') return;
     	
         //to test the Relationship_Utils class      
-        System.runAs(new User(id = UserInfo.getUserId())){ 
+        System.runAs(new User(id = UserInfo.getUserId())){
            delete [select id from npe4__Relationship_Settings__c];
-           npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
+           npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
            Boolean cAuto = REL_Utils.hasContactAutoCreate;
            Boolean cmAuto = REL_Utils.hasCMAutoCreate;
         }
