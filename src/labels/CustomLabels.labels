@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>Addr_Id_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Id Error</shortDescription>
+        <value>Auth ID cannot be blank.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_No_Batch</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Address Verification Not Supported</shortDescription>
+        <value>The specified service does not support batch address verification.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Addr Settings API Body</shortDescription>
-        <value>&lt;p&gt;To work with the SmartyStreets API, the first thing you need to do is create a new Remote Site (under Security Controls) with https://api.smartystreets.com as the URL.&lt;/p&gt;
-&lt;p&gt;Then open your own 
-&lt;a href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;SmartyStreets&lt;/a&gt; account. Once you have done so, go to the API Keys section and create a Secret Key Pair - it doesn&apos;t matter what label you use - which will expose the Auth ID and Auth Token you can copy to the fields here.&lt;/p&gt; &lt;p&gt;Alternatively, you can use a different address verification service of your choice by creating a class that implements the ADDR_IValidator interface, and entering the class name, as well as the service credentials, below.&lt;/p&gt;</value>
+        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
+        <value>DEPRECATED - API Account Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_API_Title</fullName>
@@ -23,28 +36,33 @@
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
+        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
+        <value>DEPRECATED</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Intro_Body1</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>&lt;p&gt;Using the LiveAddress API from SmartyStreets.com, you can
-					verify and geocode US addresses in your Salesforce.com database.&lt;/p&gt;
-	
-				&lt;p&gt;This integration allows you to:&lt;/p&gt;
-				&lt;ul&gt;
-					&lt;li&gt;Automatically validate every address you enter.&lt;/li&gt;
-					&lt;li&gt;Automatically update every address you enter with a
-						standardized version.&lt;/li&gt;
-					&lt;li&gt;Look up ZIP Code based on City and State entered, or City
-						and State based on ZIP Code entered.&lt;/li&gt;
-					&lt;li&gt;Automatically add latitude and longitude, county name,
-						congressional district, and other location details to your address
-						records.&lt;/li&gt;
-					&lt;li&gt;Verify or update all existing addresses in your database in
-						one operation.&lt;/li&gt;
-				&lt;/ul&gt;
-	
-				&lt;p&gt;
-					To get started, open an account at &lt;a
-						href=&quot;http://smartystreets.com/account/create&quot; target=&quot;_blank&quot;&gt;SmartyStreets.com&lt;/a&gt;.
-				&lt;/p&gt;</value>
+        <value>The Address Verification API lets you verify addresses as you add them to Salesforce. The API also lets you standardize addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Intro_Body2</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Intro Body</shortDescription>
+        <value>&lt;br/&gt;To get started:
+
+&lt;ol&gt;
+&lt;li&gt;Open a third-party address verification account. (Some are free for nonprofits.)&lt;/li&gt;
+
+&lt;li&gt;In your address verification service, create the required authentication ID and/or token.&lt;/li&gt;
+
+&lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
+
+&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
@@ -60,7 +78,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Notice</shortDescription>
-        <value>The address verification/normalization service works on the new Address__c custom object. It won&apos;t be applied to pre-existing contacts and accounts.</value>
+        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Body</fullName>
@@ -68,7 +86,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>To test your SmartyStreets Secret Key Pair, enter any US Zip Code:</value>
+        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Response_Title</fullName>
@@ -76,7 +94,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Response Title</shortDescription>
-        <value>SmartyStreets API Response</value>
+        <value>API Response</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Title</fullName>
@@ -92,7 +110,28 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Skip Verified</shortDescription>
-        <value>Skip Objects that Have Previously Been Verified</value>
+        <value>Skip previously verified records</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Token_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Token Error</shortDescription>
+        <value>Auth Token cannot be blank.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Unauthorized_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Unauthorized Endpoint</shortDescription>
+        <value>Unauthorized endpoint. Please add endpoint URL to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Valid_Key_Pair</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Valid Key Pair</shortDescription>
+        <value>Your Secret Key Pair is valid.</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Body</fullName>
@@ -100,9 +139,8 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;To verify/normalize every address record currently in your Salesforce database, click the button below. Please note that address verifications consume credits from your SmartyStreets account.&lt;/p&gt;
-
-&lt;p&gt;Mass verification uses the settings from the section above.&lt;/p&gt;
+        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
+        The mass verification process uses the settings from above.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
     <labels>
@@ -114,12 +152,56 @@
         <value>Mass Verification Status</value>
     </labels>
     <labels>
+        <fullName>Addr_Verification_Batch_Not_Supported</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Batch Support</shortDescription>
+        <value>The selected service does not support Batch Address Validation.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_SmartyStreets_Message</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batches of 100</shortDescription>
+        <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Title</shortDescription>
         <value>Mass Verify Existing Addresses</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Endpoint</shortDescription>
+        <value>Please enter the endpoint URL.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Google_Help</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Google API Helpt Text</shortDescription>
+        <value>The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to Visit the APIs console at https://code.google.com/apis/console and log in with your Google Account. Click the Services link from the left-hand menu in the APIs Console, then activate the Geocoding API service. Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section. More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Settings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Settings</shortDescription>
+        <value>Please verify you have entered your credentials.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verifying</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verifying</shortDescription>
+        <value>Verifying addresses.</value>
     </labels>
     <labels>
         <fullName>Address_Not_Found</fullName>
@@ -138,6 +220,43 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>HiddenForSecurity</fullName>
+        <categories>settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HiddenForSecurity</shortDescription>
+        <value>Hidden for security</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationAccountAndContactError</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
+        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
+    </labels>
+    <labels>
+        <fullName>Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saved</shortDescription>
+        <value>Saved.</value>
+    </labels>
+    <labels>
+        <fullName>Settings_not_Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Settings not Saved</shortDescription>
+        <value>Settings not saved</value>
+    </labels>
+    <labels>
+        <fullName>SmartyStreets_Help_Text</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SmartyStreets Help Test</shortDescription>
+        <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -152,6 +271,14 @@
         <protected>true</protected>
         <shortDescription>Zipcode Verification Limit</shortDescription>
         <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
+        <fullName>addrCiceroMissingAPIKey</fullName>
+        <categories>Cicero address verification service</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>addrCiceroMissingAPIKey</shortDescription>
+        <value>The Cicero API Key must be specified in the Auth Token setting in the Address Verification Settings.</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
@@ -192,6 +319,715 @@
         <protected>false</protected>
         <shortDescription>addrSeasonalPartial</shortDescription>
         <value>An address must have all or none of its Seasonal fields set.</value>
+    </labels>
+    <labels>
+        <fullName>healthButtonRun</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthButtonRun</shortDescription>
+        <value>Run Health Check</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccOne2OneNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccOne2OneNoContacts</shortDescription>
+        <value>There are {0} One-to-One Accounts who have no Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccountModel</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccountModel</shortDescription>
+        <value>There is no valid Account Model specified.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccountProcessor</fullName>
+        <categories>HealthCheck</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccountProcessor</shortDescription>
+        <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccountRTIssue</shortDescription>
+        <value>{0} Account records using the {1} record type do not have their System fields correctly set.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAutoRelCampaignTypeMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsAutoRelCampaignTypeMissing</shortDescription>
+        <value>Campaign Type must be specified for Relationship Autocreation from CampaignMembers.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAutoRelFieldsMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAutoRelFieldsMissing</shortDescription>
+        <value>Relationship Autocreation requires a valid Object, Field and Relationship Type specified.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsAutoRelInvalidLookupField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAutoRelInvalidLookupField</shortDescription>
+        <value>Field {0} is not a lookup field.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsBadRDField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsBadRDField</shortDescription>
+        <value>Recurring Donation field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsBadReportId</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsBadReportId</shortDescription>
+        <value>Invalid Report {0} specified.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsContactData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsContactData</shortDescription>
+        <value>There are {0} Contacts who have no Account.  These Contacts will be private to the user who created them.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsGenderField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsGenderField</shortDescription>
+        <value>Gender field {0} does not exist on Contact.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsHHAccountModel</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsHHAccountModel</shortDescription>
+        <value>When using the Household Account Model, Household Rules must be set to No Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsHHActNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsHHActNoContacts</shortDescription>
+        <value>There are {0} Household Accounts who have no Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsHHObNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsHHObNoContacts</shortDescription>
+        <value>There are {0} Household objects who have no Contacts.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidCMField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidCMField</shortDescription>
+        <value>CampaignMember field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidContactField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidContactField</shortDescription>
+        <value>Contact field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorChatterGroup</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorChatterGroup</shortDescription>
+        <value>Invalid Chatter Group {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorRecipient</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorRecipient</shortDescription>
+        <value>Invalid Error Notification recipient.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidErrorUser</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidErrorUser</shortDescription>
+        <value>Invalid User {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidFiscalYears</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
+        <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidObjectField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidObjectField</shortDescription>
+        <value>{0} field {1} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidOppField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidOppField</shortDescription>
+        <value>Opportunity field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidOppStage</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidOppStage</shortDescription>
+        <value>The Opportunity stage {0} does not exist or is not active.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidPaymentField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidPaymentField</shortDescription>
+        <value>Payment field {0} does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriod</shortDescription>
+        <value>Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriodPIcklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriodPIcklist</shortDescription>
+        <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRecordtypeId</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidRecordtypeId</shortDescription>
+        <value>Recordtype Id {0} is invalid.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRecordtypeName</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidRecordtypeName</shortDescription>
+        <value>Recordtype Name {0} is invalid.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidScheduledJob</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidScheduledJob</shortDescription>
+        <value>The record {0} in the Schedulable__c object is not valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsMailingListReportMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsMailingListReportMissing</shortDescription>
+        <value>The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsNothingScheduled</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsNothingScheduled</shortDescription>
+        <value>The NPSP Global Scheduled class is not scheduled.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsPaymentMappingBadDataTypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsPaymentMappingBadDataTypes</shortDescription>
+        <value>Payment field {0} and Opportunity field {1} are not of compatible data types.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsRDFieldsBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsRDFieldsBadDatatypes</shortDescription>
+        <value>Recurring Donation field {0} and Opportunity field {1} are not of compatible data types.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsRelReciprocalInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsRelReciprocalInvalid</shortDescription>
+        <value>Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsScheduleJobs</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsScheduleJobs</shortDescription>
+        <value>One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsUDFBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsUDFBadDatatypes</shortDescription>
+        <value>Opportunity field {0} and {1} field {2} are not of compatible data types.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsValidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsValidRDCustomPeriod</shortDescription>
+        <value>Recurring Donation Custom Installment Periods are valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelAccountData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAccountData</shortDescription>
+        <value>Account Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelAccountModelData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAccountModelData</shortDescription>
+        <value>Account Model Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelAccountRTIssueValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAccountRTIssueValid</shortDescription>
+        <value>Account system fields for any Household Accounts and One-to-One Accounts are set correctly.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelAutoRelValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAutoRelValid</shortDescription>
+        <value>Automatic Relationships valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelContactData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelContactData</shortDescription>
+        <value>Contact Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelErrorRecipientValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelErrorRecipientValid</shortDescription>
+        <value>Error Notification recipient valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelFiscalYearsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelFiscalYearsValid</shortDescription>
+        <value>Custom Fiscal Years are not in use.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelHHAccData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelHHAccData</shortDescription>
+        <value>Household Account Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelHHData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelHHData</shortDescription>
+        <value>Household Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelHHObjData</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelHHObjData</shortDescription>
+        <value>Household Object Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelIntro</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelIntro</shortDescription>
+        <value>Health Check will verify that all of your settings are valid, and look for problems in your account related data.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelLastRun</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelLastRun</shortDescription>
+        <value>Last run: {0}</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelNone</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelNone</shortDescription>
+        <value>(none)</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelPassed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelPassed</shortDescription>
+        <value>Passed</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelPaymentMappingsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelPaymentMappingsValid</shortDescription>
+        <value>Payment Mappings valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelRDOppsValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRDOppsValid</shortDescription>
+        <value>Recurring Donation Opportunities can be saved.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelRDValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRDValid</shortDescription>
+        <value>Recurring Donation Field Mappings valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelRelReciprocalValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelRelReciprocalValid</shortDescription>
+        <value>Reciprocal Relationships valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelScheduler</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelScheduler</shortDescription>
+        <value>NPSP Global Scheduler</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelSchedulerValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelSchedulerValid</shortDescription>
+        <value>NPSP Global Scheduler job scheduled.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelShowPassedTests</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelShowPassedTests</shortDescription>
+        <value>Show Passed Tests</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelTime</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelTime</shortDescription>
+        <value>Detection time in seconds: {0}</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelUDFValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelUDFValid</shortDescription>
+        <value>User Defined Rollups valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccOne2OneNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccOne2OneNoContacts</shortDescription>
+        <value>Consider deleting these unused One-to-One Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccountRTIssue</shortDescription>
+        <value>For Household Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;Household Account&apos;. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;One-to-One Individual&apos;. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelFieldsMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelFieldsMissing</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the invalid Relationship Autocreation record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelInvalidCMField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidCMField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing CampaignMember field, or delete the Relationships Autocreate record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelInvalidContactField</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidContactField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Contact field, or delete the Relationships Autocreation record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionAutoRelInvalidLookupField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAutoRelInvalidLookupField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Relationship Autocreation record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionBadRDField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionBadRDField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation field, or delete the Recurring Donation Field Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionEditSetting</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionEditSetting</shortDescription>
+        <value>On the NPSP Settings tab, click {1} | {2}, and edit the {0} setting.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionHHAccNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionHHAccNoContacts</shortDescription>
+        <value>Consider deleting these unused Household Accounts to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionHHObjNoContacts</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionHHObjNoContacts</shortDescription>
+        <value>Consider deleting these unused Household objects to save space.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidFiscalYears</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidFiscalYears</shortDescription>
+        <value>Since Salesforce does not support turning off Custom Fiscal Years, NPSP Rollups will default to Calendar Year.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidOppField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidOppField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Payment Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidOppStage</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidOppStage</shortDescription>
+        <value>Add this Opportunity Stage value in Salesforce Setup.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidPaymentField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidPaymentField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Payment field, or delete the Payment Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriod</shortDescription>
+        <value>Add this Recurring Donation Installment Period picklist value in Salesforce Setup.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriodPicklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriodPicklist</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidScheduledJob</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidScheduledJob</shortDescription>
+        <value>You must update the record to have a valid Class the implements the UTIL_MasterSchedulableHelper.UTIL_IRecurring interface.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidUDFObjectField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionInvalidUDFObjectField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing field, or delete the User Rollup record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionMailingListReportMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionMailingListReportMissing</shortDescription>
+        <value>Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate.  Then specify this report on the {0} &gt; {1} tab in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionNothingScheduled</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionNothingScheduled</shortDescription>
+        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionPaymentMappingBadDataTypes</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Payment Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRDBadOppField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRDBadOppField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the Recurring Donation Field Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRDFieldsBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRDFieldsBadDatatypes</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Recurring Donation Field Mapping record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionRelReciprocalInvalid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionRelReciprocalInvalid</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the Reciprocal Relationship record, and create a new one with the required information.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionScheduleJobs</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionScheduleJobs</shortDescription>
+        <value>You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionUDFBadDatatypes</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionUDFBadDatatypes</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and delete the User Rollup record.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionUDFOppField</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionUDFOppField</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Opportunity field, or delete the User Rollup record.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupLabelReturnToCmp</fullName>
@@ -327,7 +1163,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateMapping</shortDescription>
-        <value>Create Mapping</value>
+        <value>Create Custom Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRDPeriod</fullName>
@@ -335,7 +1171,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateRDPeriod</shortDescription>
-        <value>Create Installment Period</value>
+        <value>Create Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRelReciprocal</fullName>
@@ -375,7 +1211,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
-        <value>Activate Automatic Household Naming</value>
+        <value>Refresh naming on all Households</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -399,7 +1235,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRDPeriod</fullName>
@@ -407,7 +1243,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDPeriod</shortDescription>
-        <value>New Installment Period</value>
+        <value>New Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRelReciprocal</fullName>
@@ -439,7 +1275,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnRDCreateNewMap</shortDescription>
-        <value>Create Field Mapping</value>
+        <value>Create Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnRunBatch</fullName>
@@ -456,6 +1292,22 @@
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorINaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorINaming</shortDescription>
+        <value>Implementing Class does not implement interface HH_INaming.</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorInvalidClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorInvalidClass</shortDescription>
+        <value>Invalid Implementing Class.</value>
     </labels>
     <labels>
         <fullName>stgHelpAccountModel</fullName>
@@ -546,6 +1398,14 @@
         <value>Chatter group where error notifications will be posted.</value>
     </labels>
     <labels>
+        <fullName>stgHelpCiceroAddrVerification</fullName>
+        <categories>Address Verification Settings page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCiceroAddrVerification</shortDescription>
+        <value>Make sure you enter your Cicero API Key in the Auth Token settings field. You will find your API Key on your Cicero My Profile page at cicero.azavea.com</value>
+    </labels>
+    <labels>
         <fullName>stgHelpContactRTExcluded</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -578,6 +1438,14 @@
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpFGFormat</shortDescription>
+        <value>The format to use for the Household Formal Greeting</value>
+    </labels>
+    <labels>
         <fullName>stgHelpFiscalYearRollups</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -599,7 +1467,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHExcludedRT</shortDescription>
-        <value>Contact Record Types excluded from Household creation. This setting is ignored if you are using the Household Account model.</value>
+        <value>Specifies which Contact record types Salesforce will exclude from Household object creation. (Applies to One-to-One or Individual Account Models only.)</value>
     </labels>
     <labels>
         <fullName>stgHelpHHMailingListReport</fullName>
@@ -608,6 +1476,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
         <value>The Household Mailing List Report used for Household-deduplicated Campaign mailing lists. The report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHNameFormat</shortDescription>
+        <value>The format to use for the Household Name.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNaming</fullName>
@@ -631,7 +1507,11 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.</value>
+        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.
+&lt;br/&gt;&lt;br/&gt;
+The Household Object and its associated account models are no longer recommended. However, if you are still using the One-to-One or Individual (&quot;Bucket&quot;) account models from previous versions of the Nonprofit Starter Pack, you can change settings for the Household Object here.
+&lt;br/&gt;&lt;br/&gt;
+To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>
@@ -639,7 +1519,23 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHRules</shortDescription>
-        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.  If your Account Model is set to &quot;Household Account&quot;, this setting will always be reset to &quot;No Contacts&quot;.</value>
+        <value>Specifies for which contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpIGFormat</shortDescription>
+        <value>The format to use for the Household Informal Greeting.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpINamingClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpINamingClass</shortDescription>
+        <value>Specify the Apex Class that implements the HH_INaming interface for Household naming.</value>
     </labels>
     <labels>
         <fullName>stgHelpLeadConvert</fullName>
@@ -672,6 +1568,22 @@
         <protected>false</protected>
         <shortDescription>stgHelpMembershipRT</shortDescription>
         <value>Names of Opportunity Record Types, such as Membership, that you want to roll up separately from other Opportunity Record Types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameConnector</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameConnector</shortDescription>
+        <value>Specify what string should be used to connect pairs in a name.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameOverrun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameOverrun</shortDescription>
+        <value>Specify what string should be used to replace long lists of names.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewRDFieldMap</fullName>
@@ -720,6 +1632,14 @@
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOverrunCount</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOverrunCount</shortDescription>
+        <value>Specify the number of contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapOppField</fullName>
@@ -823,7 +1743,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50. Larger values may result in DML errors.</value>
+        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -1107,6 +2027,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Action</value>
     </labels>
     <labels>
+        <fullName>stgLabelAddressVerification</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAddressVerification</shortDescription>
+        <value>Address Verification (API Setup)</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAfflSettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1161,6 +2089,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelErrorNotify</shortDescription>
         <value>Error Notification Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesFGFormat</shortDescription>
+        <value>Examples for Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesHHNameFOrmat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesHHNameFOrmat</shortDescription>
+        <value>Examples for Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesIGFormat</shortDescription>
+        <value>Examples for Informal Greeting Format</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>
@@ -1248,7 +2200,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgLabelNewRelReciprocal</fullName>
@@ -1275,6 +2227,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>New User Defined Rollup</value>
     </labels>
     <labels>
+        <fullName>stgLabelNone</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelNone</shortDescription>
+        <value>- none -</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1297,6 +2257,38 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOppRollups</shortDescription>
         <value>Opportunity Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOther</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOther</shortDescription>
+        <value>other</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherFormalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherFormalGreetingFormat</shortDescription>
+        <value>Other Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelOtherHHNameFormat</shortDescription>
+        <value>Other Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherInformalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
+        <value>Other Informal Greeting Format</value>
     </labels>
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
@@ -1512,7 +2504,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavDonations</shortDescription>
-        <value>Donations &amp; Money</value>
+        <value>Donations</value>
     </labels>
     <labels>
         <fullName>stgNavDonorStatistics</fullName>
@@ -1537,6 +2529,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavErrorNotify</shortDescription>
         <value>Error Notifications</value>
+    </labels>
+    <labels>
+        <fullName>stgNavHealthCheck</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavHealthCheck</shortDescription>
+        <value>Health Check</value>
     </labels>
     <labels>
         <fullName>stgNavHouseholds</fullName>
@@ -1579,6 +2579,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Payments</value>
     </labels>
     <labels>
+        <fullName>stgNavPeople</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavPeople</shortDescription>
+        <value>People</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1592,7 +2600,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDFieldMap</shortDescription>
-        <value>Recurring Donation Field Mappings</value>
+        <value>Recurring Donation Custom Field Mappings</value>
     </labels>
     <labels>
         <fullName>stgNavRDInstallmentPeriods</fullName>
@@ -1600,7 +2608,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDInstallmentPeriods</shortDescription>
-        <value>Recurring Donation Installment Periods</value>
+        <value>Recurring Donation Custom Installment Periods</value>
     </labels>
     <labels>
         <fullName>stgNavRecurringDonations</fullName>
@@ -1648,7 +2656,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavSystem</shortDescription>
-        <value>System</value>
+        <value>System Tools</value>
     </labels>
     <labels>
         <fullName>stgNavTriggerConfig</fullName>

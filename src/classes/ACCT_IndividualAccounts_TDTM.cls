@@ -290,7 +290,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             listAccount.add(a);
         }
         if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.putAll(listAccount);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccount);
             //Database.SaveResult[] lsr = Database.update(listAccount, false);
         }      
     }
@@ -331,7 +331,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         
         // now do the update
-        dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);
+        dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);
         //update listAccToUpdate;
     }
     
@@ -360,6 +360,11 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
+
+        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        if (hs != null && hs.npo02__Advanced_Household_Naming__c == false)
+            return;    	
+    	
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
@@ -493,16 +498,22 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (accountInserts.size() > 0) {
             // DJH: with current TDTM design, we can't use dmlWrapper
             // because we need to get the new AccountID's into the Contacts.
-            Database.SaveResult[] lsr = Database.insert(accountInserts, false);
+            
+            //Database.SaveResult[] lsr = Database.insert(accountInserts, false);
+            // we do want it to be all or nothing, so errors won't get lost.
+            insert(accountInserts);
             Integer i = 0;
             for (Contact c : listContactNewAcct) {
-                // for each success, write the new AccountId to the Contact. 
+                // for each success, write the new AccountId to the Contact.
+                c.AccountId = accountInserts[i].Id;
+                /**** 
                 if (lsr[i].isSuccess() == true) {
                     c.AccountId = lsr[i].getId();
                 } else {
                     system.debug('Error inserting Accounts');
                     // DJH:UNDONE - need to use error class to log DML errors
                 }
+                *****/
                 i += 1;
             }
         }
@@ -550,7 +561,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }   
 
         if (listAccount.size() > 0) {
-        	dmlWrapper.objectsToUpdate.putAll((list<SObject>)listAccount);
+        	dmlWrapper.objectsToUpdate.addAll((list<SObject>)listAccount);
             //Database.SaveResult[] lsr = Database.update(listAccount, false);
         }
     }
@@ -621,7 +632,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }   
             }
             // add all accounts needing updating to our list
-            dmlWrapper.objectsToUpdate.putAll(listAccToUpdate);                        
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);                        
         }
     }
     
@@ -643,7 +654,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (listOpp.size() > 0) {
             // since our rollup code isn't using dmlWrapper,
             // we must commit now.
-            //dmlWrapper.objectsToUpdate.putAll(listOpp);
+            //dmlWrapper.objectsToUpdate.addAll(listOpp);
             update listOpp;
         }
     }

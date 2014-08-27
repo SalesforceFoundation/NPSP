@@ -48,17 +48,25 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
     }
     
-    public string strTimeMessage { get; set; }
+    public string strTime { get; set; }
     
+    public string strNow {
+    	get {
+    		return datetime.now().format();  // this will put it in the time zone of the current user.
+    	}
+    }
+    
+    // the main entry to run Health Check
     public PageReference runDetector() { 
         isRunningDetector = true;
         listDR.clear();
-        runallDetections();
+        runAllDetections();
         return null;
     }
     
     public list<DetectResult> listDR { get; private set; }
     
+    // class we use to report back the results of each Health Check test
     public class DetectResult {
         public string strName { get; set; }
         public string strStatus { get; set; }
@@ -73,7 +81,10 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         dr.strStatus = strStatus;
         dr.strDetails = strDetails;
         dr.strSolution = strSolution;
-        listDR.add(dr);
+        if (strStatus != 'Error' && listDR.size() > 0)
+            listDR.add(0, dr);
+        else
+            listDR.add(dr);
     }    
 
     // calls all of the specific detection routines
@@ -84,25 +95,26 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyRecordTypes(); 
         verifyAccountModel(); 
         verifyAccountData();
+        verifyAccountData2();
         verifyContactData();
         verifyNoOrphanedHouseholds();
         verifyNoOrphanedOne2OneAccounts();
         verifyReports(); 
         verifyFields(); 
+        STG_PanelADDRVerification_CTRL.verifyAddressVerificationService(this);
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
         STG_PanelUserRollup_CTRL.verifyUserRollups(this);
         STG_PanelRDCustomFieldMapping_CTRL.verifyRDMappings(this);
+        STG_PanelRDCustomInstallment_CTRL.verifyRDSaving(this);
         STG_PanelRelAuto_CTRL.verifyAutoCreateRels(this);
         STG_PanelRelReciprocal_CTRL.verifyRelLookups(this);
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
         verifyScheduledJobs();
-        STG_PanelADDRVerification_CTRL.verifyAddressVerificationService(this);
         ERR_Notifier.verifyErrorSettings(this);
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
-        strTimeMessage = 'Detection time in seconds: ' + double.valueOf(msec / 1000);
-
+        strTime = string.valueOf(double.valueOf(msec / 1000));
     }
     
     // verify settings are consistent with the chosen Account Model
@@ -112,9 +124,8 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         if (CAO_Constants.isHHAccountModel()) {
             if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
                 string strHHRules = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Household_Rules__c');
-                createDR(strHHRules,
-                    'Error', 'When using the Household Account Model, Household Rules must be set to No Contacts.', 
-                    'Edit the ' + strHHRules + ' on the ' + Label.stgNavHouseholds + ' tab in NPSP Settings.');  
+                createDR(strHHRules, 'Error', label.healthDetailsHHAccountModel, 
+                    string.format(label.healthSolutionEditSetting, new string[]{strHHRules, Label.stgNavPeople, Label.stgNavHouseholds} ));
                 return;                 
             }           
         } else if (CAO_Constants.isOneToOne()) {
@@ -122,11 +133,11 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         } else if (CAO_Constants.isBucketModel()) {
             // nothing to check         
         } else {
-            createDR(strAccModel, 'Error', 'There is no valid Account Model specified', 
-                'Edit the ' + strAccModel + ' on the ' + Label.stgNavAccountModel + ' tab in NPSP Settings.');
+            createDR(strAccModel, 'Error', label.healthDetailsAccountModel, 
+                string.format(label.healthSolutionEditSetting, new string[]{strAccModel, Label.stgNavPeople, Label.stgNavAccountModel} ));
             return;         
         }
-        createDR(strAccModel, 'Success', null, null);
+        createDR(strAccModel, 'Success', null, STG_Panel.stgService.stgCon.npe01__Account_Processor__c);
     }
     
     // verify Account data is consistent with the chosen Account Model
@@ -134,80 +145,129 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	integer cBucket = 0;
     	integer cOne2One = 0;
     	integer cHH = 0;
-    	integer cOther = -1;
         boolean isMixedAccs = false;
-    	
-    	list<AggregateResult> listAgg = [select npe01__SYSTEM_AccountType__c, Count(Id) cAccounts from Account group by rollup(npe01__SYSTEM_AccountType__c) limit 9999];
-    	for (AggregateResult agg : listAgg) {
-            string strAccType = string.valueOf(agg.get('npe01__SYSTEM_AccountType__c'));
-            integer cAccounts = integer.valueOf(agg.get('cAccounts'));
-            if (strAccType == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                cBucket += cAccounts;
-                if (!CAO_Constants.isBucketModel())
-                    isMixedAccs = true;
-            } else if (strAccType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                cOne2One += cAccounts;
-                if (!CAO_Constants.isOneToOne())
-                    isMixedAccs = true;
-            } else if (strAccType == CAO_Constants.HH_ACCOUNT_TYPE) {
-                cHH += cAccounts;
-                if (!CAO_Constants.isHHAccountModel())
-                    isMixedAccs = true;
-            } else if (cOther == -1) {
-                cOther = cAccounts;  
-            }          
-    	}
-    	
-        string strInfo;
-        if (isMixedAccs) {
-            strInfo = 'The Account Model is set to ' + CAO_Constants.getContactsSettings().npe01__Account_Processor__c;
-            strInfo += ', but there are a mixture of Account types being used. ';
-        }
-        strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket;
-        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One;
-        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH;        
         
-        createDR('Account Model Data', isMixedAccs ? 'Error' : 'Success',  strInfo, null);        
-    
+    	try {    	
+	    	cBucket = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE limit 9999];
+	        cOne2One = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE limit 9999];
+	        cHH = [select count() from Account where npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE limit 9999];
+	        if (cBucket > 0 && !CAO_Constants.isBucketModel())
+	            isMixedAccs = true;    	
+	        if (cOne2One > 0 && !CAO_Constants.isOneToOne())
+	            isMixedAccs = true;     
+	        if (cHH > 0 && !CAO_Constants.isHHAccountModel())
+	            isMixedAccs = true;     
+	    	
+	        string strInfo = '';
+	        if (isMixedAccs) {
+	            strInfo = string.format(Label.healthDetailsAccountProcessor, new string[]{CAO_Constants.getContactsSettings().npe01__Account_Processor__c});
+	        }
+	        strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket + (cBucket == 9999 ? '+' : '');
+	        strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One + (cOne2One == 9999 ? '+' : '');
+	        strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH + (cHH == 9999 ? '+' : '');        
+	        
+	        createDR(Label.healthLabelAccountModelData, isMixedAccs ? 'Error' : 'Success',  isMixedAccs ? strInfo : null, isMixedAccs ? null : strInfo);        
+    	} catch (exception ex) {
+            createDR(Label.healthLabelAccountModelData, 'Error',  ex.getMessage(), null);            		
+    	}    
+    }
+
+    // verify Account data is consistent with the chosen Account Model
+    // this one ensures that system fields match account record types
+    private void verifyAccountData2() { 
+        integer cOne2One = 0;
+        integer cHH = 0;
+        string strError = '';
+
+        try {                        
+		    ID rectype = STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c;
+		    if (rectype != null) {
+		        cHH = [select count() from Account where RecordTypeId = :rectype and
+		            (npe01__SYSTEM_AccountType__c != :CAO_Constants.HH_ACCOUNT_TYPE or npe01__SYSTEMISINDIVIDUAL__c = false)
+		            limit 9999]; 
+		        if (cHH > 0) {
+		            strError += string.format(Label.healthDetailsAccountRTIssue, new string[]{string.valueOf(cHH), CAO_Constants.HH_ACCOUNT_TYPE});                
+		        }
+		    }
+		    rectype = STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c;
+		    if (rectype != null) {
+		        cOne2One = [select count() from Account where RecordTypeId = :rectype and
+		            (npe01__SYSTEM_AccountType__c != :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or npe01__SYSTEMISINDIVIDUAL__c = false)
+		            limit 9999];
+		        if (cOne2One > 0) {
+		        	if (cHH > 0) strError += '<BR/>';
+		            strError += string.format(Label.healthDetailsAccountRTIssue, new string[]{string.valueOf(cOne2One), CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE});                
+		        }
+		    }
+		    
+		    if (cHH > 0 || cOne2One > 0) {
+		        createDR(Label.healthLabelAccountModelData, 'Error', strError, Label.healthSolutionAccountRTIssue);
+		    } else {          
+		        createDR(Label.healthLabelAccountModelData, 'Success', null, Label.healthLabelAccountRTIssueValid);
+		    }            
+        } catch (exception ex) {
+            createDR(Label.healthLabelAccountModelData, 'Error',  ex.getMessage(), null);                   
+        }    
     }
 
     // verify that all Contacts have an account
     private void verifyContactData() {
-        integer cContact = [select Count() from Contact where AccountId = null limit 9999];   
-        if (cContact > 0) {
-            createDR('Contact Data', 'Error', 'There are ' + cContact + ' Contacts who have no Account.  These Contacts will be private to the user who created them only.', null);                	
-        } else {
-            createDR('Contact Data', 'Success', null, null); 
-        }  
+    	try {
+	        integer cContact = [select Count() from Contact where AccountId = null limit 9999];   
+	        if (cContact > 0) {
+	            createDR(Label.healthLabelContactData, 'Error', string.format(Label.healthDetailsContactData, new string[]{string.valueOf(cContact)}), null);                	
+	        } else {
+	            createDR(Label.healthLabelContactData, 'Success', null, null); 
+	        }  
+        } catch (exception ex) {
+            createDR(Label.healthLabelContactData, 'Error',  ex.getMessage(), null);                   
+        }    
     }
     
     // verify there are no Households Accounts and Objects with no Contacts
     private void verifyNoOrphanedHouseholds() {
-        integer cHHObj = [select Count() from npo02__Household__c where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
-        integer cHHAcc = [select Count() from Account 
-            where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and
-                Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
-        if (cHHObj > 0) {
-            createDR('Household Object Data', 'Error', 'There are ' + cHHObj + ' Household objects who have no Contacts.', 'Consider deleting these unused Household objects to save space.');                 
-        } 
-        if (cHHAcc > 0) {
-            createDR('Household Account Data', 'Error', 'There are ' + cHHAcc + ' Household Accounts who have no Contacts.', 'Consider deleting these unused Household Accounts to save space.');                 
-        }         
-        if (cHHObj == 0 && cHHAcc == 0) {
-            createDR('Household Data', 'Success', null, null); 
-        }  
+    	try {
+	        integer cHHObj = [select Count() from npo02__Household__c 
+	            where Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0 limit 9999];
+	            //where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
+	        integer cHHAcc = [select Count() from Account 
+	            where npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and 
+	                (Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0) limit 9999];
+	                //Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
+	        if (cHHObj > 0) {
+	            createDR(Label.healthLabelHHObjData, 'Error', 
+	                string.format(Label.healthDetailsHHObNoContacts, new string[]{string.valueOf(cHHObj)}),
+	                Label.healthSolutionHHObjNoContacts);                 
+	        } 
+	        if (cHHAcc > 0) {
+	            createDR(Label.healthLabelHHAccData, 'Error', 
+	                string.format(Label.healthDetailsHHActNoContacts, new string[]{string.valueOf(cHHAcc)}),
+	                Label.healthSolutionHHAccNoContacts);                 
+	        }         
+	        if (cHHObj == 0 && cHHAcc == 0) {
+	            createDR(Label.healthLabelHHData, 'Success', null, null); 
+	        }  
+        } catch (exception ex) {
+            createDR(Label.healthLabelHHAccData, 'Error',  ex.getMessage(), null);                   
+        }    
     }
 
     // verify there are no 1:1 Accounts with no Contacts
     private void verifyNoOrphanedOne2OneAccounts() {
-        integer cAcc = [select Count() from Account 
-            where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE and
-                Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) limit 9999];        
-        if (cAcc > 0) {
-            createDR('Account Data', 'Error', 'There are ' + cAcc + ' One-to-One Accounts who have no Contacts.', 'Consider deleting these unused One-to-One Accounts to save space.');                 
-        } else {
-            createDR('Account Data', 'Success', null, null); 
-        }  
+    	try {
+	        integer cAcc = [select Count() from Account 
+	            where Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE and Account.npe01__One2OneContact__c = null limit 9999];
+	                //Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) limit 9999];        
+	        if (cAcc > 0) {
+	            createDR(Label.healthLabelAccountData, 'Error', 
+	                string.format(Label.healthDetailsAccOne2OneNoContacts, new string[]{string.valueOf(cAcc)}),
+	                Label.healthSolutionAccOne2OneNoContacts);                 
+	        } else {
+	            createDR(Label.healthLabelAccountData, 'Success', null, null); 
+	        }  
+        } catch (exception ex) {
+            createDR(Label.healthLabelAccountData, 'Error',  ex.getMessage(), null);                   
+        }    
     }
 
     // verify all reports exist that settings use
@@ -220,18 +280,20 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         if (rptId != null && rptId != '') { 
             list<Report> listRpt = [select Id from Report where Id = :rptId];
             if (listRpt.size() == 0) {
-                createDR(strField, 'Error', 'Invalid Report ' + rptId + ' specified.', 'Edit the ' + strField + ' on the ' + Label.stgNavHouseholds + ' tab in NPSP Settings.');
+                createDR(strField, 'Error', 
+	                string.format(Label.healthDetailsBadReportId, new string[]{rptId}),
+	                string.format(label.healthSolutionEditSetting, new string[]{strField, Label.stgNavPeople, Label.stgNavHouseholds}));        
                 return;
             }
         } else {
             list<Report> listRpt = [select id from Report where DeveloperName = 'NPSP_Campaign_Household_Mailing_List'];
             if (listRpt.size() == 0) {
-                createDR(strField, 'Error', 'The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.', 
-                   'Create a report based on Campaigns with Contacts, where Member Status does not contain Duplicate. Then specify this report on the ' + Label.stgNavHouseholds + ' tab in NPSP Settings.');
+                createDR(strField, 'Error', Label.healthDetailsMailingListReportMissing, 
+                   string.format(Label.healthSolutionMailingListReportMissing, new string[]{Label.stgNavPeople, Label.stgNavHouseholds}));
                return;
             }
         }
-        createDR(strField, 'Success', null, null);
+        createDR(strField, 'Success', null, rptId);
 
     }
     
@@ -242,10 +304,11 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         string strSetting = UTIL_Describe.getFieldLabel('npe4__Relationship_Settings__c', 'npe4__Gender_Field__c');
         string strField = STG_Panel.stgService.stgRel.npe4__Gender_Field__c;
         if (strField != null && !UTIL_Describe.isValidField('Contact', strField)) {
-            createDR(strSetting, 'Error', 'Gender field ' + strField + ' does not exist on Contact', 
-                'Add a Gender field to Contact and specify it on the ' + Label.stgNavRelationships + ' tab in NPSP Settings.');    
+            createDR(strSetting, 'Error', 
+                string.format(Label.healthDetailsGenderField, new string[]{strField}),
+                string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavRelationships, Label.stgNavRelationships}));        
         } else {
-            createDR(strSetting, 'Success', null, strField);
+            createDR(strSetting, 'Success', null, strField == null ? label.healthLabelNone : strField);
         }        
     }
     
@@ -253,107 +316,113 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     private void verifyRecordTypes() {
     
         checkRecordTypeId('Account', STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c, 
-            'npe01__Contacts_And_Orgs_Settings__c', 'npe01__HH_Account_RecordTypeID__c', Label.stgNavAccountModel);
+            'npe01__Contacts_And_Orgs_Settings__c', 'npe01__HH_Account_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);
         checkRecordTypeId('Account', STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c, 
-            'npe01__Contacts_And_Orgs_Settings__c', 'npe01__One_to_One_RecordTypeID__c', Label.stgNavAccountModel);        
+            'npe01__Contacts_And_Orgs_Settings__c', 'npe01__One_to_One_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);        
         checkRecordTypeId('Opportunity', STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
-            'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations);       
-        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, true,
-            'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavHouseholds);
-        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, true,
-            'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavContactRoles);            
+            'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations, Label.stgNavRecurringDonations);       
+        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c, false,
+            'npo02__Households_Settings__c', 'npo02__Household_Creation_Excluded_Recordtypes__c', Label.stgNavPeople, Label.stgNavHouseholds);
+        checkRecordTypeMulti('Contact', STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c, false,
+            'npo02__Households_Settings__c', 'npo02__Household_OCR_Excluded_Recordtypes__c', Label.stgNavDonations, Label.stgNavContactRoles);            
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c, false,
-            'npo02__Households_Settings__c', 'npo02__Excluded_Account_Opp_Rectypes__c', Label.stgNavDonorStatistics);
+            'npo02__Households_Settings__c', 'npo02__Excluded_Account_Opp_Rectypes__c', Label.stgNavDonations, Label.stgNavDonorStatistics);
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, false,
-            'npo02__Households_Settings__c', 'npo02__Excluded_Contact_Opp_Rectypes__c', Label.stgNavDonorStatistics);
+            'npo02__Households_Settings__c', 'npo02__Excluded_Contact_Opp_Rectypes__c', Label.stgNavDonations, Label.stgNavDonorStatistics);
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c, false,
-            'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavMembership);            
+            'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavDonations, Label.stgNavMembership);            
 
     }
 
     // helper to deal with a setting that contains multiple recordType Id's in a semi-colon delimeted string
-    private void checkRecordTypeMulti(string strObject, string strValues, boolean isIds, string strSettingObj, string strSettingField, string strTabname) {
+    private void checkRecordTypeMulti(string strObject, string strValues, boolean isIds, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         if (strValues != null) {
             list<string> listStr = strValues.split(';',0);
             for (string strRT : listStr) {
                 if (isIds)
-                    checkRecordTypeId(strObject, strRT, strSettingObj, strSettingField, strTabname);
+                    checkRecordTypeId(strObject, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);
                 else
-                    checkRecordTypeName(strObject, strRT, strSettingObj, strSettingField, strTabname);              
+                    checkRecordTypeName(strObject, strRT, strSettingObj, strSettingField, strTabLevel, strTabname);              
             }
         } else {
             string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
-            createDR(strField, 'Success', null, '(none)');                          
+            createDR(strField, 'Success', null, Label.healthLabelNone);                          
         }
     }
 
     // does the work to see if the recordType Id is valid, and logs an appropriate DetectResult    
-    private void checkRecordTypeId(string strObject, string rtId, string strSettingObj, string strSettingField, string strTabname) {
+    private void checkRecordTypeId(string strObject, string rtId, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
         string strRT = UTIL_RecordTypes.GetRecordTypeName(strObject, rtId);
         if (rtId != null && strRT == null) {
-            createDR(strField, 'Error', 'Recordtype Id ' + rtId + ' is invalid.', 'Edit the ' + strField + ' on the ' + strTabname + ' tab in NPSP Settings.');    
+            createDR(strField, 'Error', 
+                string.format(label.healthDetailsInvalidRecordtypeId, new string[]{rtId}),        
+                string.format(label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));
         } else {
-        	if (rtId == null) strRT = '(none)';
+        	if (rtId == null) strRT = Label.healthLabelNone;
             createDR(strField, 'Success', null, strRT);               
         }           
     }
     
     // does the work to see if the recordType Name is valid, and logs an appropriate DetectResult    
-    private void checkRecordTypeName(string strObject, string strRTName, string strSettingObj, string strSettingField, string strTabname) {
+    private void checkRecordTypeName(string strObject, string strRTName, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
         if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(strObject, strRTName) == null) {
-            createDR(strField, 'Error', 'Recordtype Name ' + strRTName + ' is invalid.', 'Edit the ' + strField + ' on the ' + strTabname + ' tab in NPSP Settings.');    
+            createDR(strField, 'Error', 
+                string.format(label.healthDetailsInvalidRecordtypeName, new string[]{strRTName}),        
+                string.format(label.healthSolutionEditSetting, new string[]{strField, strTabLevel, strTabname}));        
         } else {
+        	if (strRTName == null) strRTName = Label.healthLabelNone;
             createDR(strField, 'Success', null, strRTName);               
         }           
     }
 
-    // verify that our Global Scheduler is actually scheduled, and that all of the entries are valid - called by HealthCheck
+    // verify that our Master Scheduler jobs are actually scheduled, and that all of the entries are valid - called by HealthCheck
     private void verifyScheduledJobs() {
-        
-        // make sure the Global Job is scheduduled
-        List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-           where CronJobDetail.Name = :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];        
-        if (scheduledJobs.size() == 0) {
-            createDR('NPSP Global Scheduler', 'Error', 'The NPSP Global Scheduled class is not scheduled.', 
-                'You must schedule the class UTIL_GlobalSchedulable to run daily with the job name ' + UTIL_GlobalSchedulable.jobName + '.');
-            return;            
-        }
-
-        // make sure the entries we expect are there.
-        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN ('RD_RecurringDonations_SCHED','RLLP_OppRollup_SCHED','ADDR_SEASONAL_SCHED')];
-        if (numOfJobs != 3) {
-            createDR('NPSP Global Scheduler', 'Error', 
-                'One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.', 
-                'You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.');
-            return;            
-        }
-         
-        // now make sure all entries are valid
-        boolean isValidAll = true;
-        List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
-        for (Schedulable__c job : jobs) {
-            Type classType = Type.forName(job.Class_Name__c);
-            if (classType != null) {
-                Object instance = classType.newInstance();
-                if (instance != null) {
-                    if (instance instanceof UTIL_IScheduled) {
-                        // this entry is good!
-                        continue;
-                    }
-                }
-            }
-            isValidAll = false;
-            createDR('NPSP Global Scheduler', 'Error', 
-                'The record ' + job.Class_Name__c + ' in the Schedulable__c object is not valid.', 
-                'You must update the record to have a valid Class the implements the UTIL_IScheduled interface.');
-        }            
-         
-        if (isValidAll) {
-            createDR('NPSP Global Scheduler', 'Success', null, null);
-        }   
-        
+        try {        
+	        // make sure the Master Jobs are scheduduled
+	        List<CronTrigger> jobs = [select Id, CronJobDetail.Id from CronTrigger 
+	           where CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];        
+	        if (jobs.size() != 3) {
+	            createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsNothingScheduled, 
+	                String.format(label.healthSolutionNothingScheduled, UTIL_MasterSchedulableHelper.scheduledJobs));
+	            return;            
+	        }
+	
+	        // make sure the entries we expect are there.
+	        Integer numOfJobs = [select count() from Schedulable__c where Class_Name__c IN :UTIL_MasterSchedulableHelper.scheduledClasses];
+	        if (numOfJobs != UTIL_MasterSchedulableHelper.scheduledClasses.size()) {
+	            createDR(Label.healthLabelScheduler, 'Error', Label.healthDetailsScheduleJobs, Label.healthSolutionScheduleJobs);
+	            return;            
+	        }
+	         
+	        // now make sure all entries are valid
+	        boolean isValidAll = true;
+	        List<Schedulable__c> schedClasses = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c from Schedulable__c where Active__c = true];
+	        for (Schedulable__c schedClass : schedClasses) {
+	            Type classType = Type.forName(schedClass.Class_Name__c);
+	            if (classType != null) {
+	                Object instance = classType.newInstance();
+	                if (instance != null) {
+	                    if (instance instanceof UTIL_MasterSchedulableHelper.UTIL_IRecurring) {
+	                        // this entry is good!
+	                        continue;
+	                    }
+	                }
+	            }
+	            isValidAll = false;
+	            createDR(Label.healthLabelScheduler, 'Error', 
+	                string.format(label.healthDetailsInvalidScheduledJob, new string[]{schedClass.Class_Name__c}),
+	                label.healthSolutionInvalidScheduledJob);
+	        }            
+	         
+	        if (isValidAll) {
+	            createDR(Label.healthLabelScheduler, 'Success', null, label.healthLabelSchedulerValid);
+	        }   
+        } catch (exception ex) {
+            createDR(Label.healthLabelScheduler, 'Error',  ex.getMessage(), null);                   
+        }    
+	        
     }
     
 }

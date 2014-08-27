@@ -39,9 +39,22 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public Boolean batchRunning { get; set; }
     public String AccountHouseholdIdField {get;set;}
     public Map<String, String> copyFieldSet {get;set;}
-    public list<SelectOption> targetAccountfields = new list<SelectOption>();
+    public Boolean runCheckErrorState {get;set;}
+    public List<SelectOption> targetAccountfields = new list<SelectOption>();
+    private List<AsyncApexJob> aaj = new List<AsyncApexJob>();
+    public AsyncApexJob apexjob {get{
+            if (aaj.isEmpty())
+                aaj = [select a.Id, a.TotalJobItems, a.Status, a.NumberOfErrors, 
+                                a.JobType, a.JobItemsProcessed, a.ExtendedStatus, 
+                                a.CompletedDate, a.ApexClassId From AsyncApexJob a 
+                                where (a.Status = 'Completed' or a.Status = 'Aborted' or a.Status = 'Failed') and a.JobType = 'BatchApex' 
+                                order by CompletedDate desc limit 1];
+        return !aaj.isEmpty() ? aaj[0] : null;
+    }set;}
+    private Map<String, String> pageParams = new Map<String, String>();
+    private Integer scopesize = 200;
 
-    public list<SelectOption> gettargetAccountFields(){
+    public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
         Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
         targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
@@ -53,19 +66,18 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
         targetAccountfields.add(new SelectOption('', '-None-'));
 
-        if ((targettokenMap.size() < 75) && (targettokenMap.size() > 0)){
-            for (String s : targetTokenMap.keyset()){
-                if (s.contains('__c')){
+        for (String s : targetTokenMap.keyset()){
+            if (s.endsWith('__c')){
+                List<String> nameSegs = s.split('__');
+                if (nameSegs.size() < 3 && Limits.getFieldsDescribes() < Limits.getLimitFieldsDescribes()){
                     Schema.DescribeFieldResult f = targetTokenMap.get(s).getDescribe();
-                    Schema.DisplayType payType = targetTokenMap.get(s).getDescribe().getType();
-
+                    Schema.DisplayType payType = f.getType();
                     if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String){
-                         targetAccountfields.add(new SelectOption(f.getName(), s));
+                        targetAccountfields.add(new SelectOption(f.getName(), s));
                     }
                 }
             }
         }
-
         return targetAccountfields;
     }
 
@@ -97,20 +109,27 @@ public with sharing class CONV_Account_Conversion_CTRL {
     public CONV_Account_Conversion_CTRL() {
         batching = true;
         batchRunning = false;
+        runCheckErrorState = false;
+        pageParams = ApexPages.currentPage().getParameters();
+
+        if (pageParams.containsKey('scopesize')){
+            try{
+                scopesize = Integer.valueOf(pageParams.get('scopesize'));
+            }
+            catch (Exception e){
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Could not retrieve scope size from the URL.  Please check that the scope size is in the form of an integer'));
+            }
+        }
     }
 
     public PageReference convert() {
-        Savepoint sp = Database.setSavepoint();
         try {
             batchRunning = true;
             String query = CONV_Account_Conversion_CTRL.getBatchQuery();
-
             CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, AccountHouseholdIdField, null);
-
-            ID batchprocessid = Database.executeBatch(cacv);
+            ID batchprocessid = Database.executeBatch(cacv, scopesize);
 
         } catch(Exception e) {
-            Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler.Context.CONV);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
@@ -128,7 +147,94 @@ public with sharing class CONV_Account_Conversion_CTRL {
         for (String s : CONV_Account_Conversion_CTRL.HouseholdFields)
             query += ', ' + s;
         query += ' FROM npo02__Household__c n';
-        query += ' LIMIT 200';
+        if (Test.isRunningTest())
+            query += ' LIMIT 200';
         return query;
+    }
+
+    public void runCheck(){
+        Integer HHAccountCount = 0;
+        Integer ContactConnectedCount;
+        String displayHHAccountCount = '';
+        String displayContactCount = '';
+
+        HHAccountCount= [select count() from Account where npe01__SYSTEM_AccountType__c = 'Household Account' and npe01__SYSTEMIsIndividual__c = true limit 9999];
+        ContactConnectedCount = [select count() from Contact where Account.npe01__System_AccountType__c = 'Household Account' limit 9999];
+
+        if (ContactConnectedCount == 9999)
+            displayContactCount = '10000+';
+        else
+            displayContactCount = ContactConnectedCount.format();
+        if (HHAccountCount == 9999)
+            displayHHAccountCount = '10000+';
+        else
+            displayHHAccountCount = HHAccountCount.format();
+
+        String errorString = '';
+        if (HHAccountCount > 0)
+            errorString += 'Your Salesforce.com Organization currently has '+ displayHHAccountCount + ' Household Account(s) already in existence.  ';
+        if (ContactConnectedCount > 0)
+            errorString += 'Your Salesforce.com Organization currently has ' + displayContactCount + ' Contact(s) associated with a Household Account.  ';
+        errorString += 'This converter will attempt to ignore any Contacts that already have a Household Account associated.';
+
+        if (HHAccountCount > 0 || ContactConnectedCount > 0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
+        }
+
+        List<User> inactiveUsers = new List<User>();
+        inactiveUsers = [select id from User where isActive = false order by LastModifiedDate desc limit 9999];
+        Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
+        Integer contactCount = [select count() from Contact where OwnerId IN :inactiveUsers limit 200];
+        Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
+        Integer taskCount = [select count() from Task where OwnerId IN :inactiveUsers limit 200];
+
+        String inactiveUserWarning = 'You have records owned by inactive Users.  You will need to transfer these records to an active user prior to running the conversion process.  The conversion process will not be available until these records have been reassigned.';
+        if (accountCount > 0)
+            inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
+        if (contactCount > 0)
+            inactiveUserWarning += '\n ' + contactCount + ' Contacts are currently owned by an inactive user. ';
+        if (opptyCount > 0)
+            inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
+        if (taskCount > 0)
+            inactiveUserWarning += '\n ' + taskCount + ' Tasks are currently owned by an inactive user. ';
+
+        if ((accountCount + contactCount + opptyCount + taskCount) > 0){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
+            runCheckErrorState = true;
+        }
+
+        //set the recordtype if its not already set
+        Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+        if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
+            npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
+            ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
+            update ContactsSettings;
+        }
+
+        //check the running user's profile access to the account rec type to be used for HH accounts
+        if (!Schema.Sobjecttype.Account.getRecordTypeInfosById().get(CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c).isAvailable()){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'The currently selected Household Account recordtype is not accessible to your current profile.  You will need to modify your profile to include this record type prior to running the conversion process. The conversion process will not be available until the record type is made available to your profile, or a different record type is set in the NPSP Settings tab.'));
+            runCheckErrorState = true;
+        }
+    }
+
+    public class FieldValidationException extends Exception {}
+
+    @RemoteAction
+    public static Boolean verifyFieldTypeForIds(String HHField){
+        Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
+        targetTokenMap = Schema.SObjectType.Account.fields.getMap().clone();
+
+        if (targetTokenMap.containsKey(HHField)){
+            Schema.DescribeFieldResult f = targetTokenMap.get(HHField).getDescribe();
+            Schema.DisplayType payType = f.getType();
+            if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String)
+                return true;
+            else
+                return false;
+        }
+        else{
+            return false;
+        }
     }
 }

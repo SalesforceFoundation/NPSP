@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011, Salesforce.com Foundation
+    Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,20 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2011 (2.0)
-* @description Supports the automatic scheduling of opportunity rollups  
+* @date 2014
+* @description Interface that classes that provide Household Naming must implement.
 */
-public class RLLP_OppRollup_SCHED implements UTIL_IScheduled {
+public Interface HH_INaming {
 
-    public void execute(SchedulableContext SC) { 
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();    
-    }  
+    // Methods to get the appropriate name/greeting for the passed in list of Contacts from a single Household.
+    // Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name/greeting, are not included in the list of Contacts.
+    // If the list of Contacts is empty, return the appropriate 'anonymous' name/greeting.
+    string getHouseholdName(list<Contact> listCon);
+    string getHouseholdFormalGreeting(list<Contact> listCon);
+    string getHouseholdInformalGreeting(list<Contact> listCon);
+    
+    // for the Settings page, get the formatted name for the list of Contacts.
+    // hns holds an in-memory Household Naming Settings object, and strField is one of:
+    // Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
+    string getExampleName(Household_Naming_Settings__c hns, string strField, list<Contact> listCon);
 }

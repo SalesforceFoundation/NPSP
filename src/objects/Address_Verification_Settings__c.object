@@ -6,20 +6,20 @@
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Address_Verification_Endpoint__c</fullName>
-        <description>The endpoint URL to point to for address verification.</description>
+        <description>URL used for address verification.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The endpoint URL to point to for address verification.</inlineHelpText>
-        <label>Address Verification Endpoint</label>
+        <inlineHelpText>URL used for address verification.</inlineHelpText>
+        <label>Address Verification Endpoint-DEPRECATED</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
     <fields>
         <fullName>Auth_ID__c</fullName>
-        <description>Address verification  ID/Username - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
+        <description>The Auth ID from your Secret Pair Key.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Address verification  ID/Username - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
-        <label>Auth ID</label>
+        <inlineHelpText>The Auth ID from your Secret Pair Key.</inlineHelpText>
+        <label>Auth ID-DEPRECATED</label>
         <length>124</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -28,10 +28,10 @@
     </fields>
     <fields>
         <fullName>Auth_Token__c</fullName>
-        <description>Authentication Token/Password - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</description>
+        <description>The Auth Token from your Secret Pair Key.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Authentication Token/Password - For the SmartyStreets API get yours at https://smartystreets.com/account/keys</inlineHelpText>
-        <label>Auth Token</label>
+        <inlineHelpText>The Auth Token from your Secret Pair Key.</inlineHelpText>
+        <label>Auth Token-DEPRECATED</label>
         <length>200</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -43,18 +43,18 @@
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>If checked, changed addresses get updated automatically with the response from the service (when there is one verified result).</inlineHelpText>
-        <label>Auto-Update Addresses</label>
+        <label>Auto-Update Addresses-DEPRECATED</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</description>
+        <description>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Class that will implement the address verification/normalization logic. It will contact the specified endpoint(s) and validate and/or normalize address data.</inlineHelpText>
-        <label>Class</label>
+        <inlineHelpText>Salesforce class responsible for contacting the SmartyStreets API and verifying addresses.</inlineHelpText>
+        <label>Class-DEPRECATED</label>
         <length>124</length>
-        <required>true</required>
+        <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -64,25 +64,27 @@
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>If checked, any US account address that the service marks undeliverable will automatically get cleared out. (You can review the invalid entry in the Address record.)</inlineHelpText>
-        <label>Clear Invalid Addresses</label>
+        <label>Clear Invalid Addresses-DEPRECATED</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Enable_Automatic_Verification__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>Enables automatic address verification for new addresses.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If checked, automatic address verification is enabled via Apex triggers.</inlineHelpText>
-        <label>Enable Automatic Verification</label>
+        <inlineHelpText>Enables automatic address verification for new addresses.</inlineHelpText>
+        <label>Enable Automatic Verification-DEPRECATED</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Reject_Ambiguous_Addresses__c</fullName>
         <defaultValue>true</defaultValue>
+        <description>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If checked, address verification will mark ambiguous addresses as invalid; if unchecked, it will accept the first suggestion as the valid address.</inlineHelpText>
-        <label>Reject Ambiguous Addresses</label>
+        <inlineHelpText>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</inlineHelpText>
+        <label>Reject Ambiguous Addresses-DEPRECATED</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -91,7 +93,7 @@
         <description>Callout timeout in seconds</description>
         <externalId>false</externalId>
         <inlineHelpText>Callout timeout in seconds</inlineHelpText>
-        <label>Timeout</label>
+        <label>Timeout-DEPRECATED</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -102,22 +104,22 @@
     <fields>
         <fullName>Using_SmartyStreets__c</fullName>
         <defaultValue>true</defaultValue>
-        <description>Indicates whether the default SmartyStreets address verification integration will be used.</description>
+        <description>Specifies whether or not you are using the SmartyStreets address verification service.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check if you are going to use the default SmartyStreets address verification integration.</inlineHelpText>
-        <label>Using SmartyStreets</label>
+        <inlineHelpText>Specifies whether or not you are using the SmartyStreets address verification service.</inlineHelpText>
+        <label>Using SmartyStreets-DEPRECATED</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Zipcode_Verification_Endpoint__c</fullName>
-        <description>The endpoint URL to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</description>
+        <description>URL used for zip code verification.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The endpoint URL to point to for zipcode verification. Some services may have only address verification, only zipcode verification, or both. SmartyStreets has both.</inlineHelpText>
-        <label>Zipcode Verification Endpoint</label>
+        <inlineHelpText>URL used for zip code verification.</inlineHelpText>
+        <label>Zipcode Verification Endpoint-DEPRECATED</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
     </fields>
-    <label>Address Verification Settings</label>
+    <label>Address Verification Settings-DEPRECATED</label>
 </CustomObject>

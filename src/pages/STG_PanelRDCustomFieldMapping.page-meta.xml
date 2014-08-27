@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>28.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>STG_PanelRDCustomFieldMapping</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
@@ -9,7 +11,7 @@
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>0</minorNumber>
+        <minorNumber>1</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <packageVersions>
@@ -23,8 +25,8 @@
         <namespace>npe5</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>99</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>

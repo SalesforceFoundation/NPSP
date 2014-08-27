@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.2)
-* @description The controller for the VF page invoked by using the check for new opps button
+* @description The controller for the VF page invoked by using the Refresh Opportunities button
 */
 public with sharing class RD_AddDonationsBTN_CTRL {
 
@@ -51,11 +51,11 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             system.assert(RecurringDonation != null);
         
             // these must be lowercase so set.contains() will work
-	        set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name',
+	        set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name', 'npe03__paid_amount__c',
 	                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
 	                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
 	                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c'};                                                                       
+	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};                                                                       
             String qString = 'select id';
             for (string s : existingFields){
                 qString += ', ' + s;               

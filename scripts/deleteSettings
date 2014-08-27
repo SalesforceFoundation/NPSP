@@ -6,7 +6,7 @@
  * The first one is an object and the rest are custom settings.
  **/
 delete [select ID from Trigger_Handler__c];
-delete [select ID from Address_Verification_Settings__c];
+delete [select ID from Addr_Verification_Settings__c];
 delete [select ID from npe5__Affiliations_Settings__c];
 delete [select ID from Batch_Data_Entry_Settings__c];
 delete [select ID from npe01__Contacts_And_Orgs_Settings__c];

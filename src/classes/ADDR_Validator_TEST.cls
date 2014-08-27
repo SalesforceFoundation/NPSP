@@ -45,7 +45,8 @@ public with sharing class ADDR_Validator_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         // create the basic api settings
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
@@ -63,23 +64,20 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'single-address';
+        contact.MailingCity = 'Cupertino';
+        contact.MailingState = 'ca';
+        contact.MailingPostalCode = '95014';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'single-address-response';
-        contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'ca';
-        contact.MailingPostalCode = '95014';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
         
         Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
                 from Address__c where Household_Account__c = :accountId];
@@ -97,30 +95,27 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('CA', contact.MailingState);
     }
 
-    static testMethod void testContactBadAddress() {
-    	if (strTestOnly != '*' && strTestOnly != 'testContactBadAddress') return;
+    static testMethod void testContactInvalidAddress() {
+    	if (strTestOnly != '*' && strTestOnly != 'testContactInvalidAddress') return;
     	
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'invalid-address';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'il';
+        contact.MailingPostalCode = '60606';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'bogus-address-for-test';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
 
         Address__c[] av = [select Verified__c from Address__c where Household_Account__c = :contact.AccountId];       
         System.assertEquals(1, av.size());
@@ -134,23 +129,20 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'ambiguous-address';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'il';
+        contact.MailingPostalCode = '60606';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with address to get the Address__c record created
-        contact.MailingStreet = 'ambiguous-address-for-test';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
 
         Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
                             where Household_Account__c = :accountId];       
@@ -166,21 +158,18 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingPostalCode = 'single-zip';
+        
+        Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
-         
-        // update contact with postal code to get the Address__c record created
-        contact.MailingPostalCode = '60606';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-                        
+   
         Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
                             from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
@@ -199,21 +188,18 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingCity = 'single-zip';
+        contact.MailingState = 'IL';
+        
+        Test.startTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
         
         //check household got created for contact
         contact = [select Account.Id from Contact where Id = :contact.Id];
         Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-         
-        // update contact with to get the Address__c record created
-        contact.MailingCity = 'Clinton';
-        contact.MailingState = 'WA';
-        Test.StartTest();
-        update contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
+        System.assertNotEquals(null, accountId); 
 
         Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
                             where Household_Account__c = :contact.AccountId];        
@@ -226,58 +212,16 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('98236', c1[0].MailingPostalCode);
     }
 
-    static testMethod void testBatch() {
-    	if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
-    	
-        createDefaultSettings();
-        //Turn off automatic verification to avoid getting the address verified as we create the contact. 
-        //We want the batch process to do it.
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
-        settings.Enable_Automatic_Verification__c = false;
-        update settings;
-        
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-        
-         Contact contact = new contact(firstname='Test', lastname='Person', MailingStreet = 'single-address-response', 
-                                    MailingCity = 'Cupertino', MailingState = 'ca', MailingPostalCode = '95014'); 
-        insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        
-        //check household got created for contact
-        contact = [select Account.Id from Contact where Id = :contact.Id];
-        Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-        
-        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
-                from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('single-address-response', av[0].MailingStreet__c);
-        System.assertEquals('ca', av[0].MailingState__c);
-        System.assertEquals('95014', av[0].MailingPostalCode__c);
-        System.assertEquals(false, av[0].Verified__c);
-        
-        Test.StartTest();
-        ADDR_VAlidator_Batch b = new ADDR_VAlidator_Batch(true);
-        Database.executeBatch(b);
-        Test.StopTest();
-        
-        av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
-                from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
-        System.assertEquals('CA', av[0].MailingState__c);
-        System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
-        System.assertEquals(true, av[0].Verified__c);
-    }
-
     static testMethod void testController() {
     	if (strTestOnly != '*' && strTestOnly != 'testController') return;
     	
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
         
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
+        sc.addrVerifSettings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
         sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
@@ -287,18 +231,21 @@ public with sharing class ADDR_Validator_TEST {
         system.assertNotEquals(null, sc.apiTestResult);
 
         Test.startTest();
-        sc.bulkVerify();
+        sc.batchVerify();
         Test.stopTest();
         
         //The batch has its own test. This basically tests that no exception was thrown
         //since it got to set the status variable.
-        System.assertEquals(true, sc.nowVerifying);
+        System.assertEquals(true, sc.isRunningBatch);
     }
     
     static testMethod void testControllerMissingSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testControllerMissingSetting') return;
         
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
+        sc.initDynamicFields(); //this will also set the settings property
+        
+        sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
         sc.addrVerifSettings.Using_SmartyStreets__c = true;
         
         Test.startTest();

@@ -223,7 +223,7 @@ public with sharing class STG_InstallScript_TEST {
         npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
         npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults(); 
         Error_Settings__c errorSettings = Error_Settings__c.getOrgDefaults();
-        Address_Verification_Settings__c addrVerificationSetgs = Address_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c addrVerificationSetgs = Addr_Verification_Settings__c.getOrgDefaults();
         Batch_Data_Entry_Settings__c batchDataEntrySetgs = Batch_Data_Entry_Settings__c.getOrgDefaults();
         
         //If it's a new install we want to set the Household model by default
@@ -272,21 +272,15 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(true, errorSettings.Error_Notifications_On__c);
         System.assertEquals(ERR_Notifier.NotificationOptions.sysAdmins, errorSettings.Error_Notifications_To__c);
 
-        System.assertEquals(true, addrVerificationSetgs.Using_SmartyStreets__c);        
-        System.assertEquals('https://api.smartystreets.com/street-address', addrVerificationSetgs.Address_Verification_Endpoint__c);
-        System.assertEquals('https://api.smartystreets.com/zipcode', addrVerificationSetgs.Zipcode_Verification_Endpoint__c);
-        System.assertEquals('ADDR_SmartyStreets_Validator', addrVerificationSetgs.Class__c);
-        System.assertEquals(true, addrVerificationSetgs.Enable_Automatic_Verification__c);
-        System.assertEquals(true, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
+        System.assertEquals(false, addrVerificationSetgs.Using_SmartyStreets__c);        
+        System.assertEquals(false, addrVerificationSetgs.Enable_Automatic_Verification__c);
+        System.assertEquals(false, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
         
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
         
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(3, scheduledJobs.size());
-        List<CronTrigger> globalJob = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name = 
-        :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];
-        System.assertEquals(1, globalJob.size());
+        System.assertEquals(6, scheduledJobs.size());
     }
 
     public static void deleteAllCustomSettings() {

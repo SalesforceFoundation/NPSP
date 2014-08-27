@@ -212,8 +212,12 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings.Store_Errors_On__c = true;
             orgErrorSettings.Error_Notifications_On__c = true;
             orgErrorSettings.Error_Notifications_To__c = notificationsTo;
+            orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
             
-            insert orgErrorSettings;
+            // Don't insert if we're in test mode, just return the in memory settings object
+            if (! Test.isRunningTest()) {
+                insert orgErrorSettings;
+            }
         }
         return orgErrorSettings;
     }
@@ -230,16 +234,30 @@ public without sharing class UTIL_CustomSettingsFacade {
         return bdeSettings;
     }
     
-    public static Address_Verification_Settings__c getAddressValidationSettings() {        
-        Address_Verification_Settings__c settings = Address_Verification_Settings__c.getOrgDefaults();
+    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
+        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
         if(settings.Id == null) {
-        	settings = Address_Verification_Settings__c.getOrgDefaults();
-        	settings.Using_SmartyStreets__c = true;
-            settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
-            settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
-            settings.Class__c = 'ADDR_SmartyStreets_Validator';
-            settings.Enable_Automatic_Verification__c = true;
-            settings.Reject_Ambiguous_Addresses__c = true;
+        	settings = Addr_Verification_Settings__c.getOrgDefaults();
+        	settings.Using_SmartyStreets__c = false;
+            settings.Enable_Automatic_Verification__c = false;
+            settings.Reject_Ambiguous_Addresses__c = false;
+            
+            insert settings;
+        }
+        return settings;
+    }
+
+    public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
+        Household_Naming_Settings__c settings = Household_Naming_Settings__c.getOrgDefaults();
+        if (settings.Id == null) {
+            settings = Household_Naming_Settings__c.getOrgDefaults();
+            settings.Household_Name_Format__c = '{!LastName} ' + label.npo02.DefaultHouseholdName;
+            settings.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+            settings.Informal_Greeting_Format__c = '{!{!FirstName}}';
+            settings.Name_Connector__c = label.npo02.HouseholdNameConnector;
+            settings.Name_Overrun__c = label.npo02.HouseholdNameOverrun;
+            settings.Contact_Overrun_Count__c = 9;
+            settings.Implementing_Class__c = 'HH_NameSpec';
             
             insert settings;
         }

@@ -386,15 +386,20 @@ private with sharing class ACCT_HHAccounts_TEST {
  
         // setup HH Accounts
         listCon[0].AccountId = listAcc[0].Id;
+        listCon[0].npo02__Household_Naming_Order__c = 0;
         listCon[1].AccountId = listAcc[0].Id;
+        listCon[1].npo02__Household_Naming_Order__c = 1;
         listCon[2].AccountId = listAcc[1].Id;
+        listCon[2].npo02__Household_Naming_Order__c = 2;
         listCon[3].AccountId = listAcc[1].Id;
+        listCon[3].npo02__Household_Naming_Order__c = 3;
         listCon[4].AccountId = listAcc[1].Id;
+        listCon[4].npo02__Household_Naming_Order__c = 4;
         
         insert listCon;
         
         // refresh our contacts to get their accounts
-        listCon = [select Name, FirstName, LastName, AccountId from Contact];
+        listCon = [select Name, FirstName, LastName, AccountId from Contact order by FirstName];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);        
         
@@ -412,7 +417,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account order by Name];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -593,8 +598,8 @@ private with sharing class ACCT_HHAccounts_TEST {
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
             }
         }
     
@@ -855,6 +860,52 @@ private with sharing class ACCT_HHAccounts_TEST {
         } 
     }
         
+    /*********************************************************************************************************
+    operation:
+        create a new account with HH record type
+    verify:
+        the system fields on the account are set correctly
+    **********************************************************************************************************/            
+    static testMethod void newHHAccountWithRecordTypeOnly() {
+        if (strTestOnly != '*' && strTestOnly != 'newHHAccountWithRecordTypeOnly') return;
+        
+        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        if (rtIdAccountHH != null) {
+            Account acc = new Account(name='test', RecordTypeId = rtIdAccountHH);
+            insert acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertEquals(true, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update an existing account to the HH record type
+    verify:
+        the system fields on the account are set correctly
+    **********************************************************************************************************/            
+    static testMethod void updateAccountToHHRecordType() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccountToHHRecordType') return;
+        
+        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        if (rtIdAccountHH != null) {
+            Account acc = new Account(name='test');
+            insert acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertNotEquals(rtIdAccountHH, acc.RecordTypeId);
+            system.assertEquals(false, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(null, acc.npe01__SYSTEM_AccountType__c);
+            acc.RecordTypeId = rtIdAccountHH;
+            update acc;
+            acc = [select Id, Name, RecordTypeId, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c 
+                from Account where Id = :acc.Id];
+            system.assertEquals(true, acc.npe01__SYSTEMISINDIVIDUAL__c);
+            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);            
+        }
+    }
 
     /*********************************************************************************************************
     WHAT IS NOT TESTED:

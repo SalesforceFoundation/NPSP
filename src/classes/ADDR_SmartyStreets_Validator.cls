@@ -35,40 +35,71 @@
  */
 public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidator {
 
-    private Address_Verification_Settings__c settings;
+    private Addr_Verification_Settings__c settings;
+    
+    public String getServiceName() {
+    	return 'SmartyStreets';
+    }
+    
+    public String getDefaultURL() {
+        return 'https://api.smartystreets.com/street-address';	
+    }
+    
+    public String getDefaultZipcodeURL() {
+        return 'https://api.smartystreets.com/street-address';  
+    }
+    
+    public String getHelpText() {
+    	return Label.SmartyStreets_Help_Text;
+    }
+    
+    public Boolean supportsBatch() {
+        return true;	
+    }
+    
+    public String getBatchHelpText() {
+    	return Label.Addr_Verification_Batch_SmartyStreets_Message;
+    }
     
     // verify a List of custom object records - split them up into those we are
     // sending for address and those for zip only - max of 100 at a time for each
-    public List<Address__c> verifyRecords(List<Address__c> avList, Address_Verification_Settings__c settings) {
+    public List<Address__c> verifyRecords(List<Address__c> avList, Addr_Verification_Settings__c settings) {
     	this.settings = settings;
         
         List<Address__c> shortList = new List<Address__c>();
         List<Address__c> shortListZipOnly = new List<Address__c>();
+        List<Address__c> addressesToUpdate = new List<Address__c>();
+        
         for (Address__c av : avList) {
-            if (av.MailingStreet__c == null && (av.MailingPostalCode__c != null || 
-                (av.MailingCity__c != null && av.MailingState__c != null))) {
-
-                // has no address, but can be verified and geocoded by the zipcode api
-                shortListZipOnly.add(av);
-                if (shortListZipOnly.size() == 100) {
-                    verifyZipRecords100(shortListZipOnly);
-                    shortListZipOnly = new List<Address__c>();
-                }
-            } else if (av.MailingStreet__c != null) {
+            //has address   
+            if (av.MailingStreet__c != null) {
                 shortList.add(av);
                 if (shortList.size() == 100) {
-                    return verifyRecords100(shortList); 
+                    addressesToUpdate.addAll(verifyRecords100(shortList));
+                    shortList = new List<Address__c>(); 
+                }
+            // has no address, but can be verified and geocoded by the zipcode api
+            } else if (av.MailingStreet__c == null && (av.MailingPostalCode__c != null || 
+                (av.MailingCity__c != null && av.MailingState__c != null))) {
+                shortListZipOnly.add(av);
+                if (shortListZipOnly.size() == 100) {
+                    addressesToUpdate.addAll(verifyZipRecords100(shortListZipOnly));
+                    shortListZipOnly = new List<Address__c>();
                 }
             }
         }
+        
         if (!shortListZipOnly.isEmpty())
-            return verifyZipRecords100(shortListZipOnly);
+            addressesToUpdate.addAll(verifyZipRecords100(shortListZipOnly));
+        
         if (!shortList.isEmpty())
-            return verifyRecords100(shortList);
-        return new List<Address__c>();
+            addressesToUpdate.addAll(verifyRecords100(shortList));
+        
+        return addressesToUpdate;        
     }
 
     private List<Address__c> verifyRecords100(List<Address__c> avList) {
+    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList.size() + ' address records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.AddressRequest> srList = new List<ADDR_SmartyStreets_Gateway.AddressRequest>();
         
@@ -76,7 +107,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         for (Address__c av : avList) {
             ADDR_SmartyStreets_Gateway.AddressRequest sr = new ADDR_SmartyStreets_Gateway.AddressRequest();
             sr.street = av.MailingStreet__c;
-            // sr.street2 =     // SHOULD WE SPLIT STREET WHEN MULTILINE??
+            sr.street2 = av.MailingStreet2__c;
             sr.city = av.MailingCity__c;
             sr.state = av.MailingState__c;
             sr.zipcode = av.MailingPostalCode__c;
@@ -102,8 +133,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        System.debug('****Flagging address as verified. Address ID: ' + av.Id);
 	                        av.Verified__c = true;
-	                        av.MailingStreet__c = sr.delivery_line_1 + 
-	                            ((sr.delivery_line_2 != null && sr.delivery_line_2 != '') ? ('\n' + sr.delivery_line_2) : '');
+	                        av.MailingStreet__c = sr.delivery_line_1;
+	                        av.MailingStreet2__c = sr.delivery_line_2;
 	                        av.MailingCity__c = sr.components.city_name;
 	                        av.MailingState__c = sr.components.state_abbreviation;
 	                        av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
@@ -124,7 +155,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                }
 	            }
 	            for (Address__c av : avList) {             
-	                if (av.API_Response__c == null) {   
+	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
+	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
 	                }
 	            }
@@ -142,6 +174,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
 
     private List<Address__c> verifyZipRecords100(List<Address__c> avList) {
+    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList + ' zip records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.ZipRequest> zrList = new List<ADDR_SmartyStreets_Gateway.ZipRequest>();
         
@@ -180,6 +213,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                            // if there is at least one city/state, fill in city state
 	                            if (sr.city_states != null && sr.city_states.size() > 0) {
 	                                System.debug('****Populating city and estate.');
+	                                av.Verified__c = true;
 	                                av.MailingCity__c = sr.city_states[0].city;
 	                                av.MailingState__c = sr.city_states[0].state_abbreviation;
 	                                av.MailingCountry__c = 'US';

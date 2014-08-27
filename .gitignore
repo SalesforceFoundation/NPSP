@@ -8,7 +8,9 @@ Referenced Packages
 /uninstallsrc
 /installdeploy
 /installedPackages
-src/quickActions/LogACall.quickAction
-src/quickActions/NewNote.quickAction
-src/quickActions/NewTask.quickAction
 unpackaged/*/*/*.zip
+unpackaged/namespaced_zipped
+unpackaged/zipped
+unpackaged_stage
+packaged
+.*.swp

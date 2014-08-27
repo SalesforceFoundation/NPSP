@@ -113,82 +113,107 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         }
         private set;
     }
-
-    /** @TODO: do we still need this method? Should be remove it? 
-    // action method called when the page first loads 
-    public PageReference getSettingsFirstTime() {        
-        scheduleRecurringDonationsUpdate();
-        testPackageIntegrity();
-        return null;
-    }  **/      
+     
     
-    /** @DavidHabib: also comment back in line 335 in STG_SettingsManager_TEST when you
-        comment the method below back in.
-    
-    // test an opp insert as done in the class and provide a warning if it fails
-    private void testPackageIntegrity(){
+    // test an opp insert with a recurring donation to find problems - called by Health Check
+    public static void verifyRDSaving(STG_PanelHealthCheck_CTRL ctrl) {
+        
+        //verify that custom installment periods are specified on the picklist field
+        //first put all the picklist values in a set
+        Schema.DescribeFieldResult F = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get('npe03__Installment_Period__c').getDescribe();
+        list<Schema.PicklistEntry> P = F.getPicklistValues();
+        set<string> setValues = new set<string>();    
+        for (Schema.PicklistEntry plistentry: P) {
+            setValues.add(plistentry.getLabel());
+        }
+        //now iterate through all the custom installment periods and make sure they have a matching picklist value
+        boolean isValid = true;
+        set<string> setPeriods = new set<string>();    
+        for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
+        	setPeriods.add(ci.Name);
+        	if (!setValues.contains(ci.Name)) {
+        		isValid = false;
+	            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name}), 
+	                label.healthSolutionInvalidRDCustomPeriod);
+        	}
+        }
+        //now iterate through the picklist values to make sure they match a valid period
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodYearly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        setPeriods.add(label.npe03.RecurringDonationInstallmentPeriod1stand15th);
+        for (Schema.PicklistEntry plistentry: P) {
+            if (!setPeriods.contains(plistentry.getLabel())) {
+            	isValid = false;
+                ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                    string.format(label.healthDetailsInvalidRDCustomPeriodPIcklist, new string[]{plistentry.getLabel()}), 
+                    string.format(label.healthSolutionInvalidRDCustomPeriodPicklist, new string[]{label.stgNavRecurringDonations, label.stgNavRDInstallmentPeriods}));            	
+            }
+        }       
+        if (isValid)
+            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthDetailsValidRDCustomPeriod);
         
         //test closed lost opp settings        
         string closedoppstage = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
         integer x = 0;
         x = [select count() from OpportunityStage where MasterLabel = :closedoppstage and isClosed = true and isActive = true and isWon = false];
+        if (x == 0) {
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                string.format(label.healthDetailsInvalidOppStage, new string[]{closedoppstage}), 
+                label.npe03.RecurringDonationBadLabelWarning);
+        }
         
-        string page_message = '';
+        //test pledged opp settings        
+        string strPledged = system.label.npe03.RecurringDonationStageName;  // pledged
+        x = [select count() from OpportunityStage where MasterLabel = :strPledged and isActive = true];
+        if (x == 0) {
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                string.format(label.healthDetailsInvalidOppStage, new string[]{strPledged}), 
+                label.healthSolutionInvalidOppStage);
+        }
+        
         Savepoint sp = Database.setSavepoint();
             
+        // create a test account and test opportunity
         Account acc = new Account(name='test account');
         insert acc;
+        
         Opportunity testOpp = new Opportunity();
         testOpp.AccountID = acc.id;
         testOpp.Amount = 100;
         testOpp.CloseDate = system.today();
-        testOpp.Name = 'TestOpp';
+        testOpp.Name = 'TestOpp';        
+        testOpp.StageName = strPledged;        
         
-        //If there's no closed/won stage??
-        string SName = '';
-        SName = [select MasterLabel from OpportunityStage where isWon = true and isClosed = true and isActive = true limit 1].MasterLabel;
-        testOpp.StageName = SName;        
-        
-        //use one if we got one, otherwise, create one for testing
-        list<npe03__Recurring_Donation__c> rd = new list<npe03__Recurring_Donation__c>();
-        rd = [select id from npe03__Recurring_Donation__c];
-        if (!rd.isEmpty()){
-            testOpp.npe03__Recurring_Donation__c = rd[0].id;
-        }
         database.saveresult[] sr = database.insert(new list<Opportunity>{testopp}, false);
         database.rollback(sp); 
-        ApexPages.Message myMsg;
-        
-        //we allow isRunningTest code to enter these loops for coverage purposes
-        if (x < 1 || test.isRunningTest()){
-            myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, system.label.npe03.RecurringDonationBadLabelWarning);
-            ApexPages.addMessage(myMsg);
-        }   
-        
-        if(!sr[0].isSuccess() || test.isRunningTest()){ 
+
+        string strError = '';        
+        if (!sr[0].isSuccess() || test.isRunningTest()) { 
             Database.Error[] ers = sr[0].getErrors();  
             
             for (Database.Error err : ers){
                 if (err.getStatusCode() == StatusCode.FIELD_CUSTOM_VALIDATION_EXCEPTION){
-                    page_message += ' ' + system.label.npe03.RecurringDonationCustomValidationWarning;
+                    strError += ' ' + system.label.npe03.RecurringDonationCustomValidationWarning;
                 }
                 else if (err.getStatusCode() == StatusCode.REQUIRED_FIELD_MISSING){
-                    page_message += ' ' + system.label.npe03.RecurringDonationRequiredFieldsWarning;
+                    strError += ' ' + system.label.npe03.RecurringDonationRequiredFieldsWarning;
                 }
                 else{
-                    page_message += ' ' + err.getMessage();
+                    strError += ' ' + err.getMessage();
                 }
                 string strComma = ' ';
                 for (string s : err.getFields()){
-                    page_message += strComma + s;      
+                    strError += strComma + s;      
                     strComma = ', ';                 
                 }                                   
             }
-            myMsg = new ApexPages.Message(ApexPages.Severity.WARNING, page_message);            
-        }   
-        if (myMsg != null){
-            ApexPages.addMessage(myMsg);
-        }
-    }  **/   
 
+            ctrl.createDR(label.stgNavRecurringDonations, 'Error', strError, null);                            
+        } else {   
+            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthLabelRDOppsValid);
+        }                            
+    }
 }

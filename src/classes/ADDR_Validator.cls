@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Address_Verification_Settings__c settings = getAddressValidationSettings();
+    private static Addr_Verification_Settings__c settings = getAddressValidationSettings();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -45,10 +45,10 @@ public with sharing class ADDR_Validator {
     }
     
     public static void verifyRecords(set<id> recordIds) {
-    	System.debug('****Retrieving data records');
+    	System.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
-            MailingStreet__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
+            MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
             Verified__c, API_Response__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
             Congressional_District__c, County_Name__c from Address__c where id in : recordIds];
 
@@ -58,7 +58,7 @@ public with sharing class ADDR_Validator {
     //we separate it from the query so that we can call it also from the batch process
     public static void verifyAddressRecords(List<Address__c> avList) {
     	if (!avList.isEmpty()) {
-            System.debug('****Verifying records');
+            System.debug(LoggingLevel.WARN, '****Verifying records');
             if(settings != null) {
                 String classToRunName = String.valueOf(settings.get('Class__c'));
                 Type classType = Type.forName(classToRunName);
@@ -83,7 +83,7 @@ public with sharing class ADDR_Validator {
         }
     }
     
-    public static Address_Verification_Settings__c getAddressValidationSettings() {        
+    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
         settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
         return settings;
     }

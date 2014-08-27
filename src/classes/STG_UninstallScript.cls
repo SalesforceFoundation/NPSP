@@ -35,11 +35,16 @@
 global class STG_UninstallScript implements UninstallHandler {
 
     global void onUninstall(UninstallContext context) {
-    		
+        
+        String[] schedulers = new String[] {'NPSP Global Scheduler', 'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};
+        schedulers.addAll(UTIL_MasterSchedulableHelper.scheduledJobs);
     	List<CronTrigger> scheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 
-    	   where CronJobDetail.Name = :UTIL_GlobalSchedulable.jobName and CronJobDetail.JobType = '7'];
+    	   where CronJobDetail.Name IN :schedulers and CronJobDetail.JobType = '7'];
     	
-    	if(scheduledJobs.size() > 0)   
-    	   System.abortJob(scheduledJobs[0].Id);
+    	if(scheduledJobs != null && scheduledJobs.size() > 0) { 
+    	   for(CronTrigger job : scheduledJobs) {
+    	       System.abortJob(job.Id);
+    	   }
+    	}
     }
 }

@@ -30,8 +30,11 @@
 @isTest
 public with sharing class TDTM_Runnable_TEST {
 
+    private static string strTestOnly = '*';
+    
     /** This test verifies that the runFuture method of the TDTM_Runnable class works properly **/
     public static testmethod void testAsync() {
+    	if (strTestOnly != '*' && strTestOnly != 'testAsync') return;
     	
     	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = true, 
               Class__c = 'ERR_ParentAccountUpdater2_TEST', Load_Order__c = 1, Object__c = 'Contact', 
@@ -51,5 +54,32 @@ public with sharing class TDTM_Runnable_TEST {
         
         System.assertEquals('New First Name', contact.FirstName); //To verify fields from record are available in future
         System.assertEquals('New Acc Name', acc.Name);
+    }
+    
+    /** Test we do not get the "Cannot have more than 10 chunks in a single operation. Please rearrange the data to 
+    reduce chunking" error. 
+    If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.**/
+    public static testmethod void nochunking() {
+    	if (strTestOnly != '*' && strTestOnly != 'nochunking') return;
+    	
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+    
+    	List<Contact> contacts = new List<Contact>();
+		for(integer i = 0; i< 200; i++) {
+		    Contact contact = new contact(firstname='Test', lastname='Person' + i);
+		    contact.MailingStreet = 'multiple-address';
+		    contact.MailingCity = 'Cupertino';
+		    contact.MailingState = 'ca';
+		    contact.MailingPostalCode = '95014';
+		    contacts.add(contact);
+		}
+		
+		Test.startTest();
+		insert contacts;
+		Test.stopTest();
+		
+		Integer errors = [select count() from Error__c];
+		System.assertEquals(0, errors);
     }
 }

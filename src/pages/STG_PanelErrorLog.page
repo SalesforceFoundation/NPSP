@@ -1,17 +1,15 @@
 <apex:page controller="STG_PanelErrorLog_CTRL" >
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorLog}" />
 
     <apex:form id="form" styleClass="stgForm" >  
-        <apex:sectionHeader title="{!$Label.stgNavSystem}" subtitle="{!$Label.stgNavErrorLog}" />
-        <apex:pageMessages />
+        <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
+            <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+            </apex:outputPanel>
 
-            <h3 class="sectionBar" >{!$Label.stgNavErrorLog}</h3>            
             <c:UTIL_SoqlListView SoqlListViewConsumer="{!slvConsumer}" />
                                               
-            <apex:pageBlockButtons location="both">
-                <apex:commandButton value="{!$Label.stgBtnClearErrorLog}" action="{!clearErrorLog}" status="statusLoad" immediate="true" rerender="form" />
-            </apex:pageBlockButtons>
-
         </apex:pageBlock> 
     </apex:form>
 </apex:page>

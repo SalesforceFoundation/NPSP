@@ -159,6 +159,29 @@
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
+    <quickActionList>
+        <quickActionListItems>
+            <quickActionName>FeedItem.TextPost</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Opportunity.Quick_Update</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>Opportunity.New_Payment</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>New_Recurring_Donation</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>NewContact</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>NewAccount</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>FeedItem.ContentPost</quickActionName>
+        </quickActionListItems>
+    </quickActionList>
     <relatedContent>
         <relatedContentItems>
             <layoutItem>
@@ -175,6 +198,15 @@
     </relatedContent>
     <relatedLists>
         <relatedList>RelatedContactRoleList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Payment_Date__c</fields>
+        <fields>npe01__Payment_Method__c</fields>
+        <fields>npe01__Paid__c</fields>
+        <fields>npe01__Written_Off__c</fields>
+        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
@@ -196,15 +228,6 @@
         <relatedList>RelatedHistoryList</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <fields>npe01__Payment_Amount__c</fields>
-        <fields>npe01__Payment_Date__c</fields>
-        <fields>npe01__Payment_Method__c</fields>
-        <fields>npe01__Paid__c</fields>
-        <fields>npe01__Written_Off__c</fields>
-        <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
-    </relatedLists>
-    <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
     </relatedLists>
     <relatedLists>
@@ -217,7 +240,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000001iSoP</masterLabel>
+        <masterLabel>00hi0000003BQoX</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

@@ -37,7 +37,7 @@ public with sharing class STG_SettingsService {
     public static STG_SettingsService stgService = new STG_SettingsService();
     
     public STG_SettingsService() {
-    	system.debug('***** STG_SettingsService constructor');
+    	//system.debug('***** STG_SettingsService constructor');
     }
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
@@ -56,6 +56,14 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    public Household_Naming_Settings__c stgHN {
+        get {
+            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            return stgHN;
+        }
+        private set;
+    }
+
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
             if (stgRD == null) stgRD = RD_RecurringDonations.getRecurringDonationsSettings();
@@ -141,11 +149,9 @@ public with sharing class STG_SettingsService {
     } 
     
     public void saveAll() {
-    	system.debug('****stgService saveAll has stgCon: ' + stgCon + ' stgHH: ' + stgHH + 
-    	   ' stgRD: ' + stgRD + + ' stgRel: ' + stgRel + ' stgAffl: ' + stgAffl + ' stgBDE: ' + stgBDE + 
-    	   ' stgERR: ' + stgErr);
         upsert stgCon;
         upsert stgHH;
+        upsert stgHN;
         upsert stgRD;
         upsert stgRel;
         upsert stgAffl;

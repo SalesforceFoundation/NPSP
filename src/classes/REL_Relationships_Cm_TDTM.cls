@@ -63,7 +63,7 @@ public with sharing class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
                     Campaign c = cMap.get(cm.CampaignId);
                     System.debug('****Current Campaign Type: ' + c.Type);
                     //create a set from the rac
-                    if (rac.npe4__Object__c == 'CampaignMember'){
+                    if (rac.npe4__Object__c == 'CampaignMember' && rac.npe4__Campaign_Types__c != null){
                         List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';');
                         System.debug('****All Campaign Types: ' + cTypeList);
                         Set<String> cTypeSet = new Set<String>();

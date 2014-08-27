@@ -1,4 +1,4 @@
-<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false">
+<apex:page controller="CONV_Account_Conversion_CTRL" title="Account Model Conversion Utility" tabStyle="npo02__Household__c" showHeader="true" sidebar="false" action="{!runCheck}">
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
@@ -7,10 +7,27 @@
 <script type="text/javascript">
     var j$ = jQuery.noConflict();
 
+    //add some show handlers
+    jQuery(function(j$) {
+        var _oldShow = j$.fn.show;
+        j$.fn.show = function(speed, oldCallback) {
+            return j$(this).each(function() {
+                var obj = j$(this), newCallback = function() {
+                    if (j$.isFunction(oldCallback)) {
+                        oldCallback.apply(obj);
+                    }
+                    obj.trigger('afterShow');
+                };
+                obj.trigger('beforeShow');
+                _oldShow.apply(obj, [speed, newCallback]);
+            });
+        }
+    });
+
     j$(document).ready(function(){
         j$('#conversionBTN').attr('disabled', 'disabled');
         j$("input[type='checkbox']").click(function() {
-            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length)
+            if (j$("input[type='checkbox']:checked").length == j$("input[type='checkbox']").length && !{!runCheckErrorState})
                 j$('#conversionBTN').removeAttr('disabled');
             else
                 j$('#conversionBTN').attr('disabled', 'disabled');
@@ -25,10 +42,37 @@
             //call conversion
             callConversion();
         });
+     
+     //   j$("#progresspanel").bind("beforeShow", function() {
+     //       j$("div[class^='message']").hide();
+     //   })
     });
 
     function callConversion(){
         runconvert() ;
+    }
+
+    function renderResults(){
+        j$("div[class^='message']").hide();
+    }
+
+    function refreshPage(){location.reload(true);}
+
+    function verifyHHIdField(){
+        var selectedField = j$("[name$='HHId']").val();
+            if (selectedField != ''){
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',selectedField,function(result, event){
+                if(event.status){
+                    if (!result){
+                        alert("The selected field is not able to hold the Household Id information as required.  Please select a different Account field.");
+                        j$("[name$='HHId']").val('-None-');
+                    }
+                }
+                else{
+                    alert("An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.");
+                }
+            });
+        }
     }
 </script>
 
@@ -106,11 +150,14 @@
                     Before beginning this process, you'll need to confirm the following steps have been taken:</p>
                             <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
                             <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>My data has been backed-up by going to Setup | Data Management | Export Data</label>
-                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a sandbox.</label>
+                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a fresh sandbox.</label>
+                            <label for="check-inactiveuser"><input type="checkbox" id="check-inactiveuser"/>All record ownership has been transferred from any inactive users.</label>
                             <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
                             <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
+                            <label for="check-households"><input type="checkbox" id="check-households"/>I am aware this tool will only work for Contacts that currently have a Household associated.</label>
                             <label for="check-apps"><input type="checkbox" id="check-required-fields"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
                             <label for="check-consult"><input type="checkbox" id="check-consult"/>I've consulted with my local Salesforce expert.</label>
+                            <label for="check-risk"><input type="checkbox" id="check-risk"/>I accept the risk associated with using this tool, including data loss and inconsistent data</label>
                         </div>
                     </div>
                 </div>
@@ -120,11 +167,14 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading"><h3 class="panel-title">What This Tool Does</h3></div>
                         <div class="panel-body">
+                            <p>This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts.</p>
+                            <p>Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility.</p>
                             <p>The following actions are taken by the batch job associated with this tool:</p>
                             <ul>
                                 <li>All triggers are disabled</li>
                                 <li>All existing Households are selected, along with their Contacts</li>
                                 <li>New Household Accounts are created for each existing Household</li>
+                                <li>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</li>
                                 <li>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</li>
                                 <li>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</li>
                                 <li>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</li>
@@ -150,7 +200,7 @@
                             <p>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any
                                 lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</p>
                             <apex:outputlabel for="HHId" value="Account Field" style="padding: 5px 5px 5px 5px;"/>
-                            <apex:selectList id="HHId" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                            <apex:selectList id="HHId" onchange="verifyHHIdField();" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
                                 <apex:selectOptions value="{!targetAccountFields}" />
                             </apex:selectList>
                         </div>
@@ -159,9 +209,32 @@
             </div>
         </div>
 
+        <apex:outputpanel rendered="{!NOT(ISNULL(apexjob))}" layout="block" id="resultspanelwrapper">
+            <div class="container hide" id="resultspanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
+                            <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
+                            <div class="panel-body">
+                                 Completed on {!apexjob.CompletedDate}<br/>
+                                 {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
+                                 {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' batches were not converted due to errors and have been rolled back to their previous state. You should address these errors, rerun the converter, then check your data for consistency.', '')}<br/><br/>
+                                 {!IF(ISBLANK(apexjob.ExtendedStatus), '', 'The first error recorded was: ' + apexjob.ExtendedStatus)}<br/> 
+                                 <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
+                                    <button type="button" class="btn btn-warning btn-lg" onclick="refreshPage()" id="reloadBTN">
+                                        <span class="glyphicon glyphicon-refresh"></span> Reload the Converter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:outputpanel>
+
         <div class="container hide" id="progresspanel">
             <div class="row">
-                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel"/>
+                <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel, resultspanelwrapper" oncomplete="renderResults()"/>
                 <apex:outputPanel id="batchpanel">
                     <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
                 </apex:outputPanel>

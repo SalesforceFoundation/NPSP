@@ -1,3 +1,37 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Controller for the Households panel.
+*/
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
 	
 	public STG_PanelHouseholds_CTRL() {
@@ -10,18 +44,20 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
 
     public PageReference activateHouseholdNaming() {
         isRunningBatch = true; 
+        boolean isActivation = (HH_Households.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
                 
         STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-        // DJH:UNDONE is it ok that we save all settings to perform this action?
         saveSettings();
         
-        //call advanced rollup batch process
-        HH_HouseholdNaming hn = new HH_Householdnaming();
-        hn.ActivateAdvancedGreetings(false);
-        
+        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);        
         return null;
     }
 
+    public override PageReference editSettings() {
+        isRunningBatch = false;
+        return super.editSettings();
+    }
+    
     public override PageReference saveSettings() {
     	
     	// add some extra error detection
@@ -48,4 +84,119 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         }
         private set;
     }
+        
+    static public list<SelectOption> listSOHouseholdNameFormats {
+        get {    
+            if (listSOHouseholdNameFormats == null) {
+                listSOHouseholdNameFormats = new list<SelectOption>();
+                listSOHouseholdNameFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ' + label.npo02.DefaultHouseholdName, '{!LastName} ' + label.npo02.DefaultHouseholdName));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName, '{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName, '{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
+                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
+                listSOHouseholdNameFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
+            }
+            return listSOHouseholdNameFormats;
+        }
+        private set;
+    }
+    
+    static public list<SelectOption> listSOFormalGreetingFormats {
+        get {    
+            if (listSOFormalGreetingFormats == null) {
+                listSOFormalGreetingFormats = new list<SelectOption>();
+                listSOFormalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption('{!{!Salutation} {!FirstName}} {!LastName}', '{!{!Salutation} {!FirstName}} {!LastName}'));
+                listSOFormalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
+            }
+            return listSOFormalGreetingFormats;
+        }
+        private set;
+    }
+
+    static public list<SelectOption> listSOInformalGreetingFormats {
+        get {    
+            if (listSOInformalGreetingFormats == null) {
+                listSOInformalGreetingFormats = new list<SelectOption>();
+                listSOInformalGreetingFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}}', '{!{!FirstName}}'));
+                listSOInformalGreetingFormats.add(new SelectOption('{!{!FirstName}} {!LastName}', '{!{!FirstName}} {!LastName}'));
+                listSOInformalGreetingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
+            }
+            return listSOInformalGreetingFormats;
+        }
+        private set;
+    }
+
+    private static list<Contact> listConExamples {
+    	get {
+            if (listConExamples == null) {
+                    listConExamples = new list<Contact>();
+                    Contact con = new Contact();
+                    con.FirstName = 'Sam';
+                    con.LastName = 'Smith';
+                    con.Salutation = 'Dr.';
+                    con.MailingCity = 'Seattle';
+                    listConExamples.add(con);
+                    
+                    con = new Contact();
+                    con.FirstName = 'Sally';
+                    con.LastName = 'Smith';
+                    con.Salutation = 'Mrs.';
+                    con.MailingCity = 'Seattle';
+                    listConExamples.add(con);
+                    
+                    con = new Contact();
+                    con.FirstName = 'Suzie';
+                    con.LastName = 'Smith';
+                    listConExamples.add(con);
+
+                    con = new Contact();
+                    con.FirstName = 'Daphne';
+                    con.LastName = 'Doe';
+                    con.Salutation = 'Ms.';
+                    con.MailingCity = 'Portland';
+                    listConExamples.add(con);
+
+                    con = new Contact();
+                    con.FirstName = 'Donald';
+                    con.LastName = 'Doe';
+                    con.Salutation = 'Mr.';
+                    con.MailingCity = 'Portland';
+                    listConExamples.add(con);
+                }
+            return listConExamples;
+        }
+    	private set;
+    }
+    
+    // Javascript remoting api to provide an Example formatted string given an instance of
+    // Household Name Settings, which type of string (Name, Formal Greeting, Informal Greeting),
+    // for the specified number of sample Contacts.
+    @RemoteAction
+    public static string strNameSpecExample(Household_Naming_Settings__c hns, string strField, integer cContact) {
+    
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
+        	listCon.add(listConExamples[i]);
+        	
+        // call INaming interface dynamically  
+        string strClass = hns.Implementing_Class__c;  
+        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
+        Type classType = Type.forName(strClass);
+        if (classType != null) {     
+            Object classInstance = classType.newInstance();
+            if (classInstance instanceof HH_INaming) {
+                HH_INaming n = (HH_INaming)classInstance;
+                return n.getExampleName(hns, strField, listCon);
+            } else {
+            	return label.stgErrorINaming;
+            }
+        } else {
+        	return label.stgErrorInvalidClass;
+        }
+    }    
 }

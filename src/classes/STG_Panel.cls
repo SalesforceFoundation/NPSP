@@ -1,3 +1,37 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Controller for the base settings panel class.
+*/
 public with sharing virtual class STG_Panel {
 	
 	public STG_Panel() {
@@ -15,7 +49,7 @@ public with sharing virtual class STG_Panel {
 		}
 	}
     
-    static public STG_SettingsService stgService { 
+    static public STG_SettingsService stgService {
         get {
             if (stgService == null)  { 
             	stgService = STG_SettingsService.stgService;
@@ -41,7 +75,7 @@ public with sharing virtual class STG_Panel {
         
     }
 
-    public PageReference editSettings() { 
+    public virtual PageReference editSettings() { 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = true;
         return null;
@@ -70,7 +104,7 @@ public with sharing virtual class STG_Panel {
         get {    
             if (listSOContactRoles == null) {
                 listSOContactRoles = new list<SelectOption>();
-                listSOContactRoles.add(new SelectOption('','- none -'));
+                listSOContactRoles.add(new SelectOption('', Label.stgLabelNone));
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
@@ -99,7 +133,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOContactRecTypes == null) {
                 listSOContactRecTypes = new list<SelectOption>();
-                listSOContactRecTypes.add(new SelectOption('', '- none -'));
+                listSOContactRecTypes.add(new SelectOption('', Label.stgLabelNone));
                 listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Contact'));            
             }       
             return listSOContactRecTypes;
@@ -111,7 +145,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOAccountRecTypeIds == null) {
                 listSOAccountRecTypeIds = new list<SelectOption>();
-                listSOAccountRecTypeIds.add(new SelectOption('', '- none -'));
+                listSOAccountRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
                 listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Account'));            
             }       
             return listSOAccountRecTypeIds;
@@ -123,7 +157,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppRecTypes == null) {
                 listSOOppRecTypes = new list<SelectOption>();
-                listSOOppRecTypes.add(new SelectOption('', '- none -'));
+                listSOOppRecTypes.add(new SelectOption('', Label.stgLabelNone));
                 listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList('Opportunity'));            
             }       
             return listSOOppRecTypes;
@@ -135,7 +169,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppRecTypesIds == null) {
                 listSOOppRecTypesIds = new list<SelectOption>();
-                listSOOppRecTypesIds.add(new SelectOption('', '- none -'));
+                listSOOppRecTypesIds.add(new SelectOption('', Label.stgLabelNone));
                 listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity'));            
             }       
             return listSOOppRecTypesIds;
@@ -147,7 +181,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOOppContactRoles == null) {
                 listSOOppContactRoles = new list<SelectOption>();
-                listSOOppContactRoles.add(new SelectOption('','- none -'));
+                listSOOppContactRoles.add(new SelectOption('', Label.stgLabelNone));
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for(Schema.PicklistEntry pe : P) {
@@ -163,7 +197,7 @@ public with sharing virtual class STG_Panel {
     	get {
 	        if (listSOOppTypes == null) {
 	            listSOOppTypes = new list<SelectOption>();
-	            listSOOppTypes.add(new SelectOption('','- none -'));
+	            listSOOppTypes.add(new SelectOption('', Label.stgLabelNone));
 	            Schema.DescribeFieldResult F = Schema.sObjectType.Opportunity.fields.Type; 
 	            list<Schema.PicklistEntry> P = F.getPicklistValues();
 	        
@@ -180,7 +214,7 @@ public with sharing virtual class STG_Panel {
         get {    
             if (listSORelTypes == null) {
                 listSORelTypes = new list<SelectOption>();
-                listSORelTypes.add(new SelectOption('','- none -'));
+                listSORelTypes.add(new SelectOption('', Label.stgLabelNone));
                 Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
@@ -196,7 +230,7 @@ public with sharing virtual class STG_Panel {
         get {    
             if (listSOCampaignTypes == null) {
                 listSOCampaignTypes = new list<SelectOption>();
-                listSOCampaignTypes.add(new SelectOption('','- none -'));
+                listSOCampaignTypes.add(new SelectOption('', Label.stgLabelNone));
                 Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type; 
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
@@ -212,7 +246,7 @@ public with sharing virtual class STG_Panel {
         get {
             if (listSOMailingReportIds == null) {
                 listSOMailingReportIds = new list<SelectOption>();
-                listSOMailingReportIds.add(new SelectOption('','- none -'));
+                listSOMailingReportIds.add(new SelectOption('', Label.stgLabelNone));
                 for (Report rpt : [select Id, Name from Report where Name like '%mail%']) {
                     listSOMailingReportIds.add(new SelectOption(rpt.Id, rpt.Name));
                 }
