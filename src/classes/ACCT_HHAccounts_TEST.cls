@@ -759,7 +759,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = false,

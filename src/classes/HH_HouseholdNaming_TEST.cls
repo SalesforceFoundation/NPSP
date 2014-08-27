@@ -43,7 +43,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = true,
@@ -92,7 +92,7 @@ public class HH_HouseholdNaming_TEST {
     static testMethod void HouseholdNamingTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -147,7 +147,7 @@ public class HH_HouseholdNaming_TEST {
     static testMethod void HouseholdNamingUpdateTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -263,7 +263,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testNamingOrder() {
       if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,

@@ -63,7 +63,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
             npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
             npo02__Always_Rollup_to_Primary_Contact__c = false,
