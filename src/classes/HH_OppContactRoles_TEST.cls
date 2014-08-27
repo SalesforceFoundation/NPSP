@@ -323,5 +323,93 @@ private class HH_OppContactRoles_TEST {
         system.assertequals(2,(integer)[select count() from OpportunityContactRole]);
     }  
     
+    /*********************************************************************************************************
+    operation:
+        move a contact with Opportunities to a different Household Account
+    verify:
+        both open and closed opps where the contact is primary, are moved to the new HH Account
+        soft credit OCR's from the old Household are deleted
+        soft credit OCR's for the new Household are created
+    **********************************************************************************************************/            
+    static testmethod void updateOppHHAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccount') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Household_Member_Contact_Role__c='Household Member'));
+                
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        system.assertEquals(null, listCon[0].AccountId); 
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(3, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert listAcc;
+        system.assertNotEquals(null, listAcc[0].Id);
+        
+        // specify the account for each contact, some sharing HH account.
+        listCon[0].AccountId = listAcc[0].Id;
+        listCon[1].AccountId = listAcc[0].Id;
+        listCon[2].AccountId = listAcc[1].Id;
+        listCon[3].AccountId = listAcc[1].Id;
+        listCon[4].AccountId = listAcc[2].Id;
+        insert listCon;
+        
+        list<Opportunity> listOppClosed = UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+            System.Today(), 100, null, null);
+        insert listOppClosed;
+                    
+        list<Opportunity> listOppOpen = UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, UTIL_UnitTestData_TEST.getOpenStage(),
+            System.Today(), 10, null, null);
+        insert listOppOpen;
+        
+        //check for contact roles
+        List<OpportunityContactRole> listOCR = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
+        system.assertEquals(18, listOCR.size());
+        
+        // now let's move a contact to a different household
+        listCon[0].AccountId = listAcc[1].Id;
+        update listCon[0];
+        
+        List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
+        system.assertEquals(20, listOCR2.size());
+        integer c0 = 0;
+        integer c1 = 0;
+        integer c2 = 0;
+        integer c3 = 0;
+        integer c4 = 0;
+        for (OpportunityContactRole ocr : listOCR2) {
+            if (ocr.ContactId == listCon[0].Id) {
+            	c0++;
+            }
+            if (ocr.ContactId == listCon[1].Id) {
+                system.assertEquals(true, ocr.IsPrimary);
+                system.assertEquals('Donor', ocr.Role);
+                c1++;
+            }
+            if (ocr.ContactId == listCon[2].Id) {
+                c2++;
+            }
+            if (ocr.ContactId == listCon[3].Id) {
+                c3++;
+            }
+            if (ocr.ContactId == listCon[4].Id) {
+                system.assertEquals(true, ocr.IsPrimary);
+                system.assertEquals('Donor', ocr.Role);
+                c4++;
+            }
+        }
+        system.assertEquals(4, c0);
+        system.assertEquals(2, c1);
+        system.assertEquals(6, c2);
+        system.assertEquals(6, c3);
+        system.assertEquals(2, c4);
+        
+        
+    }
        
 }
