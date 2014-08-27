@@ -48,15 +48,12 @@ private class REL_Relationships_TEST {
         
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){ 
-        
-            //remove any existing settings
-            delete [select id from npe4__Relationship_Settings__c];
+                     
             if (rs != null)
-                insert rs;
-            else{
-                rs = new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description');
-                insert rs;           
-            }
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(rs);
+            else
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 
+                                                                                    'List Setting', npe4__Gender_Field__c = 'Description'));         
             
             //add autocreate settings for CMs 
             delete [select id from npe4__Relationship_Auto_Create__c];

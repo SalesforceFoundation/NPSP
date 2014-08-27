@@ -39,35 +39,35 @@ public without sharing class UTIL_CustomSettingsFacade {
     static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
     static npo02__Households_Settings__c householdsSettings;
     static npe03__Recurring_Donations_Settings__c recurringDonationsSettings;
-	static npe4__Relationship_Settings__c relationshipSettings;
+	static npe4__Relationship_Settings__c relationshipsSettings;
 	static npe5__Affiliations_Settings__c affiliationsSettings;
 	static Batch_Data_Entry_Settings__c bdeSettings;
 	static Addr_Verification_Settings__c addressVerificationSettings;
 	static Household_Naming_Settings__c householdNamingSettings;
     
     //zero-arguments method that will set custom setting defaults
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
+    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
     	if(contactsSettings == null)
     	   return getContactsSettings(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     	return contactsSettings;
     }
  
     //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings(String accountProcessor) {
+    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings(String accountProcessor) {
         boolean usedToBeOneToOne = false;
         boolean usedToBeBucket = false;
         
         //if no settings exist, create defaults
         if (contactsSettings == null) {
             //first see if we already have settings
-            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
+            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
              //this setting does nothing, but needs to be extracted from the tests before removing
             contactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
             contactsSettings.npe01__Payments_Enabled__c  = true;
             contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
             //contactsSettings.Setupownerid = UserInfo.getOrganizationId();
             
-            Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
+            Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get(CAO_Constants.HH_ACCOUNT_PROCESSOR);
             if(householdAccount != null)
                 contactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
         }
@@ -185,18 +185,18 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     //zero-arguments method that will set custom setting defaults
-    public static npe4__Relationship_Settings__c getrelationshipSettings() {
-        if (relationshipSettings == null){
+    public static npe4__Relationship_Settings__c getRelationshipSettings() {
+        if (relationshipsSettings == null){
             //retrive the lowest level hierachy setting
-            relationshipSettings = npe4__Relationship_Settings__c.getInstance();
+            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
 
             //check for an org wide setting and insert if required
-            if (relationshipSettings.Id == null){
-                relationshipSettings.npe4__Reciprocal_Method__c = 'List Settings';
-                upsert relationshipSettings;
+            if (relationshipsSettings.Id == null){
+                relationshipsSettings.npe4__Reciprocal_Method__c = 'List Settings';
+                upsert relationshipsSettings;
             }
         }
-        return relationshipSettings;
+        return relationshipsSettings;
     }
     
     //zero-arguments method that will set custom setting defaults
@@ -299,9 +299,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         return householdNamingSettings;
     }
     
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
+    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_And_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
-            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
+            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
         
         //create our own based on what's passed in from the test
         contactsSettings.npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c;
@@ -349,5 +349,16 @@ public without sharing class UTIL_CustomSettingsFacade {
             }   
         }
         return householdsSettings;
+    }
+    
+    public static npe4__Relationship_Settings__c getRelationshipsSettingsForTests(npe4__Relationship_Settings__c mySettings) {
+        if(relationshipsSettings == null)
+            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
+        
+        //create our own based on what's passed in from the test
+        relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
+        relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
+        upsert relationshipsSettings;
+        return relationshipsSettings;
     }
 }
