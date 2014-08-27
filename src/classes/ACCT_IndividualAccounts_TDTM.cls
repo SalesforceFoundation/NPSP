@@ -636,14 +636,14 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
     
-    // moves all open opps for the provided contacts to their new hh account
+    // moves all opps for the Primary OCR provided contacts to their new hh account
     private void moveOppsToContactHHAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
         set<Id> setConId = mapContactIdAccountIdNew.keySet();
         list<Id> listAccIdOld = mapContactIdAccountIdOld.values();
         list<Opportunity> listOpp = new list<Opportunity>();
     
         list<OpportunityContactRole> listOCR = [select ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId from OpportunityContactRole
-            where Opportunity.isClosed = false and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
+            where IsPrimary = true and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
             
         for (OpportunityContactRole ocr : listOCR) {
             if (mapContactIdAccountIdOld.get(ocr.ContactId) == ocr.Opportunity.AccountId) {
