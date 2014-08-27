@@ -60,7 +60,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (contactsSettings == null) {
             //first see if we already have settings
-            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
              //this setting does nothing, but needs to be extracted from the tests before removing
             contactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
             contactsSettings.npe01__Payments_Enabled__c  = true;
@@ -86,7 +86,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         //if no settings exist, create defaults
         if (householdsSettings == null) {
             //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
+            householdsSettings = npo02__Households_Settings__c.getInstance();
             
             //modified to check again the Id instead of the object
             if (householdsSettings.Id == null) {
@@ -188,7 +188,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe4__Relationship_Settings__c getrelationshipSettings() {
         if (relationshipSettings == null){
             //retrive the lowest level hierachy setting
-            relationshipSettings = npe4__Relationship_Settings__c.getOrgDefaults();
+            relationshipSettings = npe4__Relationship_Settings__c.getInstance();
 
             //check for an org wide setting and insert if required
             if (relationshipSettings.Id == null){
@@ -209,7 +209,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliation) {
     	if(affiliationsSettings == null)		
-		    affiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+		    affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
         
         //if a value is passed  
         if(automaticAffiliation != null) {
@@ -235,7 +235,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
         if(orgErrorSettings == null)
-            orgErrorSettings = Error_Settings__c.getOrgDefaults();   
+            orgErrorSettings = Error_Settings__c.getInstance();   
         
         Boolean needsDml = false;
         if(orgErrorSettings.Id == null) {
@@ -301,7 +301,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
-            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+            contactsSettings = npe01__Contacts_and_Orgs_Settings__c.getInstance();
         
         //create our own based on what's passed in from the test
         contactsSettings.npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c;
@@ -317,7 +317,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
         if(householdsSettings == null)
-            householdsSettings = npo02__Households_Settings__c.getOrgDefaults();
+            householdsSettings = npo02__Households_Settings__c.getInstance();
             
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
