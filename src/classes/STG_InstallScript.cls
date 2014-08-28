@@ -75,14 +75,14 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getContactsSettings();
-        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getRelationshipSettings();
-        npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
-        UTIL_CustomSettingsFacade.getErrorSettings();
-        UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        UTIL_CustomSettingsFacade.getBDESettings(); 
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+        npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+        UTIL_CustomSettingsFacade.getOrgErrorSettings();
+        UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
+        UTIL_CustomSettingsFacade.getOrgBDESettings(); 
         
         System.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
  

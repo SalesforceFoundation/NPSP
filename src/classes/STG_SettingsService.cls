@@ -42,7 +42,7 @@ public with sharing class STG_SettingsService {
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
-            if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getContactsSettings();
+            if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getOrgContactsSettings();
             return stgCon;
         }
         private set;
@@ -50,7 +50,7 @@ public with sharing class STG_SettingsService {
     
     public npo02__Households_Settings__c stgHH {
         get {
-            if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+            if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
             return stgHH;
         }
         private set;
@@ -58,7 +58,7 @@ public with sharing class STG_SettingsService {
     
     public Household_Naming_Settings__c stgHN {
         get {
-            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
             return stgHN;
         }
         private set;
@@ -66,7 +66,7 @@ public with sharing class STG_SettingsService {
 
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
-            if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+            if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
             return stgRD;
         }
         private set;
@@ -74,7 +74,7 @@ public with sharing class STG_SettingsService {
     
     public npe4__Relationship_Settings__c stgRel {
         get {
-            if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getRelationshipSettings();
+            if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
             return stgRel;
         }
         private set;
@@ -82,7 +82,7 @@ public with sharing class STG_SettingsService {
     
     public npe5__Affiliations_Settings__c stgAffl {
         get {
-            if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getAffiliationsSettings();
+            if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
             return stgAffl;
         }
         private set;
@@ -90,7 +90,7 @@ public with sharing class STG_SettingsService {
     
     public Error_Settings__c stgErr {
         get {
-            if (stgErr == null) stgErr = UTIL_CustomSettingsFacade.getErrorSettings();
+            if (stgErr == null) stgErr = UTIL_CustomSettingsFacade.getOrgErrorSettings();
             return stgErr;
         }
         private set;
@@ -98,7 +98,7 @@ public with sharing class STG_SettingsService {
     
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
-            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getBDESettings();
+            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getOrgBDESettings();
             return stgBDE;
         }
         private set;
