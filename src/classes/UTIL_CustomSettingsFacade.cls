@@ -309,10 +309,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     private static void configAffiliationsSettings(npe5__Affiliations_Settings__c afs) {
-        //if it had no value --> set to true
-        if(afs.npe5__Automatic_Affiliation_Creation_Turned_On__c == null) {
-            afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;        
-        }
+        afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     }
     
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
