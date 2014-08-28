@@ -331,7 +331,19 @@ private class HH_OppContactRoles_TEST {
         soft credit OCR's from the old Household are deleted
         soft credit OCR's for the new Household are created
     **********************************************************************************************************/            
-    static testmethod void updateOppHHAccount() {
+    static testmethod void updateOppHHAccountRefreshNone() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshNone') return;
+        updateOppHHAccount('none');
+    }
+    static testmethod void updateOppHHAccountRefreshOpen() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshOpen') return;
+        updateOppHHAccount('Open Opportunities');
+    }
+	static testmethod void updateOppHHAccountRefreshOpenAndClosed() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccounRefreshOpenAndClosed') return;
+        updateOppHHAccount('Open and Closed Opportunities');
+	}
+    static void updateOppHHAccount(string strRefresh) {
         if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccount') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
@@ -344,6 +356,8 @@ private class HH_OppContactRoles_TEST {
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Household_Member_Contact_Role__c='Household Member'));
+        //UNDONE: add setting strRefresh into custom settings
+        HH_OppContactRoles_TDTM.strRefreshSetting = strRefresh;
                 
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
         system.assertEquals(null, listCon[0].AccountId); 
@@ -376,40 +390,66 @@ private class HH_OppContactRoles_TEST {
         update listCon[0];
         
         List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
-        system.assertEquals(20, listOCR2.size());
-        integer c0 = 0;
-        integer c1 = 0;
-        integer c2 = 0;
-        integer c3 = 0;
-        integer c4 = 0;
+        list<integer> listPrimary = new integer[5];
+        list<integer> listSoft = new integer[5];
+        for (integer i = 0; i < 5; i++) {
+        	listPrimary[i] = 0;
+        	listSoft[i] = 0;
+        }        
+        
         for (OpportunityContactRole ocr : listOCR2) {
-            if (ocr.ContactId == listCon[0].Id) {
-            	c0++;
-            }
-            if (ocr.ContactId == listCon[1].Id) {
-                system.assertEquals(true, ocr.IsPrimary);
-                system.assertEquals('Donor', ocr.Role);
-                c1++;
-            }
-            if (ocr.ContactId == listCon[2].Id) {
-                c2++;
-            }
-            if (ocr.ContactId == listCon[3].Id) {
-                c3++;
-            }
-            if (ocr.ContactId == listCon[4].Id) {
-                system.assertEquals(true, ocr.IsPrimary);
-                system.assertEquals('Donor', ocr.Role);
-                c4++;
-            }
+        	integer i = 0;
+            if (ocr.ContactId == listCon[1].Id)
+                i = 1;
+            else if (ocr.ContactId == listCon[2].Id)
+                i = 2;
+            else if (ocr.ContactId == listCon[3].Id)
+                i = 3;
+            else if (ocr.ContactId == listCon[4].Id)
+                i = 4;
+            if (ocr.IsPrimary)
+                listPrimary[i]++;
+            else
+                listSoft[i]++;                   
         }
-        system.assertEquals(4, c0);
-        system.assertEquals(2, c1);
-        system.assertEquals(6, c2);
-        system.assertEquals(6, c3);
-        system.assertEquals(2, c4);
         
-        
+        if (strRefresh == 'none') {
+            system.assertEquals(18, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(2, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(2, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(2, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        } else if (strRefresh == 'Open Opportunities') {        
+            system.assertEquals(19, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(1, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(3, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(3, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        } else {
+            system.assertEquals(20, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(0, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(4, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(4, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        }
     }
        
 }
