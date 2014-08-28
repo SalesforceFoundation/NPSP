@@ -54,10 +54,8 @@ global class STG_InstallScript implements InstallHandler {
             }
         } catch(Exception e) {
             ERR_Notifier.sendEmailOnInstallError(e, context);
-            //We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
-            //ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             //We won't rethrow the exception, to avoid package failure installation due to install script error
-            //throw e;
        }
     }
 
