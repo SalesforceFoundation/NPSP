@@ -113,17 +113,20 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
         validators = new List<SelectOption>();
         validators.add(new SelectOption('', ''));
-        ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
-                  and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
-                  and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
+        ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like 'ADDR_%' 
+                  and (not Name like '%_TEST') and (not Name like '%_CTRL') and (not Name like '%_TDTM') 
+                  and (not Name like '%_Batch') and (not Name like '%_SCHED') 
+                  and (not Name IN :validatorExclussions)];
         
         for(ApexClass c : classes) {
-            Type classType = Type.forName(c.Name);
-            Object classInstance = classType.newInstance();
-            if(classInstance instanceof ADDR_IValidator) {
-                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
-                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+            Type classType = Type.forName(c.NamespacePrefix, c.Name);
+            if(classType != null) {
+	            Object classInstance = classType.newInstance();
+	            if(classInstance instanceof ADDR_IValidator) {
+	                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+	                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
+	                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+	            }
             }
         }         
     }
