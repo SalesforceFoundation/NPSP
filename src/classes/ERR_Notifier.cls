@@ -56,9 +56,9 @@ public with sharing class ERR_Notifier {
                 if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
                     sendList.add([select email from User where id = :errorNotifRecipient].email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator'];
+                    list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator' and isActive = true];
                     for (User u : sysadminlist) {
-                        sendList.add(u.email);              
+                        sendList.add(u.email);
                     }
                 }
                 sendEmailNotifications(context, sendList);
