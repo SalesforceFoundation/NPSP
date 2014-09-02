@@ -32,7 +32,6 @@
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
-    <members>AFFL_Affiliations_UTIL</members>
     <members>AFFL_BulkTests_TEST</members>
     <members>BDE_BatchDataEntry</members>
     <members>BDE_BatchDataEntry_TEST</members>
