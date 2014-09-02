@@ -113,17 +113,28 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
         validators = new List<SelectOption>();
         validators.add(new SelectOption('', ''));
-        ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
-                  and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
-                  and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
-        
+        //We have to use these strings because the underscode is treated like a special character in a LIKE 
+        //clause, and if we try to escape it with a backslash it gets double-escaped automatically.
+        String addrLikeClause = 'ADDR\\_%';
+        String testLikeClause = '%\\_TEST';
+        String ctrlLikeClause = '%\\_CTRL';
+        String tdtmLikeClause = '%\\_TDTM';
+        String batchLikeClause = '%\\_Batch';
+        String schedLikeClause = '%\\_SCHED'; 
+        ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like :addrLikeClause 
+                  and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
+                  and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
+                  and (not Name like :schedLikeClause) and (not Name IN :validatorExclussions)];
+        System.debug('****Validators: ' + JSON.serializePretty(classes));
         for(ApexClass c : classes) {
-            Type classType = Type.forName(c.Name);
-            Object classInstance = classType.newInstance();
-            if(classInstance instanceof ADDR_IValidator) {
-                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
-                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+            Type classType = Type.forName(c.NamespacePrefix, c.Name);
+            if(classType != null) {
+	            Object classInstance = classType.newInstance();
+	            if(classInstance instanceof ADDR_IValidator) {
+	                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+	                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
+	                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+	            }
             }
         }         
     }

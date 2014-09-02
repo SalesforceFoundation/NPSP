@@ -59,7 +59,7 @@ public without sharing class HH_HouseholdNaming {
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
         string strSoql = strContactSelectStmtAllFields;
         string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-        strSoql += ' WHERE ' + strHHId + ' IN :hhids AND ' + strHHId + ' != null ' +
+        strSoql += ' WHERE AccountId IN :hhids OR npo02__Household__c in :hhids ' +
             ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';     
         list<Contact> contactlist = Database.Query(strSoql); 
         
