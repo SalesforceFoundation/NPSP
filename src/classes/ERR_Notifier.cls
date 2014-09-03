@@ -41,10 +41,10 @@ public with sharing class ERR_Notifier {
         public final String user = '005';  //specific user (should be a system admin)
         public final String chatterGroup = '0F9'; //chatter group
     }
-    
+
     public static void sendErrorNotifications(ERR_Handler.Context context) {
         String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
-            
+
         if (Error_Settings__c.getOrgDefaults().Error_Notifications_On__c == true && errorNotifRecipient != null) {
             //We will post to chatter, if enabled
             if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
@@ -65,7 +65,7 @@ public with sharing class ERR_Notifier {
             }
         }
     }
-    
+
     private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             sendErrorQueueEmailNotificationFuture(sendList);
@@ -73,17 +73,17 @@ public with sharing class ERR_Notifier {
             sendErrorQueueEmailNotification(context, sendList);
         }
     }
-    
+
     @future
     private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
         sendErrorQueueEmailNotification(null, sendList); 
     }
-    
+
     private static void sendErrorQueueEmailNotification(ERR_Handler.Context context, List<String> sendList) {
         List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
                                         Stack_Trace__c from Error__c where Email_Sent__c = false];
-        
-        if (!errors.isEmpty()) {
+
+        if (!errors.isEmpty() && !sendList.isEmpty()) {
             Messaging.SingleEmailMessage sme = createEmailMessage(context, errors, sendList);
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
             for(Error__c error : errors)
@@ -105,20 +105,20 @@ public with sharing class ERR_Notifier {
         Integer i = 1;
         for (Error__c rdeq : rdeqlist){
             bodystring += '\n\n----------\n Error #' + i + ': \n' + getErrorMessageBody(rdeq);
-            i++;           
-        }        
-        mail.setPlainTextBody(bodyString);      
-        mail.setToAddresses(sendList);         
+            i++;
+        }
+        mail.setPlainTextBody(bodyString);
+        mail.setToAddresses(sendList); 
         return mail;        
     }
-    
+
     public static void postErrorsToChatter(String chatterGroupId) {
-        
+
         if(chatterGroupId instanceof Id) {
             SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
             List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
                                         Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
-            
+
             if (!errors.isEmpty()) {
                 List<SObject> postsToInsert = new List<SObject>();
                 for(Error__c error : errors) {
@@ -132,10 +132,10 @@ public with sharing class ERR_Notifier {
                 }
                 insert postsToInsert;
                 update errors; //we don't want to post the same errors again    
-            }  
+            }
         }
     }
-    
+
     private static String getErrorMessageBody(Error__c error) {
         String body = '\nError Type: ' + error.Error_Type__c;
         body += '\nError Date: ' + error.Datetime__c;
@@ -147,25 +147,25 @@ public with sharing class ERR_Notifier {
         body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
         return body;
     }
-    
+
     public static Error_Settings__c getErrorSettings() {
         return UTIL_CustomSettingsFacade.getErrorSettings(NotificationOptions.sysAdmins);
     }
-    
+
     // verify error settings are still valid - called by Health Check
     public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
-        
+
         Error_Settings__c es = getErrorSettings();
         String errorNotifRecipient = es.Error_Notifications_To__c;
         string strSetting;
         strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
-            
+
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
             if (errorNotifRecipient != NotificationOptions.sysAdmins) {
                 if (!(errorNotifRecipient instanceof id)) {
                     ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
                         string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                    return;                                     
+                    return;
                 }
                 if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
                     // verify chatter group exists
@@ -174,8 +174,8 @@ public with sharing class ERR_Notifier {
                         ctrl.createDR(strSetting, 'Error', 
                             string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
                             string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                        return;                     
-                    }               
+                        return;
+                    }
                 } else {
                     if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
                         // verify user exists and is active
@@ -190,16 +190,16 @@ public with sharing class ERR_Notifier {
                             ctrl.createDR(strSetting, 'Error', 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                            return;     
+                            return; 
                         }
                     }
                 }
-            }        
+            }
         // settings ok.
         ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
         }
     }
-    
+
     //For some reason this method does not seem to be working when the installation of the package fails. We'll
     //leave it here for future debugging purposes. 
     public static void sendEmailOnInstallError(Exception e, InstallContext context) {
