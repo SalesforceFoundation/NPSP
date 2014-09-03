@@ -333,7 +333,7 @@ public with sharing class ERR_Handler_TEST {
         system.assertEquals(1, [select count() from Error__c]);    
     }
 
-    /** Test that an inactive user won't receive email **/
+    /** Test that an inactive user won't receive email as the primary error user **/
     static testMethod void testInactiveUserEmailBehavior(){
 
         if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;

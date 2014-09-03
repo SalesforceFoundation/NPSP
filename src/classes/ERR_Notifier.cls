@@ -76,7 +76,7 @@ public with sharing class ERR_Notifier {
             sendErrorQueueEmailNotification(context, sendList);
         }
     }
-    
+
     @future
     private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
         sendErrorQueueEmailNotification(null, sendList); 
