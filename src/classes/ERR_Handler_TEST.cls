@@ -355,7 +355,7 @@ public with sharing class ERR_Handler_TEST {
                 username=un, isActive = false);
             insert u;}
 
-        insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, Error_Notifications_To__c = u.Id);
+        UTIL_CustomSettingsFacade.getErrorSettings(u.Id);
 
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
