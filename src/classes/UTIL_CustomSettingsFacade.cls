@@ -420,7 +420,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
         if(addressVerificationSettings == null) {
         	addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
-        	if(addressVerificationSettings == null) {
+        	if(addressVerificationSettings.Id == null) {
 	        	configAddressVerificationSettings(addressVerificationSettings);
 	            upsert addressVerificationSettings;
         	}
