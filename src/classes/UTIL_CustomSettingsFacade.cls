@@ -61,9 +61,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe01__Contacts_And_Orgs_Settings__c getOrgContactsSettings() {
     	if(orgContactsSettings == null) {
 	    	orgContactsSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-	    	configContactsSettings(orgContactsSettings);
-	    	orgContactsSettings.Setupownerid = UserInfo.getOrganizationId();
-	    	upsert orgContactsSettings; 
+	    	if(orgContactsSettings.Id == null) {
+		    	configContactsSettings(orgContactsSettings);
+		    	orgContactsSettings.Setupownerid = UserInfo.getOrganizationId();
+		    	upsert orgContactsSettings;
+	    	}
     	}
         return orgContactsSettings;
     }
@@ -82,8 +84,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (contactsSettings == null) {
             //first see if we already have settings
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-            configContactsSettings(contactsSettings);
-            needsDml = true; 
+            if(contactsSettings.Id == null) {
+	            configContactsSettings(contactsSettings);
+	            needsDml = true;
+            }
         }
             
         if (accountProcessor != null) {
@@ -112,9 +116,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npo02__Households_Settings__c getOrgHouseholdsSettings() {
     	if(orgHouseholdsSettings == null) {
 	    	orgHouseholdsSettings = npo02__Households_Settings__c.getOrgDefaults();
-	        configHouseholdSettings(orgHouseholdsSettings);
-	        orgHouseholdsSettings.Setupownerid = UserInfo.getOrganizationId();
-	        upsert orgHouseholdsSettings;   
+	    	if(orgHouseholdsSettings.Id == null) {
+		        configHouseholdSettings(orgHouseholdsSettings);
+		        orgHouseholdsSettings.Setupownerid = UserInfo.getOrganizationId();
+		        upsert orgHouseholdsSettings;
+	    	}
     	}
         return orgHouseholdsSettings;
     }
@@ -125,8 +131,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (householdsSettings == null) {
             //first see if we already have settings
             householdsSettings = npo02__Households_Settings__c.getInstance();
-            configHouseholdSettings(householdsSettings);
-            upsert householdsSettings;
+            if(householdsSettings.Id == null) {
+	            configHouseholdSettings(householdsSettings);
+	            upsert householdsSettings;
+            }
         }  
         return householdsSettings;
     }
@@ -134,65 +142,65 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configHouseholdSettings(npo02__Households_Settings__c hs) {
     	String oldProcessor = '';
     	//modified to check again the Id instead of the object
-            if (hs.Id == null) {
-                //get the model they used to be in 
-                Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                
-                for(Schema.PicklistEntry pe : P){
-                    if (pe.isDefaultValue()){
-                        if(pe.getValue() == HH_Households.ALL_PROCESSOR){
-                            oldProcessor = HH_Households.ALL_PROCESSOR;
-                        } else if(pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
-                            oldProcessor = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-                        } else if(pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
-                            oldProcessor = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
-                        }
-                        break;
-                    }
+        //get the model they used to be in 
+        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
+        List<Schema.PicklistEntry> P = F.getPicklistValues();
+        
+        for(Schema.PicklistEntry pe : P){
+            if (pe.isDefaultValue()){
+                if(pe.getValue() == HH_Households.ALL_PROCESSOR){
+                    oldProcessor = HH_Households.ALL_PROCESSOR;
+                } else if(pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+                    oldProcessor = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
+                } else if(pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+                    oldProcessor = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                 }
-                //set them up with their old setting in the new settings object
-                if(oldProcessor == HH_Households.ALL_PROCESSOR){
-                    hs.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
-                } else if(oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
-                    hs.npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-                } else if(oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
-                    hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
-                } else {
-                    hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
-                }
- 
-                hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
-                hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
-                hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
-                hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
-                hs.npo02__Excluded_Account_Opp_Types__c = null;
-                hs.npo02__Excluded_Contact_Opp_Rectypes__c = null;
-                hs.npo02__Excluded_Contact_Opp_Types__c = null;
-                hs.npo02__Membership_Record_Types__c = null;
-                hs.npo02__Rollup_N_Day_Value__c = 365;
-                hs.npo02__Membership_Grace_Period__c = 30;
-                hs.npo02__Advanced_Household_Naming__c = true;
-                hs.npo02__Async_Household_Naming__c = false;
-                hs.npo02__Schedule_Job_Limit__c = 25;
-                hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
-                hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
-                hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-                hs.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
-                hs.npo02__Household_Contact_Roles_On__c = true;
-                
-                // new HH Account model overrides having HH objects
-                if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-                    hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+                break;
             }
+        }
+        //set them up with their old setting in the new settings object
+        if(oldProcessor == HH_Households.ALL_PROCESSOR){
+            hs.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
+        } else if(oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+            hs.npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
+        } else if(oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+            hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+        } else {
+            hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+        }
+ 
+        hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+        hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
+        hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
+        hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
+        hs.npo02__Excluded_Account_Opp_Types__c = null;
+        hs.npo02__Excluded_Contact_Opp_Rectypes__c = null;
+        hs.npo02__Excluded_Contact_Opp_Types__c = null;
+        hs.npo02__Membership_Record_Types__c = null;
+        hs.npo02__Rollup_N_Day_Value__c = 365;
+        hs.npo02__Membership_Grace_Period__c = 30;
+        hs.npo02__Advanced_Household_Naming__c = true;
+        hs.npo02__Async_Household_Naming__c = false;
+        hs.npo02__Schedule_Job_Limit__c = 25;
+        hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
+        hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
+        hs.npo02__Enable_Soft_Credit_Rollups__c = true;
+        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+        hs.npo02__Household_Contact_Roles_On__c = true;
+                
+        // new HH Account model overrides having HH objects
+        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+            hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
     }
     
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
     public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
     	if(orgRecurringDonationsSettings == null) {
 	    	orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-	    	configRecurringDonationsSettings(orgRecurringDonationsSettings);
-	    	upsert orgRecurringDonationsSettings;
+	    	if(orgRecurringDonationsSettings.Id == null) {
+		    	configRecurringDonationsSettings(orgRecurringDonationsSettings);
+		    	upsert orgRecurringDonationsSettings;
+	    	}
     	}
     	return orgRecurringDonationsSettings;
     }
@@ -211,8 +219,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (recurringDonationsSettings == null) {
             //first see if we already have settings
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
-            configRecurringDonationsSettings(recurringDonationsSettings);
-            needsDml = true;
+            if(recurringDonationsSettings.Id == null) {
+	            configRecurringDonationsSettings(recurringDonationsSettings);
+	            needsDml = true;
+            }
         }
         
         if(defaultBehavior != null) {
@@ -248,8 +258,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe4__Relationship_Settings__c getOrgRelationshipSettings() {
         if(orgRelationshipsSettings == null) { 
 	        orgRelationshipsSettings = npe4__Relationship_Settings__c.getOrgDefaults();
-	        configRelationshipsSettings(orgRelationshipsSettings);
-	        upsert orgRelationshipsSettings;
+	        if(orgRelationshipsSettings.Id == null) {
+		        configRelationshipsSettings(orgRelationshipsSettings);
+		        upsert orgRelationshipsSettings;
+	        }
         }
         return orgRelationshipsSettings;
     }
@@ -259,24 +271,26 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (relationshipsSettings == null) {
             //retrive the lowest level hierachy setting
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
-            configRelationshipsSettings(relationshipsSettings);
-            upsert relationshipsSettings;
+            if(relationshipsSettings.Id == null) {
+	            configRelationshipsSettings(relationshipsSettings);
+	            upsert relationshipsSettings;
+            }
         }
         return relationshipsSettings;
     }
     
     private static void configRelationshipsSettings(npe4__Relationship_Settings__c rs) {
-        if (rs.Id == null) {
-            rs.npe4__Reciprocal_Method__c = 'List Settings';  
-        }
+        rs.npe4__Reciprocal_Method__c = 'List Settings';
     }
     
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
     public static npe5__Affiliations_Settings__c getOrgAffiliationsSettings() {
         if(orgAffiliationsSettings == null) {
 	        orgAffiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
-	        configAffiliationsSettings(orgAffiliationsSettings);
-	        upsert orgAffiliationsSettings;
+	        if(orgAffiliationsSettings.Id == null) {
+		        configAffiliationsSettings(orgAffiliationsSettings);
+		        upsert orgAffiliationsSettings;
+	        }
         }
         return orgAffiliationsSettings;
     }
@@ -293,8 +307,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     	Boolean needsDml = false;
     	if(affiliationsSettings == null) {		
 		    affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
-	        configAffiliationsSettings(affiliationsSettings);
-            needsDml = true;
+		    if(affiliationsSettings.Id == null) {
+		        configAffiliationsSettings(affiliationsSettings);
+	            needsDml = true;
+		    }
     	}
     	//if a value is passed --> set to value
         if(automaticAffiliation != null) {
@@ -316,9 +332,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Error_Settings__c getOrgErrorSettings() {
     	if(orgErrorSettings == null) {
 	        orgErrorSettings = Error_Settings__c.getOrgDefaults();
-	        configErrorSettings(orgErrorSettings, null);
-	        orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
-	        upsert orgErrorSettings;
+	        if(orgErrorSettings.Id == null) {
+		        configErrorSettings(orgErrorSettings, null);
+		        orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
+		        upsert orgErrorSettings;
+	        }
     	}
         return orgErrorSettings;
     }
@@ -333,9 +351,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
         Boolean needsDml = false;
         if(errorSettings == null) {
-            errorSettings = Error_Settings__c.getInstance();   
-            configErrorSettings(errorSettings, notificationsTo);  
-            needsDml = true;  
+            errorSettings = Error_Settings__c.getInstance();
+            if(errorSettings.Id == null) {
+	            configErrorSettings(errorSettings, notificationsTo);  
+	            needsDml = true;
+            }
         }
         
         if(notificationsTo != null) {
@@ -350,19 +370,19 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {  	
-        if(es.Id == null) {
-            es.Store_Errors_On__c = true;
-            es.Error_Notifications_On__c = true;
-            es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
-        }
+        es.Store_Errors_On__c = true;
+        es.Error_Notifications_On__c = true;
+        es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
     }
     
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
     public static Batch_Data_Entry_Settings__c getOrgBDESettings() {
         if(orgBDESettings == null) {
 	        orgBDESettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
-	        configBDESettings(orgBDESettings);
-	        upsert orgBDESettings;
+	        if(orgBDESettings.Id == null) {
+		        configBDESettings(orgBDESettings);
+		        upsert orgBDESettings;
+	        }
         }
         return orgBDESettings;
     }
@@ -371,8 +391,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Batch_Data_Entry_Settings__c getBDESettings() {
         if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
-            configBDESettings(bdeSettings);
-            upsert bdeSettings;
+            if(bdeSettings.Id == null) {
+	            configBDESettings(bdeSettings);
+	            upsert bdeSettings;
+            }
         }
         return bdeSettings;
     }
@@ -386,8 +408,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Addr_Verification_Settings__c getOrgAddressVerificationSettings() {
         if(orgAddressVerificationSettings == null) {
 	        orgAddressVerificationSettings = Addr_Verification_Settings__c.getOrgDefaults();
-	        configAddressVerificationSettings(orgAddressVerificationSettings);
-	        upsert orgAddressVerificationSettings;
+	        if(orgAddressVerificationSettings.Id == null) {
+		        configAddressVerificationSettings(orgAddressVerificationSettings);
+		        upsert orgAddressVerificationSettings;
+	        }
         }
         return orgAddressVerificationSettings;
     }
@@ -396,8 +420,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
         if(addressVerificationSettings == null) {
         	addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
-        	configAddressVerificationSettings(addressVerificationSettings);
-            upsert addressVerificationSettings;
+        	if(addressVerificationSettings == null) {
+	        	configAddressVerificationSettings(addressVerificationSettings);
+	            upsert addressVerificationSettings;
+        	}
         }
         return addressVerificationSettings;
     }
@@ -412,8 +438,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Household_Naming_Settings__c getOrgHouseholdNamingSettings() {
         if(orgHouseholdNamingSettings == null) {
 	        orgHouseholdNamingSettings = Household_Naming_Settings__c.getOrgDefaults();
-	        configHouseholdNamingSettings(orgHouseholdNamingSettings);
-	        upsert orgHouseholdNamingSettings;
+	        if(orgHouseholdNamingSettings.Id == null) {
+		        configHouseholdNamingSettings(orgHouseholdNamingSettings);
+		        upsert orgHouseholdNamingSettings;
+	        }
         }
         return orgHouseholdNamingSettings;
     }
@@ -422,8 +450,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
         if (householdNamingSettings == null) {
         	householdNamingSettings = Household_Naming_Settings__c.getInstance();
-            configHouseholdNamingSettings(householdNamingSettings);
-            upsert householdNamingSettings;
+            if(householdNamingSettings.Id == null) {
+	            configHouseholdNamingSettings(householdNamingSettings);
+	            upsert householdNamingSettings;
+            }
         }
         return householdNamingSettings;
     }
