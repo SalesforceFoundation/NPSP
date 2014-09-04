@@ -274,8 +274,8 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(ERR_Notifier.NotificationOptions.sysAdmins, errorSettings.Error_Notifications_To__c);
 
         System.assertEquals(false, addrVerificationSetgs.Using_SmartyStreets__c);        
-        System.assertEquals(true, addrVerificationSetgs.Enable_Automatic_Verification__c);
-        System.assertEquals(true, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
+        System.assertEquals(false, addrVerificationSetgs.Enable_Automatic_Verification__c);
+        System.assertEquals(false, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
         
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);

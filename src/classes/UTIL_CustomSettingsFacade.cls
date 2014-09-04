@@ -404,8 +404,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     private static void configAddressVerificationSettings(Addr_Verification_Settings__c avs) {
     	avs.Using_SmartyStreets__c = false;
-        avs.Enable_Automatic_Verification__c = true;
-        avs.Reject_Ambiguous_Addresses__c = true;
+        avs.Enable_Automatic_Verification__c = false;
+        avs.Reject_Ambiguous_Addresses__c = false;
     }
 
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
