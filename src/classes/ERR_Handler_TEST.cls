@@ -336,4 +336,68 @@ public with sharing class ERR_Handler_TEST {
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
         system.assertEquals(1, [select count() from Error__c]);    
     }
+
+    /** Test that an inactive user won't receive email as the primary error user **/
+    static testMethod void testInactiveUserEmailBehavior(){
+
+        if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;
+
+        String un = System.now().getTime() + '@testerson.com';
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        UserRole r = [SELECT Id FROM UserRole WHERE Name='COO'];
+        User u; 
+        System.runAs ( new User(Id = UserInfo.getUserId()) ) { 
+            u = new User(alias = 'jsmith', email='jsmith@acme.com', 
+                emailencodingkey='UTF-8', lastname='Smith', 
+                languagelocalekey='en_US', 
+                localesidkey='en_US', profileid = p.Id, userroleid = r.Id,
+                timezonesidkey='America/Los_Angeles', 
+                username=un, isActive = false);
+            insert u;}
+
+        insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, Error_Notifications_To__c = u.Id);
+
+        insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeInsert;');
+
+        //Create account
+        Account acc1 = new Account(Name='test1');
+        Account acc2 = new Account(Name='test2');
+        Account acc3 = new Account(Name='test3');
+        insert new Account[] {acc1, acc2, acc3};
+
+        //Create contact
+        Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
+        Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP2');
+        Contact contact3 = new Contact(FirstName = 'test', LastName = 'testerson3', AccountId = acc3.Id, Title = 'VP3');
+
+        //Delete the account to get ERR_ParentAccountUpdater_TEST code to throw an exception
+        delete acc2;
+
+        Test.startTest();
+        List<Contact> contacts = new Contact[]{contact1, contact2, contact3};
+        LIST<database.SaveResult> results = Database.insert(contacts, false);
+        Test.stopTest();
+
+        //Database.insert will roll everything back if there is an error, and then run again only with the records that
+        //don't produce exceptions
+        System.assertEquals(true, results[0].isSuccess());  
+        System.assertEquals(false, results[1].isSuccess()); 
+        System.assertEquals(true, results[2].isSuccess()); 
+
+        //Verify 2 contacts were properly inserted
+        list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
+        System.assertEquals(2, insertedContacts.size()); 
+
+        //Verify error record was created - because the name field for accounts was not retrieved when we try to access
+        //it in line 40 of ERR_ParentAccountUpdater_TEST (in the second pass of the Database.insert operation)
+        List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
+        System.assertEquals(1, errors.size());
+
+        //Verify error was NOT emailed
+        for(Error__c error : errors) {
+            System.assertEquals(false, error.Email_Sent__c);
+        }
+    }
 }
