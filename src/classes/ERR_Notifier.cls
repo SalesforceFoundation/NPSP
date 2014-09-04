@@ -54,11 +54,14 @@ public with sharing class ERR_Notifier {
             } else {
                 List<String> sendList = new List<String>();
                 if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
-                    sendList.add([select email from User where id = :errorNotifRecipient].email);
+                    List<User> useremaillist = new List<User>(); 
+                    useremaillist = [select email from User where id = :errorNotifRecipient and isActive = true];
+                    for (User u : useremaillist)
+                        sendList.add(u.email);
                 } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator'];
+                    list<User> sysadminlist = [select email from User where User.Profile.Name = 'System Administrator' and isActive = true];
                     for (User u : sysadminlist) {
-                        sendList.add(u.email);              
+                        sendList.add(u.email);
                     }
                 }
                 sendEmailNotifications(context, sendList);
@@ -86,11 +89,13 @@ public with sharing class ERR_Notifier {
         if (!errors.isEmpty() && !sendList.isEmpty()) {
             Messaging.SingleEmailMessage sme = createEmailMessage(context, errors, sendList);
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
+
             for(Error__c error : errors)
                 error.Email_Sent__c = true;
+
+            update errors;
         }
-        update errors;
-    } 
+    }
 
     private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> rdeqList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
@@ -179,7 +184,7 @@ public with sharing class ERR_Notifier {
                 } else {
                     if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
                         // verify user exists and is active
-                        list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient];
+                        list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient and isActive = true];
                         if (listUser.size() == 0) {
                             ctrl.createDR(strSetting, 'Error', 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
