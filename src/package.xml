@@ -40,6 +40,8 @@
     <members>BDE_BatchEntry_TEST</members>
     <members>BDE_DescribeHelper_TEST</members>
     <members>BDE_DescribeHelper_UTIL</members>
+    <members>BDI_DataImport_BATCH</members>
+    <members>BDI_DataImport_CTRL</members>
     <members>CAO_Constants</members>
     <members>CONV_Account_Conversion_BATCH</members>
     <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -188,6 +190,7 @@
     <members>ACCT_ViewOverride</members>
     <members>ADDR_CopyAddrHHObjBTN</members>
     <members>BDE_BatchEntry</members>
+    <members>BDI_DataImport</members>
     <members>CONV_Account_Conversion</members>
     <members>CON_ContactMerge</members>
     <members>HH_CampaignDedupeBTN</members>
@@ -319,6 +322,47 @@
     <members>Contact.Primary_Contact__c</members>
     <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
+    <members>DataImport__c.Account1_std_City__c</members>
+    <members>DataImport__c.Account1_std_Country__c</members>
+    <members>DataImport__c.Account1_std_Name__c</members>
+    <members>DataImport__c.Account1_std_Phone__c</members>
+    <members>DataImport__c.Account1_std_PostalCode__c</members>
+    <members>DataImport__c.Account1_std_State__c</members>
+    <members>DataImport__c.Account1_std_Street__c</members>
+    <members>DataImport__c.Account1_std_Website__c</members>
+    <members>DataImport__c.Contact1_npe01_AlternateEmail__c</members>
+    <members>DataImport__c.Contact1_npe01_HomeEmail__c</members>
+    <members>DataImport__c.Contact1_npe01_WorkEmail__c</members>
+    <members>DataImport__c.Contact1_std_Birthdate__c</members>
+    <members>DataImport__c.Contact1_std_Firstname__c</members>
+    <members>DataImport__c.Contact1_std_Lastname__c</members>
+    <members>DataImport__c.Contact1_std_Salutation__c</members>
+    <members>DataImport__c.Contact1_std_Title__c</members>
+    <members>DataImport__c.Contact2_std_Firstname__c</members>
+    <members>DataImport__c.Contact2_std_LastName__c</members>
+    <members>DataImport__c.Donation_Donor__c</members>
+    <members>DataImport__c.Donation_npe01_Member_Level__c</members>
+    <members>DataImport__c.Donation_npe01_Membership_End_Date__c</members>
+    <members>DataImport__c.Donation_npe01_Membership_Origin__c</members>
+    <members>DataImport__c.Donation_npe01_Membership_Start_Date__c</members>
+    <members>DataImport__c.Donation_npsp_StageName__c</members>
+    <members>DataImport__c.Donation_std_Amount__c</members>
+    <members>DataImport__c.Donation_std_Campaign__c</members>
+    <members>DataImport__c.Donation_std_CloseDate__c</members>
+    <members>DataImport__c.Donation_std_Description__c</members>
+    <members>DataImport__c.Donation_std_Name__c</members>
+    <members>DataImport__c.Donation_std_Record_Type_Name__c</members>
+    <members>DataImport__c.Donation_std_Type__c</members>
+    <members>DataImport__c.Failure_Information__c</members>
+    <members>DataImport__c.Home_npsp_City__c</members>
+    <members>DataImport__c.Home_npsp_Country__c</members>
+    <members>DataImport__c.Home_npsp_PostalCode__c</members>
+    <members>DataImport__c.Home_npsp_State__c</members>
+    <members>DataImport__c.Home_npsp_Street__c</members>
+    <members>DataImport__c.Imported_Date__c</members>
+    <members>DataImport__c.Payment_npe01_Check_Reference_Number__c</members>
+    <members>DataImport__c.Payment_npe01_Payment_Method__c</members>
+    <members>DataImport__c.Status__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -704,6 +748,7 @@
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
+    <members>DataImport__c</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
     <members>Household_Naming_Settings__c</members>
@@ -717,6 +762,7 @@
     <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>DataImport__c</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <members>npe01__OppPayment__c</members>
@@ -743,6 +789,7 @@
     <members>Address__c-Address Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
+    <members>DataImport__c-Data Import Layout</members>
     <members>Error__c-Error Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
@@ -755,6 +802,7 @@
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
+    <members>DataImport__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
   </types>

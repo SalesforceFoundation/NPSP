@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Custom object for hold denormalized data records that can be imported into the Nonprofit Starter Pack.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Account1_std_City__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 City</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_Country__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Country</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_Phone__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Account1_std_PostalCode__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_State__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_Street__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Account1_std_Website__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Website</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Contact1_npe01_AlternateEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Alternate Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_npe01_HomeEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Personal Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_npe01_WorkEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Work Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_std_Birthdate__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Birthdate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contact1_std_Firstname__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 First Name</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_std_Lastname__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Last Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_std_Salutation__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Salutation</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_std_Title__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Title</label>
+        <length>128</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_std_Firstname__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 First Name</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_std_LastName__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Last Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Donor__c</fullName>
+        <description>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</inlineHelpText>
+        <label>Donation Donor</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Contact1</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Account1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Donation_npe01_Member_Level__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Member Level</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_npe01_Membership_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Membership End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Donation_npe01_Membership_Origin__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Membership Origin</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_npe01_Membership_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Membership Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Donation_npsp_StageName__c</fullName>
+        <description>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</inlineHelpText>
+        <label>Donation Stage</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Campaign__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_std_CloseDate__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Description__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Description</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Name__c</fullName>
+        <description>The donation&apos;s name.  Will be automatically generated by the system if left empty.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The donation&apos;s name.  Will be automatically generated by the system if left empty.</inlineHelpText>
+        <label>Donation Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Record_Type_Name__c</fullName>
+        <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</inlineHelpText>
+        <label>Donation Record Type Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_std_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Type</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Failure_Information__c</fullName>
+        <description>Description of what caused the Data Import record to fail to be imported.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Description of what caused the Data Import record to fail to be imported.</inlineHelpText>
+        <label>Failure Information</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_City__c</fullName>
+        <externalId>false</externalId>
+        <label>Home City</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_Country__c</fullName>
+        <externalId>false</externalId>
+        <label>Home Country</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_PostalCode__c</fullName>
+        <externalId>false</externalId>
+        <label>Home Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_State__c</fullName>
+        <externalId>false</externalId>
+        <label>Home State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_Street__c</fullName>
+        <externalId>false</externalId>
+        <label>Home Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Imported_Date__c</fullName>
+        <description>When the Data Import record was successfully imported.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When the Data Import record was successfully imported.</inlineHelpText>
+        <label>Imported Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Payment_npe01_Check_Reference_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Check/Reference Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_npe01_Payment_Method__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Method</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>The status of importing the Data Import record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status of importing the Data Import record.</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Imported</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Failed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Data Import</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>DI-{000000}</displayFormat>
+        <label>Data Import ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Data Imports</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
