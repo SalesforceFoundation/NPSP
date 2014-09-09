@@ -392,7 +392,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete dir="uninstall" />
 
       <!-- Fetch all metadata in the  package from target org -->
-      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
+      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name.managed}" />
 
       <!-- Build a destructiveChanges.xml pacckage to delete metadata in org but not in repo -->
       <buildDestroyStaleMetadata srcdir="uninstallsrc" commdir="src" dir="uninstall" />
@@ -458,7 +458,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     </target>
 
     <target name="updatePackageXmlManaged">
-      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
+      <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
     </target>
 
     <target name="updateMetaXml">
