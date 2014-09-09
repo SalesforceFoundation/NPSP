@@ -64,6 +64,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private map<Id, Account> mapA2 = new map<Id, Account>();
     private map<Id, Address__c> mapAddr = new map<Id, Address__c>();
     private map<Id, Opportunity> mapOpp = new map<Id, Opportunity>();
+    private map<Id, npe01__OppPayment__c> mapPmt = new map<Id, npe01__OppPayment__c>();
 
     // holds the list of DataImport records we are currently processing
     private list<DataImport__c> listDI;
@@ -128,6 +129,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         		if (strParts[1] == 'std')
                     strField = strParts[2].replace('__c', '');
                 else if (strParts[1] == 'npsp' && !UTIL_Namespace.InManagedPackage)
+                    strField = strParts[2];
+                else if (strParts[1] == 'none')
                     strField = strParts[2];
                 else
                     strField = strParts[1] + '__' + strParts[2];
@@ -563,6 +566,42 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     di.DonationImportStatus__c = 'Created';
                 }
             }
-        }
+        }  
+        
+        // now deal with any payment child records
+        updatePayments();      
     }
+    
+    // method to update any fields on payment objects created for the Data Import opportunities.
+    private void updatePayments() {
+
+        // need to find payment records, to add any additional info.
+        map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
+        for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c where npe01__Opportunity__c in :mapOpp.values()]) {
+            mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
+        }
+
+        // get the payment fields we will auto-copy
+        map<string, string> mapDIFieldToPmtField = mapFieldsForDIObject('Payment', listStrDataImportFields);
+
+        // update payments
+        for (DataImport__c di: listDI) {
+            if (di.DonationImported__c != null) {
+                npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
+                if (pmt != null) {
+                    integer cPropSet = 0;
+                    for (string strDIField : mapDIFieldToPmtField.keySet()) {
+                        if (di.get(strDIField) != null) {
+                            pmt.put(mapDIFieldToPmtField.get(strDIField), di.get(strDIField));
+                            cPropSet++;
+                        }
+                    }                    
+                    if (cPropSet > 0)
+                        mapPmt.put(di.Id, pmt);
+                }
+            }
+        }
+        
+        upsert mapPmt.values();
+    }    
 }
