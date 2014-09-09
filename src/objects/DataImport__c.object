@@ -52,7 +52,29 @@
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
     <fields>
-        <fullName>Account1_std_City__c</fullName>
+        <fullName>Account1ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Account1 Imported</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Data Imports</relationshipLabel>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Account1_std_BillingCity__c</fullName>
         <externalId>false</externalId>
         <label>Account1 City</label>
         <length>255</length>
@@ -62,7 +84,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account1_std_Country__c</fullName>
+        <fullName>Account1_std_BillingCountry__c</fullName>
         <externalId>false</externalId>
         <label>Account1 Country</label>
         <length>255</length>
@@ -70,6 +92,34 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_BillingPostalCode__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_BillingState__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_std_BillingStreet__c</fullName>
+        <externalId>false</externalId>
+        <label>Account1 Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
     </fields>
     <fields>
         <fullName>Account1_std_Name__c</fullName>
@@ -90,40 +140,66 @@
         <type>Phone</type>
     </fields>
     <fields>
-        <fullName>Account1_std_PostalCode__c</fullName>
-        <externalId>false</externalId>
-        <label>Account1 Zip/Postal Code</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account1_std_State__c</fullName>
-        <externalId>false</externalId>
-        <label>Account1 State/Province</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account1_std_Street__c</fullName>
-        <externalId>false</externalId>
-        <label>Account1 Street</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>TextArea</type>
-    </fields>
-    <fields>
         <fullName>Account1_std_Website__c</fullName>
         <externalId>false</externalId>
         <label>Account1 Website</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Account2ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Account2 Imported</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Data Imports (Account2 Imported)</relationshipLabel>
+        <relationshipName>Data_Imports1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Account2_std_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Contact1 Imported</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Data Imports</relationshipLabel>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Contact1_npe01_AlternateEmail__c</fullName>
@@ -201,6 +277,37 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Contact2ImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2Imported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Contact2 Imported</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Data Imports (Contact2)</relationshipLabel>
+        <relationshipName>Data_Imports1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_npe01_HomeEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Personal Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Contact2_std_Firstname__c</fullName>
         <externalId>false</externalId>
         <label>Contact2 First Name</label>
@@ -221,7 +328,17 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Donation_Donor__c</fullName>
+        <fullName>DonationCampaignName__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DonationDonor__c</fullName>
         <description>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</inlineHelpText>
@@ -239,6 +356,40 @@
         </picklist>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>DonationImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DonationImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Donation Imported</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Data Imports</relationshipLabel>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>DonationRecordTypeName__c</fullName>
+        <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</inlineHelpText>
+        <label>Donation Record Type Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Donation_npe01_Member_Level__c</fullName>
@@ -277,18 +428,6 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>Donation_npsp_StageName__c</fullName>
-        <description>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</inlineHelpText>
-        <label>Donation Stage</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Donation_std_Amount__c</fullName>
         <externalId>false</externalId>
         <label>Donation Amount</label>
@@ -297,16 +436,6 @@
         <scale>2</scale>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
-    </fields>
-    <fields>
-        <fullName>Donation_std_Campaign__c</fullName>
-        <externalId>false</externalId>
-        <label>Donation Campaign</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Donation_std_CloseDate__c</fullName>
@@ -338,11 +467,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Donation_std_Record_Type_Name__c</fullName>
-        <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
+        <fullName>Donation_std_StageName__c</fullName>
+        <description>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</inlineHelpText>
-        <label>Donation Record Type Name</label>
+        <inlineHelpText>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</inlineHelpText>
+        <label>Donation Stage</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -360,7 +489,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Failure_Information__c</fullName>
+        <fullName>FailureInformation__c</fullName>
         <description>Description of what caused the Data Import record to fail to be imported.</description>
         <externalId>false</externalId>
         <inlineHelpText>Description of what caused the Data Import record to fail to be imported.</inlineHelpText>
@@ -371,7 +500,29 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
-        <fullName>Home_npsp_City__c</fullName>
+        <fullName>HomeAddressImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Home Address Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HomeAddressImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Home Address Imported</label>
+        <referenceTo>Address__c</referenceTo>
+        <relationshipLabel>Data Imports</relationshipLabel>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Home_npsp_MailingCity__c</fullName>
         <externalId>false</externalId>
         <label>Home City</label>
         <length>255</length>
@@ -381,7 +532,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_Country__c</fullName>
+        <fullName>Home_npsp_MailingCountry__c</fullName>
         <externalId>false</externalId>
         <label>Home Country</label>
         <length>255</length>
@@ -391,7 +542,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_PostalCode__c</fullName>
+        <fullName>Home_npsp_MailingPostalCode__c</fullName>
         <externalId>false</externalId>
         <label>Home Zip/Postal Code</label>
         <length>255</length>
@@ -401,7 +552,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_State__c</fullName>
+        <fullName>Home_npsp_MailingState__c</fullName>
         <externalId>false</externalId>
         <label>Home State/Province</label>
         <length>255</length>
@@ -411,7 +562,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_Street__c</fullName>
+        <fullName>Home_npsp_MailingStreet__c</fullName>
         <externalId>false</externalId>
         <label>Home Street</label>
         <required>false</required>
@@ -419,7 +570,7 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Imported_Date__c</fullName>
+        <fullName>ImportedDate__c</fullName>
         <description>When the Data Import record was successfully imported.</description>
         <externalId>false</externalId>
         <inlineHelpText>When the Data Import record was successfully imported.</inlineHelpText>
