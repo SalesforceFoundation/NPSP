@@ -471,6 +471,14 @@
     <label>Data Import</label>
     <listViews>
         <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>ImportedDate__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1Imported__c</columns>
+        <columns>Contact1ImportStatus__c</columns>
+        <columns>Contact2Imported__c</columns>
+        <columns>Contact2ImportStatus__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -480,6 +488,27 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Data Imports</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts>
+        <customTabListAdditionalFields>ImportedDate__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>UPDATEDBY_USER</customTabListAdditionalFields>
+        <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
+        <customTabListAdditionalFields>FailureInformation__c</customTabListAdditionalFields>
+        <listViewButtons>Process_Data_Import</listViewButtons>
+        <searchResultsCustomButtons>Process_Data_Import</searchResultsCustomButtons>
+    </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Process_Data_Import</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Process Data Import</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>/apex/BDI_DataImport</url>
+    </webLinks>
 </CustomObject>
