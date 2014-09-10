@@ -43,7 +43,7 @@ public with sharing class CAO_Constants {
     //Buck org type value
     public static final String BUCKET_ORGANIZATION_TYPE = 'Bucket Individual';
     //Bucket Account name
-    public static  String BUCKET_ACCOUNT_NAME = 'Individual';
+    public static String BUCKET_ACCOUNT_NAME = 'Individual';
 
     //HH_Account value for system processor field
     public static final String HH_ACCOUNT_PROCESSOR = 'Household Account';
@@ -64,34 +64,9 @@ public with sharing class CAO_Constants {
     
     public static  string INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS = 'IndividualAccountNameForTests';
 
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettings() {
-        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings(ContactsSettings, HH_ACCOUNT_PROCESSOR);
-        return ContactsSettings;
-    }
-
-    public static npe01__Contacts_and_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_and_Orgs_Settings__c mySettings) {
-
-        //clear out whatever settings exist
-        delete [select id from npe01__Contacts_and_Orgs_Settings__c];
-
-        //create our own based on what's passed in from the test 
-        ContactsSettings = new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c, 
-            npe01__HH_Account_RecordTypeID__c = mySettings.npe01__HH_Account_RecordTypeID__c,
-            npe01__Account_Processor__c = mySettings.npe01__Account_Processor__c,
-            npe01__Enable_Opportunity_Contact_Role_Trigger__c = mySettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c,
-            npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c,
-            npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c,
-            npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c
-            );
-        insert ContactsSettings;
-        return ContactsSettings;
-    }
-
     public static boolean isOneToOne() {
         //if no settings exist, create defaults
-        if (CAO_Constants.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c==ONE_TO_ONE_PROCESSOR) {
             return true;
         } else {
             return false;
@@ -99,11 +74,11 @@ public with sharing class CAO_Constants {
     }
 
     public static boolean isBucketModel() {
-        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
+        return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
     }
 
     public static boolean isHHAccountModel() {
-        return (CAO_Constants.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
+        return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
     }
     
     /// <name> triggerAction </name>

@@ -90,7 +90,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     
     public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (PaymentsSettings == null)
-           PaymentsSettings = CAO_Constants.getContactsSettings();
+           PaymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         
         return PaymentsSettings;
     }

@@ -52,7 +52,7 @@ private class LD_LeadConvertOverride_TEST {
     public static void newLeadConversion_Test(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_Test') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
@@ -114,7 +114,7 @@ private class LD_LeadConvertOverride_TEST {
     public static void newLeadConversionMerge_Test(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversionMerge_Test') return;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
@@ -173,7 +173,7 @@ private class LD_LeadConvertOverride_TEST {
     public static void newLeadConversionNewNamedCompany_Test(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversionNewNamedCompany_Test') return;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
@@ -222,7 +222,7 @@ private class LD_LeadConvertOverride_TEST {
     public static void newLeadConversionExistingNamedCompany_Test(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversionExistingNamedCompany_Test') return;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
@@ -274,11 +274,11 @@ private class LD_LeadConvertOverride_TEST {
     public static void newLeadConversionHHObj(string strProcessor) {
         if (strTestOnly != '*' && strTestOnly != 'newLeadConversionHHObj') return;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
 
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));

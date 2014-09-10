@@ -43,9 +43,12 @@ public with sharing class ERR_Notifier {
     }
 
     public static void sendErrorNotifications(ERR_Handler.Context context) {
-        String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c;
 
-        if (Error_Settings__c.getOrgDefaults().Error_Notifications_On__c == true && errorNotifRecipient != null) {
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+            
+        if (errorSettings.Error_Notifications_On__c == true && errorNotifRecipient != null) {
+
             //We will post to chatter, if enabled
             if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
             && Schema.SObjectType.User.isFeedEnabled()) {
@@ -152,15 +155,11 @@ public with sharing class ERR_Notifier {
         body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
         return body;
     }
-
-    public static Error_Settings__c getErrorSettings() {
-        return UTIL_CustomSettingsFacade.getErrorSettings(NotificationOptions.sysAdmins);
-    }
-
+    
     // verify error settings are still valid - called by Health Check
     public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
-
-        Error_Settings__c es = getErrorSettings();
+        
+        Error_Settings__c es = UTIL_CustomSettingsFacade.getErrorSettings();
         String errorNotifRecipient = es.Error_Notifications_To__c;
         string strSetting;
         strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));

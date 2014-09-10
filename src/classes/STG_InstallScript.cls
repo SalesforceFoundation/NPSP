@@ -54,35 +54,13 @@ global class STG_InstallScript implements InstallHandler {
             }
         } catch(Exception e) {
             ERR_Notifier.sendEmailOnInstallError(e, context);
-            //We cannot process the error because this hits the same "SetupOwnerId duplicates value on record" error
-            //ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
             //We won't rethrow the exception, to avoid package failure installation due to install script error
-            //throw e;
        }
     }
 
     /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
     global void runNewOrgScript() {      
-        setTriggerConfig();
-
-        //set default settings
-        UTIL_CustomSettingsFacade.getContactsSettings(null, 'Household Account');
-        UTIL_CustomSettingsFacade.getHouseholdsSettings(null, 'All New or Edited Contacts', 'All Individual Contacts', 'No Contacts');
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettings(null, 'Mark_Opportunities_Closed_Lost');
-        UTIL_CustomSettingsFacade.getRelationshipSettings(null);
-        UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
-        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings('All Sys Admins');
-        // The facade does not insert a new error settings to avoid duplicate id errors on setupOwnerId
-        // when run in a test environment.  This code should always insert even if in a test
-        if (errorSettings.id == null) {
-            insert errorSettings;
-        }
-        
-        UTIL_CustomSettingsFacade.getAddressValidationSettings();
-        UTIL_CustomSettingsFacade.getBDESettings();        
-    }
-    
-    public void setTriggerConfig() {
         //Get the mapping from old settings to the new TDTM default setup
         Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
         //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
@@ -95,36 +73,42 @@ global class STG_InstallScript implements InstallHandler {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
         
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-        npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getOrgDefaults();
-        npe03__Recurring_Donations_Settings__c npe03Settings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-        npe4__Relationship_Settings__c npe04Settings = npe4__Relationship_Settings__c.getOrgDefaults();
-        npe5__Affiliations_Settings__c npe05Settings = npe5__Affiliations_Settings__c.getOrgDefaults();
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+        npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+        UTIL_CustomSettingsFacade.getOrgErrorSettings();
+        UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
+        UTIL_CustomSettingsFacade.getOrgBDESettings(); 
         
+        System.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
+ 
         for(String setting : npspToCumulusMap.keySet()) {
             if(setting.startsWith('npe01')) {
-                if(npe01Settings.Id != null && npe01Settings.get(setting) != null) {
-                    npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));                 
+                if(npe01Settings != null && npe01Settings.get(setting) != null) {
+                    //Storing the old setting as key and new setting as value
+                    npspExistingSettings.put(setting, (Boolean)npe01Settings.get(setting));
                     if(npe01Settings.get(setting) == true)
                         npe01Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npo02')) {
-                if(npo02Settings.Id != null && npo02Settings.get(setting) != null) {
+                if(npo02Settings != null && npo02Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));            
                     if(npo02Settings.get(setting) == true)
                         npo02Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe03')) {
-                if(npe03Settings.Id != null && npe03Settings.get(setting) != null) {
-                    npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));                    
+                if(npe03Settings != null && npe03Settings.get(setting) != null) {
+                    npspExistingSettings.put(setting, (Boolean)npe03Settings.get(setting));
                     if(npe03Settings.get(setting) == true)
                         npe03Settings.put(setting, false); //Deactivating flag
                     continue;
                 }
             } else if(setting.startsWith('npe4')) {
-                if(npe04Settings.Id != null && npe04Settings.get(setting) != null) {
+                if(npe04Settings != null && npe04Settings.get(setting) != null) {
                     npspExistingSettings.put(setting, (Boolean)npe04Settings.get(setting));
                     if(npe04Settings.get(setting) == true)
                         npe04Settings.put(setting, false); //Deactivating flag
@@ -133,12 +117,12 @@ global class STG_InstallScript implements InstallHandler {
             }
         }
         
-        //Deactivate NPSP flags - getOrgDefaults returns an empty object if the custom setting has no records
+        //Deactivate NPSP flags - getInstance returns an empty object if the custom setting has no records
         List<SObject> npspCustomSettings = new List<SObject>();
-        if(npe01Settings.Id != null) npspCustomSettings.add(npe01Settings);
-        if(npo02Settings.Id != null) npspCustomSettings.add(npo02Settings);
-        if(npe03Settings.Id != null) npspCustomSettings.add(npe03Settings);
-        if(npe04Settings.Id != null) npspCustomSettings.add(npe04Settings);
+        if(npe01Settings != null) npspCustomSettings.add(npe01Settings);
+        if(npo02Settings != null) npspCustomSettings.add(npo02Settings);
+        if(npe03Settings != null) npspCustomSettings.add(npe03Settings);
+        if(npe04Settings != null) npspCustomSettings.add(npe04Settings);
         if(npspCustomSettings.size() > 0) {
             System.debug('****Deactivating pre-cumulus flags');
             update npspCustomSettings;

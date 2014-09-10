@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Addr_Verification_Settings__c settings = getAddressValidationSettings();
+    private static Addr_Verification_Settings__c settings = getAddressVerificationSettings();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -61,21 +61,23 @@ public with sharing class ADDR_Validator {
             System.debug(LoggingLevel.WARN, '****Verifying records');
             if(settings != null) {
                 String classToRunName = String.valueOf(settings.get('Class__c'));
-                Type classType = Type.forName(classToRunName);
-                if(classType != null) {     
-                    Object classInstance = classType.newInstance();
-                    //the objects we create dynamically need to implement the ADDR_IValidator interface
-                    if(classInstance instanceof ADDR_IValidator) {
-                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
-                        ADDR_Validator_TDTM.alreadyRun = true;
-                        //updating the addresses with the verified version
-                        update validator.verifyRecords(avList, settings);
-                    } else {
-                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
-                    }
-                } else {
-                    System.debug(LoggingLevel.WARN, '****ClassType was null.');
+                if(classToRunName != null) {
+	                Type classType = Type.forName(classToRunName);
+	                if(classType != null) {     
+	                    Object classInstance = classType.newInstance();
+	                    //the objects we create dynamically need to implement the ADDR_IValidator interface
+	                    if(classInstance instanceof ADDR_IValidator) {
+	                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
+	                        ADDR_Validator_TDTM.alreadyRun = true;
+	                        //updating the addresses with the verified version
+	                        update validator.verifyRecords(avList, settings);
+	                    } else {
+	                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+	                    }
+	                } else {
+	                    System.debug(LoggingLevel.WARN, '****ClassType was null.');
+	                }
                 }
             } else {
                 System.debug(LoggingLevel.WARN, '****ClassToCall was null');
@@ -83,8 +85,8 @@ public with sharing class ADDR_Validator {
         }
     }
     
-    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
-        settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
+        settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         return settings;
     }
 }
