@@ -42,8 +42,9 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
         return false;
     }
     
-    public database.Querylocator start(Database.BatchableContext bc) {      
-        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildHouseholdQuery());      
+    public database.Querylocator start(Database.BatchableContext bc) {
+    	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
+        return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
     }
     
     public void execute(Database.BatchableContext bc, List<npo02__Household__c> result) { 

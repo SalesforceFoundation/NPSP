@@ -42,8 +42,9 @@ public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batcha
         return false;
     }
     
-	public database.Querylocator start(Database.BatchableContext bc) {     
-        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildContactQuery());      
+	public database.Querylocator start(Database.BatchableContext bc) {
+		RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }
     
     public void execute(Database.BatchableContext bc, List<Contact> result) {

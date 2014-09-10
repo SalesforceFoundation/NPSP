@@ -97,7 +97,8 @@ public with sharing class RLLP_OppRollup_TEST {
         rg.rollupContacts(new map<id, Contact>(listConTest));
 
         //now test that the contact has received the proper stats from the trigger
-        string strSoql = RLLP_OppRollup_UTIL.buildContactQuery();
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        string strSoql = oppRollupUtil.buildContactQuery();
         strSoql = strSoql.replace('select id,', 'select id, Firstname, LastName,');
         listConTest = database.query(strSoql);
             
@@ -1537,7 +1538,8 @@ public with sharing class RLLP_OppRollup_TEST {
         insert c;
 
         //get all of the fields
-        String q = RLLP_OppRollup_UTIL.buildContactQuery() + ' where id = \'' + c.id + '\'';
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        String q = oppRollupUtil.buildContactQuery() + ' where id = \'' + c.id + '\'';
 
         c = database.query(q);
 
@@ -1561,7 +1563,7 @@ public with sharing class RLLP_OppRollup_TEST {
         RLLP_OppRollup og = new RLLP_OppRollup();
         Map<Id,Contact> cmap = new Map<Id,Contact>();
         Map<Id, npo02__Household__c> hmap = new Map<Id, npo02__Household__c>();
-        q = RLLP_OppRollup_UTIL.buildHouseholdQuery() + ' where id = \'' + c.npo02__Household__c + '\'';
+        q = oppRollupUtil.buildHouseholdQuery() + ' where id = \'' + c.npo02__Household__c + '\'';
 
         npo02__Household__c h =database.query(q); 
         cmap.put(c.id, c);

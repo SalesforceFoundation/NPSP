@@ -42,8 +42,9 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
         return false;
     }
     
-	public database.Querylocator start(Database.BatchableContext bc) {      
-        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildContactQuery());      
+	public database.Querylocator start(Database.BatchableContext bc) {
+		RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        return Database.getQueryLocator(oppRollupUtil.buildContactQuery());      
     }
     
     public void execute(Database.BatchableContext bc, List<Contact> result) {
@@ -51,8 +52,8 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
         // exception percolate up the call stack, then the batch will think it all succeeded.
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        oppRoller.RollupSoftCredits(new Map<id, Contact>((List<Contact>)result));    
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupSoftCredits(new Map<id, Contact>((List<Contact>)result));
     }
 
     public void finish(Database.BatchableContext bc) {}
