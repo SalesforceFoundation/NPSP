@@ -146,7 +146,7 @@ public without sharing class HH_HouseholdNaming {
     //get generic household name 
     public string getHHName(list<Contact> ContactList){        
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
     	list<Contact> listCon = new list<Contact>();
     	for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
@@ -210,7 +210,7 @@ public without sharing class HH_HouseholdNaming {
     //just pile up first names for qualifying contacts
     public  string getInformalName(list<Contact> ContactList){
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c'))
@@ -270,7 +270,7 @@ public without sharing class HH_HouseholdNaming {
     
     public  string getFormalName(list<Contact> ContactList){
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
