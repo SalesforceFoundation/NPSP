@@ -42,19 +42,16 @@ public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<
         return false;
     }
     
-	public database.Querylocator start(Database.BatchableContext bc) {       
-        // we must initialize the opp rollup class before using the OppRollupUtil class!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        return Database.getQueryLocator(RLLP_OppRollup_UTIL.buildAccountQuery());      
+	public database.Querylocator start(Database.BatchableContext bc) {
+        String acctQuery = RLLP_OppRollup_UTIL.buildAccountQuery();        
+        return Database.getQueryLocator(acctQuery);
     }
     
-    public void execute(Database.BatchableContext bc, List<Account> result) {
-        
+    public void execute(Database.BatchableContext bc, List<Account> result) {       
         // NOTE: we don't capture exception and log errors here, because if we don't let the 
         // exception percolate up the call stack, then the batch will think it all succeeded.
-        // but if we were to log it, and then proprogate the exception, the transaction will 
+        // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
-        
         RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
         oppRoller.RollupAccounts(new Map<id, Account>((List<Account>)result));    
     }
