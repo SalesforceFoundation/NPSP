@@ -85,7 +85,7 @@ public with sharing class ERR_AddError_TEST {
     }
     
     public testmethod static void databaseDml() {
-    	Error_Settings__c errorSettings = ERR_Notifier.getErrorSettings();
+    	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	// Delete the error settings if they are from the database
     	if (errorSettings.id != null) {
     	    delete errorSettings;

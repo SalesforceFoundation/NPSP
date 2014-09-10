@@ -52,8 +52,7 @@ private with sharing class ADDR_Addresses_TEST {
     private static list<Account> listAccT;            
     private static void createHHTestData(integer cHHT, integer cConT) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHHT * cConT);
         listAccT = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cHHT, CAO_Constants.HH_ACCOUNT_TYPE);
@@ -148,8 +147,7 @@ private with sharing class ADDR_Addresses_TEST {
     static testMethod void insertContactWithAddress() {
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
         for (Contact con : listConT) {
@@ -181,8 +179,7 @@ private with sharing class ADDR_Addresses_TEST {
     static testMethod void insertContactWithAddressOverride() {
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressOverride') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
         integer i = 1;
@@ -1570,8 +1567,7 @@ private with sharing class ADDR_Addresses_TEST {
     static testMethod void insertContactWithMultilineStreetAddress() {
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithMultilineStreetAddress') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
         for (Contact con : listConT) {
