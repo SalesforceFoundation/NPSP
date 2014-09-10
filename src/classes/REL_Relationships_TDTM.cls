@@ -247,7 +247,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     
     private static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
         
-        npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
+        npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
         
         //used for tracking place in array
         integer counter = 0;            

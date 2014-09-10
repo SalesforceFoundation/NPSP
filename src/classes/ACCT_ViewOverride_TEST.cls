@@ -38,7 +38,7 @@ private class ACCT_ViewOverride_TEST {
     //can't test very well because of the way the page redirect is built
     public static testMethod void accountViewOverride() {
         
-        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Test.setCurrentPageReference(new PageReference('Page.ACCT_ViewOverride'));
         
