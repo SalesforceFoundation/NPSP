@@ -37,7 +37,6 @@ public with sharing class RD_RecurringDonations {
     /*** Public Vars ***/ 
     
     public enum RecurringDonationCloseOptions {Delete_Open_Opportunities, Mark_Opportunities_Closed_Lost, No_Action}
-    public static npe03__Recurring_Donations_Settings__c recurringDonationsSettings;    
     public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = new map<string, npe03__Custom_Field_Mapping__c>();
     
     /*** Multicurrency Support Fields ***/
@@ -220,7 +219,7 @@ public with sharing class RD_RecurringDonations {
         //Lists used for final Insert
         list<Opportunity> opportunityInserts = new list<Opportunity>();
         
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();        
         
         //grab the contact id for role to take advantage of NPSP C&O if it exists
@@ -498,7 +497,7 @@ public with sharing class RD_RecurringDonations {
                     oppContactRoles(createdOppIds);                    
             }
             
-            if (!badSRs.isEmpty()){
+            if (!badSRs.isEmpty()) {
             	ERR_Handler errorHandler = new ERR_Handler();
                 errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
             }            
@@ -564,7 +563,7 @@ public with sharing class RD_RecurringDonations {
     public static void updateExistingOpps(set<id> recIDs, TDTM_Runnable.DmlWrapper dmlWrapper){
         
         
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>([select id, npe03__Paid_Amount__c, npe03__Next_Payment_Date__c, 
                                                                                     npe03__Contact__c, npe03__Organization__c, npe03__Amount__c, 
@@ -746,7 +745,7 @@ public with sharing class RD_RecurringDonations {
        
         //continue on to evaluate open ended rd's.
         
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
     
         list<Opportunity> oppInsertList = new list<Opportunity>();
         
@@ -920,18 +919,10 @@ public with sharing class RD_RecurringDonations {
     }
     
     /*** UTILITY METHODS ***/
-    
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-    	recurringDonationsSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings(recurringDonationsSettings, 
-    	                                           RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name());
-    	return recurringDonationsSettings;
-    }
-
     //handles action for opps on recurring donations
     private static void runRecurringDonationClosedActions(list<npe03__Recurring_Donation__c> closedRDs, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // determine the update type - 
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         //system.debug('IN THE PRIVATE METHOD');
         if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RecurringDonationCloseOptions.No_Action.name()) {
             map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__r.id 
@@ -970,7 +961,7 @@ public with sharing class RD_RecurringDonations {
     }
     //helper for calculating the next date in the sequence based on the RD schedule type 
     private static date getNextDate(date CalcDate, string InstallmentType){
-        npe03__Recurring_Donations_Settings__c rds = getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodYearly){
             CalcDate = CalcDate.addYears(1);

@@ -61,7 +61,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         
         DmlWrapper dmlWrapper = new DmlWrapper();
     	   	
-        ContactsSettings = CAO_Constants.getContactsSettings();
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             
             List<Contact> listContactNeedAccount = new List<Contact>();
             List<Contact> listContactNeedAccountUpdate = new List<Contact>();
@@ -361,7 +361,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
 
-        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         if (hs != null && hs.npo02__Advanced_Household_Naming__c == false)
             return;    	
     	
@@ -416,7 +416,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     public static ID rtIdForAccountModel(boolean isHHAccountModel) {
-        ContactsSettings = CAO_Constants.getContactsSettings();
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
