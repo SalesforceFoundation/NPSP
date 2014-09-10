@@ -50,7 +50,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
   
     public HH_CampaignDedupeBTN_CTRL(ApexPages.StandardController controller){   
         
-        hs = HH_Households.getHouseholdsSettings();
+        hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         CampaignMailingListReportId = hs.npo02__Household_Mailing_List_ID__c;
         haveReportID = true; 
       

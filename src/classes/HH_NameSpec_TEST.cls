@@ -396,11 +396,10 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void testRefreshAllHHNamingWithCustom() {
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         // turn off household naming        
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -470,8 +469,9 @@ private with sharing class HH_NameSpec_TEST {
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
         update householdSettingsForTests;
-        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update HH_Households.householdsSettings;
+        npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update householdsSettings;
 
         // refresh all names
         Test.startTest();
@@ -501,11 +501,10 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void testRefreshAllHHNamingManyHH() {
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         // turn off household naming        
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -534,8 +533,9 @@ private with sharing class HH_NameSpec_TEST {
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
         update householdSettingsForTests;
-        HH_Households.householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update HH_Households.householdsSettings;
+         npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        householdsSettings.npo02__Advanced_Household_Naming__c = true;
+        update householdsSettings;
 
         // refresh all names
         Test.startTest();

@@ -76,7 +76,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     public PageReference initDynamicFields() {
-    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
     	String validator = addrVerifSettings.Class__c;
         clearDynamicFields();
         if(validator != null) {           
@@ -202,7 +202,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     // verify the current address settings - used by Health Check.    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
-        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         if (avs.Using_SmartyStreets__c) {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
@@ -217,7 +217,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
-        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         if (avs.Using_SmartyStreets__c) {
 	        try {
 	        	encodeTokenIfNotEncoded(addrVerifSettings);

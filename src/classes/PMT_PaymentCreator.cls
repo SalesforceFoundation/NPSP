@@ -47,7 +47,7 @@ public without sharing class PMT_PaymentCreator {
     //constructor gets opps from trigger??
     public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
         
-        ContactSettings = CAO_Constants.getContactsSettings();
+        ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                     
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();

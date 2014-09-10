@@ -48,15 +48,12 @@ private class REL_Relationships_TEST {
         
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){ 
-        
-            //remove any existing settings
-            delete [select id from npe4__Relationship_Settings__c];
+                     
             if (rs != null)
-                insert rs;
-            else{
-                rs = new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description');
-                insert rs;           
-            }
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(rs);
+            else
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 
+                                                                                    'List Setting', npe4__Gender_Field__c = 'Description'));         
             
             //add autocreate settings for CMs 
             delete [select id from npe4__Relationship_Auto_Create__c];
@@ -561,10 +558,10 @@ private class REL_Relationships_TEST {
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
     }
     
-    static testMethod void testErrorRecordCreation(){
+    static testMethod void testErrorRecordCreation() {
     	if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
     	
-    	insert new Error_Settings__c(Store_Errors_On__c = true);
+    	UTIL_CustomSettingsFacade.getErrorSettings(null);
     	
         setupRelationshipTestData(null);
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
@@ -627,9 +624,9 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testRelationshipUTILS') return;
     	
         //to test the Relationship_Utils class      
-        System.runAs(new User(id = UserInfo.getUserId())){ 
+        System.runAs(new User(id = UserInfo.getUserId())){
            delete [select id from npe4__Relationship_Settings__c];
-           npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
+           npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
            Boolean cAuto = REL_Utils.hasContactAutoCreate;
            Boolean cmAuto = REL_Utils.hasCMAutoCreate;
         }
@@ -810,7 +807,7 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testSettingsObjectWithJustOrgDefaults') return;
     	
         npe4__Relationship_Settings__c newRS;
-        newRS = npe4__Relationship_Settings__c.getOrgDefaults();
+        newRS = UTIL_CustomSettingsFacade.getRelationshipSettings();
         system.assertNotEquals(null, newRS);
         system.assertEquals(null, newRS.Id);   
         system.assertEquals(null, newRS.npe4__Reciprocal_Method__c);  

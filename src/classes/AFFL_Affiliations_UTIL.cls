@@ -32,9 +32,9 @@ public with sharing class AFFL_Affiliations_UTIL {
 
     public static npe5__Affiliations_Settings__c affiliationsSettings;
     
-    //get the settings. handles the case where the managed value doesn't exist yet
+    //DEPRECATED - DO NOT USE!!! Use method in UTIL_CustomSettingsFacade instead.
+    //We are keeping this class just because without it we cannot deploy to the packaging org.
     public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        affiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings(affiliationsSettings);
-        return affiliationsSettings;
+        return null;
     }
 }

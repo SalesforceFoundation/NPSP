@@ -35,7 +35,12 @@
 @isTest
 public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
     public testmethod static void testAccountConversion1to1(){
+    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
@@ -90,11 +95,13 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //assert the task was ported as well
         system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testmethod static void testAccountConversionBucket(){
+    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
+    	
         //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
@@ -139,7 +146,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         for (Contact con : [select id, Account.Name from Contact]){
             system.assertNotEquals('Individual', con.Account.Name);
         }
@@ -147,6 +154,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     }
 
     public testMethod static void testSingleContactAddress(){
+    	if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
+    	
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
@@ -184,11 +193,13 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(true, add.Default_Address__c);
         system.assertEquals(add.Id, [select Current_Address__c from Contact where id = :c.id].Current_Address__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testMethod static void test2ContactAddresses(){
+    	if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
+    	
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
@@ -246,11 +257,13 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(true, c.is_Address_Override__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     public testMethod static void testSettingPrimaryAffiliation(){
+    	if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
+    	
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
@@ -297,12 +310,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests;
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
 
         if (isOne2One)
-            contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         else
-            contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
 
         system.assert(!CAO_Constants.isHHAccountModel());
         if(isOne2One)
@@ -311,10 +324,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
             system.assert(CAO_Constants.isBucketModel());
     }
     public static void setHHAccountModel(){
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
         //get the HH account rectype
         Id hhAccountid = [select Id from RecordType where DeveloperName = 'HH_Account'].Id;
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01__HH_Account_RecordTypeID__c = HHAccountId));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01__HH_Account_RecordTypeID__c = HHAccountId));
         system.assert(CAO_Constants.isHHAccountModel());
     }
 }
