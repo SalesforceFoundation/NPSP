@@ -34,6 +34,14 @@
 */
 public without sharing class RLLP_OppRollup {
     
+    /*** Constructor ***/
+    public RLLP_OppRollup(){
+        // setup households settings
+        RLLP_OppRollup_UTIL.setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
+        // setup user rollups
+        RLLP_OppRollup_UTIL.setupUserRollupVars();
+    }
+    
     /*** Fired from trigger on Opp - determine which opps changed and pass the Con/Acc/HH IDs to the regular rollup methods ***/
     public void rollupForOppTrigger( map<id, Opportunity> newOpps, map<id, Opportunity> oldOpps ) {
         //opp ids for contact/hh querying
