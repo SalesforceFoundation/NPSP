@@ -73,7 +73,7 @@ public without sharing class RLLP_OppRollup {
             }
             
         if (!accountRequerySet.isEmpty()){
-        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
                                                                         ' where id in :accountRequerySet'));            
             //if we only need to rollup a single Account, do sync
