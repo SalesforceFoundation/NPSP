@@ -7,8 +7,8 @@
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>99</minorNumber>
+        <majorNumber>3</majorNumber>
+        <minorNumber>0</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
     <status>Active</status>

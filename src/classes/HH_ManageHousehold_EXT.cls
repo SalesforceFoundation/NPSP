@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
      
-    public static string conSelect = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name,npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate FROM Contact ';
+    public static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllFields;
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -159,7 +159,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public static npo02__Households_Settings__c hhsettings{
         get{
             if(hhsettings == null){
-                hhsettings = npo02__Households_Settings__c.getInstance();
+                hhsettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
             }   
             return hhsettings;
         }
@@ -482,7 +482,7 @@ global with sharing class HH_ManageHousehold_EXT {
             removeContacts.remove(con[0].id);
             // check for household then find and add contacts
             if (con[0].HHId__c != null) {
-                whereClause = 'WHERE HHId__c = \''+con[0].HHId__c+'\'';
+                whereClause = 'WHERE ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' = \''+con[0].HHId__c+'\'';
                 q = conSelect + whereClause;
                 list<Contact> hhcons = Database.query(q);
                 if (!hhcons.isEmpty()) {
@@ -615,14 +615,15 @@ global with sharing class HH_ManageHousehold_EXT {
 
         // for HH Accounts, also include all Address objects
         if (isHHAccount && hh.Id != null) {
-	        q = 'select MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
+	        q = 'select MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c from Address__c ' +
 	           ' where Household_Account__c = \'' + hh.Id + '\''; 
+	        q = UTIL_Namespace.StrAllNSPrefix(q);
 	        list<Address__c> listAddr = Database.query(q);	        
 	        
 	        for (Address__c addr : listAddr) {
-	            if (addr.MailingStreet__c != null || addr.MailingCity__c != null || addr.MailingState__c != null || addr.MailingPostalCode__c != null || addr.MailingCountry__c != null) {
+	            if (addr.MailingStreet__c != null || addr.MailingStreet2__c != null || addr.MailingCity__c != null || addr.MailingState__c != null || addr.MailingPostalCode__c != null || addr.MailingCountry__c != null) {
 	                
-	                string addressString = addr.MailingStreet__c + '#' + addr.MailingCity__c + '#' + addr.MailingState__c + '#' + addr.MailingPostalCode__c + '#' + addr.MailingCountry__c;
+	                string addressString = ADDR_Addresses_TDTM.getMultilineStreet(addr) + '#' + addr.MailingCity__c + '#' + addr.MailingState__c + '#' + addr.MailingPostalCode__c + '#' + addr.MailingCountry__c;
 	                
 	                // regex pattern for getting all white space
 	                pattern whtspc = pattern.compile('[\\s]');
@@ -637,7 +638,7 @@ global with sharing class HH_ManageHousehold_EXT {
 	                {
 	                    viableAddress va = new viableAddress();
 	                    va.AddressKey = addressString;
-	                    va.MailingStreet = addr.MailingStreet__c;
+	                    va.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
 	                    va.MailingCity = addr.MailingCity__c;
 	                    va.MailingState = addr.MailingState__c;
 	                    va.MailingPostalCode = addr.MailingPostalCode__c;
@@ -744,12 +745,13 @@ global with sharing class HH_ManageHousehold_EXT {
     ********************************************************************************************************/
     public list<Contact> getHHMembers() {
         String q = conSelect;
+        string strHHId = UTIL_Namespace.StrTokenNSPrefix('hhId__c');
         
         if (conId != null || hh.id != null) q += ' WHERE';
         if (conId != null) q += ' Id=\''+conId+'\'';
         if (conId != null && hh.id != null) q += ' or';
-        if (hh.id != null) q += ' HHId__c = \''+hh.id+'\'';
-        q += ' ORDER BY hhId__c, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate LIMIT 500';
+        if (hh.id != null) q += ' ' + strHHId + ' = \''+hh.id+'\'';
+        q += ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate LIMIT 500';
         String qry = q;
         return Database.query(qry);
     }

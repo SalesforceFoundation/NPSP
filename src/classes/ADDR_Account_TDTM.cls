@@ -111,6 +111,7 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.MailingState__c = acc.BillingState;
             addr.MailingPostalCode__c = acc.BillingPostalCode;
             addr.MailingCountry__c = acc.BillingCountry;
+            ADDR_Addresses_TDTM.handleMultilineStreet(addr);
             listAddr.add(addr);         
         }
         ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper);

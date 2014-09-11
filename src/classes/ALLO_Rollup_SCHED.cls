@@ -32,11 +32,15 @@
 * @date 2014
 * @description Allocations Rollups to General Accounting Units
  */
-public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_IScheduled {
+public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
-    public void execute (SchedulableContext bc) {
-        ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
-        rollup.runRollups();
+    public Boolean executeReturnStatus() {
+        if(UTIL_JobScheduler.canRunBatch()) {
+            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
+            rollup.runRollups();
+            return true;
+        }
+        return false;
     }
 
     public ALLO_Rollup_SCHED () {
@@ -62,8 +66,6 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     public override string setParentObjName() {
         return UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
     }
-    
-
 
     public virtual override list<RollupSpec> setRollupSpecs() {
         /* TODO:
@@ -150,10 +152,6 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
     /*public virtual override void finish(Database.BatchableContext bc) {
         system.debug('running finish method in extended class ALLO_Rollup_SCHED');
-        //run contact batch when this batch is done
-        RG_Rollup_OpportunityToContact otc = new RG_Rollup_OpportunityToContact(200);
-        otc.runRollups();
     }*/
-
 
 }

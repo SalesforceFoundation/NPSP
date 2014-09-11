@@ -32,84 +32,8 @@ public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
-        list<npo02__Household__c> listHHNew = newlist;
-        list<npo02__Household__c> listHHOld = oldlist;  
-        map<ID, npo02__Household__c> mapIdHHOld = new map<ID, npo02__Household__c>(listHHOld);       
-    
-	    npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
-	    
-        //updates household records to indicate where/if user changes to the household record are happening
-        //and marks them as such so they won't be updated
-        //need to use a process control class to avoid recursion when async updates occur
-        //in non async updates, this won't fire again, so we don't need to worry
-        if (!HH_ProcessControl.inFutureContext && 
-            (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
-            
-            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
+        HH_HouseholdNaming.handleHHNameUpdates(newlist, oldlist, triggerAction, objResult);
+        return null;
 
-                // AfterUpdate data
-                list<id> hhlist = new list<id>();
-                                       
-                for (npo02__Household__c h : listHHNew) {
-                    string customname = '';
-            
-                    if (h.npo02__SYSTEM_CUSTOM_NAMING__c == null)
-                        customname = ';';                    
-                    else  
-                        customname = h.npo02__SYSTEM_CUSTOM_NAMING__c + ';';
-                
-                    // BeforeUpdate data
-                    list<string> customnamelist = new list<string>();
-                    set<string> customnameset = new set<string>();
-                    customnamelist = customname.split(';');
-                    customnameset.addall(customnamelist);
-                    
-                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                
-	                    if (h.Name != null && h.Name != mapIdHHOld.get(h.id).Name && !customnameset.contains('Name')) {
-	                        customname += 'Name' + ';';
-	                    } else if ((h.Name == null || h.Name == '' || h.Name == system.Label.npo02.NameReplacementText) && customnameset.contains('Name')) {
-	                        customname = customname.replace('Name;', ';');
-	                        h.Name = system.Label.npo02.NameReplacementText;
-	                    }
-	            
-	                    if (h.npo02__Informal_Greeting__c != null && 
-	                        h.npo02__Informal_Greeting__c != mapIdHHOld.get(h.id).npo02__Informal_Greeting__c && 
-	                        !customnameset.contains('Informal_Greeting__c')) {
-	                        customname += 'Informal_Greeting__c' + ';';
-	                    } else if ((h.npo02__Informal_Greeting__c == null || h.npo02__Informal_Greeting__c == '' || h.npo02__Informal_Greeting__c == system.Label.npo02.NameReplacementText) && 
-	                        customnameset.contains('Informal_Greeting__c')) {                
-	                        customname = customname.replace('Informal_Greeting__c;', ';');
-	                        h.npo02__Informal_Greeting__c = system.Label.npo02.NameReplacementText;
-	                    }
-	            
-	                    if (h.npo02__Formal_Greeting__c != null && 
-	                        h.npo02__Formal_Greeting__c != mapIdHHOld.get(h.id).npo02__Formal_Greeting__c && 
-	                        !customnameset.contains('Formal_Greeting__c')) {
-	                        customname += 'Formal_Greeting__c' + ';';
-	                    } else if ((h.npo02__Formal_Greeting__c == null || h.npo02__Formal_Greeting__c == '' || h.npo02__Formal_Greeting__c == system.Label.npo02.NameReplacementText) && 
-	                        customnameset.contains('Formal_Greeting__c')) {
-	                        customname = customname.replace('Formal_Greeting__c;', ';');
-	                        h.npo02__Formal_Greeting__c = system.Label.npo02.NameReplacementText;
-	                    }
-	                    h.npo02__SYSTEM_CUSTOM_NAMING__c = customname;
-                    } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-	                    if (h.Name == system.Label.npo02.NameReplacementText)
-	                       hhlist.add(h.id);
-	                    else if (h.npo02__Informal_Greeting__c == system.Label.npo02.NameReplacementText)
-	                       hhlist.add(h.id);
-	                    else if (h.npo02__Formal_Greeting__c == system.Label.npo02.NameReplacementText)
-	                        hhlist.add(h.id);       
-	                    else if (h.npo02__SYSTEM_CUSTOM_NAMING__c != mapIdHHOld.get(h.id).npo02__SYSTEM_CUSTOM_NAMING__c)
-	                        hhlist.add(h.id);                        
-                    }
-                }
-                if (!hhlist.isEmpty()){
-                    HH_HouseholdNaming hn = new HH_HouseholdNaming();
-                    hn.UpdateNames(hhlist);
-                }
-            }
-        } 
-    
-    return null;  
     }
 }

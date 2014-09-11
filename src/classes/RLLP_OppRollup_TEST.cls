@@ -60,13 +60,13 @@ public with sharing class RLLP_OppRollup_TEST {
         listConTest = new list<Contact>();
         listOppTest = new list<Opportunity>();
             
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
                 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -116,14 +116,14 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupProcessor(string strProcessor){
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
             npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
             npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -198,13 +198,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupIndividualProcessor(string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -282,13 +282,13 @@ public with sharing class RLLP_OppRollup_TEST {
     static void testGivingRollupExcludedRTProcessor (string strProcessor) {
 
         if(giftRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -364,13 +364,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
    static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = true,
@@ -450,13 +450,13 @@ public with sharing class RLLP_OppRollup_TEST {
     static void testMemberRollupProcessor (string strProcessor) {
 
         if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -519,13 +519,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupAcct (string strProcessor) {
  
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
             
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -587,13 +587,13 @@ public with sharing class RLLP_OppRollup_TEST {
     static void testGivingRollupAcctMembership (string strProcessor) {
 
         if(membershipRecordTypeNameForTests!=''){
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -656,13 +656,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testGivingRollupBatch (string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -900,13 +900,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void OneContactOneInkind(string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -944,13 +944,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupBulk (string strProcessor) {
     
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1000,13 +1000,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testGivingRollupTooManyOpps (string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1056,13 +1056,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testHouseholdStats (string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1143,13 +1143,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     static void testUserDefinedRollup(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1227,7 +1227,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testMultiCurrencyMethods(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     static void testMultiCurrencyMethods(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1274,7 +1274,7 @@ public with sharing class RLLP_OppRollup_TEST {
         testRollupAlls(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     static void testRollupAlls(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -1300,13 +1300,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testFiscalYearandCustomNDay (string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1361,13 +1361,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
    static void testSoftCredits(string strProcessor) {
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1440,13 +1440,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }    
     static void testFutureMethods(string strProcessor){
 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1499,13 +1499,13 @@ public with sharing class RLLP_OppRollup_TEST {
     }
     //a change to a UDR value should trigger a rollup
     static void testUDRChangeBehavior(string strProcessor){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -1590,7 +1590,7 @@ public with sharing class RLLP_OppRollup_TEST {
 
         //Schedule the test job 
         insert new Schedulable__c(Name = 'test Opp Sched', Class_Name__c = 'RLLP_OppRollup_SCHED', Active__c = true);
-        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_GlobalSchedulable());
+        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_MasterSchedulable());
 
         CronTrigger ct =[SELECT id,CronExpression,TimesTriggered,NextFireTime 
         FROM CronTrigger WHERE id=:jobId]; 

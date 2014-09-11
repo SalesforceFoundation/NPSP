@@ -38,21 +38,27 @@ private with sharing class ALLO_Allocations_TEST {
     
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'recurringDonationsValidation';
-    private static Allocations_Settings__c settings;
+    private static string strTestOnly = '*';
+    
+    private static void setupSettings (Allocations_Settings__c as) {
+        //set running user to avoid dml issue            
+        System.runAs(new User(id = UserInfo.getUserId())){
+            if (as==null)
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(as);
+            else 
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
+
+        }
+    }
 
     //when changing the amount of an Opportunity with Allocations: 
     //increasing the amount will adjust the percentage allocations
     //decreasing the amount so that the total allocation amount is still below the opportunity amount will adjust the percentage allocations
     //decreasing the amount so that the total allocation amount is greater than the opportunity amount, an error is thrown and the opportunity update is blocked
-
     @isTest
     static void oppAmountChange() {
         if (strTestOnly != '*' && strTestOnly != 'oppAmountChange') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
+        setupSettings(null);
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -119,11 +125,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = true;
-        settings.Default__c = defaultGau.id;
-        update settings;
+        setupSettings(new Allocations_Settings__c(Allocations_Enabled__c = true, Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -157,10 +159,8 @@ private with sharing class ALLO_Allocations_TEST {
     @isTest
     static void allocationsDisabled() {
         if (strTestOnly != '*' && strTestOnly != 'allocationsDisabled') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = false;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
+        
+        setupSettings(new Allocations_Settings__c(Allocations_Enabled__c = false));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -191,11 +191,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = true;
-        settings.Default__c = defaultgau.id;
-        update settings;
+        setupSettings(new Allocations_Settings__c(Allocations_Enabled__c = true, Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -247,11 +243,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = true;
-        settings.Default__c = defaultgau.id;
-        update settings;
+        setupSettings(new Allocations_Settings__c(Allocations_Enabled__c = true, Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -345,11 +337,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = true;
-        settings.Default__c = defaultgau.id;
-        update settings;
+        setupSettings(new Allocations_Settings__c(Allocations_Enabled__c = true, Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Account acc = new Account(Name='foo');
         insert acc;

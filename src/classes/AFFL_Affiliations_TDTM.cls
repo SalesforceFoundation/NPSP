@@ -56,7 +56,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+        //Passing null basically indicates that the existing setting (in memory) should be used
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
         
         // we have multiple scenarios to support
         // 1. create a new current affiliation, potentially mark primary
@@ -193,7 +194,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
         // the collections we want to insert/update in the db
         list<npe5__Affiliation__c> listAfflInsert = new list<npe5__Affiliation__c>();
-        map<Id, npe5__Affiliation__c> mapAfflIdAfflUpdate = new map<Id, npe5__Affiliation__c>();
+        list<npe5__Affiliation__c> listAfflIdAfflUpdate = new list<npe5__Affiliation__c>();
 
         // get all the accounts & contacts
         set<Id> setContactId = new set<Id>();
@@ -237,7 +238,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         	   npe5__Affiliation__c a = mapStrComboKeyAffl.get(ao.strComboKey);
         	   if (a != null) {
         	       a.npe5__Primary__c = true;
-        	       mapAfflIdAfflUpdate.put(a.Id, a);
+        	       listAfflIdAfflUpdate.add(a);
         	   } else {
                     a = new npe5__Affiliation__c();
                     a.npe5__Contact__c = contactId;
@@ -263,7 +264,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                if (ao.fUnprimary) {
                     a.npe5__Primary__c = false;
                }  
-               mapAfflIdAfflUpdate.put(a.Id, a);
+               listAfflIdAfflUpdate.add(a);
         	}
         }
 
@@ -272,9 +273,9 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToInsert.addAll((list<SObject>) listAfflInsert);
         }
             
-       if (mapAfflIdAfflUpdate.size() > 0) {
-            //system.debug('**** mapAfflIdAfflUpdate: ' + JSON.serializePretty(mapAfflIdAfflUpdate.values()));
-            dmlWrapper.objectsToUpdate.putAll((map<Id, SObject>) mapAfflIdAfflUpdate);
+       if (listAfflIdAfflUpdate.size() > 0) {
+            //system.debug('**** listAfflIdAfflUpdate: ' + JSON.serializePretty(listAfflIdAfflUpdate.values()));
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>) listAfflIdAfflUpdate);
        }
     }
     
@@ -326,7 +327,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         }
     
         if (listCon.size() > 0) {
-	        dmlWrapper.objectsToUpdate.putAll(listCon);
+	        dmlWrapper.objectsToUpdate.addAll((List<SObject>)listCon);
         }
         return dmlWrapper;
     }

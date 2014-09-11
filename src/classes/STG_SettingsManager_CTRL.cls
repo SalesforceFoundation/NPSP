@@ -33,23 +33,27 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
-	
-	public STG_SettingsManager_CTRL() {
-		idPanelCurrent = 'idPanelHome';
-	}
+    
+    public STG_SettingsManager_CTRL() {
+        idPanelCurrent = 'idPanelHome';
+    }
 
 
     public static string idPanelCurrent { get; set; }
    
     public PageReference setPanelCurrent() {
-    	// javascript caller auto-assigns to idPanelCurrent,
-    	// so nothing to do in this method. 
-    	return null;
+        // javascript caller auto-assigns to idPanelCurrent,
+        // so nothing to do in this method. 
+        return null;
     }
     
-    public void setTriggerConfig() {
-    	STG_InstallScript installScript = new STG_InstallScript();
-        installScript.setTriggerConfig();
-        installScript.scheduleGlobalJob();
+    public void setTriggerSchedConfig() {
+        //Set TDTM config
+        STG_InstallScript installScript = new STG_InstallScript();
+        installScript.runNewOrgScript();
+        //Set master schedulables config
+        UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+        UTIL_MasterSchedulableHelper.setSchedulableTable();
+        UTIL_MasterSchedulableHelper.scheduleMasterJobs();
     }
 }

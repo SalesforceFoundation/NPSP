@@ -72,7 +72,7 @@ public with sharing class ERR_Handler {
     	
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
-    	if(ERR_Notifier.getErrorSettings().Error_Notifications_On__c && errorsExist) {
+    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c && errorsExist) {
            System.debug('****Errors exist - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
     	}
@@ -118,12 +118,9 @@ public with sharing class ERR_Handler {
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent. */
 	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);
-	                try {
-	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
-	                } catch(Exception ex) {
-                       System.debug('****We could not add the error message to the page. Most likely the code was not called from a controller.');
-                   }  
+	                   addErrorMessage(sObjects[i], message);*/
+	                if(ApexPages.currentPage() != null)
+	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
 	        	}
 	        }
     	}
@@ -149,24 +146,21 @@ public with sharing class ERR_Handler {
                    System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
                    /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. */
-                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); 
-                   try {
-                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
-                   } catch(Exception ex) {
-                   	   System.debug('****We could not add the error message to the page. Most likely the code was not called from a controller.');
-                   }
+                     or error notification sent. 
+                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
+                   if(ApexPages.currentPage() != null)
+                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
                }
            }
            
-           if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
+           if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
                System.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
                Database.SaveResult result = Database.insert(error, false);
            }
     	}
     	
-    	if(ERR_Notifier.getErrorSettings().Error_Notifications_On__c) {
+    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
     	   System.debug('****Sending error notification');
            ERR_Notifier.sendErrorNotifications(context);
     	}
@@ -186,7 +180,7 @@ public with sharing class ERR_Handler {
     
     /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
-        if(ERR_Notifier.getErrorSettings().Store_Errors_On__c) {
+        if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
 		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
 		  Database.insert(errors, false);
         }

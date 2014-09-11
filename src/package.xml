@@ -11,10 +11,15 @@
     <members>ADDR_Account_TDTM</members>
     <members>ADDR_Addresses_TDTM</members>
     <members>ADDR_Addresses_TEST</members>
+    <members>ADDR_Cicero_TEST</members>
+    <members>ADDR_Cicero_Validator</members>
     <members>ADDR_Contact_TDTM</members>
     <members>ADDR_CopyAddrHHObjBTN_CTRL</members>
     <members>ADDR_CopyAddrHHObjBTN_TEST</members>
+    <members>ADDR_GoogleGeoAPI_Validator</members>
+    <members>ADDR_GoogleGeoAPI_Validator_TEST</members>
     <members>ADDR_IValidator</members>
+    <members>ADDR_MockGoogleGeoAPIResponse_TEST</members>
     <members>ADDR_MockHttpRespGenerator_TEST</members>
     <members>ADDR_Seasonal_SCHED</members>
     <members>ADDR_SmartyStreets_Gateway</members>
@@ -22,6 +27,7 @@
     <members>ADDR_Validation_Gateway_TEST</members>
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
+    <members>ADDR_Validator_Batch_TEST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
@@ -66,9 +72,12 @@
     <members>HH_Households</members>
     <members>HH_Households_TDTM</members>
     <members>HH_Households_TEST</members>
+    <members>HH_INaming</members>
     <members>HH_ManageHHAccount_TEST</members>
     <members>HH_ManageHousehold_EXT</members>
     <members>HH_ManageHousehold_TEST</members>
+    <members>HH_NameSpec</members>
+    <members>HH_NameSpec_TEST</members>
     <members>HH_OppContactRoles_TDTM</members>
     <members>HH_OppContactRoles_TEST</members>
     <members>HH_ProcessControl</members>
@@ -89,7 +98,6 @@
     <members>RD_RecurringDonations</members>
     <members>RD_RecurringDonations_BATCH</members>
     <members>RD_RecurringDonations_Opp_TDTM</members>
-    <members>RD_RecurringDonations_SCHED</members>
     <members>RD_RecurringDonations_TDTM</members>
     <members>RD_RecurringDonations_TEST</members>
     <members>REL_ProcessControl</members>
@@ -99,14 +107,16 @@
     <members>REL_Relationships_TDTM</members>
     <members>REL_Relationships_TEST</members>
     <members>REL_Utils</members>
+    <members>RLLP_OppAccRollup_BATCH</members>
+    <members>RLLP_OppContactRollup_BATCH</members>
+    <members>RLLP_OppHouseholdRollup_BATCH</members>
     <members>RLLP_OppRollup</members>
     <members>RLLP_OppRollupBATCH_TEST</members>
-    <members>RLLP_OppRollup_BATCH</members>
-    <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_TEST2</members>
     <members>RLLP_OppRollup_UTIL</members>
+    <members>RLLP_OppSoftCreditRollup_BATCH</members>
     <members>STG_DataBoundMultiSelect_CTRL</members>
     <members>STG_InstallScript</members>
     <members>STG_InstallScript_TEST</members>
@@ -159,8 +169,12 @@
     <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_IScheduled</members>
     <members>UTIL_JobProgress_CTRL</members>
+    <members>UTIL_JobProgress_CTRL_TEST</members>
     <members>UTIL_JobScheduler</members>
     <members>UTIL_JobScheduler_TEST</members>
+    <members>UTIL_MasterSchedulable</members>
+    <members>UTIL_MasterSchedulableHelper</members>
+    <members>UTIL_MasterSchedulable_TEST</members>
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
@@ -174,6 +188,7 @@
   </types>
   <types>
     <members>STG_DataBoundMultiSelect</members>
+    <members>STG_PageHeader</members>
     <members>UTIL_JobProgress</members>
     <members>UTIL_SoqlListView</members>
     <members>UTIL_Typeahead</members>
@@ -243,9 +258,16 @@
   </types>
   <types>
     <members>Account.Account_Compact_Layout</members>
+    <members>Address__c.NPSP_Address_Compact_Layout</members>
     <members>Contact.Contact_Compact_Layout</members>
+    <members>Contact.NPSP_Contact_Compact_Layout</members>
     <members>Opportunity.Donation_Compact_Layout</members>
     <members>Opportunity.Membership_Compact_Layout</members>
+    <members>Opportunity.NPSP_Donation_Compact_Layout</members>
+    <members>npe01__OppPayment__c.NPSP_Payment_Compact_Layout</members>
+    <members>npe03__Recurring_Donation__c.NPSP_Recurring_Donation_Compact_Layout</members>
+    <members>npe4__Relationship__c.NPSP_Relationship_Compact_Layout</members>
+    <members>npe5__Affiliation__c.NPSP_Affiliation_Compact_Layout</members>
     <name>CompactLayout</name>
   </types>
   <types>
@@ -255,6 +277,15 @@
   <types>
     <members>Account.Batch__c</members>
     <members>Account.Number_of_Household_Members__c</members>
+    <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
+    <members>Addr_Verification_Settings__c.Auth_ID__c</members>
+    <members>Addr_Verification_Settings__c.Auth_Token__c</members>
+    <members>Addr_Verification_Settings__c.Class__c</members>
+    <members>Addr_Verification_Settings__c.Enable_Automatic_Verification__c</members>
+    <members>Addr_Verification_Settings__c.Reject_Ambiguous_Addresses__c</members>
+    <members>Addr_Verification_Settings__c.Timeout__c</members>
+    <members>Addr_Verification_Settings__c.Using_SmartyStreets__c</members>
+    <members>Addr_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Address_Verification_Settings__c.Auth_ID__c</members>
     <members>Address_Verification_Settings__c.Auth_Token__c</members>
@@ -268,11 +299,13 @@
     <members>Address_Verification_Settings__c.Zipcode_Verification_Endpoint__c</members>
     <members>Address__c.API_Response__c</members>
     <members>Address__c.Address_Type__c</members>
+    <members>Address__c.Administrative_Area__c</members>
     <members>Address__c.Ambiguous__c</members>
     <members>Address__c.Congressional_District__c</members>
     <members>Address__c.County_Name__c</members>
     <members>Address__c.Default_Address__c</members>
     <members>Address__c.Formula_MailingAddress__c</members>
+    <members>Address__c.Formula_MailingStreetAddress__c</members>
     <members>Address__c.Geolocation__c</members>
     <members>Address__c.Household_Account__c</members>
     <members>Address__c.Latest_End_Date__c</members>
@@ -281,6 +314,7 @@
     <members>Address__c.MailingCountry__c</members>
     <members>Address__c.MailingPostalCode__c</members>
     <members>Address__c.MailingState__c</members>
+    <members>Address__c.MailingStreet2__c</members>
     <members>Address__c.MailingStreet__c</members>
     <members>Address__c.Seasonal_End_Day__c</members>
     <members>Address__c.Seasonal_End_Month__c</members>
@@ -310,6 +344,7 @@
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
+    <members>Contact.Primary_Contact__c</members>
     <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
@@ -338,6 +373,13 @@
     <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
     <members>General_Accounting_Unit__c.Total_Allocations__c</members>
     <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+    <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
+    <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>
+    <members>Household_Naming_Settings__c.Household_Name_Format__c</members>
+    <members>Household_Naming_Settings__c.Implementing_Class__c</members>
+    <members>Household_Naming_Settings__c.Informal_Greeting_Format__c</members>
+    <members>Household_Naming_Settings__c.Name_Connector__c</members>
+    <members>Household_Naming_Settings__c.Name_Overrun__c</members>
     <members>Lead.Batch__c</members>
     <members>Opportunity.Batch__c</members>
     <members>Schedulable__c.Active__c</members>
@@ -356,7 +398,11 @@
     <name>CustomField</name>
   </types>
   <types>
+    <members>Addr_Id_Error</members>
+    <members>Addr_No_Batch</members>
+    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
+    <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
     <members>Addr_Settings_Intro_Body2</members>
     <members>Addr_Settings_Intro_Title</members>
@@ -365,13 +411,28 @@
     <members>Addr_Settings_Test_Response_Title</members>
     <members>Addr_Settings_Test_Title</members>
     <members>Addr_Skip_Verified</members>
+    <members>Addr_Token_Error</members>
+    <members>Addr_Unauthorized_Endpoint</members>
+    <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
     <members>Addr_Verification_Batch_Status</members>
+    <members>Addr_Verification_Batch_Not_Supported</members>
+    <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verify_Endpoint</members>
+    <members>Addr_Verify_Google_Help</members>
+    <members>Addr_Verify_Settings</members>
+    <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
     <members>Address_Verification_Limit</members>
+    <members>HiddenForSecurity</members>
+    <members>RecurringDonationAccountAndContactError</members>
+    <members>Saved</members>
+    <members>Settings_not_Saved</members>
+    <members>SmartyStreets_Help_Text</members>
     <members>Zip_Not_Found</members>
     <members>Zipcode_Verification_Limit</members>
+    <members>addrCiceroMissingAPIKey</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
@@ -396,6 +457,7 @@
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
     <members>healthDetailsAccountProcessor</members>
+    <members>healthDetailsAccountRTIssue</members>
     <members>healthDetailsAutoRelCampaignTypeMissing</members>
     <members>healthDetailsAutoRelFieldsMissing</members>
     <members>healthDetailsAutoRelInvalidLookupField</members>
@@ -416,6 +478,8 @@
     <members>healthDetailsInvalidOppField</members>
     <members>healthDetailsInvalidOppStage</members>
     <members>healthDetailsInvalidPaymentField</members>
+    <members>healthDetailsInvalidRDCustomPeriod</members>
+    <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
     <members>healthDetailsInvalidRecordtypeId</members>
     <members>healthDetailsInvalidRecordtypeName</members>
     <members>healthDetailsInvalidScheduledJob</members>
@@ -426,8 +490,10 @@
     <members>healthDetailsRelReciprocalInvalid</members>
     <members>healthDetailsScheduleJobs</members>
     <members>healthDetailsUDFBadDatatypes</members>
+    <members>healthDetailsValidRDCustomPeriod</members>
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
+    <members>healthLabelAccountRTIssueValid</members>
     <members>healthLabelAutoRelValid</members>
     <members>healthLabelContactData</members>
     <members>healthLabelErrorRecipientValid</members>
@@ -450,6 +516,7 @@
     <members>healthLabelTime</members>
     <members>healthLabelUDFValid</members>
     <members>healthSolutionAccOne2OneNoContacts</members>
+    <members>healthSolutionAccountRTIssue</members>
     <members>healthSolutionAutoRelFieldsMissing</members>
     <members>healthSolutionAutoRelInvalidCMField</members>
     <members>healthSolutionAutoRelInvalidContactField</members>
@@ -462,6 +529,8 @@
     <members>healthSolutionInvalidOppField</members>
     <members>healthSolutionInvalidOppStage</members>
     <members>healthSolutionInvalidPaymentField</members>
+    <members>healthSolutionInvalidRDCustomPeriod</members>
+    <members>healthSolutionInvalidRDCustomPeriodPicklist</members>
     <members>healthSolutionInvalidScheduledJob</members>
     <members>healthSolutionInvalidUDFObjectField</members>
     <members>healthSolutionMailingListReportMissing</members>
@@ -506,6 +575,8 @@
     <members>stgBtnRDCreateNewMap</members>
     <members>stgBtnRunBatch</members>
     <members>stgBtnSave</members>
+    <members>stgErrorINaming</members>
+    <members>stgErrorInvalidClass</members>
     <members>stgHelpAccountModel</members>
     <members>stgHelpAlloFiscalYearRollups</members>
     <members>stgHelpAlloNDayValue</members>
@@ -521,30 +592,38 @@
     <members>stgHelpBatchOppRollup</members>
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
+    <members>stgHelpCiceroAddrVerification</members>
     <members>stgHelpContactRTExcluded</members>
     <members>stgHelpDefaultAllocationsEnabled</members>
     <members>stgHelpDefaultGAU</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
+    <members>stgHelpFGFormat</members>
     <members>stgHelpFiscalYearRollups</members>
     <members>stgHelpHHAccountRTID</members>
     <members>stgHelpHHExcludedRT</members>
     <members>stgHelpHHMailingListReport</members>
+    <members>stgHelpHHNameFormat</members>
     <members>stgHelpHHNaming</members>
     <members>stgHelpHHOCROn</members>
     <members>stgHelpHHObjectOverview</members>
     <members>stgHelpHHRules</members>
+    <members>stgHelpIGFormat</members>
+    <members>stgHelpINamingClass</members>
     <members>stgHelpLeadConvert</members>
     <members>stgHelpMaxPayments</members>
     <members>stgHelpMembershipGracePeriod</members>
     <members>stgHelpMembershipRT</members>
+    <members>stgHelpNameConnector</members>
+    <members>stgHelpNameOverrun</members>
     <members>stgHelpNewRDFieldMap</members>
     <members>stgHelpNewUDR</members>
     <members>stgHelpNoUDR</members>
     <members>stgHelpOCRDefaultRole</members>
     <members>stgHelpOCRRoleForHH</members>
     <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpOverrunCount</members>
     <members>stgHelpPaymentMapOppField</members>
     <members>stgHelpPaymentMapPaymentField</members>
     <members>stgHelpPaymentMapping</members>
@@ -595,11 +674,16 @@
     <members>stgHelpUDRTargetObject</members>
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
+    <members>stgLabelAddressVerification</members>
+    <members>stgLabelAfflSettings</members>
     <members>stgLabelAlloBatchProgress</members>
     <members>stgLabelAllocationsRollupSettings</members>
     <members>stgLabelAllocationsSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
+    <members>stgLabelExamplesFGFormat</members>
+    <members>stgLabelExamplesHHNameFOrmat</members>
+    <members>stgLabelExamplesIGFormat</members>
     <members>stgLabelHHGeneral</members>
     <members>stgLabelHHNaming</members>
     <members>stgLabelHHNamingProgress</members>
@@ -617,6 +701,10 @@
     <members>stgLabelOppBatchProgress</members>
     <members>stgLabelOppRollupRT</members>
     <members>stgLabelOppRollups</members>
+    <members>stgLabelOther</members>
+    <members>stgLabelOtherFormalGreetingFormat</members>
+    <members>stgLabelOtherHHNameFormat</members>
+    <members>stgLabelOtherInformalGreetingFormat</members>
     <members>stgLabelPaymentMapNoValidFields</members>
     <members>stgLabelRDNewPeriod</members>
     <members>stgLabelRDStatus</members>
@@ -648,6 +736,7 @@
     <members>stgNavMembership</members>
     <members>stgNavPaymentMappings</members>
     <members>stgNavPayments</members>
+    <members>stgNavPeople</members>
     <members>stgNavRDBatch</members>
     <members>stgNavRDFieldMap</members>
     <members>stgNavRDInstallmentPeriods</members>
@@ -668,6 +757,7 @@
   </types>
   <types>
     <members>Account</members>
+    <members>Addr_Verification_Settings__c</members>
     <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
     <members>Allocation__c</members>
@@ -679,6 +769,7 @@
     <members>Error__c</members>
     <members>Fund__c</members>
     <members>General_Accounting_Unit__c</members>
+    <members>Household_Naming_Settings__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
     <members>Schedulable__c</members>
@@ -686,10 +777,14 @@
     <name>CustomObject</name>
   </types>
   <types>
+    <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
+    <members>npe01__OppPayment__c</members>
+    <members>npe4__Relationship__c</members>
+    <members>npe5__Affiliation__c</members>
     <name>CustomTab</name>
   </types>
   <types>
@@ -731,6 +826,34 @@
     <name>ListView</name>
   </types>
   <types>
+    <members>Account.New_Address</members>
+    <members>Account.New_Affiliation</members>
+    <members>Account.Quick_Household_Update</members>
+    <members>Account.Quick_Organization_Update</members>
+    <members>Address__c.Update_Address</members>
+    <members>Contact.New_Affiliation</members>
+    <members>Contact.New_Recurring_Donation</members>
+    <members>Contact.New_Relationship</members>
+    <members>Contact.Quick_Update</members>
+    <members>LogACall</members>
+    <members>NewAccount</members>
+    <members>NewContact</members>
+    <members>NewNote</members>
+    <members>NewOpportunity</members>
+    <members>NewTask</members>
+    <members>New_Campaign</members>
+    <members>New_Recurring_Donation</members>
+    <members>Opportunity.New_Payment</members>
+    <members>Opportunity.Quick_Update</members>
+    <members>npe01__OppPayment__c.Quick_Update</members>
+    <members>npe03__Recurring_Donation__c.New_Opportunity</members>
+    <members>npe03__Recurring_Donation__c.Quick_Update</members>
+    <members>npo02__Household__c.Update_Household</members>
+    <name>QuickAction</name>
+  </types>
+  <types>
+    <members>Cicero</members>
+    <members>GoogleAPI</members>
     <members>SmartyStreets</members>
     <name>RemoteSiteSetting</name>
   </types>

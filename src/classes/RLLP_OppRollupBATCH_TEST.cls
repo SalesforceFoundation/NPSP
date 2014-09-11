@@ -39,7 +39,7 @@ private class RLLP_OppRollupBATCH_TEST {
     static testMethod void testBatch() {
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
         if(giftRecordTypeNameForTests!=''){
-            npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = true,
@@ -51,7 +51,7 @@ private class RLLP_OppRollupBATCH_TEST {
                     npo02__Membership_Record_Types__c = null
                 ));
             
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -77,10 +77,7 @@ private class RLLP_OppRollupBATCH_TEST {
             Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
             String contactAccountId = insertedContact.accountid;
         
-            RLLP_OppRollup_BATCH batch = new RLLP_OppRollup_BATCH(RLLP_OppRollup_UTIL.buildAccountQuery() + 
-                ' where Id =\'' + contactAccountId + '\' limit 200',
-                RLLP_OppRollup_BATCH.BATCH_TYPE.AccountType
-            );
+            RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
              
             Test.StartTest(); 
             id batchProcessId = database.executeBatch(batch);

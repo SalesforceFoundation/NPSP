@@ -32,21 +32,31 @@
 * @date 2012 (2.0)
 * @description Class provides a batchable wrapper for open ended recurring donations
 */
-public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful{
+public without sharing class RD_RecurringDonations_BATCH implements Database.Batchable<sObject>, Database.Stateful, 
+UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+	
     public String query { get; set; } 
-    public Integer recCount;
+    public Integer recCount = 0;
     public Integer failuresCount = 0;
     
-    // constructors
-    public RD_RecurringDonations_BATCH(string q) {
-        RD_ProcessControl.batchButton = true;
-        query = q;
-        recCount = 0;
+    public RD_RecurringDonations_BATCH() {
+    	query = RD_RecurringDonations.strQueryRDNoWhere();
+        query += ' where npe03__Open_Ended_Status__c = \'' + system.label.npe03.RecurringDonationOpenStatus + '\'';
+    	RD_ProcessControl.batchButton = true;
+    }
+        
+    public Boolean executeReturnStatus() {
+        if(UTIL_JobScheduler.canRunBatch()) {
+            Id batchInstanceId = Database.executeBatch(this, 50); 
+            return true;
+        }
+        return false;
     }
     
     public database.Querylocator start(Database.BatchableContext bc){
-        //clear any existing errors from the queue
-        delete [select id from Error__c where Context_Type__c = 'RD'];
+        //clear any existing errors from the queue?
+        //now with our error log, DJH thinks we should leave the errors alone.
+        //delete [select id from Error__c where Context_Type__c = 'RD'];
         return Database.getQueryLocator(query);      
     }
     public void execute(Database.BatchableContext bc, Sobject[] result){
@@ -62,7 +72,7 @@ public without sharing class RD_RecurringDonations_BATCH implements Database.Bat
     }
     public void finish(Database.BatchableContext bc) {
         //update our settings
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         AsyncApexJob a = [select CompletedDate from AsyncApexJob where Id = :BC.getJobId()];
                                     

@@ -34,15 +34,15 @@
  */
 public with sharing class ADDR_SmartyStreets_Gateway {
 
-    private Address_Verification_Settings__c settings;
+    private Addr_Verification_Settings__c settings;
     private String auth;
     
     public class LiveAddressException extends Exception {}
 
-    public ADDR_SmartyStreets_Gateway(Address_Verification_Settings__c settings) {
+    public ADDR_SmartyStreets_Gateway(Addr_Verification_Settings__c settings) {
         this.settings = settings;
         
-        if (settings.auth_id__c != null && settings.auth_token__c != null)
+        if (!String.isBlank(settings.auth_id__c) && !String.isBlank(settings.auth_token__c))
             auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + settings.auth_token__c;
     }
 
@@ -70,13 +70,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(addresses, settings.Address_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(addresses, settings.Address_Verification_Endpoint__c);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
             sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
-        else
-            throw new LiveAddressException(res.getStatus());
         
         if (sr == null || sr.isEmpty()) return null;
         else return sr; 
@@ -103,43 +101,58 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
         
         // send the request
-        HttpResponse res = prepareRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
 
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
             sz = (list<ZipResponse>)(JSON.deserialize(res.getBody(), list<ZipResponse>.class));
-        else
-            throw new LiveAddressException(res.getStatus());
         
         if (sz == null || sz.isEmpty()) return null;
         else return sz;
     }
     
-    private HTTPResponse prepareRequest(List<Object> payload, String baseURL) {
-    	// prepare the request
-        Http h = new Http();
-    	String body = JSON.serialize(payload);
-        HttpRequest req = new HttpRequest();
-        req.setMethod('POST');
-        req.setHeader('Content-Type','application/json');
-        req.setHeader('Accept','application/json');
-        req.setEndpoint(baseURL + auth);  
-        req.setBody(body);
-        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-        System.debug('****Request body: \n' + req.getBody());
-        HttpResponse response;
-        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
-        //calling out" error.
-        if(Test.isRunningTest() && System.isBatch()) {  
-            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
-            req.setBody('single-address-response');
-            response = mockResponseGenerator.respond(req);
-        } else {
-        	// execute the request
-        	response = h.send(req);
-        }
-        System.debug('****Response body: \n' + response.getBody());
-        return response;
+    private HTTPResponse sendRequest(List<Object> payload, String baseURL) {
+    	HttpResponse response = new HttpResponse();
+    	if(auth != null && settings.Using_SmartyStreets__c) {
+	    	// prepare the request
+	        Http h = new Http();
+	    	String body = JSON.serialize(payload);
+	        HttpRequest req = new HttpRequest();
+	        req.setMethod('POST');
+	        req.setHeader('Content-Type','application/json');
+	        req.setHeader('Accept','application/json');
+	        req.setEndpoint(baseURL + auth); 
+	        req.setBody(body);
+	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
+	        System.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
+	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
+	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
+	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
+	        //after another)
+	        if(Test.isRunningTest() && System.isBatch()) {  
+	            ADDR_MockHttpRespGenerator_TEST mockResponseGenerator = new ADDR_MockHttpRespGenerator_TEST();
+	            if(req.getBody().contains('single-address')) 
+	               req.setBody('single-address');
+	            else if(req.getBody().contains('multiple-address'))
+	               req.setBody('multiple-address');
+	            else if(req.getBody().contains('invalid-address'))
+	               req.setBody('invalid-address');
+	            else if(req.getBody().contains('ambiguous-address'))
+	               req.setBody('ambiguous-address');
+	            else if(req.getBody().contains('single-zip'))
+	               req.setBody('single-zip');
+	            else if(req.getBody().contains('invalid-zip'))
+	               req.setBody('invalid-zip');
+	            response = mockResponseGenerator.respond(req);
+	        } else {
+	        	// execute the request
+	        	response = h.send(req);
+	        }
+	        System.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
+    	} else {
+    		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
+    	}
+    	return response;
     }
     
     /* ADDRESS REQUEST DATA */

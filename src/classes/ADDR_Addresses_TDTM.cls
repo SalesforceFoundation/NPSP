@@ -232,50 +232,55 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            acc.BillingStreet = addr.MailingStreet__c;
+            acc.BillingStreet = getMultilineStreet(addr);
             acc.BillingCity = addr.MailingCity__c;
             acc.BillingState = addr.MailingState__c;
             acc.BillingPostalCode = addr.MailingPostalCode__c;
             acc.BillingCountry = addr.MailingCountry__c;
             listAccUpdate.add(acc);
 
-            // check other addresses on this household that are no longer the default
-            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
-                if (addrHH.Id == addrDefault.Id)
-                    continue;
-                if (addrHH.Default_Address__c) {
-                    addrHH.Default_Address__c = false;
-                    addrHH.Latest_End_Date__c = system.today();
-                    listAddrUpdate.add(addrHH);
-                }   
+            
+	        // check other addresses on this household that are no longer the default
+	        if(mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
+	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
+	                if (addrHH.Id == addrDefault.Id)
+	                    continue;
+	                if (addrHH.Default_Address__c) {
+	                    addrHH.Default_Address__c = false;
+	                    addrHH.Latest_End_Date__c = system.today();
+	                    listAddrUpdate.add(addrHH);
+	                }   
+	            }
             }
 
             // check the Contacts on this household
-            for (Contact con : mapAccIdListCon.get(accId)) {
-                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-                    con.MailingStreet = addr.MailingStreet__c;
-                    con.MailingCity = addr.MailingCity__c;
-                    con.MailingState = addr.MailingState__c;
-                    con.MailingPostalCode = addr.MailingPostalCode__c;
-                    con.MailingCountry = addr.MailingCountry__c;
-                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-                    con.Current_Address__c = addr.Id;
-                    listConUpdate.add(con);
-                }   
+            if(mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
+	            for (Contact con : mapAccIdListCon.get(accId)) {
+	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
+	                    con.MailingStreet = getMultilineStreet(addr);
+	                    con.MailingCity = addr.MailingCity__c;
+	                    con.MailingState = addr.MailingState__c;
+	                    con.MailingPostalCode = addr.MailingPostalCode__c;
+	                    con.MailingCountry = addr.MailingCountry__c;
+	                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+	                    con.Current_Address__c = addr.Id;
+	                    listConUpdate.add(con);
+	                }   
+	            }
             }
         }  
                     
         if (listAccUpdate.size() > 0) {
             //system.debug('DJH**** listAccUpdate: ' + listAccUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listAccUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
             //system.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listAddrUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
             //system.debug('DJH**** listConUpdate: ' + listConUpdate);
-            dmlWrapper.objectsToUpdate.putAll(listConUpdate);
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
         return mapAccIdHHInfo;
@@ -301,8 +306,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
         } else {
-            dtStart = date.newInstance(dtToday.year(), endMonth, endDay);                           
-            dtEnd = date.newInstance(dtToday.year()+1, startMonth, startDay);
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);                           
+            dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
         }
         return (fStart ? dtStart : dtEnd);
     }
@@ -328,13 +333,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
     		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            con.MailingStreet = addr.MailingStreet__c;
+            con.MailingStreet = getMultilineStreet(addr);
             con.MailingCity = addr.MailingCity__c;
             con.MailingState = addr.MailingState__c;
             con.MailingPostalCode = addr.MailingPostalCode__c;
             con.MailingCountry = addr.MailingCountry__c;
             con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-            dmlWrapper.objectsToUpdate.put(con.Id, con);    		
+            dmlWrapper.objectsToUpdate.add(con);    		
     	}
     }
     
@@ -342,7 +347,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     private static map<Id, list<Address__c>> getMapAccIdListAddrHH(list<Id> listAccId) {
         map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
         list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
-            MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
+            MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
             Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
             from Address__c 
             where Household_Account__c in :listAccId];
@@ -374,6 +379,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            return false;        
         return (
            addrNew.MailingStreet__c != addrOld.MailingStreet__c ||
+           addrNew.MailingStreet2__c != addrOld.MailingStreet2__c ||
            addrNew.MailingCity__c != addrOld.MailingCity__c ||
            addrNew.MailingState__c != addrOld.MailingState__c ||
            addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
@@ -498,7 +504,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (addrDup != null) {
                if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
                    addrDup.Default_Address__c = true;
-                   dmlWrapper.objectsToUpdate.put(addrDup.Id, addrDup);
+                   dmlWrapper.objectsToUpdate.add(addrDup);
                }
             } else {
                 dmlWrapper.objectsToInsert.add(addrNew);
@@ -537,5 +543,23 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         
         return mapAddrDupAddr;               
+    }
+    
+    public static void handleMultilineStreet(Address__c addr) {
+    
+        if (addr.MailingStreet__c == null)
+            return;
+        integer ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+        }
+    }
+    
+    public static string getMultilineStreet(Address__c addr) {
+        string str = addr.MailingStreet__c;
+        if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0)
+            str += '\n' + addr.MailingStreet2__c;
+        return str;
     }
 }

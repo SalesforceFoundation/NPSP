@@ -32,7 +32,8 @@
 * @date 2011 (2.0)
 * @description Updates and managed opportunity contact roles for Household members, invoked via opp trigger 
 */
-public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
+public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 
+	
     public HH_OppContactRoles_TDTM() {}    
 
 //  public HH_OppContactRoles_TDTM(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
@@ -44,8 +45,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
    
         DmlWrapper dmlWrapper = new DmlWrapper();
              
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         
         // bail out if the user has disabled household contact roles.
         if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
@@ -220,7 +221,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             }
             
             if (contactRolesForUpdate != null) {
-                dmlWrapper.objectsToUpdate.putAll(contactRolesForUpdate);
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactRolesForUpdate);
                 //system.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
                 //update contactRolesForUpdate;   
             }   

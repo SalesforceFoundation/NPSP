@@ -60,7 +60,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         DmlWrapper dmlWrapper = new DmlWrapper();
             	   
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -241,7 +241,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     {
         List<npo02__household__c> householdInserts = new List<npo02__household__c>();
         //reload to evaluate insert criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
                 
         set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
@@ -279,13 +279,11 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             // ideally, we'd do this all with dmlWrapper.  But since we
             // need to update the contact's hhId, we can't defer creating the HH's.
             
-            //DJH:UNDONE: error handling needs to be added
             Database.SaveResult[] lsr = Database.insert(householdInserts, false);
                        
             Integer i = 0;
             for (Contact c : contacts)
             {
-                //TODO: if household insert fails, there is no notification to the user
                 if (lsr[i].isSuccess() == true)
                 {
                     //write the new Household Ids to the Contacts
@@ -303,9 +301,10 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             if (contactUpdates.size() > 0) {
                 // using dmlWrapper here caused too many errors with other 
                 // trigger handlers on contact, so do the update directly.
-                //dmlWrapper.objectsToUpdate.putAll(contactUpdates);
-                Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
-                // DJH:UNDONE error handling
+                //dmlWrapper.objectsToUpdate.addAll(contactUpdates);
+                //Database.SaveResult[] dbsr = Database.update(contactUpdates, false);
+                // all or nothing so errors not lost.
+                update contactUpdates;
             }
         
             //SETTING CHECK HERE!!!
@@ -378,7 +377,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
         //reload to evaluate delete criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
         //Generate a list of Household Ids
         for(Contact c : contacts){

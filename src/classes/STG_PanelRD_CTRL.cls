@@ -93,6 +93,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
                where CloseDate > :limitDate 
                and isClosed != true 
                and npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel];
+               
+        map<Id, npe03__Recurring_Donation__c> mapIdRD = new map<Id, npe03__Recurring_Donation__c>([select Id from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel]);
+        RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(mapIdRD.keySet());               
     }
         
     public list<SelectOption> listSORDCloseOptions {

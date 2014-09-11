@@ -32,22 +32,25 @@
 * @date 2014
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
-public with sharing class ADDR_Seasonal_SCHED implements UTIL_IScheduled, Database.Batchable<SObject>  {
+public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
     public String strQuery { get; set; }
-
-    public void execute(SchedulableContext SC) { 
-    	
-    	integer iMonth = system.today().month();
-    	integer iDay = system.today().day();
+    
+    public Boolean executeReturnStatus() { 
+    	//call the batch job, processing 10 at a time
+        if(UTIL_JobScheduler.canRunBatch()) {
+	    	integer iMonth = system.today().month();
+	    	integer iDay = system.today().day();
+	        
+	        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
+	            ' from Address__c ' +
+	            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
+	            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
         
-        strQuery = 'select Id, Household_Account__c, Default_Address__c ' +
-            ' from Address__c ' +
-            ' where Seasonal_Start_Month__c = \'' + string.valueOf(iMonth) + '\'' +
-            ' and Seasonal_Start_Day__c = \'' + string.valueOf(iDay) + '\'';
-        
-        //call the batch job, processing 10 at a time 
-        Id batchInstanceId = Database.executeBatch(this, 10);    
+            Id batchInstanceId = Database.executeBatch(this, 10);
+            return true;
+        }
+        return false;
     }
 
 

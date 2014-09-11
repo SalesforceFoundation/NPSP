@@ -275,7 +275,7 @@ public class RD_RecurringDonations_TEST {
     {
         if (strTestOnly != '*' && strTestOnly != 'contactRolesOnOppsProcessor') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor, 
                 npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole));
             
@@ -306,7 +306,7 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
 
         delete [select id from npe03__Recurring_Donations_Settings__c];
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(50, rds.npe03__Maximum_Donations__c);
         system.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           
@@ -632,6 +632,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = date.newinstance(2000,1,1);
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -686,6 +687,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
+        r1.OwnerId = system.Userinfo.getUserId();
         rdlist.add(r1);
         insert rdlist; 
         
@@ -742,6 +744,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = date.newinstance(2000,1,1);
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -802,6 +805,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -821,7 +825,7 @@ public class RD_RecurringDonations_TEST {
         
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
         
-        system.assert(27 <= [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
+        system.assert(26 <= [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     
@@ -926,6 +930,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = date.newinstance(2000,1,1);
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -987,6 +992,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -1041,6 +1047,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
         r1.npe03__Next_Payment_Date__c = system.today();
+        r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
         map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
@@ -1654,7 +1661,8 @@ public class RD_RecurringDonations_TEST {
         //pass the controller into the extension
         STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL(); 
         controller.getSettingsFirstTime();
-        system.assertNotEquals(null,RD_RecurringDonations.getRecurringDonationsSettings());
+        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getRecurringDonationsSettings(
+                                            RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost));
         
         list<SelectOption> enumvalues  =  controller.closeOptions; 
         system.assertEquals(3,enumvalues.size());
@@ -1734,7 +1742,7 @@ public class RD_RecurringDonations_TEST {
         
         //Schedule the test job 
         insert new Schedulable__c(Name = 'test rd Sched', Class_Name__c = 'RD_RecurringDonations_SCHED', Active__c = true);
-        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_GlobalSchedulable()); 
+        String jobId = System.schedule('Global Scheduler', '0 0 0 3 9 ? 2022', new UTIL_MasterSchedulable()); 
 
         CronTrigger ct =[SELECT id,CronExpression,TimesTriggered,NextFireTime 
         FROM CronTrigger WHERE id=:jobId]; 

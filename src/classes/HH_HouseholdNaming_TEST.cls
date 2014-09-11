@@ -43,7 +43,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = true,
@@ -56,7 +56,7 @@ public class HH_HouseholdNaming_TEST {
                 npo02__Advanced_Household_Naming__c = true
             ));
             
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
            npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -80,7 +80,8 @@ public class HH_HouseholdNaming_TEST {
         system.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
-        'select npo02__household__r.id from Contact where npo02__household__r.id = \'' + hhid + '\' limit 200', true
+        'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 
+            UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' = \'' + hhid + '\' limit 200', true
         );
             
         Test.StartTest(); 
@@ -91,7 +92,7 @@ public class HH_HouseholdNaming_TEST {
     static testMethod void HouseholdNamingTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -102,7 +103,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Excluded_Contact_Opp_Types__c = null                    
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -141,15 +142,12 @@ public class HH_HouseholdNaming_TEST {
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
         system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
         
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        //test for coverage
-        hn.ActivateAdvancedGreetings(true);
     }
     
     static testMethod void HouseholdNamingUpdateTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -161,7 +159,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -170,8 +168,8 @@ public class HH_HouseholdNaming_TEST {
         integer i;
         
         list<Contact> insertlist = new list<Contact>();
-        for (i = 0; i < 200; i++){
-            Contact c = new Contact(LastName = 'LastName' + i, FirstName = 'FirstName' + i, Salutation = 'Mr.');
+        for (i = 0; i < 20; i++){
+            Contact c = new Contact(LastName = 'L' + i, FirstName = 'F' + i, Salutation = 'Mr.');
             if (i == 1){
                 c.npo02__Naming_Exclusions__c = 'Household Name';
             }
@@ -265,7 +263,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testNamingOrder() {
       if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -277,7 +275,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -316,7 +314,7 @@ public class HH_HouseholdNaming_TEST {
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
         system.assert(hh.npo02__Formal_greeting__c.contains('Joe'));
@@ -324,6 +322,7 @@ public class HH_HouseholdNaming_TEST {
         system.assert(hh.npo02__Formal_greeting__c.endswith('Test'));
         system.assert(hh.npo02__Informal_greeting__c.contains('Joe'));
         system.assert(hh.npo02__Informal_greeting__c.contains('Jim'));
+        system.assertEquals(2, hh.Number_of_Household_Members__c);
 
         con1.npo02__Household_Naming_Order__c = 0;
         con2.npo02__Household_Naming_Order__c = 1;
@@ -348,11 +347,12 @@ public class HH_HouseholdNaming_TEST {
         
         hn.UpdateNames(new list<Id>{hh.id});
         
-        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
+        hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c, Number_of_Household_Members__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Jones ' + system.label.npo02.HouseholdNameConnector + ' Test ' + system.label.npo02.DefaultHouseholdName, hh.Name);
-        system.assertequals('John Jones, Jim Test ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
+        system.assertequals('John Jones ' + system.label.npo02.HouseholdNameConnector + ' Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe Test', hh.npo02__Formal_greeting__c);
         system.assertequals('John, Jim ' + system.label.npo02.HouseholdNameConnector + ' Joe', hh.npo02__Informal_greeting__c);
+        system.assertEquals(3, hh.Number_of_Household_Members__c);
         
         con0.npo02__Household_Naming_Order__c = null;
         con1.npo02__Household_Naming_Order__c = 2;
@@ -365,7 +365,7 @@ public class HH_HouseholdNaming_TEST {
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
         system.assertequals('Test ' + system.label.npo02.HouseholdNameConnector + ' Jones ' + system.label.npo02.DefaultHouseholdName, hh.Name);
-        system.assertequals('Jim Test, Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
+        system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
         Test.stopTest();

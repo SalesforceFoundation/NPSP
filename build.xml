@@ -23,6 +23,9 @@
     <!-- Load up the version.properties file to get desired versions -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 
+    <!-- Setup a blank namespace prefix string.  Managed deployments need to override this property before calling deployUnpackagedPost -->
+    <property name="cumulusci.namespace.prefix" value="" />
+
     <!-- Cumulus specific macros -->
     <macrodef name="getPackageVersions" description="Gets the version for all installed packages">
       <sequential>
@@ -130,6 +133,39 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
     <target name="deployUnpackagedPre">
+      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" />
+    </target>
+
+    <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="deployUnpackagedPost">
+      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" />
+    </target>
+
+    <!-- deployManagedUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
+    <target name="deployManagedUnpackagedPre">
+      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
+    <!-- deployManagedUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
+    <target name="deployManagedUnpackagedPost">
+      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with non-namespaced versions of all pre and post deployment bundles -->
+    <target name="zipUnpackagedBundles">
+      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
+      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
+    </target>
+
+    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with namespaced versions of all pre and post deployment bundles -->
+    <target name="zipManagedUnpackagedBundles">
+      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
+      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
+    </target>
+
+
+    <!-- uninstallUnpackagedPre: Uninstall the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="uninstallUnpackagedPre">
       <if>
         <available file="${basedir}/unpackaged/pre/" type="dir" />
         <then>
@@ -138,16 +174,19 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
               <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
             </path>
             <sequential>  
-              <echo>Deploying unpackaged bundle @{dir}</echo>
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
+              <echo>Uninstalling unpackaged bundle @{dir}</echo>
+              <delete dir="uninstall" />
+              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
+              <delete dir="uninstall" />
             </sequential>
           </for>
         </then>
       </if>
     </target>
 
-    <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
-    <target name="deployUnpackagedPost">
+    <!-- uninstallUnpackagedPost: Uninstall the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
+    <target name="uninstallUnpackagedPost">
       <if>
         <available file="${basedir}/unpackaged/post/" type="dir" />
         <then>
@@ -157,7 +196,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
             </path>
             <sequential>  
               <echo>Deploying unpackaged bundle @{dir}</echo>
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="@{dir}" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
+              <echo>Uninstalling unpackaged bundle @{dir}</echo>
+              <delete dir="uninstall" />
+              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
+              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
+              <delete dir="uninstall" />
             </sequential>
           </for>
         </then>
@@ -182,6 +225,8 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
       <antcall target="deployUnpackagedPost" />
 
+      <!-- Uninstall unpackaged post bundles since they may reference code in the package -->
+      <antcall target="uninstallUnpackagedPost" />
     </target>
 
     <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstall.
@@ -267,7 +312,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <updateDependentPackages />
 
       <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-      <antcall target="deployUnpackagedPre" />
+      <antcall target="deployManagedUnpackagedPre" />
 
       <!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
       <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
@@ -277,7 +322,9 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <antcall target="updateDependentPackages" />
 
       <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-      <antcall target="deployUnpackagedPost" />
+      <antcall target="deployManagedUnpackagedPost" />
+
+      <antcall target="uninstallUnpackagedPost" />
 
     </target>
 
@@ -345,7 +392,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <delete dir="uninstall" />
 
       <!-- Fetch all metadata in the  package from target org -->
-      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
+      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name.managed}" />
 
       <!-- Build a destructiveChanges.xml pacckage to delete metadata in org but not in repo -->
       <buildDestroyStaleMetadata srcdir="uninstallsrc" commdir="src" dir="uninstall" />
@@ -359,6 +406,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
     <!-- uninstall: Removes all metadata from the package -->
     <target name="uninstall">
+      <antcall target="uninstallUnpackagedPost" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
       <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
@@ -366,6 +414,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
       <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
       <delete dir="uninstallsrc" />
       <delete dir="uninstall" />
+      <antcall target="uninstallUnpackagedPre" />
     </target>
 
     <!-- uninstall: Removes all non-standard unpackaged metadata from the org -->
@@ -414,7 +463,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     </target>
 
     <target name="updatePackageXmlManaged">
-      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
+      <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
     </target>
 
     <target name="updateMetaXml">
@@ -428,5 +477,11 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
     <target name="testXml">
       <xmlproperty file="src/package.xml" />
       <echoproperties />
+    </target>
+
+    <target name="deployPassingTest">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged/pre/passing_test" runAllTests="false" maxPoll="${cumulusci.maxPoll.test}">
+        <runTest>NPSPAlwaysPassingTest</runTest>
+      </sf:deploy>
     </target>
 </project>

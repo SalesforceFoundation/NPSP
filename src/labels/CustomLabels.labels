@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>Addr_Id_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Id Error</shortDescription>
+        <value>Auth ID cannot be blank.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_No_Batch</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Address Verification Not Supported</shortDescription>
+        <value>The specified service does not support batch address verification.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_API_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
+        <value>DEPRECATED - API Account Settings</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
@@ -9,12 +32,20 @@
         <value>API Account Settings</value>
     </labels>
     <labels>
+        <fullName>Addr_Settings_Intro_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
+        <value>DEPRECATED</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>The SmartyStreets.com LiveAddress API lets you verify US addresses as you add them to Salesforce. The API also standardizes addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
+        <value>The Address Verification API lets you verify addresses as you add them to Salesforce. The API also lets you standardize addresses when you save them (for example, it converts any instance of Street to St in the saved record).</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body2</fullName>
@@ -22,16 +53,16 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Intro Body</shortDescription>
-        <value>To get started using SmartyStreets:
+        <value>&lt;br/&gt;To get started:
 
 &lt;ol&gt;
-&lt;li&gt;Open a free &lt;a href=&quot;https://smartystreets.com&quot; target=&quot;_blank&quot;&gt;SmartyStreets.com&lt;/a&gt; account.&lt;/li&gt;
+&lt;li&gt;Open a third-party address verification account. (Some are free for nonprofits.)&lt;/li&gt;
 
-&lt;li&gt;In SmartyStreets, go to the API Keys section of the website, and create a Secret Key Pair by giving it a label and clicking Add. &lt;br/&gt;Once created, the Secret Key Pair will include an Auth ID and an Auth Token.&lt;/li&gt;
+&lt;li&gt;In your address verification service, create the required authentication ID and/or token.&lt;/li&gt;
 
-&lt;li&gt;Return to this tab, click the Edit button below, and paste the Auth ID and the Auth Token into the appropriate fields.&lt;/li&gt;
+&lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
-&lt;li&gt;Accept the rest of the default settings and click Save.&lt;/li&gt;</value>
+&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
@@ -47,7 +78,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Notice</shortDescription>
-        <value>Address verification using SmartyStreets will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
+        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Body</fullName>
@@ -55,7 +86,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>To test your SmartyStreets Secret Key Pair, enter any US Zip Code:</value>
+        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Response_Title</fullName>
@@ -63,7 +94,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings Test Response Title</shortDescription>
-        <value>SmartyStreets API Response</value>
+        <value>API Response</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Test_Title</fullName>
@@ -82,15 +113,34 @@
         <value>Skip previously verified records</value>
     </labels>
     <labels>
+        <fullName>Addr_Token_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Token Error</shortDescription>
+        <value>Auth Token cannot be blank.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Unauthorized_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Unauthorized Endpoint</shortDescription>
+        <value>Unauthorized endpoint. Please add endpoint URL to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Valid_Key_Pair</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Valid Key Pair</shortDescription>
+        <value>Your Secret Key Pair is valid.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Batch_Body</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. The mass verification process uses the settings from above.&lt;/p&gt;
-
-&lt;p&gt;NOTE: Address Verifications consume credits from your SmartyStreets account.&lt;/p&gt;
-
+        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
+        The mass verification process uses the settings from above.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
     <labels>
@@ -102,12 +152,56 @@
         <value>Mass Verification Status</value>
     </labels>
     <labels>
+        <fullName>Addr_Verification_Batch_Not_Supported</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Batch Support</shortDescription>
+        <value>The selected service does not support Batch Address Validation.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_SmartyStreets_Message</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batches of 100</shortDescription>
+        <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Title</shortDescription>
         <value>Mass Verify Existing Addresses</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Endpoint</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Endpoint</shortDescription>
+        <value>Please enter the endpoint URL.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Google_Help</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Google API Helpt Text</shortDescription>
+        <value>The Google Geocoding API requires a value for Authentication Token only.  This can be found by going to Visit the APIs console at https://code.google.com/apis/console and log in with your Google Account. Click the Services link from the left-hand menu in the APIs Console, then activate the Geocoding API service. Once the service has been activated, your API key is available from the API Access page, in the Simple API Access section. More information on this service and what it provides can be found here: https://developers.google.com/maps/documentation/geocoding/.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verify_Settings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verify Settings</shortDescription>
+        <value>Please verify you have entered your credentials.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verifying</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verifying</shortDescription>
+        <value>Verifying addresses.</value>
     </labels>
     <labels>
         <fullName>Address_Not_Found</fullName>
@@ -126,6 +220,43 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>HiddenForSecurity</fullName>
+        <categories>settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>HiddenForSecurity</shortDescription>
+        <value>Hidden for security</value>
+    </labels>
+    <labels>
+        <fullName>RecurringDonationAccountAndContactError</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
+        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
+    </labels>
+    <labels>
+        <fullName>Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saved</shortDescription>
+        <value>Saved.</value>
+    </labels>
+    <labels>
+        <fullName>Settings_not_Saved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Settings not Saved</shortDescription>
+        <value>Settings not saved</value>
+    </labels>
+    <labels>
+        <fullName>SmartyStreets_Help_Text</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SmartyStreets Help Test</shortDescription>
+        <value>Make sure you have entered both the Auth ID and Auth Token provided to you by SmartyStreets. You will find them in your SmartyStreets API Keys page.</value>
+    </labels>
+    <labels>
         <fullName>Zip_Not_Found</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -140,6 +271,14 @@
         <protected>true</protected>
         <shortDescription>Zipcode Verification Limit</shortDescription>
         <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
+        <fullName>addrCiceroMissingAPIKey</fullName>
+        <categories>Cicero address verification service</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>addrCiceroMissingAPIKey</shortDescription>
+        <value>The Cicero API Key must be specified in the Auth Token setting in the Address Verification Settings.</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
@@ -334,6 +473,14 @@
         <value>The Account Model is set to {0}, but there are a mixture of Account types being used.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsAccountRTIssue</shortDescription>
+        <value>{0} Account records using the {1} record type do not have their System fields correctly set.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsAutoRelCampaignTypeMissing</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -493,6 +640,22 @@
         <value>Payment field {0} does not exist.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriod</shortDescription>
+        <value>Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsInvalidRDCustomPeriodPIcklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsInvalidRDCustomPeriodPIcklist</shortDescription>
+        <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -573,6 +736,14 @@
         <value>Opportunity field {0} and {1} field {2} are not of compatible data types.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsValidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthDetailsValidRDCustomPeriod</shortDescription>
+        <value>Recurring Donation Custom Installment Periods are valid.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelAccountData</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -587,6 +758,14 @@
         <protected>false</protected>
         <shortDescription>healthLabelAccountModelData</shortDescription>
         <value>Account Model Data</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelAccountRTIssueValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAccountRTIssueValid</shortDescription>
+        <value>Account system fields for any Household Accounts and One-to-One Accounts are set correctly.</value>
     </labels>
     <labels>
         <fullName>healthLabelAutoRelValid</fullName>
@@ -765,6 +944,14 @@
         <value>Consider deleting these unused One-to-One Accounts to save space.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionAccountRTIssue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionAccountRTIssue</shortDescription>
+        <value>For Household Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;Household Account&apos;. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;One-to-One Individual&apos;. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionAutoRelFieldsMissing</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -860,12 +1047,28 @@
         <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Payment field, or delete the Payment Mapping record.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriod</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriod</shortDescription>
+        <value>Add this Recurring Donation Installment Period picklist value in Salesforce Setup.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionInvalidRDCustomPeriodPicklist</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>healthSolutionInvalidRDCustomPeriodPicklist</shortDescription>
+        <value>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionInvalidScheduledJob</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionInvalidScheduledJob</shortDescription>
-        <value>You must update the record to have a valid Class the implements the UTIL_IScheduled interface.</value>
+        <value>You must update the record to have a valid Class the implements the UTIL_MasterSchedulableHelper.UTIL_IRecurring interface.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidUDFObjectField</fullName>
@@ -889,7 +1092,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>You must schedule the class UTIL_GlobalSchedulable to run daily with the job name {0}.</value>
+        <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
     </labels>
     <labels>
         <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>
@@ -1080,7 +1283,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateMapping</shortDescription>
-        <value>Create Mapping</value>
+        <value>Create Custom Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRDPeriod</fullName>
@@ -1088,7 +1291,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnCreateRDPeriod</shortDescription>
-        <value>Create Installment Period</value>
+        <value>Create Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateRelReciprocal</fullName>
@@ -1128,7 +1331,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
-        <value>Activate Automatic Household Naming</value>
+        <value>Refresh naming on all Households</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -1152,7 +1355,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRDPeriod</fullName>
@@ -1160,7 +1363,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewRDPeriod</shortDescription>
-        <value>New Installment Period</value>
+        <value>New Custom Installment Period</value>
     </labels>
     <labels>
         <fullName>stgBtnNewRelReciprocal</fullName>
@@ -1192,7 +1395,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnRDCreateNewMap</shortDescription>
-        <value>Create Field Mapping</value>
+        <value>Create Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgBtnRunBatch</fullName>
@@ -1209,6 +1412,22 @@
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorINaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorINaming</shortDescription>
+        <value>Implementing Class does not implement interface HH_INaming.</value>
+    </labels>
+    <labels>
+        <fullName>stgErrorInvalidClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorInvalidClass</shortDescription>
+        <value>Invalid Implementing Class.</value>
     </labels>
     <labels>
         <fullName>stgHelpAccountModel</fullName>
@@ -1332,6 +1551,14 @@ You can close this page at any time and the process will still run in the backgr
         <value>Chatter group where error notifications will be posted.</value>
     </labels>
     <labels>
+        <fullName>stgHelpCiceroAddrVerification</fullName>
+        <categories>Address Verification Settings page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCiceroAddrVerification</shortDescription>
+        <value>Make sure you enter your Cicero API Key in the Auth Token settings field. You will find your API Key on your Cicero My Profile page at cicero.azavea.com</value>
+    </labels>
+    <labels>
         <fullName>stgHelpContactRTExcluded</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1380,6 +1607,14 @@ You can close this page at any time and the process will still run in the backgr
         <value>Select the type of user to send notifications to.</value>
     </labels>
     <labels>
+        <fullName>stgHelpFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpFGFormat</shortDescription>
+        <value>The format to use for the Household Formal Greeting</value>
+    </labels>
+    <labels>
         <fullName>stgHelpFiscalYearRollups</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1401,7 +1636,7 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHExcludedRT</shortDescription>
-        <value>Contact Record Types excluded from Household creation. This setting is ignored if you are using the Household Account model.</value>
+        <value>Specifies which Contact record types Salesforce will exclude from Household object creation. (Applies to One-to-One or Individual Account Models only.)</value>
     </labels>
     <labels>
         <fullName>stgHelpHHMailingListReport</fullName>
@@ -1410,6 +1645,14 @@ You can close this page at any time and the process will still run in the backgr
         <protected>false</protected>
         <shortDescription>stgHelpHHMailingListReport</shortDescription>
         <value>The Household Mailing List Report used for Household-deduplicated Campaign mailing lists. The report should be of Campaigns with Contacts, where Member Status does not contain &apos;Duplicate&apos;</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHNameFormat</shortDescription>
+        <value>The format to use for the Household Name.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNaming</fullName>
@@ -1433,7 +1676,11 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.</value>
+        <value>The Nonprofit Starter Pack supports two different ways to track households.  The recommended way is to specify the Household Account Model, which will use an Account as the Contact&apos;s Household.  If, however, you are using either the One-to-One or Individual Account Models, you can optionally use a separate Household Object as the Contact&apos;s Household.
+&lt;br/&gt;&lt;br/&gt;
+The Household Object and its associated account models are no longer recommended. However, if you are still using the One-to-One or Individual (&quot;Bucket&quot;) account models from previous versions of the Nonprofit Starter Pack, you can change settings for the Household Object here.
+&lt;br/&gt;&lt;br/&gt;
+To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation&quot; target=&quot;_new&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>
@@ -1441,7 +1688,23 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHRules</shortDescription>
-        <value>Specifies which Contacts will have Households objects automatically created for them. Note that this is only used for Contacts using the One-to-One or Individual Account Model. This is ignored for Contacts with the Household Account Model.  If your Account Model is set to &quot;Household Account&quot;, this setting will always be reset to &quot;No Contacts&quot;.</value>
+        <value>Specifies for which contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpIGFormat</shortDescription>
+        <value>The format to use for the Household Informal Greeting.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpINamingClass</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpINamingClass</shortDescription>
+        <value>Specify the Apex Class that implements the HH_INaming interface for Household naming.</value>
     </labels>
     <labels>
         <fullName>stgHelpLeadConvert</fullName>
@@ -1474,6 +1737,22 @@ You can close this page at any time and the process will still run in the backgr
         <protected>false</protected>
         <shortDescription>stgHelpMembershipRT</shortDescription>
         <value>Names of Opportunity Record Types, such as Membership, that you want to roll up separately from other Opportunity Record Types.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameConnector</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameConnector</shortDescription>
+        <value>Specify what string should be used to connect pairs in a name.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpNameOverrun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpNameOverrun</shortDescription>
+        <value>Specify what string should be used to replace long lists of names.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewRDFieldMap</fullName>
@@ -1522,6 +1801,14 @@ You can close this page at any time and the process will still run in the backgr
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOverrunCount</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOverrunCount</shortDescription>
+        <value>Specify the number of contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapOppField</fullName>
@@ -1625,7 +1912,7 @@ You can close this page at any time and the process will still run in the backgr
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50. Larger values may result in DML errors.</value>
+        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -1925,6 +2212,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Action</value>
     </labels>
     <labels>
+        <fullName>stgLabelAddressVerification</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAddressVerification</shortDescription>
+        <value>Address Verification (API Setup)</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAfflSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAfflSettings</shortDescription>
+        <value>Affiliations Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAlloBatchProgress</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -1963,6 +2266,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
         <value>Automatic Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesFGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesFGFormat</shortDescription>
+        <value>Examples for Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesHHNameFOrmat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesHHNameFOrmat</shortDescription>
+        <value>Examples for Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelExamplesIGFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelExamplesIGFormat</shortDescription>
+        <value>Examples for Informal Greeting Format</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>
@@ -2042,7 +2369,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelNewRDFieldMap</shortDescription>
-        <value>New Field Mapping</value>
+        <value>New Custom Field Mapping</value>
     </labels>
     <labels>
         <fullName>stgLabelNewRelReciprocal</fullName>
@@ -2099,6 +2426,38 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOppRollups</shortDescription>
         <value>Opportunity Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOther</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOther</shortDescription>
+        <value>other</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherFormalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherFormalGreetingFormat</shortDescription>
+        <value>Other Formal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherHHNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelOtherHHNameFormat</shortDescription>
+        <value>Other Household Name Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherInformalGreetingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
+        <value>Other Informal Greeting Format</value>
     </labels>
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>
@@ -2274,7 +2633,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavDonations</shortDescription>
-        <value>Donations &amp; Money</value>
+        <value>Donations</value>
     </labels>
     <labels>
         <fullName>stgNavDonorStatistics</fullName>
@@ -2349,6 +2708,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Payments</value>
     </labels>
     <labels>
+        <fullName>stgNavPeople</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavPeople</shortDescription>
+        <value>People</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2362,7 +2729,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDFieldMap</shortDescription>
-        <value>Recurring Donation Field Mappings</value>
+        <value>Recurring Donation Custom Field Mappings</value>
     </labels>
     <labels>
         <fullName>stgNavRDInstallmentPeriods</fullName>
@@ -2370,7 +2737,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavRDInstallmentPeriods</shortDescription>
-        <value>Recurring Donation Installment Periods</value>
+        <value>Recurring Donation Custom Installment Periods</value>
     </labels>
     <labels>
         <fullName>stgNavRecurringDonations</fullName>
@@ -2426,7 +2793,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavSystem</shortDescription>
-        <value>System</value>
+        <value>System Tools</value>
     </labels>
     <labels>
         <fullName>stgNavTriggerConfig</fullName>

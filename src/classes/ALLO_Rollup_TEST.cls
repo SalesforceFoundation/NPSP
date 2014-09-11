@@ -47,10 +47,7 @@ private with sharing class ALLO_Rollup_TEST {
     @isTest
     static void rollupBTN() {
         if (strTestOnly != '*' && strTestOnly != 'rollupBTN') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
+        setupSettings(null);
 
         Account acc = new Account(Name='foo');
         insert acc;
