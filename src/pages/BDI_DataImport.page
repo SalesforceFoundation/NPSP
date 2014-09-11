@@ -25,7 +25,7 @@
     }
 
     function renderResults(){
-        j$("div[class^='message']").hide();
+        // what is this for? --> j$("div[class^='message']").hide();
         // we let the refresh on the action function to display the progress indicator,
         // so that we get the correct state from the server.
     }
@@ -77,9 +77,8 @@
     }
 </style>
 
-<apex:pageMessages />
     <div class="bootstrap" >
-        <apex:form >
+        <apex:form id="idForm">
         <!-- HEADER -->
         <div class="container">
             <div class="jumbotron">
@@ -143,8 +142,20 @@
             <div class="row">
                 <apex:actionFunction name="runconvert" action="{!importData}" reRender="batchpanel" oncomplete="renderResults()"/>
                 <apex:outputPanel id="batchpanel">
-                    <c:UTIL_JobProgress strBatchComponentLabel="Batch Data Import Progress" cNumberOfJobs="1" rendered="{!batchRunning}" />
-                </apex:outputPanel>
+                    <apex:pageMessages />
+                    <c:UTIL_JobProgress strBatchComponentLabel="Batch Data Import progress" cNumberOfJobs="1" rendered="{!batchRunning}" />
+                
+                    <apex:actionPoller rerender="panelSummary" interval="5"/>                
+                    <apex:outputPanel id="panelSummary" >
+                        <apex:outputPanel rendered="{!batchRunning}">
+		                    <apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
+		                    <p>summary at time: {!NOW()} </p>
+		                    <p>records processed: {!crecProcessed}</p>
+		                    <p>records imported: {!crecImported}</p>
+		                    <p>records failed: {!crecFailed}</p>
+		                </apex:outputPanel>
+	                </apex:outputPanel>
+	            </apex:outputPanel>
             </div>
         </div>
     </apex:form>

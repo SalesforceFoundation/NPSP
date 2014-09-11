@@ -35,7 +35,7 @@
 * Batch process looks for all DataImport records that need to be processed
 *
 */
-public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
+public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sObject> { 
 
     private String strSoql;
     
@@ -49,7 +49,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             strComma = ', ';
         }
         strSoql += ' FROM DataImport__c ';
-        strSoql += ' WHERE Status__c <> \'Imported\' ';         
+        strSoql += ' WHERE Status__c <> \'Imported\' ';        
     }
     
     public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -76,6 +76,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	    try {
             this.listDI = listDI;
             
+            // first set a clean state for each DI
+            for (DataImport__c di: listDI) {
+                di.Status__c = null;
+                di.ImportedDate__c = null;
+                di.ApexJobId__c = null;
+            }
+
             importContactsAndHouseholds();
             
             importAccounts();
@@ -86,8 +93,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             
             // update final status for each DI
             for (DataImport__c di: listDI) {
-                di.Status__c = 'Imported';
+            	if (di.Status__c == null)
+                    di.Status__c = 'Imported';
                 di.ImportedDate__c = system.now();
+                di.ApexJobId__c = bc.getJobId();
             }
             
             update listDI;
@@ -95,15 +104,38 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	    } catch (Exception e) {
             // rollback the entire transaction on any failure, DML or otherwise
 	        Database.rollback(sp);
+	        
+	        // log the unexpected error
 	        ERR_Handler.processError(e, ERR_Handler.Context.BDI);
-	        // UNDONE: need to write errors into DI's and not have that commit rolled back.
-	        throw new BDIException(e.getMessage());
+	        
+            // update all the di's with errors with the error state.
+            // those di's without specific errors will get the exception's error
+            list<DataImport__c> listDIError = new list<DataImport__c>();
+            for (DataImport__c di : listDI) {
+            		listDIError.add(new DataImport__c(
+            		  Id = di.Id, 
+            		  Status__c = 'Failed', 
+            		  FailureInformation__c = di.Status__c == 'Failed' ? di.FailureInformation__c : e.getMessage(),
+            		  ApexJobId__c = bc.getJobId()
+            		  ));
+            }
+            
+            update listDIError;
+            
+            // unfortunately, we can't let the system think the batch failed, or
+            // then it would rollback our setting of failure state in the DI records.
+            // so we just return, and rely on our Data Import ui to notify the user.
 	    }
     }
 
-    public class BDIException extends Exception {}
+    // utility to copy the specific error into the provide di.
+    private void LogBDIError(DataImport__c di, string strError) {
+    	di.Status__c = 'Failed';
+        di.FailureInformation__c = strError;
+    }
             
-    public void finish(Database.BatchableContext bc) { }
+    // required method for Batchable.  Nothing we need to do though!
+    public void finish(Database.BatchableContext bc) {}
 
     // utility to return all fields from the Data Import object
     private static list<string> listStrDataImportFields { 
@@ -151,6 +183,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<string> setEmail = new set<string>();
         
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+        	if (di.Status__c == 'Failed')
+        	   continue;
             // c1
             if (di.Contact1_std_Firstname__c != null)
                 setFname.add(di.Contact1_std_Firstname__c);
@@ -202,6 +237,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // create/update our c1's
         map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', listStrDataImportFields);
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             Contact con = new Contact();
             if (di.Contact1Imported__c != null)
                 con.Id = di.Contact1Imported__c; 
@@ -211,6 +249,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             mapC1.put(di.Id, con);
         }
+        //UNDONE: if multiple di's match the same contact, trying to update the contact twice will fail!!
         upsert mapC1.values();
             
         // update each DI with its new contact1 ID
@@ -284,6 +323,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // create/update our A1's
         map<string, string> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', listStrDataImportFields);
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             Account acc = new Account();
             boolean isEmpty = true;
             if (di.Account1Imported__c != null)
@@ -415,6 +457,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     	// so we need to get all the households, and then get all their addresses.
         set<Id> setHHId = new set<Id>();
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             Contact con = mapC1.get(di.Id);
             if (con != null && con.AccountId != null)
                 setHHId.add(con.AccountId);
@@ -429,6 +474,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Home', listStrDataImportFields);
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
  
             // only create Home Address if we have a household
             Contact con = mapC1.get(di.Id);
@@ -480,6 +528,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // need to find all the Campaigns that we might need
         set<string> setStrCampaign = new set<string>();
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             if (di.DonationCampaignName__c != null)
                 setStrCampaign.add(di.DonationCampaignName__c);
         }
@@ -489,6 +540,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
 
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             integer cPropSet = 0;
             Opportunity opp = new Opportunity();
             string strOppName;
@@ -499,25 +553,32 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
             if (di.DonationDonor__c == 'Contact1' || di.DonationDonor__c == null) {
                 Contact con = mapC1.get(di.Id);
-                if (con == null)
-                    throw new BDIException('Invalid Donation Donor');                
+                if (con == null) {
+                    LogBDIError(di, 'Invalid Donation Donor');
+                    continue;
+                }                
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.DonationDonor__c == 'Account1') {
                 Account acc = mapA1.get(di.Id);
-                if (acc == null)
-                    throw new BDIException('Invalid Donation Donor');
+                if (acc == null) {
+                    LogBDIError(di, 'Invalid Donation Donor');
+                    continue;
+                }
                 opp.accountId = acc.Id;    
                 strOppName = acc.Name;            
             } else {
-                throw new BDIException('Invalid Donation Donor');
+                LogBDIError(di, 'Invalid Donation Donor');
+                continue;
             }
                 
             if (di.DonationRecordTypeName__c != null) {
                 Id idRt = UTIL_RecordTypes.GetRecordTypeId('Opportunity', di.DonationRecordTypeName__c);
-                if (idRt == null)
-                    throw new BDIException('Invalid Donation Record Type Name');
+                if (idRt == null) {
+                    LogBDIError(di, 'Invalid Donation Record Type Name');
+                    continue;
+                }
                 opp.RecordTypeId = idRt;
                 strOppName += ' ' + di.DonationRecordTypeName__c;
             } else {
@@ -526,8 +587,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             
             if (di.DonationCampaignName__c != null) {
                 Id idCmp = mapStrCampaignToId.get(di.DonationCampaignName__c);
-                if (idCmp == null)
-                    throw new BDIException('Invalid Donation Campaign Name');
+                if (idCmp == null) {
+                    LogBDIError(di, 'Invalid Donation Campaign Name');
+                    continue;
+                }
                 opp.CampaignId = idCmp;
             }
             
@@ -586,6 +649,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // update payments
         for (DataImport__c di: listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;        	
             if (di.DonationImported__c != null) {
                 npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
                 if (pmt != null) {
