@@ -377,11 +377,12 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>alloAmountOrPercent</members>
     <members>alloBtnCancel</members>
     <members>alloBtnSaveAndClose</members>
-    <members>alloCampaignExceedsOppAmount</members>
     <members>alloDefaultEqual100</members>
     <members>alloDefaultGAUMissing</members>
+    <members>alloDefaultNotPercent</members>
     <members>alloExceedsOppAmount</members>
     <members>alloManageCampaignAllocations</members>
     <members>alloManageOppAllocations</members>
@@ -738,6 +739,7 @@
     <name>StaticResource</name>
   </types>
   <types>
+    <members>Allocation__c.Manage_Allocations</members>
     <members>Contact.Merge_Contacts</members>
     <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
     <name>WebLink</name>

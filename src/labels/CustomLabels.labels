@@ -182,6 +182,14 @@
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>alloAmountOrPercent</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloAmountOrPercent</shortDescription>
+        <value>Each allocation must have either an assigned amount or percent.</value>
+    </labels>
+    <labels>
         <fullName>alloBtnCancel</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -198,20 +206,12 @@
         <value>Save &amp; Close</value>
     </labels>
     <labels>
-        <fullName>alloCampaignExceedsOppAmount</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloCampaignExceedsOppAmount</shortDescription>
-        <value>Campaign Allocations for the following opportunity exceeded the opportunity amount, and were not created.</value>
-    </labels>
-    <labels>
         <fullName>alloDefaultEqual100</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloDefaultEqual100</shortDescription>
-        <value>If default allocations are enabled, allocations must equal 100% of the parent amount.</value>
+        <value>If you&apos;ve enabled default allocations, your allocations must equal 100% of the opportunity amount.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -219,7 +219,15 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
-        <value>Default Allocations are enabled, but no default General Accounting Unit is selected.</value>
+        <value>You&apos;ve enabled Default Allocations. You also need to select a default General Accounting Unit.</value>
+    </labels>
+    <labels>
+        <fullName>alloDefaultNotPercent</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloDefaultNotPercent</shortDescription>
+        <value>The default allocation cannot be percentage-based.</value>
     </labels>
     <labels>
         <fullName>alloExceedsOppAmount</fullName>
@@ -227,7 +235,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>The allocations for this opportunity are greater than the amount of the opportun</shortDescription>
-        <value>The allocations for this opportunity are greater than the amount of the opportunity. Please update the allocations before reducing the amount of the Opportunity.</value>
+        <value>You need to update your allocations before you can reduce the amount of an opportunity. The allocations for this opportunity are currently greater than the opportunity amount.</value>
     </labels>
     <labels>
         <fullName>alloManageCampaignAllocations</fullName>
@@ -259,7 +267,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Percent based Allocations cannot exceed 100%.</shortDescription>
-        <value>Percent based Allocations cannot exceed 100%.</value>
+        <value>Percent-based allocations cannot exceed 100%.</value>
     </labels>
     <labels>
         <fullName>alloSingleParent</fullName>
@@ -267,7 +275,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
-        <value>Each Allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
+        <value>Each allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
@@ -275,7 +283,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
-        <value>Opportunity Allocation totals must not exceed the amount of the Opportunity.</value>
+        <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
     </labels>
     <labels>
         <fullName>alloTotals</fullName>
@@ -1216,7 +1224,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
-        <value>Checking this box will cause Opportunity rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.</value>
+        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpAlloNDayValue</fullName>
@@ -1232,7 +1240,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpAllocationsEnabled</shortDescription>
-        <value>Enables management of Opportunity Allocations into General Accounting Units, and related features.</value>
+        <value>Enables management of Opportunity Allocations into General Accounting Units.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -1296,7 +1304,8 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBatchAlloRollup</shortDescription>
-        <value>Use this page to rollup totals for all closed Opportunities with Allocations, saving the results in General Accounting Unit records. The process may take some time; you can close this page and the process will continue in the background.</value>
+        <value>Click Run Batch to roll up totals for all closed opportunities with allocations assigned to them. The results will be saved in General Accounting Unit records.
+You can close this page at any time and the process will still run in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpBatchOppRollup</fullName>

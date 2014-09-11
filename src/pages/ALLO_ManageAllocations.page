@@ -208,7 +208,7 @@ defaultGAU, automatic uneditable handling of the default
                                 <td width="150px">
                                     <div class="input-group">
                                         <span class="input-group-addon">{!$Label.npe01__DefaultContactTransactionCurrency}</span>
-                                        <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onChange="window.initOrReload" id="alloInputAmount" value="{!Allo.Amount__c}"/>
+                                        <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onChange="window.initOrReload()" id="alloInputAmount" value="{!Allo.Amount__c}"/>
                                     </div>
                                 </td>
                                 <td width="100px">

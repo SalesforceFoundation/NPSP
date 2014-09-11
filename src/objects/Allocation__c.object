@@ -76,7 +76,7 @@
     </fields>
     <fields>
         <fullName>General_Accounting_Unit__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <description>The General Accounting Unit to attribute this allocation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The General Accounting Unit to attribute this allocation.</inlineHelpText>
@@ -84,7 +84,7 @@
         <referenceTo>General_Accounting_Unit__c</referenceTo>
         <relationshipLabel>Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
-        <required>false</required>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
@@ -136,4 +136,16 @@
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
+    <webLinks>
+        <fullName>Manage_Allocations</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Manage Allocations</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/npsp__ALLO_ManageAllocations?{!IF(Opportunity.Id!=null,&apos;opp&apos;,IF(Campaign.Id!=null,&apos;cam&apos;,&apos;rd&apos;))}={!Campaign.Id}{!Opportunity.Id}{!npe03__Recurring_Donation__c.Id}</url>
+    </webLinks>
 </CustomObject>

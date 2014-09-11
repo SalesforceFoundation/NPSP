@@ -130,7 +130,7 @@ public without sharing class TDTM_DefaultConfig {
         //Payment Allocation on Allocation object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 1, Object__c = 'Allocation__c', 
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
+              Trigger_Action__c = 'BeforeInsert;AfterInsert;BeforeUpdate;AfterUpdate;AfterDelete'));
 
         //Payment Allocation on Opportunity object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
