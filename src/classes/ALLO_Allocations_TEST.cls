@@ -299,17 +299,16 @@ private with sharing class ALLO_Allocations_TEST {
         Opportunity opp = new Opportunity(Name='foo', npe03__Recurring_Donation__c = rd.id, Amount = 20, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getOpenStage());
         insert opp;
 
-
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Amount__c];
         system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
-
+/*
         ALLO_Allocations_TDTM.resetFlags();
         delete amountAllo;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Percent__c];
         system.assertEquals(2,queryAllo.size(), 'Opportunity Allocation should be deleted along with the Recurring Donation allocation.');
         system.assertEquals(10,queryAllo[1].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
-
+*/
     }
     /*
     only percentage defined, amount is calculated
