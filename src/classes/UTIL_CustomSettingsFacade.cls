@@ -533,7 +533,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return relationshipsSettings;
     }
 
-    public static Allocations_Settings__c getOrgAllocationsSettings(Allocations_Settings__c mySettings) {
+    public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
         if (allocationsSettings == null)
             allocationsSettings = Allocations_Settings__c.getInstance();
 
@@ -553,13 +553,13 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (allocationsSettings == null)
             allocationsSettings = Allocations_Settings__c.getInstance();
 
-        if (settings.Id == null) {
+        if (allocationsSettings.Id == null) {
             configAllocationsSettings(orgAllocationsSettings);
             upsert allocationsSettings;
         }
 
-        if (settings.Rollup_N_Day_Value__c == null)
-            settings.Rollup_N_Day_Value__c = 365;
+        if (allocationsSettings.Rollup_N_Day_Value__c == null)
+            allocationsSettings.Rollup_N_Day_Value__c = 365;
         return allocationsSettings;
     }
 
@@ -567,25 +567,25 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (orgAllocationsSettings==null)
             orgAllocationsSettings = Allocations_Settings__c.getOrgDefaults();
         
-        if (settings.Id == null) {
+        if (orgAllocationsSettings.Id == null) {
             configAllocationsSettings(orgAllocationsSettings);
             upsert orgAllocationsSettings;
         }
 
-        if (settings.Rollup_N_Day_Value__c == null)
-            settings.Rollup_N_Day_Value__c = 365;
+        if (orgAllocationsSettings.Rollup_N_Day_Value__c == null)
+            orgAllocationsSettings.Rollup_N_Day_Value__c = 365;
         return orgAllocationsSettings;
     }
 
-    public static void configAllocationsSettings(Allocations_Settings__c as) {
+    public static void configAllocationsSettings(Allocations_Settings__c allosettings) {
         //disable allocations by default
-        settings.Allocations_Enabled__c = false;
-        settings.Default_Allocations_Enabled__c = false;
-        settings.Default__c = null;
-        settings.Excluded_Opp_RecTypes__c = null;
-        settings.Excluded_Opp_Types__c = null;
-        settings.Rollup_N_Day_Value__c = 365;
-        settings.Use_Fiscal_Year_for_Rollups__c = false;
+        allosettings.Allocations_Enabled__c = false;
+        allosettings.Default_Allocations_Enabled__c = false;
+        allosettings.Default__c = null;
+        allosettings.Excluded_Opp_RecTypes__c = null;
+        allosettings.Excluded_Opp_Types__c = null;
+        allosettings.Rollup_N_Day_Value__c = 365;
+        allosettings.Use_Fiscal_Year_for_Rollups__c = false;
     }
 
 }

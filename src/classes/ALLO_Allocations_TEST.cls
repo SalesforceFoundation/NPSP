@@ -40,13 +40,13 @@ private with sharing class ALLO_Allocations_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
     
-    private static void setupSettings (Allocations_Settings__c as) {
+    private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
-            if (as==null)
-                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(as);
+            if (alloset==null)
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
-                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
 
         }
     }

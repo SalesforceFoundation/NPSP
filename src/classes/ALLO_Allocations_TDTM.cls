@@ -229,7 +229,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 oppWrap.totalAmount -= allo.Amount__c;
                                 allo.Amount__c = oppWrap.parentAmount * allo.Percent__c * .01;
                                 oppWrap.totalAmount += allo.Amount__c;
-                                dmlWrapper.objectsToUpdate.put(allo.id, allo);
+                                dmlWrapper.objectsToUpdate.add(allo);
                                 system.debug('LookHere: Recalc Amt: ' + allo);
                             }
                         }
@@ -242,7 +242,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         if (oppWrap.defaultAllo.Amount__c==0)
                             dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
                         else
-                            dmlWrapper.objectsToUpdate.put(oppWrap.defaultAllo.id, oppWrap.defaultAllo);
+                            dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
                     if (oppWrap.totalAmount > oppWrap.parentAmount)
@@ -292,7 +292,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         //equalize total amount to parent amount                        
                         //if this default isn't in the trigger set, add it to DML wrapper
                         if (!wrap.defaultInTrigger)
-                            dmlWrapper.objectsToUpdate.put(wrap.defaultAllo.id, wrap.defaultAllo);
+                            dmlWrapper.objectsToUpdate.add(wrap.defaultAllo);
                     }
                 }                    
             }
@@ -376,7 +376,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             //if we have a default allocation, update the amount
                             if (oppWrap.defaultAllo!=null) {
                                 oppWrap.defaultAllo.Amount__c = opp.Amount - oppWrap.totalAmount;
-                                dmlWrapper.objectsToUpdate.put(oppWrap.defaultAllo.id, oppWrap.defaultAllo);
+                                dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
                             //if we don't have a default allocation, create one
                             } else {
                                 oppWrap.defaultAllo = makeDefaultAllocation(opp);
@@ -475,7 +475,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 }
 
                 for (Allocation__c allo : listAlloForUpdate)
-                    dmlWrapper.objectsToUpdate.put(allo.id,(sObject)allo);
+                    dmlWrapper.objectsToUpdate.add(allo);
                 dmlWrapper.objectsToInsert.addAll((list<sObject>)listAlloForInsert);
                 dmlWrapper.objectsToDelete.addAll((list<sObject>)listAlloForDelete);
                 system.debug('LookHere: dmlWrapper ' + dmlWrapper);

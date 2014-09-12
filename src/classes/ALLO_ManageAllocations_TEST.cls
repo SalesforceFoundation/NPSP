@@ -35,17 +35,27 @@
 @isTest
 private class ALLO_ManageAllocations_TEST {
 
+
+
     private static string strTestOnly = '*';
     private static Allocations_Settings__c settings;	
+
+    private static void setupSettings (Allocations_Settings__c alloset) {
+        //set running user to avoid dml issue            
+        System.runAs(new User(id = UserInfo.getUserId())){
+            if (alloset==null)
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
+            else 
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
+
+        }
+    }
 
     //run manage allocations page on an opportunity with no allocations
     //add and delete a row, insert an allocation
 	@isTest static void testOpp() {
         if (strTestOnly != '*' && strTestOnly != 'testOpp') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
+        setupSettings(null);
 		
 		Account acc = new Account(Name='foo');
         insert acc;
@@ -84,10 +94,7 @@ private class ALLO_ManageAllocations_TEST {
     //add a new allocation, delete an existing one, check results
 	@isTest static void testCam() {
         if (strTestOnly != '*' && strTestOnly != 'testCam') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
+        setupSettings(null);
 		
 		Account acc = new Account(Name='foo');
         insert acc;
@@ -118,7 +125,7 @@ private class ALLO_ManageAllocations_TEST {
     	ctrl.delRow();
 
         ALLO_Allocations_TDTM.resetFlags();
-        
+
     	ctrl.listAllo[1].Amount__c = 5;
     	ctrl.listAllo[1].General_Accounting_Unit__c = campaigngau.id;
     	ctrl.saveClose();
@@ -131,12 +138,8 @@ private class ALLO_ManageAllocations_TEST {
     //add a new allocation, delete an existing one, check results
 	@isTest static void testRD() {
         if (strTestOnly != '*' && strTestOnly != 'testRD') return;
-        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-        settings.Allocations_Enabled__c = true;
-        settings.Default_Allocations_Enabled__c = false;
-        update settings;
-		
-
+        setupSettings(null);
+        
         Account acc = new Account(Name='foo');
         insert acc;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
