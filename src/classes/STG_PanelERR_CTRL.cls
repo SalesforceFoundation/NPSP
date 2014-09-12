@@ -61,7 +61,7 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     //Displays the Error Notification Recipients (View Mode only)
     public String strErrorNotifDisplayName {
         get {
-        	String errorNotifRecipient = Error_Settings__c.getOrgDefaults().Error_Notifications_To__c; 
+        	String errorNotifRecipient = UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_To__c; 
         	
             if (errorNotifRecipient != null) {
                 if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {

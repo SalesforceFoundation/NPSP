@@ -400,7 +400,7 @@ public without sharing class HH_HouseholdNaming {
         list<SObject> listHHOld = oldlist;  
         map<ID, SObject> mapIdHHOld = new map<ID, SObject>(listHHOld);       
     
-        npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         
         //updates household records to indicate where/if user changes to the household record are happening
         //and marks them as such so they won't be updated

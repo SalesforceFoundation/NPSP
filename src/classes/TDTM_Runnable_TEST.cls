@@ -62,7 +62,7 @@ public with sharing class TDTM_Runnable_TEST {
     public static testmethod void nochunking() {
     	if (strTestOnly != '*' && strTestOnly != 'nochunking') return;
     	
-    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     
     	List<Contact> contacts = new List<Contact>();

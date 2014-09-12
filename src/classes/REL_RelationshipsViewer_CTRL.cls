@@ -97,8 +97,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         String prefix;
         String NameField;
         String NameIdField;
-        public RelationshipInfo(){
-            npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
+        public RelationshipInfo() {
+            npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
             
             this.prefix = npe4__Relationship__c.sObjectType.getDescribe().getKeyPrefix();
             if (rs.npe4__Relationship_Name_Field_Id__c != null){

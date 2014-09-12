@@ -105,8 +105,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c, Type = 'Household', npe01__SYSTEM_AccountType__c = 'Household Account',
                 npe01__SYSTEMIsIndividual__c = true);
 
-                if (CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
-                    a.RecordTypeId = CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+                if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
+                    a.RecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
 
                 if (HouseholdIdField != null && HouseholdIdField != ''){
                     a.put(HouseholdIdField, hh.Id);
@@ -517,7 +517,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         update updateTriggerHandlers;
 
         //update the custom setting
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = npe01__Contacts_and_Orgs_Settings__c.getOrgDefaults();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         ContactsSettings.npe01__Account_Processor__c = 'Household Account';
 
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
@@ -526,7 +526,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
         update ContactsSettings;
 
-        npo02__Households_Settings__c HHSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c HHSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         HHSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         update HHSettings;
     }
@@ -535,7 +535,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     private List<npo02__Household__c> removeHouseholdAccountsFromList(List<npo02__Household__c> hhList, List<Contact> conList){
         Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
         for (Contact c : conList){
-            if (c.Account.RecordTypeID == CAO_Constants.getContactsSettings().npe01__HH_Account_RecordTypeID__c &&
+            if (c.Account.RecordTypeID == UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c &&
                 c.Account.npe01__SYSTEM_AccountType__c == 'Household Account' &&
                 c.Account.npe01__SYSTEMIsIndividual__c == true &&
                 c.Account.Type == 'Household' &&
