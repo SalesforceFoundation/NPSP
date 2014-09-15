@@ -16,28 +16,12 @@
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
-        <fullName>Addr_Settings_API_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
-        <value>DEPRECATED - API Account Settings</value>
-    </labels>
-    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Intro_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
-        <value>DEPRECATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
@@ -63,46 +47,6 @@
 &lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
 &lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Intro_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Intro Title</shortDescription>
-        <value>Introduction</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Notice</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Notice</shortDescription>
-        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Response_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Response Title</shortDescription>
-        <value>API Response</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Title</shortDescription>
-        <value>Test My Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Skip_Verified</fullName>
@@ -144,14 +88,6 @@
  &lt;br/&gt;</value>
     </labels>
     <labels>
-        <fullName>Addr_Verification_Batch_Status</fullName>
-        <categories>address, verification</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Verification Batch Status</shortDescription>
-        <value>Mass Verification Status</value>
-    </labels>
-    <labels>
         <fullName>Addr_Verification_Batch_Not_Supported</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -166,6 +102,14 @@
         <protected>true</protected>
         <shortDescription>Batches of 100</shortDescription>
         <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_Status</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verification Batch Status</shortDescription>
+        <value>Mass Verification Status</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
@@ -2220,14 +2164,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Address Verification (API Setup)</value>
     </labels>
     <labels>
-        <fullName>stgLabelAfflSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelAfflSettings</shortDescription>
-        <value>Affiliations Settings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelAlloBatchProgress</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -2618,14 +2554,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavContactRoles</shortDescription>
         <value>Contact Roles</value>
-    </labels>
-    <labels>
-        <fullName>stgNavContacts</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNavContacts</shortDescription>
-        <value>Contacts</value>
     </labels>
     <labels>
         <fullName>stgNavDonations</fullName>

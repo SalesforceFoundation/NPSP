@@ -43,7 +43,7 @@ private class ALLO_ManageAllocations_TEST {
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
-            if (alloset==null)
+            if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));

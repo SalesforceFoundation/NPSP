@@ -98,6 +98,7 @@
     <members>RD_RecurringDonations</members>
     <members>RD_RecurringDonations_BATCH</members>
     <members>RD_RecurringDonations_Opp_TDTM</members>
+    <members>RD_RecurringDonations_SCHED</members>
     <members>RD_RecurringDonations_TDTM</members>
     <members>RD_RecurringDonations_TEST</members>
     <members>REL_ProcessControl</members>
@@ -112,6 +113,8 @@
     <members>RLLP_OppHouseholdRollup_BATCH</members>
     <members>RLLP_OppRollup</members>
     <members>RLLP_OppRollupBATCH_TEST</members>
+    <members>RLLP_OppRollup_BATCH</members>
+    <members>RLLP_OppRollup_SCHED</members>
     <members>RLLP_OppRollup_TDTM</members>
     <members>RLLP_OppRollup_TEST</members>
     <members>RLLP_OppRollup_TEST2</members>
@@ -400,24 +403,17 @@
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
-    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
-    <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
     <members>Addr_Settings_Intro_Body2</members>
-    <members>Addr_Settings_Intro_Title</members>
-    <members>Addr_Settings_Notice</members>
-    <members>Addr_Settings_Test_Body</members>
-    <members>Addr_Settings_Test_Response_Title</members>
-    <members>Addr_Settings_Test_Title</members>
     <members>Addr_Skip_Verified</members>
     <members>Addr_Token_Error</members>
     <members>Addr_Unauthorized_Endpoint</members>
     <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
-    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Not_Supported</members>
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
+    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
@@ -675,7 +671,6 @@
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAddressVerification</members>
-    <members>stgLabelAfflSettings</members>
     <members>stgLabelAlloBatchProgress</members>
     <members>stgLabelAllocationsRollupSettings</members>
     <members>stgLabelAllocationsSettings</members>
@@ -725,7 +720,6 @@
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
     <members>stgNavContactRoles</members>
-    <members>stgNavContacts</members>
     <members>stgNavDonations</members>
     <members>stgNavDonorStatistics</members>
     <members>stgNavErrorLog</members>

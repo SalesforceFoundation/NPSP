@@ -197,16 +197,16 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         
                         //if our remainder is negative, don't insert allocations, as they would exceed the opportunity amount
                         if (remainder < 0) {
-                            //TODO: Figure out better default behavior. Maybe only create percentage based allocations, and document it well.
-                            //Send an email & post to chatter?
-                            //throw new AllocationsException(Label.alloCampaignExceedsOppAmount + ' ' + opp.id);
+                            //TODO: implement better default behavior. only create percentage based allocations, and document it well.
                             if (settings.Default_Allocations_Enabled__c) {
                                 dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
                             }
 
                         //create default allocation if needed
                         } else if (settings.Default_Allocations_Enabled__c && remainder > 0) {
-                            dmlWrapper.objectsToInsert.add((sObject)makeDefaultAllocation(opp));
+                            Allocation__c defaultAllo = makeDefaultAllocation(opp);
+                            defaultAllo.Amount__c = remainder;
+                            dmlWrapper.objectsToInsert.add(defaultAllo);
                             dmlWrapper.objectsToInsert.addAll((list<sObject>)listAlloForInsert);
                         //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
                         } else {
@@ -343,7 +343,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         set<id> setOppIds = new set<id>();
 
 
-        for (Allocation__c allo : (list<Allocation__c>) newList) {
+        for (Allocation__c allo : triggerAction == TDTM_Runnable.Action.AfterDelete ? (list<Allocation__c>) oldList : (list<Allocation__c>) newList) {
             //if this allocation is for a recurring donation, save the Id for updating open opportunities under that RD schedule
             if (allo.Recurring_Donation__c != null)
                 setRecDonId.add(allo.Recurring_Donation__c);

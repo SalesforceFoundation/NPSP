@@ -550,26 +550,26 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     public static Allocations_Settings__c getAllocationsSettings() {
-        if (allocationsSettings == null)
+        if (allocationsSettings == null) {
             allocationsSettings = Allocations_Settings__c.getInstance();
 
-        if (allocationsSettings.Id == null) {
-            configAllocationsSettings(orgAllocationsSettings);
-            upsert allocationsSettings;
+            if (allocationsSettings.Id == null) {
+                configAllocationsSettings(allocationsSettings);
+                upsert allocationsSettings;
+            }
         }
-
         if (allocationsSettings.Rollup_N_Day_Value__c == null)
             allocationsSettings.Rollup_N_Day_Value__c = 365;
         return allocationsSettings;
     }
 
     public static Allocations_Settings__c getOrgAllocationsSettings() {
-        if (orgAllocationsSettings==null)
+        if (orgAllocationsSettings==null) {
             orgAllocationsSettings = Allocations_Settings__c.getOrgDefaults();
-        
-        if (orgAllocationsSettings.Id == null) {
-            configAllocationsSettings(orgAllocationsSettings);
-            upsert orgAllocationsSettings;
+            if (orgAllocationsSettings.Id == null) {
+                configAllocationsSettings(orgAllocationsSettings);
+                upsert orgAllocationsSettings;
+            }
         }
 
         if (orgAllocationsSettings.Rollup_N_Day_Value__c == null)
