@@ -55,16 +55,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(strSoql);
     }
-
+    
     // maps to keep track of the objects we will create.
-    // all are indexed by the DataImport ID
-    private map<Id, Contact> mapC1 = new map<Id, Contact>();
-    private map<Id, Contact> mapC2 = new map<Id, Contact>();
-    private map<Id, Account> mapA1 = new map<Id, Account>();
-    private map<Id, Account> mapA2 = new map<Id, Account>();
-    private map<Id, Address__c> mapAddr = new map<Id, Address__c>();
-    private map<Id, Opportunity> mapOpp = new map<Id, Opportunity>();
-    private map<Id, npe01__OppPayment__c> mapPmt = new map<Id, npe01__OppPayment__c>();
+    // all are indexed by the object's matching key or the di.Id
+    private map<string, Contact> mapDIKeyToContact = new map<string, Contact>();
+    private map<string, Account> mapDIKeyToAccount = new map<string, Account>();
+    private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
+    private map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
+    private map<Id, npe01__OppPayment__c> mapDIIdPmt = new map<Id, npe01__OppPayment__c>();
 
     // holds the list of DataImport records we are currently processing
     private list<DataImport__c> listDI;
@@ -81,6 +79,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 di.Status__c = null;
                 di.ImportedDate__c = null;
                 di.ApexJobId__c = null;
+                di.FailureInformation__c = null;
             }
 
             importContactsAndHouseholds();
@@ -173,8 +172,119 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         return mapDIFieldToObjField;
     }
 
+    //********************************************* CONTACTS & HOUSEHOLDS ************************************************
+    // method to handle importing or updating Contact1 and Contact2,
+    // creating their Household if none exists.
+    private void importContactsAndHouseholds() {        
+
+        // first, try to match our existing contacts
+        matchExistingContacts();            
+
+        // handle multiple di's referring to the same existing contact
+        set<string> setDIKeyUpsert = new set<string>();
+        list<Contact> listConUpsert = new list<Contact>();
+                    
+        // create/update our c1's
+        map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', listStrDataImportFields);
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
+               
+            string diKey = diKeyC1(di);
+            if (diKey == null)
+                continue;                
+            Contact con = mapDIKeyToContact.get(diKey);
+            
+            boolean isModified = false;                 
+            for (string strDIField : mapDIFieldToC1Field.keySet()) {
+                if (di.get(strDIField) != null) {
+                    con.put(mapDIFieldToC1Field.get(strDIField), di.get(strDIField));
+                    isModified = true;
+                }
+            }
+            
+            if (isModified) {
+                if (setDIKeyUpsert.add(diKey))
+                    listConUpsert.add(con);
+            }
+        }
+        upsert listConUpsert;
+            
+        // update each DI with its new contact1 ID
+        // also get all our C1 Id's in a set for further use
+        set<Id> setC1Id = new set<Id>();
+        for (DataImport__c di: listDI) {
+            if (di.Contact1Imported__c == null) {
+                string diKey = diKeyC1(di);
+                Contact con = mapDIKeyToContact.get(diKey);
+                if (con != null) 
+                    di.Contact1Imported__c = con.Id;
+            }
+            setC1Id.add(di.Contact1Imported__c);
+        }
+            
+        // get the Household Accounts that were created for C1's
+        map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
+        for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
+            mapC1IdToHHId.put(con.Id, con.AccountId);
+        }
+        // store it back in C1 for later use
+        for (DataImport__c di : listDI) {
+            if (di.Contact1Imported__c != null) {
+                Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
+                if (HHId != null) {
+                    string diKey = diKeyC1(di);
+                    Contact con = mapDIKeyToContact.get(diKey);
+                    con.AccountId = HHId;
+                }
+            }
+        }
+
+        // now create our c2's
+        map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', listStrDataImportFields);
+        setDIKeyUpsert.clear();
+        listConUpsert.clear();
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
+               
+            string diKey = diKeyC2(di);
+            if (diKey == null)
+                continue;                
+            Contact con = mapDIKeyToContact.get(diKey);
+            // set c2's household to match c1
+            con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
+            
+            boolean isModified = false;                 
+            for (string strDIField : mapDIFieldToC2Field.keySet()) {
+                if (di.get(strDIField) != null) {
+                    con.put(mapDIFieldToC2Field.get(strDIField), di.get(strDIField));
+                    isModified = true;
+                }
+            }
+            if (isModified) {
+                if (setDIKeyUpsert.add(diKey))
+                   listConUpsert.add(con);
+            }
+        }
+        upsert listConUpsert;
+            
+        // update each DI with its new contact2 ID
+        for (DataImport__c di: listDI) {
+            if (di.Contact2Imported__c == null) {
+                string diKey = diKeyC2(di);
+                Contact con = mapDIKeyToContact.get(diKey);
+                if (con != null) 
+                    di.Contact2Imported__c = con.Id;
+            }
+        }
+    }
+
     // looks for existing contacts that match C1 or C2, and if found,
-    // updates their Id's in the Di's.
+    // updates their Id's in the Di's.  if not found, creates a new
+    // contact object for that di.
     private void matchExistingContacts() {
     
         //UNDONE: read preference for fields to match against.
@@ -207,151 +317,62 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         strSoql += 'Firstname in :setFname and Lastname in :setLname and Email in :setEmail';
         list<Contact> listCon = database.query(strSoql);
         
-        map<string, Id> mapKeyToContactId = new map<string, Id>();
+        // put all potential contacts into a map
+        map<string, Contact> mapDIKeyToContactAll = new map<string, Contact>();        
         for (Contact con : listCon) {
-            string key = con.Firstname + '|' + con.Lastname + '|' + con.Email;
-            mapKeyToContactId.put(key, con.Id);
-        }        
+            string diKey = diKeyContact(con);
+            mapDIKeyToContactAll.put(diKey, con);
+        }
         
         for (DataImport__c di : listDI) {
-            ID id = mapKeyToContactId.get(di.Contact1_std_Firstname__c + '|' + di.Contact1_std_Lastname__c + '|' + di.Contact1_npe01_HomeEmail__c);
-            if (id != null) {
-                di.Contact1Imported__c = id;
+        	string diKey = diKeyC1(di);
+            Contact con = mapDIKeyToContactAll.get(diKey);
+            if (con != null) {
+                di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = 'Matched';
+            } else if (diKey != null) {
+                con = new Contact();
+                di.Contact1ImportStatus__c = 'Created';
             }
-            id = mapKeyToContactId.get(di.Contact2_std_Firstname__c + '|' + di.Contact2_std_Lastname__c + '|' + di.Contact2_npe01_HomeEmail__c);
-            if (id != null) {
-                di.Contact2Imported__c = id;
+            mapDIKeyToContactAll.put(diKey, con);
+            mapDIKeyToContact.put(diKey, con);
+            
+            diKey = diKeyC2(di);
+            con = mapDIKeyToContactAll.get(diKey);
+            if (con != null) {
+                di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = 'Matched';
+            } else if (diKey != null) {
+                con = new Contact();
+                di.Contact2ImportStatus__c = 'Created';
             }
+            mapDIKeyToContactAll.put(diKey, con);
+            mapDIKeyToContact.put(diKey, con);
         }
     }
 
-    // method to handle importing or updating Contact1 and Contact2,
-    // creating their Household if none exists.
-    private void importContactsAndHouseholds() {        
-
-        // first, try to match our existing contacts
-        matchExistingContacts();            
-
-        // handle multiple di's referring to the same existing contact
-        map<Id,Contact> mapConIdToCon = new map<Id, Contact>();
-        list<Contact> listConUpsert = new list<Contact>();
-                    
-        // create/update our c1's
-        map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', listStrDataImportFields);
-        for (DataImport__c di : listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == 'Failed')
-               continue;
-            Contact con;
-            
-            if (di.Contact1Imported__c != null) {
-                // see if we already have this contact
-                con = mapConIdToCon.get(di.Contact1Imported__c);
-            }
-            
-            if (con == null) { 
-                con = new Contact();
-                listConUpsert.add(con);
-            }
-                
-            if (di.Contact1Imported__c != null) {
-                con.Id = di.Contact1Imported__c;
-                mapConIdToCon.put(con.Id, con);
-            }
-                 
-            for (string strDIField : mapDIFieldToC1Field.keySet()) {
-                if (di.get(strDIField) != null)
-                    con.put(mapDIFieldToC1Field.get(strDIField), di.get(strDIField));
-            }
-            mapC1.put(di.Id, con);
-        }
-        upsert listConUpsert;
-            
-        // update each DI with its new contact1 ID
-        // also get all our C1 Id's in a set for further use
-        set<Id> setC1Id = new set<Id>();
-        for (DataImport__c di: listDI) {
-            if (di.Contact1Imported__c == null) {
-            	Contact con = mapC1.get(di.Id);
-            	if (con != null) {
-	                di.Contact1Imported__c = con.Id;
-                    di.Contact1ImportStatus__c = 'Created';
-            	}
-            }
-            setC1Id.add(di.Contact1Imported__c);
-        }
-            
-        // get the Household Accounts that were created for C1's
-        map<Id, Id> mapC1IdToHHId = new map<Id, Id>();
-        for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
-            mapC1IdToHHId.put(con.Id, con.AccountId);
-        }
-        // store it back in C1 for later use
-        for (DataImport__c di : listDI) {
-            if (di.Contact1Imported__c != null) {
-                Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
-                if (HHId != null) {
-                    Contact con = mapC1.get(di.Id);
-                    con.AccountId = HHId;
-                }
-            }
-        }
-
-        // now create our c2's
-        map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', listStrDataImportFields);
-        listConUpsert.clear();
-        mapConIdToCon.clear();
-        for (DataImport__c di : listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == 'Failed')
-               continue;
-            Contact con;
-            boolean isDup = false;
-            
-            if (di.Contact2Imported__c != null) {
-                // see if we already have this contact
-                con = mapConIdToCon.get(di.Contact2Imported__c);
-                if (con != null) isDup = true;
-            }
-
-            if (con == null) { 
-                con = new Contact();
-            }
-                
-            if (di.Contact2Imported__c != null) {
-                con.Id = di.Contact2Imported__c;
-                mapConIdToCon.put(con.Id, con);
-            }
-            boolean isEmpty = true;
-            con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
-            for (string strDIField : mapDIFieldToC2Field.keySet()) {
-                if (di.get(strDIField) != null) {
-                    con.put(mapDIFieldToC2Field.get(strDIField), di.get(strDIField));
-                    isEmpty = false;
-                }
-            }
-            if (!isEmpty) {
-                mapC2.put(di.Id, con);
-                if (!isDup)
-                    listConUpsert.add(con);
-            }
-        }
-        upsert listConUpsert;
-            
-        // update each DI with its new contact2 ID
-        for (DataImport__c di: listDI) {
-            if (di.Contact2Imported__c == null) {
-            	Contact con = mapC2.get(di.Id);
-            	if (con != null) {
-	                di.Contact2Imported__c = con.Id;
-                    di.Contact2ImportStatus__c = 'Created';
-            	}
-            }
-        }
+    // utility to return the search key for a given contact.
+    private string diKeyContact(Contact con) {
+    	if (con == null)
+    	   return null;
+        return con.Firstname + '|' + con.Lastname + '|' + con.Email;
     }
-            
+
+    // utility to return the search key for contact1 in the given di.
+    private string diKeyC1(DataImport__c di) {
+    	if (di.Contact1_std_Firstname__c == null && di.Contact1_std_Lastname__c == null && di.Contact1_npe01_HomeEmail__c == null)
+    	   return null;
+        return di.Contact1_std_Firstname__c + '|' + di.Contact1_std_Lastname__c + '|' + di.Contact1_npe01_HomeEmail__c;
+    }
+    
+    // utility to return the search key for contact2 in the given di.
+    private string diKeyC2(DataImport__c di) {
+        if (di.Contact2_std_Firstname__c == null && di.Contact2_std_Lastname__c == null && di.Contact2_npe01_HomeEmail__c == null)
+            return null;
+        return di.Contact2_std_Firstname__c + '|' + di.Contact2_std_Lastname__c + '|' + di.Contact2_npe01_HomeEmail__c;
+    }
+
+    //********************************************* ACCOUNTS ************************************************
     // method to handle importing or updating Account1 and Account2,
     // and setting the contacts' Primary Affiliation.
     private void importAccounts() {        
@@ -360,7 +381,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         matchExistingAccounts();            
             
         // handle multiple di's referring to the same existing account
-        map<Id,Account> mapAccIdToAcc = new map<Id, Account>();
+        set<string> setDIKeyUpsert = new set<string>();
         list<Account> listAccUpsert = new list<Account>();
 
         // create/update our A1's
@@ -369,32 +390,21 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-            boolean isDup = false;
-            Account acc;
-            
-            if (di.Account1Imported__c != null) {
-                // see if we already have this account
-                acc = mapAccIdToAcc.get(di.Account1Imported__c);
-                if (acc != null) isDup = true;
-            }
-            
-            if (acc == null)
-                acc = new Account();
-                
-            if (di.Account1Imported__c != null) {
-                acc.Id = di.Account1Imported__c;
-                mapAccIdToAcc.put(acc.Id, acc);
-            }
-            boolean isEmpty = true;             
+               
+            string diKey = diKeyA1(di);
+            if (diKey == null)
+                continue;
+            Account acc = mapDIKeyToAccount.get(diKey);
+
+            boolean isModified = false;             
             for (string strDIField : mapDIFieldToA1Field.keySet()) {
                 if (di.get(strDIField) != null) {
                     acc.put(mapDIFieldToA1Field.get(strDIField), di.get(strDIField));
-                    isEmpty = false;
+                    isModified = true;
                 }
             }
-            if (!isEmpty) {
-                mapA1.put(di.Id, acc);
-                if (!isDup)
+            if (isModified) {
+                if (setDIKeyUpsert.add(diKey)) 
                     listAccUpsert.add(acc);
             }
         }
@@ -405,15 +415,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         map<Id, Contact> mapConIdToConUpdate = new map<Id, Contact>();
         for (DataImport__c di: listDI) {
             if (di.Account1Imported__c == null) {
-            	Account acc = mapA1.get(di.Id);
-            	if (acc != null) {
+            	Account acc = mapDIKeyToAccount.get(diKeyA1(di));
+            	if (acc != null) 
 	                di.Account1Imported__c = acc.Id;
-	                di.Account1ImportStatus__c = 'Created';
-            	}
             }
             // set c1's primary affilation
             if (di.Account1Imported__c != null) {
-                Contact c1 = mapC1.get(di.Id);
+            	Contact c1 = mapDIKeyToContact.get(diKeyC1(di));
                 if (c1 != null) {
 	                c1.Primary_Affiliation__c = di.Account1Imported__c;
 	                if (mapConIdToConUpdate.get(c1.Id) == null)
@@ -425,55 +433,42 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // create/update our A2's
         map<string, string> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', listStrDataImportFields);
         listAccUpsert.clear();
-        mapAccIdToAcc.clear();
+        setDIKeyUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-            boolean isDup = false;
-            Account acc;
             
-            if (di.Account2Imported__c != null) {
-                // see if we already have this account
-                acc = mapAccIdToAcc.get(di.Account2Imported__c);
-                if (acc != null) isDup = true;
-            }
-            
-            if (acc == null)
-                acc = new Account();
-                
-            if (di.Account2Imported__c != null) {
-                acc.Id = di.Account2Imported__c;
-                mapAccIdToAcc.put(acc.Id, acc);
-            }
-            boolean isEmpty = true;             
+            string diKey = diKeyA2(di);
+            if (diKey == null)
+                continue;
+            Account acc = mapDIKeyToAccount.get(diKey);
+
+            boolean isModified = false;             
             for (string strDIField : mapDIFieldToA2Field.keySet()) {
                 if (di.get(strDIField) != null) {
                     acc.put(mapDIFieldToA2Field.get(strDIField), di.get(strDIField));
-                    isEmpty = false;
+                    isModified = true;
                 }
             }
-            if (!isEmpty) {
-                mapA2.put(di.Id, acc);
-                if (!isDup)
+            if (isModified) {
+                if (setDIKeyUpsert.add(diKey)) 
                     listAccUpsert.add(acc);
             }
         }
         upsert listAccUpsert;
-            
-        // update each DI with its new Account1 ID
+
+        // update each DI with its new Account2 ID
         // and set contact's primary affiliations
         for (DataImport__c di: listDI) {
             if (di.Account2Imported__c == null) {
-            	Account acc = mapA2.get(di.Id);
-            	if (acc != null) {
+            	Account acc = mapDIKeyToAccount.get(diKeyA2(di));
+            	if (acc != null) 
                     di.Account2Imported__c = acc.Id;
-                    di.Account2ImportStatus__c = 'Created';
-            	}
             }
             // set c2's primary affilation
             if (di.Account2Imported__c != null) {
-                Contact c2 = mapC2.get(di.Id);
+                Contact c2 = mapDIKeyToContact.get(diKeyC2(di));
                 if (c2 != null) {
 	                c2.Primary_Affiliation__c = di.Account2Imported__c;
 	                if (mapConIdToConUpdate.get(c2.Id) == null)
@@ -488,6 +483,23 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	    AFFL_Affiliations_TDTM.hasRunForContacts = false;
 	    AFFL_Affiliations_TDTM.hasRunForAffiliations = false;       
         update mapConIdToConUpdate.values();
+    }
+
+    // utility to return the search key for a given account.
+    private string diKeyAccount(Account acc) {
+    	if (acc == null)
+    	   return null;
+        return acc.Name;
+    }
+
+    // utility to return the search key for Account1 in the given di.
+    private string diKeyA1(DataImport__c di) {
+        return di.Account1_std_Name__c;
+    }
+    
+    // utility to return the search key for Account2 in the given di.
+    private string diKeyA2(DataImport__c di) {
+        return di.Account2_std_Name__c;
     }
 
     // looks for existing Accounts that match A1 or A2, and if found,
@@ -511,26 +523,38 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         strSoql += 'Name in :setName';
         list<Account> listAcc = database.query(strSoql);
         
-        map<string, Id> mapKeyToAccountId = new map<string, Id>();
+        // put all Accounts into our map
         for (Account acc : listAcc) {
-            string key = acc.Name;
-            mapKeyToAccountId.put(key, acc.Id);
+            string diKey = diKeyAccount(acc);
+            mapDIKeyToAccount.put(dikey, acc);
         }        
         
         for (DataImport__c di : listDI) {
-            ID id = mapKeyToAccountId.get(di.Account1_std_Name__c);
-            if (id != null) {
-                di.Account1Imported__c = id;
+        	string diKey = diKeyA1(di);
+            Account acc = mapDIKeyToAccount.get(diKey);
+            if (acc != null) {
+                di.Account1Imported__c = acc.id;
                 di.Account1ImportStatus__c = 'Matched';
+            } else if (diKey != null) {
+                acc = new Account();
+                di.Account1ImportStatus__c = 'Created';                
             }
-            id = mapKeyToAccountId.get(di.Account2_std_Name__c);
-            if (id != null) {
-                di.Account2Imported__c = id;
+            mapDIKeyToAccount.put(diKey, acc);
+
+            diKey = diKeyA2(di);
+            acc = mapDIKeyToAccount.get(diKey);
+            if (acc != null) {
+                di.Account2Imported__c = acc.id;
                 di.Account2ImportStatus__c = 'Matched';
+            } else if (diKey != null) {
+                acc = new Account();
+                di.Account2ImportStatus__c = 'Created';                
             }
+            mapDIKeyToAccount.put(diKey, acc);
         }
     }
-    
+
+    //********************************************* ADDRESSES ************************************************    
     // method to create the default Household Address for each household.
     // must ensure the address doesn't already exist for the case of updating existing contacts and accounts.
     private void importAddresses() {
@@ -542,7 +566,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-            Contact con = mapC1.get(di.Id);
+            Contact con = mapDIKeyToContact.get(diKeyC1(di));
             if (con != null && con.AccountId != null)
                 setHHId.add(con.AccountId);
         }
@@ -561,7 +585,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                continue;
  
             // only create Home Address if we have a household
-            Contact con = mapC1.get(di.Id);
+            Contact con = mapDIKeyToContact.get(diKeyC1(di));
             if (con == null || con.AccountId == null)
                 continue;
  
@@ -583,16 +607,16 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             	   di.HomeAddressImported__c = idAddr;
             	   di.HomeAddressImportStatus__c = 'Matched';
             	} else {
-                    mapAddr.put(di.Id, addr);
+                    mapDIIdToAddr.put(di.Id, addr);
             	}
             }
         }
-        insert mapAddr.values();   
+        insert mapDIIdToAddr.values();   
 
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
             if (di.HomeAddressImported__c == null) {
-                Address__c addr = mapAddr.get(di.Id);
+                Address__c addr = mapDIIdToAddr.get(di.Id);
                 if (addr != null) {
                     di.HomeAddressImported__c = addr.Id;
                     di.HomeAddressImportStatus__c = 'Created';
@@ -601,6 +625,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    //********************************************* OPPORTUNITIES ************************************************
     // method to create an new Opportunity for the specified Contact or Account
     private void importOpportunities() {
     
@@ -634,7 +659,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 continue;
 
             if (di.DonationDonor__c == 'Contact1' || di.DonationDonor__c == null) {
-                Contact con = mapC1.get(di.Id);
+                Contact con = mapDIKeyToContact.get(diKeyC1(di));
                 if (con == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
                     continue;
@@ -643,7 +668,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.DonationDonor__c == 'Account1') {
-                Account acc = mapA1.get(di.Id);
+                Account acc = mapDIKeyToAccount.get(diKeyA1(di));
                 if (acc == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
                     continue;
@@ -698,14 +723,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }
             }
             if (cPropSet > 0)
-                mapOpp.put(di.Id, opp);
+                mapDIIdToOpp.put(di.Id, opp);
         }
-        insert mapOpp.values();
+        insert mapDIIdToOpp.values();
         
         // update each DI with its new opp
         for (DataImport__c di: listDI) {
             if (di.DonationImported__c == null) {
-                Opportunity opp = mapOpp.get(di.Id);
+                Opportunity opp = mapDIIdToOpp.get(di.Id);
                 if (opp != null) {
                     di.DonationImported__c = opp.Id;
                     di.DonationImportStatus__c = 'Created';
@@ -722,7 +747,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // need to find payment records, to add any additional info.
         map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
-        for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c where npe01__Opportunity__c in :mapOpp.values()]) {
+        for (npe01__OppPayment__c pmt : [select Id, npe01__Opportunity__c from npe01__OppPayment__c where npe01__Opportunity__c in :mapDIIdToOpp.values()]) {
             mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
         }
 
@@ -745,11 +770,11 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                         }
                     }                    
                     if (cPropSet > 0)
-                        mapPmt.put(di.Id, pmt);
+                        mapDIIdPmt.put(di.Id, pmt);
                 }
             }
         }
         
-        upsert mapPmt.values();
+        upsert mapDIIdPmt.values();
     }    
 }
