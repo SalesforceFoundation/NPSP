@@ -42,6 +42,7 @@
     <members>BDE_DescribeHelper_UTIL</members>
     <members>BDI_DataImport_BATCH</members>
     <members>BDI_DataImport_CTRL</members>
+    <members>BDI_DataImport_TEST</members>
     <members>CAO_Constants</members>
     <members>CONV_Account_Conversion_BATCH</members>
     <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -334,11 +335,20 @@
     <members>DataImport__c.Account1_std_Website__c</members>
     <members>DataImport__c.Account2ImportStatus__c</members>
     <members>DataImport__c.Account2Imported__c</members>
+    <members>DataImport__c.Account2_std_BillingCity__c</members>
+    <members>DataImport__c.Account2_std_BillingCountry__c</members>
+    <members>DataImport__c.Account2_std_BillingPostalCode__c</members>
+    <members>DataImport__c.Account2_std_BillingState__c</members>
+    <members>DataImport__c.Account2_std_BillingStreet__c</members>
     <members>DataImport__c.Account2_std_Name__c</members>
+    <members>DataImport__c.Account2_std_Phone__c</members>
+    <members>DataImport__c.Account2_std_Website__c</members>
+    <members>DataImport__c.ApexJobId__c</members>
     <members>DataImport__c.Contact1ImportStatus__c</members>
     <members>DataImport__c.Contact1Imported__c</members>
     <members>DataImport__c.Contact1_npe01_AlternateEmail__c</members>
     <members>DataImport__c.Contact1_npe01_HomeEmail__c</members>
+    <members>DataImport__c.Contact1_npe01_Preferred_Email__c</members>
     <members>DataImport__c.Contact1_npe01_WorkEmail__c</members>
     <members>DataImport__c.Contact1_std_Birthdate__c</members>
     <members>DataImport__c.Contact1_std_Firstname__c</members>
@@ -347,9 +357,15 @@
     <members>DataImport__c.Contact1_std_Title__c</members>
     <members>DataImport__c.Contact2ImportStatus__c</members>
     <members>DataImport__c.Contact2Imported__c</members>
+    <members>DataImport__c.Contact2_npe01_AlternateEmail__c</members>
     <members>DataImport__c.Contact2_npe01_HomeEmail__c</members>
+    <members>DataImport__c.Contact2_npe01_Preferred_Email__c</members>
+    <members>DataImport__c.Contact2_npe01_WorkEmail__c</members>
+    <members>DataImport__c.Contact2_std_Birthdate__c</members>
     <members>DataImport__c.Contact2_std_Firstname__c</members>
     <members>DataImport__c.Contact2_std_LastName__c</members>
+    <members>DataImport__c.Contact2_std_Salutation__c</members>
+    <members>DataImport__c.Contact2_std_Title__c</members>
     <members>DataImport__c.DonationCampaignName__c</members>
     <members>DataImport__c.DonationDonor__c</members>
     <members>DataImport__c.DonationImportStatus__c</members>
