@@ -38,7 +38,7 @@ private with sharing class ALLO_Allocations_TEST {
     
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
+    private static string strTestOnly = 'recurringDonationsValidation';
     
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
