@@ -67,7 +67,6 @@
         <externalId>false</externalId>
         <label>Account1 Imported</label>
         <referenceTo>Account</referenceTo>
-        <relationshipLabel>Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -163,17 +162,92 @@
         <externalId>false</externalId>
         <label>Account2 Imported</label>
         <referenceTo>Account</referenceTo>
-        <relationshipLabel>Data Imports (Account2 Imported)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Account2_std_BillingCity__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 City</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_std_BillingCountry__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Country</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_std_BillingPostalCode__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_std_BillingState__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_std_BillingStreet__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Account2_std_Name__c</fullName>
         <externalId>false</externalId>
         <label>Account2 Name</label>
         <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_std_Phone__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Account2_std_Website__c</fullName>
+        <externalId>false</externalId>
+        <label>Account2 Website</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>ApexJobId__c</fullName>
+        <description>The ApexJobID of the Batch Job that processed the record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ApexJobID of the Batch Job that processed the record.</inlineHelpText>
+        <label>ApexJobId</label>
+        <length>18</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -195,7 +269,6 @@
         <externalId>false</externalId>
         <label>Contact1 Imported</label>
         <referenceTo>Contact</referenceTo>
-        <relationshipLabel>Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -218,6 +291,28 @@
         <trackTrending>false</trackTrending>
         <type>Email</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_npe01_Preferred_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Preferred Email</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Personal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Work</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Alternate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>Contact1_npe01_WorkEmail__c</fullName>
@@ -292,11 +387,19 @@
         <externalId>false</externalId>
         <label>Contact2 Imported</label>
         <referenceTo>Contact</referenceTo>
-        <relationshipLabel>Data Imports (Contact2)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_npe01_AlternateEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Alternate Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Contact2_npe01_HomeEmail__c</fullName>
@@ -306,6 +409,45 @@
         <trackTrending>false</trackTrending>
         <type>Email</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_npe01_Preferred_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Preferred Email</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Personal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Work</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Alternate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_npe01_WorkEmail__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Work Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_std_Birthdate__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Birthdate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
     </fields>
     <fields>
         <fullName>Contact2_std_Firstname__c</fullName>
@@ -322,6 +464,26 @@
         <externalId>false</externalId>
         <label>Contact2 Last Name</label>
         <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_std_Salutation__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Salutation</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_std_Title__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Title</label>
+        <length>128</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -373,7 +535,6 @@
         <externalId>false</externalId>
         <label>Donation Imported</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -515,7 +676,6 @@
         <externalId>false</externalId>
         <label>Home Address Imported</label>
         <referenceTo>Address__c</referenceTo>
-        <relationshipLabel>Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -619,17 +779,16 @@
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
     </fields>
-    <label>Data Import</label>
+    <label>NPSP Data Import</label>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>Status__c</columns>
-        <columns>ImportedDate__c</columns>
         <columns>FailureInformation__c</columns>
-        <columns>Contact1Imported__c</columns>
-        <columns>Contact1ImportStatus__c</columns>
-        <columns>Contact2Imported__c</columns>
-        <columns>Contact2ImportStatus__c</columns>
+        <columns>Contact1_std_Firstname__c</columns>
+        <columns>Contact1_std_Lastname__c</columns>
+        <columns>Account1_std_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -638,14 +797,28 @@
         <label>Data Import ID</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Data Imports</pluralLabel>
+    <pluralLabel>NPSP Data Imports</pluralLabel>
     <searchLayouts>
-        <customTabListAdditionalFields>ImportedDate__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>UPDATEDBY_USER</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
         <customTabListAdditionalFields>FailureInformation__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Contact1_std_Firstname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Contact1_std_Lastname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Account1_std_Name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <listViewButtons>Process_Data_Import</listViewButtons>
+        <searchFilterFields>OBJECT_ID</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+        <searchFilterFields>Contact1_std_Firstname__c</searchFilterFields>
+        <searchFilterFields>Contact1_std_Lastname__c</searchFilterFields>
+        <searchFilterFields>Account1_std_Name__c</searchFilterFields>
+        <searchFilterFields>LAST_UPDATE</searchFilterFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact1_std_Firstname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact1_std_Lastname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
         <searchResultsCustomButtons>Process_Data_Import</searchResultsCustomButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
@@ -656,10 +829,10 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>Process Data Import</masterLabel>
+        <masterLabel>Run Data Import</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
-        <requireRowSelection>true</requireRowSelection>
+        <requireRowSelection>false</requireRowSelection>
         <url>/apex/BDI_DataImport</url>
     </webLinks>
 </CustomObject>
