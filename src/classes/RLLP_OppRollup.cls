@@ -33,7 +33,7 @@
 * @description Resposible for rollups of all opportunities to the requisite Account/Household/Contact 
 */
 public without sharing class RLLP_OppRollup {
-
+    
     /*** Constructor ***/
     public RLLP_OppRollup(){
         // setup households settings
@@ -41,7 +41,6 @@ public without sharing class RLLP_OppRollup {
         // setup user rollups
         RLLP_OppRollup_UTIL.setupUserRollupVars();
     }
-    /*************************************************************/  
     
     /*** Fired from trigger on Opp - determine which opps changed and pass the Con/Acc/HH IDs to the regular rollup methods ***/
     public void rollupForOppTrigger( map<id, Opportunity> newOpps, map<id, Opportunity> oldOpps ) {
@@ -82,7 +81,8 @@ public without sharing class RLLP_OppRollup {
             }
             
         if (!accountRequerySet.isEmpty()){
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
                                                                         ' where id in :accountRequerySet'));            
             //if we only need to rollup a single Account, do sync
             if (amap.size() == 1 || system.isFuture() || system.isBatch()){
@@ -122,7 +122,8 @@ public without sharing class RLLP_OppRollup {
         map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>();
         
         // use the contact roles to find the contacts and households
-        for (OpportunityContactRole r : Database.query(RLLP_OppRollup_UTIL.buildOpportunityContactRoleQuery() +
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        for (OpportunityContactRole r : Database.query(oppRollupUtil.buildOpportunityContactRoleQuery() +
                                             ' where Opportunity.Id IN :OppIds and isPrimary = true ALL ROWS ')){   
                     
             cmap.put(r.ContactId, r.Contact);
@@ -145,10 +146,11 @@ public without sharing class RLLP_OppRollup {
     public static void rollupAccountsFuture( set<id> acctIds ) {
         Savepoint sp = Database.setSavepoint();
         try {
-	        if (acctIds != null && !acctIds.isEmpty()) { 
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(RLLP_OppRollup_UTIL.buildAccountQuery() + 
+	        if (acctIds != null && !acctIds.isEmpty()) {
+	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+	            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
 	                                                           ' where id IN :acctIds')); 
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
 	            rg.rollupAccounts(amap);
 	           
 	        }
@@ -163,10 +165,10 @@ public without sharing class RLLP_OppRollup {
         Savepoint sp = Database.setSavepoint();
         try {
 	        if (conIds != null && !conIDs.isEmpty()){
-	            RLLP_OppRollup rg = new RLLP_OppRollup();           
-	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(RLLP_OppRollup_UTIL.buildContactQuery() +
+	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+	            map<id, Contact> cmap = new map<id, Contact>((list<Contact>)Database.query(oppRollupUtil.buildContactQuery() +
 	                                                          ' where id IN :conIds'));
-	            
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
 	            rg.rollupContacts(cmap);
 	        }
 	    } catch(Exception e) {
@@ -179,9 +181,10 @@ public without sharing class RLLP_OppRollup {
     	Savepoint sp = Database.setSavepoint();
         try {
 	        if (hhIds != null && !hhIds.isEmpty()){
-	            RLLP_OppRollup rg = new RLLP_OppRollup();
-	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+	        	RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+	            map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
 	                                                                            ' where id IN :hhIDs'));
+	            RLLP_OppRollup rg = new RLLP_OppRollup();
 	            rg.rollupHouseholds(hhmap);                                                                         
 	        }
 	    } catch(Exception e) {
@@ -253,7 +256,8 @@ public without sharing class RLLP_OppRollup {
         set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeAccts;
         set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeAccts;
 
-        list<sobject> objectList = Database.query(RLLP_OppRollup_UTIL.buildAccountRollupQuery());
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        list<sobject> objectList = Database.query(oppRollupUtil.buildAccountRollupQuery());
 
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
@@ -275,7 +279,7 @@ public without sharing class RLLP_OppRollup {
         }       
         
         objectList.clear();
-        objectList = database.query(RLLP_OppRollup_UTIL.buildAccountNDayQuery());
+        objectList = database.query(oppRollupUtil.buildAccountNDayQuery());
         
         for (sobject r : objectList){
             id aid = (id)(r.get('AccountId'));
@@ -286,7 +290,7 @@ public without sharing class RLLP_OppRollup {
         if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()) {
             set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes; 
             objectList.clear();
-            objectList = database.query(RLLP_OppRollup_UTIL.buildAccountMembershipQuery());        
+            objectList = database.query(oppRollupUtil.buildAccountMembershipQuery());        
             
             opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
@@ -398,7 +402,8 @@ public without sharing class RLLP_OppRollup {
         set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
         set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
-        objectList = database.query(RLLP_OppRollup_UTIL.buildContactRollupQuery());
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        objectList = database.query(oppRollupUtil.buildContactRollupQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
@@ -420,7 +425,7 @@ public without sharing class RLLP_OppRollup {
         }        
         
         objectList.clear();
-        objectList = database.query(RLLP_OppRollup_UTIL.buildContactNDayQuery());
+        objectList = database.query(oppRollupUtil.buildContactNDayQuery());
         
         for (sobject r : objectList){
             id cid = (id)(r.get('ContactId'));
@@ -431,7 +436,7 @@ public without sharing class RLLP_OppRollup {
         if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()){
             set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes;
             objectList.clear();
-            objectList = database.query(RLLP_OppRollup_UTIL.buildContactMembershipQuery());        
+            objectList = database.query(oppRollupUtil.buildContactMembershipQuery());        
             
             opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
@@ -538,7 +543,8 @@ public without sharing class RLLP_OppRollup {
         set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
         set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
-        objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdRollupQuery());
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        objectList = database.query(oppRollupUtil.buildHouseholdRollupQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
@@ -560,7 +566,7 @@ public without sharing class RLLP_OppRollup {
         }        
         
         objectList.clear();
-        objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdNDayQuery());
+        objectList = database.query(oppRollupUtil.buildHouseholdNDayQuery());
         
         for (sobject r : objectList){
             id hhid = (id)(r.get('hhid'));
@@ -571,7 +577,7 @@ public without sharing class RLLP_OppRollup {
         if (!RLLP_OppRollup_UTIL.mbrRecordTypes.isEmpty()){
             set<id> memberset = RLLP_OppRollup_UTIL.mbrRecordTypes;
             objectList.clear();
-            objectList = database.query(RLLP_OppRollup_UTIL.buildHouseholdMembershipQuery());        
+            objectList = database.query(oppRollupUtil.buildHouseholdMembershipQuery());        
             
             opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
    
@@ -642,7 +648,8 @@ public without sharing class RLLP_OppRollup {
         set<string> typeset = RLLP_OppRollup_UTIL.oppTypesToExcludeCons;
         set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         
-        objectList = database.query(RLLP_OppRollup_UTIL.buildSoftCreditQuery());
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        objectList = database.query(oppRollupUtil.buildSoftCreditQuery());
             
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
@@ -655,7 +662,7 @@ public without sharing class RLLP_OppRollup {
         }                
 
         objectList.clear();
-        objectList = database.query(RLLP_OppRollup_UTIL.buildContactNDaySoftCreditQuery());
+        objectList = database.query(oppRollupUtil.buildContactNDaySoftCreditQuery());
         
         for (sobject r : objectList){
             id cid = (id)(r.get('ContactId'));

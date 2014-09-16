@@ -36,53 +36,135 @@
 @isTest
 private class RLLP_OppRollupBATCH_TEST {
 
-    static testMethod void testBatch() {
-        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
-        if(giftRecordTypeNameForTests!=''){
-            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                    npo02__Always_Rollup_to_Primary_Contact__c = true,
-                    npo02__Enable_Opp_Rollup_Triggers__c = true,
-                    npo02__Excluded_Account_Opp_Rectypes__c = null,
-                    npo02__Excluded_Account_Opp_Types__c = null,
-                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                    npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = null
-                ));
+    // if you only want to run one test in this class, fill in its name here.
+    // if you want to run all tests, then use '*'
+    private static string strTestOnly = '*';
+    
+    static void setup() {
+    	npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = true,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null,
+                npo02__Soft_Credit_Roles__c = 'Influencer',
+                npo02__Enable_Soft_Credit_Rollups__c = true
+        ));
             
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
-            ));
-            
-            Date datClose = System.Today();
-                
-            // create & insert contact(s)
-            Contact[] TestCons = new contact[]{ new contact(
-                FirstName= CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName= CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                npe01__Private__c=false,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
-            ) };
-            insert TestCons;
-            
-            Contact insertedContact = [select accountid from Contact where id IN :TestCons];
-
-            // create new opps
-            Opportunity[] newOpps = UTIL_UnitTestData_TEST.OppsForContactList ( TestCons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 100 , giftRecordTypeNameForTests ,null);
-            String contactAccountId = insertedContact.accountid;
+            )
+        );
+    }
+    
+    static testMethod void testOppAcctRollupBatch() {
+    	if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
+    	setup();
+    	
+        //The record type is an optional parameter when creating opps
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+         
+        // create & insert contact
+        Contact contact = UTIL_UnitTestData_TEST.getContact(); 
+        insert contact;
         
-            RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
+        Integer giftAmount = 100;
+        // create new opps
+        Opportunity[] opps = UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null);   
+        insert opps;
+    
+        RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
              
-            Test.StartTest(); 
-            id batchProcessId = database.executeBatch(batch);
-            Test.StopTest(); 
-        }
+        Test.startTest(); 
+        id batchProcessId = Database.executeBatch(batch);
+        Test.stopTest();
+        
+        Id acctId = [select AccountId from Contact where Id = :contact.Id][0].AccountId;
+        Account acct = [select Id, npo02__TotalOppAmount__c from Account where Id = :acctId];
+        System.assertEquals(acct.npo02__TotalOppAmount__c, giftAmount);
     }
 
+    static testMethod void testOppContactRollupBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppContactRollupBatch') return;
+        setup();
+        
+        //The record type is an optional parameter when creating opps
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+         
+        // create & insert contact
+        Contact contact = UTIL_UnitTestData_TEST.getContact(); 
+        insert contact;
+        
+        Integer giftAmount = 100;
+        // create new opps
+        Opportunity[] opps = new Opportunity[]{};
+        opps.addAll(UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null));   
+        opps.addAll(UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null));
+        opps.addAll(UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null));
+        insert opps;
+        
+        RLLP_OppContactRollup_BATCH batch = new RLLP_OppContactRollup_BATCH();
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+        
+        contact = [select npo02__TotalOppAmount__c, npo02__NumberOfClosedOpps__c from Contact where Id=:contact.Id];
+        System.assertEquals(300, contact.npo02__TotalOppAmount__c);
+        System.assertEquals(3, contact.npo02__NumberOfClosedOpps__c);
+    }
+    
+    static testMethod void testOppSoftCreditRollupBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppSoftCreditRollupBatch') return;
+        setup();
+        
+        String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+         
+        // create & insert contact
+        Contact contact18 = UTIL_UnitTestData_TEST.getContact();
+        Contact contact19 = UTIL_UnitTestData_TEST.getContact();
+        insert new Contact[] {contact18, contact19};
+        
+        Integer giftAmount = 100;
+        // create new opps
+        Opportunity[] opps = UTIL_UnitTestData_TEST.OppsForContactList(new Contact[]{contact19}, null, 
+                UTIL_UnitTestData_TEST.getClosedWonStage(), System.Today(), giftAmount, 
+                giftRecordTypeNameForTests, null);   
+        insert opps;
+        
+        //give soft credit to contact2
+        OpportunityContactRole[] oppRoles = new OpportunityContactRole[]{}; 
+        for(Opportunity opp : opps) {
+        	oppRoles.add(new OpportunityContactRole(ContactId = contact18.Id, OpportunityId = opp.Id, 
+        	               Role = 'Influencer')); 
+        }
+        insert oppRoles;
+        
+        RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
+        
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        contact18 = [select npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Total__c,
+            npe01__Lifetime_Giving_History_Amount__c, npo02__OppsClosedThisYear__c, npo02__TotalOppAmount__c
+                            from Contact where Id=:contact18.Id];
+        System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_This_Year__c);
+        System.assertEquals(giftAmount, contact18.npo02__Soft_Credit_Total__c);
+    }
 }
