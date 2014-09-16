@@ -38,7 +38,7 @@ private with sharing class ALLO_Allocations_TEST {
     
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'recurringDonationsValidation';
+    private static string strTestOnly = '*';
     
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
@@ -267,6 +267,7 @@ private with sharing class ALLO_Allocations_TEST {
         list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :queryOpp[0].id];
         system.assertEquals(1,queryAllo.size(),'A single default allocation should be created.');
         system.assertEquals(defaultgau.id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
+        system.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
         
         ALLO_Allocations_TDTM.resetFlags();
 
@@ -301,14 +302,14 @@ private with sharing class ALLO_Allocations_TEST {
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Amount__c];
         system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
-/*
+
         ALLO_Allocations_TDTM.resetFlags();
         delete amountAllo;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Percent__c];
         system.assertEquals(2,queryAllo.size(), 'Opportunity Allocation should be deleted along with the Recurring Donation allocation.');
-        system.assertEquals(10,queryAllo[1].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
-*/
+        system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
+
     }
     /*
     only percentage defined, amount is calculated
@@ -360,6 +361,6 @@ private with sharing class ALLO_Allocations_TEST {
         insert oppList;
 
         AggregateResult[] queryAllo = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name];
-        system.debug('LookHere: queryallo' + queryAllo);
+        system.debug('LookHere: bulkOppInsert' + queryAllo);
     }
 }

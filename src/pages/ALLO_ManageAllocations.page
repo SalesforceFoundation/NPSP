@@ -38,6 +38,8 @@
     <script type="text/javascript">
 /*TODO:
 defaultGAU, automatic uneditable handling of the default
+adding two rows breaks the page
+cut off amounts at 2 decimals
 */
     (function($) {
 

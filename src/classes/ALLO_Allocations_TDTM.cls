@@ -84,8 +84,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        System.debug('LookHere: settings: ' + settings);
-        System.debug('LookHere: Entering trigger: ' + objResult.getName() + ' ' + triggerAction);
         
         //if allocations are not enabled, do nothing
         if (!settings.Allocations_Enabled__c)
@@ -111,6 +109,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
             DmlWrapper wrapper;
             wrapper = runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
+            hasRunForAllocationsBefore = true;
             hasRunForAllocationsAfter = true;
             return wrapper;
 
@@ -129,8 +128,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private DmlWrapper runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
-
-        System.debug('LookHere: Made it to Opportunity trigger.' + newList[0].get('Amount') + ' ' + triggerAction);
 
         list<Opportunity> listOppsForProcessing = new list<Opportunity>();
         list<Opportunity> listOldOpps = new list<Opportunity>();
@@ -163,7 +160,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         if (!listOppsForProcessing.isEmpty()) {
             //Don't return a wrapper object if there are no allocations
             mapWrapper = fillMapWrapper(listOppsForProcessing);
-            system.debug('LookHere: mapWrapper ' + mapWrapper);
             
             for (integer i=0; i<listOppsForProcessing.size(); i++) {
                 Opportunity opp = listOppsForProcessing[i];
@@ -230,7 +226,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 allo.Amount__c = oppWrap.parentAmount * allo.Percent__c * .01;
                                 oppWrap.totalAmount += allo.Amount__c;
                                 dmlWrapper.objectsToUpdate.add(allo);
-                                system.debug('LookHere: Recalc Amt: ' + allo);
                             }
                         }
                     }
@@ -252,7 +247,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
         }
 
-        system.debug('LookHere: dmlWrapper ' + dmlWrapper);
         return dmlWrapper;
     }
 
@@ -335,8 +329,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private DmlWrapper runAllocationAfterTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
-        system.debug('LookHere: Entered after trigger handler');
-
         DmlWrapper dmlWrapper = new DmlWrapper();
         list<Opportunity> listOpps = new list<Opportunity>();
         set<id> setRecDonId = new set<id>();
@@ -355,19 +347,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         if (!setRecDonId.isEmpty() || !setOppIds.isEmpty()) 
             listOpps = [SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId FROM Opportunity WHERE (Opportunity.isClosed = FALSE AND npe03__Recurring_Donation__c IN :setRecDonId) OR ID IN :setOppIds];
+
         if (!listOpps.isEmpty()) {
 
-
-
-            system.debug('LookHere: listOpps ' + listOpps);
             mapWrapper = fillMapWrapper(listOpps);
-            system.debug('LookHere: mapWrapper ' + mapWrapper);
             
             //if we have any deletion of opportunity allocations and default handling is enabled, adjust the opps' default allocation
             list<Opportunity> listRecDonOpps = new list<Opportunity>();
             if (!setOppIds.isEmpty()) {
                 for (Opportunity opp : listOpps) {
-                    
                     //we have allocations for this opportunity
                     if (setOppIds.contains(opp.Id)) {
                         //this opp has allocations, check for default cases
@@ -391,7 +379,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //no deletion cases, just copy the list over
             } else listRecDonOpps = listOpps;
 
-
             //after insert/update/delete of Recurring Donation allocations: adjust all open opportunities
             //check each opp's allocations, make them match the allocations for this RD
             for (Opportunity opp : listOpps) {
@@ -400,7 +387,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
                 list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
                 list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
-
 
                 //this opp has allocations, modify them to match the recurring donations' allocations
                 alloWrapper oppWrap = mapWrapper.get(opp.Id);
@@ -425,7 +411,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     //copy allocations from rd to opp, update opp allocations
                     if (i<oppSize && i<rdSize) {
                         Allocation__c oppAllo = oppWrap.listAllo[i];
-                        oppAllo = rdWrap.listAllo[i].clone(false,true,false,false);
+                        Allocation__c rdAllo = rdWrap.listAllo[i];
+                        oppAllo.Percent__c = rdAllo.Percent__c;
+                        oppAllo.Amount__c = rdAllo.Amount__c;
                         oppAllo.Opportunity__c = opp.id;
                         oppAllo.Recurring_Donation__c = null;
                         if (oppAllo.Percent__c!=null)
@@ -478,7 +466,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     dmlWrapper.objectsToUpdate.add(allo);
                 dmlWrapper.objectsToInsert.addAll((list<sObject>)listAlloForInsert);
                 dmlWrapper.objectsToDelete.addAll((list<sObject>)listAlloForDelete);
-                system.debug('LookHere: dmlWrapper ' + dmlWrapper);
 
             }
             return dmlWrapper;
@@ -611,10 +598,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         list<Allocation__c> queryAllo = [SELECT Id, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, 
             Recurring_Donation__r.npe03__Amount__c, Amount__c, Percent__c, General_Accounting_Unit__c 
             FROM Allocation__c WHERE Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId ];
-        system.debug('LookHere: queryAllo' + queryAllo);
 
         for (Allocation__c allo : queryAllo) {
-            system.debug('LookHere: Allocation queried: ' + allo);
         
             //create wrapper if it doesn't exist yet
             if (!mapIdToWrapper.containsKey(getParentId(allo)))
