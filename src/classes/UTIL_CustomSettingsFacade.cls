@@ -92,7 +92,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             }
         }
             
-        if (accountProcessor != null) {
+        if (accountProcessor != null && accountProcessor != contactsSettings.npe01__Account_Processor__c) {
             contactsSettings.npe01__Account_Processor__c = accountProcessor;
             needsDml = true;
         }                    
@@ -227,7 +227,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             }
         }
         
-        if(defaultBehavior != null) {
+        if(defaultBehavior != null && defaultBehavior.name() != recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c) {
             recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = defaultBehavior.name();
             needsDml = true;
         }
@@ -315,7 +315,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 		    }
     	}
     	//if a value is passed --> set to value
-        if(automaticAffiliation != null) {
+        if(automaticAffiliation != null && automaticAffiliation != affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
             affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliation; 
             needsDml = true;       
         }
@@ -360,7 +360,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             }
         }
         
-        if(notificationsTo != null) {
+        if(notificationsTo != null && notificationsTo != errorSettings.Error_Notifications_To__c) {
             errorSettings.Error_Notifications_To__c = notificationsTo;
             needsDml = true;
         }
