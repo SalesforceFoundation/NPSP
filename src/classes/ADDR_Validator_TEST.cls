@@ -41,11 +41,10 @@ public with sharing class ADDR_Validator_TEST {
     
     public static void createDefaultSettings() {
         // use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
@@ -54,7 +53,7 @@ public with sharing class ADDR_Validator_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        insert settings;
+        upsert settings;
     }
     
     static testMethod void testContactAddress() {

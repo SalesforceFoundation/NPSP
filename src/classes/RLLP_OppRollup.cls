@@ -37,7 +37,7 @@ public without sharing class RLLP_OppRollup {
     /*** Constructor ***/
     public RLLP_OppRollup(){
         // setup households settings
-        RLLP_OppRollup_UTIL.setupRollupVars(HH_Households.getHouseholdsSettings());
+        RLLP_OppRollup_UTIL.setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
         // setup user rollups
         RLLP_OppRollup_UTIL.setupUserRollupVars();
     }

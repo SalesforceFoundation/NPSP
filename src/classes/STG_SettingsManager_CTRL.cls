@@ -50,7 +50,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     public void setTriggerSchedConfig() {
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();
-        installScript.setTriggerConfig();
+        installScript.runNewOrgScript();
         //Set master schedulables config
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
         UTIL_MasterSchedulableHelper.setSchedulableTable();

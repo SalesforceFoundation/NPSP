@@ -72,7 +72,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     }
     public void finish(Database.BatchableContext bc) {
         //update our settings
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         AsyncApexJob a = [select CompletedDate from AsyncApexJob where Id = :BC.getJobId()];
                                     
