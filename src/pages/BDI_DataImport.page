@@ -12,7 +12,8 @@
     j$(document).ready(function(){
         j$("#convertBTN").bind("click",function(){
             //hide buttons
-            j$("#convertBTN").hide();
+            //j$("#convertBTN").hide();
+            j$(".btn").hide();
 
             //hide panels
             j$(".panel").hide();
@@ -77,6 +78,15 @@
     .bootstrap input[type="checkbox"]{
         margin-right:10px;
     }
+
+    // from UTIL_JobProgress.component
+    .panel-heading{
+        overflow: hidden;
+    }
+    .panel-body{
+        margin: 5px;
+    }
+
 </style>
 
     <div class="bootstrap" >
@@ -85,11 +95,11 @@
         <div class="container">
             <div class="jumbotron">
                 <div class="row">
-                    <div class="col-sm-8 col-xs-12" >
+                    <div class="col-sm-9 col-xs-12" >
                         <h3>Batch Data Import</h3>
                         <h4>This utility allows you to easily import your data into the Nonprofit Starter Pack.</h4>
                     </div>
-                    <div class="col-sm-4 col-xs-12" >
+                    <div class="col-sm-3 col-xs-12" >
                         <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
                     </div>
                 </div>
@@ -139,34 +149,61 @@
             </div>
         </div>
 
-        <div class="container" id="progresspanel">
+        <div class="container">
             <div class="row">
-                <apex:actionFunction name="runconvert" action="{!importData}" reRender="batchpanel" oncomplete="renderResults()"/>
-                <apex:outputPanel id="batchpanel">
-                    <apex:pageMessages />
-                    <c:UTIL_JobProgress strBatchComponentLabel="Batch Data Import progress" cNumberOfJobs="1" rendered="{!batchRunning}" />
-                
-                    <apex:actionPoller rerender="panelSummary" interval="5"/>                
-                    <apex:outputPanel id="panelSummary" >
-                        <apex:outputPanel rendered="{!batchRunning}">
-		                    <apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
-		                    <p>summary at time: {!NOW()} </p>
-		                    <p>records processed: {!crecProcessed}</p>
-		                    <p>records imported: {!crecImported}</p>
-		                    <p>records failed: {!crecFailed}</p>
+                <div class="col-md-12">
+	                <apex:actionFunction name="runconvert" action="{!importData}" reRender="batchpanel" />
+	                <apex:outputPanel id="batchpanel">
+	                    <apex:outputPanel id="panelSummary" rendered="{!batchRunning}" >
+                            <apex:actionPoller rerender="panelSummary" interval="5" />      
+                            <apex:pageMessages />
+	
+				            <div class="panel {!IF(NOT(isBatchJobCompleted), 'panel-primary', IF(aaj.ExtendedStatus != null || crecFailed > 0, 'panel-warning', 'panel-success'))}">
+	
+				                <div class="panel-heading">
+				                    <h3 class="panel-title">NPSP Data Import<strong>{!IF(NOT(isBatchJobCompleted), '', IF(aaj.ExtendedStatus != null || crecFailed > 0, ' - Errors', ' - Completed'))} </strong></h3>
+				                </div>
+	
+			                    <div class="panel-body">
+                                    <p><apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
+			                        &nbsp;&nbsp;Current Status: <strong>{!aaj.Status}</strong></p>
+			                        <p>{!aaj.ApexClass.Name} {!IF(aaj.Status == 'Processing', 'is currently processing batch', 'processed')} {!aaj.JobItemsProcessed} of {!aaj.TotalJobItems} total batches</p>
+			                        <div class="progress">
+			                            <div class="progress-bar progress-bar-striped active {!IF(aaj.Status != 'Completed', '', IF(aaj.NumberOfErrors > 0 || crecFailed > 0, 'progress-bar-warning', 'progress-bar-success'))} " role="progressbar" aria-valuenow="{!percentComplete}" aria-valuemin="0" aria-valuemax="100" style="width: {!percentComplete}%;">
+			                                {!percentComplete}%
+			                            </div>
+			                        </div>
+	
+	                                <p>time: {!strTimeSpent} </p>
+	                                <p>records processed: {!crecProcessed}</p>
+	                                <p>records imported: {!crecImported}</p>
+	                                <p>records failed: {!crecFailed}</p>
+	
+			                        <apex:outputpanel id="ExtendedStatusPanel" rendered="{!aaj.ExtendedStatus != null}">
+			                            <strong>
+			                            <p>An error was thrown during the process.  The following status was the first reported error: </p>
+			                            <p>{!aaj.ExtendedStatus}</p>
+			                            </strong>
+			                        </apex:outputpanel>		                
+	                            </div>		
+	                        </div>
+                            <div class="text-center"> 
+                                <apex:commandButton value="Close" action="{!close}" immediate="true" styleClass="btn-md" />
+                            </div>            
 		                </apex:outputPanel>
-	                </apex:outputPanel>
-	            </apex:outputPanel>
+			        </apex:outputPanel>
+		      </div>
             </div>
         </div>
-    </apex:form>
 
-    <div class="container">
-        <div class="text-center"> 
-            <button type="button" class="btn btn-success btn-lg" id="convertBTN">
-                <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Data Import Process
-            </button>
-        </div>
-    </div>
+	    <div class="container">
+	        <div class="text-center"> 
+	            <button type="button" class="btn btn-success btn-md" id="convertBTN">
+	                <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Data Import Process
+	            </button>&nbsp;&nbsp;
+	            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="btn btn-md" />            
+	        </div>
+	    </div>
+    </apex:form>
 </div><!-- close class bootstrap-->
 </apex:page>
