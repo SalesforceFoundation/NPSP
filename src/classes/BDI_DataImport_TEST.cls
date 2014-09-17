@@ -367,7 +367,8 @@ private with sharing class BDI_DataImport_TEST {
         import contacts with Preferred Email set
     verify:
         ensure the appropriate contact email field gets copied into the standard email field.
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
+    /** can't use this test because it relies on our workflow rules being active, which we can't enforce.
     static testMethod void ThreeDINewContactsWithPreferredEmail() {
         if (strTestOnly != '*' && strTestOnly != 'ThreeDINewContactsWithPreferredEmail') return;
             
@@ -399,5 +400,5 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('c3 C3', listCon[2].Name);
         system.assertEquals('c3@alt.com', listCon[2].Email);        
     }
-
+    ***************/
 }
