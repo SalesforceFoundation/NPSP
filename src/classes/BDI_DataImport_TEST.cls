@@ -401,4 +401,413 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('c3@alt.com', listCon[2].Email);        
     }
     ***************/
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with accounts
+    verify:
+        contacts created
+        accounts created
+        affiliations created between contacts and accounts
+    **********************************************************************************************************/            
+    static testMethod void TwoDIAffiliations() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIAffiliations') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Account1_std_Name__c = 'A1';
+        listDI[1].Account2_std_Name__c = 'A2';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, Primary_Affiliation__c from Contact order by Lastname];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertEquals('c4 C4', listCon[3].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertNotEquals(null, listCon[3].AccountId);
+        
+        list<Account> listAcc = [select Id, Name from Account where Type != 'Household' order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals(listCon[0].Primary_Affiliation__c, listAcc[0].Id);
+        system.assertEquals(listCon[1].Primary_Affiliation__c, null);
+        system.assertEquals(listCon[2].Primary_Affiliation__c, null);
+        system.assertEquals(listCon[3].Primary_Affiliation__c, listAcc[1].Id);
+        
+        list<npe5__Affiliation__c> listAffl = [select Id, npe5__Contact__c, npe5__Organization__c from npe5__Affiliation__c order by npe5__Contact__r.Name];
+        system.assertEquals(2, listAffl.size());
+        system.assertEquals(listCon[0].Id, listAffl[0].npe5__Contact__c);
+        system.assertEquals(listCon[3].Id, listAffl[1].npe5__Contact__c);
+                
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with home addresses 
+    verify:
+        address objects created
+        contacts' mailing address set
+        hh accounts' billing address set
+    **********************************************************************************************************/            
+    static testMethod void TwoDIHomeAddresses() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddresses') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Home_npsp_MailingCity__c = 'Seattle';
+        listDI[1].Home_npsp_MailingCity__c = 'Portland';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertEquals('c4 C4', listCon[3].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertNotEquals(null, listCon[3].AccountId);
+        system.assertEquals('Seattle', listCon[0].MailingCity);
+        system.assertEquals('Seattle', listCon[1].MailingCity);
+        system.assertEquals('Portland', listCon[2].MailingCity);
+        system.assertEquals('Portland', listCon[3].MailingCity);
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(2, listAddr.size());
+        system.assertEquals('Portland', listAddr[0].MailingCity__c);
+        system.assertEquals('Seattle', listAddr[1].MailingCity__c);
+        
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals('Seattle', listAcc[0].BillingCity);
+        system.assertEquals('Portland', listAcc[1].BillingCity);
+                
+        listDI = [select HomeAddressImported__c, HomeAddressImportStatus__c, Home_npsp_MailingCity__c from DataImport__c order by Home_npsp_MailingCity__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[0].Id); 
+        system.assertEquals(listDI[1].HomeAddressImported__c, listAddr[1].Id);
+        system.assertEquals('Created', listDI[0].HomeAddressImportStatus__c);
+        system.assertEquals('Created', listDI[1].HomeAddressImportStatus__c);        
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        import existing contacts with the same home address
+    verify:
+        contacts matched
+        address matched
+    **********************************************************************************************************/            
+    static testMethod void TwoDIMixedAddresses() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddresses') return;
+            
+        // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', MailingCity='Portland'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[0].Home_npsp_MailingCity__c = 'Seattle';
+        listDI[1].Home_npsp_MailingCity__c = 'Bellevue';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(3, listAddr.size());
+        system.assertEquals('Bellevue', listAddr[0].MailingCity__c);
+        system.assertEquals('Portland', listAddr[1].MailingCity__c);
+        system.assertEquals('Seattle', listAddr[2].MailingCity__c);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
+        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);
+        system.assertEquals(listAddr[2].Id, listDI[0].HomeAddressImported__c);   
+        system.assertEquals(listAddr[0].Id, listDI[1].HomeAddressImported__c);   
+        system.assertEquals('Matched', listDI[0].HomeAddressImportStatus__c);
+        system.assertEquals('Created', listDI[1].HomeAddressImportStatus__c);            
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        import contacts with donation & payment information 
+    verify:
+        opportunity objects created
+        payment objects created
+        ocr's created
+        contacts' rollups updated
+        hh account's rollups updated
+    **********************************************************************************************************/            
+    static testMethod void TwoDIWithDonations() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonations') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Donation_std_Amount__c = 100;
+        listDI[1].Donation_std_Amount__c = 200;
+        listDI[0].Payment_npe01_Check_Reference_Number__c = 'abc';
+        listDI[1].Payment_npe01_Check_Reference_Number__c = '1234';
+        listDI[0].Payment_npe01_Payment_Method__c = 'Check';
+        listDI[1].Payment_npe01_Payment_Method__c = 'Visa';       
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Lastname];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertEquals('c4 C4', listCon[3].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertNotEquals(null, listCon[3].AccountId);
+        system.assertEquals(100, listCon[0].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listCon[1].npo02__TotalOppAmount__c);
+        system.assertEquals(200, listCon[2].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listCon[3].npo02__TotalOppAmount__c);
+        
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        
+        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
+        system.assertEquals(2, listOpp.size());
+        system.assertEquals(100, listOpp[0].Amount);
+        system.assertEquals(200, listOpp[1].Amount);
+        system.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
+        system.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
+                
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        system.assertEquals(2, listPmt.size());
+        system.assertEquals(100, listPmt[0].npe01__Payment_Amount__c);
+        system.assertEquals(200, listPmt[1].npe01__Payment_Amount__c);
+        system.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
+        system.assertEquals('Visa', listPmt[1].npe01__Payment_Method__c);
+        system.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
+        system.assertEquals('1234', listPmt[1].npe01__Check_Reference_Number__c);
+
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId from OpportunityContactRole order by Contact.Name];
+        system.assertEquals(4, listOCR.size());
+        system.assertEquals(listCon[0].Id, listOCR[0].ContactId);
+        system.assertEquals(listCon[1].Id, listOCR[1].ContactId);
+        system.assertEquals(listCon[2].Id, listOCR[2].ContactId);
+        system.assertEquals(listCon[3].Id, listOCR[3].ContactId);
+
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
+        system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
+        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
+        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import accounts with donation & payment information 
+    verify:
+        opportunity objects created
+        payment objects created
+        ocr's created
+        account's rollups updated
+    **********************************************************************************************************/            
+    static testMethod void TwoDIWithAccountDonations() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithAccountDonations') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_std_Name__c='A2'));
+        listDI[0].DonationDonor__c = 'Account1';
+        listDI[1].DonationDonor__c = 'Account1';
+        listDI[0].Donation_std_Amount__c = 100;
+        listDI[1].Donation_std_Amount__c = 200;
+        listDI[0].Payment_npe01_Check_Reference_Number__c = 'abc';
+        listDI[1].Payment_npe01_Check_Reference_Number__c = '1234';
+        listDI[0].Payment_npe01_Payment_Method__c = 'Check';
+        listDI[1].Payment_npe01_Payment_Method__c = 'Visa';       
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results        
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        
+        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
+        system.assertEquals(2, listOpp.size());
+        system.assertEquals(100, listOpp[0].Amount);
+        system.assertEquals(200, listOpp[1].Amount);
+        system.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
+        system.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
+                
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        system.assertEquals(2, listPmt.size());
+        system.assertEquals(100, listPmt[0].npe01__Payment_Amount__c);
+        system.assertEquals(200, listPmt[1].npe01__Payment_Amount__c);
+        system.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
+        system.assertEquals('Visa', listPmt[1].npe01__Payment_Method__c);
+        system.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
+        system.assertEquals('1234', listPmt[1].npe01__Check_Reference_Number__c);
+
+        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId from OpportunityContactRole order by Contact.Name];
+        system.assertEquals(0, listOCR.size());
+
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_std_Name__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
+        system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
+        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
+        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with donation & campaign information 
+    verify:
+        opportunity objects created
+        opportunities added to campaigns
+    **********************************************************************************************************/            
+    static testMethod void TwoDIWithDonationsAndCampaigns() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationsAndCampaigns') return;
+        
+        list<Campaign> listC = new list<Campaign>();
+        listC.add(new Campaign(Name='CmpExisting'));
+        insert listC;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[0].Donation_std_Amount__c = 100;
+        listDI[1].Donation_std_Amount__c = 200;
+        listDI[0].DonationCampaignName__c = 'CmpExisting';
+        listDI[1].DonationCampaignName__c = 'CmpNew';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(200, listAcc[1].npo02__TotalOppAmount__c);
+        
+        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId, CampaignId from Opportunity order by Name];
+        system.assertEquals(2, listOpp.size());
+        system.assertEquals(100, listOpp[0].Amount);
+        system.assertEquals(200, listOpp[1].Amount);
+        system.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
+        system.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
+                
+        list<Campaign> listCmp = [select Id, Name from Campaign order by Name];
+        system.assertEquals(2, listCmp.size());
+        system.assertEquals(listOpp[0].CampaignId, listCmp[0].Id);
+        system.assertEquals(listOpp[1].CampaignId, listCmp[1].Id);
+        
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
+        system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
+        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
+        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import accounts with invalid donation information 
+    verify:
+        opportunity objects created only for valid di
+    **********************************************************************************************************/            
+    static testMethod void TwoDIWithDonationErrors() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationErrors') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_std_Name__c='A2'));
+        listDI[0].DonationDonor__c = 'Account1';
+        listDI[1].DonationDonor__c = 'illegal value here!';
+        listDI[0].Donation_std_Amount__c = 100;
+        listDI[1].Donation_std_Amount__c = 200;
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results        
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals(100, listAcc[0].npo02__TotalOppAmount__c);
+        system.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
+        
+        list<Opportunity> listOpp = [select Id, Name, Amount, AccountId from Opportunity order by Name];
+        system.assertEquals(1, listOpp.size());
+        system.assertEquals(100, listOpp[0].Amount);
+        system.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
+                
+        listDI = [select Id, Status__c, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_std_Name__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
+        system.assertEquals(listDI[1].DonationImported__c, null);
+        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
+        system.assertEquals(null, listDI[1].DonationImportStatus__c);
+        system.assertEquals('Imported', listDI[0].Status__c);        
+        system.assertEquals('Failed', listDI[1].Status__c);        
+    }
+
 }
