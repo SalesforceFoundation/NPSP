@@ -63,6 +63,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private map<Id, Address__c> mapDIIdToAddr = new map<Id, Address__c>();
     private map<Id, Opportunity> mapDIIdToOpp = new map<Id, Opportunity>();
     private map<Id, npe01__OppPayment__c> mapDIIdPmt = new map<Id, npe01__OppPayment__c>();
+    private map<string, Id> mapStrNameToCampaignId = new map<string, Id>();
 
     // holds the list of DataImport records we are currently processing
     private list<DataImport__c> listDI;
@@ -87,6 +88,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             importAccounts();
             
             importAddresses();
+            
+            importCampaigns();
 
             importOpportunities();
             
@@ -611,6 +614,11 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             	}
             }
         }
+        // because we have inserted contacts and accounts it the same context,
+        // the address trigger flag will have been set to true.  we need to
+        // reset it back to false, or else the newly inserted addresses won't
+        // propogate to the hh account and contacts.
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
         insert mapDIIdToAddr.values();   
 
         // update each DI with its new home address
@@ -631,20 +639,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     
         // get the fields we will auto-copy
         map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Donation', listStrDataImportFields);
-
-        // need to find all the Campaigns that we might need
-        set<string> setStrCampaign = new set<string>();
-        for (DataImport__c di : listDI) {
-            // skip di's that already have an error
-            if (di.Status__c == 'Failed')
-               continue;
-            if (di.DonationCampaignName__c != null)
-                setStrCampaign.add(di.DonationCampaignName__c);
-        }
-        map<string, Id> mapStrCampaignToId = new map<string, Id>();
-        for (Campaign cmp : [select Id, Name from Campaign where Name in :setStrCampaign]) {
-            mapStrCampaignToId.put(cmp.Name, cmp.Id);
-        }
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -693,7 +687,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             
             if (di.DonationCampaignName__c != null) {
-                Id idCmp = mapStrCampaignToId.get(di.DonationCampaignName__c);
+                Id idCmp = mapStrNameToCampaignId.get(di.DonationCampaignName__c);
                 if (idCmp == null) {
                     LogBDIError(di, 'Invalid Donation Campaign Name');
                     continue;
@@ -777,4 +771,39 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         upsert mapDIIdPmt.values();
     }    
+
+    //********************************************* CAMPAIGNS ************************************************
+    // utility to match to existing campaigns, and create new campaigns, as needed.
+    private void importCampaigns() {
+
+        // need to find all the Campaigns that we might need
+        set<string> setStrCampaign = new set<string>();
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
+            if (di.DonationCampaignName__c != null)
+                setStrCampaign.add(di.DonationCampaignName__c);
+        }
+
+        // add the existing campaigns to our map
+        for (Campaign cmp : [select Id, Name from Campaign where Name in :setStrCampaign]) {
+            mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+        }
+        
+        // create any new campaigns
+        list<Campaign> listCmpNew = new list<Campaign>();
+        for (string strName : setStrCampaign) {
+            if (mapStrNameToCampaignId.get(strName) == null)
+            	listCmpNew.add(new Campaign(Name=strName));
+        }
+        insert listCmpNew;
+        
+        // add the new campaigns to our map
+        for (Campaign cmp : listCmpNew) {
+            mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+        }
+            
+    }
+
 }
