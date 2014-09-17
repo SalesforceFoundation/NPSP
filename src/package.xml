@@ -833,6 +833,9 @@
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
     <members>DataImport__c.All</members>
+    <members>DataImport__c.Failed_Data_Imports</members>
+    <members>DataImport__c.Succesfully_Imported</members>
+    <members>DataImport__c.To_Be_Imported</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
   </types>

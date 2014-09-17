@@ -792,6 +792,57 @@
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
+    <listViews>
+        <fullName>Failed_Data_Imports</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_std_Firstname__c</columns>
+        <columns>Contact1_std_Lastname__c</columns>
+        <columns>Account1_std_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Failed</value>
+        </filters>
+        <label>Failed Data Imports</label>
+    </listViews>
+    <listViews>
+        <fullName>Succesfully_Imported</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_std_Firstname__c</columns>
+        <columns>Contact1_std_Lastname__c</columns>
+        <columns>Account1_std_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Imported</value>
+        </filters>
+        <label>Succesfully Imported</label>
+    </listViews>
+    <listViews>
+        <fullName>To_Be_Imported</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_std_Firstname__c</columns>
+        <columns>Contact1_std_Lastname__c</columns>
+        <columns>Account1_std_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>notEqual</operation>
+            <value>Imported</value>
+        </filters>
+        <label>To Be Imported</label>
+    </listViews>
     <nameField>
         <displayFormat>DI-{000000}</displayFormat>
         <label>Data Import ID</label>
@@ -833,6 +884,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/BDI_DataImport</url>
+        <url>/apex/npsp__BDI_DataImport?retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
     </webLinks>
 </CustomObject>
