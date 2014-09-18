@@ -83,9 +83,7 @@ public with sharing class BDI_DataImport_CTRL {
 
     public integer crecToProcess {
         get {
-            if (crecToProcess == null) {
-               crecToProcess = [select count() from DataImport__c where Status__c <> 'Imported'];
-            }
+            crecToProcess = [select count() from DataImport__c where Status__c <> 'Imported'];
             return crecToProcess;
         }
         set;
