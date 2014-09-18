@@ -801,6 +801,11 @@
     <name>CustomTab</name>
   </types>
   <types>
+    <members>NPSP_Documents</members>
+    <members>NPSP_Documents/NPSP_Data_Import_Template_csv.csv</members>
+    <name>Document</name>
+  </types>
+  <types>
     <members>Account.BDE_Entry_FS</members>
     <members>Account.BDE_List_FS</members>
     <members>Account.Manage_Household_Custom</members>
