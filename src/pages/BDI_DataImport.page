@@ -139,9 +139,7 @@
                                 <li>unique external key field for Contacts</li>
                                 <li>Account matching rules</li>
                                 <li>unique external key field for Accounts</li>
-                                <li>Create Accounts if no match found</li>
                                 <li>Batch size</li>
-                                <li>others?</li>
                             </ul>
                         </div>
                     </div>
