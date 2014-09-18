@@ -75,6 +75,7 @@
     <fields>
         <fullName>Account1_std_BillingCity__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingCity</inlineHelpText>
         <label>Account1 City</label>
         <length>255</length>
         <required>false</required>
@@ -85,6 +86,7 @@
     <fields>
         <fullName>Account1_std_BillingCountry__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingCountry</inlineHelpText>
         <label>Account1 Country</label>
         <length>255</length>
         <required>false</required>
@@ -95,6 +97,7 @@
     <fields>
         <fullName>Account1_std_BillingPostalCode__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingPostalCode</inlineHelpText>
         <label>Account1 Zip/Postal Code</label>
         <length>255</length>
         <required>false</required>
@@ -105,6 +108,7 @@
     <fields>
         <fullName>Account1_std_BillingState__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingState</inlineHelpText>
         <label>Account1 State/Province</label>
         <length>255</length>
         <required>false</required>
@@ -115,6 +119,7 @@
     <fields>
         <fullName>Account1_std_BillingStreet__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingStreet</inlineHelpText>
         <label>Account1 Street</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -123,6 +128,7 @@
     <fields>
         <fullName>Account1_std_Name__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.Name</inlineHelpText>
         <label>Account1 Name</label>
         <length>255</length>
         <required>false</required>
@@ -133,6 +139,7 @@
     <fields>
         <fullName>Account1_std_Phone__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.Phone</inlineHelpText>
         <label>Account1 Phone</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -141,6 +148,7 @@
     <fields>
         <fullName>Account1_std_Website__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account1.Website</inlineHelpText>
         <label>Account1 Website</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -170,6 +178,7 @@
     <fields>
         <fullName>Account2_std_BillingCity__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingCity</inlineHelpText>
         <label>Account2 City</label>
         <length>255</length>
         <required>false</required>
@@ -180,6 +189,7 @@
     <fields>
         <fullName>Account2_std_BillingCountry__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingCountry</inlineHelpText>
         <label>Account2 Country</label>
         <length>255</length>
         <required>false</required>
@@ -190,6 +200,7 @@
     <fields>
         <fullName>Account2_std_BillingPostalCode__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingPostalCode</inlineHelpText>
         <label>Account2 Zip/Postal Code</label>
         <length>255</length>
         <required>false</required>
@@ -200,6 +211,7 @@
     <fields>
         <fullName>Account2_std_BillingState__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingState</inlineHelpText>
         <label>Account2 State/Province</label>
         <length>255</length>
         <required>false</required>
@@ -210,6 +222,7 @@
     <fields>
         <fullName>Account2_std_BillingStreet__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingStreet</inlineHelpText>
         <label>Account2 Street</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -218,6 +231,7 @@
     <fields>
         <fullName>Account2_std_Name__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.Name</inlineHelpText>
         <label>Account2 Name</label>
         <length>255</length>
         <required>false</required>
@@ -228,6 +242,7 @@
     <fields>
         <fullName>Account2_std_Phone__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.Phone</inlineHelpText>
         <label>Account2 Phone</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -236,6 +251,7 @@
     <fields>
         <fullName>Account2_std_Website__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Account2.Website</inlineHelpText>
         <label>Account2 Website</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -277,6 +293,7 @@
     <fields>
         <fullName>Contact1_npe01_AlternateEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__AlternateEmail__c</inlineHelpText>
         <label>Contact1 Alternate Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -286,6 +303,7 @@
     <fields>
         <fullName>Contact1_npe01_HomeEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__HomeEmail__c</inlineHelpText>
         <label>Contact1 Personal Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -295,6 +313,7 @@
     <fields>
         <fullName>Contact1_npe01_Preferred_Email__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact1 Preferred Email</label>
         <picklist>
             <picklistValues>
@@ -317,6 +336,7 @@
     <fields>
         <fullName>Contact1_npe01_WorkEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__WorkEmail__c</inlineHelpText>
         <label>Contact1 Work Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -326,6 +346,7 @@
     <fields>
         <fullName>Contact1_std_Birthdate__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.Birthdate</inlineHelpText>
         <label>Contact1 Birthdate</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -334,6 +355,7 @@
     <fields>
         <fullName>Contact1_std_Firstname__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.Firstname</inlineHelpText>
         <label>Contact1 First Name</label>
         <length>40</length>
         <required>false</required>
@@ -344,6 +366,7 @@
     <fields>
         <fullName>Contact1_std_Lastname__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.Lastname</inlineHelpText>
         <label>Contact1 Last Name</label>
         <length>80</length>
         <required>false</required>
@@ -354,6 +377,7 @@
     <fields>
         <fullName>Contact1_std_Salutation__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.Salutation</inlineHelpText>
         <label>Contact1 Salutation</label>
         <length>20</length>
         <required>false</required>
@@ -364,6 +388,7 @@
     <fields>
         <fullName>Contact1_std_Title__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact1.Title</inlineHelpText>
         <label>Contact1 Title</label>
         <length>128</length>
         <required>false</required>
@@ -395,6 +420,7 @@
     <fields>
         <fullName>Contact2_npe01_AlternateEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__AlternateEmail__c</inlineHelpText>
         <label>Contact2 Alternate Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -404,6 +430,7 @@
     <fields>
         <fullName>Contact2_npe01_HomeEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__HomeEmail__c</inlineHelpText>
         <label>Contact2 Personal Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -413,6 +440,7 @@
     <fields>
         <fullName>Contact2_npe01_Preferred_Email__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact2 Preferred Email</label>
         <picklist>
             <picklistValues>
@@ -435,6 +463,7 @@
     <fields>
         <fullName>Contact2_npe01_WorkEmail__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__WorkEmail__c</inlineHelpText>
         <label>Contact2 Work Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -444,6 +473,7 @@
     <fields>
         <fullName>Contact2_std_Birthdate__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.Birthdate</inlineHelpText>
         <label>Contact2 Birthdate</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -452,6 +482,7 @@
     <fields>
         <fullName>Contact2_std_Firstname__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.Firstname</inlineHelpText>
         <label>Contact2 First Name</label>
         <length>40</length>
         <required>false</required>
@@ -462,6 +493,7 @@
     <fields>
         <fullName>Contact2_std_LastName__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.Lastname</inlineHelpText>
         <label>Contact2 Last Name</label>
         <length>80</length>
         <required>false</required>
@@ -472,6 +504,7 @@
     <fields>
         <fullName>Contact2_std_Salutation__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.Salutation</inlineHelpText>
         <label>Contact2 Salutation</label>
         <length>20</length>
         <required>false</required>
@@ -482,6 +515,7 @@
     <fields>
         <fullName>Contact2_std_Title__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Contact2.Title</inlineHelpText>
         <label>Contact2 Title</label>
         <length>128</length>
         <required>false</required>
@@ -544,7 +578,7 @@
         <fullName>DonationRecordTypeName__c</fullName>
         <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</inlineHelpText>
+        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.</inlineHelpText>
         <label>Donation Record Type Name</label>
         <length>255</length>
         <required>false</required>
@@ -555,6 +589,7 @@
     <fields>
         <fullName>Donation_npe01_Member_Level__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Member_Level__c</inlineHelpText>
         <label>Donation Member Level</label>
         <length>255</length>
         <required>false</required>
@@ -565,6 +600,7 @@
     <fields>
         <fullName>Donation_npe01_Membership_End_Date__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_End_Date__c</inlineHelpText>
         <label>Donation Membership End Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -573,6 +609,7 @@
     <fields>
         <fullName>Donation_npe01_Membership_Origin__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_Origin__c</inlineHelpText>
         <label>Donation Membership Origin</label>
         <length>255</length>
         <required>false</required>
@@ -583,6 +620,7 @@
     <fields>
         <fullName>Donation_npe01_Membership_Start_Date__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_Start_Date__c</inlineHelpText>
         <label>Donation Membership Start Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -591,6 +629,7 @@
     <fields>
         <fullName>Donation_std_Amount__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.Amount</inlineHelpText>
         <label>Donation Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -601,6 +640,7 @@
     <fields>
         <fullName>Donation_std_CloseDate__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.CloseDate</inlineHelpText>
         <label>Donation Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -609,6 +649,7 @@
     <fields>
         <fullName>Donation_std_Description__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.Description</inlineHelpText>
         <label>Donation Description</label>
         <length>32768</length>
         <trackTrending>false</trackTrending>
@@ -619,7 +660,7 @@
         <fullName>Donation_std_Name__c</fullName>
         <description>The donation&apos;s name.  Will be automatically generated by the system if left empty.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The donation&apos;s name.  Will be automatically generated by the system if left empty.</inlineHelpText>
+        <inlineHelpText>Opportunity.Name</inlineHelpText>
         <label>Donation Name</label>
         <length>255</length>
         <required>false</required>
@@ -631,7 +672,7 @@
         <fullName>Donation_std_StageName__c</fullName>
         <description>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</inlineHelpText>
+        <inlineHelpText>Opportunity.StageName</inlineHelpText>
         <label>Donation Stage</label>
         <length>255</length>
         <required>false</required>
@@ -642,6 +683,7 @@
     <fields>
         <fullName>Donation_std_Type__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.Type</inlineHelpText>
         <label>Donation Type</label>
         <length>255</length>
         <required>false</required>
@@ -684,6 +726,7 @@
     <fields>
         <fullName>Home_npsp_MailingCity__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingCity__c</inlineHelpText>
         <label>Home City</label>
         <length>255</length>
         <required>false</required>
@@ -694,6 +737,7 @@
     <fields>
         <fullName>Home_npsp_MailingCountry__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingCountry__c</inlineHelpText>
         <label>Home Country</label>
         <length>255</length>
         <required>false</required>
@@ -704,6 +748,7 @@
     <fields>
         <fullName>Home_npsp_MailingPostalCode__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingPostalCode__c</inlineHelpText>
         <label>Home Zip/Postal Code</label>
         <length>255</length>
         <required>false</required>
@@ -714,6 +759,7 @@
     <fields>
         <fullName>Home_npsp_MailingState__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingState__c</inlineHelpText>
         <label>Home State/Province</label>
         <length>255</length>
         <required>false</required>
@@ -724,6 +770,7 @@
     <fields>
         <fullName>Home_npsp_MailingStreet__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingStreet__c</inlineHelpText>
         <label>Home Street</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -742,6 +789,7 @@
     <fields>
         <fullName>Payment_npe01_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>
         <label>Payment Check/Reference Number</label>
         <length>255</length>
         <required>false</required>
@@ -752,6 +800,7 @@
     <fields>
         <fullName>Payment_npe01_Payment_Method__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Payment.npe01__Payment_Method__c</inlineHelpText>
         <label>Payment Method</label>
         <length>255</length>
         <required>false</required>

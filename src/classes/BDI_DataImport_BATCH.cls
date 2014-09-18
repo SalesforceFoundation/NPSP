@@ -157,20 +157,36 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private static map<string, string> mapFieldsForDIObject(string strObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
-        	list<string> strParts = strF.split('_', 3);
-        	string strField;
-        	if (strParts.size() == 3 && strParts[0] == strObj && strParts[1] != '' && strParts[2] != '') {
-        		if (strParts[1] == 'std')
-                    strField = strParts[2].replace('__c', '');
-                else if (strParts[1] == 'npsp' && !UTIL_Namespace.InManagedPackage)
-                    strField = strParts[2];
-                else if (strParts[1] == 'none')
-                    strField = strParts[2];
-                else
-                    strField = strParts[1] + '__' + strParts[2];
-                
-                mapDIFieldToObjField.put(strF, strField);
+        	
+        	DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('DataImport__c', strF);
+        	string strHelpText = dfr.getInlineHelpText();
+        	if (strHelpText != null && strHelpText != '') {
+	        	list<string> strParts = strHelpText.split('\\.', 2);
+	        	if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
+	        		string strField = strParts[1];
+	        		if (!UTIL_Namespace.InManagedPackage)
+	        		     strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
+	                mapDIFieldToObjField.put(strF, strField);
+	        	}
+        	} 
+        	/*********
+        	else {
+	        	list<string> strParts = strF.split('_', 3);
+	        	string strField;
+	        	if (strParts.size() == 3 && strParts[0] == strObj && strParts[1] != '' && strParts[2] != '') {
+	        		if (strParts[1] == 'std')
+	                    strField = strParts[2].replace('__c', '');
+	                else if (strParts[1] == 'npsp' && !UTIL_Namespace.InManagedPackage)
+	                    strField = strParts[2];
+	                else if (strParts[1] == 'none')
+	                    strField = strParts[2];
+	                else
+	                    strField = strParts[1] + '__' + strParts[2];
+	                
+	                mapDIFieldToObjField.put(strF, strField);
+	        	}
         	}
+        	******/
         }
         return mapDIFieldToObjField;
     }
@@ -581,7 +597,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 addr.MailingState__c + addr.MailingPostalCode__c, addr.Id);
         }        
         
-        map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Home', listStrDataImportFields);
+        map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
@@ -638,7 +654,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private void importOpportunities() {
     
         // get the fields we will auto-copy
-        map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Donation', listStrDataImportFields);
+        map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Opportunity', listStrDataImportFields);
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
