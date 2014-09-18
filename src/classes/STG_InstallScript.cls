@@ -32,7 +32,7 @@
 * @date 2014
 * @description Install Script for the NPSP package. 
 */
-global class STG_InstallScript implements InstallHandler {
+global without sharing class STG_InstallScript implements InstallHandler {
     
     global void onInstall(InstallContext context) {
         try { 
