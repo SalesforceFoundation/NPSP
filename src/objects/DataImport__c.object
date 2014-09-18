@@ -565,7 +565,7 @@
     <fields>
         <fullName>Donation_npe01_Membership_End_Date__c</fullName>
         <externalId>false</externalId>
-        <label>Membership End Date</label>
+        <label>Donation Membership End Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Date</type>
