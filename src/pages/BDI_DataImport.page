@@ -165,7 +165,7 @@
 			                    <div class="panel-body">
                                     <p><apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
 			                        &nbsp;&nbsp;Current Status: <strong>{!aaj.Status}</strong></p>
-			                        <p>{!aaj.ApexClass.Name} {!IF(aaj.Status == 'Processing', 'is currently processing batch', 'processed')} {!aaj.JobItemsProcessed} of {!aaj.TotalJobItems} total batches</p>
+			                        <p>{!aaj.ApexClass.Name} {!IF(aaj.Status == 'Processing', 'is currently processing batch', 'processed')} {!aaj.JobItemsProcessed} of {!aaj.TotalJobItems} total batches.</p>
 			                        <div class="progress">
 			                            <div class="progress-bar progress-bar-striped active {!IF(aaj.Status != 'Completed', '', IF(aaj.NumberOfErrors > 0 || crecFailed > 0, 'progress-bar-warning', 'progress-bar-success'))} " role="progressbar" aria-valuenow="{!percentComplete}" aria-valuemin="0" aria-valuemax="100" style="width: {!percentComplete}%;">
 			                                {!percentComplete}%
