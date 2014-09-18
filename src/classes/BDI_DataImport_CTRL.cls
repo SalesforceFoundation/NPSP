@@ -110,17 +110,18 @@ public with sharing class BDI_DataImport_CTRL {
 	                //A little check here as we don't want to divide by 0.
 	                percentComplete = 5;
 	            } else {
-	                percentComplete = ((aaj.JobItemsProcessed  / aaj.TotalJobItems) * 100.0).intValue();
+	            	decimal dec = decimal.valueOf(aaj.JobItemsProcessed) / decimal.valueOf(aaj.TotalJobItems);
+	                percentComplete = (dec * 100.0).intValue();
 	                //don't let it go backwards from preparing/queued
 	                if (percentComplete == 0 || percentComplete == null)
-	                    percentComplete = 5;
+	                    percentComplete = 10;
 	            }
-            return percentComplete;
-            }
-            else 
-                return 0;	
+                return percentComplete;
+            } else {
+                return 0;
+            }	
         }
-        set;
+        private set;
     }
 
     public string strTimeSpent {
@@ -129,8 +130,11 @@ public with sharing class BDI_DataImport_CTRL {
         		DateTime dt = DateTime.newInstance(system.Now().getTime() - dtStart.getTime());
         		strTimeSpent = dt.format('m:ss');
         		return strTimeSpent;
+        	} else if (isBatchJobCompleted) {
+        		return strTimeSpent;
+        	} else {
+                return null;
         	}
-            return null;
         }
         private set;
     }
