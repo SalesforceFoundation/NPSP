@@ -63,41 +63,41 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_std_Salutation__c</field>
+                <field>Contact1_Salutation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_std_Firstname__c</field>
+                <field>Contact1_Firstname__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_std_Lastname__c</field>
+                <field>Contact1_Lastname__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_std_Birthdate__c</field>
+                <field>Contact1_Birthdate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_std_Title__c</field>
+                <field>Contact1_Title__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_npe01_HomeEmail__c</field>
+                <field>Contact1_Personal_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_npe01_WorkEmail__c</field>
+                <field>Contact1_Work_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_npe01_AlternateEmail__c</field>
+                <field>Contact1_Alternate_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact1_npe01_Preferred_Email__c</field>
+                <field>Contact1_Preferred_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -118,37 +118,37 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_Name__c</field>
+                <field>Account1_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_BillingStreet__c</field>
+                <field>Account1_Street__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_BillingCity__c</field>
+                <field>Account1_City__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_BillingState__c</field>
+                <field>Account1_State_Province__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_BillingPostalCode__c</field>
+                <field>Account1_Zip_Postal_Code__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_BillingCountry__c</field>
+                <field>Account1_Country__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_Phone__c</field>
+                <field>Account1_Phone__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account1_std_Website__c</field>
+                <field>Account1_Website__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -169,41 +169,41 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_std_Salutation__c</field>
+                <field>Contact2_Salutation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_std_Firstname__c</field>
+                <field>Contact2_Firstname__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_std_LastName__c</field>
+                <field>Contact2_Lastname__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_std_Birthdate__c</field>
+                <field>Contact2_Birthdate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_std_Title__c</field>
+                <field>Contact2_Title__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_npe01_HomeEmail__c</field>
+                <field>Contact2_Personal_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_npe01_WorkEmail__c</field>
+                <field>Contact2_Work_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_npe01_AlternateEmail__c</field>
+                <field>Contact2_Alternate_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Contact2_npe01_Preferred_Email__c</field>
+                <field>Contact2_Preferred_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -224,37 +224,37 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_Name__c</field>
+                <field>Account2_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_BillingStreet__c</field>
+                <field>Account2_Street__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_BillingCity__c</field>
+                <field>Account2_City__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_BillingState__c</field>
+                <field>Account2_State_Province__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_BillingPostalCode__c</field>
+                <field>Account2_Zip_Postal_Code__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_BillingCountry__c</field>
+                <field>Account2_Country__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_Phone__c</field>
+                <field>Account2_Phone__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Account2_std_Website__c</field>
+                <field>Account2_Website__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -275,23 +275,23 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Home_npsp_MailingStreet__c</field>
+                <field>Home_Street__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Home_npsp_MailingCity__c</field>
+                <field>Home_City__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Home_npsp_MailingState__c</field>
+                <field>Home_State_Province__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Home_npsp_MailingPostalCode__c</field>
+                <field>Home_Zip_Postal_Code__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Home_npsp_MailingCountry__c</field>
+                <field>Home_Country__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -314,65 +314,65 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>DonationDonor__c</field>
+                <field>Donation_Donor__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_Amount__c</field>
+                <field>Donation_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_CloseDate__c</field>
+                <field>Donation_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_Name__c</field>
+                <field>Donation_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>DonationRecordTypeName__c</field>
+                <field>Donation_Record_Type_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_Type__c</field>
+                <field>Donation_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_StageName__c</field>
+                <field>Donation_Stage__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_std_Description__c</field>
+                <field>Donation_Description__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_npe01_Member_Level__c</field>
+                <field>Donation_Member_Level__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_npe01_Membership_Origin__c</field>
+                <field>Donation_Membership_Origin__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_npe01_Membership_Start_Date__c</field>
+                <field>Donation_Membership_Start_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Donation_npe01_Membership_End_Date__c</field>
+                <field>Donation_Membership_End_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>DonationCampaignName__c</field>
+                <field>Donation_Campaign_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Payment_npe01_Payment_Method__c</field>
+                <field>Payment_Method__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Payment_npe01_Check_Reference_Number__c</field>
+                <field>Payment_Check_Reference_Number__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
