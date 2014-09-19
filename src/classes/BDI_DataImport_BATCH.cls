@@ -48,7 +48,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             strSoql += strComma + strF;
             strComma = ', ';
         }
-        strSoql += ' FROM DataImport__c ';
+        strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         strSoql += ' WHERE Status__c <> \'Imported\' ';        
     }
     
@@ -92,7 +92,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             importCampaigns();
 
             importOpportunities();
-            
+
             // update final status for each DI
             for (DataImport__c di: listDI) {
             	if (di.Status__c == null)
@@ -157,7 +157,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private static map<string, string> mapFieldsForDIObject(string strObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
-        	
         	DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('DataImport__c', strF);
         	string strHelpText = dfr.getInlineHelpText();
         	if (strHelpText != null && strHelpText != '') {
@@ -169,24 +168,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	                mapDIFieldToObjField.put(strF, strField);
 	        	}
         	} 
-        	/*********
-        	else {
-	        	list<string> strParts = strF.split('_', 3);
-	        	string strField;
-	        	if (strParts.size() == 3 && strParts[0] == strObj && strParts[1] != '' && strParts[2] != '') {
-	        		if (strParts[1] == 'std')
-	                    strField = strParts[2].replace('__c', '');
-	                else if (strParts[1] == 'npsp' && !UTIL_Namespace.InManagedPackage)
-	                    strField = strParts[2];
-	                else if (strParts[1] == 'none')
-	                    strField = strParts[2];
-	                else
-	                    strField = strParts[1] + '__' + strParts[2];
-	                
-	                mapDIFieldToObjField.put(strF, strField);
-	        	}
-        	}
-        	******/
         }
         return mapDIFieldToObjField;
     }
@@ -316,20 +297,20 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         	if (di.Status__c == 'Failed')
         	   continue;
             // c1
-            if (di.Contact1_std_Firstname__c != null)
-                setFname.add(di.Contact1_std_Firstname__c);
-            if (di.Contact1_std_Lastname__c != null)
-                setLname.add(di.Contact1_std_Lastname__c);
-            if (di.Contact1_npe01_HomeEmail__c != null)
-                setEmail.add(di.Contact1_npe01_HomeEmail__c);            
+            if (di.Contact1_Firstname__c != null)
+                setFname.add(di.Contact1_Firstname__c);
+            if (di.Contact1_Lastname__c != null)
+                setLname.add(di.Contact1_Lastname__c);
+            if (di.Contact1_Personal_Email__c != null)
+                setEmail.add(di.Contact1_Personal_Email__c);            
 
             // c2
-            if (di.Contact2_std_Firstname__c != null)
-                setFname.add(di.Contact2_std_Firstname__c);
-            if (di.Contact2_std_Lastname__c != null)
-                setLname.add(di.Contact2_std_Lastname__c);
-            if (di.Contact2_npe01_HomeEmail__c != null)
-                setEmail.add(di.Contact2_npe01_HomeEmail__c);            
+            if (di.Contact2_Firstname__c != null)
+                setFname.add(di.Contact2_Firstname__c);
+            if (di.Contact2_Lastname__c != null)
+                setLname.add(di.Contact2_Lastname__c);
+            if (di.Contact2_Personal_Email__c != null)
+                setEmail.add(di.Contact2_Personal_Email__c);            
         }
         
         string strSoql = 'Select Id, Firstname, Lastname, Email from Contact where ';
@@ -379,16 +360,16 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
     // utility to return the search key for contact1 in the given di.
     private string diKeyC1(DataImport__c di) {
-    	if (di.Contact1_std_Firstname__c == null && di.Contact1_std_Lastname__c == null && di.Contact1_npe01_HomeEmail__c == null)
+    	if (di.Contact1_Firstname__c == null && di.Contact1_Lastname__c == null && di.Contact1_Personal_Email__c == null)
     	   return null;
-        return di.Contact1_std_Firstname__c + '|' + di.Contact1_std_Lastname__c + '|' + di.Contact1_npe01_HomeEmail__c;
+        return di.Contact1_Firstname__c + '|' + di.Contact1_Lastname__c + '|' + di.Contact1_Personal_Email__c;
     }
     
     // utility to return the search key for contact2 in the given di.
     private string diKeyC2(DataImport__c di) {
-        if (di.Contact2_std_Firstname__c == null && di.Contact2_std_Lastname__c == null && di.Contact2_npe01_HomeEmail__c == null)
+        if (di.Contact2_Firstname__c == null && di.Contact2_Lastname__c == null && di.Contact2_Personal_Email__c == null)
             return null;
-        return di.Contact2_std_Firstname__c + '|' + di.Contact2_std_Lastname__c + '|' + di.Contact2_npe01_HomeEmail__c;
+        return di.Contact2_Firstname__c + '|' + di.Contact2_Lastname__c + '|' + di.Contact2_Personal_Email__c;
     }
 
     //********************************************* ACCOUNTS ************************************************
@@ -513,12 +494,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
     // utility to return the search key for Account1 in the given di.
     private string diKeyA1(DataImport__c di) {
-        return di.Account1_std_Name__c;
+        return di.Account1_Name__c;
     }
     
     // utility to return the search key for Account2 in the given di.
     private string diKeyA2(DataImport__c di) {
-        return di.Account2_std_Name__c;
+        return di.Account2_Name__c;
     }
 
     // looks for existing Accounts that match A1 or A2, and if found,
@@ -530,12 +511,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         for (DataImport__c di : listDI) {
             // a1
-            if (di.Account1_std_Name__c != null)
-                setName.add(di.Account1_std_Name__c);
+            if (di.Account1_Name__c != null)
+                setName.add(di.Account1_Name__c);
 
             // a2
-            if (di.Account2_std_Name__c != null)
-                setName.add(di.Account2_std_Name__c);
+            if (di.Account2_Name__c != null)
+                setName.add(di.Account2_Name__c);
         }
         
         string strSoql = 'Select Id, Name from Account where ';
@@ -668,7 +649,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.DonationImported__c != null)
                 continue;
 
-            if (di.DonationDonor__c == 'Contact1' || di.DonationDonor__c == null) {
+            if (di.Donation_Donor__c == 'Contact1' || di.Donation_Donor__c == null) {
                 Contact con = mapDIKeyToContact.get(diKeyC1(di));
                 if (con == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
@@ -677,7 +658,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
-            } else if (di.DonationDonor__c == 'Account1') {
+            } else if (di.Donation_Donor__c == 'Account1') {
                 Account acc = mapDIKeyToAccount.get(diKeyA1(di));
                 if (acc == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
@@ -690,20 +671,20 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 continue;
             }
                 
-            if (di.DonationRecordTypeName__c != null) {
-                Id idRt = UTIL_RecordTypes.GetRecordTypeId('Opportunity', di.DonationRecordTypeName__c);
+            if (di.Donation_Record_Type_Name__c != null) {
+                Id idRt = UTIL_RecordTypes.GetRecordTypeId('Opportunity', di.Donation_Record_Type_Name__c);
                 if (idRt == null) {
                     LogBDIError(di, 'Invalid Donation Record Type Name');
                     continue;
                 }
                 opp.RecordTypeId = idRt;
-                strOppName += ' ' + di.DonationRecordTypeName__c;
+                strOppName += ' ' + di.Donation_Record_Type_Name__c;
             } else {
                 strOppName += ' Donation';
             }
             
-            if (di.DonationCampaignName__c != null) {
-                Id idCmp = mapStrNameToCampaignId.get(di.DonationCampaignName__c);
+            if (di.Donation_Campaign_Name__c != null) {
+                Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
                 if (idCmp == null) {
                     LogBDIError(di, 'Invalid Donation Campaign Name');
                     continue;
@@ -711,18 +692,18 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 opp.CampaignId = idCmp;
             }
             
-            if (di.Donation_std_CloseDate__c == null) {
-                di.Donation_std_CloseDate__c = system.today();
+            if (di.Donation_Date__c == null) {
+                di.Donation_Date__c = system.today();
                 cPropSet--;
             }
             
-            if (di.Donation_std_Name__c == null) {
-                di.Donation_std_Name__c = strOppName + ' ' + di.Donation_std_CloseDate__c.format();
+            if (di.Donation_Name__c == null) {
+                di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
                 cPropSet--;
             } 
                 
-            if (di.Donation_std_StageName__c == null) {
-                di.Donation_std_StageName__c = UTIL_UnitTestData_TEST.getClosedWonStage();
+            if (di.Donation_Stage__c == null) {
+                di.Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage();
                 cPropSet--;
             }
 
@@ -798,8 +779,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-            if (di.DonationCampaignName__c != null)
-                setStrCampaign.add(di.DonationCampaignName__c);
+            if (di.Donation_Campaign_Name__c != null)
+                setStrCampaign.add(di.Donation_Campaign_Name__c);
         }
 
         // add the existing campaigns to our map

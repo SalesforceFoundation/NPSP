@@ -73,7 +73,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Account1_std_BillingCity__c</fullName>
+        <fullName>Account1_City__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account1.BillingCity</inlineHelpText>
         <label>Account1 City</label>
@@ -84,7 +84,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account1_std_BillingCountry__c</fullName>
+        <fullName>Account1_Country__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account1.BillingCountry</inlineHelpText>
         <label>Account1 Country</label>
@@ -95,38 +95,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account1_std_BillingPostalCode__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account1.BillingPostalCode</inlineHelpText>
-        <label>Account1 Zip/Postal Code</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account1_std_BillingState__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account1.BillingState</inlineHelpText>
-        <label>Account1 State/Province</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account1_std_BillingStreet__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account1.BillingStreet</inlineHelpText>
-        <label>Account1 Street</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>Account1_std_Name__c</fullName>
+        <fullName>Account1_Name__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account1.Name</inlineHelpText>
         <label>Account1 Name</label>
@@ -137,7 +106,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account1_std_Phone__c</fullName>
+        <fullName>Account1_Phone__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account1.Phone</inlineHelpText>
         <label>Account1 Phone</label>
@@ -146,13 +115,44 @@
         <type>Phone</type>
     </fields>
     <fields>
-        <fullName>Account1_std_Website__c</fullName>
+        <fullName>Account1_State_Province__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingState</inlineHelpText>
+        <label>Account1 State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account1_Street__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingStreet</inlineHelpText>
+        <label>Account1 Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Account1_Website__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account1.Website</inlineHelpText>
         <label>Account1 Website</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Account1_Zip_Postal_Code__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account1.BillingPostalCode</inlineHelpText>
+        <label>Account1 Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Account2ImportStatus__c</fullName>
@@ -176,7 +176,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Account2_std_BillingCity__c</fullName>
+        <fullName>Account2_City__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account2.BillingCity</inlineHelpText>
         <label>Account2 City</label>
@@ -187,7 +187,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account2_std_BillingCountry__c</fullName>
+        <fullName>Account2_Country__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account2.BillingCountry</inlineHelpText>
         <label>Account2 Country</label>
@@ -198,38 +198,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account2_std_BillingPostalCode__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account2.BillingPostalCode</inlineHelpText>
-        <label>Account2 Zip/Postal Code</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account2_std_BillingState__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account2.BillingState</inlineHelpText>
-        <label>Account2 State/Province</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Account2_std_BillingStreet__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Account2.BillingStreet</inlineHelpText>
-        <label>Account2 Street</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>Account2_std_Name__c</fullName>
+        <fullName>Account2_Name__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account2.Name</inlineHelpText>
         <label>Account2 Name</label>
@@ -240,7 +209,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Account2_std_Phone__c</fullName>
+        <fullName>Account2_Phone__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account2.Phone</inlineHelpText>
         <label>Account2 Phone</label>
@@ -249,13 +218,44 @@
         <type>Phone</type>
     </fields>
     <fields>
-        <fullName>Account2_std_Website__c</fullName>
+        <fullName>Account2_State_Province__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingState</inlineHelpText>
+        <label>Account2 State/Province</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account2_Street__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingStreet</inlineHelpText>
+        <label>Account2 Street</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Account2_Website__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Account2.Website</inlineHelpText>
         <label>Account2 Website</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Account2_Zip_Postal_Code__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Account2.BillingPostalCode</inlineHelpText>
+        <label>Account2 Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>ApexJobId__c</fullName>
@@ -291,7 +291,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Contact1_npe01_AlternateEmail__c</fullName>
+        <fullName>Contact1_Alternate_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__AlternateEmail__c</inlineHelpText>
         <label>Contact1 Alternate Email</label>
@@ -301,7 +301,38 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact1_npe01_HomeEmail__c</fullName>
+        <fullName>Contact1_Birthdate__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.Birthdate</inlineHelpText>
+        <label>Contact1 Birthdate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contact1_Firstname__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.Firstname</inlineHelpText>
+        <label>Contact1 First Name</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_Lastname__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.Lastname</inlineHelpText>
+        <label>Contact1 Last Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_Personal_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__HomeEmail__c</inlineHelpText>
         <label>Contact1 Personal Email</label>
@@ -311,7 +342,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact1_npe01_Preferred_Email__c</fullName>
+        <fullName>Contact1_Preferred_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact1 Preferred Email</label>
@@ -334,48 +365,7 @@
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>Contact1_npe01_WorkEmail__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact1.npe01__WorkEmail__c</inlineHelpText>
-        <label>Contact1 Work Email</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Email</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact1_std_Birthdate__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact1.Birthdate</inlineHelpText>
-        <label>Contact1 Birthdate</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Contact1_std_Firstname__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact1.Firstname</inlineHelpText>
-        <label>Contact1 First Name</label>
-        <length>40</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact1_std_Lastname__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact1.Lastname</inlineHelpText>
-        <label>Contact1 Last Name</label>
-        <length>80</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact1_std_Salutation__c</fullName>
+        <fullName>Contact1_Salutation__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.Salutation</inlineHelpText>
         <label>Contact1 Salutation</label>
@@ -386,7 +376,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact1_std_Title__c</fullName>
+        <fullName>Contact1_Title__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.Title</inlineHelpText>
         <label>Contact1 Title</label>
@@ -394,6 +384,16 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_Work_Email__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__WorkEmail__c</inlineHelpText>
+        <label>Contact1 Work Email</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
         <unique>false</unique>
     </fields>
     <fields>
@@ -418,7 +418,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Contact2_npe01_AlternateEmail__c</fullName>
+        <fullName>Contact2_Alternate_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npe01__AlternateEmail__c</inlineHelpText>
         <label>Contact2 Alternate Email</label>
@@ -428,7 +428,38 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact2_npe01_HomeEmail__c</fullName>
+        <fullName>Contact2_Birthdate__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.Birthdate</inlineHelpText>
+        <label>Contact2 Birthdate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_Firstname__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.Firstname</inlineHelpText>
+        <label>Contact2 First Name</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_Lastname__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.Lastname</inlineHelpText>
+        <label>Contact2 Last Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_Personal_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npe01__HomeEmail__c</inlineHelpText>
         <label>Contact2 Personal Email</label>
@@ -438,7 +469,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact2_npe01_Preferred_Email__c</fullName>
+        <fullName>Contact2_Preferred_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.npe01__Preferred_Email__c</inlineHelpText>
         <label>Contact2 Preferred Email</label>
@@ -461,48 +492,7 @@
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>Contact2_npe01_WorkEmail__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact2.npe01__WorkEmail__c</inlineHelpText>
-        <label>Contact2 Work Email</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Email</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact2_std_Birthdate__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact2.Birthdate</inlineHelpText>
-        <label>Contact2 Birthdate</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Contact2_std_Firstname__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact2.Firstname</inlineHelpText>
-        <label>Contact2 First Name</label>
-        <length>40</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact2_std_LastName__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Contact2.Lastname</inlineHelpText>
-        <label>Contact2 Last Name</label>
-        <length>80</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Contact2_std_Salutation__c</fullName>
+        <fullName>Contact2_Salutation__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.Salutation</inlineHelpText>
         <label>Contact2 Salutation</label>
@@ -513,7 +503,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Contact2_std_Title__c</fullName>
+        <fullName>Contact2_Title__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.Title</inlineHelpText>
         <label>Contact2 Title</label>
@@ -524,34 +514,14 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>DonationCampaignName__c</fullName>
+        <fullName>Contact2_Work_Email__c</fullName>
         <externalId>false</externalId>
-        <label>Donation Campaign Name</label>
-        <length>255</length>
+        <inlineHelpText>Contact2.npe01__WorkEmail__c</inlineHelpText>
+        <label>Contact2 Work Email</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
+        <type>Email</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>DonationDonor__c</fullName>
-        <description>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</inlineHelpText>
-        <label>Donation Donor</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Contact1</fullName>
-                <default>true</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Account1</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
     </fields>
     <fields>
         <fullName>DonationImportStatus__c</fullName>
@@ -575,59 +545,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>DonationRecordTypeName__c</fullName>
-        <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.</inlineHelpText>
-        <label>Donation Record Type Name</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Donation_npe01_Member_Level__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Opportunity.npe01__Member_Level__c</inlineHelpText>
-        <label>Donation Member Level</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Donation_npe01_Membership_End_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Opportunity.npe01__Membership_End_Date__c</inlineHelpText>
-        <label>Donation Membership End Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Donation_npe01_Membership_Origin__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Opportunity.npe01__Membership_Origin__c</inlineHelpText>
-        <label>Donation Membership Origin</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Donation_npe01_Membership_Start_Date__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Opportunity.npe01__Membership_Start_Date__c</inlineHelpText>
-        <label>Donation Membership Start Date</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Donation_std_Amount__c</fullName>
+        <fullName>Donation_Amount__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.Amount</inlineHelpText>
         <label>Donation Amount</label>
@@ -638,7 +556,17 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Donation_std_CloseDate__c</fullName>
+        <fullName>Donation_Campaign_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Date__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.CloseDate</inlineHelpText>
         <label>Donation Date</label>
@@ -647,7 +575,7 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>Donation_std_Description__c</fullName>
+        <fullName>Donation_Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.Description</inlineHelpText>
         <label>Donation Description</label>
@@ -657,7 +585,67 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
-        <fullName>Donation_std_Name__c</fullName>
+        <fullName>Donation_Donor__c</fullName>
+        <description>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies whether the donation is an individual donation from Contact1, or an organizational donation from Account1.</inlineHelpText>
+        <label>Donation Donor</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Contact1</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Account1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Donation_Member_Level__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Member_Level__c</inlineHelpText>
+        <label>Donation Member Level</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Membership_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_End_Date__c</inlineHelpText>
+        <label>Donation Membership End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Donation_Membership_Origin__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_Origin__c</inlineHelpText>
+        <label>Donation Membership Origin</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Membership_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.npe01__Membership_Start_Date__c</inlineHelpText>
+        <label>Donation Membership Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Donation_Name__c</fullName>
         <description>The donation&apos;s name.  Will be automatically generated by the system if left empty.</description>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.Name</inlineHelpText>
@@ -669,7 +657,19 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Donation_std_StageName__c</fullName>
+        <fullName>Donation_Record_Type_Name__c</fullName>
+        <description>The Name of the Opportunity Record Type to use for the donation.  Uses default Record Type if left blank.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Name of the Opportunity Record Type to use for the donation. Uses default Record Type if left blank.</inlineHelpText>
+        <label>Donation Record Type Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Donation_Stage__c</fullName>
         <description>The Stage to set on the Opportunity.  Will set to Closed Won if left blank.</description>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.StageName</inlineHelpText>
@@ -681,7 +681,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Donation_std_Type__c</fullName>
+        <fullName>Donation_Type__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.Type</inlineHelpText>
         <label>Donation Type</label>
@@ -724,7 +724,7 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Home_npsp_MailingCity__c</fullName>
+        <fullName>Home_City__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Address.npsp__MailingCity__c</inlineHelpText>
         <label>Home City</label>
@@ -735,7 +735,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_MailingCountry__c</fullName>
+        <fullName>Home_Country__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Address.npsp__MailingCountry__c</inlineHelpText>
         <label>Home Country</label>
@@ -746,18 +746,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_MailingPostalCode__c</fullName>
-        <externalId>false</externalId>
-        <inlineHelpText>Address.npsp__MailingPostalCode__c</inlineHelpText>
-        <label>Home Zip/Postal Code</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Home_npsp_MailingState__c</fullName>
+        <fullName>Home_State_Province__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Address.npsp__MailingState__c</inlineHelpText>
         <label>Home State/Province</label>
@@ -768,13 +757,24 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Home_npsp_MailingStreet__c</fullName>
+        <fullName>Home_Street__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Address.npsp__MailingStreet__c</inlineHelpText>
         <label>Home Street</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Home_Zip_Postal_Code__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Address.npsp__MailingPostalCode__c</inlineHelpText>
+        <label>Home Zip/Postal Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>ImportedDate__c</fullName>
@@ -787,7 +787,7 @@
         <type>DateTime</type>
     </fields>
     <fields>
-        <fullName>Payment_npe01_Check_Reference_Number__c</fullName>
+        <fullName>Payment_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>
         <label>Payment Check/Reference Number</label>
@@ -798,7 +798,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Payment_npe01_Payment_Method__c</fullName>
+        <fullName>Payment_Method__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Payment_Method__c</inlineHelpText>
         <label>Payment Method</label>
@@ -834,9 +834,9 @@
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>FailureInformation__c</columns>
-        <columns>Contact1_std_Firstname__c</columns>
-        <columns>Contact1_std_Lastname__c</columns>
-        <columns>Account1_std_Name__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
@@ -846,9 +846,9 @@
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>FailureInformation__c</columns>
-        <columns>Contact1_std_Firstname__c</columns>
-        <columns>Contact1_std_Lastname__c</columns>
-        <columns>Account1_std_Name__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -863,9 +863,9 @@
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>FailureInformation__c</columns>
-        <columns>Contact1_std_Firstname__c</columns>
-        <columns>Contact1_std_Lastname__c</columns>
-        <columns>Account1_std_Name__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -880,9 +880,9 @@
         <columns>NAME</columns>
         <columns>Status__c</columns>
         <columns>FailureInformation__c</columns>
-        <columns>Contact1_std_Firstname__c</columns>
-        <columns>Contact1_std_Lastname__c</columns>
-        <columns>Account1_std_Name__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -901,9 +901,9 @@
     <searchLayouts>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>FailureInformation__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Contact1_std_Firstname__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Contact1_std_Lastname__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Account1_std_Name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Contact1_Firstname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Contact1_Lastname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Account1_Name__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
         <excludedStandardButtons>New</excludedStandardButtons>
         <excludedStandardButtons>Accept</excludedStandardButtons>
@@ -911,13 +911,13 @@
         <listViewButtons>Process_Data_Import</listViewButtons>
         <searchFilterFields>OBJECT_ID</searchFilterFields>
         <searchFilterFields>Status__c</searchFilterFields>
-        <searchFilterFields>Contact1_std_Firstname__c</searchFilterFields>
-        <searchFilterFields>Contact1_std_Lastname__c</searchFilterFields>
-        <searchFilterFields>Account1_std_Name__c</searchFilterFields>
+        <searchFilterFields>Contact1_Firstname__c</searchFilterFields>
+        <searchFilterFields>Contact1_Lastname__c</searchFilterFields>
+        <searchFilterFields>Account1_Name__c</searchFilterFields>
         <searchFilterFields>LAST_UPDATE</searchFilterFields>
         <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Contact1_std_Firstname__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Contact1_std_Lastname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact1_Firstname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Contact1_Lastname__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
         <searchResultsCustomButtons>Process_Data_Import</searchResultsCustomButtons>
     </searchLayouts>

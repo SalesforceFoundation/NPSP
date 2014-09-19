@@ -325,73 +325,73 @@
     <members>Contact.is_Address_Override__c</members>
     <members>DataImport__c.Account1ImportStatus__c</members>
     <members>DataImport__c.Account1Imported__c</members>
-    <members>DataImport__c.Account1_std_BillingCity__c</members>
-    <members>DataImport__c.Account1_std_BillingCountry__c</members>
-    <members>DataImport__c.Account1_std_BillingPostalCode__c</members>
-    <members>DataImport__c.Account1_std_BillingState__c</members>
-    <members>DataImport__c.Account1_std_BillingStreet__c</members>
-    <members>DataImport__c.Account1_std_Name__c</members>
-    <members>DataImport__c.Account1_std_Phone__c</members>
-    <members>DataImport__c.Account1_std_Website__c</members>
+    <members>DataImport__c.Account1_City__c</members>
+    <members>DataImport__c.Account1_Country__c</members>
+    <members>DataImport__c.Account1_Name__c</members>
+    <members>DataImport__c.Account1_Phone__c</members>
+    <members>DataImport__c.Account1_State_Province__c</members>
+    <members>DataImport__c.Account1_Street__c</members>
+    <members>DataImport__c.Account1_Website__c</members>
+    <members>DataImport__c.Account1_Zip_Postal_Code__c</members>
     <members>DataImport__c.Account2ImportStatus__c</members>
     <members>DataImport__c.Account2Imported__c</members>
-    <members>DataImport__c.Account2_std_BillingCity__c</members>
-    <members>DataImport__c.Account2_std_BillingCountry__c</members>
-    <members>DataImport__c.Account2_std_BillingPostalCode__c</members>
-    <members>DataImport__c.Account2_std_BillingState__c</members>
-    <members>DataImport__c.Account2_std_BillingStreet__c</members>
-    <members>DataImport__c.Account2_std_Name__c</members>
-    <members>DataImport__c.Account2_std_Phone__c</members>
-    <members>DataImport__c.Account2_std_Website__c</members>
+    <members>DataImport__c.Account2_City__c</members>
+    <members>DataImport__c.Account2_Country__c</members>
+    <members>DataImport__c.Account2_Name__c</members>
+    <members>DataImport__c.Account2_Phone__c</members>
+    <members>DataImport__c.Account2_State_Province__c</members>
+    <members>DataImport__c.Account2_Street__c</members>
+    <members>DataImport__c.Account2_Website__c</members>
+    <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
     <members>DataImport__c.ApexJobId__c</members>
     <members>DataImport__c.Contact1ImportStatus__c</members>
     <members>DataImport__c.Contact1Imported__c</members>
-    <members>DataImport__c.Contact1_npe01_AlternateEmail__c</members>
-    <members>DataImport__c.Contact1_npe01_HomeEmail__c</members>
-    <members>DataImport__c.Contact1_npe01_Preferred_Email__c</members>
-    <members>DataImport__c.Contact1_npe01_WorkEmail__c</members>
-    <members>DataImport__c.Contact1_std_Birthdate__c</members>
-    <members>DataImport__c.Contact1_std_Firstname__c</members>
-    <members>DataImport__c.Contact1_std_Lastname__c</members>
-    <members>DataImport__c.Contact1_std_Salutation__c</members>
-    <members>DataImport__c.Contact1_std_Title__c</members>
+    <members>DataImport__c.Contact1_Alternate_Email__c</members>
+    <members>DataImport__c.Contact1_Birthdate__c</members>
+    <members>DataImport__c.Contact1_Firstname__c</members>
+    <members>DataImport__c.Contact1_Lastname__c</members>
+    <members>DataImport__c.Contact1_Personal_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Email__c</members>
+    <members>DataImport__c.Contact1_Salutation__c</members>
+    <members>DataImport__c.Contact1_Title__c</members>
+    <members>DataImport__c.Contact1_Work_Email__c</members>
     <members>DataImport__c.Contact2ImportStatus__c</members>
     <members>DataImport__c.Contact2Imported__c</members>
-    <members>DataImport__c.Contact2_npe01_AlternateEmail__c</members>
-    <members>DataImport__c.Contact2_npe01_HomeEmail__c</members>
-    <members>DataImport__c.Contact2_npe01_Preferred_Email__c</members>
-    <members>DataImport__c.Contact2_npe01_WorkEmail__c</members>
-    <members>DataImport__c.Contact2_std_Birthdate__c</members>
-    <members>DataImport__c.Contact2_std_Firstname__c</members>
-    <members>DataImport__c.Contact2_std_LastName__c</members>
-    <members>DataImport__c.Contact2_std_Salutation__c</members>
-    <members>DataImport__c.Contact2_std_Title__c</members>
-    <members>DataImport__c.DonationCampaignName__c</members>
-    <members>DataImport__c.DonationDonor__c</members>
+    <members>DataImport__c.Contact2_Alternate_Email__c</members>
+    <members>DataImport__c.Contact2_Birthdate__c</members>
+    <members>DataImport__c.Contact2_Firstname__c</members>
+    <members>DataImport__c.Contact2_Lastname__c</members>
+    <members>DataImport__c.Contact2_Personal_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Email__c</members>
+    <members>DataImport__c.Contact2_Salutation__c</members>
+    <members>DataImport__c.Contact2_Title__c</members>
+    <members>DataImport__c.Contact2_Work_Email__c</members>
     <members>DataImport__c.DonationImportStatus__c</members>
     <members>DataImport__c.DonationImported__c</members>
-    <members>DataImport__c.DonationRecordTypeName__c</members>
-    <members>DataImport__c.Donation_npe01_Member_Level__c</members>
-    <members>DataImport__c.Donation_npe01_Membership_End_Date__c</members>
-    <members>DataImport__c.Donation_npe01_Membership_Origin__c</members>
-    <members>DataImport__c.Donation_npe01_Membership_Start_Date__c</members>
-    <members>DataImport__c.Donation_std_Amount__c</members>
-    <members>DataImport__c.Donation_std_CloseDate__c</members>
-    <members>DataImport__c.Donation_std_Description__c</members>
-    <members>DataImport__c.Donation_std_Name__c</members>
-    <members>DataImport__c.Donation_std_StageName__c</members>
-    <members>DataImport__c.Donation_std_Type__c</members>
+    <members>DataImport__c.Donation_Amount__c</members>
+    <members>DataImport__c.Donation_Campaign_Name__c</members>
+    <members>DataImport__c.Donation_Date__c</members>
+    <members>DataImport__c.Donation_Description__c</members>
+    <members>DataImport__c.Donation_Donor__c</members>
+    <members>DataImport__c.Donation_Member_Level__c</members>
+    <members>DataImport__c.Donation_Membership_End_Date__c</members>
+    <members>DataImport__c.Donation_Membership_Origin__c</members>
+    <members>DataImport__c.Donation_Membership_Start_Date__c</members>
+    <members>DataImport__c.Donation_Name__c</members>
+    <members>DataImport__c.Donation_Record_Type_Name__c</members>
+    <members>DataImport__c.Donation_Stage__c</members>
+    <members>DataImport__c.Donation_Type__c</members>
     <members>DataImport__c.FailureInformation__c</members>
     <members>DataImport__c.HomeAddressImportStatus__c</members>
     <members>DataImport__c.HomeAddressImported__c</members>
-    <members>DataImport__c.Home_npsp_MailingCity__c</members>
-    <members>DataImport__c.Home_npsp_MailingCountry__c</members>
-    <members>DataImport__c.Home_npsp_MailingPostalCode__c</members>
-    <members>DataImport__c.Home_npsp_MailingState__c</members>
-    <members>DataImport__c.Home_npsp_MailingStreet__c</members>
+    <members>DataImport__c.Home_City__c</members>
+    <members>DataImport__c.Home_Country__c</members>
+    <members>DataImport__c.Home_State_Province__c</members>
+    <members>DataImport__c.Home_Street__c</members>
+    <members>DataImport__c.Home_Zip_Postal_Code__c</members>
     <members>DataImport__c.ImportedDate__c</members>
-    <members>DataImport__c.Payment_npe01_Check_Reference_Number__c</members>
-    <members>DataImport__c.Payment_npe01_Payment_Method__c</members>
+    <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+    <members>DataImport__c.Payment_Method__c</members>
     <members>DataImport__c.Status__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>

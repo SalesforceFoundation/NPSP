@@ -41,24 +41,24 @@ private with sharing class BDI_DataImport_TEST {
     private static string strTestOnly = '*';
     
     
-    // utility to create a new di record	
+    // utility to create a new di record    
     static DataImport__c newDI(string firstname, string lastname) {
-    	return new DataImport__c(
-    	   Contact1_std_Firstname__c = firstname,
-    	   Contact1_std_Lastname__c = lastname,
-    	   Contact1_npe01_HomeEmail__c = firstname + '@' + lastname + '.com'
+        return new DataImport__c(
+           Contact1_Firstname__c = firstname,
+           Contact1_Lastname__c = lastname,
+           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com'
         );
     }
 
     // utility to create a new di record    
     static DataImport__c newDI(string firstname, string lastname, string firstname2, string lastname2) {
         return new DataImport__c(
-           Contact1_std_Firstname__c = firstname,
-           Contact1_std_Lastname__c = lastname,
-           Contact1_npe01_HomeEmail__c = firstname + '@' + lastname + '.com',
-           Contact2_std_Firstname__c = firstname2,
-           Contact2_std_Lastname__c = lastname2,
-           Contact2_npe01_HomeEmail__c = firstname2 + '@' + lastname2 + '.com'
+           Contact1_Firstname__c = firstname,
+           Contact1_Lastname__c = lastname,
+           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+           Contact2_Firstname__c = firstname2,
+           Contact2_Lastname__c = lastname2,
+           Contact2_Personal_Email__c = firstname2 + '@' + lastname2 + '.com'
         );
     }
 
@@ -240,7 +240,7 @@ private with sharing class BDI_DataImport_TEST {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoNewAccounts') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1', Account2_std_Name__c='A2'));
+        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
         insert listDI;
           
         //run batch data import
@@ -272,7 +272,7 @@ private with sharing class BDI_DataImport_TEST {
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoSameAccounts') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1', Account2_std_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A1'));
         insert listDI;
           
         //run batch data import
@@ -303,8 +303,8 @@ private with sharing class BDI_DataImport_TEST {
         if (strTestOnly != '*' && strTestOnly != 'TwoDISameAccounts') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A1'));
         insert listDI;
           
         //run batch data import
@@ -340,8 +340,8 @@ private with sharing class BDI_DataImport_TEST {
         insert listAcc;    
                     
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
-        listDI.add(new DataImport__c(Account1_std_Name__c='A2'));
+        listDI.add(new DataImport__c(Account1_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A2'));
         insert listDI;
           
         //run batch data import
@@ -376,12 +376,12 @@ private with sharing class BDI_DataImport_TEST {
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c2', 'C2'));
         listDI.add(newDI('c3', 'C3'));
-        listDI[0].Contact1_npe01_Preferred_Email__c = 'Home';
-        listDI[0].Contact1_npe01_HomeEmail__c = 'c1@home.com';
-        listDI[1].Contact1_npe01_Preferred_Email__c = 'Work';
-        listDI[1].Contact1_npe01_WorkEmail__c = 'c2@work.com';
-        listDI[2].Contact1_npe01_Preferred_Email__c = 'Alternate';
-        listDI[2].Contact1_npe01_HomeEmail__c = 'c3@alt.com';
+        listDI[0].Contact1_Preferred_Email__c = 'Home';
+        listDI[0].Contact1_Personal_Email__c = 'c1@home.com';
+        listDI[1].Contact1_Preferred_Email__c = 'Work';
+        listDI[1].Contact1_Work_Email__c = 'c2@work.com';
+        listDI[2].Contact1_Preferred_Email__c = 'Alternate';
+        listDI[2].Contact1_Personal_Email__c = 'c3@alt.com';
         insert listDI;
           
         //run batch data import
@@ -416,8 +416,8 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Account1_std_Name__c = 'A1';
-        listDI[1].Account2_std_Name__c = 'A2';
+        listDI[0].Account1_Name__c = 'A1';
+        listDI[1].Account2_Name__c = 'A2';
         insert listDI;
           
         //run batch data import
@@ -466,8 +466,8 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Home_npsp_MailingCity__c = 'Seattle';
-        listDI[1].Home_npsp_MailingCity__c = 'Portland';
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'Portland';
         insert listDI;
           
         //run batch data import
@@ -502,7 +502,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Seattle', listAcc[0].BillingCity);
         system.assertEquals('Portland', listAcc[1].BillingCity);
                 
-        listDI = [select HomeAddressImported__c, HomeAddressImportStatus__c, Home_npsp_MailingCity__c from DataImport__c order by Home_npsp_MailingCity__c];
+        listDI = [select HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c order by Home_City__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[0].Id); 
         system.assertEquals(listDI[1].HomeAddressImported__c, listAddr[1].Id);
@@ -529,8 +529,8 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c2', 'C2'));
-        listDI[0].Home_npsp_MailingCity__c = 'Seattle';
-        listDI[1].Home_npsp_MailingCity__c = 'Bellevue';
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'Bellevue';
         insert listDI;
           
         //run batch data import
@@ -549,7 +549,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Portland', listAddr[1].MailingCity__c);
         system.assertEquals('Seattle', listAddr[2].MailingCity__c);
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c order by Contact1_Lastname__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
@@ -577,12 +577,12 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Donation_std_Amount__c = 100;
-        listDI[1].Donation_std_Amount__c = 200;
-        listDI[0].Payment_npe01_Check_Reference_Number__c = 'abc';
-        listDI[1].Payment_npe01_Check_Reference_Number__c = '1234';
-        listDI[0].Payment_npe01_Payment_Method__c = 'Check';
-        listDI[1].Payment_npe01_Payment_Method__c = 'Visa';       
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
+        listDI[0].Payment_Check_Reference_Number__c = 'abc';
+        listDI[1].Payment_Check_Reference_Number__c = '1234';
+        listDI[0].Payment_Method__c = 'Check';
+        listDI[1].Payment_Method__c = 'Visa';       
         insert listDI;
           
         //run batch data import
@@ -635,7 +635,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listCon[2].Id, listOCR[2].ContactId);
         system.assertEquals(listCon[3].Id, listOCR[3].ContactId);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_Lastname__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -656,16 +656,16 @@ private with sharing class BDI_DataImport_TEST {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithAccountDonations') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
-        listDI.add(new DataImport__c(Account1_std_Name__c='A2'));
-        listDI[0].DonationDonor__c = 'Account1';
-        listDI[1].DonationDonor__c = 'Account1';
-        listDI[0].Donation_std_Amount__c = 100;
-        listDI[1].Donation_std_Amount__c = 200;
-        listDI[0].Payment_npe01_Check_Reference_Number__c = 'abc';
-        listDI[1].Payment_npe01_Check_Reference_Number__c = '1234';
-        listDI[0].Payment_npe01_Payment_Method__c = 'Check';
-        listDI[1].Payment_npe01_Payment_Method__c = 'Visa';       
+        listDI.add(new DataImport__c(Account1_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A2'));
+        listDI[0].Donation_Donor__c = 'Account1';
+        listDI[1].Donation_Donor__c = 'Account1';
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
+        listDI[0].Payment_Check_Reference_Number__c = 'abc';
+        listDI[1].Payment_Check_Reference_Number__c = '1234';
+        listDI[0].Payment_Method__c = 'Check';
+        listDI[1].Payment_Method__c = 'Visa';       
         insert listDI;
           
         //run batch data import
@@ -699,7 +699,7 @@ private with sharing class BDI_DataImport_TEST {
         list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId from OpportunityContactRole order by Contact.Name];
         system.assertEquals(0, listOCR.size());
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_std_Name__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_Name__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -724,10 +724,10 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c2', 'C2'));
-        listDI[0].Donation_std_Amount__c = 100;
-        listDI[1].Donation_std_Amount__c = 200;
-        listDI[0].DonationCampaignName__c = 'CmpExisting';
-        listDI[1].DonationCampaignName__c = 'CmpNew';
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
+        listDI[0].Donation_Campaign_Name__c = 'CmpExisting';
+        listDI[1].Donation_Campaign_Name__c = 'CmpNew';
         insert listDI;
           
         //run batch data import
@@ -757,7 +757,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listOpp[0].CampaignId, listCmp[0].Id);
         system.assertEquals(listOpp[1].CampaignId, listCmp[1].Id);
         
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_std_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_Lastname__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -775,12 +775,12 @@ private with sharing class BDI_DataImport_TEST {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationErrors') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_std_Name__c='A1'));
-        listDI.add(new DataImport__c(Account1_std_Name__c='A2'));
-        listDI[0].DonationDonor__c = 'Account1';
-        listDI[1].DonationDonor__c = 'illegal value here!';
-        listDI[0].Donation_std_Amount__c = 100;
-        listDI[1].Donation_std_Amount__c = 200;
+        listDI.add(new DataImport__c(Account1_Name__c='A1'));
+        listDI.add(new DataImport__c(Account1_Name__c='A2'));
+        listDI[0].Donation_Donor__c = 'Account1';
+        listDI[1].Donation_Donor__c = 'illegal value here!';
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
         insert listDI;
           
         //run batch data import
@@ -800,7 +800,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(100, listOpp[0].Amount);
         system.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
                 
-        listDI = [select Id, Status__c, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_std_Name__c];
+        listDI = [select Id, Status__c, DonationImported__c, DonationImportStatus__c from DataImport__c order by Account1_Name__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, null);
@@ -822,9 +822,9 @@ private with sharing class BDI_DataImport_TEST {
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Account1_std_Name__c = 'A1';
-        listDI[0].Donation_std_Amount__c = 100;
-        listDI[1].Donation_std_Amount__c = 200;
+        listDI[0].Account1_Name__c = 'A1';
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
         insert listDI;
         
         Test.startTest();
