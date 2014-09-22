@@ -909,6 +909,8 @@
         <excludedStandardButtons>Accept</excludedStandardButtons>
         <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
         <listViewButtons>Process_Data_Import</listViewButtons>
+        <listViewButtons>Delete_All_Data_Import_Records</listViewButtons>
+        <listViewButtons>Delete_Imported_Data_Import_Records</listViewButtons>
         <searchFilterFields>OBJECT_ID</searchFilterFields>
         <searchFilterFields>Status__c</searchFilterFields>
         <searchFilterFields>Contact1_Firstname__c</searchFilterFields>
@@ -920,8 +922,36 @@
         <searchResultsAdditionalFields>Contact1_Lastname__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
         <searchResultsCustomButtons>Process_Data_Import</searchResultsCustomButtons>
+        <searchResultsCustomButtons>Delete_All_Data_Import_Records</searchResultsCustomButtons>
+        <searchResultsCustomButtons>Delete_Imported_Data_Import_Records</searchResultsCustomButtons>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Delete_All_Data_Import_Records</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Delete All Data Import Records</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/npsp__BDI_DataImport?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Delete_Imported_Data_Import_Records</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Delete Imported Data Import Records</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/npsp__BDI_DataImport?action=deleteImported&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+    </webLinks>
     <webLinks>
         <fullName>Process_Data_Import</fullName>
         <availability>online</availability>

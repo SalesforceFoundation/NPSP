@@ -5,9 +5,31 @@ public with sharing class BDI_DataImport_CTRL {
 		bdi = null;
 		ApexJobId = null;
 		dtStart = null;
-		
 	}
 
+    public PageReference actionImportOrDelete() {        
+        String strAction = ApexPages.currentPage().getParameters().get('action');
+        if (strAction == 'deleteImported') {
+            return deleteImportedDIRecords();    
+        } else if (strAction == 'deleteAll') {
+            return deleteAllDIRecords();	
+        }
+        // else we load up the DataImport page.       
+        return null;
+    }
+    
+    public PageReference deleteImportedDIRecords() {
+        for (list<DataImport__c> listDI : [select Id from DataImport__c where Status__c = 'Imported'])
+            delete listDI;
+        return (close());    	
+    }
+    
+    public PageReference deleteAllDIRecords() {
+    	for (list<DataImport__c> listDI : [select Id from DataImport__c])
+            delete listDI; 
+        return (close());
+    }
+    
     public BDI_DataImport_BATCH bdi { get; set; }
     public Boolean batchRunning { get; set; }
     private ID ApexJobId;

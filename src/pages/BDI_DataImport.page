@@ -1,4 +1,4 @@
-<apex:page controller="BDI_DataImport_CTRL" title="Batch Data Import" tabStyle="DataImport__c" showHeader="true" sidebar="false" >
+<apex:page controller="BDI_DataImport_CTRL" title="Batch Data Import" tabStyle="DataImport__c" showHeader="true" sidebar="false" action="{!actionImportOrDelete}" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
@@ -96,7 +96,7 @@
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-sm-9 col-xs-12" >
-                        <h3>Batch Data Import</h3>
+                        <h3>NPSP Data Import</h3>
                         <h4>This utility allows you to easily import your data into the Nonprofit Starter Pack.</h4>
                     </div>
                     <div class="col-sm-3 col-xs-12" >
@@ -164,7 +164,7 @@
 	
 			                    <div class="panel-body">
                                     <p><apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
-			                        &nbsp;&nbsp;Current Status: <strong>{!aaj.Status}</strong></p>
+			                        &nbsp;&nbsp;Current Status: <strong>{!IF(aaj.Status == 'Processing' && aaj.JobItemsProcessed == 0, 'Queued', aaj.Status)}</strong></p>
 			                        <p>{!aaj.ApexClass.Name} {!IF(aaj.Status == 'Processing', 'is currently processing batch', 'processed')} {!aaj.JobItemsProcessed} of {!aaj.TotalJobItems} total batches.</p>
 			                        <div class="progress">
 			                            <div class="progress-bar progress-bar-striped active {!IF(aaj.Status != 'Completed', '', IF(aaj.NumberOfErrors > 0 || crecFailed > 0, 'progress-bar-warning', 'progress-bar-success'))} " role="progressbar" aria-valuenow="{!percentComplete}" aria-valuemin="0" aria-valuemax="100" style="width: {!percentComplete}%;">

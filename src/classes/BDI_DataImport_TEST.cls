@@ -878,4 +878,77 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Created', listDI[1].Contact2ImportStatus__c);        
     }
 
+   /*********************************************************************************************************
+    operation:
+        test the Delete All Data Import Records button
+    verify:
+        all records deleted
+    **********************************************************************************************************/            
+    static testMethod void TestDeleteAllDIRecordsBtn() {
+        if (strTestOnly != '*' && strTestOnly != 'TestDeleteAllDIRecordsBtn') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Status__c = 'Imported';
+        listDI[1].Status__c = 'Failed';
+        insert listDI;
+        
+        Test.startTest();
+
+        // create the page 
+        Test.setCurrentPage(Page.BDI_DataImport); 
+
+        // instantiate the controller
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+        // call the deleteAll method
+        ctrl.deleteAllDIRecords();
+        Test.stopTest();
+
+        // verify results
+        listDI = [select Id, Status__c from DataImport__c];
+        system.assertEquals(0, listDI.size());
+    }
+
+   /*********************************************************************************************************
+    operation:
+        test the Delete Imported Data Import Records button
+    verify:
+        all records deleted
+    **********************************************************************************************************/            
+    static testMethod void TestDeleteImportedDIRecordsBtn() {
+        if (strTestOnly != '*' && strTestOnly != 'TestDeleteImportedDIRecordsBtn') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Status__c = 'Imported';
+        listDI[1].Status__c = 'Failed';
+        listDI[3].Status__c = 'Imported';
+        insert listDI;
+        
+        Test.startTest();
+
+        // create the page 
+        Test.setCurrentPage(Page.BDI_DataImport); 
+
+        // instantiate the controller
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+        // call the deleteAll method
+        ctrl.deleteImportedDIRecords();
+        Test.stopTest();
+
+        // verify results
+        listDI = [select Id, Status__c from DataImport__c order by Status__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(null, listDI[0].Status__c);
+        system.assertEquals('Failed', listDI[1].Status__c);
+    }
+
 }
