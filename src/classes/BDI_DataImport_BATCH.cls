@@ -157,7 +157,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private static map<string, string> mapFieldsForDIObject(string strObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
-        	DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('DataImport__c', strF);
+        	DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
         	string strHelpText = dfr.getInlineHelpText();
         	if (strHelpText != null && strHelpText != '') {
 	        	list<string> strParts = strHelpText.split('\\.', 2);
