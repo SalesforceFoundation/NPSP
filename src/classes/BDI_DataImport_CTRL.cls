@@ -34,6 +34,16 @@ public with sharing class BDI_DataImport_CTRL {
     public Boolean batchRunning { get; set; }
     private ID ApexJobId;
     private DateTime dtStart;
+    
+    public Data_Import_Settings__c diSettings {
+        get {
+        	if (diSettings == null) {
+                diSettings = new Data_Import_Settings__c();
+        	}
+        	return diSettings;
+        }
+        private set;
+    }
 
     // action method that user wants to close this page
     public PageReference close() {
@@ -157,6 +167,48 @@ public with sharing class BDI_DataImport_CTRL {
         	} else {
                 return null;
         	}
+        }
+        private set;
+    }
+
+    public list<SelectOption> listSOContactUniqueID {
+        get {
+            if (listSOContactUniqueID == null) {
+                listSOContactUniqueID = new list<SelectOption>();
+                //add a default option
+                listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
+                            
+                map<String, Schema.SObjectField> conFieldTokenList = Schema.SObjectType.Contact.fields.getMap(); 
+               
+                //only get the describe information for custom fields (not from NPSP)
+                for (string fieldName : conFieldTokenList.keyset()) {
+                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
+                        listSOContactUniqueID.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('Contact', fieldName))); 
+                    }               
+                }
+            }               
+            return listSOContactUniqueID;
+        }
+        private set;
+    }
+
+    public list<SelectOption> listSOAccountUniqueID {
+        get {
+            if (listSOAccountUniqueID == null) {
+                listSOAccountUniqueID = new list<SelectOption>();
+                //add a default option
+                listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
+                            
+                map<String, Schema.SObjectField> fieldTokenList = Schema.SObjectType.Account.fields.getMap(); 
+               
+                //only get the describe information for custom fields (not from NPSP)
+                for (string fieldName : fieldTokenList.keyset()) {
+                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
+                        listSOAccountUniqueID.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('Account', fieldName))); 
+                    }               
+                }
+            }               
+            return listSOAccountUniqueID;
         }
         private set;
     }

@@ -1,8 +1,7 @@
-<apex:page controller="BDI_DataImport_CTRL" title="Batch Data Import" tabStyle="DataImport__c" showHeader="true" sidebar="false" action="{!actionImportOrDelete}" >
+<apex:page controller="BDI_DataImport_CTRL" title="NPSP Data Import" tabStyle="DataImport__c" showHeader="true" sidebar="false" action="{!actionImportOrDelete}" docType="html-5.0" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
-    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced-s1.css')}" />
 
 <script type="text/javascript">
     var j$ = jQuery.noConflict();
@@ -41,6 +40,9 @@
     body{
         margin:0px;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .bootstrap {
+        background: #fff;    
     }
     .bootstrap3 h1, .bootstrap3 h2, .bootstrap3 h3, .bootstrap3 h4{ 
         font-family: Vagrolight,Arial,Helvetica,sans-serif;
@@ -90,7 +92,7 @@
 </style>
 
     <div class="bootstrap" >
-        <apex:form id="idForm">
+        <apex:form id="idForm" styleClass="form-horizontal">
         <!-- HEADER -->
         <div class="container">
             <div class="jumbotron">
@@ -133,14 +135,55 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
                         <div class="panel-body">
-                            <p><i>Possible custom settings that control behavior of the Data Importer.  I propose just exposing them on this page, not NPSP Settings.</i></p>
-                            <ul>
-                                <li>Contact matching rules</li>
-                                <li>unique external key field for Contacts</li>
-                                <li>Account matching rules</li>
-                                <li>unique external key field for Accounts</li>
-                                <li>Batch size</li>
-                            </ul>
+			                <div class="form-group">
+			                    <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.Label}" for="tbxBS" styleClass="col-sm-4 control-label" />
+			                    <div class="col-sm-8 form-control-column">
+			                        <apex:inputField value="{!diSettings.Batch_Size__c}" type="number" id="tbxBS" styleClass="form-control" />
+			                    </div>
+			                    <div class="col-sm-offset-4 col-sm-8 help-block">
+			                        <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.InlineHelpText}" />
+			                    </div>
+			                </div>
+                        
+                            <div class="form-group">
+                                <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.Label}" for="slCMR" styleClass="col-sm-4 control-label" />
+                                <div class="col-sm-8 form-control-column">
+                                    <apex:selectList value="{!diSettings.Contact_Matching_Rule__c}" size="1" multiselect="false" id="slCMR" styleClass="form-control">
+                                        <apex:SelectOption itemLabel="First Name, Last Name, and Email" itemValue="Firstname,Lastname,Email" />
+                                        <apex:SelectOption itemLabel="Last Name and Email" itemValue="Lastname,Email" />
+                                        <apex:SelectOption itemLabel="First Name and Last Name" itemValue="Firstname,Lastname" />
+                                        <apex:SelectOption itemLabel="Email only" itemValue="Email" />
+                                    </apex:selectList>                
+                                </div>
+                                <div class="col-sm-offset-4 col-sm-8 help-block">
+                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.InlineHelpText}" />
+                                </div>
+                            </div>
+
+				            <div class="form-group">
+				                <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.Label}" for="slCCUI" styleClass="col-sm-4 control-label" />
+				                <div class="col-sm-8 form-control-column">
+				                    <apex:selectList value="{!diSettings.Contact_Custom_Unique_ID__c}" size="1" multiselect="false" id="slCCUI" styleClass="form-control">
+				                        <apex:SelectOptions value="{!listSOContactUniqueID}" />
+				                    </apex:selectList>                
+				                </div>
+				                <div class="col-sm-offset-4 col-sm-8 help-block">
+				                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Custom_Unique_ID__c.InlineHelpText}" />
+				                </div>
+				            </div>
+
+                            <div class="form-group">
+                                <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.Label}" for="slACUI" styleClass="col-sm-4 control-label" />
+                                <div class="col-sm-8 form-control-column">
+                                    <apex:selectList value="{!diSettings.Account_Custom_Unique_ID__c}" size="1" multiselect="false" id="slACUI" styleClass="form-control">
+                                        <apex:SelectOptions value="{!listSOAccountUniqueID}" />
+                                    </apex:selectList>                
+                                </div>
+                                <div class="col-sm-offset-4 col-sm-8 help-block">
+                                    <apex:outputText value="{!$ObjectType.Data_Import_Settings__c.Fields.Account_Custom_Unique_ID__c.InlineHelpText}" />
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
