@@ -81,24 +81,20 @@ public without sharing class UTIL_CustomSettingsFacade {
  
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings(String accountProcessor) {
-    	Boolean needsDml = false;
+
         //if no settings exist, create defaults
         if (contactsSettings == null) {
             //first see if we already have settings
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-            if(contactsSettings.Id == null) {
-	            configContactsSettings(contactsSettings);
-	            needsDml = true;
-            }
+            if(contactsSettings.Id == null)
+	            contactsSettings = getOrgContactsSettings();
         }
             
         if (accountProcessor != null && accountProcessor != contactsSettings.npe01__Account_Processor__c) {
             contactsSettings.npe01__Account_Processor__c = accountProcessor;
-            needsDml = true;
+            upsert contactsSettings;
         }                    
 
-        if(needsDml)
-            upsert contactsSettings;
             
         return contactsSettings;
     }
@@ -133,10 +129,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (householdsSettings == null) {
             //first see if we already have settings
             householdsSettings = npo02__Households_Settings__c.getInstance();
-            if(householdsSettings.Id == null) {
-	            configHouseholdSettings(householdsSettings);
-	            upsert householdsSettings;
-            }
+            if(householdsSettings.Id == null)
+	            householdsSettings = getOrgHouseholdsSettings();
         }  
         return householdsSettings;
     }
@@ -216,25 +210,19 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings(RD_RecurringDonations.RecurringDonationCloseOptions defaultBehavior) {
-        Boolean needsDml = false;
         //if no settings exist, create defaults
         if (recurringDonationsSettings == null) {
             //first see if we already have settings
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
-            if(recurringDonationsSettings.Id == null) {
-	            configRecurringDonationsSettings(recurringDonationsSettings);
-	            needsDml = true;
-            }
+            if(recurringDonationsSettings.Id == null)
+	            recurringDonationsSettings = getOrgRecurringDonationsSettings();
         }
         
         if(defaultBehavior != null && defaultBehavior.name() != recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c) {
             recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = defaultBehavior.name();
-            needsDml = true;
+            upsert recurringDonationsSettings;
         }
         
-        if(needsDml)
-            upsert recurringDonationsSettings;
-              
         return recurringDonationsSettings;
     }
     
@@ -273,10 +261,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (relationshipsSettings == null) {
             //retrive the lowest level hierachy setting
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
-            if(relationshipsSettings.Id == null) {
-	            configRelationshipsSettings(relationshipsSettings);
-	            upsert relationshipsSettings;
-            }
+            if(relationshipsSettings.Id == null)
+	            relationshipsSettings = getOrgRelationshipSettings();
         }
         return relationshipsSettings;
     }
@@ -306,23 +292,17 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     //get the settings. handles the case where the managed value doesn't exist yet
     public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliation) {
-    	Boolean needsDml = false;
     	if(affiliationsSettings == null) {		
 		    affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
-		    if(affiliationsSettings.Id == null) {
-		        configAffiliationsSettings(affiliationsSettings);
-	            needsDml = true;
-		    }
+		    if(affiliationsSettings.Id == null) 
+		        affiliationsSettings = getOrgAffiliationsSettings();
     	}
     	//if a value is passed --> set to value
         if(automaticAffiliation != null && automaticAffiliation != affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
             affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliation; 
-            needsDml = true;       
+            upsert affiliationsSettings;
         }
         
-        if(needsDml)
-            upsert affiliationsSettings;
-            
         return affiliationsSettings;
     }
     
@@ -351,22 +331,16 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        Boolean needsDml = false;
         if(errorSettings == null) {
             errorSettings = Error_Settings__c.getInstance();
-            if(errorSettings.Id == null) {
-	            configErrorSettings(errorSettings, notificationsTo);  
-	            needsDml = true;
-            }
+            if(errorSettings.Id == null)
+	            errorSettings = getOrgErrorSettings();
         }
         
         if(notificationsTo != null && notificationsTo != errorSettings.Error_Notifications_To__c) {
             errorSettings.Error_Notifications_To__c = notificationsTo;
-            needsDml = true;
-        }
-        
-        if(needsDml)
             upsert errorSettings;
+        }
             
         return errorSettings;
     }
@@ -393,10 +367,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Batch_Data_Entry_Settings__c getBDESettings() {
         if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
-            if(bdeSettings.Id == null) {
-	            configBDESettings(bdeSettings);
-	            upsert bdeSettings;
-            }
+            if(bdeSettings.Id == null)
+	            bdeSettings = getOrgBDESettings();
         }
         return bdeSettings;
     }
@@ -422,10 +394,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
         if(addressVerificationSettings == null) {
         	addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
-        	if(addressVerificationSettings.Id == null) {
-	        	configAddressVerificationSettings(addressVerificationSettings);
-	            upsert addressVerificationSettings;
-        	}
+        	if(addressVerificationSettings.Id == null)
+	            addressVerificationSettings = getOrgAddressVerificationSettings();
         }
         return addressVerificationSettings;
     }
@@ -452,10 +422,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
         if (householdNamingSettings == null) {
         	householdNamingSettings = Household_Naming_Settings__c.getInstance();
-            if(householdNamingSettings.Id == null) {
-	            configHouseholdNamingSettings(householdNamingSettings);
-	            upsert householdNamingSettings;
-            }
+            if(householdNamingSettings.Id == null) 
+	            householdNamingSettings = getOrgHouseholdNamingSettings();
         }
         return householdNamingSettings;
     }
