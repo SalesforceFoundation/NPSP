@@ -1077,4 +1077,45 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Matched', listDI[2].Contact1ImportStatus__c);        
     }
 
+   /*********************************************************************************************************
+    operation:
+        import existing contacts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all contacts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdMatchingExistingContacts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
+            
+         // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='c1Title'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='c1PrimeTitle'));
+        insert listConExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='c1Title'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='c1PrimeTitle'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Custom_Unique_ID__c = 'Title';
+        upsert diSettings;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, Email, Title from Contact];
+        system.assertEquals(2, listCon.size());
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c desc];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listConExisting[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listConExisting[1].Id);
+        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
+        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
+    }
 }

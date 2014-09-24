@@ -345,6 +345,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<string> setEmail = new set<string>();
         set<string> setCustomID = new set<string>();
         
+        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
+        
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
         	if (di.Status__c == 'Failed')
@@ -360,8 +362,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setEmail.add(di.Contact1_Work_Email__c);            
             if (di.Contact1_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
-            if (isCustomIDInContactMatchRules && di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c) != null)
-                setCustomID.add(string.valueOf(di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c)));
+            if (isCustomIDInContactMatchRules && di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix) != null)
+                setCustomID.add(string.valueOf(di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix)));
                 
             // c2
             if (di.Contact2_Firstname__c != null)
@@ -374,8 +376,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setEmail.add(di.Contact1_Work_Email__c);            
             if (di.Contact2_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
-            if (isCustomIDInContactMatchRules && di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c) != null)
-                setCustomID.add(string.valueOf(di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c)));
+            if (isCustomIDInContactMatchRules && di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix) != null)
+                setCustomID.add(string.valueOf(di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix)));
         }
         
         string strSoql = 'Select Id, Firstname, Lastname, ';
@@ -477,6 +479,15 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     }
     private list<string> listDiKeyCx(DataImport__c di, string strCx) {
         list<string> listDiKey = new list<string>();
+
+        // we nee the Contact CustomId key to always be checked first when matching
+        string strUnique; 
+        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
+        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix))) != null) {
+            listDiKey.add(strUnique);
+        }
+
+        // now create any other dikeys
         string strPrefix = '';
         if (isFirstnameInContactMatchRules) {
             strPrefix += di.get(strCx + '_Firstname__c');
@@ -496,10 +507,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 listDiKey.add(strPrefix + strEmail);
         } else {
             listDiKey.add(strPrefix);
-        }
-        string strUnique; 
-        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c))) != null) {
-            listDiKey.add(strUnique);
         }
         return listDiKey;        
     }
