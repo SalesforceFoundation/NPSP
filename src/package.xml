@@ -393,6 +393,11 @@
     <members>DataImport__c.Payment_Check_Reference_Number__c</members>
     <members>DataImport__c.Payment_Method__c</members>
     <members>DataImport__c.Status__c</members>
+    <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
+    <members>Data_Import_Settings__c.Batch_Size__c</members>
+    <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -779,6 +784,7 @@
     <members>Batch__c</members>
     <members>Contact</members>
     <members>DataImport__c</members>
+    <members>Data_Import_Settings__c</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
     <members>Household_Naming_Settings__c</members>
