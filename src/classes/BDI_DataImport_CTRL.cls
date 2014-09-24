@@ -38,7 +38,7 @@ public with sharing class BDI_DataImport_CTRL {
     public Data_Import_Settings__c diSettings {
         get {
         	if (diSettings == null) {
-                diSettings = new Data_Import_Settings__c();
+                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         	}
         	return diSettings;
         }
@@ -58,7 +58,7 @@ public with sharing class BDI_DataImport_CTRL {
         try {
             batchRunning = true;
             bdi = new BDI_DataImport_BATCH();
-            ApexJobId = Database.executeBatch(bdi, 10);
+            ApexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
             dtStart = system.now();
 
         } catch (Exception ex) {

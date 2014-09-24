@@ -44,6 +44,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 	static Error_Settings__c errorSettings;
 	static Batch_Data_Entry_Settings__c bdeSettings;
 	static Addr_Verification_Settings__c addressVerificationSettings;
+	static Data_Import_Settings__c dataImportSettings;
 	static Household_Naming_Settings__c householdNamingSettings;
 	
 	//storing them in-memory to avoid slowing down the settings page
@@ -55,6 +56,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Error_Settings__c orgErrorSettings;
     static Batch_Data_Entry_Settings__c orgBdeSettings;
     static Addr_Verification_Settings__c orgAddressVerificationSettings;
+    static Data_Import_Settings__c orgDataImportSettings;
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
     
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
@@ -403,6 +405,34 @@ public without sharing class UTIL_CustomSettingsFacade {
         avs.Enable_Automatic_Verification__c = false;
         avs.Reject_Ambiguous_Addresses__c = false;
     }
+
+    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    public static Data_Import_Settings__c getOrgDataImportSettings() {
+        if (orgDataImportSettings == null) {
+            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
+            if (orgDataImportSettings.Id == null) {
+                configDataImportSettings(orgDataImportSettings);
+                upsert orgDataImportSettings;
+            }
+        }
+        return orgDataImportSettings;
+    }
+    
+    //zero-arguments method that will set custom setting defaults
+    public static Data_Import_Settings__c getDataImportSettings() {        
+        if (dataImportSettings == null) {
+            dataImportSettings = Data_Import_Settings__c.getInstance();
+            if (dataImportSettings.Id == null) 
+                dataImportSettings = getOrgDataImportSettings();
+        }
+        return dataImportSettings;
+    }
+    
+    private static void configDataImportSettings(Data_Import_Settings__c dis) {
+        dis.Batch_Size__c = 20;
+        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+    }
+
 
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
     public static Household_Naming_Settings__c getOrgHouseholdNamingSettings() {

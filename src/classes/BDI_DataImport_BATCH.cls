@@ -67,7 +67,55 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
     // holds the list of DataImport records we are currently processing
     private list<DataImport__c> listDI;
+    
+    private Data_Import_Settings__c diSettings {
+        get {
+            if (diSettings == null) {
+                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            }
+            return diSettings;
+        }
+        private set;
+    }    
 
+    private boolean isFirstnameInContactMatchRules {
+    	get {
+    		string str = diSettings.Contact_Matching_Rule__c;
+    		if (str == null || str == '')
+                return false;
+    		return str.contains('Firstname');
+    	}
+    }
+
+    private boolean isLastnameInContactMatchRules {
+        get {
+            string str = diSettings.Contact_Matching_Rule__c;
+            if (str == null || str == '')
+                return false;
+            return str.contains('Lastname');
+        }
+    }
+
+    private boolean isEmailInContactMatchRules {
+        get {
+            string str = diSettings.Contact_Matching_Rule__c;
+            if (str == null || str == '')
+                return false;
+            return str.contains('Email');
+        }
+    }
+
+    private boolean isCustomIdInContactMatchRules {
+        get {
+            string str = diSettings.Contact_Custom_Unique_ID__c;
+            if (str == null || str == '')
+                return false;
+            return true;
+        }
+    }
+
+    // the real work gets done here!
+    // given a batch of di records, process them.
     public void execute(Database.BatchableContext bc, List<DataImport__c> listDI) {
 
 	    SavePoint sp = Database.setSavepoint();
@@ -153,7 +201,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     }    
     
     // utility to return a map of fields from the DataImport to fields for the given 'object',
-    // from the list of DataImport Fields, which have the form DIObject_namespace_field 
+    // from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property. 
     private static map<string, string> mapFieldsForDIObject(string strObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
@@ -190,11 +238,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-               
-            string diKey = diKeyC1(di);
-            if (diKey == null)
-                continue;                
-            Contact con = mapDIKeyToContact.get(diKey);
+            Contact con = ContactFromDi(di, 1);
+            if (con == null)
+                continue;
             
             boolean isModified = false;                 
             for (string strDIField : mapDIFieldToC1Field.keySet()) {
@@ -205,7 +251,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             
             if (isModified) {
-                if (setDIKeyUpsert.add(diKey))
+            	boolean isAlreadyAdded = false;
+            	// add all dikeys for the contact to make sure we don't try to upsert the contact twice
+            	for (string dikey : listDiKeyC1(di)) {
+	                if (!setDIKeyUpsert.add(diKey))
+	                   isAlreadyAdded = true; 
+            	}
+            	if (!isAlreadyAdded)
                     listConUpsert.add(con);
             }
         }
@@ -214,10 +266,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // update each DI with its new contact1 ID
         // also get all our C1 Id's in a set for further use
         set<Id> setC1Id = new set<Id>();
-        for (DataImport__c di: listDI) {
+        for (DataImport__c di : listDI) {
             if (di.Contact1Imported__c == null) {
-                string diKey = diKeyC1(di);
-                Contact con = mapDIKeyToContact.get(diKey);
+                Contact con = ContactFromDi(di, 1);
                 if (con != null) 
                     di.Contact1Imported__c = con.Id;
             }
@@ -234,8 +285,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Contact1Imported__c != null) {
                 Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
                 if (HHId != null) {
-                    string diKey = diKeyC1(di);
-                    Contact con = mapDIKeyToContact.get(diKey);
+                    Contact con = ContactFromDi(di, 1);
                     con.AccountId = HHId;
                 }
             }
@@ -249,11 +299,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-               
-            string diKey = diKeyC2(di);
-            if (diKey == null)
-                continue;                
-            Contact con = mapDIKeyToContact.get(diKey);
+            Contact con = ContactFromDi(di, 2);
+            if (con == null)
+                continue;
             // set c2's household to match c1
             con.AccountId = mapC1IdToHHId.get(di.Contact1Imported__c);
             
@@ -265,8 +313,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }
             }
             if (isModified) {
-                if (setDIKeyUpsert.add(diKey))
-                   listConUpsert.add(con);
+                boolean isAlreadyAdded = false;
+                // add all dikeys for the contact to make sure we don't try to upsert the contact twice
+                for (string dikey : listDiKeyC2(di)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                       isAlreadyAdded = true; 
+                }
+                if (!isAlreadyAdded)
+                    listConUpsert.add(con);
             }
         }
         upsert listConUpsert;
@@ -274,8 +328,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // update each DI with its new contact2 ID
         for (DataImport__c di: listDI) {
             if (di.Contact2Imported__c == null) {
-                string diKey = diKeyC2(di);
-                Contact con = mapDIKeyToContact.get(diKey);
+                Contact con = ContactFromDi(di, 2);
                 if (con != null) 
                     di.Contact2Imported__c = con.Id;
             }
@@ -287,10 +340,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     // contact object for that di.
     private void matchExistingContacts() {
     
-        //UNDONE: read preference for fields to match against.
         set<string> setFname = new set<string>();
         set<string> setLname = new set<string>();
         set<string> setEmail = new set<string>();
+        set<string> setCustomID = new set<string>();
         
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -303,7 +356,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setLname.add(di.Contact1_Lastname__c);
             if (di.Contact1_Personal_Email__c != null)
                 setEmail.add(di.Contact1_Personal_Email__c);            
-
+            if (di.Contact1_Work_Email__c != null)
+                setEmail.add(di.Contact1_Work_Email__c);            
+            if (di.Contact1_Alternate_Email__c != null)
+                setEmail.add(di.Contact1_Alternate_Email__c);            
+            if (isCustomIDInContactMatchRules && di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c) != null)
+                setCustomID.add(string.valueOf(di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c)));
+                
             // c2
             if (di.Contact2_Firstname__c != null)
                 setFname.add(di.Contact2_Firstname__c);
@@ -311,67 +370,150 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setLname.add(di.Contact2_Lastname__c);
             if (di.Contact2_Personal_Email__c != null)
                 setEmail.add(di.Contact2_Personal_Email__c);            
+            if (di.Contact2_Work_Email__c != null)
+                setEmail.add(di.Contact1_Work_Email__c);            
+            if (di.Contact2_Alternate_Email__c != null)
+                setEmail.add(di.Contact1_Alternate_Email__c);            
+            if (isCustomIDInContactMatchRules && di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c) != null)
+                setCustomID.add(string.valueOf(di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c)));
         }
         
-        string strSoql = 'Select Id, Firstname, Lastname, Email from Contact where ';
-        strSoql += 'Firstname in :setFname and Lastname in :setLname and Email in :setEmail';
+        string strSoql = 'Select Id, Firstname, Lastname, ';
+        if (isCustomIDInContactMatchRules)
+            strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
+        strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
+        strSoql += ' from Contact where ';
+        string strAnd = '(';
+        if (isFirstnameInContactMatchRules) {
+            strSoql += strAnd + ' Firstname in :setFName ';
+            strAnd = ' and ';
+        }
+        if (isLastnameInContactMatchRules) {
+            strSoql += strAnd + ' Lastname in :setLName ';
+            strAnd = ' and ';
+        }
+        if (isEmailInContactMatchRules) {
+            strSoql += strAnd + '(Email in :setEmail or npe01__AlternateEmail__c in :setEmail or npe01__HomeEmail__c in :setEmail or npe01__WorkEmail__c in :setEmail)';
+            strAnd = ' and ';
+        }
+        if (isCustomIDInContactMatchRules) {
+            strSoql += ') or (' + diSettings.Contact_Custom_Unique_ID__c + ' in :setCustomID'; 
+        }
+        strSoql += ')';
+        
         list<Contact> listCon = database.query(strSoql);
         
-        // put all potential contacts into a map
-        map<string, Contact> mapDIKeyToContactAll = new map<string, Contact>();        
+        // put all potential contacts into our map
         for (Contact con : listCon) {
-            string diKey = diKeyContact(con);
-            mapDIKeyToContactAll.put(diKey, con);
+            for (string diKey : listDiKeyContact(con))
+                mapDIKeyToContact.put(diKey, con);
         }
         
         for (DataImport__c di : listDI) {
-        	string diKey = diKeyC1(di);
-            Contact con = mapDIKeyToContactAll.get(diKey);
+            Contact con = ContactFromDi(di, 1);
             if (con != null) {
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = 'Matched';
-            } else if (diKey != null) {
+            } else {
                 con = new Contact();
                 di.Contact1ImportStatus__c = 'Created';
             }
-            mapDIKeyToContactAll.put(diKey, con);
-            mapDIKeyToContact.put(diKey, con);
+            // make sure all dikeys for that contact are in the map
+            for (string diKey : listDiKeyC1(di)) 
+                mapDIKeyToContact.put(diKey, con);
             
-            diKey = diKeyC2(di);
-            con = mapDIKeyToContactAll.get(diKey);
+            con = ContactFromDi(di, 2);
             if (con != null) {
                 di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = 'Matched';
-            } else if (diKey != null) {
+            } else {
                 con = new Contact();
                 di.Contact2ImportStatus__c = 'Created';
             }
-            mapDIKeyToContactAll.put(diKey, con);
-            mapDIKeyToContact.put(diKey, con);
+            // make sure all dikeys for that contact are in the map
+            for (string diKey : listDiKeyC2(di)) 
+                mapDIKeyToContact.put(diKey, con);
         }
     }
 
-    // utility to return the search key for a given contact.
-    private string diKeyContact(Contact con) {
-    	if (con == null)
-    	   return null;
-        return con.Firstname + '|' + con.Lastname + '|' + con.Email;
+    // utility to return the dikeys for a given contact.
+    private list<string> listDiKeyContact(Contact con) {
+        if (con == null)
+            return null;
+        list<string> listDiKey = new list<string>();
+        string strPrefix = '';
+        if (isFirstnameInContactMatchRules) {
+            strPrefix += con.Firstname;
+        }
+        strPrefix += '|';
+        if (isLastnameInContactMatchRules) {
+            strPrefix += con.Lastname;
+        }
+        strPrefix += '|';
+        if (isEmailInContactMatchRules) {
+            if (con.Email != null)
+                listDiKey.add(strPrefix + con.Email);
+            if (con.npe01__HomeEmail__c != null)
+                listDiKey.add(strPrefix + con.npe01__HomeEmail__c);
+            if (con.npe01__WorkEmail__c != null)
+                listDiKey.add(strPrefix + con.npe01__WorkEmail__c);
+            if (con.npe01__AlternateEmail__c != null)
+                listDiKey.add(strPrefix + con.npe01__AlternateEmail__c);
+        } else {
+            listDiKey.add(strPrefix);
+        }
+        if (isCustomIDInContactMatchRules && con.get(diSettings.Contact_Custom_Unique_ID__c) != null) {
+            listDiKey.add(string.valueOf(con.get(diSettings.Contact_Custom_Unique_ID__c)));
+        }
+        return listDiKey;
     }
 
-    // utility to return the search key for contact1 in the given di.
-    private string diKeyC1(DataImport__c di) {
-    	if (di.Contact1_Firstname__c == null && di.Contact1_Lastname__c == null && di.Contact1_Personal_Email__c == null)
-    	   return null;
-        return di.Contact1_Firstname__c + '|' + di.Contact1_Lastname__c + '|' + di.Contact1_Personal_Email__c;
+    // utility to return the dikeys for contact1 in the given di.
+    private list<string> listDiKeyC1(DataImport__c di) {
+    	return listDiKeyCx(di, 'Contact1');
+    }
+    private list<string> listDiKeyC2(DataImport__c di) {
+    	return listDIKeyCx(di, 'Contact2');
+    }
+    private list<string> listDiKeyCx(DataImport__c di, string strCx) {
+        list<string> listDiKey = new list<string>();
+        string strPrefix = '';
+        if (isFirstnameInContactMatchRules) {
+            strPrefix += di.get(strCx + '_Firstname__c');
+        }
+        strPrefix += '|';
+        if (isLastnameInContactMatchRules) {
+            strPrefix += di.get(strCx + '_Lastname__c');
+        }
+        strPrefix += '|';
+        if (isEmailInContactMatchRules) {
+        	string strEmail;
+            if ((strEmail = string.valueOf(di.get(strCx + '_Personal_Email__c'))) != null)
+                listDiKey.add(strPrefix + strEmail);
+            if ((strEmail = string.valueOf(di.get(strCx + '_Work_Email__c'))) != null)
+                listDiKey.add(strPrefix + strEmail);
+            if ((strEmail = string.valueOf(di.get(strCx + '_Alternate_Email__c'))) != null)
+                listDiKey.add(strPrefix + strEmail);
+        } else {
+            listDiKey.add(strPrefix);
+        }
+        string strUnique; 
+        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c))) != null) {
+            listDiKey.add(strUnique);
+        }
+        return listDiKey;        
     }
     
-    // utility to return the search key for contact2 in the given di.
-    private string diKeyC2(DataImport__c di) {
-        if (di.Contact2_Firstname__c == null && di.Contact2_Lastname__c == null && di.Contact2_Personal_Email__c == null)
-            return null;
-        return di.Contact2_Firstname__c + '|' + di.Contact2_Lastname__c + '|' + di.Contact2_Personal_Email__c;
+    // utility that finds a contact in our map, by matching against all the contact dikeys
+    private Contact ContactFromDi(DataImport__c di, integer iCon) {
+        for (string diKey : listDiKeyCx(di, iCon == 1 ? 'Contact1' : 'Contact2')) {
+            Contact con = mapDIKeyToContact.get(diKey);
+            if (con != null)
+                return con;
+        }
+        return null;
     }
-
+    
     //********************************************* ACCOUNTS ************************************************
     // method to handle importing or updating Account1 and Account2,
     // and setting the contacts' Primary Affiliation.
@@ -421,7 +563,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             // set c1's primary affilation
             if (di.Account1Imported__c != null) {
-            	Contact c1 = mapDIKeyToContact.get(diKeyC1(di));
+            	Contact c1 = ContactFromDi(di, 1);
                 if (c1 != null) {
 	                c1.Primary_Affiliation__c = di.Account1Imported__c;
 	                if (mapConIdToConUpdate.get(c1.Id) == null)
@@ -468,7 +610,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             // set c2's primary affilation
             if (di.Account2Imported__c != null) {
-                Contact c2 = mapDIKeyToContact.get(diKeyC2(di));
+                Contact c2 = ContactFromDi(di, 2);
                 if (c2 != null) {
 	                c2.Primary_Affiliation__c = di.Account2Imported__c;
 	                if (mapConIdToConUpdate.get(c2.Id) == null)
@@ -566,7 +708,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // skip di's that already have an error
             if (di.Status__c == 'Failed')
                continue;
-            Contact con = mapDIKeyToContact.get(diKeyC1(di));
+            Contact con = ContactFromDi(di, 1);
             if (con != null && con.AccountId != null)
                 setHHId.add(con.AccountId);
         }
@@ -585,7 +727,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                continue;
  
             // only create Home Address if we have a household
-            Contact con = mapDIKeyToContact.get(diKeyC1(di));
+            Contact con = ContactFromDi(di, 1);
             if (con == null || con.AccountId == null)
                 continue;
  
@@ -650,7 +792,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 continue;
 
             if (di.Donation_Donor__c == 'Contact1' || di.Donation_Donor__c == null) {
-                Contact con = mapDIKeyToContact.get(diKeyC1(di));
+                Contact con = ContactFromDi(di, 1);
                 if (con == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
                     continue;
@@ -715,6 +857,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             if (cPropSet > 0)
                 mapDIIdToOpp.put(di.Id, opp);
+            else {
+            	// clear out fields we autoset since we didn't actually create an opp.
+            	di.Donation_Date__c = null;
+            	di.Donation_Name__c = null;
+            	di.Donation_Stage__c = null;
+            }
         }
         insert mapDIIdToOpp.values();
         
