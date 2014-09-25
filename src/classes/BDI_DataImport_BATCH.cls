@@ -114,6 +114,15 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    private boolean isCustomIdInAccountMatchRules {
+        get {
+            string str = diSettings.Account_Custom_Unique_ID__c;
+            if (str == null || str == '')
+                return false;
+            return true;
+        }
+    }
+
     // the real work gets done here!
     // given a batch of di records, process them.
     public void execute(Database.BatchableContext bc, List<DataImport__c> listDI) {
@@ -413,27 +422,29 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         for (DataImport__c di : listDI) {
             Contact con = ContactFromDi(di, 1);
+            list<string> listDiKey = listDIKeyC1(di);
             if (con != null) {
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = 'Matched';
-            } else {
+            } else if (listDiKey.size() > 0) {
                 con = new Contact();
                 di.Contact1ImportStatus__c = 'Created';
             }
             // make sure all dikeys for that contact are in the map
-            for (string diKey : listDiKeyC1(di)) 
+            for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
             
             con = ContactFromDi(di, 2);
+            listDiKey = listDiKeyC2(di);
             if (con != null) {
                 di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = 'Matched';
-            } else {
+            } else if (listDiKey.size() > 0) {
                 con = new Contact();
                 di.Contact2ImportStatus__c = 'Created';
             }
             // make sure all dikeys for that contact are in the map
-            for (string diKey : listDiKeyC2(di)) 
+            for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
         }
     }
@@ -505,7 +516,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 listDiKey.add(strPrefix + strEmail);
             if ((strEmail = string.valueOf(di.get(strCx + '_Alternate_Email__c'))) != null)
                 listDiKey.add(strPrefix + strEmail);
-        } else {
+        } else if (strPrefix != '||') {
             listDiKey.add(strPrefix);
         }
         return listDiKey;        
@@ -540,10 +551,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Status__c == 'Failed')
                continue;
                
-            string diKey = diKeyA1(di);
-            if (diKey == null)
+            Account acc = AccountFromDi(di, 1);
+            if (acc == null)
                 continue;
-            Account acc = mapDIKeyToAccount.get(diKey);
 
             boolean isModified = false;             
             for (string strDIField : mapDIFieldToA1Field.keySet()) {
@@ -553,7 +563,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }
             }
             if (isModified) {
-                if (setDIKeyUpsert.add(diKey)) 
+            	boolean isAlreadyAdded = false;
+            	for (string diKey : listDiKeyA1(di)) {
+	                if (!setDIKeyUpsert.add(diKey))
+	                   isAlreadyAdded = true;
+            	}
+            	if (!isAlreadyAdded) 
                     listAccUpsert.add(acc);
             }
         }
@@ -564,7 +579,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         map<Id, Contact> mapConIdToConUpdate = new map<Id, Contact>();
         for (DataImport__c di: listDI) {
             if (di.Account1Imported__c == null) {
-            	Account acc = mapDIKeyToAccount.get(diKeyA1(di));
+            	Account acc = AccountFromDi(di, 1);
             	if (acc != null) 
 	                di.Account1Imported__c = acc.Id;
             }
@@ -588,10 +603,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Status__c == 'Failed')
                continue;
             
-            string diKey = diKeyA2(di);
-            if (diKey == null)
+            Account acc = AccountFromDi(di, 2);
+            if (acc == null)
                 continue;
-            Account acc = mapDIKeyToAccount.get(diKey);
 
             boolean isModified = false;             
             for (string strDIField : mapDIFieldToA2Field.keySet()) {
@@ -601,7 +615,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }
             }
             if (isModified) {
-                if (setDIKeyUpsert.add(diKey)) 
+                boolean isAlreadyAdded = false;
+                for (string diKey : listDiKeyA2(di)) {
+                    if (!setDIKeyUpsert.add(diKey))
+                       isAlreadyAdded = true;
+                }
+                if (!isAlreadyAdded) 
                     listAccUpsert.add(acc);
             }
         }
@@ -611,7 +630,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // and set contact's primary affiliations
         for (DataImport__c di: listDI) {
             if (di.Account2Imported__c == null) {
-            	Account acc = mapDIKeyToAccount.get(diKeyA2(di));
+            	Account acc = AccountFromDi(di, 2);
             	if (acc != null) 
                     di.Account2Imported__c = acc.Id;
             }
@@ -634,72 +653,124 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         update mapConIdToConUpdate.values();
     }
 
-    // utility to return the search key for a given account.
-    private string diKeyAccount(Account acc) {
-    	if (acc == null)
-    	   return null;
-        return acc.Name;
+    // utility to return the dikeys for a given account.
+    private list<string> listDiKeyAccount(Account acc) {
+        if (acc == null)
+            return null;
+
+        list<string> listDiKey = new list<string>();
+        if (isCustomIDInAccountMatchRules && acc.get(diSettings.Account_Custom_Unique_ID__c) != null) {
+            listDiKey.add(string.valueOf(acc.get(diSettings.Account_Custom_Unique_ID__c)));
+        }
+
+        if (acc.Name != null)
+            listDiKey.add(acc.Name);        
+        return listDiKey;
     }
 
-    // utility to return the search key for Account1 in the given di.
-    private string diKeyA1(DataImport__c di) {
-        return di.Account1_Name__c;
+    // utility to return the dikeys for account1 in the given di.
+    private list<string> listDiKeyA1(DataImport__c di) {
+        return listDiKeyAx(di, 'Account1');
+    }
+    private list<string> listDiKeyA2(DataImport__c di) {
+        return listDIKeyAx(di, 'Account2');
+    }
+    private list<string> listDiKeyAx(DataImport__c di, string strAx) {
+        list<string> listDiKey = new list<string>();
+
+        // we nee the Account CustomId key to always be checked first when matching
+        string strUnique; 
+        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
+        if (isCustomIDInAccountMatchRules && (strUnique = string.valueOf(di.get(strAx + '_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix))) != null) {
+            listDiKey.add(strUnique);
+        }
+
+        // now create any other dikeys
+        string strName;
+        if ((strName = string.valueOf(di.get(strAx + '_Name__c'))) != null)
+            listDiKey.add(strName); 
+        return listDiKey;        
     }
     
-    // utility to return the search key for Account2 in the given di.
-    private string diKeyA2(DataImport__c di) {
-        return di.Account2_Name__c;
+    // utility that finds an account in our map, by matching against all the account dikeys
+    private Account AccountFromDi(DataImport__c di, integer iAcc) {
+        for (string diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
+            Account acc = mapDIKeyToAccount.get(diKey);
+            if (acc != null)
+                return acc;
+        }
+        return null;
     }
 
     // looks for existing Accounts that match A1 or A2, and if found,
-    // updates their Id's in the Di's.
+    // updates their Id's in the Di's. if not found, creates a new
+    // account object for that di.
     private void matchExistingAccounts() {
     
-        //UNDONE: read preference for fields to match against.
         set<string> setName = new set<string>();
+        set<string> setCustomID = new set<string>();
+        
+        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
         
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
+
             // a1
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
+            if (isCustomIDInAccountMatchRules && di.get('Account1_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix) != null)
+                setCustomID.add(string.valueOf(di.get('Account1_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix)));
 
             // a2
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
+            if (isCustomIDInAccountMatchRules && di.get('Account2_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix) != null)
+                setCustomID.add(string.valueOf(di.get('Account2_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix)));
         }
         
-        string strSoql = 'Select Id, Name from Account where ';
+        string strSoql = 'Select Id, ';
+        if (isCustomIDInAccountMatchRules)
+            strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';                
+        strSoql += 'Name from Account where ';
         strSoql += 'Name in :setName';
+        if (isCustomIDInAccountMatchRules) 
+            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomID';     
         list<Account> listAcc = database.query(strSoql);
         
         // put all Accounts into our map
         for (Account acc : listAcc) {
-            string diKey = diKeyAccount(acc);
-            mapDIKeyToAccount.put(dikey, acc);
+            for (string diKey : listDiKeyAccount(acc))
+                mapDIKeyToAccount.put(dikey, acc);
         }        
         
         for (DataImport__c di : listDI) {
-        	string diKey = diKeyA1(di);
-            Account acc = mapDIKeyToAccount.get(diKey);
+            Account acc = AccountFromDi(di, 1);
+            list<string> listDiKey = listDiKeyA1(di);
             if (acc != null) {
                 di.Account1Imported__c = acc.id;
                 di.Account1ImportStatus__c = 'Matched';
-            } else if (diKey != null) {
+            } else if (listDiKey.size() > 0) {
                 acc = new Account();
                 di.Account1ImportStatus__c = 'Created';                
             }
-            mapDIKeyToAccount.put(diKey, acc);
+            // make sure all dikeys for that account are in the map
+            for (string diKey : listDiKey) 
+                mapDIKeyToAccount.put(diKey, acc);
 
-            diKey = diKeyA2(di);
-            acc = mapDIKeyToAccount.get(diKey);
+            acc = AccountFromDi(di, 2);
+            listDiKey = listDiKeyA2(di);
             if (acc != null) {
                 di.Account2Imported__c = acc.id;
                 di.Account2ImportStatus__c = 'Matched';
-            } else if (diKey != null) {
+            } else if (listDiKey.size() > 0) {
                 acc = new Account();
                 di.Account2ImportStatus__c = 'Created';                
             }
-            mapDIKeyToAccount.put(diKey, acc);
+            // make sure all dikeys for that account are in the map
+            for (string diKey : listDiKey) 
+                mapDIKeyToAccount.put(diKey, acc);
         }
     }
 
@@ -798,7 +869,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.DonationImported__c != null)
                 continue;
 
-            if (di.Donation_Donor__c == 'Contact1' || di.Donation_Donor__c == null) {
+            if (di.Donation_Donor__c == 'Contact1' || (di.Donation_Donor__c == null && di.Donation_Amount__c != null)) {
                 Contact con = ContactFromDi(di, 1);
                 if (con == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
@@ -808,14 +879,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.Donation_Donor__c == 'Account1') {
-                Account acc = mapDIKeyToAccount.get(diKeyA1(di));
+                Account acc = AccountFromDi(di, 1);
                 if (acc == null) {
                     LogBDIError(di, 'Invalid Donation Donor');
                     continue;
                 }
                 opp.accountId = acc.Id;    
                 strOppName = acc.Name;            
-            } else {
+            } else if (di.Donation_Donor__c != null) {
                 LogBDIError(di, 'Invalid Donation Donor');
                 continue;
             }

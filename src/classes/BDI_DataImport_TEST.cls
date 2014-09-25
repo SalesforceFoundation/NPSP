@@ -878,6 +878,39 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Created', listDI[1].Contact2ImportStatus__c);        
     }
 
+    /*********************************************************************************************************
+    operation:
+        test validation rules for settings on visualforce page
+    verify:
+        all code tested in controller
+    **********************************************************************************************************/            
+    static testMethod void TestBDIVisualforcePageValidation() {
+        if (strTestOnly != '*' && strTestOnly != 'TestBDIVisualforcePageValidation') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        insert listDI;
+        
+        Test.startTest();
+
+        // create the page 
+        Test.setCurrentPage(Page.BDI_DataImport); 
+
+        // instantiate the controller
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+        
+        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Name';
+        ctrl.importData();
+        system.assertEquals(false, ctrl.batchRunning);
+        
+        ctrl.diSettings.Account_Custom_Unique_ID__c = null;
+        ctrl.diSettings.Account_Custom_Unique_ID__c = 'Lastname';        
+        ctrl.importData();
+        system.assertEquals(false, ctrl.batchRunning);
+        
+        Test.stopTest();
+    }
+
    /*********************************************************************************************************
     operation:
         test the Delete All Data Import Records button
@@ -1118,4 +1151,47 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
         system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
     }
+
+   /*********************************************************************************************************
+    operation:
+        import existing accounts within multiple di records in the same batch, using Custom Unique Id matching
+    verify:
+        all accounts matched
+    **********************************************************************************************************/            
+    static testMethod void ManyDIUniqueIdMatchingExistingAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingAccounts') return;
+            
+         // existing Accounts
+        list<Account> listAccExisting = new list<Account>();
+        listAccExisting.add(new Account(Name='foo', website='a1.com'));
+        listAccExisting.add(new Account(Name='a1', website='nota1.com'));
+        insert listAccExisting;
+ 
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Website__c='a1.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        insert listDI;
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        upsert diSettings;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Account> listAcc = [select Id, Name, Website from Account];
+        system.assertEquals(2, listAcc.size());
+        
+        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
+        system.assertEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
+        system.assertEquals('Matched', listDI[0].Account1ImportStatus__c);
+        system.assertEquals('Matched', listDI[1].Account1ImportStatus__c);        
+    }
+
 }
