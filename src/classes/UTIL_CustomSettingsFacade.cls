@@ -448,7 +448,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     	if(errorSettings == null)
     	   errorSettings = Error_Settings__c.getInstance();
     	   
+    	errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
     	errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
+    	errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
     	upsert errorSettings;
     	return errorSettings;  
     }
