@@ -111,6 +111,13 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
     
+    public string strBatchStatus {
+    	get {
+    		string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
+    		return string.format(strLabel, new string[]{string.valueOf(aaj.JobItemsProcessed), string.valueOf(aaj.TotalJobItems)});
+    	}
+    }
+    
     public integer crecProcessed { 
         get {
             if (ApexJobId != null) {

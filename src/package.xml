@@ -476,8 +476,32 @@
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
     <members>bdiAccountCustomIdError</members>
+    <members>bdiBatchException</members>
+    <members>bdiBtnClose</members>
+    <members>bdiComplete</members>
+    <members>bdiCompleteWithErrors</members>
     <members>bdiContactCustomIdError</members>
+    <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameLname</members>
+    <members>bdiContactMatchFnameLnameEmail</members>
+    <members>bdiContactMatchLnameEmail</members>
+    <members>bdiDataImporterConfigTitle</members>
+    <members>bdiDataImporterDescription</members>
+    <members>bdiDataImporterInfoLine1</members>
+    <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine3</members>
+    <members>bdiDataImporterInfoLine4</members>
+    <members>bdiDataImporterInfoTitle</members>
+    <members>bdiDataImporterNumToProcess</members>
+    <members>bdiDataImporterTitle</members>
+    <members>bdiRecordsFailed</members>
+    <members>bdiRecordsImported</members>
+    <members>bdiRecordsProcessed</members>
     <members>bdiRunBtn</members>
+    <members>bdiStatus</members>
+    <members>bdiStatusProcessed</members>
+    <members>bdiStatusProcessing</members>
+    <members>bdiTime</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>

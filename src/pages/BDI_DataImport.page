@@ -70,8 +70,8 @@
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-sm-9 col-xs-12" >
-                        <h3>NPSP Data Import</h3>
-                        <h4>This utility allows you to easily import your data into the Nonprofit Starter Pack.</h4>
+                        <h3>{!$Label.bdiDataImporterTitle}</h3>
+                        <h4>{!$Label.bdiDataImporterDescription}</h4>
                     </div>
                     <div class="col-sm-3 col-xs-12" >
                         <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
@@ -85,15 +85,15 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!$Label.bdiDataImporterInfoTitle}</h3></div>
                         <div class="panel-body">
-                        <p>Each Data Import record can contain up to 2 Contacts, up to 2 Organizations, a Home Address, and an optional Donation. </p>
-                        <p>The system will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.</p>
-                        <p>Any problem encountered during the Data Import will be tracked on each Data Import record that failed to be imported.</p>
-                        <p>After resolving any issues, you can re-import those failed Data Import records, without worrying about creating duplicate data records.</p>
-                        <p><i>The Data Import process can be slow to initially start, as it depends on Salesforce's current load to start its batch job.</i></p>
-                        <p/>
-                        <p><b>Number of Data Import records to process: {!crecToProcess}</b></p>                        
+	                        <ul>
+	                            <li>{!$Label.bdiDataImporterInfoLine1}</li>
+	                            <li>{!$Label.bdiDataImporterInfoLine2}</li>
+	                            <li>{!$Label.bdiDataImporterInfoLine3}</li>
+	                            <li>{!$Label.bdiDataImporterInfoLine4}
+	                               <br/><br/><b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b></li>
+	                        </ul>                        
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!$Label.bdiDataImporterConfigTitle}</h3></div>
                         <div class="panel-body">
                             <apex:pageMessages />
 			                <div class="form-group">
@@ -122,10 +122,10 @@
                                 <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Contact_Matching_Rule__c.Label}" for="slCMR" styleClass="col-sm-4 control-label" />
                                 <div class="col-sm-8 form-control-column">
                                     <apex:selectList value="{!diSettings.Contact_Matching_Rule__c}" size="1" multiselect="false" id="slCMR" styleClass="form-control">
-                                        <apex:SelectOption itemLabel="First Name, Last Name, and Email" itemValue="Firstname,Lastname,Email" />
-                                        <apex:SelectOption itemLabel="Last Name and Email" itemValue="Lastname,Email" />
-                                        <apex:SelectOption itemLabel="First Name and Last Name" itemValue="Firstname,Lastname" />
-                                        <apex:SelectOption itemLabel="Email only" itemValue="Email" />
+                                        <apex:SelectOption itemLabel="{!$Label.bdiContactMatchFnameLnameEmail}" itemValue="Firstname,Lastname,Email" />
+                                        <apex:SelectOption itemLabel="{!$Label.bdiContactMatchLnameEmail}" itemValue="Lastname,Email" />
+                                        <apex:SelectOption itemLabel="{!$Label.bdiContactMatchFnameLname}" itemValue="Firstname,Lastname" />
+                                        <apex:SelectOption itemLabel="{!$Label.bdiContactMatchEmail}" itemValue="Email" />
                                     </apex:selectList>                
                                 </div>
                                 <div class="col-sm-offset-4 col-sm-8 help-block">
@@ -174,34 +174,34 @@
 				            <div class="panel {!IF(NOT(isBatchJobCompleted), 'panel-primary', IF(aaj.ExtendedStatus != null || crecFailed > 0, 'panel-warning', 'panel-success'))}">
 	
 				                <div class="panel-heading">
-				                    <h3 class="panel-title">NPSP Data Import<strong>{!IF(NOT(isBatchJobCompleted), '', IF(aaj.ExtendedStatus != null || crecFailed > 0, ' - Errors', ' - Completed'))} </strong></h3>
+				                    <h3 class="panel-title">{!$Label.bdiDataImporterTitle}&nbsp;<strong>{!IF(NOT(isBatchJobCompleted), '', IF(aaj.ExtendedStatus != null || crecFailed > 0, $Label.bdiCompleteWithErrors, $Label.bdiComplete))} </strong></h3>
 				                </div>
 	
 			                    <div class="panel-body">
                                     <p><apex:image url="/img/loading.gif" rendered="{!NOT(isBatchJobCompleted)}" alt="{!$Label.labelMessageLoading}" width="16" height="16" title="{!$Label.labelMessageLoading}" />
-			                        &nbsp;&nbsp;Current Status: <strong>{!IF(aaj.Status == 'Processing' && aaj.JobItemsProcessed == 0, 'Queued', aaj.Status)}</strong></p>
-			                        <p>{!aaj.ApexClass.Name} {!IF(aaj.Status == 'Processing', 'is currently processing batch', 'processed')} {!aaj.JobItemsProcessed} of {!aaj.TotalJobItems} total batches.</p>
+			                        &nbsp;&nbsp;{!$Label.bdiStatus} <strong>{!IF(aaj.Status == 'Processing' && aaj.JobItemsProcessed == 0, 'Queued', aaj.Status)}</strong></p>
+			                        <p>{!aaj.ApexClass.Name} {!strBatchStatus}</p>
 			                        <div class="progress">
 			                            <div class="progress-bar progress-bar-striped active {!IF(aaj.Status != 'Completed', '', IF(aaj.NumberOfErrors > 0 || crecFailed > 0, 'progress-bar-warning', 'progress-bar-success'))} " role="progressbar" aria-valuenow="{!percentComplete}" aria-valuemin="0" aria-valuemax="100" style="width: {!percentComplete}%;">
 			                                {!percentComplete}%
 			                            </div>
 			                        </div>
 	
-	                                <p>time: {!strTimeSpent} </p>
-	                                <p>records processed: {!crecProcessed}</p>
-	                                <p>records imported: {!crecImported}</p>
-	                                <p>records failed: {!crecFailed}</p>
+	                                <p>{!$Label.bdiTime} {!strTimeSpent} </p>
+	                                <p>{!$Label.bdiRecordsProcessed} {!crecProcessed}</p>
+	                                <p>{!$Label.bdiRecordsImported} {!crecImported}</p>
+	                                <p>{!$Label.bdiRecordsFailed} {!crecFailed}</p>
 	
 			                        <apex:outputpanel id="ExtendedStatusPanel" rendered="{!aaj.ExtendedStatus != null}">
 			                            <strong>
-			                            <p>An error was thrown during the process.  The following status was the first reported error: </p>
+			                            <p>{!$Label.bdiBatchException}</p>
 			                            <p>{!aaj.ExtendedStatus}</p>
 			                            </strong>
 			                        </apex:outputpanel>		                
 	                            </div>		
 	                        </div>
                             <div class="text-center"> 
-                                <apex:commandButton value="Close" action="{!close}" immediate="true" styleClass="btn-md" />
+                                <apex:commandButton value="{!$Label.bdiBtnClose}" action="{!close}" immediate="true" styleClass="btn-md" />
                             </div>            
 		                </apex:outputPanel>
 			        </apex:outputPanel>
