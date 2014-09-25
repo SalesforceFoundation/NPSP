@@ -321,6 +321,30 @@
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>bdiAccountCustomIdError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiAccountCustomIdError</shortDescription>
+        <value>The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactCustomIdError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactCustomIdError</shortDescription>
+        <value>The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
+    </labels>
+    <labels>
+        <fullName>bdiRunBtn</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiRunBtn</shortDescription>
+        <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
