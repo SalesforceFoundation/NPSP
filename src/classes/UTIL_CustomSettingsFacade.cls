@@ -74,9 +74,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     //zero-arguments method that will set custom setting defaults
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
-    	if(contactsSettings == null)
-    	   return getContactsSettings(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    	return contactsSettings;
+        if(contactsSettings == null)
+           return getContactsSettings(null);
+        return contactsSettings;
     }
  
     //get the settings. handles the case where the managed value doesn't exist yet
