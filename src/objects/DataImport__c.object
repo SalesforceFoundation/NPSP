@@ -593,7 +593,7 @@
         <picklist>
             <picklistValues>
                 <fullName>Contact1</fullName>
-                <default>true</default>
+                <default>false</default>
             </picklistValues>
             <picklistValues>
                 <fullName>Account1</fullName>

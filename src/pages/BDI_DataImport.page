@@ -6,34 +6,6 @@
 <script type="text/javascript">
     var j$ = jQuery.noConflict();
 
-    function refreshPage(){location.reload(true);}
-    
-    j$(document).ready(function(){
-        j$("#convertBTN").bind("click",function(){
-            //hide buttons
-            //j$("#convertBTN").hide();
-            j$(".btn").hide();
-
-            //hide panels
-            j$(".panel").hide();
-
-            //call conversion
-            callConversion();
-        });
-    });
-
-    function callConversion(){
-        runconvert() ;
-    }
-
-    function renderResults(){
-        // what is this for? --> j$("div[class^='message']").hide();
-        // we let the refresh on the action function to display the progress indicator,
-        // so that we get the correct state from the server.
-    }
-
-    
-
 </script>
 
 <style>
@@ -108,7 +80,7 @@
             </div>
         </div>
 
-        <div class="container" >
+        <apex:outputPanel styleClass="container" layout="block" rendered="{!NOT(batchRunning)}" >
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
@@ -126,15 +98,16 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </apex:outputPanel>
 
-        <div class="container" >
+        <apex:outputPanel styleClass="container" layout="block" rendered="{!NOT(batchRunning)}" >
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
                         <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
                         <div class="panel-body">
+                            <apex:pageMessages />
 			                <div class="form-group">
 			                    <apex:outputLabel value="{!$ObjectType.Data_Import_Settings__c.Fields.Batch_Size__c.Label}" for="tbxBS" styleClass="col-sm-4 control-label" />
 			                    <div class="col-sm-8 form-control-column">
@@ -188,12 +161,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </apex:outputPanel>
 
-        <div class="container">
+        <apex:outputPanel styleClass="container" layout="block" rendered="{!batchRunning}" >
             <div class="row">
                 <div class="col-md-12">
-	                <apex:actionFunction name="runconvert" action="{!importData}" reRender="batchpanel" />
 	                <apex:outputPanel id="batchpanel">
 	                    <apex:outputPanel id="panelSummary" rendered="{!batchRunning}" >
                             <apex:actionPoller rerender="panelSummary" interval="5" />      
@@ -233,18 +205,18 @@
                             </div>            
 		                </apex:outputPanel>
 			        </apex:outputPanel>
-		      </div>
+			    </div>
             </div>
-        </div>
+        </apex:outputPanel>
 
-	    <div class="container">
+        <apex:outputPanel styleClass="container" layout="block" rendered="{!NOT(batchRunning)}" >
 	        <div class="text-center"> 
-	            <button type="button" class="btn btn-success btn-md" id="convertBTN">
-	                <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Data Import Process
-	            </button>&nbsp;&nbsp;
+                <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="btn btn-md btn-success" rerender="idForm"/>
+                &nbsp;&nbsp;            
 	            <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="btn btn-md" />            
 	        </div>
-	    </div>
-    </apex:form>
-</div><!-- close class bootstrap-->
+	    </apex:outputPanel>
+	    
+        </apex:form>
+    </div><!-- close class bootstrap-->
 </apex:page>

@@ -54,15 +54,46 @@ public with sharing class BDI_DataImport_CTRL {
         return p;
     }
 
+    private class BDICtrlException extends Exception {}
+    
     public PageReference importData() {
         try {
+        	// validate settings
+        	if (diSettings.Contact_Custom_Unique_ID__c != null) {
+                // make sure c1 and c2 have the appropriately named field
+        	    if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact1_' + diSettings.Contact_Custom_Unique_ID__c) ||
+        	       !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact2_' + diSettings.Contact_Custom_Unique_ID__c)) {
+                    throw(new BDICtrlException(string.format(Label.bdiContactCustomIdError, 
+                        new string[]{diSettings.Contact_Custom_Unique_ID__c, 
+                        	'Contact1_' + diSettings.Contact_Custom_Unique_ID__c,
+                        	'Contact2_' + diSettings.Contact_Custom_Unique_ID__c})));
+        	    }
+        	}
+        	
+            if (diSettings.Account_Custom_Unique_ID__c != null) {
+                // make sure a1 and a2 have the appropriately named field
+                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + diSettings.Contact_Custom_Unique_ID__c) ||
+                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + diSettings.Contact_Custom_Unique_ID__c)) {
+                    throw(new BDICtrlException(string.format(Label.bdiAccountCustomIdError, 
+                        new string[]{diSettings.Account_Custom_Unique_ID__c, 
+                            'Account1_' + diSettings.Account_Custom_Unique_ID__c,
+                            'Account2_' + diSettings.Account_Custom_Unique_ID__c})));
+                }
+            }
+            
+        	// save any settings changes.
+        	upsert diSettings;
+        	
             batchRunning = true;
             bdi = new BDI_DataImport_BATCH();
             ApexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
             dtStart = system.now();
 
         } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler.Context.BDI);
+            // no reason to log the error if we haven't started the batch,
+            // since it is just a validation error that we are displaying on the page.
+            if (batchRunning)
+                ERR_Handler.processError(ex, ERR_Handler.Context.BDI);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
         }
         return null;
@@ -178,12 +209,17 @@ public with sharing class BDI_DataImport_CTRL {
                 //add a default option
                 listSOContactUniqueID.add(new SelectOption('', Label.stgLabelNone));
                             
-                map<String, Schema.SObjectField> conFieldTokenList = Schema.SObjectType.Contact.fields.getMap(); 
-               
-                //only get the describe information for custom fields (not from NPSP)
-                for (string fieldName : conFieldTokenList.keyset()) {
-                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
-                        listSOContactUniqueID.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('Contact', fieldName))); 
+                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Contact');               
+                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
+                    //only allow custom fields that have no namespace
+                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
+                    	Schema.Displaytype dt = dfr.getType();
+                    	// only strings and numbers
+                    	if (dt == Schema.DisplayType.String ||
+                    	   dt == Schema.DisplayType.Integer ||
+                    	   dt == Schema.DisplayType.Double) {
+                           listSOContactUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
+                    	} 
                     }               
                 }
             }               
@@ -198,13 +234,18 @@ public with sharing class BDI_DataImport_CTRL {
                 listSOAccountUniqueID = new list<SelectOption>();
                 //add a default option
                 listSOAccountUniqueID.add(new SelectOption('', Label.stgLabelNone));
-                            
-                map<String, Schema.SObjectField> fieldTokenList = Schema.SObjectType.Account.fields.getMap(); 
-               
-                //only get the describe information for custom fields (not from NPSP)
-                for (string fieldName : fieldTokenList.keyset()) {
-                    if (fieldname.endsWith('__c') && !fieldname.startsWith('np')) {
-                        listSOAccountUniqueID.add(new SelectOption(fieldName, UTIL_Describe.getFieldLabel('Account', fieldName))); 
+                                           
+                Map<String, Schema.DescribeFieldResult> mapNameToDfr = UTIL_Describe.getAllFieldsDescribe('Account');               
+                for (Schema.DescribeFieldResult dfr : mapNameToDfr.values()) {
+                    //only allow custom fields that have no namespace
+                    if (dfr.isCustom() && dfr.getName().countMatches('__') == 1) {
+                        Schema.Displaytype dt = dfr.getType();
+                        // only strings and numbers
+                        if (dt == Schema.DisplayType.String ||
+                           dt == Schema.DisplayType.Integer ||
+                           dt == Schema.DisplayType.Double) {
+                           listSOAccountUniqueID.add(new SelectOption(dfr.getName(), dfr.getLabel()));
+                        } 
                     }               
                 }
             }               
