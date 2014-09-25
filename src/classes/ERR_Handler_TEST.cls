@@ -46,9 +46,9 @@ public with sharing class ERR_Handler_TEST {
 	    	chatterGroup.put('CollaborationType', 'Private');
 	    	insert chatterGroup;
 	    	chatterGroupId = chatterGroup.Id;
-	    	UTIL_CustomSettingsFacade.getErrorSettings(chatterGroup.Id);
+	    	UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_To__c = chatterGroup.Id));
     	} else {
-    		UTIL_CustomSettingsFacade.getErrorSettings(null);
+    		UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_To__c = null));
     	}
     }
     
@@ -57,7 +57,7 @@ public with sharing class ERR_Handler_TEST {
         UTIL_CustomSettingsFacade.getHouseholdsSettings();
         
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
-        UTIL_CustomSettingsFacade.getErrorSettings(user.Id);
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_To__c = user.Id));
     }
     
     /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
@@ -224,7 +224,8 @@ public with sharing class ERR_Handler_TEST {
     
         setupWithChatterNotifications();
         
-        UTIL_CustomSettingsFacade.getAffiliationsSettings(true);
+        UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
                     
         //Create account
         Account acc1 = new Account(Name='test1');
@@ -355,7 +356,7 @@ public with sharing class ERR_Handler_TEST {
                 username=un, isActive = false);
             insert u;}
 
-        UTIL_CustomSettingsFacade.getErrorSettings(u.Id);
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_To__c = u.Id));
 
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
