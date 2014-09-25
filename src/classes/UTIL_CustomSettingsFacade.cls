@@ -429,7 +429,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     private static void configDataImportSettings(Data_Import_Settings__c dis) {
-        dis.Batch_Size__c = 20;
+        dis.Batch_Size__c = 50;
         dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
     }
 
