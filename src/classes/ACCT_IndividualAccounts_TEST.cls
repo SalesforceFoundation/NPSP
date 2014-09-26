@@ -95,7 +95,7 @@ private class ACCT_IndividualAccounts_TEST {
         
     	//Verify it's using Individual
     	contact1 = [select Account.Name from Contact Where ID = :contact1.ID];
-    	System.assertEquals('Individual', contact1.Account.Name);
+    	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contact1.Account.Name);
     	
     	//Verify we are still using Individual (Bucket) settings
     	contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();

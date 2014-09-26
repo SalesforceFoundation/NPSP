@@ -209,7 +209,6 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings = Error_Settings__c.getOrgDefaults();
             if(orgErrorSettings.Id == null) {
                 configErrorSettings(orgErrorSettings, null);
-                orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
                 upsert orgErrorSettings;
             }
         }
