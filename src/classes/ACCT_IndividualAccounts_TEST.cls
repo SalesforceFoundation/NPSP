@@ -78,6 +78,42 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(null,insertedContacts[0].AccountId);
     }
     
+    static testMethod void changeFromOneToOneToHouseholdAccount() {
+    	if (strTestOnly != '*' && strTestOnly != 'changeFromOneToOneToHouseholdAccount') return;
+    	
+    	UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+            
+    	//Set Individual (Bucket) settings
+    	npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	contactsSettings.npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR;
+        update contactsSettings;
+        
+    	//Create a contact
+    	Contact contact1 = new Contact(FirstName = 'Test', LastName = 'Testerson');
+        insert contact1;
+        
+    	//Verify it's using Individual
+    	contact1 = [select Account.Name from Contact Where ID = :contact1.ID];
+    	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contact1.Account.Name);
+    	
+    	//Verify we are still using Individual (Bucket) settings
+    	contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contactsSettings.npe01__Account_Processor__c);
+    	
+    	//Change to Household Account
+    	contactsSettings.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
+        update contactsSettings;
+            
+    	//Create a Contact
+    	Contact contact2 = new Contact(FirstName = 'Test2', LastName = 'Testerson2');
+        insert contact2;
+        
+    	//Verify it's using Household Account - a new Account should have been created for it
+    	Integer numOfAccs = [select count() from Account];
+    	System.assertEquals(2, numOfAccs);
+    }
+    
     static testMethod void insertOneToOneChangeToPrivate() {
     	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneChangeToPrivate') return;
     	
