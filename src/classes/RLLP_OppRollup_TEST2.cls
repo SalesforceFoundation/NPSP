@@ -52,7 +52,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
     }
     static void testOpportunityUtilityErrorHandling(string strProcessor) {
     	
-    	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings(null);
+    	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	errorSettings.Error_Notifications_On__c = false;
 		upsert errorSettings;
 
