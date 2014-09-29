@@ -52,7 +52,7 @@
         var dollarSign = '{!$Label.npe01__DefaultContactTransactionCurrency}';
         var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
-        $(document).on("ready",document,function(){})
+        //$(document).on("ready",document,function(){})
 
         //adds all amount fields together
         var calcAmount = function() {
@@ -177,9 +177,9 @@
                             <tr>
                                 <td>
                                     <div class="btn-toolbar">
-                                        <apex:commandButton styleClass="btn btn-sm btn-danger" value="Delete" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
+                                        <apex:commandButton styleClass="btn btn-sm btn-danger" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
                                             <span class="sr-only">Delete Row {!cnt}</span>
-                                            <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                            <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
                                     </div>
                                 </td>
@@ -209,9 +209,9 @@
                                 </td>
                                 <td>
                                     <div class="btn-toolbar">
-                                        <apex:commandButton styleClass="btn btn-sm btn-info" value="Add row" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
+                                        <apex:commandButton styleClass="btn btn-sm btn-info" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
                                             <span class="sr-only">{!$Label.alloAddRowAtPosition} {!cnt}</span>
-                                            <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                            <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
                                     </div>
                                 </td>

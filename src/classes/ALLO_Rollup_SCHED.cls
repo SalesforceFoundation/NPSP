@@ -72,10 +72,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
     public virtual override list<RollupSpec> setRollupSpecs() {
 
-
-
         //get allocations settings
         Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+        if (alloSettings.Rollup_N_Day_Value__c==null) alloSettings.Rollup_N_Day_Value__c = 365;
         string strFiscalOrCalendarYear = alloSettings.Use_Fiscal_Year_for_Rollups__c ? 'Fiscal_Year' : 'Calendar_Year';
         string strExcludeOppRecTypesQuery = '';
         string strExcludeOppTypesQuery = '';
@@ -89,8 +88,6 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         if (alloSettings.Excluded_Opp_Types__c != null) {
             strExcludeOppTypesQuery = 'AND Opportunity__r.Type NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Types__c);
         }
-
-        
 
         list<RollupSpec> mySpecs = new list<RollupSpec>();
         
@@ -136,7 +133,6 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'SUM(Amount__c)' => 'Total_Allocations_Last_N_Days__c',
             'COUNT_DISTINCT(ID)' => 'Number_of_Allocations_Last_N_Days__c'
         };
-
 
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
             rs.additionalQueryFields.add('CurrencyIsoCode');
