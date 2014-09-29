@@ -35,20 +35,21 @@
 */
 public without sharing class UTIL_CustomSettingsFacade {
 
-    //storing them in-memory to avoid trying to isert/update them twice and thus trigger the "duplicate OwnerId" error
+    //storing user-level custom settings in-memory to avoid trying to isert/update them 
+    //twice and thus trigger the "duplicate OwnerId" error
     static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
     static npo02__Households_Settings__c householdsSettings;
     static npe03__Recurring_Donations_Settings__c recurringDonationsSettings;
-	static npe4__Relationship_Settings__c relationshipsSettings;
-	static npe5__Affiliations_Settings__c affiliationsSettings;
-	static Error_Settings__c errorSettings;
-	static Batch_Data_Entry_Settings__c bdeSettings;
-	static Addr_Verification_Settings__c addressVerificationSettings;
-	static Data_Import_Settings__c dataImportSettings;
-	static Household_Naming_Settings__c householdNamingSettings;
-	
-	//storing them in-memory to avoid slowing down the settings page
-	static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
+    static npe4__Relationship_Settings__c relationshipsSettings;
+    static npe5__Affiliations_Settings__c affiliationsSettings;
+    static Error_Settings__c errorSettings;
+    static Batch_Data_Entry_Settings__c bdeSettings;
+    static Addr_Verification_Settings__c addressVerificationSettings;
+    static Household_Naming_Settings__c householdNamingSettings;
+    static Data_Import_Settings__c dataImportSettings;
+    
+    //storing org-level custom settings in-memory to avoid slowing down the settings page
+    static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
     static npo02__Households_Settings__c orgHouseholdsSettings;
     static npe03__Recurring_Donations_Settings__c orgRecurringDonationsSettings;
     static npe4__Relationship_Settings__c orgRelationshipsSettings;
@@ -56,51 +57,204 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Error_Settings__c orgErrorSettings;
     static Batch_Data_Entry_Settings__c orgBdeSettings;
     static Addr_Verification_Settings__c orgAddressVerificationSettings;
-    static Data_Import_Settings__c orgDataImportSettings;
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
+    static Data_Import_Settings__c orgDataImportSettings;
     
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    /**
+     * Methods that will try retrieving the user-level custom settings. If no user-level custom
+     * settings exist, we'll query the org-level settings.
+     **/
+    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
+        if (contactsSettings == null) {
+            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+            if(contactsSettings.Id == null)
+                contactsSettings = getOrgContactsSettings();
+        }    
+        return contactsSettings;
+    }
+    
+    public static npo02__Households_Settings__c getHouseholdsSettings() {
+        if (householdsSettings == null) {
+            householdsSettings = npo02__Households_Settings__c.getInstance();
+            if(householdsSettings.Id == null)
+                householdsSettings = getOrgHouseholdsSettings();
+        }  
+        return householdsSettings;
+    }
+    
+    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
+        if (recurringDonationsSettings == null) {
+            recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
+            if(recurringDonationsSettings.Id == null)
+                recurringDonationsSettings = getOrgRecurringDonationsSettings();
+        }
+        return recurringDonationsSettings;
+    }
+    
+    public static npe4__Relationship_Settings__c getRelationshipSettings() {
+        if (relationshipsSettings == null) {
+            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
+            if(relationshipsSettings.Id == null)
+                relationshipsSettings = getOrgRelationshipSettings();
+        }
+        return relationshipsSettings;
+    }
+    
+    public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
+        if(affiliationsSettings == null) {      
+            affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+            if(affiliationsSettings.Id == null) 
+                affiliationsSettings = getOrgAffiliationsSettings();
+        }
+        return affiliationsSettings;
+    }
+    
+    public static Error_Settings__c getErrorSettings() {
+        if(errorSettings == null) {
+            errorSettings = Error_Settings__c.getInstance();
+            if(errorSettings.Id == null)
+                errorSettings = getOrgErrorSettings();
+        }    
+        return errorSettings;
+    }
+    
+    public static Batch_Data_Entry_Settings__c getBDESettings() {
+        if(bdeSettings == null) {
+            bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
+            if(bdeSettings.Id == null)
+                bdeSettings = getOrgBDESettings();
+        }
+        return bdeSettings;
+    }
+    
+    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
+        if(addressVerificationSettings == null) {
+            addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
+            if(addressVerificationSettings.Id == null)
+                addressVerificationSettings = getOrgAddressVerificationSettings();
+        }
+        return addressVerificationSettings;
+    }
+    
+    public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
+        if (householdNamingSettings == null) {
+            householdNamingSettings = Household_Naming_Settings__c.getInstance();
+            if(householdNamingSettings.Id == null) 
+                householdNamingSettings = getOrgHouseholdNamingSettings();
+        }
+        return householdNamingSettings;
+    }
+    
+    /**
+     * Methods that try retrieving the org-level custom settings. Default org-level settings will be created if none exist.
+     * Meant to be called only from settings page and install script.
+     **/
     public static npe01__Contacts_And_Orgs_Settings__c getOrgContactsSettings() {
-    	if(orgContactsSettings == null) {
-	    	orgContactsSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-	    	if(orgContactsSettings.Id == null) {
-		    	configContactsSettings(orgContactsSettings);
-		    	orgContactsSettings.Setupownerid = UserInfo.getOrganizationId();
-		    	upsert orgContactsSettings;
-	    	}
-    	}
+        if(orgContactsSettings == null) {
+            orgContactsSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+            if(orgContactsSettings.Id == null) {
+                configContactsSettings(orgContactsSettings);
+                orgContactsSettings.Setupownerid = UserInfo.getOrganizationId();
+                upsert orgContactsSettings;
+            }
+        }
         return orgContactsSettings;
     }
     
-    //zero-arguments method that will set custom setting defaults
-    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
-        if(contactsSettings == null)
-           return getContactsSettings(null);
-        return contactsSettings;
-    }
- 
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings(String accountProcessor) {
-
-        //if no settings exist, create defaults
-        if (contactsSettings == null) {
-            //first see if we already have settings
-            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
-            if(contactsSettings.Id == null)
-	            contactsSettings = getOrgContactsSettings();
+    public static npo02__Households_Settings__c getOrgHouseholdsSettings() {
+        if(orgHouseholdsSettings == null) {
+            orgHouseholdsSettings = npo02__Households_Settings__c.getOrgDefaults();
+            if(orgHouseholdsSettings.Id == null) {
+                configHouseholdSettings(orgHouseholdsSettings);
+                orgHouseholdsSettings.Setupownerid = UserInfo.getOrganizationId();
+                upsert orgHouseholdsSettings;
+            }
         }
-            
-        if (accountProcessor != null && accountProcessor != contactsSettings.npe01__Account_Processor__c) {
-            contactsSettings.npe01__Account_Processor__c = accountProcessor;
-            upsert contactsSettings;
-        }                    
-
-            
-        return contactsSettings;
+        return orgHouseholdsSettings;
     }
     
+    public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
+        if(orgRecurringDonationsSettings == null) {
+            orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+            if(orgRecurringDonationsSettings.Id == null) {
+                configRecurringDonationsSettings(orgRecurringDonationsSettings);
+                upsert orgRecurringDonationsSettings;
+            }
+        }
+        return orgRecurringDonationsSettings;
+    }
+    
+    public static npe4__Relationship_Settings__c getOrgRelationshipSettings() {
+        if(orgRelationshipsSettings == null) { 
+            orgRelationshipsSettings = npe4__Relationship_Settings__c.getOrgDefaults();
+            if(orgRelationshipsSettings.Id == null) {
+                configRelationshipsSettings(orgRelationshipsSettings);
+                upsert orgRelationshipsSettings;
+            }
+        }
+        return orgRelationshipsSettings;
+    }
+    
+    public static npe5__Affiliations_Settings__c getOrgAffiliationsSettings() {
+        if(orgAffiliationsSettings == null) {
+            orgAffiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
+            if(orgAffiliationsSettings.Id == null) {
+                configAffiliationsSettings(orgAffiliationsSettings);
+                upsert orgAffiliationsSettings;
+            }
+        }
+        return orgAffiliationsSettings;
+    }
+    
+    public static Error_Settings__c getOrgErrorSettings() {
+        if(orgErrorSettings == null) {
+            orgErrorSettings = Error_Settings__c.getOrgDefaults();
+            if(orgErrorSettings.Id == null) {
+                configErrorSettings(orgErrorSettings, null);
+                upsert orgErrorSettings;
+            }
+        }
+        return orgErrorSettings;
+    }
+    
+    public static Batch_Data_Entry_Settings__c getOrgBDESettings() {
+        if(orgBDESettings == null) {
+            orgBDESettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
+            if(orgBDESettings.Id == null) {
+                configBDESettings(orgBDESettings);
+                upsert orgBDESettings;
+            }
+        }
+        return orgBDESettings;
+    }
+    
+    public static Addr_Verification_Settings__c getOrgAddressVerificationSettings() {
+        if(orgAddressVerificationSettings == null) {
+            orgAddressVerificationSettings = Addr_Verification_Settings__c.getOrgDefaults();
+            if(orgAddressVerificationSettings.Id == null) {
+                configAddressVerificationSettings(orgAddressVerificationSettings);
+                upsert orgAddressVerificationSettings;
+            }
+        }
+        return orgAddressVerificationSettings;
+    }
+    
+    public static Household_Naming_Settings__c getOrgHouseholdNamingSettings() {
+        if(orgHouseholdNamingSettings == null) {
+            orgHouseholdNamingSettings = Household_Naming_Settings__c.getOrgDefaults();
+            if(orgHouseholdNamingSettings.Id == null) {
+                configHouseholdNamingSettings(orgHouseholdNamingSettings);
+                upsert orgHouseholdNamingSettings;
+            }
+        }
+        return orgHouseholdNamingSettings;
+    }
+    
+    /**
+     * Private methods that will configure the default org-level custom settings.
+     **/
     private static void configContactsSettings(npe01__Contacts_And_Orgs_Settings__c cs) {
-    	//this setting does nothing, but needs to be extracted from the tests before removing
+        //this setting does nothing, but needs to be extracted from the tests before removing
         cs.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
         cs.npe01__Payments_Enabled__c  = true;
         cs.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
@@ -110,34 +264,9 @@ public without sharing class UTIL_CustomSettingsFacade {
             cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
     }
 
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static npo02__Households_Settings__c getOrgHouseholdsSettings() {
-    	if(orgHouseholdsSettings == null) {
-	    	orgHouseholdsSettings = npo02__Households_Settings__c.getOrgDefaults();
-	    	if(orgHouseholdsSettings.Id == null) {
-		        configHouseholdSettings(orgHouseholdsSettings);
-		        orgHouseholdsSettings.Setupownerid = UserInfo.getOrganizationId();
-		        upsert orgHouseholdsSettings;
-	    	}
-    	}
-        return orgHouseholdsSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static npo02__Households_Settings__c getHouseholdsSettings() {
-        //if no settings exist, create defaults
-        if (householdsSettings == null) {
-            //first see if we already have settings
-            householdsSettings = npo02__Households_Settings__c.getInstance();
-            if(householdsSettings.Id == null)
-	            householdsSettings = getOrgHouseholdsSettings();
-        }  
-        return householdsSettings;
-    }
-    
     private static void configHouseholdSettings(npo02__Households_Settings__c hs) {
-    	String oldProcessor = '';
-    	//modified to check again the Id instead of the object
+        String oldProcessor = '';
+        //modified to check again the Id instead of the object
         //get the model they used to be in 
         Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c; 
         List<Schema.PicklistEntry> P = F.getPicklistValues();
@@ -189,45 +318,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
     }
     
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
-    	if(orgRecurringDonationsSettings == null) {
-	    	orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-	    	if(orgRecurringDonationsSettings.Id == null) {
-		    	configRecurringDonationsSettings(orgRecurringDonationsSettings);
-		    	upsert orgRecurringDonationsSettings;
-	    	}
-    	}
-    	return orgRecurringDonationsSettings;
-    }
-        
-    //zero-arguments method that will set custom setting defaults
-    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-    	if(recurringDonationsSettings == null)
-            return getRecurringDonationsSettings(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost);
-        return recurringDonationsSettings;
-    }
-
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings(RD_RecurringDonations.RecurringDonationCloseOptions defaultBehavior) {
-        //if no settings exist, create defaults
-        if (recurringDonationsSettings == null) {
-            //first see if we already have settings
-            recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
-            if(recurringDonationsSettings.Id == null)
-	            recurringDonationsSettings = getOrgRecurringDonationsSettings();
-        }
-        
-        if(defaultBehavior != null && defaultBehavior.name() != recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c) {
-            recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = defaultBehavior.name();
-            upsert recurringDonationsSettings;
-        }
-        
-        return recurringDonationsSettings;
-    }
-    
     private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c rds) {
-    	//if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its 
+        //if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its 
         //the only field w/o a default defined
         if (rds.npe03__Open_Opportunity_Behavior__c == null){          
             rds.npe03__Add_Campaign_to_All_Opportunites__c = true;
@@ -240,220 +332,32 @@ public without sharing class UTIL_CustomSettingsFacade {
             List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity'];
             if(oppRecordTypes.size() > 0)
                 rds.npe03__Record_Type__c = oppRecordTypes[0].id;
-        }
-        
+        }   
     }
 
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static npe4__Relationship_Settings__c getOrgRelationshipSettings() {
-        if(orgRelationshipsSettings == null) { 
-	        orgRelationshipsSettings = npe4__Relationship_Settings__c.getOrgDefaults();
-	        if(orgRelationshipsSettings.Id == null) {
-		        configRelationshipsSettings(orgRelationshipsSettings);
-		        upsert orgRelationshipsSettings;
-	        }
-        }
-        return orgRelationshipsSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static npe4__Relationship_Settings__c getRelationshipSettings() {
-        if (relationshipsSettings == null) {
-            //retrive the lowest level hierachy setting
-            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
-            if(relationshipsSettings.Id == null)
-	            relationshipsSettings = getOrgRelationshipSettings();
-        }
-        return relationshipsSettings;
-    }
-    
     private static void configRelationshipsSettings(npe4__Relationship_Settings__c rs) {
         rs.npe4__Reciprocal_Method__c = 'List Settings';
-    }
-    
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static npe5__Affiliations_Settings__c getOrgAffiliationsSettings() {
-        if(orgAffiliationsSettings == null) {
-	        orgAffiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
-	        if(orgAffiliationsSettings.Id == null) {
-		        configAffiliationsSettings(orgAffiliationsSettings);
-		        upsert orgAffiliationsSettings;
-	        }
-        }
-        return orgAffiliationsSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        if(affiliationsSettings == null)
-            return getAffiliationsSettings(true);
-        return affiliationsSettings;
-    }
-    
-    //get the settings. handles the case where the managed value doesn't exist yet
-    public static npe5__Affiliations_Settings__c getAffiliationsSettings(Boolean automaticAffiliation) {
-    	if(affiliationsSettings == null) {		
-		    affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
-		    if(affiliationsSettings.Id == null) 
-		        affiliationsSettings = getOrgAffiliationsSettings();
-    	}
-    	//if a value is passed --> set to value
-        if(automaticAffiliation != null && automaticAffiliation != affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
-            affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = automaticAffiliation; 
-            upsert affiliationsSettings;
-        }
-        
-        return affiliationsSettings;
     }
     
     private static void configAffiliationsSettings(npe5__Affiliations_Settings__c afs) {
         afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     }
-    
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Error_Settings__c getOrgErrorSettings() {
-    	if(orgErrorSettings == null) {
-	        orgErrorSettings = Error_Settings__c.getOrgDefaults();
-	        if(orgErrorSettings.Id == null) {
-		        configErrorSettings(orgErrorSettings, null);
-		        orgErrorSettings.Setupownerid = UserInfo.getOrganizationId();
-		        upsert orgErrorSettings;
-	        }
-    	}
-        return orgErrorSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static Error_Settings__c getErrorSettings() {
-    	if(errorSettings == null)
-            return getErrorSettings(null);
-        return errorSettings;
-    }
-    
-    public static Error_Settings__c getErrorSettings(String notificationsTo) {
-        if(errorSettings == null) {
-            errorSettings = Error_Settings__c.getInstance();
-            if(errorSettings.Id == null)
-	            errorSettings = getOrgErrorSettings();
-        }
-        
-        if(notificationsTo != null && notificationsTo != errorSettings.Error_Notifications_To__c) {
-            errorSettings.Error_Notifications_To__c = notificationsTo;
-            upsert errorSettings;
-        }
-            
-        return errorSettings;
-    }
-    
-    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {  	
+
+    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {     
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
     }
     
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Batch_Data_Entry_Settings__c getOrgBDESettings() {
-        if(orgBDESettings == null) {
-	        orgBDESettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
-	        if(orgBDESettings.Id == null) {
-		        configBDESettings(orgBDESettings);
-		        upsert orgBDESettings;
-	        }
-        }
-        return orgBDESettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static Batch_Data_Entry_Settings__c getBDESettings() {
-        if(bdeSettings == null) {
-            bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
-            if(bdeSettings.Id == null)
-	            bdeSettings = getOrgBDESettings();
-        }
-        return bdeSettings;
-    }
-    
     private static void configBDESettings(Batch_Data_Entry_Settings__c bds) {
-    	bds.Allow_Blank_Opportunity_Names__c = true;
+        bds.Allow_Blank_Opportunity_Names__c = true;
         bds.Opportunity_Naming__c = true;
     }
-    
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Addr_Verification_Settings__c getOrgAddressVerificationSettings() {
-        if(orgAddressVerificationSettings == null) {
-	        orgAddressVerificationSettings = Addr_Verification_Settings__c.getOrgDefaults();
-	        if(orgAddressVerificationSettings.Id == null) {
-		        configAddressVerificationSettings(orgAddressVerificationSettings);
-		        upsert orgAddressVerificationSettings;
-	        }
-        }
-        return orgAddressVerificationSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
-        if(addressVerificationSettings == null) {
-        	addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
-        	if(addressVerificationSettings.Id == null)
-	            addressVerificationSettings = getOrgAddressVerificationSettings();
-        }
-        return addressVerificationSettings;
-    }
-    
+
     private static void configAddressVerificationSettings(Addr_Verification_Settings__c avs) {
-    	avs.Using_SmartyStreets__c = false;
+        avs.Using_SmartyStreets__c = false;
         avs.Enable_Automatic_Verification__c = false;
         avs.Reject_Ambiguous_Addresses__c = false;
-    }
-
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Data_Import_Settings__c getOrgDataImportSettings() {
-        if (orgDataImportSettings == null) {
-            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
-            if (orgDataImportSettings.Id == null) {
-                configDataImportSettings(orgDataImportSettings);
-                upsert orgDataImportSettings;
-            }
-        }
-        return orgDataImportSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static Data_Import_Settings__c getDataImportSettings() {        
-        if (dataImportSettings == null) {
-            dataImportSettings = Data_Import_Settings__c.getInstance();
-            if (dataImportSettings.Id == null) 
-                dataImportSettings = getOrgDataImportSettings();
-        }
-        return dataImportSettings;
-    }
-    
-    private static void configDataImportSettings(Data_Import_Settings__c dis) {
-        dis.Batch_Size__c = 50;
-        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
-    }
-
-
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Household_Naming_Settings__c getOrgHouseholdNamingSettings() {
-        if(orgHouseholdNamingSettings == null) {
-	        orgHouseholdNamingSettings = Household_Naming_Settings__c.getOrgDefaults();
-	        if(orgHouseholdNamingSettings.Id == null) {
-		        configHouseholdNamingSettings(orgHouseholdNamingSettings);
-		        upsert orgHouseholdNamingSettings;
-	        }
-        }
-        return orgHouseholdNamingSettings;
-    }
-    
-    //zero-arguments method that will set custom setting defaults
-    public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
-        if (householdNamingSettings == null) {
-        	householdNamingSettings = Household_Naming_Settings__c.getInstance();
-            if(householdNamingSettings.Id == null) 
-	            householdNamingSettings = getOrgHouseholdNamingSettings();
-        }
-        return householdNamingSettings;
     }
     
     private static void configHouseholdNamingSettings(Household_Naming_Settings__c hns) {
@@ -466,6 +370,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         hns.Implementing_Class__c = 'HH_NameSpec';
     }
     
+    /**
+     * Methods that will create custom settings for tests.
+     **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_And_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
@@ -528,4 +435,53 @@ public without sharing class UTIL_CustomSettingsFacade {
         upsert relationshipsSettings;
         return relationshipsSettings;
     }
+    
+    public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
+    	if(affiliationsSettings == null)
+    	   affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+    	   
+    	affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
+        upsert affiliationsSettings;
+        return affiliationsSettings;
+    }
+    
+    public static Error_Settings__c getErrorSettingsForTests(Error_Settings__c mySettings) {
+    	if(errorSettings == null)
+    	   errorSettings = Error_Settings__c.getInstance();
+    	   
+    	errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
+    	errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
+    	errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
+    	upsert errorSettings;
+    	return errorSettings;  
+    }
+
+    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    public static Data_Import_Settings__c getOrgDataImportSettings() {
+        if (orgDataImportSettings == null) {
+            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
+            if (orgDataImportSettings.Id == null) {
+                configDataImportSettings(orgDataImportSettings);
+                upsert orgDataImportSettings;
+            }
+        }
+        return orgDataImportSettings;
+    }
+    
+    //zero-arguments method that will set custom setting defaults
+    public static Data_Import_Settings__c getDataImportSettings() {        
+        if (dataImportSettings == null) {
+            dataImportSettings = Data_Import_Settings__c.getInstance();
+            if (dataImportSettings.Id == null) 
+                dataImportSettings = getOrgDataImportSettings();
+        }
+        return dataImportSettings;
+    }
+    
+    private static void configDataImportSettings(Data_Import_Settings__c dis) {
+        dis.Batch_Size__c = 50;
+        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+    }
+
+
 }
