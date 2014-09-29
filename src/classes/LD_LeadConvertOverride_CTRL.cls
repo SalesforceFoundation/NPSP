@@ -67,7 +67,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     private npe01__Contacts_And_Orgs_Settings__c ContactsSettings; 
     
     public LD_LeadConvertOverride_CTRL(ApexPages.StandardController controller) {
-        ContactsSettings = CAO_Constants.getContactsSettings();
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                             
         // get the lead
         l = [select id, name, firstname, lastname, company, email, ownerId from lead
@@ -196,7 +196,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                                              
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
 	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
-	                npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();                
+	                npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();                
 	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
 	                    update con;                         

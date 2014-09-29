@@ -131,6 +131,14 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                                 'npo02__LastMembershipLevel__c', 'npo02__Best_Gift_Year__c',
                                                                 'npo02__Best_Gift_Year_Total__c'};
 
+    /*** Constructor ***/
+	public RLLP_OppRollup_UTIL(){
+	    // setup households settings
+	    setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
+	    // setup user rollups
+	    setupUserRollupVars();
+	}
+	
     /*** Settings Methods ***/ 
     //configures and sets up static vars for OppRollups
     public static void setupRollupVars(npo02__Households_Settings__c household_settings){
@@ -388,7 +396,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     
     /*** Query Building Methods ***/    
     
-    public static string buildAccountQuery(){
+    public string buildAccountQuery(){
         if (AccountQuery == null){
             AccountQuery = 'select id';
             for (string s : AccountFields){
@@ -400,7 +408,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         }
         return AccountQuery;
     }
-    public static string buildOpportunityContactRoleQuery(){
+    public string buildOpportunityContactRoleQuery(){
         if (OpportunityContactRoleQuery == null){
             OpportunityContactRoleQuery = 'select id';
             for (string s : OpportunityContactRoleFields){
@@ -411,7 +419,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         }
         return OpportunityContactRoleQuery;     
     }
-    public static string buildContactQuery(){        
+    public string buildContactQuery(){    
         if (ContactQuery == null){
             ContactQuery = 'select id';
             for (string s : ContactFields){
@@ -422,7 +430,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         }    
         return ContactQuery;
     }
-    public static string buildHouseholdQuery(){
+    public string buildHouseholdQuery(){
         if (HouseholdQuery == null){
             HouseholdQuery = 'select id';
             for (string s : HouseholdFields){
@@ -434,7 +442,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return HouseholdQuery;    
     }
     
-    public static string buildAccountRollupQuery(){
+    public string buildAccountRollupQuery(){
         if (AccountRollupQuery == null){
             if (useFiscalYear)
                 AccountRollupQuery = 'SELECT AccountId, Fiscal_Year(CloseDate) CalendarYr, ';
@@ -473,7 +481,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return AccountRollupQuery;
     }
     
-    public static string buildAccountNDayQuery(){
+    public string buildAccountNDayQuery(){
         if (AccountNDayQuery == null){
             AccountNDayQuery = 'SELECT AccountId, ';
             AccountNDayQuery += 'SUM(Amount) TotalOppAmount, COUNT_DISTINCT(Id) NumberOfClosedOpps '; 
@@ -501,7 +509,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return AccountNDayQuery;
     }
     
-    public static string buildAccountMembershipQuery(){
+    public string buildAccountMembershipQuery(){
         if (AccountMembershipQuery == null){
             AccountMembershipQuery = 'SELECT AccountId, ';
             AccountMembershipQuery += 'SUM(Amount) TotalOppAmount, '; 
@@ -534,7 +542,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return AccountMembershipQuery;
     }
     
-    public static string buildContactRollupQuery(){
+    public string buildContactRollupQuery(){
         if (ContactRollupQuery == null){
             if (useFiscalYear)
                 ContactRollupQuery = 'SELECT ContactId, Fiscal_Year(Opportunity.CloseDate) CalendarYr, ';
@@ -566,7 +574,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return ContactRollupQuery;
     }
     
-    public static string buildContactNDayQuery(){
+    public string buildContactNDayQuery(){
         if (ContactNDayQuery == null){
             ContactNDayQuery = 'SELECT ContactId, ';
             ContactNDayQuery += 'SUM(Opportunity.Amount) TotalOppAmount, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps ';
@@ -587,7 +595,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return ContactNDayQuery;
     }
     
-    public static string buildContactMembershipQuery(){ 
+    public string buildContactMembershipQuery(){ 
         if (ContactMembershipQuery == null){
             ContactMembershipQuery = 'SELECT ContactId, ';
             ContactMembershipQuery += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
@@ -613,7 +621,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     }
     
     
-    public static string buildHouseholdRollupQuery(){
+    public string buildHouseholdRollupQuery(){
         if (HouseholdRollupQuery == null){
             if (useFiscalYear)
                 HouseholdRollupQuery = 'SELECT Contact.npo02__Household__c hhid, Fiscal_Year(Opportunity.CloseDate) CalendarYr, ';
@@ -645,7 +653,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return HouseholdRollupQuery;        
     }
     
-    public static string buildHouseholdNDayQuery(){
+    public string buildHouseholdNDayQuery(){
         if (HouseholdNDayQuery == null){
             HouseholdNDayQuery = 'SELECT Contact.npo02__Household__c hhid, ';
             HouseholdNDayQuery += 'SUM(Opportunity.Amount) TotalOppAmount, COUNT_DISTINCT(Opportunity.Id) NumberOfClosedOpps ';
@@ -666,7 +674,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return HouseholdNDayQuery;      
     }
     
-    public static string buildHouseholdMembershipQuery(){
+    public string buildHouseholdMembershipQuery(){
         if (HouseholdMembershipQuery == null){
             HouseholdMembershipQuery = 'SELECT Contact.npo02__Household__c hhid, ';
             HouseholdMembershipQuery += 'SUM(Opportunity.Amount) TotalOppAmount,  ';
@@ -691,7 +699,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return HouseholdMembershipQuery;
     }
     
-    public static string buildSoftCreditQuery(){
+    public string buildSoftCreditQuery(){
         if (SoftCreditQuery == null){           
             if (useFiscalYear)
                 SoftCreditQuery = 'SELECT ContactId, Fiscal_Year(Opportunity.CloseDate) CalendarYr, ';
@@ -719,7 +727,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         return SoftCreditQuery;  
     }
     
-    public static string buildContactNDaySoftCreditQuery(){
+    public string buildContactNDaySoftCreditQuery(){
         if (ContactNDaySoftCreditQuery == null){
             ContactNDaySoftCreditQuery = 'SELECT ContactId, ';
             ContactNDaySoftCreditQuery += 'SUM(Opportunity.Amount) TotalOppAmount ';

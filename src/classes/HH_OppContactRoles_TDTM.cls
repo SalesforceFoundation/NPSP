@@ -42,8 +42,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = CAO_Constants.getContactsSettings();
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         
         // bail out if the user has disabled household contact roles.
         if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
@@ -106,13 +106,13 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         boolean recordTypesOnCons = false;
         if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
             recordTypesOnCons = true;
-                        
+                
         // get all Opps in the trigger set that are for individual accounts 
         // issue 318, also get Contact ID for Role if available
         map<Id, Opportunity> oppsForContactRoles = new map<Id,Opportunity>([select Id, npe01__Contact_Id_for_Role__c, AccountId, account.npe01__One2OneContact__c,
             account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c from Opportunity 
             where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true]);
-
+        
         if (oppsForContactRoles.size() > 0) {
             
             // set of contact Ids on Accounts for Opps in the trigger set

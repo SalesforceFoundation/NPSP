@@ -60,7 +60,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         DmlWrapper dmlWrapper = new DmlWrapper();
             	   
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         List<Contact> householdInserts = new List<Contact>();
         List<Contact> contactEvaluations = new List<Contact>();
         List<Contact> householdDeletes = new List<Contact>();
@@ -206,9 +206,10 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         if (setHHIdToRollup.size() > 0) {
             if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
-                RLLP_OppRollup rg = new RLLP_OppRollup(); 
-                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+                RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
                                                                                 ' where id IN :setHHIdToRollup'));
+                RLLP_OppRollup rg = new RLLP_OppRollup();
                 rg.rollupHouseholds(hhmap);
             } else {
                 RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
@@ -241,7 +242,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
     {
         List<npo02__household__c> householdInserts = new List<npo02__household__c>();
         //reload to evaluate insert criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
                 
         set<string> HouseholdRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
@@ -377,7 +378,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         map<Id,Integer> householdCountMap = new map<Id,Integer>();
         list<id> householdrenames = new list<id>();
         //reload to evaluate delete criteria
-        npo02__Households_Settings__c currentHouseholdsSettings = HH_Households.getHouseholdsSettings();
+        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
         //Generate a list of Household Ids
         for(Contact c : contacts){

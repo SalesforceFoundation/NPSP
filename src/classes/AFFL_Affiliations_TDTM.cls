@@ -56,7 +56,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+        //Passing null basically indicates that the existing setting (in memory) should be used
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
         
         // we have multiple scenarios to support
         // 1. create a new current affiliation, potentially mark primary

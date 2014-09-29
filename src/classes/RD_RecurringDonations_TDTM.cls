@@ -40,10 +40,10 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
-        map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>(); 
+        map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         if (RD_ProcessControl.hasRun) 
             return null;
             

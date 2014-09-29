@@ -159,7 +159,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public static npo02__Households_Settings__c hhsettings{
         get{
             if(hhsettings == null){
-                hhsettings = npo02__Households_Settings__c.getInstance();
+                hhsettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
             }   
             return hhsettings;
         }

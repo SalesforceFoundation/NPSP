@@ -275,7 +275,7 @@ public class RD_RecurringDonations_TEST {
     {
         if (strTestOnly != '*' && strTestOnly != 'contactRolesOnOppsProcessor') return;
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor, 
                 npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole));
             
@@ -306,7 +306,7 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
 
         delete [select id from npe03__Recurring_Donations_Settings__c];
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(50, rds.npe03__Maximum_Donations__c);
         system.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           
@@ -1661,7 +1661,8 @@ public class RD_RecurringDonations_TEST {
         //pass the controller into the extension
         STTG_RecurringDonations_CTRL controller = new STTG_RecurringDonations_CTRL(); 
         controller.getSettingsFirstTime();
-        system.assertNotEquals(null,RD_RecurringDonations.getRecurringDonationsSettings());
+        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getRecurringDonationsSettings(
+                                            RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost));
         
         list<SelectOption> enumvalues  =  controller.closeOptions; 
         system.assertEquals(3,enumvalues.size());

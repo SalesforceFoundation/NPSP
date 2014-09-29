@@ -37,23 +37,34 @@ public with sharing class ERR_Handler_TEST {
     private static Id chatterGroupId;
     
     private static void setupWithChatterNotifications() {
+    	UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+    	UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+    	
     	if(Schema.SObjectType.User.isFeedEnabled()) {
 	    	SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
 	    	chatterGroup.put('Name', 'ChatterTestGroup');
 	    	chatterGroup.put('CollaborationType', 'Private');
 	    	insert chatterGroup;
 	    	chatterGroupId = chatterGroup.Id;
-	    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
-	    	                               Error_Notifications_To__c = chatterGroup.Id);
+	    	UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
+	    	  Error_Notifications_To__c = chatterGroup.Id, Store_Errors_On__c = true));
     	} else {
-    		insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true);
+    		UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
+    		  Error_Notifications_To__c = null, Store_Errors_On__c = true));
     	}
     }
     
     private static void setupWithEmailNotifications() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
-        insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, 
-                                       Error_Notifications_To__c = user.Id);
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
+            Error_Notifications_To__c = user.Id, Store_Errors_On__c = true));
     }
     
     /*** We need to use Database.insert because otherwise the code does not go passed the contacts insert operation
@@ -220,8 +231,8 @@ public with sharing class ERR_Handler_TEST {
     
         setupWithChatterNotifications();
         
-        AFFL_Affiliations_TEST.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(
-                                           npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
                     
         //Create account
         Account acc1 = new Account(Name='test1');
@@ -256,6 +267,7 @@ public with sharing class ERR_Handler_TEST {
         //gets rolled back and then run again only with records that succeed. No error is saved.
         //**Note that we have not created a Trigger_Handler__c record with the test class that would throw an exception**
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
+        System.debug('****ERROR: ' + JSON.serializePretty(errors));
         System.assertEquals(0, errors.size());                                    
     }
     
@@ -334,7 +346,7 @@ public with sharing class ERR_Handler_TEST {
     }
 
     /** Test that an inactive user won't receive email as the primary error user **/
-    static testMethod void testInactiveUserEmailBehavior(){
+    static testMethod void testInactiveUserEmailBehavior() {
 
         if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;
 
@@ -351,8 +363,9 @@ public with sharing class ERR_Handler_TEST {
                 username=un, isActive = false);
             insert u;}
 
-        insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = true, Error_Notifications_To__c = u.Id);
-
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
+            Error_Notifications_To__c = u.Id, Store_Errors_On__c = true));
+ 
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;');
