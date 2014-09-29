@@ -349,23 +349,33 @@
     <members>DataImport__c.Contact1_Alternate_Email__c</members>
     <members>DataImport__c.Contact1_Birthdate__c</members>
     <members>DataImport__c.Contact1_Firstname__c</members>
+    <members>DataImport__c.Contact1_Home_Phone__c</members>
     <members>DataImport__c.Contact1_Lastname__c</members>
+    <members>DataImport__c.Contact1_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact1_Other_Phone__c</members>
     <members>DataImport__c.Contact1_Personal_Email__c</members>
     <members>DataImport__c.Contact1_Preferred_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Phone__c</members>
     <members>DataImport__c.Contact1_Salutation__c</members>
     <members>DataImport__c.Contact1_Title__c</members>
     <members>DataImport__c.Contact1_Work_Email__c</members>
+    <members>DataImport__c.Contact1_Work_Phone__c</members>
     <members>DataImport__c.Contact2ImportStatus__c</members>
     <members>DataImport__c.Contact2Imported__c</members>
     <members>DataImport__c.Contact2_Alternate_Email__c</members>
     <members>DataImport__c.Contact2_Birthdate__c</members>
     <members>DataImport__c.Contact2_Firstname__c</members>
+    <members>DataImport__c.Contact2_Home_Phone__c</members>
     <members>DataImport__c.Contact2_Lastname__c</members>
+    <members>DataImport__c.Contact2_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact2_Other_Phone__c</members>
     <members>DataImport__c.Contact2_Personal_Email__c</members>
     <members>DataImport__c.Contact2_Preferred_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Phone__c</members>
     <members>DataImport__c.Contact2_Salutation__c</members>
     <members>DataImport__c.Contact2_Title__c</members>
     <members>DataImport__c.Contact2_Work_Email__c</members>
+    <members>DataImport__c.Contact2_Work_Phone__c</members>
     <members>DataImport__c.DonationImportStatus__c</members>
     <members>DataImport__c.DonationImported__c</members>
     <members>DataImport__c.Donation_Amount__c</members>

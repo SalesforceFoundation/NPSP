@@ -321,6 +321,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Contact1_Home_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.HomePhone</inlineHelpText>
+        <label>Contact1 Home Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
         <fullName>Contact1_Lastname__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.Lastname</inlineHelpText>
@@ -330,6 +339,24 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_Mobile_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.MobilePhone</inlineHelpText>
+        <label>Contact1 Mobile Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Contact1_Other_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.OtherPhone</inlineHelpText>
+        <label>Contact1 Other Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
     </fields>
     <fields>
         <fullName>Contact1_Personal_Email__c</fullName>
@@ -357,6 +384,33 @@
             </picklistValues>
             <picklistValues>
                 <fullName>Alternate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contact1_Preferred_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__PreferredPhone__c</inlineHelpText>
+        <label>Contact1 Preferred Phone</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Home</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Work</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Mobile</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
                 <default>false</default>
             </picklistValues>
             <sorted>false</sorted>
@@ -395,6 +449,15 @@
         <trackTrending>false</trackTrending>
         <type>Email</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact1_Work_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact1.npe01__WorkPhone__c</inlineHelpText>
+        <label>Contact1 Work Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
     </fields>
     <fields>
         <fullName>Contact2ImportStatus__c</fullName>
@@ -448,6 +511,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Contact2_Home_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.HomePhone</inlineHelpText>
+        <label>Contact2 Home Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
         <fullName>Contact2_Lastname__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact2.Lastname</inlineHelpText>
@@ -457,6 +529,24 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_Mobile_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.MobilePhone</inlineHelpText>
+        <label>Contact2 Mobile Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_Other_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.OtherPhone</inlineHelpText>
+        <label>Contact2 Other Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
     </fields>
     <fields>
         <fullName>Contact2_Personal_Email__c</fullName>
@@ -484,6 +574,33 @@
             </picklistValues>
             <picklistValues>
                 <fullName>Alternate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contact2_Preferred_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__PreferredPhone__c</inlineHelpText>
+        <label>Contact2 Preferred Phone</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Home</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Work</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Mobile</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
                 <default>false</default>
             </picklistValues>
             <sorted>false</sorted>
@@ -522,6 +639,15 @@
         <trackTrending>false</trackTrending>
         <type>Email</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_Work_Phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Contact2.npe01__WorkPhone__c</inlineHelpText>
+        <label>Contact2 Work Phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
     </fields>
     <fields>
         <fullName>DonationImportStatus__c</fullName>
