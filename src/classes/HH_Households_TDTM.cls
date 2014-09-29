@@ -206,9 +206,10 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         if (setHHIdToRollup.size() > 0) {
             if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
-                RLLP_OppRollup rg = new RLLP_OppRollup(); 
-                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(RLLP_OppRollup_UTIL.buildHouseholdQuery() +
+                RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
                                                                                 ' where id IN :setHHIdToRollup'));
+                RLLP_OppRollup rg = new RLLP_OppRollup();
                 rg.rollupHouseholds(hhmap);
             } else {
                 RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);

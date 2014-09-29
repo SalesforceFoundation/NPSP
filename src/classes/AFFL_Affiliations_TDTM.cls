@@ -57,7 +57,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper = new DmlWrapper();
         
         //Passing null basically indicates that the existing setting (in memory) should be used
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings(null);
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
         
         // we have multiple scenarios to support
         // 1. create a new current affiliation, potentially mark primary

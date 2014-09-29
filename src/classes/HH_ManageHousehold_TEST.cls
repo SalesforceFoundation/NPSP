@@ -28,7 +28,8 @@ public with sharing class HH_ManageHousehold_TEST {
     // TEST METHOD
     public static testMethod void testExistingHH() { 
         
-        UTIL_CustomSettingsFacade.getContactsSettings(CAO_Constants.ONE_TO_ONE_PROCESSOR);  
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR)); 
         
         npo02__Household__c hh = new npo02__Household__c(
             Name = 'test_hh'
@@ -95,7 +96,8 @@ public with sharing class HH_ManageHousehold_TEST {
     public static testMethod void testHHAddrToContact() {
         //tests writing the household address to the contact if the flag is ticked
         
-        UTIL_CustomSettingsFacade.getContactsSettings(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Household__c hh = new npo02__Household__c(
             Name = 'test_hh',
@@ -156,7 +158,8 @@ public with sharing class HH_ManageHousehold_TEST {
     public static testMethod void testRemoveContactActiveAddress() {
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
         
-        UTIL_CustomSettingsFacade.getContactsSettings(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Household__c hh = new npo02__Household__c(
             Name = 'test_hh'
@@ -554,7 +557,8 @@ public with sharing class HH_ManageHousehold_TEST {
     
     public static testMethod void testRemoveReAdd() {
         
-        UTIL_CustomSettingsFacade.getContactsSettings(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         npo02__Household__c hh = new npo02__Household__c (
             Name = 'Household'
