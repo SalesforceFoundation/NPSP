@@ -237,19 +237,6 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 
 	</target>
 
-	<!-- uninstall: Removes all metadata from the package -->
-	<target name="uninstall">
-		<antcall target="uninstallUnpackagedPost" />
-		<delete dir="uninstallsrc" />
-		<delete dir="uninstall" />
-		<retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
-		<buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="${cumulusci.package.name}" />
-		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
-		<delete dir="uninstallsrc" />
-		<delete dir="uninstall" />
-		<antcall target="uninstallUnpackagedPre" />
-	</target>
-
 	<target name="updateMetaXml">
 		<updateMetaXml dir="${basedir}/src" namespace="npe01" version="${version.npe01}" />
 		<updateMetaXml dir="${basedir}/src" namespace="npo02" version="${version.npo02}" />
