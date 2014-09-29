@@ -49,7 +49,7 @@ private with sharing class ALLO_Rollup_TEST {
             if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
 
         }
     }

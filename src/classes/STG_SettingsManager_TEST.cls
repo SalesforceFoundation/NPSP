@@ -139,17 +139,17 @@ public with sharing class STG_SettingsManager_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
         system.assertEquals('idPanelAllocations', panel.idPanel());
-        STG_Panel.stgService.stgAllo.Allocations_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
         //this call creates a General fund when one doesn't exist
-        panel.enableAllocations();
+        panel.enableDefaultAllocations();
         //set the default accounting unit. this is normally selected automatically through the picklist in the UI.
         STG_Panel.stgService.stgAllo.Default__c = STG_PanelAllocations_CTRL.listSOGeneralAccountingUnitIds[0].getValue();
         panel.saveSettings();
-        system.assertEquals(true, Allocations_Settings__c.getOrgDefaults().Allocations_Enabled__c, 'Settings should save successfully.');
+        system.assertEquals(true, Allocations_Settings__c.getOrgDefaults().Default_Allocations_Enabled__c, 'Settings should save successfully.');
         system.assertNotEquals(null,Allocations_Settings__c.getOrgDefaults().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');
-        STG_Panel.stgService.stgAllo.Allocations_Enabled__c = false;
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
         panel.saveSettings();
-        system.assertEquals(false, Allocations_Settings__c.getOrgDefaults().Allocations_Enabled__c);
+        system.assertEquals(false, Allocations_Settings__c.getOrgDefaults().Default_Allocations_Enabled__c);
     }
 
     public static testMethod void testPanelBDE() {

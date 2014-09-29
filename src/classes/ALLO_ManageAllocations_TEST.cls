@@ -46,10 +46,34 @@ private class ALLO_ManageAllocations_TEST {
             if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Allocations_Enabled__c = true));
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
 
         }
     }
+
+    /*@isTest static void foo() {
+        if (strTestOnly != '*' && strTestOnly != 'foo') return;
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
+        insert gau;
+
+        PageReference pageRef = Page.ALLO_ManageAllocations;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('opp', opp.id);
+        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL();
+
+        //system.debug('LookHere: JSON ' + json.serializePretty(ctrl));
+        
+    }*/
 
     //run manage allocations page on an opportunity with no allocations
     //add and delete a row, insert an allocation
@@ -77,7 +101,7 @@ private class ALLO_ManageAllocations_TEST {
     	ctrl.addRow();
     	system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
 
-        ALLO_Allocations_TDTM.resetFlags();
+        ALLO_Allocations_TDTM.resetFlags(false);
 
     	ctrl.listAllo[0].Percent__c = 50;
     	ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
@@ -124,7 +148,7 @@ private class ALLO_ManageAllocations_TEST {
     	ctrl.rowNumber = 0;
     	ctrl.delRow();
 
-        ALLO_Allocations_TDTM.resetFlags();
+        ALLO_Allocations_TDTM.resetFlags(false);
 
     	ctrl.listAllo[1].Amount__c = 5;
     	ctrl.listAllo[1].General_Accounting_Unit__c = campaigngau.id;
@@ -175,7 +199,7 @@ private class ALLO_ManageAllocations_TEST {
     	ctrl.rowNumber = 0;
     	ctrl.delRow();
 
-        ALLO_Allocations_TDTM.resetFlags();
+        ALLO_Allocations_TDTM.resetFlags(false);
 
     	ctrl.listAllo[1].Amount__c = 5;
     	ctrl.listAllo[1].General_Accounting_Unit__c = gau.id;

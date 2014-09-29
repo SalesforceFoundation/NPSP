@@ -52,10 +52,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     public static boolean hasRunForAllocationsAfter = false;
     public static boolean hasRunForOpportunities = false;
 
-    public static void resetFlags() {
-        hasRunForOpportunities = false;
-        hasRunForAllocationsAfter = false;
-        hasRunForAllocationsBefore = false;
+    public static void resetFlags(boolean b) {
+        hasRunForOpportunities = b;
+        hasRunForAllocationsAfter = b;
+        hasRunForAllocationsBefore = b;
     }
 
     //holds the default General Accounting Unit if creating default allocations is enabled
@@ -77,52 +77,44 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         decimal totalPercent = 0;                                            //holds total percentage allocations
         list<Allocation__c> triggerList = new list<Allocation__c>();         //all allocations for this opportunity in the current trigger set
         list<Allocation__c> listAllo = new list<Allocation__c>();            //all non-default allocations for this parent object
-        Allocation__c defaultAllo = new Allocation__c();                     //the default allocation for this parent object
+        Allocation__c defaultAllo = null;                     //the default allocation for this parent object
         boolean defaultInTrigger = false;                                    //is the default allocation in the current trigger set?
     }
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
-        //if allocations are not enabled, do nothing
-        if (!settings.Allocations_Enabled__c)
-            return null;
+
+        DmlWrapper wrapper = new DmlWrapper();
 
         //if default allocations are enabled, verify that we have an ID value for the default fund
         if (settings.Default_Allocations_Enabled__c) {
             if (settings.Default__c == null) {
                 throw new AllocationsException(Label.alloDefaultGAUMissing);
-                return null;
+                return wrapper;
             } else idDefaultGAU = settings.Default__c;
         }
 
         // dispatch to the correct handler
         if (objResult.getName() == 'Allocation__c' && !hasRunForAllocationsBefore && 
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
-            DmlWrapper wrapper;
+
             wrapper = runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAllocationsBefore = true;
-            return wrapper;
-        
         } else if (objResult.getName() == 'Allocation__c' && !hasRunForAllocationsAfter && 
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
-            DmlWrapper wrapper;
+
             wrapper = runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAllocationsBefore = true;
             hasRunForAllocationsAfter = true;
-            return wrapper;
-
         } else if (objResult.getName() == 'Opportunity' && !hasRunForOpportunities) {
-            DmlWrapper wrapper = runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
+
+            wrapper = runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForOpportunities = true;
-            //we're recalculating allocations amounts in the opportunity trigger handler and don't want to run twice
             hasRunForAllocationsBefore = true;
             hasRunForAllocationsAfter = true;
-            return wrapper;
-        } else {
-            return null;
         }
+        return wrapper;
     }
         
     private DmlWrapper runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
@@ -149,7 +141,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //UPDATE case: if the opportunity amount changed, or the opp went to a closed/won stage: add to the list for processing
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Opportunity oldOpp = (Opportunity) oldlist[i];
-                if (opp.Amount != oldOpp.Amount || (opp.isWon && !oldOpp.isWon)) {
+                if (opp.Amount != oldOpp.Amount) {
                     listOppsForProcessing.add(opp);
                     listOldOpps.add(oldOpp);
                 }
@@ -163,7 +155,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             
             for (integer i=0; i<listOppsForProcessing.size(); i++) {
                 Opportunity opp = listOppsForProcessing[i];
-                //system.debug('LookHere: oppWrap ' + oppWrap);
 
                 //Recurring Donation / Campaign cases: if this is an insert, create allocations to match the campaign or recurring donation. if there are non and defaults are enabled, create the default allocation
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
@@ -191,11 +182,20 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             remainder -= allo.Amount__c;
                         }
                         
-                        //if our remainder is negative, don't insert allocations, as they would exceed the opportunity amount
+                        //if our remainder is negative, only create percentage based allocations
                         if (remainder < 0) {
-                            //TODO: implement better default behavior. only create percentage based allocations, and document it well.
+                            remainder = opp.Amount;
+                            for (Allocation__c allo : listAlloForInsert) {
+                                if (allo.Percent__c!=null) {
+                                    dmlWrapper.objectsToInsert.add(allo);
+                                    remainder-=allo.Amount__c;
+                                }
+                            }
+
                             if (settings.Default_Allocations_Enabled__c) {
-                                dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
+                                Allocation__c defaultAllo = makeDefaultAllocation(opp);
+                                defaultAllo.Amount__c = remainder;
+                                dmlWrapper.objectsToInsert.add(defaultAllo);
                             }
 
                         //create default allocation if needed
@@ -216,7 +216,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //adjust percentage based allocations, adjust default allocations if enabled, and enforce that total allocations don't exceed the opportunity amount
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate && opp.Amount != listOldOpps[i].Amount && mapWrapper.containsKey(opp.id)) {
                     alloWrapper oppWrap = mapWrapper.get(opp.id);
-
                     //if some allocations are percentage based, recalculate those percentages and update them
                     if (oppWrap.totalPercent > 0) {
                         for (Allocation__c allo : oppWrap.listAllo) {
@@ -231,13 +230,19 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     }
                     //if the Default allocation handling is enabled, update the amount to cover 100% of the opportunity
                     if (settings.Default_Allocations_Enabled__c) {
-                        oppWrap.totalAmount -= oppWrap.defaultAllo.Amount__c;
-                        oppWrap.defaultAllo.Amount__c = oppWrap.parentAmount - oppWrap.totalAmount;
-                        oppWrap.totalAmount += oppWrap.defaultAllo.Amount__c;
-                        if (oppWrap.defaultAllo.Amount__c==0)
-                            dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
-                        else
-                            dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
+                        decimal remainder = oppWrap.parentAmount - oppWrap.totalAmount;
+                        if (remainder==0) {
+                            if (oppWrap.defaultAllo!=null)
+                                dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                        } else if (remainder > 0) {
+                            if (oppWrap.defaultAllo==null) {
+                                oppWrap.defaultAllo = makeDefaultAllocation(opp);
+                                oppWrap.defaultAllo.Amount__c = remainder;
+                                dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
+                            } else
+                                dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
+
+                        }
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
                     if (oppWrap.totalAmount > oppWrap.parentAmount)
@@ -263,35 +268,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 allo.AddError(Label.alloSingleParent);
             if (allo.Amount__c == null && allo.Percent__c == null)
                 allo.addError(Label.alloAmountOrPercent);
+            if (allo.Amount__c != null && allo.Amount__c < 0)
+                allo.addError(Label.alloNegativeAmount);
+            if (allo.Percent__c != null && allo.Percent__c < 0)
+                allo.addError(Label.alloNegativePercent);
+
         }
 
         mapWrapper = fillMapWrapper(triggerList);
         
-        //adjust default allocation, and add to DML wrapper if needed
-        if (settings.Default_Allocations_Enabled__c) {
-            for (alloWrapper wrap : mapWrapper.values()) {
-                //skip this check for Campaign and RD allocations
-                if (wrap.parentAmount==null) 
-                    continue;
-                decimal amountDifferential = wrap.parentAmount - wrap.totalAmount;
-                if (amountDifferential != 0) {
-                
-                    wrap.defaultAllo.Amount__c += amountDifferential;
-                    wrap.totalAmount += amountDifferential;
-                    
-                    //if the default allocation has an amount of 0, delete it
-                    if (wrap.defaultAllo.Amount__c == 0) {
-                        dmlWrapper.objectsToDelete.add(wrap.defaultAllo);
-                    } else if (wrap.defaultAllo.Amount__c > 0) {
-                        //equalize total amount to parent amount                        
-                        //if this default isn't in the trigger set, add it to DML wrapper
-                        if (!wrap.defaultInTrigger)
-                            dmlWrapper.objectsToUpdate.add(wrap.defaultAllo);
-                    }
-                }                    
-            }
-        }
-
         //verify that we're not over the total amount, and that everything is equalized
         for (integer i=0;i<triggerList.size();i++) {
             //current trigger allocation object
@@ -313,13 +298,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (wrap.totalAmount > wrap.parentAmount)
                 allo.addError(Label.alloTotalExceedsOppAmt);
 
-            //if default is enabled and we're not at exactly 100%
-            if (settings.Default_Allocations_Enabled__c) {
-                if (wrap.isPercentOnly && wrap.totalPercent != 100)
-                    allo.addError(Label.alloDefaultEqual100);
-                if (!wrap.isPercentOnly && wrap.totalAmount != wrap.parentAmount)
-                    allo.addError(Label.alloDefaultEqual100);
-            }
         }
 
         return dmlWrapper;
@@ -334,13 +312,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         set<id> setRecDonId = new set<id>();
         set<id> setOppIds = new set<id>();
 
-
         for (Allocation__c allo : triggerAction == TDTM_Runnable.Action.AfterDelete ? (list<Allocation__c>) oldList : (list<Allocation__c>) newList) {
             //if this allocation is for a recurring donation, save the Id for updating open opportunities under that RD schedule
             if (allo.Recurring_Donation__c != null)
                 setRecDonId.add(allo.Recurring_Donation__c);
-            //if this is an opportunity allocation deletion and defaults are enabled, adjust/create the default
-            if (triggerAction==TDTM_Runnable.Action.AfterDelete && settings.Default_Allocations_Enabled__c && allo.Opportunity__c!=null)
+            //if this is an opportunity allocation and defaults are enabled, adjust/create/delete the default
+            if (settings.Default_Allocations_Enabled__c && allo.Opportunity__c!=null)
                 setOppIds.add(allo.Opportunity__c);
         }
         
@@ -351,8 +328,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         if (!listOpps.isEmpty()) {
 
             mapWrapper = fillMapWrapper(listOpps);
-            
-            //if we have any deletion of opportunity allocations and default handling is enabled, adjust the opps' default allocation
+
+            //if we have any opportunity allocations and default handling is enabled, adjust the opps' default allocation
             list<Opportunity> listRecDonOpps = new list<Opportunity>();
             if (!setOppIds.isEmpty()) {
                 for (Opportunity opp : listOpps) {
@@ -361,57 +338,73 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         //this opp has allocations, check for default cases
                         if (mapWrapper.containsKey(opp.Id)) {
                             alloWrapper oppWrap = mapWrapper.get(opp.id);
-                            //if we have a default allocation, update the amount
-                            if (oppWrap.defaultAllo!=null) {
-                                oppWrap.defaultAllo.Amount__c = opp.Amount - oppWrap.totalAmount;
-                                dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
-                            //if we don't have a default allocation, create one
-                            } else {
-                                oppWrap.defaultAllo = makeDefaultAllocation(opp);
-                                oppWrap.defaultAllo.Amount__c = opp.Amount - oppWrap.totalAmount;
-                                dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
-                            }
+                            //adjust default allocation, and add to DML wrapper if needed
+                            decimal amountDifferential = opp.Amount - oppWrap.totalAmount;
+
+                            //no remainder: delete default allocation
+                            if (amountDifferential == 0 && oppWrap.defaultAllo!=null) {
+                                dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                            } else if (amountDifferential > 0) {
+                                //create a default allocation if we don't have one
+                                if (oppWrap.defaultAllo == null) {
+                                    oppWrap.defaultAllo = makeDefaultAllocation(opp);
+                                    oppWrap.defaultAllo.Amount__c = amountDifferential;
+                                    dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
+                                } else if (oppWrap.defaultAllo.Amount__c != amountDifferential) {
+                                    oppWrap.defaultAllo.Amount__c = amountDifferential;
+                                    dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
+                                }
+                            }          
                         //this opp has no allocations, just create the default
                         } else dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
                     //if this was a recurring donation allocation, add to list for processing
                     } else listRecDonOpps.add(opp);
                 }
-            //no deletion cases, just copy the list over
+            //no opportunity default cases, just copy the list over
             } else listRecDonOpps = listOpps;
 
-            //after insert/update/delete of Recurring Donation allocations: adjust all open opportunities
-            //check each opp's allocations, make them match the allocations for this RD
-            for (Opportunity opp : listOpps) {
+            //after insert/update/delete of Recurring Donation allocations: adjust all open opportunity's allocations
+            for (Opportunity opp : listRecDonOpps) {
                 alloWrapper rdWrap = mapWrapper.get(opp.npe03__Recurring_Donation__c);
-                //temporary lists in case we exceed the opportunity amount and need to revert to percentage allocations only
-                list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
-                list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
-                list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
+
+                //list of allocations to copy over
+                list<Allocation__c> listAlloRD = new list<Allocation__c>();
+                decimal remainder = opp.Amount;
+
+                //verify we don't exceed the opportunity amount. if we do, only use percent based allocations
+                for (Allocation__c allo : rdWrap.listAllo) {
+                    if (allo.Percent__c!=null) {
+                        remainder -= opp.Amount * allo.Percent__c * .01;
+                        listAlloRD.add(allo);
+                    } else
+                        remainder -= allo.Amount__c;
+                }
+
+                //if our remainder is positive, use all the RD's allocations
+                if (remainder >= 0) {
+                    listAlloRD = rdWrap.listAllo;
+                }
 
                 //this opp has allocations, modify them to match the recurring donations' allocations
                 alloWrapper oppWrap = mapWrapper.get(opp.Id);
                 integer oppSize = 0;
                 if (oppWrap != null)
                     oppSize = oppWrap.listAllo.size();
-                integer rdSize = rdwrap.listallo.size();
+                integer rdSize = listAlloRD.size();
                 integer maxSize = oppSize > rdSize ? oppSize : rdSize;
-                decimal remainder = opp.Amount;
-                
-                //case1: opp has same amount as RD
+                remainder = opp.Amount;
+
+                //case1: opp has same amount of allocations as RD
                     //modify existing allocations
                 //case2: opp has fewer allocations than RD
                     //modify and update existing allocations, insert new ones
                 //case3: opp has more allocations than RD
                     //modify existing allocations, delete remainder
-
-                //I can assume the opportunity has a default allocation
-                //the RD may or may not have a default allocation
-                
                 for (integer i=0;i<maxSize;i++) {
                     //copy allocations from rd to opp, update opp allocations
                     if (i<oppSize && i<rdSize) {
                         Allocation__c oppAllo = oppWrap.listAllo[i];
-                        Allocation__c rdAllo = rdWrap.listAllo[i];
+                        Allocation__c rdAllo = listAlloRD[i];
                         oppAllo.Percent__c = rdAllo.Percent__c;
                         oppAllo.Amount__c = rdAllo.Amount__c;
                         oppAllo.Opportunity__c = opp.id;
@@ -419,58 +412,43 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         if (oppAllo.Percent__c!=null)
                             oppAllo.Amount__c = opp.Amount * oppAllo.Percent__c * .01;
                         remainder -= oppAllo.Amount__c;
-                        listAlloForUpdate.add(oppAllo);
+                        dmlWrapper.objectsToUpdate.add(oppAllo);
                     //create new allo, copy info from rd, insert it
                     } else if (i>=oppSize && i<rdSize) {
-                        Allocation__c newAllo = rdWrap.listAllo[i].clone(false,true,false,false);
+                        Allocation__c newAllo = listAlloRD[i].clone(false,true,false,false);
                         newAllo.Opportunity__c = opp.id;
                         newAllo.Recurring_Donation__c = null;
                         if (newAllo.Percent__c!=null)
                             newAllo.Amount__c = opp.Amount * newAllo.Percent__c * .01;
                         remainder -= newAllo.Amount__c;
-                        listAlloForInsert.add(newAllo);
+                        dmlWrapper.objectsToInsert.add(newAllo);
                     //add to delete
                     } else if (i<oppSize && i>=rdSize) {
-                        listAlloForDelete.add(oppWrap.listAllo[i]);
+                        dmlWrapper.objectsToDelete.add(oppWrap.listAllo[i]);
                     }
                 }
-                
-                //we have more allocations than the opportunity amount, only create percent based allocations
-                if (remainder < 0) {
-                    //TODO
-                    listAlloForUpdate = new list<Allocation__c>();
-                    listAlloForInsert = new list<Allocation__c>();
-                    listAlloForDelete = new list<Allocation__c>();
-
-
-
-                //our remainder is blank, if we have a default allocation, delete it
-                } else if (remainder == 0 && oppWrap!=null) {
+                //if the remainder is 0 and we have a default allocation, delete it
+                if (remainder == 0 && oppWrap!=null) {
                     if (oppWrap.defaultAllo!=null)
-                        listAlloForDelete.add(oppWrap.defaultAllo);
+                        dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                
+                //if we have a remainder, update the default allocation or create a new one
                 } else if (settings.Default_Allocations_Enabled__c && remainder > 0) {
                     if (oppWrap!=null && oppWrap.defaultAllo != null) {
                         oppWrap.defaultAllo.Amount__c = remainder;
-                        listAlloForUpdate.add(oppWrap.defaultAllo);
+                        dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
                     } else {
                         Allocation__c defaultAllo = new Allocation__c(
                             Opportunity__c = opp.id,
                             Amount__c = remainder,
                             General_Accounting_Unit__c = idDefaultGAU
                         );
-                        listAlloForInsert.add(defaultAllo);
+                        dmlWrapper.objectsToInsert.add(defaultAllo);
                     }
                 }
-
-                for (Allocation__c allo : listAlloForUpdate)
-                    dmlWrapper.objectsToUpdate.add(allo);
-                dmlWrapper.objectsToInsert.addAll((list<sObject>)listAlloForInsert);
-                dmlWrapper.objectsToDelete.addAll((list<sObject>)listAlloForDelete);
-
             }
-            return dmlWrapper;
         }
-        return null;
+        return dmlWrapper;
     }
 
 
@@ -500,19 +478,22 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //Add any allocation with an id to be excluded from calculations in the query
             if (allo.id != null)
                 setExistingAlloId.add(allo.id);
-            if (idDefaultGAU != null && allo.General_Accounting_Unit__c == idDefaultGAU) {
-                if (allo.Percent__c != null)
+            if (settings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == idDefaultGAU) {
+                if (allo.Percent__c != null && allo.Opportunity__c != null)
                     allo.addError(Label.alloDefaultNotPercent);
-                wrap.defaultAllo = allo;
+                if (wrap.defaultAllo == null)
+                    wrap.defaultAllo = allo;
                 wrap.defaultInTrigger = true;
+                continue;
             }
+
             if (allo.Amount__c!=null)
                 wrap.totalAmount += allo.Amount__c;
             
             //if any allocations don't have a percent, set flag to false
-            if (allo.Percent__c == null && allo.General_Accounting_Unit__c != idDefaultGAU)
+            if (allo.Percent__c == null)
                 wrap.isPercentOnly = false;
-            else if (allo.Percent__c != null && allo.General_Accounting_Unit__c != idDefaultGAU)
+            else
                 wrap.totalPercent += allo.Percent__c;
         }
 
@@ -526,14 +507,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //add opportunity amount and allocation totals
             wrap.parentAmount = allo.Opportunity__r.Amount;
 
-            wrap.totalAmount += allo.Amount__c;
-
             //save the default allocation.
-            if (idDefaultGAU != null && allo.General_Accounting_Unit__c == idDefaultGAU) {
+            if (settings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == idDefaultGAU) {
                 wrap.defaultAllo = allo;
                 //keep the default allocation from listAllo
                 continue;
             }
+
+            wrap.totalAmount += allo.Amount__c;
 
             //add this allocation to the list
             wrap.listAllo.add(allo);
@@ -612,14 +593,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 wrap.parentAmount = allo.Opportunity__r.Amount;
             }
             
-            if (allo.Amount__c!=null)    
-                wrap.totalAmount += allo.Amount__c;
-
             //save the default allocation.
-            if (idDefaultGAU != null && allo.General_Accounting_Unit__c == idDefaultGAU) {
+            if (settings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == idDefaultGAU) {
                 wrap.defaultAllo = allo;
                 continue;
             }
+
+            if (allo.Amount__c!=null)    
+                wrap.totalAmount += allo.Amount__c;
 
             //if any allocations don't have a percent, set flag to false
             if (allo.Percent__c == null)

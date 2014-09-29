@@ -1,4 +1,4 @@
-<apex:page controller="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false">
+<apex:page controller="ALLO_ManageAllocations_CTRL" title="Manage Allocations" tabStyle="Allocation__c" showHeader="true" sidebar="true" standardStylesheets="false" cache="false" >
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
@@ -29,18 +29,20 @@
             -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
             transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
         }
-        table.centertable {
-            max-width: 600px;
-            margin-left: auto; 
-            margin-right: auto;
+        table.allocation-table {
+            max-width: 640px;
+        }
+        .bootstrap .form-control-column {
+            margin-top: 7px;
+        }
+        .subhead a {
+            color: black;
+        }
+        .subhead small {
+            color: black;
         }
     </style>
     <script type="text/javascript">
-/*TODO:
-defaultGAU, automatic uneditable handling of the default
-adding two rows breaks the page
-cut off amounts at 2 decimals
-*/
     (function($) {
 
         var sumAmount;
@@ -48,9 +50,9 @@ cut off amounts at 2 decimals
         
         var parentAmount = {!parentAmount};
         var dollarSign = '{!$Label.npe01__DefaultContactTransactionCurrency}';
+        var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
-        $(document).on("ready",document,function(){
-        })
+        $(document).on("ready",document,function(){})
 
         //adds all amount fields together
         var calcAmount = function() {
@@ -58,6 +60,8 @@ cut off amounts at 2 decimals
             $('.alloAmount').each(function(i,o){
                 var thisRowAmount = $('.amount'+i);
                 var thisRowPercent = $('.percent'+i);
+
+                //thisRowAmount.val(thisRowAmount.val().toFixed(2));
 
                 //if amount and percent are blank, enable them both
                 if (isBlankOrEmpty(thisRowAmount)){
@@ -73,29 +77,31 @@ cut off amounts at 2 decimals
                         thisRowPercent.prop('disabled', true);
                     }
                 }
-                if (parseInt($(o).val()))
-                    sumAmount += parseInt($(o).val());
+                if (!isNaN($(o).val()))
+                    sumAmount += Math.round($(o).val()*100);
                
             });
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
             //if we're over the parent amount, make it red.
             if (parentAmount > 0) {
-                var unallocated = parentAmount - sumAmount;
-                $('#totalAmount').text(dollarSign + sumAmount + ' (' + dollarSign + unallocated + ' {!$Label.alloUnallocated})');
-                if (unallocated < 0)
+                var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
+                $('#totalAmount').text(dollarSign + unallocated);
+                if (unallocated < 0) {
                     $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                else
+                    $('[id$="saveCloseBTN"]').attr('disabled','disabled');
+                } else {
                     $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
+                    $('[id$="saveCloseBTN"]').removeAttr('disabled');
+                }
             } else {
-                $('#totalAmount').text(dollarSign + sumAmount);
+                $('#totalAmount').text(dollarSign + (Math.round(sumAmount)/100).toFixed(2));
             }
             
         }
 
         //adds all percent fields together
         var calcPercent = function() {
-            sumPercent = 0;
             $('.alloPercent').each(function(i,o){
                 //selector variable for each row
                 var thisRowAmount = $('.amount'+i);
@@ -109,25 +115,10 @@ cut off amounts at 2 decimals
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
                     if (parentAmount > 0)
-                        thisRowAmount.val(thisRowPercent.val() * parentAmount * .01);
+                        thisRowAmount.val((Math.round(thisRowPercent.val() * parentAmount)/100).toFixed(2));
                 }
-
-                //if we have an integer value, add it to the total
-                if (parseInt($(o).val()))
-                    sumPercent += parseInt($(o).val());
             });
-            $('#totalPercent').text(sumPercent + '%');
             
-            //validates percentage, toggles button and adds CSS to show invalid precentages
-            if (sumPercent > 100) {
-                //grey out save button
-                //set a message
-                $('#totalPercent').css({ "color": "red", "font-weight": "bold" });
-            } else {
-                $('#totalPercent').css({ "color": "black", "font-weight": "normal" });
-                //make sure save button is not greyed out
-                //unset a message?
-            }
         }
 
         var changePercent = function(i) {
@@ -155,85 +146,92 @@ cut off amounts at 2 decimals
     })(jQuery);
 
     </script>
-    <apex:form id="theForm">
-        <apex:pageBlock title="{!$Label.alloManageOppAllocations}" rendered="{!opp<>null}">
-            <apex:pageBlockSection title="Opportunity Information">
-                <apex:outputField value="{!opp.name}"/>
-                <apex:outputField value="{!opp.stagename}"/>
-                <apex:outputField value="{!opp.amount}"/>
-                <apex:outputField value="{!opp.closeDate}"/>
-            </apex:pageBlockSection>
-        </apex:pageBlock>
-        <apex:pageBlock title="{!$Label.alloManageCampaignAllocations}" rendered="{!cam<>null}">
-            <apex:pageBlockSection title="Campaign Information">
-                <apex:outputField value="{!cam.name}"/>
-            </apex:pageBlockSection>
-        </apex:pageBlock>
-        <apex:pageBlock title="{!$Label.alloManageRecurringDonationAllocations}" rendered="{!rd<>null}">
-            <apex:pageBlockSection title="Recurring Donation Information">
-                <apex:outputField value="{!rd.name}"/>
-            </apex:pageBlockSection>
-        </apex:pageBlock>
+    <apex:form id="theForm" styleClass="bootstrap">
+        <apex:outputPanel rendered="{!opp<>null}">
+        <h4 class="subhead">{!$Label.alloManageOppAllocations}</h4><h3 class="subhead"><apex:outputLink value="/{!opp.id}" >{!opp.Name}</apex:outputLink>&nbsp;-&nbsp;<apex:outputField value="{!opp.amount}"/></h3>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!cam<>null}">
+        <h4>{!$Label.alloManageCampaignAllocations}&nbsp;<apex:outputLink value="/{!cam.id}" >{!cam.Name}</apex:outputLink></h4>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!rd<>null}">
+        <h4>{!$Label.alloManageRecurringDonationAllocations}&nbsp;<apex:outputLink value="/{!opp.id}" >{!rd.Name}</apex:outputLink></h4>
+        </apex:outputPanel>
         <div> 
             <apex:pageMessages id="messages"/>
         </div>
-        <div class="bootstrap">
-            <div class="bootstrap table-responsive">
-                <table class="centertable table table-bordered table-hover table-condensed" >
+        <div>
+            <div class="table-responsive">
+                <table class="allocation-table table table-condensed" >
                     <thead>
-                        <tr>
+                        <tr class="active">
                             <th></th>
                             <th>{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</th>
-                            <th>{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</th>
-                            <th>{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
+                            <th width="250px">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</th>
+                            <th width="100px">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <apex:variable var="cnt" value="{!0}" /> 
                         <apex:repeat var="allo" value="{!listAllo}" >
                             <tr>
-                                <td width="80px">
+                                <td>
                                     <div class="btn-toolbar">
-                                        <apex:commandButton styleClass="btn btn-danger" value="×" id="delRowBTN" title="Delete Row" action="{!delRow}" reRender="theForm">
+                                        <apex:commandButton styleClass="btn btn-sm btn-danger" value="Delete" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
                                             <span class="sr-only">Delete Row {!cnt}</span>
                                             <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
-                                        <apex:commandButton styleClass="btn btn-info" value="+" id="addRowBTN" title="Add Row" action="{!addRow}" reRender="theForm">
-                                            <span class="sr-only">Add Row at Position {!cnt}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                        <label for="alloInputGAU{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label} {!cnt}</label>
+                                        <div id="alloInputGAU{!cnt}">
+                                            <apex:inputField styleClass="lookupInput" value="{!Allo.General_Accounting_Unit__c}"/>
+                                        </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <label for="alloInputAmount{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
+                                        <span class="input-group-addon">{!$Label.npe01__DefaultContactTransactionCurrency}</span>
+                                        <div id="alloInputAmount{!cnt}">
+                                            <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <label for="alloInputPercent{!cnt}" class="sr-only">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
+                                        <div id="alloInputPercent{!cnt}">
+                                            <apex:inputField styleClass="form-control alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
+                                        </div>
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-toolbar">
+                                        <apex:commandButton styleClass="btn btn-sm btn-info" value="Add row" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true">
+                                            <span class="sr-only">{!$Label.alloAddRowAtPosition} {!cnt}</span>
                                             <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                         </apex:commandButton>
-                                    </div>
-                                </td>
-                                <td width="90px">
-                                        <apex:inputField styleClass="lookupInput" id="alloInputGAU" value="{!Allo.General_Accounting_Unit__c}"/>
-                                </td>
-                                <td width="150px">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">{!$Label.npe01__DefaultContactTransactionCurrency}</span>
-                                        <apex:inputField styleClass="form-control alloAmount amount{!cnt}" onChange="window.initOrReload()" id="alloInputAmount" value="{!Allo.Amount__c}"/>
-                                    </div>
-                                </td>
-                                <td width="100px">
-                                    <div class="input-group">
-                                        <apex:inputField styleClass="form-control alloPercent percent{!cnt}" onChange="window.changePercent({!cnt})" id="alloInputPercent" value="{!Allo.Percent__c}"/>
-                                        <span class="input-group-addon">%</span>
                                     </div>
                                 </td>
                             </tr>
                             <apex:variable var="cnt" value="{!cnt+1}"/>
                         </apex:repeat>
-                        <tr>
+                        <tr class="active">
                             <th scope="row">
-                                {!$Label.alloTotals}
+                                {!IF(parentAmount>0,$Label.alloRemainder,$Label.alloTotals)}
                             </th>
                             <td>
-                                
+                                <apex:outputField value="{!defaultAllo.General_Accounting_Unit__c}"/>
                             </td>
                             <td>
                                 <div id="totalAmount"></div>
                             </td>
                             <td>
                                 <div id="totalPercent"></div>
+                            </td>
+                            <td>
                             </td>
                         </tr>
                    </tbody>
@@ -243,8 +241,8 @@ cut off amounts at 2 decimals
                 window.initOrReload();
             </script>
             <div class="btn-toolbar">
-                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}"/>
-                    <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}"/>
+                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="{!IF(listAlloSize==1&&listAllo[0].Amount__c==NULL&&listAllo[0].Percent__c==NULL,'true','false')}"/>
+                    <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}" immediate="true"/>
             </div>
         </div>
     </apex:form>

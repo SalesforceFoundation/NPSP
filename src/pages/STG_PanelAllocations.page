@@ -1,46 +1,13 @@
 <apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
-    <p>{!$Label.stgLabelAllocationsSettings}</p>
 
-    <apex:form id="form" styleClass="form-horizontal">   
-        <apex:pageMessages id="pageMessages"/>
+    <apex:form id="form" styleClass="form-horizontal">
         <apex:pageBlock mode="maindetail">
              <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
             </apex:outputPanel>
-
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Allocations_Enabled__c.Label}" for="cbxAE" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:inputcheckbox value="{!stgService.stgAllo.Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxAE" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpAllocationsEnabled}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" />
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="slDefaultGAU" styleClass="col-sm-4 control-label" />
-                <div class="col-sm-8 form-control-column">
-                    <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" />
-                    <apex:selectList value="{!stgService.stgAllo.Default__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slDefaultGAU" >
-                        <apex:selectOptions value="{!listSOGeneralAccountingUnitIds}" />
-                    </apex:selectList>
-                </div>
-                <div class="col-sm-offset-4 col-sm-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpDefaultGAU}" />
-                </div>
-            </div>
             <section>
-                <h3 class="section-header" >{!$Label.stgLabelAllocationsRollupSettings}</h3>                        
+                <h3 class="section-header" >{!$Label.stgLabelAllocationsRollupSettings}</h3>
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
@@ -79,7 +46,46 @@
                     </div>
                 </div>
             </section>
+            <apex:pageMessages id="pageMessages"/>
+            <section>
+                <h3 class="section-header" >{!$Label.stgLabelAllocationsSettings}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" onSelect="enableDefaultAllocations()">
+                            <apex:actionSupport event="onchange" action="{!enableDefaultAllocations}" rerender="form" status="statusLoad" />
+                        </apex:inputcheckbox>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="slDefaultGAU" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgAllo.Default__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slDefaultGAU" >
+                            <apex:selectOptions value="{!listSOGeneralAccountingUnitIds}" />
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpDefaultGAU}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:outputText value="Batch Create Default Allocations" rendered="{!isReadOnlyMode}" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch||NOT(stgService.stgAllo.Default_Allocations_Enabled__c)||ISNULL(stgService.stgAllo.Default__c)}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" rendered="{!isReadOnlyMode}"/>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool." rendered="{!isReadOnlyMode}"/>
 
+                    </div>
+                </div>
+                <apex:outputPanel rendered="{!isRunningBatch}">
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                </apex:outputPanel>
+            </section>
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />

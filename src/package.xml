@@ -36,8 +36,10 @@
     <members>AFFL_BulkTests_TEST</members>
     <members>ALLO_Allocations_TDTM</members>
     <members>ALLO_Allocations_TEST</members>
+    <members>ALLO_MakeDefaultAllocations_BATCH</members>
     <members>ALLO_ManageAllocations_CTRL</members>
     <members>ALLO_ManageAllocations_TEST</members>
+    <members>ALLO_Multicurrency_TDTM</members>
     <members>ALLO_RollupBTN_CTRL</members>
     <members>ALLO_Rollup_SCHED</members>
     <members>ALLO_Rollup_TEST</members>
@@ -327,7 +329,6 @@
     <members>Allocation__c.Opportunity__c</members>
     <members>Allocation__c.Percent__c</members>
     <members>Allocation__c.Recurring_Donation__c</members>
-    <members>Allocations_Settings__c.Allocations_Enabled__c</members>
     <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
     <members>Allocations_Settings__c.Default__c</members>
     <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
@@ -359,6 +360,7 @@
     <members>Error__c.Posted_in_Chatter__c</members>
     <members>Error__c.Record_URL__c</members>
     <members>Error__c.Stack_Trace__c</members>
+    <members>General_Accounting_Unit__c.Average_Allocation__c</members>
     <members>General_Accounting_Unit__c.First_Allocation_Date__c</members>
     <members>General_Accounting_Unit__c.Largest_Allocation__c</members>
     <members>General_Accounting_Unit__c.Last_Allocation_Date__c</members>
@@ -431,21 +433,25 @@
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>alloAddRow</members>
+    <members>alloAddRowAtPosition</members>
     <members>alloAmountOrPercent</members>
     <members>alloBtnCancel</members>
     <members>alloBtnSaveAndClose</members>
-    <members>alloDefaultEqual100</members>
     <members>alloDefaultGAUMissing</members>
     <members>alloDefaultNotPercent</members>
+    <members>alloDeleteRow</members>
     <members>alloExceedsOppAmount</members>
     <members>alloManageCampaignAllocations</members>
     <members>alloManageOppAllocations</members>
     <members>alloManageRecurringDonationAllocations</members>
+    <members>alloNegativeAmount</members>
+    <members>alloNegativePercent</members>
     <members>alloPercentExceed100</members>
+    <members>alloRemainder</members>
     <members>alloSingleParent</members>
     <members>alloTotalExceedsOppAmt</members>
     <members>alloTotals</members>
-    <members>alloUnallocated</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
@@ -573,7 +579,6 @@
     <members>stgHelpAccountModel</members>
     <members>stgHelpAlloFiscalYearRollups</members>
     <members>stgHelpAlloNDayValue</members>
-    <members>stgHelpAllocationsEnabled</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>
     <members>stgHelpAutoRelField</members>

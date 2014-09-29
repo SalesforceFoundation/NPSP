@@ -5,16 +5,6 @@
     <description>Settings for the allocation of Opportunities into General Accounting Units.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>Allocations_Enabled__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Enables all trigger based functionality for the Allocations feature.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Enables all trigger based functionality for the Allocations feature.</inlineHelpText>
-        <label>Allocations Enabled</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Default_Allocations_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.</description>

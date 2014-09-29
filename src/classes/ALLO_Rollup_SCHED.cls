@@ -34,6 +34,9 @@
  */
 public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
+
+
+
     public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
             ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
@@ -68,9 +71,8 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     }
 
     public virtual override list<RollupSpec> setRollupSpecs() {
-        /* TODO:
-            multi currency support
-        */
+
+
 
         //get allocations settings
         Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
@@ -102,6 +104,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'COUNT_DISTINCT(ID)' => 'Total_Number_of_Allocations__c',
             'MIN(Amount__c)' => 'Smallest_Allocation__c',
             'MAX(Amount__c)' => 'Largest_Allocation__c',
+            'AVG(Amount__c)' => 'Average_Allocation__c',
             'MIN(Opportunity__r.CloseDate)' => 'First_Allocation_Date__c',
             'MAX(Opportunity__r.CloseDate)' => 'Last_Allocation_Date__c'
         };
@@ -120,6 +123,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             }
         };
 
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+            rs.additionalQueryFields.add('CurrencyIsoCode');
+
         mySpecs.add(rs);
 
         //last 365 days
@@ -131,13 +137,17 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'COUNT_DISTINCT(ID)' => 'Number_of_Allocations_Last_N_Days__c'
         };
 
+
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+            rs.additionalQueryFields.add('CurrencyIsoCode');
+
         mySpecs.add(rs2);
         
         return mySpecs;
     }
 
     //converts a semicolon delimited string, e.g. str1;str2;str3, into a SOQL friendly list format, e.g. ('str1','str2','str3')
-    private string convertToQueryListFormat(string str) {
+    public static string convertToQueryListFormat(string str) {
         string results = '(\'';
 
         for (string s : new set<string>(str.split(';'))) {
@@ -154,4 +164,18 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         system.debug('running finish method in extended class ALLO_Rollup_SCHED');
     }*/
 
+    public override void customResultRowProcessing(SObject rollupRow,RollupSpec spec,SObject parentRec) {
+        // this is called for each non-subgroup row of our aggregate result to allow for custom calculation of rollup values
+        // you should write code here to insert values into the parent obj in parentRec
+        // you must also make sure that any fields you're writing to are contained in specialRollupFields property of the spec
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+           parentRec.put('Total_Allocations__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations__c')));
+           parentRec.put('Total_Allocations_This_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_This_Year__c')));
+           parentRec.put('Total_Allocations_Last_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_Last_Year__c')));
+           parentRec.put('Total_Allocations_Two_Years_Ago__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_Two_Years_Ago__c')));
+           parentRec.put('Smallest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Smallest_Allocation__c')));
+           parentRec.put('Largest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Largest_Allocation__c')));
+           parentRec.put('Average_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Average_Allocation__c')));
+        }
+    }
 }

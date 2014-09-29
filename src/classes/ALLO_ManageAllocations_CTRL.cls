@@ -1,16 +1,15 @@
 public with sharing class ALLO_ManageAllocations_CTRL {
 
-	public list<Allocation__c> listAllo {
+	public list<Allocation__c> listAllo {get;set;}
+    public Allocation__c defaultAllo {get;set;}
+
+    public integer listAlloSize {
         get{
-            if (listAllo == null) {
-                listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :parentId OR Campaign__c = :parentId OR Recurring_Donation__c = :parentId];
-                if (listAllo.isEmpty())
-                    addRow();
-            }
-            return listAllo;
+            return listAllo.size();
         }
         set;
     }
+
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
 
     public id parentId {get;set;}
@@ -18,6 +17,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public Campaign cam {get;set;}
     public npe03__Recurring_Donation__c rd {get;set;}
     public decimal parentAmount {get;set;}
+    public static Allocations_Settings__c settings {get;set;}
+
 
     public string parentName {get;set;}
 
@@ -35,7 +36,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             allo.Recurring_Donation__c = parentId;
 
         //enable adding to the last row
-        if (rowNumber == null || rowNumber == listAllo.size() - 1)
+        if (rowNumber == null || rowNumber >= listAllo.size()-1)
             listAllo.add(allo);
         else
             listAllo.add(rowNumber+1, allo);
@@ -47,16 +48,41 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         if (listAllo[rowNumber].id!=null)
             listAlloForDelete.add(listAllo[rowNumber]);
         listAllo.remove(rowNumber);
+        if (listAllo.isEmpty())
+            addRow();
         return null;
     }
 
 
     public pageReference saveClose() {
+        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
+        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
+        pageReference source = new pageReference('/'+parentId);
+
+        //split into insert and update cases so we can reset recursion flags for each operation
+        for (Allocation__c allo : listAllo) {
+            if (allo.id!=null) listAlloForUpdate.add(allo);
+            else listAlloForInsert.add(allo);
+        }
+
         try {
-            if (!listAlloForDelete.isEmpty())
+            if (!listAlloForDelete.isEmpty()) {
+                ALLO_Allocations_TDTM.resetFlags(false);
                 delete listAlloForDelete;
-            upsert listAllo;
-            pageReference source = new pageReference('/'+parentId);
+
+                //allow user to delete all GAUs and save with one empty GAU
+                if (listAllo.size()==1 && listAllo[0].General_Accounting_Unit__c==null)
+                    return source;
+            }
+            if (!listAlloForUpdate.isEmpty()) {
+                ALLO_Allocations_TDTM.resetFlags(false);
+                update listAlloForUpdate;
+            }
+            if (!listAlloForInsert.isEmpty()) {
+                ALLO_Allocations_TDTM.resetFlags(false);
+                insert listAlloForInsert;
+            }
+            
             return source;
         } catch (Exception e) {
             ApexPages.addMessages(e);
@@ -71,38 +97,40 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     //constructor finds parent object, queries it, and sets parentId and parentAmount if possible
     public ALLO_ManageAllocations_CTRL() {
+
+        settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
         map<string,string> params = ApexPages.currentPage().getParameters();
         parentAmount = 0;        
+        
         if (params.containsKey('opp')) {
             parentId = String.escapeSingleQuotes(params.get('opp'));
-            opp = (Opportunity) getSObject(parentId, Schema.SObjectType.Opportunity);
+            opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
             //only Opportunities have parent amounts and enforce being below this amount
             parentAmount = opp.Amount;
         } else if (params.containsKey('cam')) {
             parentId = String.escapeSingleQuotes(params.get('cam'));
-            cam = (Campaign) getSObject(parentId, Schema.SObjectType.Campaign);
+            cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];
         } else if (params.containsKey('rd')) {
             parentId = string.escapeSingleQuotes(params.get('rd'));
-            rd = (npe03__Recurring_Donation__c) getSObject(parentId, Schema.SObjectType.npe03__Recurring_Donation__c);
+            rd = [SELECT Id, Name FROM npe03__Recurring_Donation__c WHERE Id = :parentId];
         }
 
-    }
+        defaultAllo = new Allocation__c();
+        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :parentId OR Campaign__c = :parentId OR Recurring_Donation__c = :parentId];
 
-    //queries all fields for a generic sObject
-    public sObject getSObject (id objId, DescribeSObjectResult objResult) {
-        Map<String, Schema.SObjectField> fieldMap = objResult.fields.getMap();
-        list<String> fields = new list<String>();
-        fields.addAll(fieldMap.keySet());
-        String objQuery = 'SELECT ';
-        Integer i = 1;
-        for (String fld : fields) {
-            objQuery += fld;
-            if (i != fields.size()) objQuery += ', ';
-            i += 1;
+        //find default allocation if enabled, remove from list
+        if (settings.Default_Allocations_Enabled__c && opp!=null) {
+            for (integer i=0; i<listAllo.size(); i++) {
+                if (listAllo[i].General_Accounting_Unit__c == settings.Default__c) {
+                    defaultAllo = listAllo[i];
+                    listAllo.remove(i);
+                    break;
+                }
+            }
         }
-        objQuery += ' FROM ' + objResult.getName() + ' WHERE Id = \''+objId+'\'';
-        sObject result = database.query(objQuery);
-        return result;
-    }
 
+        if (listAllo.isEmpty())
+            addRow();
+    }
 }

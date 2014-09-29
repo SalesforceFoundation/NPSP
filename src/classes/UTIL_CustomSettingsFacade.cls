@@ -535,9 +535,8 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
         if (allocationsSettings == null)
-            allocationsSettings = Allocations_Settings__c.getInstance();
+            allocationsSettings = getOrgAllocationsSettings();
 
-        allocationsSettings.Allocations_Enabled__c = mySettings.Allocations_Enabled__c;
         allocationsSettings.Default_Allocations_Enabled__c = mySettings.Default_Allocations_Enabled__c;
         allocationsSettings.Default__c = mySettings.Default__c;
         allocationsSettings.Excluded_Opp_RecTypes__c = mySettings.Excluded_Opp_RecTypes__c;
@@ -554,8 +553,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             allocationsSettings = Allocations_Settings__c.getInstance();
 
             if (allocationsSettings.Id == null) {
-                configAllocationsSettings(allocationsSettings);
-                upsert allocationsSettings;
+                allocationsSettings = getOrgAllocationsSettings();
             }
         }
         if (allocationsSettings.Rollup_N_Day_Value__c == null)
@@ -579,7 +577,6 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static void configAllocationsSettings(Allocations_Settings__c allosettings) {
         //disable allocations by default
-        allosettings.Allocations_Enabled__c = false;
         allosettings.Default_Allocations_Enabled__c = false;
         allosettings.Default__c = null;
         allosettings.Excluded_Opp_RecTypes__c = null;

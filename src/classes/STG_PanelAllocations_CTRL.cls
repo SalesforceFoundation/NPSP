@@ -37,6 +37,12 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
     public override string idPanel() { return 'idPanelAllocations'; }
 
+    public boolean isRunningBatch { get; set; }
+
+    public STG_PanelAllocations_CTRL() {
+        isRunningBatch = false;
+    }
+
     //generates a list of SelectOptions for all General Accounting Units to allow the user to select a default.
     static public list<SelectOption> listSOGeneralAccountingUnitIds {
         get {
@@ -75,12 +81,19 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     //this method runs each time the user selects the "Enable Allocations" checkbox
     //if no General Accounting Units exist, create one, then blank out the property
     //so that the rerender queries for the newly created GAU
-    public pagereference enableAllocations() {
+    public pagereference enableDefaultAllocations() {
         if (listSOGeneralAccountingUnitIds.size() == 1 && listSOGeneralAccountingUnitIds[0].getValue()=='') {
             General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='General');
             insert gau;
             listSOGeneralAccountingUnitIds = null;
         }
+        return null;
+    }
+
+    public PageReference runBatch() {
+        // run batch rollup
+        isRunningBatch = true;
+        id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         return null;
     }
 }
