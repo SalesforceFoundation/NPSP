@@ -429,6 +429,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
                 di.Contact1ImportStatus__c = 'Created';
+                di.Contact1_Preferred_Email__c = strPreferredEmail(di, 1);
+                di.Contact1_Preferred_Phone__c = strPreferredPhone(di, 1);
             }
             // make sure all dikeys for that contact are in the map
             for (string diKey : listDiKey) 
@@ -442,6 +444,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
                 di.Contact2ImportStatus__c = 'Created';
+                di.Contact2_Preferred_Email__c = strPreferredEmail(di, 2);
+                di.Contact2_Preferred_Phone__c = strPreferredPhone(di, 2);
             }
             // make sure all dikeys for that contact are in the map
             for (string diKey : listDiKey) 
@@ -449,6 +453,59 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    // utility to return the Preferred Email if only one email is set in the di.
+    private string strPreferredEmail(DataImport__c di, integer iCon) {
+    	string strPreferred = null;
+    	string strCx = UTIL_Namespace.StrTokenNSPrefix('Contact' + string.valueOf(iCon));
+    	
+        if (di.get(strCx + '_Preferred_Email__c') != null) {
+            return string.valueOf(di.get(strCx + '_Preferred_Email__c'));
+        }    
+    	if (di.get(strCx + '_Personal_Email__c') != null) {
+            strPreferred = 'Personal';
+    	}
+        if (di.get(strCx + '_Work_Email__c') != null) {
+            if (strPreferred != null)
+                return null;
+            strPreferred = 'Work';
+        }
+        if (di.get(strCx + '_Alternate_Email__c') != null) {
+            if (strPreferred != null)
+                return null;
+            strPreferred = 'Alternate';
+        }
+        return strPreferred;
+    }
+    
+    // utility to return the Preferred Phone if only one phone is set in the di.
+    private string strPreferredPhone(DataImport__c di, integer iCon) {
+        string strPreferred = null;
+        string strCx = UTIL_Namespace.StrTokenNSPrefix('Contact' + string.valueOf(iCon));
+        
+        if (di.get(strCx + '_Preferred_Phone__c') != null) {
+            return string.valueOf(di.get(strCx + '_Preferred_Phone__c'));
+        }    
+        if (di.get(strCx + '_Home_Phone__c') != null) {
+            strPreferred = 'Home';
+        }
+        if (di.get(strCx + '_Work_Phone__c') != null) {
+            if (strPreferred != null)
+                return null;
+            strPreferred = 'Work';
+        }
+        if (di.get(strCx + '_Mobile_Phone__c') != null) {
+            if (strPreferred != null)
+                return null;
+            strPreferred = 'Mobile';
+        }
+        if (di.get(strCx + '_Other_Phone__c') != null) {
+            if (strPreferred != null)
+                return null;
+            strPreferred = 'Other';
+        }
+        return strPreferred;
+    }
+    
     // utility to return the dikeys for a given contact.
     private list<string> listDiKeyContact(Contact con) {
         if (con == null)
@@ -489,13 +546,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     	return listDIKeyCx(di, 'Contact2');
     }
     private list<string> listDiKeyCx(DataImport__c di, string strCx) {
-        list<string> listDiKey = new list<string>();
+        set<string> setDiKey = new set<string>(); // use set to avoid duplicate keys
 
         // we nee the Contact CustomId key to always be checked first when matching
         string strUnique; 
         string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
         if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix))) != null) {
-            listDiKey.add(strUnique);
+            setDiKey.add(strUnique);
         }
 
         // now create any other dikeys
@@ -511,15 +568,15 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         if (isEmailInContactMatchRules) {
         	string strEmail;
             if ((strEmail = string.valueOf(di.get(strCx + '_Personal_Email__c'))) != null)
-                listDiKey.add(strPrefix + strEmail);
+                setDiKey.add(strPrefix + strEmail);
             if ((strEmail = string.valueOf(di.get(strCx + '_Work_Email__c'))) != null)
-                listDiKey.add(strPrefix + strEmail);
+                setDiKey.add(strPrefix + strEmail);
             if ((strEmail = string.valueOf(di.get(strCx + '_Alternate_Email__c'))) != null)
-                listDiKey.add(strPrefix + strEmail);
+                setDiKey.add(strPrefix + strEmail);
         } else if (strPrefix != '||') {
-            listDiKey.add(strPrefix);
+            setDiKey.add(strPrefix);
         }
-        return listDiKey;        
+        return new list<string>(setDiKey);        
     }
     
     // utility that finds a contact in our map, by matching against all the contact dikeys
