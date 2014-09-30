@@ -243,6 +243,7 @@ npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
 		<updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
 		<updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
 		<updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
+		<!-- <updateMetaXmlApi dir="${basedir}/src" apiVersion="${cumulusci.package.apiVersion}" /> -->
 	</target>
 
 </project>
