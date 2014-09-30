@@ -61,7 +61,6 @@
     </target>
 
     <!-- This is only overridden for now until we start using updateMetaXml to also set api version -->
-<!--
     <target name="updateMetaXml">
         <for list="${required.packages}" delimiter="," param="packageNamespace">
             <sequential>
@@ -69,5 +68,4 @@
             </sequential>
         </for>
     </target>
--->
 </project>
