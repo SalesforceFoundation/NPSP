@@ -1,248 +1,73 @@
 <project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
 
+    <loadproperties srcFile="${basedir}/version.properties"/>
 
-	<import file="../CumulusCI/build/build.xml" />
+    <import file="../CumulusCI/build/build.xml" />
 
-	<!-- Cumulus specific macros -->
-	<macrodef name="getPackageVersions" description="Gets the version for all installed packages">
-		<sequential>
-			<delete dir="${basedir}/installedPackages"/>
-			<mkdir dir="${basedir}/installedPackages"/>
+    <target name="preUpdateRequiredPackages">
+        <!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
+        <if>
+            <and>
+                <not>
+                    <equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" />
+                </not>
+                <or>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="version.npe01" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npo02.versionNumber}" arg2="version.npo02" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe03.versionNumber}" arg2="version.npe03" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe4.versionNumber}" arg2="version.npe4" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe5.versionNumber}" arg2="version.npe5" />
+                    </bool>
+                </or>
+            </and>
+            <then>
+                <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber} to allow for downgrade</echo>
+                <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />
 
-			<sf:bulkRetrieve
-            username="${sf.username}"
-            password="${sf.password}"
-            metadataType="InstalledPackage"
-            retrieveTarget="${basedir}/installedPackages"/>
+                <!-- Override the cached installed version of npsp so we don't have to fetch versions again -->
+                <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
+            </then>
+        </if>
 
-			<getPackageVersion namespace="npe01" refresh="false" />
-			<getPackageVersion namespace="npo02" refresh="false" />
-			<getPackageVersion namespace="npe03" refresh="false" />
-			<getPackageVersion namespace="npe4" refresh="false" />
-			<getPackageVersion namespace="npe5" refresh="false" />
-			<getPackageVersion namespace="npsp" refresh="false" />
+        <!-- npo02 depends on npe01 so we have to uninstall npo02 first if npo02 needs downgraded -->
+        <if>
+            <and>
+                <!-- npo02 is installed -->
+                <not>
+                    <equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" />
+                </not>
+                <!-- and npe01 need downgraded -->
+                <bool>
+                    <isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" />
+                </bool>
+            </and>
+            <then>
+                <echo>Uninstalling npo02 ${InstalledPackage.npe01.versionNumber} to allow for npe01 downgrade</echo>
+                <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}" />
 
-			<echo>Dependent Package Versions:
--------------------------------
-npe01: ${InstalledPackage.npe01.versionNumber} (${version.npe01} required)
-npo02: ${InstalledPackage.npo02.versionNumber} (${version.npo02} required)
-npe03: ${InstalledPackage.npe03.versionNumber} (${version.npe03} required)
-npe4: ${InstalledPackage.npe4.versionNumber} (${version.npe4} required)
-npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
-npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
+                <!-- Override the cached installed version of npo02 so we don't have to fetch versions again -->
+                <var name="InstalledPackage.npo02.versionNumber" value="Not Installed" />
+            </then>
+        </if>
+    </target>
 
-        </echo>
-
-			<delete dir="${basedir}/installedPackages"/>
-
-		</sequential>
-	</macrodef>
-
-
-	<macrodef name="updateDependentPackages">
-		<sequential>
-			<getPackageVersions />
-
-			<!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
-			<if>
-				<and>
-					<not>
-						<equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" />
-					</not>
-					<or>
-						<bool>
-							<isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="version.npe01" />
-						</bool>
-						<bool>
-							<isgreaterthan arg1="${InstalledPackage.npo02.versionNumber}" arg2="version.npo02" />
-						</bool>
-						<bool>
-							<isgreaterthan arg1="${InstalledPackage.npe03.versionNumber}" arg2="version.npe03" />
-						</bool>
-						<bool>
-							<isgreaterthan arg1="${InstalledPackage.npe4.versionNumber}" arg2="version.npe4" />
-						</bool>
-						<bool>
-							<isgreaterthan arg1="${InstalledPackage.npe5.versionNumber}" arg2="version.npe5" />
-						</bool>
-					</or>
-				</and>
-				<then>
-					<echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber} to allow for downgrade</echo>
-					<uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />
-
-					<!-- Override the cached installed version of npsp so we don't have to fetch versions again -->
-					<var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
-				</then>
-			</if>
-
-			<!-- npo02 depends on npe01 so we have to uninstall npo02 first if npo02 needs downgraded -->
-			<if>
-				<and>
-					<!-- npo02 is installed -->
-					<not>
-						<equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" />
-					</not>
-					<!-- and npe01 need downgraded -->
-					<bool>
-						<isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" />
-					</bool>
-				</and>
-				<then>
-					<echo>Uninstalling npo02 ${InstalledPackage.npe01.versionNumber} to allow for npe01 downgrade</echo>
-					<uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}" />
-
-					<!-- Override the cached installed version of npo02 so we don't have to fetch versions again -->
-					<var name="InstalledPackage.npo02.versionNumber" value="Not Installed" />
-				</then>
-			</if>
-
-			<updatePackageVersion namespace="npe01" version="${version.npe01}" />
-			<updatePackageVersion namespace="npo02" version="${version.npo02}" />
-			<updatePackageVersion namespace="npe03" version="${version.npe03}" />
-			<updatePackageVersion namespace="npe4" version="${version.npe4}" />
-			<updatePackageVersion namespace="npe5" version="${version.npe5}" />
-			<updatePackageVersion namespace="npsp" version="${version.npsp}" />
-
-		</sequential>
-	</macrodef>
-
-	<!-- Deploys the latest managed beta (UAT) release to an org -->
-	<!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
-	<target name="deployManagedUAT">
-		<property environment="env" />
-
-		<echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
-		<if>
-			<and>
-				<isset property="env.BUILD_COMMIT" />
-				<not>
-					<equals arg1="env.BUILD_COMMIT" arg2="" />
-				</not>
-				<isset property="env.PACKAGE_VERSION" />
-				<not>
-					<equals arg1="env.PACKAGE_VERSION" arg2="" />
-				</not>
-			</and>
-			<then>
-				<!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
-				<property name="managed_uat_tag" value="${env.BUILD_COMMIT}" />
-				<property name="version.npsp.uat" value="${env.PACKAGE_VERSION}" />
-				<echo>Building with environment variables: BUILD_COMMIT=${managed_uat_tag}, PACKAGE_VERSION=${version.npsp.uat}</echo>
-			</then>
-			<else>
-				<!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
-				<!-- Get the latest beta release tag name -->
-				<get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta/tag" dest="${basedir}/managed_uat_tag" />
-				<loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
-				<delete file="${basedir}/managed_uat_tag" />
-
-				<!-- Get the latest beta release version number -->
-				<get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta" dest="${basedir}/version_uat" />
-				<loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
-				<delete file="${basedir}/version_uat" />
-			</else>
-		</if>
-
-		<!-- Fetch the version.properties file for the release from GitHub -->
-		<get src="${cumulusci.github.url.raw}/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
-
-		<!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.uat file -->
-		<var name="version.npe01" unset="true" />
-		<var name="version.npo02" unset="true" />
-		<var name="version.npe03" unset="true" />
-		<var name="version.npe4" unset="true" />
-		<var name="version.npe5" unset="true" />
-		<loadproperties srcFile="${basedir}/version.properties.uat"/>
-		<delete file="${basedir}/version.properties.uat" />
-
-		<!-- At this point, version.npsp is set to Not Install.  Call updateDependentPackages to install the correct packages and uninstall the current Cumulus beta version -->
-		<updateDependentPackages />
-
-		<!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-		<antcall target="deployManagedUnpackagedPre" />
-
-		<!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
-		<var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
-		<var name="version.npsp" value="${version.npsp.uat}" />
-
-		<!-- This call should only install the beta package -->
-		<antcall target="updateDependentPackages" />
-
-		<!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-		<antcall target="deployManagedUnpackagedPost" />
-
-		<antcall target="uninstallUnpackagedPost" />
-
-	</target>
-
-	<!-- Deploys the latest production managed release to an org -->
-	<!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
-	<target name="deployManaged">
-		<property environment="env" />
-
-		<echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
-		<if>
-			<and>
-				<isset property="env.BUILD_COMMIT" />
-				<not>
-					<equals arg1="env.BUILD_COMMIT" arg2="" />
-				</not>
-				<isset property="env.PACKAGE_VERSION" />
-				<not>
-					<equals arg1="env.PACKAGE_VERSION" arg2="" />
-				</not>
-			</and>
-			<then>
-				<!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
-				<property name="managed_prod_tag" value="${env.BUILD_COMMIT}" />
-				<property name="version.npsp.prod" value="${env.PACKAGE_VERSION}" />
-				<echo>Building with environment variables: BUILD_COMMIT=${managed_prod_tag}, PACKAGE_VERSION=${version.npsp.prod}</echo>
-			</then>
-			<else>
-				<!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
-				<!-- Get the latest production release tag name -->
-				<get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/tag" dest="${basedir}/managed_prod_tag" />
-				<loadfile property="managed_prod_tag" srcfile="${basedir}/managed_prod_tag" />
-				<delete file="${basedir}/managed_prod_tag" />
-
-				<!-- Get the latest production release version number -->
-				<get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version" dest="${basedir}/version_prod" />
-				<loadfile property="version.npsp.prod" srcfile="${basedir}/version_prod" />
-				<delete file="${basedir}/version_prod" />
-			</else>
-		</if>
-
-		<!-- Fetch the version.properties file for the release from GitHub -->
-		<get src="${cumulusci.github.url.raw}/${managed_prod_tag}/version.properties" dest="${basedir}/version.properties.prod" />
-
-		<!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.prod file -->
-		<var name="version.npe01" unset="true" />
-		<var name="version.npo02" unset="true" />
-		<var name="version.npe03" unset="true" />
-		<var name="version.npe4" unset="true" />
-		<var name="version.npe5" unset="true" />
-		<loadproperties srcFile="${basedir}/version.properties.prod"/>
-		<delete file="${basedir}/version.properties.prod" />
-
-		<!-- Now set the version.npsp property to the prod version -->
-		<var name="version.npsp" value="${version.npsp.prod}" />
-
-		<!-- Run updateDependentPackages to install the correct versions of the 5 original NPSP packages and the Cumulus package -->
-		<antcall target="updateDependentPackages" />
-
-		<!-- Deploy any unpackaged metadata bundles needed for builds -->
-		<antcall target="deployUnpackagedPre" />
-		<antcall target="deployUnpackagedPost" />
-
-	</target>
-
-	<target name="updateMetaXml">
-		<updateMetaXml dir="${basedir}/src" namespace="npe01" version="${version.npe01}" />
-		<updateMetaXml dir="${basedir}/src" namespace="npo02" version="${version.npo02}" />
-		<updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
-		<updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
-		<updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
-	</target>
-
+    <!-- This is only overridden for now until we start using updateMetaXml to also set api version -->
+<!--
+    <target name="updateMetaXml">
+        <for list="${required.packages}" delimiter="," param="packageNamespace">
+            <sequential>
+                <updateMetaXml dir="${basedir}/src" namespace="@{packageNamespace}" version="${version.@{packageNamespace}}" />
+            </sequential>
+        </for>
+    </target>
+-->
 </project>
