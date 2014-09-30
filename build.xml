@@ -1,7 +1,7 @@
 <project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
 
 
-	<import file="../CumulusCI/build/build.xml" />
+	<import file="${cumulusci.project.path}/build/build.xml" />
 
 	<!-- Cumulus specific macros -->
 	<macrodef name="getPackageVersions" description="Gets the version for all installed packages">
