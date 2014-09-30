@@ -1194,4 +1194,101 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Matched', listDI[1].Account1ImportStatus__c);        
     }
 
+    /*********************************************************************************************************
+    operation:
+        import new contacts with a variety of emails 
+    verify:
+        correct preferred email set for contacts with only one email specified
+        preferred email left null for contants with multiple emails specified
+    **********************************************************************************************************/            
+    static testMethod void testPreferredEmailAutoSetting() {
+        if (strTestOnly != '*' && strTestOnly != 'testPreferredEmailAutoSetting') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c0', 'C0'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        // switch c1 to work email
+        listDI[1].Contact1_Work_Email__c = 'c1@c1.com';
+        listDI[1].Contact1_Personal_Email__c = null;
+        // switch c2 to alt email
+        listDI[2].Contact1_Alternate_Email__c = 'c2@c2.com';
+        listDI[2].Contact1_Personal_Email__c = null;
+        // c3 gets multiple emails
+        listDI[3].Contact1_Work_Email__c = 'c3@c3.com';
+        system.debug('****DJH: listDI' + listDI);
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, npe01__Preferred_Email__c from Contact order by Name];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('Personal', listCon[0].npe01__Preferred_Email__c);
+        system.assertEquals('Work', listCon[1].npe01__Preferred_Email__c);
+        system.assertEquals('Alternate', listCon[2].npe01__Preferred_Email__c);
+        system.assertEquals(null, listCon[3].npe01__Preferred_Email__c);
+      
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact1_Preferred_Email__c from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(4, listDI.size());
+        for (integer i = 0; i < 4; i++) {
+            system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
+            system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+            system.assertEquals(listDI[i].Contact1_Preferred_Email__c, listCon[i].npe01__Preferred_Email__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import new contacts with a variety of phones 
+    verify:
+        correct preferred phone set for contacts with only one phone specified
+        preferred Phone left null for contants with multiple Phones specified
+    **********************************************************************************************************/            
+    static testMethod void testPreferredPhoneAutoSetting() {
+        if (strTestOnly != '*' && strTestOnly != 'testPreferredPhoneAutoSetting') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c0', 'C0'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        listDI.add(newDI('c4', 'C4'));
+        listDI[0].Contact1_Home_Phone__c = '000-0000';
+        listDI[1].Contact1_Work_Phone__c = '111-1111';
+        listDI[2].Contact1_Mobile_Phone__c = '222-2222';
+        listDI[3].Contact1_Other_Phone__c = '333-3333';
+        listDI[4].Contact1_Mobile_Phone__c = '444-4444';
+        listDI[4].Contact1_Other_Phone__c = '555-5555';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, npe01__PreferredPhone__c from Contact order by Name];
+        system.assertEquals(5, listCon.size());
+        system.assertEquals('Home', listCon[0].npe01__PreferredPhone__c);
+        system.assertEquals('Work', listCon[1].npe01__PreferredPhone__c);
+        system.assertEquals('Mobile', listCon[2].npe01__PreferredPhone__c);
+        system.assertEquals('Other', listCon[3].npe01__PreferredPhone__c);
+        system.assertEquals(null, listCon[4].npe01__PreferredPhone__c);
+      
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact1_Preferred_Phone__c from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(5, listDI.size());
+        for (integer i = 0; i < 5; i++) {
+            system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
+            system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+            system.assertEquals(listDI[i].Contact1_Preferred_Phone__c, listCon[i].npe01__PreferredPhone__c);
+        }
+    }
+
 }
