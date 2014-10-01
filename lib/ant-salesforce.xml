@@ -38,7 +38,7 @@
           <mkdir dir="${basedir}/installdeploy"/>
           <mkdir dir="${basedir}/installdeploy"/>         
           <mkdir dir="${basedir}/installdeploy/installedPackages"/>
-          <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>29.0</version></Package>]]></echo>
+          <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>${cumulusci.package.apiVersion}</version></Package>]]></echo>
           <echo file="${basedir}/installdeploy/installedPackages/@{namespace}.installedPackage"><![CDATA[<InstalledPackage xmlns="http://soap.sforce.com/2006/04/metadata"><versionNumber>@{version}</versionNumber>${passwordElement}</InstalledPackage>]]></echo>
           <sf:deploy deployRoot="${basedir}/installdeploy" username="@{username}" password="@{password}" maxPoll="500" />
           <delete dir="${basedir}/installdeploy"/>
@@ -56,8 +56,8 @@
           <mkdir dir="${basedir}/installdeploy"/>
           <mkdir dir="${basedir}/installdeploy"/>         
           <mkdir dir="${basedir}/installdeploy/installedPackages"/>
-          <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>29.0</version></Package>]]></echo>
-          <echo file="${basedir}/installdeploy/destructiveChanges.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>29.0</version></Package>]]></echo>
+          <echo file="${basedir}/installdeploy/package.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>${cumulusci.package.apiVersion}</version></Package>]]></echo>
+          <echo file="${basedir}/installdeploy/destructiveChanges.xml"><![CDATA[<Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>@{namespace}</members><name>InstalledPackage</name></types><version>${cumulusci.package.apiVersion}</version></Package>]]></echo>
           <echo file="${basedir}/installdeploy/installedPackages/@{namespace}.installedPackage"><![CDATA[<InstalledPackage xmlns="http://soap.sforce.com/2006/04/metadata"><versionNumber>@{version}</versionNumber></InstalledPackage>]]></echo>
           <sf:deploy deployRoot="${basedir}/installdeploy" username="@{username}" password="@{password}" maxPoll="500" />
       </sequential>
@@ -207,7 +207,7 @@
   <macrodef name="buildPackageXmlFromDir" description="Runs through a directory of metadata and builds a package.xml format file from the contents">
     <attribute name="dir" description="The directory containing metadata (i.e. package src)" />
     <attribute name="xmlfile" description="The output file path" />
-    <attribute name="version" description="The value for the version element of the package.xml file to set the api version (i.e. 29.0)" />
+    <attribute name="version" description="The value for the version element of the package.xml file to set the api version (i.e. ${cumulusci.package.apiVersion})" />
     <attribute name="package" description="If provided, a fullName element will be added to the file so it is deployed into a Package in the target org" default="NOTSET" />
     <attribute name="exclude" description="If provided, a list of filenames to skip." default="" />
   	<attribute name="installClass" description="If provided, a installClass element will be added to the file to specify a class to run when installing the package." default="NOTSET" />
@@ -238,6 +238,12 @@
             <case value="components">
               <property name="typename" value="ApexComponent" />
             </case>
+            <case value="dashboards">
+              <property name="typename" value="Dashboard" />
+            </case>
+            <case value="documents">
+              <property name="typename" value="Document" />
+            </case>
             <case value="labels">
               <property name="typename" value="CustomLabel" />
             </case>
@@ -256,6 +262,9 @@
             <case value="remoteSiteSettings">
               <property name="typename" value="RemoteSiteSetting" />
             </case>
+            <case value="reports">
+              <property name="typename" value="Report" />
+            </case>
             <case value="staticresources">
               <property name="typename" value="StaticResource" />
             </case>
@@ -265,12 +274,17 @@
             <case value="triggers">
               <property name="typename" value="ApexTrigger" />
             </case>
+            <case value="workflows">
+              <property name="typename" value="Workflow" />
+            </case>
             <default/>
           </switch>
 
           <if>
             <isset property="typename" />
             <then>
+
+              <var name="parents_included" unset="true" />
 
               <!-- Write a new <types/> section for the meta type -->
               <echo file="@{xmlfile}" append="true">  &lt;types&gt;${line.separator}</echo>
@@ -279,20 +293,57 @@
               <for param="file">
                 <path>
                   <!-- exclude xml files and namespaced metadata files as well as any manual excludes -->
-                  <fileset dir="@{typedir}" includes="**/*" excludes="*.xml *__*__c.object @{exclude}" />
+                  <fileset dir="@{typedir}" includes="**/*.*" excludes="*.xml *-meta.xml *__*__c.object @{exclude}" />
                 </path>
                 <sequential>
+                  <var name="component_file" unset="true" />
+                  <var name="component_file_dirname" unset="true" />
+                  <var name="component_file_parent" unset="true" />
+
                   <!-- get basename and basename without suffix for file. propertyregex is used since we don't know the file suffix from only the dir name (i.e. classes vs .class) -->
                   <basename property="component_file" file="@{file}" />
                   <propertyregex property="component" input="${component_file}" regexp="(.*)\.(.*)" select="\1" />
 
+                  <!-- get the component file's parent directory.  if the parent is not the metatype, include it (i.e. Reports and Dashboards) -->
+                  <dirname property="component_file_dirname" file="@{file}" />
+                  <basename property="component_file_parent" file="${component_file_dirname}" />
+
                   <!-- If the file is not in the exclude list, add it to the package.xml -->
                   <if>
-                    <not><contains string="@{exclude}" substring="${component_file}" /></not>
+                    <and>
+                      <not><contains string="@{exclude}" substring="${component_file}" /></not>
+                      <not><contains string="${component_file}" substring="-meta.xml" /></not>
+                    </and>
                     <then>
                       <!-- Write the <members/> element -->
-                      <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component}&lt;/members&gt;${line.separator}</echo>
-    
+                      <if>
+                        <equals arg1="${metatype}" arg2="${component_file_parent}" />
+                        <then>
+                          <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component}&lt;/members&gt;${line.separator}</echo>
+                        </then>
+                        <else>
+                          <!-- This type contains metadata grouped into subdirectories under typedir.  Include the dir once and prefix all files with it -->
+                          <if>
+                            <not><contains string="${parents_included}" substring=",${component_file_parent}," /></not>
+                            <then>
+                              <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component_file_parent}&lt;/members&gt;${line.separator}</echo>
+                              <var name="parents_included" value="${parents_included},${component_file_parent}," />
+                            </then>
+                          </if>
+                          <!-- Some metadata types, such as Document, require the suffix -->
+                          <if>
+                            <or>
+                              <equals arg1="${typename}" arg2="Document" />
+                            </or>
+                            <then>
+                              <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component_file_parent}/${component_file}&lt;/members&gt;${line.separator}</echo>
+                            </then>
+                            <else>
+                              <echo file="@{xmlfile}" append="true">    &lt;members&gt;${component_file_parent}/${component}&lt;/members&gt;${line.separator}</echo>
+                            </else>
+                          </if>
+                        </else>
+                      </if> 
                     </then>
                   </if>
 
@@ -401,9 +452,17 @@
               </xslt>
               <delete file="@{xslt}.rendered" />
 
-              <!-- Prepend member names with OBJECT. -->
+              <!-- Prepend member names with object. -->
               <if>
                 <equals arg1="@{suffix}" arg2="object" />
+                <then>
+                  <replaceregexp file="@{dir}/${parent_file}.@{typename}" match="members>(.*)./members>" replace="members>${parent}.\1&lt;/members>${line.separator}" flags="g" />
+                </then>
+              </if>
+
+              <!-- Prepend member names with workflow. -->
+              <if>
+                <equals arg1="@{suffix}" arg2="workflow" />
                 <then>
                   <replaceregexp file="@{dir}/${parent_file}.@{typename}" match="members>(.*)./members>" replace="members>${parent}.\1&lt;/members>${line.separator}" flags="g" />
                 </then>
@@ -473,7 +532,10 @@
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="ListView" element="listViews" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="NamedFilter" element="namedFilters" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="RecordType" element="recordTypes" />
+      <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="ValidationRule" element="validationRules" />
       <addMetadataSubType dir="${basedir}/src/objects" xmlfile="${basedir}/src/package.xml.new" typename="WebLink" element="webLinks" />
+      <addMetadataSubType dir="${basedir}/src/workflows" suffix="workflow" xmlfile="${basedir}/src/package.xml.new" typename="WorkflowFieldUpdate" element="fieldUpdates" parentelement="Workflow" />
+      <addMetadataSubType dir="${basedir}/src/workflows" suffix="workflow" xmlfile="${basedir}/src/package.xml.new" typename="WorkflowRule" element="rules" parentelement="Workflow" />
 
       <move file="${basedir}/src/package.xml.new" tofile="${basedir}/src/package.xml" />
     </sequential>
@@ -496,7 +558,7 @@
       <!-- Create the package.xml to accompany the destructiveChanges.xml -->
       <echo file="@{dir}/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-<version>29.0</version>
+<version>${cumulusci.package.apiVersion}</version>
 </Package>]]></echo>
 
       <!-- initialize the destructiveChanges.xml file -->
@@ -556,7 +618,7 @@
 
       <!-- Finalize the destructiveChanges.xml file -->
       <echo file="@{dir}/destructiveChanges.xml" append="true">${dest.types.xml}</echo>
-      <echo file="@{dir}/destructiveChanges.xml" append="true">  &lt;version&gt;29.0&lt;/version&gt;${line.separator}</echo>
+      <echo file="@{dir}/destructiveChanges.xml" append="true">  &lt;version&gt;${cumulusci.package.apiVersion}&lt;/version&gt;${line.separator}</echo>
       <echo file="@{dir}/destructiveChanges.xml" append="true">&lt;/Package&gt;</echo>
 
       <!-- clean up -->
@@ -580,7 +642,7 @@
       <!-- Create the package.xml to accompany the destructiveChanges.xml -->
       <echo file="@{dir}/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-<version>29.0</version>
+<version>${cumulusci.package.apiVersion}</version>
 </Package>]]></echo>
 
       <!-- Add the package name to the package.xml file -->
@@ -588,7 +650,7 @@
 
       <!-- Build the destructiveChanges.xml file by walking the srcdir and adding all metadata -->
       <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
-      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="29.0" exclude="${metadata_whitelist} CustomLabels.labels" />
+      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="${metadata_whitelist} CustomLabels.labels" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CompactLayout" element="compactLayouts" />
@@ -598,7 +660,10 @@
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="ValidationRule" element="validationRules" />
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="WebLink" element="webLinks" />
+      <addMetadataSubType dir="@{srcdir}/workflows" suffix="workflow" xmlfile="@{dir}/destructiveChanges.xml" typename="WorkflowFieldUpdate" element="fieldUpdates" />
+      <addMetadataSubType dir="@{srcdir}/workflows" suffix="workflow" xmlfile="@{dir}/destructiveChanges.xml" typename="WorkflowRule" element="rules" />
 
     </sequential>
   </macrodef>
@@ -617,12 +682,12 @@
       <!-- Create the package.xml to accompany the destructiveChanges.xml -->
       <echo file="@{dir}/unpackaged/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-<version>29.0</version>
+<version>${cumulusci.package.apiVersion}</version>
 </Package>]]></echo>
 
       <!-- Build the destructiveChanges.xml file by walking the unpackaged directory and adding all metadata -->
       <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
-      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="29.0" exclude="CustomLabels.labels" />
+      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="CustomLabels.labels" />
      
       <!-- Copy the package manifest used to retrieve standard objects into srcdir and create an objects subfolder-->
       <copy file="@{srcdir}/standard/package.xml" todir="@{dir}/standard" />
@@ -656,7 +721,10 @@
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ListView" element="listViews" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="NamedFilter" element="namedFilters" />
       <!--<addMetadataSubType dir="@{srcdir}/standard" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="RecordType" element="recordTypes" />-->
+      <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="ValidationRule" element="validationRules" />
       <addMetadataSubType dir="@{srcdir}/standard/objects" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="WebLink" element="webLinks" />
+      <addMetadataSubType dir="@{srcdir}/unpackaged/workflows" suffix="workflow" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="WorkflowFieldUpdate" element="fieldUpdates" />
+      <addMetadataSubType dir="@{srcdir}/unpackaged/workflows" suffix="workflow" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" typename="WorkflowRule" element="rules" />
 
     </sequential>
 
@@ -695,6 +763,32 @@
         </sequential>
       </for>
       <delete file="lib/update_meta_xml.xsl.rendered" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="updateMetaXmlApi" description="Updates all apiVersion elements in all *-meta.xml files in target directory">
+    <attribute name="dir" description="The package directory containing the *-meta.xml files to update" />
+    <attribute name="apiVersion" description="The apiVersion value (i.e. 31.0)" />
+    <sequential>
+
+      <for param="file">
+        <path>
+          <fileset dir="@{dir}" includes="**/*-meta.xml" />
+        </path>
+        <sequential>
+          <xslt in="@{file}" out="@{file}.updated" style="lib/update_meta_xml_api.xsl">
+            <param name="apiVersion" expression="@{apiVersion}" />
+          </xslt>
+          <if>
+            <not><filesmatch file1="@{file}" file2="@{file}.updated" /></not>
+            <then>
+              <echo>@{file} updated for @{namespace}</echo>
+              <move file="@{file}.updated" tofile="@{file}" />
+            </then>
+          </if>
+          <delete file="@{file}.updated" />
+        </sequential>
+      </for>
     </sequential>
   </macrodef>
 
