@@ -70,7 +70,7 @@ public without sharing class TDTM_DefaultConfig {
         // OpportunityContactRole support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'AfterInsert'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
         // HH Object support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
