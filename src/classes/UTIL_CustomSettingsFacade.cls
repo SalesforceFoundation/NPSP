@@ -310,7 +310,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
         hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
         hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit;Household Member';
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
