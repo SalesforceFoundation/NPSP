@@ -46,6 +46,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Batch_Data_Entry_Settings__c bdeSettings;
     static Addr_Verification_Settings__c addressVerificationSettings;
     static Household_Naming_Settings__c householdNamingSettings;
+    static Data_Import_Settings__c dataImportSettings;
     
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -57,6 +58,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Batch_Data_Entry_Settings__c orgBdeSettings;
     static Addr_Verification_Settings__c orgAddressVerificationSettings;
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
+    static Data_Import_Settings__c orgDataImportSettings;
     
     /**
      * Methods that will try retrieving the user-level custom settings. If no user-level custom
@@ -308,7 +310,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
         hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
         hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit;Household Member';
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
@@ -453,4 +455,33 @@ public without sharing class UTIL_CustomSettingsFacade {
     	upsert errorSettings;
     	return errorSettings;  
     }
+
+    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    public static Data_Import_Settings__c getOrgDataImportSettings() {
+        if (orgDataImportSettings == null) {
+            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
+            if (orgDataImportSettings.Id == null) {
+                configDataImportSettings(orgDataImportSettings);
+                upsert orgDataImportSettings;
+            }
+        }
+        return orgDataImportSettings;
+    }
+    
+    //zero-arguments method that will set custom setting defaults
+    public static Data_Import_Settings__c getDataImportSettings() {        
+        if (dataImportSettings == null) {
+            dataImportSettings = Data_Import_Settings__c.getInstance();
+            if (dataImportSettings.Id == null) 
+                dataImportSettings = getOrgDataImportSettings();
+        }
+        return dataImportSettings;
+    }
+    
+    private static void configDataImportSettings(Data_Import_Settings__c dis) {
+        dis.Batch_Size__c = 50;
+        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+    }
+
+
 }

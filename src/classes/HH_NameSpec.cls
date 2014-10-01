@@ -212,7 +212,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
-            string val = string.valueOf(con.get(strField));
+            string val = string.valueOf(con.get(strField.trim()));
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   

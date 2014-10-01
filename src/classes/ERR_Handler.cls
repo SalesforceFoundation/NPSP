@@ -31,7 +31,7 @@ public with sharing class ERR_Handler {
     
     private List<Error__c> errors = new List<Error__c>();
    
-    public enum Context {AFFL, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR}
+    public enum Context {AFFL, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
     
     private static String stackTrace;
     
