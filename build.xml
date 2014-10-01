@@ -2,7 +2,7 @@
 
     <loadproperties srcFile="${basedir}/version.properties"/>
 
-	<import file="${cumulusci.project.path}/build/build.xml" />
+	<import file="${env.CUMULUSCI_PATH}/build/build.xml" />
 
     <target name="preUpdateRequiredPackages">
         <!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
