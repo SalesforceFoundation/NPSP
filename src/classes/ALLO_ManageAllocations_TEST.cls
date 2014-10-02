@@ -35,10 +35,7 @@
 @isTest
 private class ALLO_ManageAllocations_TEST {
 
-
-
     private static string strTestOnly = '*';
-    private static Allocations_Settings__c settings;	
 
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
@@ -50,30 +47,6 @@ private class ALLO_ManageAllocations_TEST {
 
         }
     }
-
-    /*@isTest static void foo() {
-        if (strTestOnly != '*' && strTestOnly != 'foo') return;
-
-        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
-        insert defaultGau;
-
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
-
-        Account acc = new Account(Name='foo');
-        insert acc;
-        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
-        insert opp;
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
-
-        PageReference pageRef = Page.ALLO_ManageAllocations;
-        Test.setCurrentPage(pageRef);
-        ApexPages.currentPage().getParameters().put('opp', opp.id);
-        ALLO_ManageAllocations_CTRL ctrl = new ALLO_ManageAllocations_CTRL();
-
-        //system.debug('LookHere: JSON ' + json.serializePretty(ctrl));
-        
-    }*/
 
     //run manage allocations page on an opportunity with no allocations
     //add and delete a row, insert an allocation

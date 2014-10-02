@@ -34,9 +34,6 @@
  */
 public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
-
-
-
     public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
             ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
@@ -67,7 +64,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     }
     
     public override string setParentObjName() {
-        return UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
+        return 'General_Accounting_Unit__c';
     }
 
     public virtual override list<RollupSpec> setRollupSpecs() {
