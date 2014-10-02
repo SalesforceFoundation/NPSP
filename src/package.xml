@@ -49,6 +49,9 @@
     <members>BDE_BatchEntry_TEST</members>
     <members>BDE_DescribeHelper_TEST</members>
     <members>BDE_DescribeHelper_UTIL</members>
+    <members>BDI_DataImport_BATCH</members>
+    <members>BDI_DataImport_CTRL</members>
+    <members>BDI_DataImport_TEST</members>
     <members>CAO_Constants</members>
     <members>CONV_Account_Conversion_BATCH</members>
     <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -202,6 +205,7 @@
     <members>ALLO_ManageAllocations</members>
     <members>ALLO_RollupBTN</members>
     <members>BDE_BatchEntry</members>
+    <members>BDI_DataImport</members>
     <members>CONV_Account_Conversion</members>
     <members>CON_ContactMerge</members>
     <members>HH_CampaignDedupeBTN</members>
@@ -348,6 +352,91 @@
     <members>Contact.Primary_Contact__c</members>
     <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
+    <members>DataImport__c.Account1ImportStatus__c</members>
+    <members>DataImport__c.Account1Imported__c</members>
+    <members>DataImport__c.Account1_City__c</members>
+    <members>DataImport__c.Account1_Country__c</members>
+    <members>DataImport__c.Account1_Name__c</members>
+    <members>DataImport__c.Account1_Phone__c</members>
+    <members>DataImport__c.Account1_State_Province__c</members>
+    <members>DataImport__c.Account1_Street__c</members>
+    <members>DataImport__c.Account1_Website__c</members>
+    <members>DataImport__c.Account1_Zip_Postal_Code__c</members>
+    <members>DataImport__c.Account2ImportStatus__c</members>
+    <members>DataImport__c.Account2Imported__c</members>
+    <members>DataImport__c.Account2_City__c</members>
+    <members>DataImport__c.Account2_Country__c</members>
+    <members>DataImport__c.Account2_Name__c</members>
+    <members>DataImport__c.Account2_Phone__c</members>
+    <members>DataImport__c.Account2_State_Province__c</members>
+    <members>DataImport__c.Account2_Street__c</members>
+    <members>DataImport__c.Account2_Website__c</members>
+    <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
+    <members>DataImport__c.ApexJobId__c</members>
+    <members>DataImport__c.Contact1ImportStatus__c</members>
+    <members>DataImport__c.Contact1Imported__c</members>
+    <members>DataImport__c.Contact1_Alternate_Email__c</members>
+    <members>DataImport__c.Contact1_Birthdate__c</members>
+    <members>DataImport__c.Contact1_Firstname__c</members>
+    <members>DataImport__c.Contact1_Home_Phone__c</members>
+    <members>DataImport__c.Contact1_Lastname__c</members>
+    <members>DataImport__c.Contact1_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact1_Other_Phone__c</members>
+    <members>DataImport__c.Contact1_Personal_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Phone__c</members>
+    <members>DataImport__c.Contact1_Salutation__c</members>
+    <members>DataImport__c.Contact1_Title__c</members>
+    <members>DataImport__c.Contact1_Work_Email__c</members>
+    <members>DataImport__c.Contact1_Work_Phone__c</members>
+    <members>DataImport__c.Contact2ImportStatus__c</members>
+    <members>DataImport__c.Contact2Imported__c</members>
+    <members>DataImport__c.Contact2_Alternate_Email__c</members>
+    <members>DataImport__c.Contact2_Birthdate__c</members>
+    <members>DataImport__c.Contact2_Firstname__c</members>
+    <members>DataImport__c.Contact2_Home_Phone__c</members>
+    <members>DataImport__c.Contact2_Lastname__c</members>
+    <members>DataImport__c.Contact2_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact2_Other_Phone__c</members>
+    <members>DataImport__c.Contact2_Personal_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Phone__c</members>
+    <members>DataImport__c.Contact2_Salutation__c</members>
+    <members>DataImport__c.Contact2_Title__c</members>
+    <members>DataImport__c.Contact2_Work_Email__c</members>
+    <members>DataImport__c.Contact2_Work_Phone__c</members>
+    <members>DataImport__c.DonationImportStatus__c</members>
+    <members>DataImport__c.DonationImported__c</members>
+    <members>DataImport__c.Donation_Amount__c</members>
+    <members>DataImport__c.Donation_Campaign_Name__c</members>
+    <members>DataImport__c.Donation_Date__c</members>
+    <members>DataImport__c.Donation_Description__c</members>
+    <members>DataImport__c.Donation_Donor__c</members>
+    <members>DataImport__c.Donation_Member_Level__c</members>
+    <members>DataImport__c.Donation_Membership_End_Date__c</members>
+    <members>DataImport__c.Donation_Membership_Origin__c</members>
+    <members>DataImport__c.Donation_Membership_Start_Date__c</members>
+    <members>DataImport__c.Donation_Name__c</members>
+    <members>DataImport__c.Donation_Record_Type_Name__c</members>
+    <members>DataImport__c.Donation_Stage__c</members>
+    <members>DataImport__c.Donation_Type__c</members>
+    <members>DataImport__c.FailureInformation__c</members>
+    <members>DataImport__c.HomeAddressImportStatus__c</members>
+    <members>DataImport__c.HomeAddressImported__c</members>
+    <members>DataImport__c.Home_City__c</members>
+    <members>DataImport__c.Home_Country__c</members>
+    <members>DataImport__c.Home_State_Province__c</members>
+    <members>DataImport__c.Home_Street__c</members>
+    <members>DataImport__c.Home_Zip_Postal_Code__c</members>
+    <members>DataImport__c.ImportedDate__c</members>
+    <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+    <members>DataImport__c.Payment_Method__c</members>
+    <members>DataImport__c.Status__c</members>
+    <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
+    <members>Data_Import_Settings__c.Batch_Size__c</members>
+    <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -452,6 +541,33 @@
     <members>alloSingleParent</members>
     <members>alloTotalExceedsOppAmt</members>
     <members>alloTotals</members>
+    <members>bdiAccountCustomIdError</members>
+    <members>bdiBatchException</members>
+    <members>bdiBtnClose</members>
+    <members>bdiComplete</members>
+    <members>bdiCompleteWithErrors</members>
+    <members>bdiContactCustomIdError</members>
+    <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameLname</members>
+    <members>bdiContactMatchFnameLnameEmail</members>
+    <members>bdiContactMatchLnameEmail</members>
+    <members>bdiDataImporterConfigTitle</members>
+    <members>bdiDataImporterDescription</members>
+    <members>bdiDataImporterInfoLine1</members>
+    <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine3</members>
+    <members>bdiDataImporterInfoLine4</members>
+    <members>bdiDataImporterInfoTitle</members>
+    <members>bdiDataImporterNumToProcess</members>
+    <members>bdiDataImporterTitle</members>
+    <members>bdiRecordsFailed</members>
+    <members>bdiRecordsImported</members>
+    <members>bdiRecordsProcessed</members>
+    <members>bdiRunBtn</members>
+    <members>bdiStatus</members>
+    <members>bdiStatusProcessed</members>
+    <members>bdiStatusProcessing</members>
+    <members>bdiTime</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
@@ -761,6 +877,8 @@
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
+    <members>DataImport__c</members>
+    <members>Data_Import_Settings__c</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
     <members>Fund__c</members>
@@ -776,12 +894,18 @@
     <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>DataImport__c</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <members>npe01__OppPayment__c</members>
     <members>npe4__Relationship__c</members>
     <members>npe5__Affiliation__c</members>
     <name>CustomTab</name>
+  </types>
+  <types>
+    <members>NPSP_Documents</members>
+    <members>NPSP_Documents/NPSP_Data_Import_Template_csv.csv</members>
+    <name>Document</name>
   </types>
   <types>
     <members>Account.BDE_Entry_FS</members>
@@ -803,6 +927,7 @@
     <members>Allocation__c-Allocation Layout</members>
     <members>Batch__c-Batch Layout</members>
     <members>Contact-Contact Layout</members>
+    <members>DataImport__c-Data Import Layout</members>
     <members>Error__c-Error Layout</members>
     <members>Fund__c-Fund Layout</members>
     <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
@@ -817,6 +942,10 @@
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
+    <members>DataImport__c.All</members>
+    <members>DataImport__c.Failed_Data_Imports</members>
+    <members>DataImport__c.Succesfully_Imported</members>
+    <members>DataImport__c.To_Be_Imported</members>
     <members>General_Accounting_Unit__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
@@ -860,6 +989,9 @@
   <types>
     <members>Allocation__c.Manage_Allocations</members>
     <members>Contact.Merge_Contacts</members>
+    <members>DataImport__c.Delete_All_Data_Import_Records</members>
+    <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
+    <members>DataImport__c.Process_Data_Import</members>
     <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
     <name>WebLink</name>
   </types>

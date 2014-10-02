@@ -417,6 +417,222 @@
         <value>Totals:</value>
     </labels>
     <labels>
+        <fullName>bdiAccountCustomIdError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiAccountCustomIdError</shortDescription>
+        <value>The Account Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
+    </labels>
+    <labels>
+        <fullName>bdiBatchException</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiBatchException</shortDescription>
+        <value>An error occurred during the process.  The following status was the first reported error:</value>
+    </labels>
+    <labels>
+        <fullName>bdiBtnClose</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiBtnClose</shortDescription>
+        <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>bdiComplete</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiComplete</shortDescription>
+        <value>- Completed</value>
+    </labels>
+    <labels>
+        <fullName>bdiCompleteWithErrors</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiCompleteWithErrors</shortDescription>
+        <value>- Errors</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactCustomIdError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactCustomIdError</shortDescription>
+        <value>The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactMatchEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchEmail</shortDescription>
+        <value>Email only</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactMatchFnameLname</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchFnameLname</shortDescription>
+        <value>First Name and Last Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactMatchFnameLnameEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchFnameLnameEmail</shortDescription>
+        <value>First Name, Last Name, and Email</value>
+    </labels>
+    <labels>
+        <fullName>bdiContactMatchLnameEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchLnameEmail</shortDescription>
+        <value>Last Name and Email</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterConfigTitle</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterConfigTitle</shortDescription>
+        <value>Configuration Options</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterDescription</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterDescription</shortDescription>
+        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Starter Pack</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine1</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDataImporterInfoLine1</shortDescription>
+        <value>Each import record can contain up to 2 Contacts, up to 2 Organizations, an optional Home Address, and an optional Donation.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine2</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterInfoLine2</shortDescription>
+        <value>Salesforce will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine3</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterInfoLine3</shortDescription>
+        <value>Salesforce will track any data import problems on individual import records. After resolving any issues, you can re-import those failed records without having to worry about creating duplicate records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine4</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterInfoLine4</shortDescription>
+        <value>The start of the data import may not begin immediately. Its processing depends on Salesforce&apos;s current activity.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoTitle</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterInfoTitle</shortDescription>
+        <value>Important Information</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterNumToProcess</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterNumToProcess</shortDescription>
+        <value>Number of Data Import records to process:</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterTitle</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDataImporterTitle</shortDescription>
+        <value>NPSP Data Import</value>
+    </labels>
+    <labels>
+        <fullName>bdiRecordsFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiRecordsFailed</shortDescription>
+        <value>Records failed:</value>
+    </labels>
+    <labels>
+        <fullName>bdiRecordsImported</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiRecordsImported</shortDescription>
+        <value>Records imported:</value>
+    </labels>
+    <labels>
+        <fullName>bdiRecordsProcessed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiRecordsProcessed</shortDescription>
+        <value>Records processed:</value>
+    </labels>
+    <labels>
+        <fullName>bdiRunBtn</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiRunBtn</shortDescription>
+        <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
+        <fullName>bdiStatus</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiStatus</shortDescription>
+        <value>Current Status:</value>
+    </labels>
+    <labels>
+        <fullName>bdiStatusProcessed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiStatusProcessed</shortDescription>
+        <value>processed {0} of {1} total batches.</value>
+    </labels>
+    <labels>
+        <fullName>bdiStatusProcessing</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiStatusProcessing</shortDescription>
+        <value>is currently processing batch {0} of {1} total batches.</value>
+    </labels>
+    <labels>
+        <fullName>bdiTime</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiTime</shortDescription>
+        <value>Time:</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>

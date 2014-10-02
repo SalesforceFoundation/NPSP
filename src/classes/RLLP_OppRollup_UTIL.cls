@@ -715,9 +715,11 @@ public without sharing class RLLP_OppRollup_UTIL {
                 SoftCreditQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             SoftCreditQuery += 'AND Opportunity.Type NOT IN :typeset ';
+            /** soft credits should always roll up to contacts with those OCR's regardless of the tpe of account. 
             if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 SoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }
+            */
             SoftCreditQuery += 'AND ContactId IN :cset ';            
             if (useFiscalYear)
                 SoftCreditQuery += 'GROUP BY ROLLUP(ContactId, Fiscal_Year(Opportunity.CloseDate)) ';

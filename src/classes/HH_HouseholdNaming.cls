@@ -57,7 +57,7 @@ public without sharing class HH_HouseholdNaming {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        string strSoql = strContactSelectStmtAllFields;
+        string strSoql = strContactSelectStmtAllNamingFields;
         string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
         strSoql += ' WHERE AccountId IN :hhids OR npo02__Household__c in :hhids ' +
             ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';     
@@ -146,7 +146,7 @@ public without sharing class HH_HouseholdNaming {
     //get generic household name 
     public string getHHName(list<Contact> ContactList){        
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
     	list<Contact> listCon = new list<Contact>();
     	for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Name'))
@@ -210,7 +210,7 @@ public without sharing class HH_HouseholdNaming {
     //just pile up first names for qualifying contacts
     public  string getInformalName(list<Contact> ContactList){
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Informal_Greeting__c'))
@@ -270,7 +270,7 @@ public without sharing class HH_HouseholdNaming {
     
     public  string getFormalName(list<Contact> ContactList){
         if (ContactList == null)
-            return '';
+            ContactList = new list<Contact>();
         list<Contact> listCon = new list<Contact>();
         for (Contact con : ContactList) {
             if (con.npo02__Naming_Exclusions__c == null || !con.npo02__Naming_Exclusions__c.contains('Formal_Greeting__c'))
@@ -373,21 +373,37 @@ public without sharing class HH_HouseholdNaming {
         set;
     }    
 
-    public static string strContactSelectStmtAllFields {
+    public static string strContactSelectStmtAllNamingFields {
         get {
-	        if (strContactSelectStmtAllFields == null) {
+	        if (strContactSelectStmtAllNamingFields == null) {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
 		        string strSoql = 'SELECT ';
 		        string strComma = '';
 		        for (string strF : listStrContactFields) {
-		            if (strF == 'Salutation') strF = 'toLabel(Salutation)';
-		            strSoql += strComma + strF;
-		            strComma = ', ';
+		        	// only include Text, TextArea, and Picklist fields for custom household naming
+		        	// also include a bunch of types needed by the ManageHouseholdUI code
+		        	Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Contact', strF);
+		        	if (dt == Schema.Displaytype.ID || 
+                        dt == Schema.Displaytype.String || 
+                        dt == Schema.Displaytype.TextArea || 
+                        dt == Schema.DisplayType.Picklist ||
+                        dt == Schema.DisplayType.MultiPicklist ||  // needed for naming exclusions
+                        dt == Schema.DisplayType.Integer ||
+                        dt == Schema.DisplayType.Double ||   // needed for name order
+                        dt == Schema.DisplayType.Date ||  // needed for CreatedDate
+                        dt == Schema.DisplayType.DateTime ||
+                        dt == Schema.DisplayType.Boolean || // needed for isAddressOverride
+                        dt == Schema.DisplayType.Reference  // needed for HHId
+                    ) {
+			            if (strF == 'Salutation') strF = 'toLabel(Salutation)';
+			            strSoql += strComma + strF;
+			            strComma = ', ';
+		        	}
 		        }
 		        strSoql += ' FROM Contact ';
-		        strContactSelectStmtAllFields = strSoql;
+		        strContactSelectStmtAllNamingFields = strSoql;
 	        }
-	        return strContactSelectStmtAllFields;
+	        return strContactSelectStmtAllNamingFields;
         }
         private set;        
     }    
