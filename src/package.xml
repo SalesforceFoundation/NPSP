@@ -636,6 +636,7 @@
     <members>stgBtnSave</members>
     <members>stgErrorINaming</members>
     <members>stgErrorInvalidClass</members>
+    <members>stgHHNameRefreshTitle</members>
     <members>stgHelpAccountModel</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>

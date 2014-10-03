@@ -1427,7 +1427,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnHHAutoName</shortDescription>
-        <value>Refresh naming on all Households</value>
+        <value>Refresh All Household Names</value>
     </labels>
     <labels>
         <fullName>stgBtnNewAutoRel</fullName>
@@ -1526,6 +1526,14 @@
         <value>Invalid Implementing Class.</value>
     </labels>
     <labels>
+        <fullName>stgHHNameRefreshTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHHNameRefreshTitle</shortDescription>
+        <value>Refresh Household Names</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAccountModel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1603,7 +1611,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBtnHHNaming</shortDescription>
-        <value>Clicking this button will activate Automatic Household Naming, and populate your existing Formal Greeting, Informal Greeting and Household Name fields with new names.  THIS IS AN IRREVERSIBLE PROCESS.  While you can deactivate Automatic Household Naming, the newly populated names will remain.  Toggling on, off, then on again may have unpredictable results.  DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.  Once complete (100%), you may safely leave or refresh the page.</value>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greeting with new names, according to the formats you&apos;ve chosen. Every single Household Account (or Household object) in your Salesforce organization will be renamed (except those Households that have auto naming checked off).&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
+
+Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpChatterGroup</fullName>
@@ -1659,7 +1673,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpFGFormat</shortDescription>
-        <value>The format to use for the Household Formal Greeting</value>
+        <value>The format Salesforce uses for the Formal Greeting.</value>
     </labels>
     <labels>
         <fullName>stgHelpFiscalYearRollups</fullName>
@@ -1699,7 +1713,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHNameFormat</shortDescription>
-        <value>The format to use for the Household Name.</value>
+        <value>The format Salesforce uses for the Household Name.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHNaming</fullName>
@@ -1707,7 +1721,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHNaming</shortDescription>
-        <value>If checked, the system will provide automatic naming for Household Names, Informal and Formal Greetings.</value>
+        <value>If selected, Salesforce automatically creates a name for the Household Account, based on the name of the Contacts in the Household. Salesforce also automatically generates formal and informal greetings.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHOCROn</fullName>
@@ -1743,7 +1757,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpIGFormat</shortDescription>
-        <value>The format to use for the Household Informal Greeting.</value>
+        <value>The format Salesforce uses for the Informal Greeting.</value>
     </labels>
     <labels>
         <fullName>stgHelpINamingClass</fullName>
@@ -1751,7 +1765,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpINamingClass</shortDescription>
-        <value>Specify the Apex Class that implements the HH_INaming interface for Household naming.</value>
+        <value>The Apex Class that implements the HH_INaming interface for Household naming.</value>
     </labels>
     <labels>
         <fullName>stgHelpLeadConvert</fullName>
@@ -1791,7 +1805,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNameConnector</shortDescription>
-        <value>Specify what string should be used to connect pairs in a name.</value>
+        <value>Specifies the name or character (such as &amp;) that Salesforce uses to connect pairs in a name.</value>
     </labels>
     <labels>
         <fullName>stgHelpNameOverrun</fullName>
@@ -1799,7 +1813,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNameOverrun</shortDescription>
-        <value>Specify what string should be used to replace long lists of names.</value>
+        <value>Specifies the text Salesforce uses to replace longer lists of names.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewRDFieldMap</fullName>
@@ -1855,7 +1869,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOverrunCount</shortDescription>
-        <value>Specify the number of contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.</value>
+        <value>The number of contacts Salesforce will explicitly name in Household names and greetings. After this number, Salesforce substitutes the Name Overrun value for names.</value>
     </labels>
     <labels>
         <fullName>stgHelpPaymentMapOppField</fullName>
