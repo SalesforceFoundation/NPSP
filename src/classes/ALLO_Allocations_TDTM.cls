@@ -34,7 +34,7 @@
 *              and calculates amount for percentage based allocations.
 */
 public class ALLO_Allocations_TDTM extends TDTM_Runnable {
-    
+
     //flags to prevent recursion
     public static boolean hasRunForAllocationsBefore = false;
     public static boolean hasRunForAllocationsAfter = false;
@@ -102,7 +102,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<Opportunity> listOppsForProcessing = new list<Opportunity>();
-
         for (integer i=0; i<newList.size(); i++) {
             Opportunity opp = (Opportunity) newlist[i];
 
@@ -122,18 +121,23 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 if (opp.Amount != oldlist[i].get('Amount')) {
                     listOppsForProcessing.add(opp);
                 }
+                //if currency has changed, reset allocation currencies
+                if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                    if (opp.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
+                        listOppsForProcessing.add(opp);
+                    }
+                }
             }
         }
 
         if (!listOppsForProcessing.isEmpty()) {
             fillMapWrapper(listOppsForProcessing);
             
-            //INSERT case: new Opp with associated Campaign or Recurring donation. 
-            //Create allocations from Recurring Donation or Campaign objects. Prefers Recurring Donation allocations.
             if (triggerAction == TDTM_Runnable.Action.AfterInsert)
                 copyRecurringDonationCampaignAllocations(listOppsForProcessing);
+            
             else if (triggerAction == TDTM_Runnable.Action.AfterUpdate)
-                opportunityAmountChange(listOppsForProcessing);
+                opportunityAmountCurrencyChange(listOppsForProcessing);
         }
     }
 
@@ -201,9 +205,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
         
 
-        if (!setRecDonId.isEmpty() || !setOppIds.isEmpty()) 
-            listOpps = [SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId FROM Opportunity WHERE (Opportunity.isClosed = FALSE 
-                AND npe03__Recurring_Donation__c IN :setRecDonId) OR ID IN :setOppIds];
+        if (!setRecDonId.isEmpty() || !setOppIds.isEmpty()) {
+            string oppQuery = 'SELECT Id, Amount, npe03__Recurring_Donation__c, CampaignId';
+            if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+                oppQuery += ', CurrencyIsoCode';
+            oppQuery+=' FROM Opportunity WHERE (Opportunity.isClosed = FALSE AND npe03__Recurring_Donation__c IN :setRecDonId) OR ID IN :setOppIds';
+            listOpps = database.query(oppQuery);
+        }
 
         if (!listOpps.isEmpty()) {
 
@@ -278,6 +286,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 else 
                     wrap = mapWrapper.get(opp.CampaignId);
 
+                //multi currency field is cloned here
                 list<Allocation__c> listAlloForInsert = wrap.listAllo.deepclone();
 
                 decimal remainder = opp.Amount;
@@ -287,8 +296,21 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     allo.Recurring_Donation__c = null;
                     allo.Campaign__c = null;
                     allo.Opportunity__c = opp.id;
+                    
+                    //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
+                    if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+                        if (allo.Amount__c!=null) {
+                            allo.Amount__c = ALLO_Multicurrency_TDTM.convertCurrency(
+                                (string)allo.get('CurrencyIsoCode'), 
+                                (string)opp.get('CurrencyIsoCode'), 
+                                allo.Amount__c
+                            );
+                        }
+                        allo.put('CurrencyIsoCode',opp.get('CurrencyIsoCode'));
+                    }
+
                     if (allo.Percent__c != null)
-                        allo.Amount__c = Opp.Amount * allo.Percent__c * .01; //TODO set to 2 decimal places
+                        allo.Amount__c = (Opp.Amount * allo.Percent__c * .01).setScale(2);
                     remainder -= allo.Amount__c;
                 }
                 
@@ -325,29 +347,35 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
-    //opportunity amount has changed. retrieve this opps allocations, adjust amounts and/or generate errors
+    //opportunity amount has changed or currency has changed. retrieve this opps allocations, adjust amounts and currencies
     //adjust percentage based allocations, adjust default allocations if enabled, 
     //enforce that total allocations don't exceed the opportunity amount
-    private void opportunityAmountChange(list<Opportunity> listOpps){
+    private void opportunityAmountCurrencyChange(list<Opportunity> listOpps){
         
         for (Opportunity opp : listOpps) {
         
             if (mapWrapper.containsKey(opp.id)) {
                 alloWrapper oppWrap = mapWrapper.get(opp.id);
         
-                //if some allocations are percentage based, recalculate those percentages and update them
-                if (oppWrap.totalPercent > 0) {
-                    for (Allocation__c allo : oppWrap.listAllo) {
-                        if (allo.Percent__c!=null && allo.Percent__c>0) {
-                            //remove the previous amount, recalculate the amount, and add it back
-                            oppWrap.totalAmount -= allo.Amount__c;
-                            allo.Amount__c = oppWrap.parentAmount * allo.Percent__c * .01;
-                            oppWrap.totalAmount += allo.Amount__c;
-                            dmlWrapper.objectsToUpdate.add(allo);
-                        }
+                for (Allocation__c allo : oppWrap.listAllo) {
+                    //if the percentage changed, recalculate the amount
+                    if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
+                        //remove the previous amount, recalculate the amount, and add it back
+                        oppWrap.totalAmount -= allo.Amount__c;
+                        allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);
+                        oppWrap.totalAmount += allo.Amount__c;
+                        
+                        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+                            allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+
+                        dmlWrapper.objectsToUpdate.add(allo);
+                    //if just the currency changed, recalculate the currency
+                    } else if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode')) {
+                        allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                        dmlWrapper.objectsToUpdate.add(allo);
                     }
                 }
-                //if the Default allocation handling is enabled, update the amount to cover 100% of the opportunity
+                //if the Default allocation handling is enabled, create/update/delete the default allocation to cover 100% of the opportunity
                 if (settings.Default_Allocations_Enabled__c) {
                     decimal remainder = oppWrap.parentAmount - oppWrap.totalAmount;
                     if (remainder==0) {
@@ -358,9 +386,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             oppWrap.defaultAllo = makeDefaultAllocation(opp);
                             oppWrap.defaultAllo.Amount__c = remainder;
                             dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
-                        } else
+                        } else if (oppWrap.defaultAllo.Amount__c != remainder || (ALLO_Multicurrency_TDTM.isMultiCurrency() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
+                            oppWrap.defaultAllo.Amount__c = remainder;
+                            if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+                                oppWrap.defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
                             dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
-
+                        }
                     }
                 }
                 //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
@@ -417,8 +448,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //fill wrapper with all allocations for this opportunity
         //getting payment and opportunity info here to avoid excess queries
-        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c 
-                FROM Allocation__c WHERE (Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId) AND Id NOT IN :setExistingAlloId]) {
+        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c 
+                WHERE (Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId) 
+                AND Id NOT IN :setExistingAlloId]) {
 
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
             
@@ -466,13 +498,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (allo.Percent__c!=null && wrap.parentAmount!=null) {
                 //we don't have an amount yet, add it. we're only dealing with before triggers so we can just update the allocation
                 if (allo.Amount__c==null) {
-                    allo.Amount__c = wrap.parentAmount * allo.Percent__c * .01;
+                    allo.Amount__c = (wrap.parentAmount * allo.Percent__c * .01).setScale(2);
                     wrap.totalAmount += allo.Amount__c;
                 //we have an amount not equal to the percentage of the total, so update it and the total
-                } else if (wrap.parentAmount * allo.Percent__c * .01 != allo.Amount__c) {
+                } else if (allo.Amount__c != (wrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
                     //remove the previous amount, recalculate the amount, and add it back
                     wrap.totalAmount -= allo.Amount__c;
-                    allo.Amount__c = wrap.parentAmount * allo.Percent__c * .01;
+                    allo.Amount__c = (wrap.parentAmount * allo.Percent__c * .01).setScale(2);
                     wrap.totalAmount += allo.Amount__c;
                 }
             }
@@ -490,12 +522,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 setParentId.add(opp.npe03__Recurring_Donation__c);
             setParentId.add(opp.id);
         }
+            
+        string alloQueryString = 'SELECT Id, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' + 
+            'Amount__c, Percent__c, General_Accounting_Unit__c';
         
-        list<Allocation__c> queryAllo = [SELECT Id, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, 
-            Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c 
-            WHERE Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId ];
+        //query for multicurrency string if multicurrency org
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+            alloQueryString += ', CurrencyIsoCode';
 
-        for (Allocation__c allo : queryAllo) {
+        alloQueryString += ' FROM Allocation__c WHERE Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId';
+
+        for (Allocation__c allo : database.query(alloQueryString)) {
         
             //create wrapper if it doesn't exist yet
             if (!mapWrapper.containsKey(getParentId(allo)))
@@ -561,6 +598,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             Amount__c = opp.Amount,
             General_Accounting_Unit__c = idDefaultGAU
         );
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+            defaultAllo.put('CurrencyIsoCode',opp.get('CurrencyIsoCode'));
         return defaultAllo;
     }
 

@@ -232,6 +232,10 @@
                                 <div id="totalPercent"></div>
                             </td>
                             <td>
+                                <apex:commandButton styleClass="btn btn-sm btn-info" value="{!$Label.alloAddRow}" id="addRowBTN" title="{!$Label.alloAddRow}" action="{!addRow}" reRender="theForm" immediate="true" rendered="{!listAlloSize==0}">
+                                    <span class="sr-only">{!$Label.alloAddRowAtPosition} {!cnt}</span>
+                                    <apex:param name="rowForNew" value="{!cnt}" assignTo="{!rowNumber}"/>
+                                </apex:commandButton>
                             </td>
                         </tr>
                    </tbody>
@@ -241,7 +245,7 @@
                 window.initOrReload();
             </script>
             <div class="btn-toolbar">
-                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="{!IF(listAlloSize==1&&listAllo[0].Amount__c==NULL&&listAllo[0].Percent__c==NULL,'true','false')}"/>
+                    <apex:commandButton styleClass="btn btn-primary btn-sm" value="{!$Label.alloBtnSaveAndClose}" id="saveCloseBTN" action="{!saveClose}" immediate="false"/>
                     <apex:commandButton styleClass="btn btn-default btn-sm" value="{!$Label.alloBtnCancel}" id="cancelBTN" action="{!cancel}" immediate="true"/>
             </div>
         </div>

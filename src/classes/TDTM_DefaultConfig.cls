@@ -137,6 +137,16 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 2, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
+        //Currency adjustment of allocations on Campaign object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Multicurrency_TDTM', Load_Order__c = 1, Object__c = 'Campaign', 
+              Trigger_Action__c = 'AfterUpdate'));
+
+        //Currency adjustment of allocations on Recurring Donation object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Multicurrency_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
+              Trigger_Action__c = 'AfterUpdate'));
+
         return handlers;
     }
     

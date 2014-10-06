@@ -118,7 +118,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         };
 
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
-            rs.additionalQueryFields.add('CurrencyIsoCode');
+            rs.additionalQueryFields = new set<string>{'CurrencyIsoCode'};
 
         mySpecs.add(rs);
 
@@ -132,7 +132,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         };
 
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
-            rs.additionalQueryFields.add('CurrencyIsoCode');
+            rs2.additionalQueryFields = new set<string>{'CurrencyIsoCode'};
 
         mySpecs.add(rs2);
         
@@ -153,22 +153,19 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         return results;
     }
 
-    /*public virtual override void finish(Database.BatchableContext bc) {
-        system.debug('running finish method in extended class ALLO_Rollup_SCHED');
-    }*/
-
-    public override void customResultRowProcessing(SObject rollupRow,RollupSpec spec,SObject parentRec) {
-        // this is called for each non-subgroup row of our aggregate result to allow for custom calculation of rollup values
-        // you should write code here to insert values into the parent obj in parentRec
-        // you must also make sure that any fields you're writing to are contained in specialRollupFields property of the spec
+    //if multi currency is enabled, recalculate the currency values for each GAU
+    public override void customFinalProcessing (map<id, sobject> objMap) {
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
-           parentRec.put('Total_Allocations__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations__c')));
-           parentRec.put('Total_Allocations_This_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_This_Year__c')));
-           parentRec.put('Total_Allocations_Last_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_Last_Year__c')));
-           parentRec.put('Total_Allocations_Two_Years_Ago__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Total_Allocations_Two_Years_Ago__c')));
-           parentRec.put('Smallest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Smallest_Allocation__c')));
-           parentRec.put('Largest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Largest_Allocation__c')));
-           parentRec.put('Average_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)parentRec.get('CurrencyIsoCode'),(decimal)rollupRow.get('Average_Allocation__c')));
+            for (sObject obj : objMap.values()) {
+                obj.put('Total_Allocations__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations__c')));
+                obj.put('Total_Allocations_This_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_This_Year__c')));
+                obj.put('Total_Allocations_Last_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Last_Year__c')));
+                obj.put('Total_Allocations_Two_Years_Ago__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Two_Years_Ago__c')));
+                obj.put('Smallest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Smallest_Allocation__c')));
+                obj.put('Largest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Largest_Allocation__c')));
+                obj.put('Average_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Average_Allocation__c')));
+                obj.put('Total_Allocations_Last_N_Days__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Last_N_Days__c')));
+            }
         }
     }
 }

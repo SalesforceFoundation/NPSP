@@ -35,33 +35,61 @@
 public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 	
 /*
-BEFORE INSERT allocation by user: copy currency from parent.
-BEFORE INSERT allocation by allocation trigger copied from campaign/rd: convert currency from campaign/rd to opp
 AFTER UPDATE Opportunity / Campaign / RD currency change: copy currency to allocation.
+    add opp case
 */
 
-    public ALLO_Multicurrency_TDTM() {}
-    
     //set when multicurrency check is called, holds the field string/sobject mapping
     public static Map<String, SObjectField> mcFieldValues = new Map<String, SObjectField>();
     public static boolean multiCurrency;
     //exchangerate store
     static map<string, decimal> exchangeRates = new map<string,decimal>();
     //corporate currency
-    static string currCorporate; 
+    public static string currCorporate;
+
+    public DmlWrapper wrapper = new DmlWrapper();
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        DmlWrapper wrapper = new DmlWrapper();
+        //if this is a multicurrency org, update child objects 
+        if (isMultiCurrency())
+            wrapper.objectsToUpdate.addAll((list<sObject>)updateAllocationCurrencyFromParent(newlist,oldlist));
 
-        //if this isn't a multicurrency org, do nothing
-        if (!isMultiCurrency())
-            return wrapper;
-        else {
-            return wrapper;
+        return wrapper;
+    }
+
+    // for any list of allocation parent objects (Opportunity, Campaign, Recurring Donation),
+    // gets a list of their child allocations, updates their CurrencyIsoCode
+    public static list<Allocation__c> updateAllocationCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist) {
+        list<Allocation__c> results = new list<Allocation__c>();
+        //map holds object id to currency iso code
+        map<id,string> mapIdToISO = new map<id,string>();
+
+        //if the parent currency has changed, add to map
+        for (integer i=0;i<newlist.size();i++) {
+            if (newlist[i].get('CurrencyIsoCode')!=oldlist[i].get('CurrencyIsoCode')) {
+                mapIdToISO.put((id)newlist[i].get('id'),(string)newlist[i].get('CurrencyIsoCode'));
+            }
         }
+
+        string alloQuery = 'SELECT Id, Amount__c, Opportunity__c, Campaign__c, Recurring_Donation__c, CurrencyIsoCode FROM Allocation__c '+
+            'WHERE Opportunity__c IN :mapIdToISO OR Campaign__c IN :mapIdToISO OR Recurring_Donation__c IN :mapIdToISO';
+        
+        //query all allocations associated with the parents, update their ISO code and their amount if needed 
+        for (Allocation__c allo : database.query(alloQuery)) {
+            string parentCurrency = mapIdToISO.get(ALLO_Allocations_TDTM.getParentId(allo));
+            
+            /*Not updating allocagion amounts, as Salesforce only updates the currency and does not convert the amount
+            if (allo.Amount__c!=null)
+                allo.Amount__c = convertCurrency(parentCurrency, (string)allo.get('CurrencyIsoCode'), allo.Amount__c);
+            */
+            allo.put('CurrencyIsoCode', parentCurrency);
+            results.add(allo);
+        }
+
+        return results;
     }
 
     //for a list of allocations, set the currency ISO code from the parent object

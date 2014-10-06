@@ -118,8 +118,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         if (listAllo[rowNumber].id!=null)
             listAlloForDelete.add(listAllo[rowNumber]);
         listAllo.remove(rowNumber);
-        if (listAllo.isEmpty())
-            addRow();
+
         return null;
     }
 
