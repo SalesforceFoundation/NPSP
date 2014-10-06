@@ -864,6 +864,14 @@
         <value>Account system fields for any Household Accounts and One-to-One Accounts are set correctly.</value>
     </labels>
     <labels>
+        <fullName>healthLabelAllTestsPassed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelAllTestsPassed</shortDescription>
+        <value>All Health Check tests have successfully passed.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelAutoRelValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1108,7 +1116,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionHHObjNoContacts</shortDescription>
-        <value>Consider deleting these unused Household objects to save space.</value>
+        <value>Consider deleting these unused Household objects to save space. If you have completed a conversion to the Household Account model and no longer need the data on the Household object records they can be deleted.</value>
     </labels>
     <labels>
         <fullName>healthSolutionInvalidFiscalYears</fullName>

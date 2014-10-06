@@ -36,6 +36,12 @@
             </apex:outputPanel>
             
             <apex:outputPanel layout="block" id="panelResults">
+                <apex:outputPanel rendered="{!isAllTestsPassed}" >
+                    <h4 style="text-align:center;padding-top:10px;">
+                        <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> {!$Label.healthLabelPassed} </span>
+                        {!$Label.healthLabelAllTestsPassed}
+                    </h4>
+                </apex:outputPanel>
 		        <apex:outputPanel rendered="{!hasResults}">
                     <div>
 	                    <span style="position:relative;left:30px;">

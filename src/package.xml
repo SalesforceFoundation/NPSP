@@ -553,6 +553,7 @@
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
     <members>healthLabelAccountRTIssueValid</members>
+    <members>healthLabelAllTestsPassed</members>
     <members>healthLabelAutoRelValid</members>
     <members>healthLabelContactData</members>
     <members>healthLabelErrorRecipientValid</members>
