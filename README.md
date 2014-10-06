@@ -9,6 +9,7 @@ rel:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/j
 * <a href="https://github.com/SalesforceFoundation/Cumulus/issues/new" target="_blank">Log a confirmed Issue or Feature Request</a>
 * <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank">User Documentation</a>
 * Check out existing <a href="https://github.com/SalesforceFoundation/Cumulus/labels/bug" target="_blank">bugs,</a><a href="https://github.com/SalesforceFoundation/Cumulus/labels/feature%20request" target="_blank"> feature requests,</a> and <a href="https://github.com/SalesforceFoundation/Cumulus/labels/enhancement" target="_blank">enhancement requests.</a>
+* <a href="https://github.com/SalesforceFoundation/Cumulus/releases" target="_blank">Release Notes and Beta Releases</a>
 
 #### For Developers
 
