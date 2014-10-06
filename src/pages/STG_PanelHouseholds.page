@@ -274,18 +274,20 @@
     	                <apex:outputText value="{!$Label.stgHelpINamingClass}" />
                     </div>
                 </div>
-
-	            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="panel panel-danger">
-	                <div class="panel-heading">
-	                    <h3 class="panel-title">{!$Label.stgHHNameRefreshTitle}</h3>
-	                </div>
-	                <div class="panel-body" style="padding:15px;">	               
-	                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" />
-	                    <div style="text-align:center;" class="form-control-column">
-	                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+            
+                <div class="col-sm-offset-1 col-sm-10"> 
+		            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="panel panel-danger">
+		                <div class="panel-heading">
+		                    <h3 class="panel-title">{!$Label.stgHHNameRefreshTitle}</h3>
+		                </div>
+		                <div class="panel-body" style="padding:15px;">	               
+		                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" />
+		                    <div style="text-align:center;" class="form-control-column">
+		                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+		                    </div>
 	                    </div>
-                    </div>
-	            </apex:outputPanel>                    
+		            </apex:outputPanel>                    
+	            </div>
 	        </section>
 			
 	        <apex:outputPanel rendered="{!isRunningBatch}">
