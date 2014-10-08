@@ -27,6 +27,17 @@ global with sharing class HH_ManageHousehold_EXT {
     // use an SObject to handle both HH Accounts and HH Objects
     public SObject hh { get; set; }
     
+    // to easily tell our Account override page whether to defer to the normal Account edit page
+    // when the user is trying to change their recordtype!
+    public boolean isChangingRecordType {
+        get {
+            String paramRtId = ApexPages.currentPage().getParameters().get('RecordType');
+            if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true))
+                return true;
+            return false; 
+        }
+    }
+    
     // for code that knows it is a HH Account
     public Account hhA {
     	get {
