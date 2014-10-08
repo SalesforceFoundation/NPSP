@@ -49,6 +49,10 @@ public without sharing class HH_HouseholdNaming {
         HH_ProcessControl.inFutureContext = false;    
     }
 
+    // we now want to always call UpdateNames() because it will set Number_Of_Household_Members__c, and
+    // it will be responsible for only updating names if the advanced household naming is true.
+    // so any code that used to check for advanced household naming should no longer do so,
+    // (unless it is only for a naming scenario that would possibly change number of household members.)
     public void UpdateNames(list<id> hhids){
         
         //we need this turned on to prevent recursive triggering on household creation        
@@ -429,10 +433,10 @@ public without sharing class HH_HouseholdNaming {
         if (!HH_ProcessControl.inFutureContext && 
             (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
             
-            // we now want to always call UpdateNames() because it will set Number_Of_Household_Members__c, and
-            // it will be responsible for only updating names if the advanced household naming is true.
-            // if (hs != null && hs.npo02__Advanced_Household_Naming__c == true ) {
-            {
+            // no need to do any of this name checking if we aren't using auto household naming.
+            // even though UpdateNames() keeps Number of Household Members updated, there is no need
+            // to call it from here which is just trying to detect manual hh name changes.
+            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true ) {
                 // AfterUpdate data
                 list<id> hhlist = new list<id>();
                                        
