@@ -150,7 +150,7 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
     
-    public static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllNamingFields;
+    private static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllNamingFields;
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated

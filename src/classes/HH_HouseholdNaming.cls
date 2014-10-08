@@ -83,25 +83,30 @@ public without sharing class HH_HouseholdNaming {
                 clist.add(c);                
             }
         }
-                
+         
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+               
         //loop through the households needing name changes, if necessary, make them.
         for (SObject h : hhupdatelist){    
             ID hhId = string.valueOf(h.get('Id'));
             list<Contact> listCon = hhIDContactMap.get(hhId);
-            string customnameparam = '';
-            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
-                customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
-            }            
-            
-            if (!customnameparam.contains('Name'))
-                h.put('Name', getHHName(listCon));
-            
-            if (!customnameparam.contains('Formal_Greeting__c'))
-                h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
 
-            if (!customnameparam.contains('Informal_Greeting__c'))
-                h.put('npo02__Informal_Greeting__c', getInformalName(listCon));   
-            
+            if (hs.npo02__Advanced_Household_Naming__c == true) {
+	            string customnameparam = '';
+	            if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != null){
+	                customnameparam = string.valueOf(h.get('npo02__SYSTEM_CUSTOM_NAMING__c'));
+	            }            
+	            
+	            if (!customnameparam.contains('Name'))
+	                h.put('Name', getHHName(listCon));
+	            
+	            if (!customnameparam.contains('Formal_Greeting__c'))
+	                h.put('npo02__Formal_Greeting__c', getFormalName(listCon));
+	
+	            if (!customnameparam.contains('Informal_Greeting__c'))
+	                h.put('npo02__Informal_Greeting__c', getInformalName(listCon));   
+            }
+                        
             // now we also store the number of members on the Household!
             h.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'), listCon != null ? listCon.size() : 0);          
         } 
@@ -424,8 +429,10 @@ public without sharing class HH_HouseholdNaming {
         if (!HH_ProcessControl.inFutureContext && 
             (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
             
-            if (hs != null && hs.npo02__Advanced_Household_Naming__c == true) {
-
+            // we now want to always call UpdateNames() because it will set Number_Of_Household_Members__c, and
+            // it will be responsible for only updating names if the advanced household naming is true.
+            // if (hs != null && hs.npo02__Advanced_Household_Naming__c == true ) {
+            {
                 // AfterUpdate data
                 list<id> hhlist = new list<id>();
                                        
