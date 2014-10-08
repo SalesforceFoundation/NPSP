@@ -254,10 +254,10 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
     </apex:form>  
         
     <apex:form styleClass="formClass" >        
-        <apex:pageBlock mode="edit" rendered="{!displayRecInfoSection}">
+        <apex:pageBlock mode="edit" rendered="{!displayRecInfoSection}" id="pbEdit" >
             <apex:pageMessages />
             <apex:pageBlockButtons location="bottom" >
-                <apex:commandButton value="Save" action="{!save}" styleclass="btnSave" rerender="recInfo,recList,itemCount,batchinfo" oncomplete="resetDefaults();" />
+                <apex:commandButton value="Save" action="{!save}" styleclass="btnSave" rerender="recInfo,recList,pbEdit,itemCount,batchinfo" oncomplete="resetDefaults();" />
                 <apex:commandButton value="Clear" action="{!clear}" immediate="true" rerender="recInfo" oncomplete="getSetUp();" />
             </apex:pageBlockButtons>            
             <apex:pageBlockSection title="Record Information" id="recInfo" columns="2" >
