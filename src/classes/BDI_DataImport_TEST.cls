@@ -1293,4 +1293,63 @@ private with sharing class BDI_DataImport_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    operation:
+        import contacts using different matching rules
+    verify:
+        only one contact created
+    **********************************************************************************************************/            
+    static testMethod void ManyDIMultiContactMatchRules1() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules1') return;
+        ManyDIMultiContactMatchRules('Firstname;Lastname;Email');
+    }
+    static testMethod void ManyDIMultiContactMatchRules2() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules2') return;
+        ManyDIMultiContactMatchRules('Lastname;Email');
+    }
+    static testMethod void ManyDIMultiContactMatchRules3() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules3') return;
+        ManyDIMultiContactMatchRules('Email');
+    }
+    static testMethod void ManyDIMultiContactMatchRules4() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules4') return;
+        ManyDIMultiContactMatchRules('Firstname;Lastname');
+    }
+    static void ManyDIMultiContactMatchRules(string strRule) {            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='C0'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c='C1'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c=null));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));        
+        insert listDI;
+          
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = strRule;
+        upsert diSettings;
+ 
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(3, listCon.size());
+        
+        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, Contact1_Lastname__c from DataImport__c];        
+        system.assertEquals(4, listDI.size());
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].Contact1_Lastname__c == null) {
+                system.assertEquals(null, listDI[i].Contact1ImportStatus__c);                
+                system.assertEquals('Failed', listDI[i].Status__c);                
+            } else {
+                system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
+                system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);                
+                system.assertEquals('Imported', listDI[i].Status__c);                
+            }
+            
+        }
+    }
+    
 }

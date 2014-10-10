@@ -123,6 +123,17 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    private string strNull(Object obj) {
+        return strNull(string.valueOf(obj));
+    }
+
+    private string strNull(string str) {
+        if (str == null)
+            return '';
+        else
+            return str;
+    }
+
     // the real work gets done here!
     // given a batch of di records, process them.
     public void execute(Database.BatchableContext bc, List<DataImport__c> listDI) {
@@ -445,16 +456,22 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         strSoql += ')';
         
         list<Contact> listCon = database.query(strSoql);
+        system.debug('****DJH potential existing contacts: ' + listCon);
         
         // put all potential contacts into our map
         for (Contact con : listCon) {
             for (string diKey : listDiKeyContact(con))
                 mapDIKeyToContact.put(diKey, con);
         }
+        system.debug('****DJH after adding potential contacts mapDIKeyToContact: ' + mapDIKeyToContact);
         
         for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == 'Failed')
+               continue;
             Contact con = ContactFromDi(di, 1);
             list<string> listDiKey = listDIKeyC1(di);
+            system.debug('****DJH listDiKey: ' + listDiKey);
             if (con != null) {
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = 'Matched';
@@ -467,6 +484,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // make sure all dikeys for that contact are in the map
             for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
+            system.debug('****DJH after add di keys to mapDIKeyToContact: ' + mapDIKeyToContact);
             
             con = ContactFromDi(di, 2);
             listDiKey = listDiKeyC2(di);
@@ -483,6 +501,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
         }
+        system.debug('****DJH at end of MatchExistingCOntacts, mapDIKeyToContact: ' + mapDIKeyToContact);
     }
 
     // utility to return the Preferred Email if only one email is set in the di.
@@ -538,77 +557,158 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         return strPreferred;
     }
     
+    /**********
+    Key Matching Explained
+    
+    We use a compound key of Contact Firstname, Lastname, and Email (with a | between each) to match against existing Contacts,
+    and also those Contacts we are creating. We call this compound key a diKey. Our mapDIKeyToContact 
+    is used to lookup a given Contact from a diKey. In order to support settings that tell us which fields
+    to use in the match, a given Contact can have multiple keys. Eg., if the setting is Email Only, and
+    we have an existing Contact of Fred Smith fred@smith.com, then we need to support matching the following
+    diKeys:
+        Fred|Smith|fred@smith.com 
+        Fred||fred@smith.com 
+        |Smith|fred@smith.com 
+        ||fred@smith.com
+
+    In this same same example, if our DI record is John Doe john@doe.com, then its diKeys would be:
+        John|Doe|john@doe.com
+        John||john@doe.com
+        |Doe|john@doe.com
+        ||john@doe.com
+        
+    But if another DI record is just Bob Dole (no email), then we know it can't match an existing Contact
+    since it has no email, but we still need to create a unique diKey for this record so that we can track
+    its Contact, as well as map other DI records with the same name to the same contact.  Thus we'll create
+    the diKey:
+        Bob|Dole|
+            
+    So the rules can be explained as:
+        Existing contacts only add the specific keys the rules can match against.
+        Di's add the specific keys the rules can match against, and if none created, a single unique key
+        
+    ************/
+    
     // utility to return the dikeys for a given contact.
     private list<string> listDiKeyContact(Contact con) {
         if (con == null)
             return null;
+            
         list<string> listDiKey = new list<string>();
-        string strPrefix = '';
-        if (isFirstnameInContactMatchRules) {
-            strPrefix += con.Firstname;
-        }
-        strPrefix += '|';
-        if (isLastnameInContactMatchRules) {
-            strPrefix += con.Lastname;
-        }
-        strPrefix += '|';
-        if (isEmailInContactMatchRules) {
-            if (con.Email != null)
-                listDiKey.add(strPrefix + con.Email);
-            if (con.npe01__HomeEmail__c != null)
-                listDiKey.add(strPrefix + con.npe01__HomeEmail__c);
-            if (con.npe01__WorkEmail__c != null)
-                listDiKey.add(strPrefix + con.npe01__WorkEmail__c);
-            if (con.npe01__AlternateEmail__c != null)
-                listDiKey.add(strPrefix + con.npe01__AlternateEmail__c);
-        } else {
-            listDiKey.add(strPrefix);
-        }
+
+        // we need the Contact CustomId key to always be checked first when matching
         if (isCustomIDInContactMatchRules && con.get(diSettings.Contact_Custom_Unique_ID__c) != null) {
             listDiKey.add(string.valueOf(con.get(diSettings.Contact_Custom_Unique_ID__c)));
         }
+
+        list<string> listFName = new list<string>();    
+        list<string> listLName = new list<string>();    
+        list<string> listEmail = new list<string>();
+        
+        if (con.Firstname != null)
+            listFName.add(con.Firstname);
+        if (!isFirstnameInContactMatchRules)
+        	listFName.add('');
+            
+        if (con.Lastname != null)
+            listLName.add(con.Lastname);
+        if (!isLastnameInContactMatchRules)
+            listLName.add('');
+            
+        if (con.Email != null)
+            listEmail.add(con.Email);
+        if (con.npe01__HomeEmail__c != null)
+            listEmail.add(con.npe01__HomeEmail__c);
+        if (con.npe01__WorkEmail__c != null)
+            listEmail.add(con.npe01__WorkEmail__c);
+        if (con.npe01__AlternateEmail__c != null)
+            listEmail.add(con.npe01__AlternateEmail__c);
+        if (!isEmailInContactMatchRules)
+            listEmail.add('');
+            
+        set<string> setDiKey = new set<string>();
+        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail);
+        listDiKey.addAll(setDiKey);
+
         return listDiKey;
+    }
+
+    // utility to create all the diKey permutations given firstname, lastname, and emails.
+    private void addDiKeyPermutations(set<string> setDiKey, list<string> listFname, list<string> listLName, list<string> listEmail) {
+        for (string strFName : listFName) {
+            for (string strLName : listLName) {
+                for (string strEmail : listEmail) {
+                    setDiKey.add(strFName + '|' + strLName + '|' + strEmail);
+                }
+            }
+        }
+        setDiKey.remove('||');
     }
 
     // utility to return the dikeys for contact1 in the given di.
     private list<string> listDiKeyC1(DataImport__c di) {
     	return listDiKeyCx(di, 'Contact1');
     }
+
+    // utility to return the dikeys for contact2 in the given di.
     private list<string> listDiKeyC2(DataImport__c di) {
     	return listDIKeyCx(di, 'Contact2');
     }
-    private list<string> listDiKeyCx(DataImport__c di, string strCx) {
-        set<string> setDiKey = new set<string>(); // use set to avoid duplicate keys
 
-        // we nee the Contact CustomId key to always be checked first when matching
+    // utility to return the dikeys for the given contact in the given di.
+    private list<string> listDiKeyCx(DataImport__c di, string strCx) {
+        list<string> listDiKey = new list<string>();
+
+        // we need the Contact CustomId key to always be checked first when matching
         string strUnique; 
         string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
         if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix))) != null) {
-            setDiKey.add(strUnique);
+            listDiKey.add(strUnique);
         }
-
-        // now create any other dikeys
-        string strPrefix = '';
-        if (isFirstnameInContactMatchRules) {
-            strPrefix += di.get(strCx + '_Firstname__c');
+                
+        list<string> listFName = new list<string>();    
+        list<string> listLName = new list<string>();    
+        list<string> listEmail = new list<string>();
+        
+        if (di.get(strCx + '_Firstname__c') != null)
+            listFName.add(string.valueOf(di.get(strCx + '_Firstname__c')));
+        if (!isFirstnameInContactMatchRules)
+            listFName.add('');
+            
+        if (di.get(strCx + '_Lastname__c') != null)
+            listLName.add(string.valueOf(di.get(strCx + '_Lastname__c')));
+        if (!isLastnameInContactMatchRules)
+            listLName.add('');
+            
+        if (di.get(strCx + '_Personal_Email__c') != null)
+            listEmail.add(string.valueOf(di.get(strCx + '_Personal_Email__c')));
+        if (di.get(strCx + '_Work_Email__c') != null)
+            listEmail.add(string.valueOf(di.get(strCx + '_Work_Email__c')));
+        if (di.get(strCx + '_Alternate_Email__c') != null)
+            listEmail.add(string.valueOf(di.get(strCx + '_Alternate_Email__c')));
+        if (!isEmailInContactMatchRules)
+            listEmail.add('');
+            
+        set<string> setDiKey = new set<string>();
+        addDiKeyPermutations(setDiKey, listFName, listLName, ListEmail);
+        listDiKey.addAll(setDiKey);
+        
+        // if we didn't create any dikey's for this di due to it not matching all constraints,
+        // we have to still add a single key that this di can use to find the new contact to be created.
+        if (listDiKey.size() == 0) {
+	        string diKey =  strNull(di.get(strCx + '_Firstname__c')) + '|' + strNull(di.get(strCx + '_Lastname__c')) + '|';
+	        if (di.get(strCx + '_Personal_Email__c') != null)
+	           diKey += string.valueOf(di.get(strCx + '_Personal_Email__c'));
+	        else if (di.get(strCx + '_Work_Email__c') != null)
+	            diKey += string.valueOf(di.get(strCx + '_Work_Email__c'));
+	        else if (di.get(strCx + '_Alternate_Email__c') != null)
+	            diKey += string.valueOf(di.get(strCx + '_Alternate_Email__c'));
+	        
+	        if (diKey != '||')
+	           listDiKey.add(diKey);
         }
-        strPrefix += '|';
-        if (isLastnameInContactMatchRules) {
-            strPrefix += di.get(strCx + '_Lastname__c');
-        }
-        strPrefix += '|';
-        if (isEmailInContactMatchRules) {
-        	string strEmail;
-            if ((strEmail = string.valueOf(di.get(strCx + '_Personal_Email__c'))) != null)
-                setDiKey.add(strPrefix + strEmail);
-            if ((strEmail = string.valueOf(di.get(strCx + '_Work_Email__c'))) != null)
-                setDiKey.add(strPrefix + strEmail);
-            if ((strEmail = string.valueOf(di.get(strCx + '_Alternate_Email__c'))) != null)
-                setDiKey.add(strPrefix + strEmail);
-        } else if (strPrefix != '||') {
-            setDiKey.add(strPrefix);
-        }
-        return new list<string>(setDiKey);        
+                       
+        return listDiKey;
     }
     
     // utility that finds a contact in our map, by matching against all the contact dikeys
