@@ -72,19 +72,23 @@
                         <apex:outputText value="{!$Label.stgHelpDefaultGAU}" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <apex:outputText value="Batch Create Default Allocations" rendered="{!isReadOnlyMode}" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
-                        <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch||NOT(stgService.stgAllo.Default_Allocations_Enabled__c)||ISNULL(stgService.stgAllo.Default__c)}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" rendered="{!isReadOnlyMode}"/>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-8 help-block">
-                        <apex:outputText value="Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool." rendered="{!isReadOnlyMode}"/>
-
-                    </div>
+                <div class="col-sm-offset-1 col-sm-10">
+                    <apex:outputPanel rendered="{!isReadOnlyMode&&NOT(isRunningBatch)}" layout="block" styleClass="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{!$Label.alloBatchCreateDefault}</h3>
+                        </div>
+                        <div class="panel-body" style="padding:15px;">                 
+                            <apex:outputText value="{!$Label.alloBatchDefaultInfo}" escape="false" />
+                            <div style="text-align:center;" class="form-control-column">
+                                <apex:commandButton value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!NOT(stgService.stgAllo.Default_Allocations_Enabled__c)||ISNULL(stgService.stgAllo.Default__c)}" immediate="true" rerender="form" styleClass="btn-sm btn-default" rendered="{!isReadOnlyMode}"/>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!isRunningBatch}">
+                        <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    </apex:outputPanel>
                 </div>
-                <apex:outputPanel rendered="{!isRunningBatch}">
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                </apex:outputPanel>
+                
             </section>
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />

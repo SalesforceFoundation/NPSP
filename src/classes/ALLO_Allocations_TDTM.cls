@@ -101,9 +101,20 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private void runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        set<id> oppRecordTypesToExclude = new set<id>();
+        set<string> oppTypesToExclude = new set<string>();
+        if (settings.Excluded_Opp_RecTypes__c!=null) 
+            oppRecordTypesToExclude = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', new set<string>(settings.Excluded_Opp_RecTypes__c.split(';')));
+        if (settings.Excluded_Opp_Types__c!=null)
+            oppTypesToExclude = new set<string>(settings.Excluded_Opp_Types__c.split(';'));
+
         list<Opportunity> listOppsForProcessing = new list<Opportunity>();
         for (integer i=0; i<newList.size(); i++) {
             Opportunity opp = (Opportunity) newlist[i];
+
+            //skip excluded opp types and recordtypes
+            if (oppRecordTypesToExclude.contains((id)opp.get('RecordTypeId')) || oppTypesToExclude.contains(opp.Type))
+                continue;
 
             //INSERT case: Verify associated Campaign and Recurring Donations to auto create allocations
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
@@ -181,9 +192,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         }
 
-        //if this org is multicurrency, set currency ISO code based on parent ISO code
-        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+        //if this org is multicurrency and this is an insert, set currency ISO code based on parent ISO code
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert && ALLO_Multicurrency_TDTM.isMultiCurrency())
             ALLO_Multicurrency_TDTM.updateAllocationCurrency(triggerList);
+
+        //TODO: don't let users change allocation currency manually
 
     }
 

@@ -306,17 +306,6 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
 
     }
-
-    /*
-
-    Bulk: multiple allocations equaling 100%
-          multiple allocations over 100%
-          multiple allocations for different objects
-
-          create default allocations when an allocation is inserted on an opp without one?
-          
-
-    */
     
     //insert bulk opportunities. verify that default allocations and campaign allocations are created.
     //bulk update opportunities, verify that default allocations were deleted
@@ -362,6 +351,30 @@ private with sharing class ALLO_Allocations_TEST {
         system.debug(logginglevel.warn, 'LookHere: bulkOppInsert' + queryAggResult);
         system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should still exist.');
         system.assertEquals(50, queryAggResult[1].get('expr0'), 'Fifty default allocations should remain.');
+
+    }
+
+    @isTest
+    static void testExcludedOpps() {
+        if (strTestOnly != '*' && strTestOnly != 'testExcludedOpps') return;
+
+        General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
+        insert defaultgau;
+
+        string rtname = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+        id rtid = UTIL_RecordTypes.GetRecordTypeId('Opportunity',rtname);
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtname));
+        Account acc = new Account(Name='foo');
+        insert acc;
+
+        list<Opportunity> oppForInsert = new list<Opportunity>();
+        oppForInsert.add(new Opportunity(Name='excluded type', Type='foo', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+        oppForInsert.add(new Opportunity(Name='excluded record type', RecordTypeId=rtid, Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+        insert oppForInsert;
+
+        list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c];
+        system.assertEquals(0,queryAllo.size(), 'No default allocation should be created for an excluded opportunity type or an excluded opportunity record type.');
 
     }
 }

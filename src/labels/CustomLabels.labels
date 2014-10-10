@@ -289,6 +289,22 @@
         <value>Each allocation must have either an assigned amount or percent.</value>
     </labels>
     <labels>
+        <fullName>alloBatchCreateDefault</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloBatchCreateDefault</shortDescription>
+        <value>Batch Create Default Allocations</value>
+    </labels>
+    <labels>
+        <fullName>alloBatchDefaultInfo</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloBatchDefaultInfo</shortDescription>
+        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool. You only need to run this tool once after enabling default allocations, as all new opportunities will receive a default allocation once enabled.</value>
+    </labels>
+    <labels>
         <fullName>alloBtnCancel</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>

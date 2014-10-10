@@ -525,6 +525,8 @@
     <members>alloAddRow</members>
     <members>alloAddRowAtPosition</members>
     <members>alloAmountOrPercent</members>
+    <members>alloBatchCreateDefault</members>
+    <members>alloBatchDefaultInfo</members>
     <members>alloBtnCancel</members>
     <members>alloBtnSaveAndClose</members>
     <members>alloDefaultGAUMissing</members>
