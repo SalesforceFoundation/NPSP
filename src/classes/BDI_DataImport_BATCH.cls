@@ -234,7 +234,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     // creating their Household if none exists.
     private void importContactsAndHouseholds() {        
 
-        // first, try to match our existing contacts
+        // first, validate any required fields on contacts
+        verifyContactData();
+        
+        // try to match our existing contacts
         matchExistingContacts();            
 
         // handle multiple di's referring to the same existing contact
@@ -344,6 +347,35 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    // for every di with C1 or C2 data, make sure they have a lastname
+    private void verifyContactData() {    
+        for (DataImport__c di: listDI) {
+            if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null) {
+                LogBDIError(di, 'Contact1 Last Name must be specified.');
+                continue;                
+            }
+            if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null) {
+                di.Contact2_Lastname__c = di.Contact1_Lastname__c;
+            }
+        }
+    }
+    
+    // utility to see if any of the dikey fields for the Contact are specified
+    private boolean isContactSpecified(DataImport__c di, string strCx) {
+        if (di.get(strCx + '_Firstname__c') != null)
+            return true;
+        if (di.get(strCx + '_Lastname__c') != null)
+            return true;
+        if (di.get(strCx + '_Personal_Email__c') != null)
+            return true;
+        if (di.get(strCx + '_Work_Email__c') != null)
+            return true;
+        if (di.get(strCx + '_Alternate_Email__c') != null)
+            return true;
+        // no dikey data about the contact
+        return false;
+    }
+    
     // looks for existing contacts that match C1 or C2, and if found,
     // updates their Id's in the Di's.  if not found, creates a new
     // contact object for that di.
