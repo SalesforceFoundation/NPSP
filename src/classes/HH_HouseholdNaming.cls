@@ -60,7 +60,7 @@ public without sharing class HH_HouseholdNaming {
         string strSoql = strContactSelectStmtAllNamingFields;
         string strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
         strSoql += ' WHERE AccountId IN :hhids OR npo02__Household__c in :hhids ' +
-            ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';     
+            ' ORDER BY ' + strHHId + ', Primary_Contact__c DESC, npo02__Household_Naming_Order__c ASC NULLS LAST, CreatedDate ';     
         list<Contact> contactlist = Database.Query(strSoql); 
         
         list<SObject> listHHObj = [select Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c from npo02__Household__c where id IN : hhids];
@@ -482,6 +482,8 @@ public without sharing class HH_HouseholdNaming {
                         else if (h.get('npo02__Formal_Greeting__c') == system.Label.npo02.NameReplacementText)
                             hhlist.add(h.id);       
                         else if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != mapIdHHOld.get(h.id).get('npo02__SYSTEM_CUSTOM_NAMING__c'))
+                            hhlist.add(h.id);                        
+                        else if (h.get('npe01__One2OneContact__c') != mapIdHHOld.get(h.id).get('npe01__One2OneContact__c'))
                             hhlist.add(h.id);                        
                     }
                 }
