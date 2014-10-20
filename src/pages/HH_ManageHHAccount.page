@@ -1,5 +1,5 @@
 <apex:page standardController="Account" extensions="HH_ManageHousehold_EXT" title="{!$Label.npo02__ManageHousehold}" 
-	action="{!if(hhA.npe01__SYSTEM_AccountType__c != 'Household Account',  urlFor($Action.Account.Edit, hhA.Id, [retURL = $CurrentPage.parameters.retURL], true), null)}" >
+	action="{!if(hhA.npe01__SYSTEM_AccountType__c != 'Household Account' || isChangingRecordType,  urlFor($Action.Account.Edit, hhA.Id, [retURL=$CurrentPage.parameters.retURL, RecordType=$CurrentPage.parameters.RecordType], true), null)}" >
     
 <!-- Written by Ryan Foster, copyright (c) 2011 Groundwire
  This program is released under the GNU Affero General Public License, Version 3. http://www.gnu.org/licenses/
