@@ -172,7 +172,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         //we still need to query to make sure its not a custom fiscal year
         //or else we'll throw errors when calling Fiscal_Year in queries
         if (household_settings.npo02__Use_Fiscal_Year_for_Rollups__c == true){
-            String fyQuery = 'select id from FiscalYearSettings';            
+            String fyQuery = 'select id from FiscalYearSettings  where IsStandardYear = false';            
             List<SObject> fySettings = new List<SObject>();
             fySettings = Database.query(fyQuery);
             integer hasCustomFYRecord = fySettings.size();
