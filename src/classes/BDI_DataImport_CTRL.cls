@@ -54,7 +54,7 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference deleteImportedDIRecords() {
-        delete [select Id from DataImport__c where Status__c = 'Imported' limit 10000];
+        delete [select Id from DataImport__c where Status__c = :label.bdiImported limit 10000];
         return (close());    	
     }
     
@@ -177,7 +177,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecImported { 
         get {
             if (ApexJobId != null) {
-                crecImported = [select count() from DataImport__c where Status__c = 'Imported' and ApexJobId__c = :ApexJobId];
+                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :ApexJobId];
                 return crecImported;
             }
             return null;
@@ -188,7 +188,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecFailed { 
         get {
             if (ApexJobId != null) {
-                crecFailed = [select count() from DataImport__c where Status__c = 'Failed' and ApexJobId__c = :ApexJobId];
+                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :ApexJobId];
                 return crecFailed;
             }
             return null;
@@ -198,7 +198,7 @@ public with sharing class BDI_DataImport_CTRL {
 
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> 'Imported'];
+            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported];
             return crecToProcess;
         }
         set;

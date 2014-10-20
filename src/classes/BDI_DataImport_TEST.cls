@@ -90,8 +90,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[0].Contact2Imported__c, listCon[0].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[0].Contact2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
     }
     
     /*********************************************************************************************************
@@ -122,8 +122,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Created', listDI[0].Contact2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -155,8 +155,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
     
     /*********************************************************************************************************
@@ -188,8 +188,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Created', listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -226,8 +226,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[0].Contact2ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -258,8 +258,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         system.assertEquals(listDI[0].Account2Imported__c, listAcc[1].Id);
-        system.assertEquals('Created', listDI[0].Account1ImportStatus__c);
-        system.assertEquals('Created', listDI[0].Account2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Account2ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -289,8 +289,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         system.assertEquals(listDI[0].Account2Imported__c, listAcc[0].Id);
-        system.assertEquals('Created', listDI[0].Account1ImportStatus__c);
-        system.assertEquals('Matched', listDI[0].Account2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Account2ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -321,8 +321,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         system.assertEquals(listDI[1].Account1Imported__c, listAcc[0].Id);
-        system.assertEquals('Created', listDI[0].Account1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -358,8 +358,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         system.assertEquals(listDI[1].Account1Imported__c, listAcc[1].Id);
-        system.assertEquals('Matched', listDI[0].Account1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -506,8 +506,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[0].Id); 
         system.assertEquals(listDI[1].HomeAddressImported__c, listAddr[1].Id);
-        system.assertEquals('Created', listDI[0].HomeAddressImportStatus__c);
-        system.assertEquals('Created', listDI[1].HomeAddressImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);        
     }
     
     /*********************************************************************************************************
@@ -553,12 +553,12 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);
         system.assertEquals(listAddr[2].Id, listDI[0].HomeAddressImported__c);   
         system.assertEquals(listAddr[0].Id, listDI[1].HomeAddressImported__c);   
-        system.assertEquals('Matched', listDI[0].HomeAddressImportStatus__c);
-        system.assertEquals('Created', listDI[1].HomeAddressImportStatus__c);            
+        system.assertEquals(label.bdiMatched, listDI[0].HomeAddressImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);            
     }
     
     /*********************************************************************************************************
@@ -639,8 +639,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
-        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -703,8 +703,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
-        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -761,8 +761,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
-        system.assertEquals('Created', listDI[1].DonationImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -804,10 +804,10 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, null);
-        system.assertEquals('Created', listDI[0].DonationImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
         system.assertEquals(null, listDI[1].DonationImportStatus__c);
-        system.assertEquals('Imported', listDI[0].Status__c);        
-        system.assertEquals('Failed', listDI[1].Status__c);        
+        system.assertEquals(label.bdiImported, listDI[0].Status__c);        
+        system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
     }
 
     /*********************************************************************************************************
@@ -872,10 +872,10 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[2].Id);
         system.assertEquals(listDI[1].Contact2Imported__c, listCon[3].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Created', listDI[0].Contact2ImportStatus__c);        
-        system.assertEquals('Created', listDI[1].Contact1ImportStatus__c);
-        system.assertEquals('Created', listDI[1].Contact2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -925,8 +925,8 @@ private with sharing class BDI_DataImport_TEST {
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Status__c = 'Imported';
-        listDI[1].Status__c = 'Failed';
+        listDI[0].Status__c = label.bdiImported;
+        listDI[1].Status__c = label.bdiFailed;
         insert listDI;
         
         Test.startTest();
@@ -960,9 +960,9 @@ private with sharing class BDI_DataImport_TEST {
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
-        listDI[0].Status__c = 'Imported';
-        listDI[1].Status__c = 'Failed';
-        listDI[3].Status__c = 'Imported';
+        listDI[0].Status__c = label.bdiImported;
+        listDI[1].Status__c = label.bdiFailed;
+        listDI[3].Status__c = label.bdiImported;
         insert listDI;
         
         Test.startTest();
@@ -981,7 +981,7 @@ private with sharing class BDI_DataImport_TEST {
         listDI = [select Id, Status__c from DataImport__c order by Status__c];
         system.assertEquals(2, listDI.size());
         system.assertEquals(null, listDI[0].Status__c);
-        system.assertEquals('Failed', listDI[1].Status__c);
+        system.assertEquals(label.bdiFailed, listDI[1].Status__c);
     }
 
     /*********************************************************************************************************
@@ -1015,9 +1015,9 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals('Created', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
     
     /*********************************************************************************************************
@@ -1060,10 +1060,10 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
         system.assertEquals(listDI[2].Contact1Imported__c, listCon[2].Id);
         system.assertEquals(listDI[3].Contact1Imported__c, listCon[3].Id);
-        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals('Matched', listDI[2].Contact1ImportStatus__c);        
-        system.assertEquals('Matched', listDI[3].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -1105,9 +1105,9 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
         system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals('Matched', listDI[2].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -1148,8 +1148,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Contact1Imported__c, listConExisting[0].Id);
         system.assertEquals(listDI[1].Contact1Imported__c, listConExisting[1].Id);
-        system.assertEquals('Matched', listDI[0].Contact1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -1190,8 +1190,8 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
         system.assertEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
-        system.assertEquals('Matched', listDI[0].Account1ImportStatus__c);
-        system.assertEquals('Matched', listDI[1].Account1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -1239,7 +1239,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(4, listDI.size());
         for (integer i = 0; i < 3; i++) {
             system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
-            system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+            system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
             system.assertEquals(listDI[i].Contact1_Preferred_Email__c, listCon[i].npe01__Preferred_Email__c);
         }
     }
@@ -1288,7 +1288,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(5, listDI.size());
         for (integer i = 0; i < 4; i++) {
             system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
-            system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+            system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
             system.assertEquals(listDI[i].Contact1_Preferred_Phone__c, listCon[i].npe01__PreferredPhone__c);
         }
     }
@@ -1342,11 +1342,11 @@ private with sharing class BDI_DataImport_TEST {
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Contact1_Lastname__c == null) {
                 system.assertEquals(null, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals('Failed', listDI[i].Status__c);                
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);                
             } else {
                 system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
-                system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals('Imported', listDI[i].Status__c);                
+                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);                
+                system.assertEquals(label.bdiImported, listDI[i].Status__c);                
             }
             
         }
@@ -1389,17 +1389,17 @@ private with sharing class BDI_DataImport_TEST {
         integer cC2 = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Contact1Imported__c != null) {
-                system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
                 cC1++;
             }
             if (listDI[i].Contact2Imported__c != null) {
-                system.assertEquals('Created', listDI[i].Contact2ImportStatus__c);            
+                system.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
                 cC2++;
             }
             if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
-                system.assertEquals('Failed', listDI[i].Status__c);
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assert(listDI[i].FailureInformation__c.contains('Last Name must be specified'));                 
+                system.assert(listDI[i].FailureInformation__c.contains(label.bdiErrorInvalidLastname));                 
             }
         }
         system.assertEquals(2, cC1);
