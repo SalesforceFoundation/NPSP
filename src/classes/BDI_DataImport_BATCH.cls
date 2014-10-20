@@ -367,6 +367,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
             if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null) {
                 di.Contact2_Lastname__c = di.Contact1_Lastname__c;
+                if (di.Contact2_Lastname__c == null)
+	                LogBDIError(di, 'Contact2 Last Name must be specified.');
             }
         }
     }

@@ -1352,4 +1352,58 @@ private with sharing class BDI_DataImport_TEST {
         }
     }
     
+    /*********************************************************************************************************
+    operation:
+        import contacts with some missing required fields
+    verify:
+        contacts with errors not created, failures logged in di records
+        contacts without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDISomeInvalidContactData() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDISomeInvalidContactData') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c=null, Contact1_Personal_Email__c='c0@foo.com'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
+        listDI.add(new DataImport__c(Contact2_Firstname__c='c2', Contact2_Lastname__c=null, Contact2_Alternate_Email__c='c2@foo.com'));
+        listDI.add(new DataImport__c(Contact2_Firstname__c='c3', Contact2_Lastname__c='C3', Contact2_Alternate_Email__c='c3@foo.com'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c4', Contact1_Lastname__c='C4', Contact1_Work_Email__c='c1@foo.com', Contact2_Firstname__c='c5'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+
+        listDI = [select Status__c, FailureInformation__c, 
+            Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c 
+            from DataImport__c order by Contact1ImportStatus__c];
+        system.assertEquals(5, listDI.size());
+        integer cC1 = 0;
+        integer cC2 = 0;
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].Contact1Imported__c != null) {
+                system.assertEquals('Created', listDI[i].Contact1ImportStatus__c);
+                cC1++;
+            }
+            if (listDI[i].Contact2Imported__c != null) {
+                system.assertEquals('Created', listDI[i].Contact2ImportStatus__c);            
+                cC2++;
+            }
+            if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
+                system.assertEquals('Failed', listDI[i].Status__c);
+                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                system.assert(listDI[i].FailureInformation__c.contains('Last Name must be specified'));                 
+            }
+        }
+        system.assertEquals(2, cC1);
+        system.assertEquals(2, cC2);
+    }
+    
 }
