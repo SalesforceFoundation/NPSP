@@ -64,7 +64,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             returnList.clear();
         }        
         
-        relationshipList = [select id, npe4__RelatedContact__r.LastName, npe4__Type__c, npe4__Status__c, npe4__RelatedContact__r.FirstName, 
+        relationshipList = [select id, npe4__RelatedContact__r.LastName, toLabel(npe4__Type__c), npe4__Status__c, npe4__RelatedContact__r.FirstName, 
                                     npe4__RelatedContact__r.id, npe4__RelatedContact__r.Account.Name, npe4__RelatedContact__r.Title,
                                     npe4__ReciprocalRelationship__r.id 
                                     from npe4__Relationship__c 

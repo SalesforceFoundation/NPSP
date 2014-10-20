@@ -274,18 +274,25 @@
     	                <apex:outputText value="{!$Label.stgHelpINamingClass}" />
                     </div>
                 </div>
-
-	            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="alert alert-danger">
-                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}"  />
-                    <div style="text-align:center;" class="form-control-column">
-                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
-                    </div>
-	            </apex:outputPanel>                    
+            
+                <div class="col-sm-offset-1 col-sm-10"> 
+		            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="panel panel-danger">
+		                <div class="panel-heading">
+		                    <h3 class="panel-title">{!$Label.stgHHNameRefreshTitle}</h3>
+		                </div>
+		                <div class="panel-body" style="padding:15px;">	               
+		                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" />
+		                    <div style="text-align:center;" class="form-control-column">
+		                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+		                    </div>
+	                    </div>
+		            </apex:outputPanel>                    
+	            </div>
 	        </section>
 			
 	        <apex:outputPanel rendered="{!isRunningBatch}">
 	            <br/><br/>
-	            <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelHHNamingProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+	            <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgHHNameRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
 	            <br/>
 	        </apex:outputPanel>
 

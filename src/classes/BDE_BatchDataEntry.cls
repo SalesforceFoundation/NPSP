@@ -133,8 +133,20 @@ public class BDE_BatchDataEntry {
         return false;
     }
     
-    // return a list of all objects that support Batch Data Entry
-    public static list<String> listStrBDEObjects() {
-    	return new string[]{'Opportunity','Contact','Lead','Account'};
+    // return a map of all objects that support Batch Data Entry
+    // key is the object devName, value is the object label
+    public static map<string, string> mapDevNameToLabelBDEObjects() {
+    	//return new string[]{'Opportunity','Contact','Lead','Account'};
+    	map<string, string> mapBDE = new map<string, string>();
+    	Schema.Describesobjectresult dor = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Batch__c'));
+    	for (Schema.ChildRelationship cr : dor.getChildRelationships()) {
+    		// first see if they have a batch__c field
+    		Schema.SObjectField sfld = cr.getField();
+    		if (sfld.getDescribe().getLocalName() == 'Batch__c') { 
+	    		Schema.DescribeSObjectResult dr = cr.getChildSObject().getDescribe();
+	            mapBDE.put(dr.getName(), dr.getLabel());
+    		}
+    	}
+    	return mapBDE;
     }
 }
