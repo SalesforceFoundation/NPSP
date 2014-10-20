@@ -114,9 +114,21 @@ public with sharing class BDI_DataImport_CTRL {
                 }
             }
             
-        	// save any settings changes.
-        	upsert diSettings;
-        	
+            // save any settings changes.
+            try {
+                upsert diSettings;
+            } catch (Exception ex) {
+                // this is a complete hack to work around the bug
+                // https://github.com/SalesforceFoundation/Cumulus/issues/1094
+                // for reasons I cannot fathom, we get an error trying to upsert the
+                // settings object even though the UTIL_CustomSettingsFacade has already
+                // done an upsert on it.  This failure only occurs if there is no org defined
+                // custom setting instance.  The workaround is to catch the upsert failing, and
+                // just clear the Id and do an insert.
+                diSettings.Id = null;
+                insert diSettings;
+            }
+            
             batchRunning = true;
             bdi = new BDI_DataImport_BATCH();
             ApexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
