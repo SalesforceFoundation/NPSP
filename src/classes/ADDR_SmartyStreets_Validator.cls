@@ -166,7 +166,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                               + ' - Exception in verifyRecords100: ' + ex.getMessage() 
 	                               + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
-	                av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
+	                av.API_Response__c = ex.getMessage();
+	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	            }
 	        }
         }
@@ -239,7 +240,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                            + ' - Exception in verifyZipRecords100: ' + ex.getMessage()
 	                            + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
-	                av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
+	                av.API_Response__c = ex.getMessage();
+	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	            }
 	            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	        }

@@ -92,7 +92,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 response = h.send(req);
             } catch (Exception e){
                 a.Verified__c = false;
-                a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
+                a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
+                ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
             }
 
             if (response.getStatusCode() == 200){
@@ -101,7 +102,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
                 }catch (Exception e){
                     a.Verified__c = false;
-                    a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
+                    a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
+                    ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
                 }
 
                 String verified_street = '';
