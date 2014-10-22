@@ -55,6 +55,6 @@ private class BDE_BatchDataEntry_TEST {
         System.assertNotEquals(null, bde.getQueryString());
         System.assertNotEquals(null, bde.getFailureMessage());
         System.assertNotEquals(null, bde.getBatchLookupFieldName());
-        System.assertNotEquals(0, BDE_BatchDataEntry.listStrBDEObjects().size());       
+        System.assertNotEquals(0, BDE_BatchDataEntry.mapDevNameToLabelBDEObjects().size());       
     }
 }

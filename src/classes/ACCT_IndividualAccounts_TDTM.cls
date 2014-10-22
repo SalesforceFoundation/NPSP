@@ -83,7 +83,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
-               contacts = [select id,npe01__SystemAccountProcessor__c,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
+               contacts = [select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
                     Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
                     Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,
                     MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
@@ -100,10 +100,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     
                     // BEFORE INSERT
                     if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    	// always clear this deprecated field to avoid confusing users.
+                    	c.npe01__SystemAccountProcessor__c = null;
+                    	
                         /* HH Account should be created if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to Household Account
                         */
                         if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
                             listContactNeedAccount.add(c);
@@ -112,7 +115,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         /*one-to-one account should be created if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to OneToOne
                         */ 
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
                             (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
@@ -126,7 +129,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         /*contact should be connected to the bucket account if:
                             1. The account isn't set by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to the individual bucket model
                         */
                         else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
                             listContactNeedBucketAccount.add(c);
@@ -138,7 +141,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         /*grab the Accounts that need to have the newly assigned Contact Id to them if:
                             1. If the contact is connected to an Account
                             2. The Contact is flagged as an individual
-                            3. The one-to-one or HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                            3. we are in the one-to-one or HH Account model
                         */
                         if (c.AccountId != null && c.npe01__Private__c != true && 
                             c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && 
@@ -156,10 +159,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         
                     // BEFORE UPDATE
                     if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                        // always clear this deprecated field to avoid confusing users.
+                        c.npe01__SystemAccountProcessor__c = null;
+
                         /* HH account should be created if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The HH Account model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to Household Account
                         */
                         if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
                             listContactNeedAccount.add(c);
@@ -167,7 +173,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         /*one-to-one account should be created if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The one-to-one model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to One-to-One
                         */
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
                             (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
@@ -181,7 +187,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         /*contact should be connected to the bucket account if:
                             1. The account has been blanked out by the user
                             2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Individual model is chosen in the npe01__SystemAccountProcessor__c
+                            3. The Account Model is set to individual bucket
                         */ 
                         else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
                             listContactNeedBucketAccount.add(c);
@@ -361,11 +367,6 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /// <summary> for the list of HH AccountId's, force their renaming </summary>
     /// <param name="listAccountId">list of Account Id</param>
     private void renameHHAccounts(list<Id> listAccountId) {
-
-        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        if (hs != null && hs.npo02__Advanced_Household_Naming__c == false)
-            return;    	
-    	
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);
