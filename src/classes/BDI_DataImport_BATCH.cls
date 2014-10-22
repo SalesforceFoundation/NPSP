@@ -172,7 +172,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             update listDI;
 	
 	    } catch (Exception e) {
-            // rollback the entire transaction on any failure, DML or otherwise
+            // we should only hit this exception if a truly unexpected runtime
+            // error occurs.  not even database updates/inserts should get here,
+            // since we now handle all database updates/inserts using the flavor
+            // of the api that allows us to specify AllOrNothing=false, and we mark
+            // the failed update/inserts on the di record with the problem.
+            // So go ahead and rollback the entire transaction on these totally unexpected errors.
 	        Database.rollback(sp);
 	        
 	        // log the unexpected error
@@ -199,9 +204,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     }
 
     // utility to copy the specific error into the provide di.
-    private void LogBDIError(DataImport__c di, string strError) {
+    private void LogBDIError(DataImport__c di, string strError, string strStatusField) {
+    	system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
     	di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
+        if (strStatusField != null)
+            di.put(strStatusField, strError);
     }
             
     // required method for Batchable.  Nothing we need to do though!
@@ -254,6 +262,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // handle multiple di's referring to the same existing contact
         set<string> setDIKeyUpsert = new set<string>();
         list<Contact> listConUpsert = new list<Contact>();
+        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
                     
         // create/update our c1's
         map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', listStrDataImportFields);
@@ -280,12 +289,25 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	                if (!setDIKeyUpsert.add(diKey))
 	                   isAlreadyAdded = true; 
             	}
-            	if (!isAlreadyAdded)
+            	if (!isAlreadyAdded) {
                     listConUpsert.add(con);
+                    listDIUpsert.add(di);
+            	}
+            }
+            
+            // testing error handling
+            if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
+                con.LastName = null;
+        }
+        //upsert listConUpsert;
+        list<Database.UpsertResult> listUR = database.upsert(listConUpsert, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
             }
         }
-        upsert listConUpsert;
-            
+        
         // update each DI with its new contact1 ID
         // also get all our C1 Id's in a set for further use
         set<Id> setC1Id = new set<Id>();
@@ -318,6 +340,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', listStrDataImportFields);
         setDIKeyUpsert.clear();
         listConUpsert.clear();
+        listDIUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -342,11 +365,23 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     if (!setDIKeyUpsert.add(diKey))
                        isAlreadyAdded = true; 
                 }
-                if (!isAlreadyAdded)
+                if (!isAlreadyAdded) {
                     listConUpsert.add(con);
+                    listDIUpsert.add(di);
+                }
+            }
+            // testing error handling
+            if (Test.isRunningTest() && con.LastName != null && con.LastName.startsWith('FailTest'))
+                con.LastName = null;
+        }
+        //upsert listConUpsert;
+        listUR = database.upsert(listConUpsert, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
             }
         }
-        upsert listConUpsert;
             
         // update each DI with its new contact2 ID
         for (DataImport__c di: listDI) {
@@ -362,13 +397,13 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private void verifyContactData() {    
         for (DataImport__c di: listDI) {
             if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null) {
-                LogBDIError(di, 'Contact1: ' + label.bdiErrorInvalidLastname);
+                LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact1ImportStatus__c');
                 continue;                
             }
             if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null) {
                 di.Contact2_Lastname__c = di.Contact1_Lastname__c;
                 if (di.Contact2_Lastname__c == null)
-	                LogBDIError(di, 'Contact2: ' + label.bdiErrorInvalidLastname);
+	                LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact2ImportStatus__c');
             }
         }
     }
@@ -458,14 +493,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         strSoql += ')';
         
         list<Contact> listCon = database.query(strSoql);
-        system.debug('****DJH potential existing contacts: ' + listCon);
+        //system.debug('****DJH potential existing contacts: ' + listCon);
         
         // put all potential contacts into our map
         for (Contact con : listCon) {
             for (string diKey : listDiKeyContact(con))
                 mapDIKeyToContact.put(diKey, con);
         }
-        system.debug('****DJH after adding potential contacts mapDIKeyToContact: ' + mapDIKeyToContact);
+        //system.debug('****DJH after adding potential contacts mapDIKeyToContact: ' + mapDIKeyToContact);
         
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -473,7 +508,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                continue;
             Contact con = ContactFromDi(di, 1);
             list<string> listDiKey = listDIKeyC1(di);
-            system.debug('****DJH listDiKey: ' + listDiKey);
+            //system.debug('****DJH listDiKey: ' + listDiKey);
             if (con != null) {
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = label.bdiMatched;
@@ -486,7 +521,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // make sure all dikeys for that contact are in the map
             for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
-            system.debug('****DJH after add di keys to mapDIKeyToContact: ' + mapDIKeyToContact);
+            //system.debug('****DJH after add di keys to mapDIKeyToContact: ' + mapDIKeyToContact);
             
             con = ContactFromDi(di, 2);
             listDiKey = listDiKeyC2(di);
@@ -503,7 +538,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
         }
-        system.debug('****DJH at end of MatchExistingCOntacts, mapDIKeyToContact: ' + mapDIKeyToContact);
+        //system.debug('****DJH at end of MatchExistingCOntacts, mapDIKeyToContact: ' + mapDIKeyToContact);
     }
 
     // utility to return the Preferred Email if only one email is set in the di.
@@ -734,6 +769,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // handle multiple di's referring to the same existing account
         set<string> setDIKeyUpsert = new set<string>();
         list<Account> listAccUpsert = new list<Account>();
+        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
 
         // create/update our A1's
         map<string, string> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', listStrDataImportFields);
@@ -759,11 +795,23 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	                if (!setDIKeyUpsert.add(diKey))
 	                   isAlreadyAdded = true;
             	}
-            	if (!isAlreadyAdded) 
+            	if (!isAlreadyAdded) {
                     listAccUpsert.add(acc);
+                    listDIUpsert.add(di);
+            	}
+            }
+            // testing error handling
+            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
+                acc.Name = null;            
+        }
+        //upsert listAccUpsert;
+        list<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account1ImportStatus__c');
             }
         }
-        upsert listAccUpsert;
             
         // update each DI with its new Account1 ID
         // and set contact's primary affiliations
@@ -788,6 +836,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // create/update our A2's
         map<string, string> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', listStrDataImportFields);
         listAccUpsert.clear();
+        listDIUpsert.clear();
         setDIKeyUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -811,11 +860,23 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     if (!setDIKeyUpsert.add(diKey))
                        isAlreadyAdded = true;
                 }
-                if (!isAlreadyAdded) 
+                if (!isAlreadyAdded) { 
                     listAccUpsert.add(acc);
+                    listDIUpsert.add(di);
+                }
+            }
+            // testing error handling
+            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
+                acc.Name = null;
+        }
+        //upsert listAccUpsert;
+        listUR = database.upsert(listAccUpsert, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account2ImportStatus__c');
             }
         }
-        upsert listAccUpsert;
 
         // update each DI with its new Account2 ID
         // and set contact's primary affiliations
@@ -990,6 +1051,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }        
         
         map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', listStrDataImportFields);
+        list<Address__c> listAddrInsert = new list<Address__c>();
+        list<DataImport__c> listDIInsert = new list<DataImport__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1021,15 +1084,27 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             	   di.HomeAddressImportStatus__c = label.bdiMatched;
             	} else {
                     mapDIIdToAddr.put(di.Id, addr);
+                    listAddrInsert.add(addr);
+                    listDIInsert.add(di);
             	}
             }
+            if (Test.isRunningTest() && addr.MailingCity__c != null && addr.MailingCity__c.startsWith('FailTest')) {
+                addr.Household_Account__c = di.Id;  // a bogus id for this field
+            }            
         }
-        // because we have inserted contacts and accounts it the same context,
+        // because we have inserted contacts and accounts in the same context,
         // the address trigger flag will have been set to true.  we need to
         // reset it back to false, or else the newly inserted addresses won't
         // propogate to the hh account and contacts.
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
-        insert mapDIIdToAddr.values();   
+        //insert mapDIIdToAddr.values();   
+        list<Database.SaveResult> listSR = database.insert(listAddrInsert, false);
+        for (integer i = 0; i < listSR.size(); i++) {
+            Database.SaveResult sr = listSR[i];
+            if (!sr.isSuccess()) {
+                LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
+            }
+        }
 
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
@@ -1049,7 +1124,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     
         // get the fields we will auto-copy
         map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Opportunity', listStrDataImportFields);
-
+        list<Opportunity> listOppInsert = new list<Opportunity>();
+        list<DataImport__c> listDIInsert = new list<DataImport__c>();
+        
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1065,7 +1142,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Donation_Donor__c == 'Contact1' || (di.Donation_Donor__c == null && di.Donation_Amount__c != null)) {
                 Contact con = ContactFromDi(di, 1);
                 if (con == null) {
-                    LogBDIError(di, label.bdiErrorInvalidDonor);
+                    LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
                     continue;
                 }                
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
@@ -1074,20 +1151,20 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             } else if (di.Donation_Donor__c == 'Account1') {
                 Account acc = AccountFromDi(di, 1);
                 if (acc == null) {
-                    LogBDIError(di, label.bdiErrorInvalidDonor);
+                    LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
                     continue;
                 }
                 opp.accountId = acc.Id;    
                 strOppName = acc.Name;            
             } else if (di.Donation_Donor__c != null) {
-                LogBDIError(di, label.bdiErrorInvalidDonor);
+                LogBDIError(di, label.bdiErrorInvalidDonor, 'DonationImportStatus__c');
                 continue;
             }
                 
             if (di.Donation_Record_Type_Name__c != null) {
                 Id idRt = UTIL_RecordTypes.GetRecordTypeId('Opportunity', di.Donation_Record_Type_Name__c);
                 if (idRt == null) {
-                    LogBDIError(di, label.bdiErrorInvalidOppRTName);
+                    LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
                     continue;
                 }
                 opp.RecordTypeId = idRt;
@@ -1099,7 +1176,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Donation_Campaign_Name__c != null) {
                 Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
                 if (idCmp == null) {
-                    LogBDIError(di, label.bdiErrorInvalidCampaignName);
+                    LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
                     continue;
                 }
                 opp.CampaignId = idCmp;
@@ -1126,16 +1203,27 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     cPropSet++;
                 }
             }
-            if (cPropSet > 0)
+            if (cPropSet > 0) {
                 mapDIIdToOpp.put(di.Id, opp);
-            else {
+                listOppInsert.add(opp);
+                listDIInsert.add(di);  
+            } else {
             	// clear out fields we autoset since we didn't actually create an opp.
             	di.Donation_Date__c = null;
             	di.Donation_Name__c = null;
             	di.Donation_Stage__c = null;
             }
+            if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest'))
+                opp.Name = null;
         }
-        insert mapDIIdToOpp.values();
+        //insert mapDIIdToOpp.values();
+        list<Database.SaveResult> listSR = database.insert(listOppInsert, false);
+        for (integer i = 0; i < listSR.size(); i++) {
+            Database.SaveResult sr = listSR[i];
+            if (!sr.isSuccess()) {
+                LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'DonationImportStatus__c');
+            }
+        }
         
         // update each DI with its new opp
         for (DataImport__c di: listDI) {
@@ -1163,6 +1251,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // get the payment fields we will auto-copy
         map<string, string> mapDIFieldToPmtField = mapFieldsForDIObject('Payment', listStrDataImportFields);
+        list<npe01__OppPayment__c> listPmtUpsert = new list<npe01__OppPayment__c>();
+        list<DataImport__c> listDIUpsert = new list<DataImport__c>();
 
         // update payments
         for (DataImport__c di: listDI) {
@@ -1179,13 +1269,24 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                             cPropSet++;
                         }
                     }                    
-                    if (cPropSet > 0)
+                    if (cPropSet > 0) {
                         mapDIIdPmt.put(di.Id, pmt);
-                }
+                        listPmtUpsert.add(pmt);
+                        listDIUpsert.add(di);
+                    }
+	            }
+	        }
+        }
+        
+        //upsert mapDIIdPmt.values();
+        list<Database.UpsertResult> listUR = database.upsert(listPmtUpsert, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), null);
             }
         }
         
-        upsert mapDIIdPmt.values();
     }    
 
     //********************************************* CAMPAIGNS ************************************************
@@ -1209,11 +1310,29 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         
         // create any new campaigns
         list<Campaign> listCmpNew = new list<Campaign>();
-        for (string strName : setStrCampaign) {
-            if (mapStrNameToCampaignId.get(strName) == null)
-            	listCmpNew.add(new Campaign(Name=strName));
+        list<DataImport__c> listDINew = new list<DataImport__c>();
+        setStrCampaign.clear();
+        for (DataImport__c di : listDI) {
+            string strName = di.Donation_Campaign_Name__c;
+            Campaign cmp;
+            if (strName != null && setStrCampaign.add(strName)) {
+	            if (mapStrNameToCampaignId.get(strName) == null) {
+	            	cmp = new Campaign(Name=strName);
+	            	listCmpNew.add(cmp);
+	            	listDINew.add(di);
+	            }
+            }
+            if (Test.isRunningTest() && strName != null && strName.startsWith('FailTest'))
+                cmp.Name = null;
         }
-        insert listCmpNew;
+        //insert listCmpNew;
+        list<Database.UpsertResult> listUR = database.upsert(listCmpNew, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listDINew[i], ur.getErrors()[0].getMessage(), 'DonationImportStatus__c');
+            }
+        }
         
         // add the new campaigns to our map
         for (Campaign cmp : listCmpNew) {

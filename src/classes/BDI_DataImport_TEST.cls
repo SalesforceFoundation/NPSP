@@ -805,7 +805,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, null);
         system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
-        system.assertEquals(null, listDI[1].DonationImportStatus__c);
+        system.assertEquals(label.bdiErrorInvalidDonor, listDI[1].DonationImportStatus__c);
         system.assertEquals(label.bdiImported, listDI[0].Status__c);        
         system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
     }
@@ -1341,7 +1341,7 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(4, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Contact1_Lastname__c == null) {
-                system.assertEquals(null, listDI[i].Contact1ImportStatus__c);                
+                system.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);                
                 system.assertEquals(label.bdiFailed, listDI[i].Status__c);                
             } else {
                 system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
@@ -1406,4 +1406,246 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(2, cC2);
     }
     
+    /*********************************************************************************************************
+    operation:
+        import contacts with some data that forces commit errors
+    verify:
+        contacts with errors not created, failures logged in di records
+        contacts without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDITestContactDataErrorHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDITestContactDataErrorHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='FailTest', Contact1_Personal_Email__c='c0@foo.com'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
+        listDI.add(new DataImport__c(Contact2_Firstname__c='c2', Contact2_Lastname__c='FailTest', Contact2_Alternate_Email__c='c2@foo.com'));
+        listDI.add(new DataImport__c(Contact2_Firstname__c='c3', Contact2_Lastname__c='C3', Contact2_Alternate_Email__c='c3@foo.com'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c4', Contact1_Lastname__c='C4', Contact1_Work_Email__c='c1@foo.com', Contact2_Firstname__c='c5'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+
+        listDI = [select Status__c, FailureInformation__c, 
+            Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c 
+            from DataImport__c order by Contact1ImportStatus__c];
+        system.assertEquals(5, listDI.size());
+        integer cC1 = 0;
+        integer cC2 = 0;
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].Contact1Imported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+                cC1++;
+            }
+            if (listDI[i].Contact2Imported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
+                cC2++;
+            }
+            if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                system.assert(listDI[i].Contact1ImportStatus__c != null || listDI[i].Contact2ImportStatus__c != null);                 
+            }
+        }
+        system.assertEquals(2, cC1);
+        system.assertEquals(2, cC2);
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import accounts with some data that forces commit errors
+    verify:
+        accounts with errors not created, failures logged in di records
+        accounts without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDITestAccountDataErrorHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDITestAccountDataErrorHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a0'));
+        listDI.add(new DataImport__c(Account1_Name__c='FailTest1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a2'));
+        listDI.add(new DataImport__c(Account1_Name__c='FailTest3'));
+        listDI.add(new DataImport__c(Account1_Name__c='a4'));
+        listDI.add(new DataImport__c(Account2_Name__c='a5'));
+        listDI.add(new DataImport__c(Account2_Name__c='FailTest6'));
+        listDI.add(new DataImport__c(Account2_Name__c='a7'));
+        listDI.add(new DataImport__c(Account2_Name__c='FailTest8'));
+        listDI.add(new DataImport__c(Account2_Name__c='a9'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Account> listAcc = [select Id, Name from Account order by Name];
+        system.assertEquals(6, listAcc.size());
+
+        listDI = [select Status__c, FailureInformation__c, Account1Imported__c, Account1ImportStatus__c,
+            Account2Imported__c, Account2ImportStatus__c from DataImport__c];
+        system.assertEquals(10, listDI.size());
+        integer cA1 = 0;
+        integer cA2 = 0;
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].Account1Imported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].Account1ImportStatus__c);
+                cA1++;
+            }
+            if (listDI[i].Account2Imported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].Account2ImportStatus__c);            
+                cA2++;
+            }
+            if (listDI[i].Account1Imported__c == null && listDI[i].Account2Imported__c == null) {
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                system.assert(listDI[i].Account1ImportStatus__c != null || listDI[i].Account2ImportStatus__c != null);                 
+            }
+        }
+        system.assertEquals(3, cA1);
+        system.assertEquals(3, cA2);
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import donations with some data that forces commit errors
+    verify:
+        donations with errors not created, failures logged in di records
+        donations without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDITestDonationDataErrorHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDITestDonationDataErrorHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10));
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Name__c='FailTest1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='FailTest2', Donation_Amount__c=30));
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Contact1', Donation_Amount__c=40)); // will fail.
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=50, Donation_Record_Type_Name__c='FailTest3'));
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=70));         
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Opportunity> listOpp = [select Id, Name, Amount from Opportunity order by Amount];
+        system.assertEquals(2, listOpp.size());
+
+        listDI = [select Status__c, FailureInformation__c, DonationImported__c, DonationImportStatus__c from DataImport__c];
+        system.assertEquals(6, listDI.size());
+        integer cOpp = 0;
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].DonationImported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
+                cOpp++;
+            } else {
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                system.assertNotEquals(null, listDI[i].DonationImportStatus__c);    
+            }
+        }
+        system.assertEquals(cOpp, listOpp.size());
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import donations with campaigns that have some data that forces commit errors
+    verify:
+        campaigns with errors not created, failures logged in di records
+        campaigns without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDITestCampaignDataErrorHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDITestCampaignDataErrorHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10, Donation_Campaign_Name__c='cmp1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Campaign_Name__c='FailTest1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a2', Donation_Donor__c='Account1', Donation_Amount__c=30, Donation_Campaign_Name__c='cmp1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a3', Donation_Donor__c='Account1', Donation_Amount__c=40, Donation_Campaign_Name__c='cmp2'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Opportunity> listOpp = [select Id, Name, Amount from Opportunity order by Amount];
+        system.assertEquals(3, listOpp.size());
+        list<Campaign> listCmp = [select Id, Name from Campaign];
+        system.assertEquals(2, listCmp.size());
+
+        listDI = [select Status__c, FailureInformation__c, DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c from DataImport__c];
+        system.assertEquals(4, listDI.size());
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].Donation_Campaign_Name__c == 'FailTest1') {
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertNotEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
+                system.assertEquals(null, listDI[i].DonationImported__c);
+            } else {
+                system.assertEquals(label.bdiImported, listDI[i].Status__c);
+                system.assertEquals(null, listDI[i].FailureInformation__c);    
+                system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);    
+            }
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import addresses with some data that forces commit errors
+    verify:
+        addresses with errors not created, failures logged in di records
+        addresses without errors are created
+    **********************************************************************************************************/            
+    static testMethod void ManyDITestAddressDataErrorHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDITestAddressDataErrorHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='C0', Contact1_Personal_Email__c='c0@foo.com',Home_City__c='Seattle'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',Home_City__c='FailTest1'));
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Personal_Email__c='c2@foo.com',Home_City__c='Portland'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Address__c> listAddr = [select Id, MailingCity__c from Address__c];
+        system.assertEquals(2, listAddr.size());
+
+        listDI = [select Status__c, FailureInformation__c, HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c];
+        system.assertEquals(3, listDI.size());
+        integer cAddr = 0;
+        for (integer i = 0; i < listDI.size(); i++) {
+            if (listDI[i].HomeAddressImported__c != null) {
+                system.assertEquals(label.bdiCreated, listDI[i].HomeAddressImportStatus__c);
+                cAddr++;
+            } else {
+                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                system.assertNotEquals(null, listDI[i].HomeAddressImportStatus__c);    
+            }
+        }
+        system.assertEquals(cAddr, listAddr.size());
+    }
+
 }
