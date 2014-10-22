@@ -75,6 +75,15 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
             sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
+        else if(res.getStatusCode() == 400)
+            throw new LiveAddressException('Bad input. Required fields missing from input or are malformed.');
+        else if(res.getStatusCode() == 401)
+            throw new LiveAddressException('Unauthorized. Authentication failure; invalid credentials.');
+        else if(res.getStatusCode() == 402)
+            throw new LiveAddressException('Payment required. No active subscription found.');
+        else if(res.getStatusCode() == 500)
+            throw new LiveAddressException('Internal server error. General service failure; retry request.');
+        
         
         if (sr == null || sr.isEmpty()) return null;
         else return sr; 
