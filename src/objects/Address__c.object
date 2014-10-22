@@ -55,12 +55,9 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Starter Pack.</description>
     <enableActivities>false</enableActivities>
-    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
-    <enableSharing>true</enableSharing>
-    <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>API_Response__c</fullName>
         <description>Contains the raw response or an error message.</description>
