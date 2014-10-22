@@ -536,6 +536,7 @@
     <members>alloManageCampaignAllocations</members>
     <members>alloManageOppAllocations</members>
     <members>alloManageRecurringDonationAllocations</members>
+    <members>alloModifyCurrency</members>
     <members>alloNegativeAmount</members>
     <members>alloNegativePercent</members>
     <members>alloPercentExceed100</members>

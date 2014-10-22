@@ -112,14 +112,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         for (integer i=0; i<newList.size(); i++) {
             Opportunity opp = (Opportunity) newlist[i];
 
+
             //skip excluded opp types and recordtypes
             if (oppRecordTypesToExclude.contains((id)opp.get('RecordTypeId')) || oppTypesToExclude.contains(opp.Type))
                 continue;
 
             //INSERT case: Verify associated Campaign and Recurring Donations to auto create allocations
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+                //don't do anything on insert if we don't have an amount
+                if (opp.Amount == null)
+                    continue;
                 //if this new opportunity has a Campaign, add to list for campaign processing
-                if (opp.CampaignId != null || opp.npe03__Recurring_Donation__c != null)
+                else if (opp.CampaignId != null || opp.npe03__Recurring_Donation__c != null)
                     listOppsForProcessing.add(opp);
                 //create a default allocation for the total amount, only if there's no possibility of other allocations from related objects
                 else if (settings.Default_Allocations_Enabled__c) {
@@ -157,18 +161,27 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         
         list<Allocation__c> triggerList = (list<Allocation__c>) newList;
 
-        for (Allocation__c allo : triggerList) {  
+        for (integer i=0; i<triggerList.size(); i++) {  
+            Allocation__c allo = triggerlist[i];
+
             //if we don't have a parent, or have more than one parent, exception thrown
             if (parentError(allo))
                 allo.AddError(Label.alloSingleParent);
+            //neither an amount nor a percent is defined
             if (allo.Amount__c == null && allo.Percent__c == null)
                 allo.addError(Label.alloAmountOrPercent);
+            //negative amount
             if (allo.Amount__c != null && allo.Amount__c < 0)
                 allo.addError(Label.alloNegativeAmount);
+            //negative percent
             if (allo.Percent__c != null && allo.Percent__c < 0)
                 allo.addError(Label.alloNegativePercent);
+            //manually updated currency
+            if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != oldList[i].get('CurrencyIsoCode'))
+                allo.addError(Label.alloModifyCurrency);
 
         }
+
 
         fillMapWrapper(triggerList);
         
@@ -369,48 +382,60 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         
             if (mapWrapper.containsKey(opp.id)) {
                 alloWrapper oppWrap = mapWrapper.get(opp.id);
-        
-                for (Allocation__c allo : oppWrap.listAllo) {
-                    //if the percentage changed, recalculate the amount
-                    if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
-                        //remove the previous amount, recalculate the amount, and add it back
-                        oppWrap.totalAmount -= allo.Amount__c;
-                        allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);
-                        oppWrap.totalAmount += allo.Amount__c;
-                        
-                        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
-                            allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
 
-                        dmlWrapper.objectsToUpdate.add(allo);
-                    //if just the currency changed, recalculate the currency
-                    } else if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode')) {
-                        allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
-                        dmlWrapper.objectsToUpdate.add(allo);
-                    }
-                }
-                //if the Default allocation handling is enabled, create/update/delete the default allocation to cover 100% of the opportunity
-                if (settings.Default_Allocations_Enabled__c) {
-                    decimal remainder = oppWrap.parentAmount - oppWrap.totalAmount;
-                    if (remainder==0) {
-                        if (oppWrap.defaultAllo!=null)
-                            dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
-                    } else if (remainder > 0) {
-                        if (oppWrap.defaultAllo==null) {
-                            oppWrap.defaultAllo = makeDefaultAllocation(opp);
-                            oppWrap.defaultAllo.Amount__c = remainder;
-                            dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
-                        } else if (oppWrap.defaultAllo.Amount__c != remainder || (ALLO_Multicurrency_TDTM.isMultiCurrency() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
-                            oppWrap.defaultAllo.Amount__c = remainder;
+                system.debug('LookHere!: ' + oppWrap);
+                //null amount: delete all associated allocations
+                if (opp.Amount == null) {
+                    dmlWrapper.objectsToDelete.addAll((list<sObject>)oppWrap.listAllo);
+                    if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null)
+                        dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                } else {
+
+                    for (Allocation__c allo : oppWrap.listAllo) {
+                        //if the percentage changed, recalculate the amount
+                        if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
+                            //remove the previous amount, recalculate the amount, and add it back
+                            oppWrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);
+                            oppWrap.totalAmount += allo.Amount__c;
+                            
                             if (ALLO_Multicurrency_TDTM.isMultiCurrency())
-                                oppWrap.defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
-                            dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
+                                allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+
+                            dmlWrapper.objectsToUpdate.add(allo);
+                        //if just the currency changed, recalculate the currency
+                        } else if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode')) {
+                            allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                            dmlWrapper.objectsToUpdate.add(allo);
                         }
                     }
+                    //if the Default allocation handling is enabled, create/update/delete the default allocation to cover 100% of the opportunity
+                    if (settings.Default_Allocations_Enabled__c) {
+                        decimal remainder = oppWrap.parentAmount - oppWrap.totalAmount;
+                        if (remainder==0) {
+                            if (oppWrap.defaultAllo!=null)
+                                dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                        } else if (remainder > 0) {
+                            if (oppWrap.defaultAllo==null) {
+                                oppWrap.defaultAllo = makeDefaultAllocation(opp);
+                                oppWrap.defaultAllo.Amount__c = remainder;
+                                dmlWrapper.objectsToInsert.add(oppWrap.defaultAllo);
+                            } else if (oppWrap.defaultAllo.Amount__c != remainder || (ALLO_Multicurrency_TDTM.isMultiCurrency() && oppWrap.defaultAllo.get('CurrencyIsoCode') != opp.get('CurrencyIsoCode'))) {
+                                oppWrap.defaultAllo.Amount__c = remainder;
+                                if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+                                    oppWrap.defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                                dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
+                            }
+                        }
+                    }
+                    //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
+                    if (oppWrap.totalAmount > oppWrap.parentAmount)
+                        //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
+                        opp.Amount.addError(Label.alloExceedsOppAmount);
                 }
-                //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
-                if (oppWrap.totalAmount > oppWrap.parentAmount)
-                    //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
-                    opp.Amount.addError(Label.alloExceedsOppAmount);
+            //if we have no allocations for this opportunity, defaults are enabled, and the opportunity has an amount, make a default allocation
+            } else if (settings.Default_Allocations_Enabled__c && opp.Amount != null) {
+                dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
             }
         }
     }

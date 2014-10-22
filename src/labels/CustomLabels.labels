@@ -377,6 +377,14 @@
         <value>Manage Recurring Donation Allocations</value>
     </labels>
     <labels>
+        <fullName>alloModifyCurrency</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>alloModifyCurrency</shortDescription>
+        <value>You can&apos;t modify allocation currencies directly. An allocation&apos;s currency is updated when the parent Opportunity, Campaign, or Recurring Donation currency is modified.</value>
+    </labels>
+    <labels>
         <fullName>alloNegativeAmount</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>

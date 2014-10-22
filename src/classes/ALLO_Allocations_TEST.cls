@@ -354,6 +354,8 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
 
+    //insert opps with excluded type and recordtype
+    //verify no default allocations are created
     @isTest
     static void testExcludedOpps() {
         if (strTestOnly != '*' && strTestOnly != 'testExcludedOpps') return;
@@ -379,4 +381,40 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(0,queryAllo.size(), 'No default allocation should be created for an excluded opportunity type or an excluded opportunity record type.');
 
     }
+
+    //insert opp with null amount, verify no default allocation is created
+    //add an amount, verify default created
+    //remove the amount, verify default removed
+    @isTest
+    static void testOppNullAmount() {
+        if (strTestOnly != '*' && strTestOnly != 'testOppNullAmount') return;
+
+        General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
+        insert defaultgau;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        Account acc = new Account(Name='foo');
+        insert acc;
+
+        Opportunity opp = new Opportunity(Name='foo', Amount = null, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
+        system.assertEquals(0,queryAllo.size(),'No default allocation should be created for an opporunity with a null amount.');
+
+        ALLO_Allocations_TDTM.resetFlags(false);
+        opp.Amount = 8;
+        update opp;
+
+        queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
+        system.assertEquals(1,queryAllo.size(),'A default allocation should be created for the opporunity that now has an amount.');
+
+        ALLO_Allocations_TDTM.resetFlags(false);
+        opp.Amount = null;
+        update opp;
+
+        queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
+        system.assertEquals(0,queryAllo.size(),'A default allocation should be created for the opporunity that now has an amount.');
+    }
+
 }
