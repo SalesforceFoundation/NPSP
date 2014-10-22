@@ -252,7 +252,7 @@ public with sharing class ADDR_Validator_TEST {
         Test.stopTest();
         
         System.assertEquals(null, sc.apiSettingsSaveMessage);
-        System.debug('****Error message: ' + sc.apiSettingsErrorMessage);
+        UTIL_Debug.debug('****Error message: ' + sc.apiSettingsErrorMessage);
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'));
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'));
     }

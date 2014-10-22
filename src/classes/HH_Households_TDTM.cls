@@ -83,16 +83,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 
                 if (oldcmap.get(c.id).npo02__household__c != null){
                     oldHouseholds.add(oldcmap.get(c.id).npo02__household__c);
-                    //system.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
+                    //UTIL_Debug.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
                 }
                 
             }            
             
-            AggregateResult[] ar = [select npo02__Household__c oldhh, count(id) membercount from Contact where npo02__Household__c IN :oldHouseholds group by npo02__Household__c];
-            
             //create a map from the old household id and its size
-            for (AggregateResult a : ar){
-                //system.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
+            for (AggregateResult a : [select npo02__Household__c oldhh, count(id) membercount from Contact where npo02__Household__c IN :oldHouseholds group by npo02__Household__c]){
+                //UTIL_Debug.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
                 oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
             }
             

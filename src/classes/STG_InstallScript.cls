@@ -82,7 +82,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
         UTIL_CustomSettingsFacade.getOrgBDESettings(); 
         
-        System.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
+        UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
  
         for(String setting : npspToCumulusMap.keySet()) {
             if(setting.startsWith('npe01')) {
@@ -124,7 +124,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if(npe03Settings != null) npspCustomSettings.add(npe03Settings);
         if(npe04Settings != null) npspCustomSettings.add(npe04Settings);
         if(npspCustomSettings.size() > 0) {
-            System.debug('****Deactivating pre-cumulus flags');
+            UTIL_Debug.debug('****Deactivating pre-cumulus flags');
             update npspCustomSettings;
         }
         
@@ -185,7 +185,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c 
                                                      IN :handlerSettingsToUpdate];
         for(Trigger_Handler__c handler : handlersToUpdate) {
-            //System.debug('****Deactivating class: ' + handler.Class__c);
+            //UTIL_Debug.debug('****Deactivating class: ' + handler.Class__c);
             handler.Active__c = false;
         }
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 

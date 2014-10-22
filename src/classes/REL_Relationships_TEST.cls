@@ -189,20 +189,20 @@ private class REL_Relationships_TEST {
         
         crel_original = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
                                             from npe4__Relationship__c where Id=:crel_original.Id];
-        System.debug('****Original relationship: ' + crel_original);
+        UTIL_Debug.debug('****Original relationship: ' + crel_original);
 
         // check mirror rel got created
         npe4__Relationship__c crel_mirror = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
                                             from npe4__Relationship__c where npe4__reciprocalrelationship__c=:crel_original.Id];
 
-        System.debug('****Mirror relationship: ' + crel_mirror);
+        UTIL_Debug.debug('****Mirror relationship: ' + crel_mirror);
                                         
         //mirror should reference the original
         System.assertEquals(crel_original.Id, crel_mirror.npe4__reciprocalrelationship__c);        
         
         //original should reference mirror
         System.assertEquals(crel_mirror.Id, crel_original.npe4__reciprocalrelationship__c);  
-        System.debug('***Original successfully references mirror');
+        UTIL_Debug.debug('***Original successfully references mirror');
         
         //reset the process controller to mimic a second user action
         //Relationships_ProcessControl.hasRun = false;
@@ -234,14 +234,14 @@ private class REL_Relationships_TEST {
         //Verify a relationship was automatically created when the campaign member was created 
         List<npe4__Relationship__c> relationships = [select id, npe4__Type__c from npe4__Relationship__c 
                                         where npe4__Contact__c = :c2.id];
-        System.debug('****Number of relationships after creating campaign member: ' + relationships.size());
+        UTIL_Debug.debug('****Number of relationships after creating campaign member: ' + relationships.size());
         system.assertEquals(2, relationships.size());
         system.assertEquals('TestType', relationships[0].npe4__Type__c);
         
         //Verify a reciprocal relationship was also automatically created when the campaign member was created 
         List<npe4__Relationship__c> reciprocalRelationships = [select id, npe4__Type__c from npe4__Relationship__c 
                                         where npe4__ReciprocalRelationship__c = :relationships[0].id];
-        System.debug('****Number of reciprocal relationships: ' + reciprocalRelationships);
+        UTIL_Debug.debug('****Number of reciprocal relationships: ' + reciprocalRelationships);
         system.assertEquals(1, reciprocalRelationships.size());
         system.assertEquals('TestType', reciprocalRelationships[0].npe4__Type__c);
         
@@ -574,12 +574,12 @@ private class REL_Relationships_TEST {
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
         Database.SaveResult[] updateResults = Database.update(relationships, false);
-        System.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
+        UTIL_Debug.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
         errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
-        System.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
         //no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }

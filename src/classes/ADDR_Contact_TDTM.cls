@@ -127,7 +127,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
-                	//system.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
 

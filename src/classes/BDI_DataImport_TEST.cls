@@ -1217,7 +1217,7 @@ private with sharing class BDI_DataImport_TEST {
         listDI[2].Contact1_Personal_Email__c = null;
         // c3 gets multiple emails
         listDI[3].Contact1_Work_Email__c = 'c3@c3.com';
-        system.debug('****DJH: listDI' + listDI);
+        UTIL_Debug.debug('****DJH: listDI' + listDI);
         insert listDI;
           
         //run batch data import
