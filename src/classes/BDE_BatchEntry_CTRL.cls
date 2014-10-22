@@ -156,8 +156,9 @@ public with sharing class BDE_BatchEntry_CTRL {
                 } 
                 else{
                     objectSettingsList = new List<SelectOption>();
-                    for(String str : BDE_BatchDataEntry.listStrBDEObjects()) {
-                        objectSettingsList.add(new SelectOption(str, str));
+                    map<string, string> mapBDE = BDE_BatchDataEntry.mapDevNameToLabelBDEObjects();
+                    for(String strDevName : mapBDE.keySet()) {
+                        objectSettingsList.add(new SelectOption(strDevName, mapBDE.get(strDevName)));
                     }
                     
                     pageSubtitle = 'Batch Data Entry Home';

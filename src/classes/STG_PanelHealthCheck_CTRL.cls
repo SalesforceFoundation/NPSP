@@ -48,6 +48,18 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
     }
     
+    public boolean isAllTestsPassed { 
+        get {
+            if (!hasResults)
+                return false;
+            for (DetectResult dr : listDR) {
+                if (dr.strStatus == 'Error')
+                    return false;
+            }
+            return true;
+        }
+    }
+    
     public string strTime { get; set; }
     
     public string strNow {

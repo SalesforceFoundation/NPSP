@@ -95,6 +95,7 @@ public class HH_HouseholdNaming_TEST {
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Advanced_Household_Naming__c = true,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,

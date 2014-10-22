@@ -192,7 +192,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         if (householdDeletes.size() > 0)        
             deleteHousehold(householdDeletes, dmlWrapper);
         
-        if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdnameupdates.size() > 0){
+        if (householdnameupdates.size() > 0){
                           
             if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
                 HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
@@ -306,8 +306,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 update contactUpdates;
             }
         
-            //SETTING CHECK HERE!!!
-            if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && isInsertTrigger){
+            if (isInsertTrigger){
                 list<id> hhidsfornaming = new list<id>();
                 
                 for (Database.SaveResult sr : lsr){
@@ -406,7 +405,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToDelete.addAll(householdDeletes);
         }           
         
-        if (currentHouseholdsSettings.npo02__Advanced_Household_Naming__c == true && householdrenames.size() > 0){
+        if (householdrenames.size() > 0){
             if (!system.isFuture() && !system.isBatch() && currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
                 HH_HouseholdNaming.FutureUpdateNames(householdrenames);
             else{
