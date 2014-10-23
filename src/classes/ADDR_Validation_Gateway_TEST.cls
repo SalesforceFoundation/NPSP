@@ -108,7 +108,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testBadAuth') return;
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
     	
-    	settings.Address_Verification_Endpoint__c = 'bad-authentication-for-test';
+    	settings.Address_Verification_Endpoint__c = '401';
         update settings;
         
         Test.startTest();
@@ -117,7 +117,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
             sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
         	System.debug('****' + e.getStackTraceString());
-            system.assertEquals('Not authenticated.', e.getMessage());
+            system.assertEquals('Unauthorized. Authentication failure; invalid credentials.', e.getMessage());
         }
         Test.stopTest();
         system.assertEquals(null, sr);
