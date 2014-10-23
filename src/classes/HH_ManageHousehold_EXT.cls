@@ -161,7 +161,29 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
     
-    private static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllNamingFields;
+    private static string conSelect {
+        get {
+            if (conSelect == null) {
+                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+                string strSoql = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name, ' +
+                    'npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, ' + 
+                    'is_Address_Override__c, Current_Address__c, ' + 
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate ';
+                
+                set<string> setStrField = HH_HouseholdNaming.iNaming.setHousholdNameFieldsOnContact();
+                for (string strF : setStrField) {
+                	if (!strSoql.contains(' ' + strF))
+                        strSoql += ', ' + strF;
+                }  
+                                
+                strSoql += ' FROM Contact ';
+                conSelect = strSoql;
+            }
+            return conSelect;
+        }
+        set;        
+    }    
+    
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
