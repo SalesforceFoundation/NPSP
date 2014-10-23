@@ -58,4 +58,34 @@ public with sharing class UTIL_Namespace_TEST {
         String fixedEmail = UTIL_Namespace.sandboxEmailToRealEmail('awheeler=universalcontainers.com@example.com');	
         System.assertEquals('awheeler@universalcontainers.com', fixedEmail);
     }
+    
+    //we have some packaged labels that we no longer reference.
+    //unfortunately, this causes our local DE Orgs to not include them in our local package.
+    //but these labels were already released in the managed package and cannot be deleted.
+    //so we now refer to them here, just so our DE Orgs will keep the in our local package.
+    static testmethod void keepUnusedPackagedLabelsInPackage() {
+        string str;
+        str = Label.Addr_Settings_API_Body;
+        str = Label.Addr_Settings_Intro_Body;
+        str = Label.Addr_Settings_Intro_Title;
+        str = Label.Addr_Settings_Notice;
+        str = Label.Addr_Settings_Test_Body;
+        str = Label.Addr_Settings_Test_Response_Title;
+        str = Label.Addr_Settings_Test_Title;
+        str = Label.Addr_Verification_Batch_Status;
+        str = Label.stgHHNameRefreshTitle;
+        str = Label.stgLabelAfflSettings;
+        str = Label.stgLabelBDESettings;
+        str = Label.stgLabelBatchStatus;
+        str = Label.stgLabelCurrentUDR;
+        str = Label.stgLabelErrorNotify;
+        str = Label.stgLabelMembershipSettings;
+        str = Label.stgLabelPaymentSettings;
+        str = Label.stgLabelRDFieldMap;
+        str = Label.stgLabelRDPeriod;
+        str = Label.stgLabelRDSettings;
+        str = Label.stgLabelRelSettings;
+        str = Label.stgLabelTriggerHandlers;
+        str = Label.stgNavContacts;
+    }
 }

@@ -144,14 +144,6 @@
  &lt;br/&gt;</value>
     </labels>
     <labels>
-        <fullName>Addr_Verification_Batch_Status</fullName>
-        <categories>address, verification</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Verification Batch Status</shortDescription>
-        <value>Mass Verification Status</value>
-    </labels>
-    <labels>
         <fullName>Addr_Verification_Batch_Not_Supported</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -166,6 +158,14 @@
         <protected>true</protected>
         <shortDescription>Batches of 100</shortDescription>
         <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_Status</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verification Batch Status</shortDescription>
+        <value>Mass Verification Status</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
