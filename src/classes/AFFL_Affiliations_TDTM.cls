@@ -90,6 +90,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     	AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
                     	if (ao == null) ao = new AfflOps(contact.Id, contact.Primary_Affiliation__c);
                     	ao.fPrimary = true;
+                        ao.strRole = contact.Title;
                     	mapStrComboKeyAfflOps.put(strComboKey, ao);
                     }
                 }
@@ -123,6 +124,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 	                        AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
                             if (ao == null) ao = new AfflOps(contact.Id, contact.Primary_Affiliation__c);
                             ao.fPrimary = true;
+                            ao.strRole = contact.Title;
                             mapStrComboKeyAfflOps.put(strComboKey, ao);
                         }
                         if (oldContact.Primary_Affiliation__c != null) {
@@ -245,6 +247,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     a.npe5__Organization__c = accountId;
                     a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
                     a.npe5__StartDate__c = System.Today();
+                    a.npe5__Role__c = ao.strRole;
                     a.npe5__Primary__c = true;
                     listAfflInsert.add(a);        	   	
         	   }
