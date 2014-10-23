@@ -554,6 +554,7 @@
     <members>bdiContactMatchFnameLname</members>
     <members>bdiContactMatchFnameLnameEmail</members>
     <members>bdiContactMatchLnameEmail</members>
+    <members>bdiCreated</members>
     <members>bdiDataImporterConfigTitle</members>
     <members>bdiDataImporterDescription</members>
     <members>bdiDataImporterInfoLine1</members>
@@ -563,6 +564,15 @@
     <members>bdiDataImporterInfoTitle</members>
     <members>bdiDataImporterNumToProcess</members>
     <members>bdiDataImporterTitle</members>
+    <members>bdiDonation</members>
+    <members>bdiErrorInvalidCampaignName</members>
+    <members>bdiErrorInvalidDonor</members>
+    <members>bdiErrorInvalidLastname</members>
+    <members>bdiErrorInvalidOppRTName</members>
+    <members>bdiFailed</members>
+    <members>bdiIgnored</members>
+    <members>bdiImported</members>
+    <members>bdiMatched</members>
     <members>bdiRecordsFailed</members>
     <members>bdiRecordsImported</members>
     <members>bdiRecordsProcessed</members>
