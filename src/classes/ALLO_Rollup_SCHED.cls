@@ -89,7 +89,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         list<RollupSpec> mySpecs = new list<RollupSpec>();
         
         //total all time / this year / last year / two years ago
-        RollupSpec rs = new RollupSpec('Allocation__c', 'General_Accounting_Unit__c');
+        RollupSpec rs = new RollupSpec(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c'));
         rs.filter = 'Opportunity__r.IsWon = TRUE AND Opportunity__r.IsClosed = TRUE ';
         //add built out exclusions to query
         rs.filter += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
@@ -123,7 +123,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         mySpecs.add(rs);
 
         //last 365 days
-        RollupSpec rs2 = new RollupSpec('Allocation__c', 'General_Accounting_Unit__c');
+        RollupSpec rs2 = new RollupSpec(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c'));
         rs2.filter = 'Opportunity__r.IsWon = TRUE AND Opportunity__r.IsClosed = TRUE AND Opportunity__r.CloseDate = LAST_N_DAYS:' + alloSettings.Rollup_N_Day_Value__c.intValue() + ' ';
         rs2.filter += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
         rs2.aggregateToParentFieldnameMap = new map<string, string> {
