@@ -76,12 +76,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getName() == 'Allocation__c' && !hasRunForAllocationsBefore && 
+        if (objResult.getName() == UTIL_Namespace.StrTokenNSPrefix('Allocation__c') && !hasRunForAllocationsBefore && 
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAllocationsBefore = true;
-        } else if (objResult.getName() == 'Allocation__c' && !hasRunForAllocationsAfter && 
+        } else if (objResult.getName() == UTIL_Namespace.StrTokenNSPrefix('Allocation__c') && !hasRunForAllocationsAfter && 
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);

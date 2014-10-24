@@ -491,9 +491,16 @@
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
+    <members>Addr_Settings_Intro_Body</members>
     <members>Addr_Settings_Intro_Body1</members>
     <members>Addr_Settings_Intro_Body2</members>
+    <members>Addr_Settings_Intro_Title</members>
+    <members>Addr_Settings_Notice</members>
+    <members>Addr_Settings_Test_Body</members>
+    <members>Addr_Settings_Test_Response_Title</members>
+    <members>Addr_Settings_Test_Title</members>
     <members>Addr_Skip_Verified</members>
     <members>Addr_Token_Error</members>
     <members>Addr_Unauthorized_Endpoint</members>
@@ -804,11 +811,16 @@
     <members>stgInstallScriptError</members>
     <members>stgLabelActionColumn</members>
     <members>stgLabelAddressVerification</members>
+    <members>stgLabelAfflSettings</members>
     <members>stgLabelAlloBatchProgress</members>
     <members>stgLabelAllocationsRollupSettings</members>
     <members>stgLabelAllocationsSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
+    <members>stgLabelBDESettings</members>
+    <members>stgLabelBatchStatus</members>
+    <members>stgLabelCurrentUDR</members>
+    <members>stgLabelErrorNotify</members>
     <members>stgLabelExamplesFGFormat</members>
     <members>stgLabelExamplesHHNameFOrmat</members>
     <members>stgLabelExamplesIGFormat</members>
@@ -819,6 +831,7 @@
     <members>stgLabelHHObject</members>
     <members>stgLabelHHSettings</members>
     <members>stgLabelLeadSettings</members>
+    <members>stgLabelMembershipSettings</members>
     <members>stgLabelNewAutoRel</members>
     <members>stgLabelNewPaymentMapping</members>
     <members>stgLabelNewRDFieldMap</members>
@@ -834,10 +847,16 @@
     <members>stgLabelOtherHHNameFormat</members>
     <members>stgLabelOtherInformalGreetingFormat</members>
     <members>stgLabelPaymentMapNoValidFields</members>
+    <members>stgLabelPaymentSettings</members>
+    <members>stgLabelRDFieldMap</members>
     <members>stgLabelRDNewPeriod</members>
+    <members>stgLabelRDPeriod</members>
+    <members>stgLabelRDSettings</members>
     <members>stgLabelRDStatus</members>
+    <members>stgLabelRelSettings</members>
     <members>stgLabelSelectChatterGroup</members>
     <members>stgLabelSoftCredit</members>
+    <members>stgLabelTriggerHandlers</members>
     <members>stgLabelTypeAhead</members>
     <members>stgLabelUDRNoOppFields</members>
     <members>stgLabelUDROp</members>
@@ -853,6 +872,7 @@
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
     <members>stgNavContactRoles</members>
+    <members>stgNavContacts</members>
     <members>stgNavDonations</members>
     <members>stgNavDonorStatistics</members>
     <members>stgNavErrorLog</members>
