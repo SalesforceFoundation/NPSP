@@ -115,8 +115,18 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Test.startTest();      
         insert listCon;
+
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listAcc[0].Id, npe01__One2OneContact__c = listCon[0].Id),
+            new Account(Id=listAcc[1].Id, npe01__One2OneContact__c = listCon[2].Id),
+            new Account(Id=listAcc[2].Id, npe01__One2OneContact__c = listCon[4].Id)
+        };
+        update updtAccts;        
         test.stopTest();    // to flush any future calls.
-        
+
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
         system.assertEquals(3, listAcc.size());
@@ -320,7 +330,13 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEqualS(listCon[0].LastName, listCon[1].LastName);
         listCon[3].LastName = 'DifferentLastName';
         system.assertNotEquals(listCon[2].LastName, listCon[3].LastName);
-        
+
+        // Force the primary contact on each to ensure proper naming order
+        listAcc[0].npe01__One2OneContact__c = listCon[0].Id;
+        listAcc[1].npe01__One2OneContact__c = listCon[2].Id;
+        listAcc[2].npe01__One2OneContact__c = listCon[4].Id;
+        update listAcc;
+                
         Test.startTest();      
         update listCon;
         test.stopTest();    // to flush any future calls.
@@ -405,6 +421,14 @@ private with sharing class ACCT_HHAccounts_TEST {
         // now split the HH's
         listCon[1].AccountId = listAcc[2].Id;
         listCon[4].AccountId = listAcc[2].Id;
+        
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listAcc[2].Id, npe01__One2OneContact__c = listCon[1].Id)
+        };
+        update updtAccts;        
         
         Test.startTest();      
         update listCon;
@@ -580,6 +604,10 @@ private with sharing class ACCT_HHAccounts_TEST {
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
         system.assertEquals(1, listAcc.size());
         
+        // Determine which contact is the primary contact
+        Integer contact1 = (listAcc[0].npe01__One2OneContact__c == listCon[0].Id ? 0 : 1);
+        Integer contact2 = (contact1 == 1 ? 0 : 1);
+
         for (Account acc : listAcc) {
             system.assertNotEquals(null, acc.npe01__One2OneContact__c);
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
@@ -589,9 +617,9 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
-                system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[contact1].LastName + ' Household', acc.Name);
+                system.assertEquals(listCon[contact1].FirstName + ' and ' + listCon[contact2].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[contact1].FirstName + ' and ' + listCon[contact2].FirstName + ' ' + listCon[contact1].LastName, acc.npo02__Formal_Greeting__c);
             }
         }
     
@@ -709,7 +737,15 @@ private with sharing class ACCT_HHAccounts_TEST {
         listCon[6].AccountId = listAcc[5].Id;   // Org
         
         insert listCon;
-                
+
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listAcc[1].Id, npe01__One2OneContact__c = listCon[1].Id)
+        };
+        update updtAccts;        
+
         listCon[0].ownerId = u2.Id;   // single HH
         listCon[1].ownerId = u2.Id;   // multi HH
         //listCon[2].ownerId = u2.Id;   // multi HH
