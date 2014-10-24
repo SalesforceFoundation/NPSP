@@ -16,12 +16,28 @@
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
+        <fullName>Addr_Settings_API_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
+        <value>DEPRECATED - API Account Settings</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Intro_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
+        <value>DEPRECATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
@@ -47,6 +63,46 @@
 &lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
 &lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Intro_Title</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Intro Title</shortDescription>
+        <value>Introduction</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Notice</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Notice</shortDescription>
+        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Test_Body</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Test Body</shortDescription>
+        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Test_Response_Title</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Test Response Title</shortDescription>
+        <value>API Response</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Settings_Test_Title</fullName>
+        <categories>address, settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Settings Test Title</shortDescription>
+        <value>Test My Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Skip_Verified</fullName>
@@ -263,182 +319,6 @@
         <protected>false</protected>
         <shortDescription>addrSeasonalPartial</shortDescription>
         <value>An address must have all or none of its Seasonal fields set.</value>
-    </labels>
-    <labels>
-        <fullName>alloAddRow</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloAddRow</shortDescription>
-        <value>Add Row</value>
-    </labels>
-    <labels>
-        <fullName>alloAddRowAtPosition</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloAddRowAtPosition</shortDescription>
-        <value>Add Row at Position</value>
-    </labels>
-    <labels>
-        <fullName>alloAmountOrPercent</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloAmountOrPercent</shortDescription>
-        <value>Each allocation must have either an assigned amount or percent.</value>
-    </labels>
-    <labels>
-        <fullName>alloBatchCreateDefault</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloBatchCreateDefault</shortDescription>
-        <value>Batch Create Default Allocations</value>
-    </labels>
-    <labels>
-        <fullName>alloBatchDefaultInfo</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloBatchDefaultInfo</shortDescription>
-        <value>Clicking this button starts a batch process that creates default allocations for all existing opportunities, except opportunities excluded in the Allocations Rollup Settings. Default allocations must be enabled and a default General Accounting Unit selected to run this tool. You only need to run this tool once after enabling default allocations, as all new opportunities will receive a default allocation once enabled.</value>
-    </labels>
-    <labels>
-        <fullName>alloBtnCancel</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloBtnCancel</shortDescription>
-        <value>Cancel</value>
-    </labels>
-    <labels>
-        <fullName>alloBtnSaveAndClose</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloBtnSaveAndClose</shortDescription>
-        <value>Save &amp; Close</value>
-    </labels>
-    <labels>
-        <fullName>alloDefaultGAUMissing</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
-        <value>You&apos;ve enabled Default Allocations. You also need to select a default General Accounting Unit.</value>
-    </labels>
-    <labels>
-        <fullName>alloDefaultNotPercent</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloDefaultNotPercent</shortDescription>
-        <value>The default allocation cannot be percentage-based.</value>
-    </labels>
-    <labels>
-        <fullName>alloDeleteRow</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloDeleteRow</shortDescription>
-        <value>Delete Row</value>
-    </labels>
-    <labels>
-        <fullName>alloExceedsOppAmount</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>The allocations for this opportunity are greater than the amount of the opportun</shortDescription>
-        <value>You need to update your allocations before you can reduce the amount of an opportunity. The allocations for this opportunity are currently greater than the opportunity amount.</value>
-    </labels>
-    <labels>
-        <fullName>alloManageCampaignAllocations</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloManageCampaignAllocations</shortDescription>
-        <value>Manage Campaign Allocations</value>
-    </labels>
-    <labels>
-        <fullName>alloManageOppAllocations</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloManageOppAllocations</shortDescription>
-        <value>Manage Opportunity Allocations</value>
-    </labels>
-    <labels>
-        <fullName>alloManageRecurringDonationAllocations</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloManageRecurringDonationAllocations</shortDescription>
-        <value>Manage Recurring Donation Allocations</value>
-    </labels>
-    <labels>
-        <fullName>alloModifyCurrency</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloModifyCurrency</shortDescription>
-        <value>You can&apos;t modify allocation currencies directly. An allocation&apos;s currency is updated when the parent Opportunity, Campaign, or Recurring Donation currency is modified.</value>
-    </labels>
-    <labels>
-        <fullName>alloNegativeAmount</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloNegativeAmount</shortDescription>
-        <value>Allocations cannot have a negative amount.</value>
-    </labels>
-    <labels>
-        <fullName>alloNegativePercent</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloNegativePercent</shortDescription>
-        <value>Allocations cannot have a negative percent.</value>
-    </labels>
-    <labels>
-        <fullName>alloPercentExceed100</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Percent based Allocations cannot exceed 100%.</shortDescription>
-        <value>Percent-based allocations cannot exceed 100%.</value>
-    </labels>
-    <labels>
-        <fullName>alloRemainder</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloRemainder</shortDescription>
-        <value>Remainder:</value>
-    </labels>
-    <labels>
-        <fullName>alloSingleParent</fullName>
-        <categories>Allocation, Error</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
-        <value>Each allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
-    </labels>
-    <labels>
-        <fullName>alloTotalExceedsOppAmt</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
-        <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
-    </labels>
-    <labels>
-        <fullName>alloTotals</fullName>
-        <categories>Allocation</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>alloTotals</shortDescription>
-        <value>Totals:</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
@@ -1750,22 +1630,6 @@
         <value>Setting for the Account model. Should be &quot;Household Account&quot;, &quot;One-to-One&quot;, or &quot;Individual&quot;. Replaces the custom field Contact.SystemAccountProcessor__c. &quot;Household Account&quot; is the recommended model.</value>
     </labels>
     <labels>
-        <fullName>stgHelpAlloFiscalYearRollups</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpAlloFiscalYearRollups</shortDescription>
-        <value>When checked, this option enables fiscal year settings, rather than calendar year settings, for allocation rollup totals. To set fiscal year information, go to Setup | Company Profile | Fiscal Year. NOTE: The Nonprofit Starter Pack does not support custom fiscal year settings.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpAlloNDayValue</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpAlloNDayValue</shortDescription>
-        <value>Provide a value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpAutoAffil</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1822,15 +1686,6 @@
         <value>This setting automatically generates the record name for batch entered Opportunity records based on the value of the entered fields.</value>
     </labels>
     <labels>
-        <fullName>stgHelpBatchAlloRollup</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpBatchAlloRollup</shortDescription>
-        <value>Click Run Batch to roll up totals for all closed opportunities with allocations assigned to them. The results will be saved in General Accounting Unit records.
-You can close this page at any time and the process will still run in the background.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpBatchOppRollup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1875,22 +1730,6 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <protected>false</protected>
         <shortDescription>stgHelpContactRTExcluded</shortDescription>
         <value>Contact Record Types excluded from Household Opportunity Contact Role creation</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpDefaultAllocationsEnabled</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpDefaultAllocationsEnabled</shortDescription>
-        <value>Enables the automatic creation and management of Allocation records to the default General Accounting Unit. This feature enables better reporting on the default General Accounting Unit, but uses more data storage.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpDefaultGAU</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpDefaultGAU</shortDescription>
-        <value>Default General Accounting Unit for default allocation of unallocated Opportunities, and remainders of partially allocated Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpEnableSoftCreditRollups</fullName>
@@ -2361,22 +2200,6 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>Values for the Opportunity Type field to exclude from statistics when rolling up Account Opportunities.</value>
     </labels>
     <labels>
-        <fullName>stgHelpRollupExcludeAlloOppRecType</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpRollupExcludeAlloOppRecType</shortDescription>
-        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Allocations.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpRollupExcludeAlloOppType</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpRollupExcludeAlloOppType</shortDescription>
-        <value>Values for the Opportunity Type field to exclude from statistics when rolling up.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpRollupExcludeContactOppRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2530,28 +2353,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Address Verification (API Setup)</value>
     </labels>
     <labels>
-        <fullName>stgLabelAlloBatchProgress</fullName>
-        <categories>Allocation, Settings</categories>
+        <fullName>stgLabelAfflSettings</fullName>
+        <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgLabelAlloBatchProgress</shortDescription>
-        <value>Rollup Allocations Batch Progress</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelAllocationsRollupSettings</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
-        <value>Allocations Rollup Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelAllocationsSettings</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelAllocationsSettings</shortDescription>
-        <value>Default Allocations Settings</value>
+        <shortDescription>stgLabelAfflSettings</shortDescription>
+        <value>Affiliations Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAreYouSure</fullName>
@@ -2568,6 +2375,38 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
         <value>Automatic Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBDESettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBDESettings</shortDescription>
+        <value>Batch Data Entry Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchStatus</shortDescription>
+        <value>Batch Status</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelCurrentUDR</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelCurrentUDR</shortDescription>
+        <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelErrorNotify</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelErrorNotify</shortDescription>
+        <value>Error Notification Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelExamplesFGFormat</fullName>
@@ -2648,6 +2487,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelLeadSettings</shortDescription>
         <value>Lead Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelMembershipSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelMembershipSettings</shortDescription>
+        <value>Membership Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelNewAutoRel</fullName>
@@ -2770,6 +2617,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>No Valid Field Available</value>
     </labels>
     <labels>
+        <fullName>stgLabelPaymentSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelPaymentSettings</shortDescription>
+        <value>Payment Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDFieldMap</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDFieldMap</shortDescription>
+        <value>Custom Field Mappings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelRDNewPeriod</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2778,12 +2641,36 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>New Installment Period</value>
     </labels>
     <labels>
+        <fullName>stgLabelRDPeriod</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDPeriod</shortDescription>
+        <value>Custom Installment Periods</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRDSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRDSettings</shortDescription>
+        <value>Recurring Donation Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelRDStatus</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelRDStatus</shortDescription>
         <value>Updating Recurring Donation Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelRelSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelRelSettings</shortDescription>
+        <value>General Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>
@@ -2800,6 +2687,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelSoftCredit</shortDescription>
         <value>Soft Credit Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelTriggerHandlers</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelTriggerHandlers</shortDescription>
+        <value>Trigger Handlers</value>
     </labels>
     <labels>
         <fullName>stgLabelTypeAhead</fullName>
@@ -2890,14 +2785,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Affiliations</value>
     </labels>
     <labels>
-        <fullName>stgNavAllocations</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNavAllocations</shortDescription>
-        <value>Allocations</value>
-    </labels>
-    <labels>
         <fullName>stgNavBDE</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2920,6 +2807,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavContactRoles</shortDescription>
         <value>Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgNavContacts</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavContacts</shortDescription>
+        <value>Contacts</value>
     </labels>
     <labels>
         <fullName>stgNavDonations</fullName>
@@ -3064,14 +2959,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavRelationships</shortDescription>
         <value>Relationships</value>
-    </labels>
-    <labels>
-        <fullName>stgNavRollupAlloBatch</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNavRollupAlloBatch</shortDescription>
-        <value>Rollup Allocations Batch</value>
     </labels>
     <labels>
         <fullName>stgNavRollupBatch</fullName>
