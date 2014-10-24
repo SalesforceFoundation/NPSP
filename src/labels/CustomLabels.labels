@@ -16,28 +16,12 @@
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
-        <fullName>Addr_Settings_API_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
-        <value>DEPRECATED - API Account Settings</value>
-    </labels>
-    <labels>
         <fullName>Addr_Settings_API_Title</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Settings API Title</shortDescription>
         <value>API Account Settings</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Intro_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DEPRECATED - Addr Settings Intro Body</shortDescription>
-        <value>DEPRECATED</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Body1</fullName>
@@ -63,46 +47,6 @@
 &lt;li&gt;Return to this settings page, click the Edit button below, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
 &lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Intro_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Intro Title</shortDescription>
-        <value>Introduction</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Notice</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Notice</shortDescription>
-        <value>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Body</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Body</shortDescription>
-        <value>To test your Secret Key Pair, enter any US Zip Code:</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Response_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Response Title</shortDescription>
-        <value>API Response</value>
-    </labels>
-    <labels>
-        <fullName>Addr_Settings_Test_Title</fullName>
-        <categories>address, settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Settings Test Title</shortDescription>
-        <value>Test My Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Skip_Verified</fullName>
@@ -577,14 +521,6 @@
         <value>Last Name and Email</value>
     </labels>
     <labels>
-        <fullName>bdiCreated</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiCreated</shortDescription>
-        <value>Created</value>
-    </labels>
-    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -655,78 +591,6 @@
         <protected>false</protected>
         <shortDescription>bdiDataImporterTitle</shortDescription>
         <value>NPSP Data Import</value>
-    </labels>
-    <labels>
-        <fullName>bdiDonation</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiDonation</shortDescription>
-        <value>Donation</value>
-    </labels>
-    <labels>
-        <fullName>bdiErrorInvalidCampaignName</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiErrorInvalidCampaignName</shortDescription>
-        <value>Invalid Donation Campaign Name</value>
-    </labels>
-    <labels>
-        <fullName>bdiErrorInvalidDonor</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiErrorInvalidDonor</shortDescription>
-        <value>Invalid Donation Donor</value>
-    </labels>
-    <labels>
-        <fullName>bdiErrorInvalidLastname</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiErrorInvalidLastname</shortDescription>
-        <value>Last Name must be specified.</value>
-    </labels>
-    <labels>
-        <fullName>bdiErrorInvalidOppRTName</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiErrorInvalidOppRTName</shortDescription>
-        <value>Invalid Donation Record Type Name</value>
-    </labels>
-    <labels>
-        <fullName>bdiFailed</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiFailed</shortDescription>
-        <value>Failed</value>
-    </labels>
-    <labels>
-        <fullName>bdiIgnored</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiIgnored</shortDescription>
-        <value>Ignored</value>
-    </labels>
-    <labels>
-        <fullName>bdiImported</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bdiImported</shortDescription>
-        <value>Imported</value>
-    </labels>
-    <labels>
-        <fullName>bdiMatched</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>bdiMatched</shortDescription>
-        <value>Matched</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>
@@ -2706,14 +2570,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Lead Settings</value>
     </labels>
     <labels>
-        <fullName>stgLabelMembershipSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelMembershipSettings</shortDescription>
-        <value>Membership Settings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelNewAutoRel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2834,22 +2690,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>No Valid Field Available</value>
     </labels>
     <labels>
-        <fullName>stgLabelPaymentSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelPaymentSettings</shortDescription>
-        <value>Payment Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRDFieldMap</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDFieldMap</shortDescription>
-        <value>Custom Field Mappings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelRDNewPeriod</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2858,36 +2698,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>New Installment Period</value>
     </labels>
     <labels>
-        <fullName>stgLabelRDPeriod</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDPeriod</shortDescription>
-        <value>Custom Installment Periods</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRDSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRDSettings</shortDescription>
-        <value>Recurring Donation Settings</value>
-    </labels>
-    <labels>
         <fullName>stgLabelRDStatus</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelRDStatus</shortDescription>
         <value>Updating Recurring Donation Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelRelSettings</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelRelSettings</shortDescription>
-        <value>General Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelSelectChatterGroup</fullName>
@@ -2904,14 +2720,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelSoftCredit</shortDescription>
         <value>Soft Credit Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelTriggerHandlers</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelTriggerHandlers</shortDescription>
-        <value>Trigger Handlers</value>
     </labels>
     <labels>
         <fullName>stgLabelTypeAhead</fullName>
@@ -3032,14 +2840,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgNavContactRoles</shortDescription>
         <value>Contact Roles</value>
-    </labels>
-    <labels>
-        <fullName>stgNavContacts</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNavContacts</shortDescription>
-        <value>Contacts</value>
     </labels>
     <labels>
         <fullName>stgNavDonations</fullName>
