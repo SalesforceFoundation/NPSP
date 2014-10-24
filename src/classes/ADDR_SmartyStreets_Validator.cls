@@ -152,6 +152,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup.add(sr);
 	                    }
 	                    av.API_Response__c = JSON.serializePretty(responseGroup);
+	                    av.Verification_Status__c = Label.Addr_Verified;
 	                }
 	            }
 	            for (Address__c av : avList) {             

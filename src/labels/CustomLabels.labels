@@ -176,6 +176,14 @@
         <value>Mass Verify Existing Addresses</value>
     </labels>
     <labels>
+        <fullName>Addr_Verified</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Address Successfully Verified</shortDescription>
+        <value>Verified</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verify_Endpoint</fullName>
         <language>en_US</language>
         <protected>true</protected>
