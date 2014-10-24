@@ -426,7 +426,9 @@ private with sharing class ACCT_HHAccounts_TEST {
         // Update separately so that Name field doesn't accidentally get overwritten
         // Don't want to re-query first because the list may come back in a different order
         list<Account> updtAccts = new list<Account>{
-            new Account(Id=listAcc[2].Id, npe01__One2OneContact__c = listCon[1].Id)
+            new Account(Id=listCon[0].AccountId, npe01__One2OneContact__c = listCon[0].Id),
+            new Account(Id=listCon[1].AccountId, npe01__One2OneContact__c = listCon[1].Id),
+            new Account(Id=listCon[2].AccountId, npe01__One2OneContact__c = listCon[2].Id)
         };
         update updtAccts;        
         
