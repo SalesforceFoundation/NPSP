@@ -64,7 +64,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     }
     
     public override string setParentObjName() {
-        return 'General_Accounting_Unit__c';
+        return UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
     }
 
     public virtual override list<RollupSpec> setRollupSpecs() {
@@ -94,26 +94,26 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         //add built out exclusions to query
         rs.filter += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
         rs.aggregateToParentFieldnameMap = new map<string, string> {
-            'SUM(Amount__c)' => 'Total_Allocations__c',
-            'COUNT_DISTINCT(ID)' => 'Total_Number_of_Allocations__c',
-            'MIN(Amount__c)' => 'Smallest_Allocation__c',
-            'MAX(Amount__c)' => 'Largest_Allocation__c',
-            'AVG(Amount__c)' => 'Average_Allocation__c',
-            'MIN(Opportunity__r.CloseDate)' => 'First_Allocation_Date__c',
-            'MAX(Opportunity__r.CloseDate)' => 'Last_Allocation_Date__c'
+            'SUM(Amount__c)' => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations__c'),
+            'COUNT_DISTINCT(ID)' => UTIL_Namespace.StrTokenNSPrefix('Total_Number_of_Allocations__c'),
+            'MIN(Amount__c)' => UTIL_Namespace.StrTokenNSPrefix('Smallest_Allocation__c'),
+            'MAX(Amount__c)' => UTIL_Namespace.StrTokenNSPrefix('Largest_Allocation__c'),
+            'AVG(Amount__c)' => UTIL_Namespace.StrTokenNSPrefix('Average_Allocation__c'),
+            'MIN(Opportunity__r.CloseDate)' => UTIL_Namespace.StrTokenNSPrefix('First_Allocation_Date__c'),
+            'MAX(Opportunity__r.CloseDate)' => UTIL_Namespace.StrTokenNSPrefix('Last_Allocation_Date__c')
         };
         
         rs.subgroupExpression = strFiscalOrCalendarYear+'(Opportunity__r.CloseDate)';
         rs.subgroupValueToParentFieldnameMap = new map<string, map<object, string>> {
             'SUM(Amount__c)' => new map<object, string> { 
-                System.Today().Year() => 'Total_Allocations_This_Year__c', 
-                System.Today().AddYears(-1).Year() => 'Total_Allocations_Last_Year__c',
-                System.Today().AddYears(-2).Year() => 'Total_Allocations_Two_Years_Ago__c'
+                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_This_Year__c'), 
+                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_Year__c'),
+                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Two_Years_Ago__c')
             },
             'COUNT_DISTINCT(ID)' => new map<object, string> { 
-                System.Today().Year() => 'Number_of_Allocations_This_Year__c', 
-                System.Today().AddYears(-1).Year() => 'Number_of_Allocations_Last_Year__c',
-                System.Today().AddYears(-2).Year() => 'Number_of_Allocations_Two_Years_Ago__c'
+                System.Today().Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_This_Year__c'), 
+                System.Today().AddYears(-1).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_Year__c'),
+                System.Today().AddYears(-2).Year() => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Two_Years_Ago__c')
             }
         };
 
@@ -127,8 +127,8 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         rs2.filter = 'Opportunity__r.IsWon = TRUE AND Opportunity__r.IsClosed = TRUE AND Opportunity__r.CloseDate = LAST_N_DAYS:' + alloSettings.Rollup_N_Day_Value__c.intValue() + ' ';
         rs2.filter += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
         rs2.aggregateToParentFieldnameMap = new map<string, string> {
-            'SUM(Amount__c)' => 'Total_Allocations_Last_N_Days__c',
-            'COUNT_DISTINCT(ID)' => 'Number_of_Allocations_Last_N_Days__c'
+            'SUM(Amount__c)' => UTIL_Namespace.StrTokenNSPrefix('Total_Allocations_Last_N_Days__c'),
+            'COUNT_DISTINCT(ID)' => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_N_Days__c')
         };
 
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
