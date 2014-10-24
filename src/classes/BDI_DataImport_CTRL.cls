@@ -54,7 +54,7 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference deleteImportedDIRecords() {
-        delete [select Id from DataImport__c where Status__c = 'Imported' limit 10000];
+        delete [select Id from DataImport__c where Status__c = :label.bdiImported limit 10000];
         return (close());    	
     }
     
@@ -114,9 +114,21 @@ public with sharing class BDI_DataImport_CTRL {
                 }
             }
             
-        	// save any settings changes.
-        	upsert diSettings;
-        	
+            // save any settings changes.
+            try {
+                upsert diSettings;
+            } catch (Exception ex) {
+                // this is a complete hack to work around the bug
+                // https://github.com/SalesforceFoundation/Cumulus/issues/1094
+                // for reasons I cannot fathom, we get an error trying to upsert the
+                // settings object even though the UTIL_CustomSettingsFacade has already
+                // done an upsert on it.  This failure only occurs if there is no org defined
+                // custom setting instance.  The workaround is to catch the upsert failing, and
+                // just clear the Id and do an insert.
+                diSettings.Id = null;
+                insert diSettings;
+            }
+            
             batchRunning = true;
             bdi = new BDI_DataImport_BATCH();
             ApexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
@@ -165,7 +177,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecImported { 
         get {
             if (ApexJobId != null) {
-                crecImported = [select count() from DataImport__c where Status__c = 'Imported' and ApexJobId__c = :ApexJobId];
+                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :ApexJobId];
                 return crecImported;
             }
             return null;
@@ -176,7 +188,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecFailed { 
         get {
             if (ApexJobId != null) {
-                crecFailed = [select count() from DataImport__c where Status__c = 'Failed' and ApexJobId__c = :ApexJobId];
+                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :ApexJobId];
                 return crecFailed;
             }
             return null;
@@ -186,7 +198,7 @@ public with sharing class BDI_DataImport_CTRL {
 
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> 'Imported'];
+            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported];
             return crecToProcess;
         }
         set;

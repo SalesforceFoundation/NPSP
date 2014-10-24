@@ -521,6 +521,14 @@
         <value>Last Name and Email</value>
     </labels>
     <labels>
+        <fullName>bdiCreated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiCreated</shortDescription>
+        <value>Created</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -591,6 +599,78 @@
         <protected>false</protected>
         <shortDescription>bdiDataImporterTitle</shortDescription>
         <value>NPSP Data Import</value>
+    </labels>
+    <labels>
+        <fullName>bdiDonation</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDonation</shortDescription>
+        <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidCampaignName</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidCampaignName</shortDescription>
+        <value>Invalid Donation Campaign Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidDonor</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidDonor</shortDescription>
+        <value>Invalid Donation Donor</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidLastname</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidLastname</shortDescription>
+        <value>Last Name must be specified.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidOppRTName</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidOppRTName</shortDescription>
+        <value>Invalid Donation Record Type Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiIgnored</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiIgnored</shortDescription>
+        <value>Ignored</value>
+    </labels>
+    <labels>
+        <fullName>bdiImported</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiImported</shortDescription>
+        <value>Imported</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatched</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiMatched</shortDescription>
+        <value>Matched</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>
