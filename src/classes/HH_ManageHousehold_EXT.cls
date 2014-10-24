@@ -31,9 +31,15 @@ global with sharing class HH_ManageHousehold_EXT {
     // when the user is trying to change their recordtype!
     public boolean isChangingRecordType {
         get {
-            String paramRtId = ApexPages.currentPage().getParameters().get('RecordType');
-            if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true))
-                return true;
+        	if (ApexPages.currentPage() != null) {
+                map<string, string> mapParams = ApexPages.currentPage().getParameters();
+                if (mapParams != null) {
+                    string paramRtId = mapParams.get('RecordType');
+		            if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true)) {
+		                return true;
+		            }
+                }
+        	}
             return false; 
         }
     }
@@ -248,7 +254,18 @@ global with sharing class HH_ManageHousehold_EXT {
             //lookup viable addresses
             getViableAddresses();
         }
-                        
+           
+        // handle recordtype change that comes into the URL (from recordtype selection page)
+        if (ApexPages.currentPage() != null) {
+            map<string, string> mapParams = ApexPages.currentPage().getParameters();
+            if (mapParams != null) {
+                string paramRtId = mapParams.get('RecordType');
+                if (paramRtId != null) {
+                    hhA.recordTypeId = paramRtId;
+                }
+            }            
+        }
+                     
         jsonState = JSON.serialize(this);
         
         // If we are in edit mode, add a copy of the state to compare against
