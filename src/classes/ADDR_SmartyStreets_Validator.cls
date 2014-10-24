@@ -158,6 +158,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
 	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
+	                    av.Verification_Status__c = Label.Address_Not_Found;
 	                }
 	            }
 	        } catch (Exception ex) {
@@ -167,6 +168,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                               + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
 	                av.API_Response__c = ex.getMessage();
+	                av.Verification_Status__c = ex.getMessage();
 	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	            }
 	        }
