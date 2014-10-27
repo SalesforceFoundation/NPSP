@@ -126,7 +126,7 @@ public without sharing class HH_HouseholdNaming {
     
     
     // our cached copy of the Household Naming Settings
-    private Household_Naming_Settings__c hns {
+    private static Household_Naming_Settings__c hns {
         get {
             if (hns == null) hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
             return hns;
@@ -134,7 +134,7 @@ public without sharing class HH_HouseholdNaming {
         set;
     }
 
-    private HH_INaming iNaming {
+    public static HH_INaming iNaming {
     	get {
     		if (iNaming == null) {                
 		        string strClass = hns.Implementing_Class__c;  
@@ -382,19 +382,27 @@ public without sharing class HH_HouseholdNaming {
         set;
     }    
 
-    public static string strContactSelectStmtAllNamingFields {
+    public string strContactSelectStmtAllNamingFields {
         get {
 	        if (strContactSelectStmtAllNamingFields == null) {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-		        string strSoql = 'SELECT ';
-		        string strComma = '';
+		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
+		        
+		        set<string> setStrField = iNaming.setHousholdNameFieldsOnContact();
+		        system.debug('****DJH setStrField: ' + setStrField);
+		        for (string strF : setStrField) {
+                    if (strF == 'Salutation') strF = 'toLabel(Salutation)';
+                    strSoql += ', ' + strF;
+		        }  
+		        
+		        /***********
 		        for (string strF : listStrContactFields) {
 		        	// only include Text, TextArea, and Picklist fields for custom household naming
 		        	// also include a bunch of types needed by the ManageHouseholdUI code
 		        	Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Contact', strF);
 		        	if (dt == Schema.Displaytype.ID || 
                         dt == Schema.Displaytype.String || 
-                        dt == Schema.Displaytype.TextArea || 
+                        //dt == Schema.Displaytype.TextArea || //THESE EAT UP TOO MUCH HEAP SPACE!! 
                         dt == Schema.DisplayType.Picklist ||
                         dt == Schema.DisplayType.MultiPicklist ||  // needed for naming exclusions
                         dt == Schema.DisplayType.Integer ||
@@ -409,6 +417,8 @@ public without sharing class HH_HouseholdNaming {
 			            strComma = ', ';
 		        	}
 		        }
+		        **********/
+		        
 		        strSoql += ' FROM Contact ';
 		        strContactSelectStmtAllNamingFields = strSoql;
 	        }

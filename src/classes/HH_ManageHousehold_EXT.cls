@@ -31,9 +31,15 @@ global with sharing class HH_ManageHousehold_EXT {
     // when the user is trying to change their recordtype!
     public boolean isChangingRecordType {
         get {
-            String paramRtId = ApexPages.currentPage().getParameters().get('RecordType');
-            if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true))
-                return true;
+        	if (ApexPages.currentPage() != null) {
+                map<string, string> mapParams = ApexPages.currentPage().getParameters();
+                if (mapParams != null) {
+                    string paramRtId = mapParams.get('RecordType');
+		            if (paramRtId != null && paramRtId != ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true)) {
+		                return true;
+		            }
+                }
+        	}
             return false; 
         }
     }
@@ -161,7 +167,29 @@ global with sharing class HH_ManageHousehold_EXT {
     public string activeState;
     public string activeCountry;
     
-    private static string conSelect = HH_HouseholdNaming.strContactSelectStmtAllNamingFields;
+    private static string conSelect {
+        get {
+            if (conSelect == null) {
+                //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
+                string strSoql = 'SELECT Id, npo02__Household_Naming_Order__c, FirstName, LastName, Salutation, Name, ' +
+                    'npo02__Naming_Exclusions__c, npo02__Household__c, AccountId, HHId__c, ' + 
+                    'is_Address_Override__c, Current_Address__c, ' + 
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate ';
+                
+                set<string> setStrField = HH_HouseholdNaming.iNaming.setHousholdNameFieldsOnContact();
+                for (string strF : setStrField) {
+                	if (!strSoql.contains(' ' + strF))
+                        strSoql += ', ' + strF;
+                }  
+                                
+                strSoql += ' FROM Contact ';
+                conSelect = strSoql;
+            }
+            return conSelect;
+        }
+        set;        
+    }    
+    
     
     //object to hold viable addresses - this is the DISTINCT (SQL style) list which includes household address and all contact addresses
     // see function getViableAddresses for how the map is populated
@@ -226,7 +254,18 @@ global with sharing class HH_ManageHousehold_EXT {
             //lookup viable addresses
             getViableAddresses();
         }
-                        
+           
+        // handle recordtype change that comes into the URL (from recordtype selection page)
+        if (ApexPages.currentPage() != null) {
+            map<string, string> mapParams = ApexPages.currentPage().getParameters();
+            if (mapParams != null) {
+                string paramRtId = mapParams.get('RecordType');
+                if (paramRtId != null) {
+                    hhA.recordTypeId = paramRtId;
+                }
+            }            
+        }
+                     
         jsonState = JSON.serialize(this);
         
         // If we are in edit mode, add a copy of the state to compare against
