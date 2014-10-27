@@ -71,17 +71,7 @@ public with sharing class ADDR_Validator {
 	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
 	                        ADDR_Validator_TDTM.alreadyRun = true;
 	                        //updating the addresses with the verified version
-	                        List<Address__c> validatedAddresses;
-	                        try {
-	                            validatedAddresses = validator.verifyRecords(avList, settings);
-	                        } catch(Exception e) {
-	                        	for(Address__c addr : validatedAddresses) {
-	                        		addr.Verification_Status__c = e.getMessage();
-	                        	}
-	                        }
-	                        if(validatedAddresses != null && validatedAddresses.size() > 0) {
-	                        	update validatedAddresses;
-	                        }
+	                        update validator.verifyRecords(avList, settings);
 	                    } else {
 	                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	                    }
