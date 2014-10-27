@@ -125,7 +125,7 @@ public without sharing class TDTM_DefaultConfig {
         //Address Verification/Normalization on Address object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
-              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
         return handlers;
     }
