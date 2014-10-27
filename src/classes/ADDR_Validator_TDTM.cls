@@ -44,11 +44,15 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
         
         if(!alreadyRun) {
 	        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-	        if(trigger.isBefore && settings.enable_automatic_verification__c) {
+	        if(trigger.isBefore && settings.enable_automatic_verification__c) {        	
 	        	for(SObject so : newList) {
 	        		Address__c address = (Address__c)so;
-	        		address.Verification_Status__c = 'Pending verification';
-	        	}
+	        		if(!system.isFuture() && !system.isBatch()) {
+	        		    address.Verification_Status__c = 'Pending verification';
+	        		} else {
+	        			address.Verification_Status__c = 'Mass address verification required';
+	        		}	
+        	    }
 	        }
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
                 if(!system.isFuture() && !system.isBatch()) {
