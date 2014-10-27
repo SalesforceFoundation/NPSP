@@ -467,6 +467,7 @@
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verified</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
