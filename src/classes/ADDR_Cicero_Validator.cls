@@ -118,9 +118,9 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                list<Candidates> listCandidates = cresp.response.results.candidates;  
 	
 	                // more than one candidate means should mark as ambiguous
-	                if (listCandidates.size() > 1)
+	                if (listCandidates.size() > 1) {
 	                    addr.Ambiguous__c = true;
-	                              
+	                }             
 		            // find the congressional legislative district
 		            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
 	                    Candidates candidate = listCandidates[0];
@@ -150,6 +150,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 		            }
 	            }	
 	            addr.Verified__c = foundData;
+	            addr.Verification_Status__c = 'Response Received';
 	            return addr;
 	        } else {
 	        	throw(new CiceroException(Label.addrCiceroMissingAPIKey));
@@ -157,6 +158,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         } catch (Exception ex) {
 	        addr.Verified__c = false;
 	        addr.API_Response__c = ex.getMessage();
+	        addr.Verification_Status__c = addr.API_Response__c; 
             ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
         }
         return addr;
