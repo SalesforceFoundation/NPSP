@@ -556,7 +556,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         insert listCon;
         
         // refresh our contacts to get their accounts
-        listCon = [select Name, FirstName, LastName, AccountId from Contact];
+        listCon = [select Name, FirstName, LastName, AccountId from Contact order by Name];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);        
         
@@ -574,7 +574,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Test.startTest();      
         delete listConDel;
-        list<Contact> listCon2 = [select Id, Name from Contact];
+        list<Contact> listCon2 = [select Id, Name from Contact order by Name];
         system.assertEquals(1, listCon2.size());
         list<Account> listAcc2 = [select Id, Name from Account];
         system.assertEquals(1, listAcc2.size());
@@ -588,7 +588,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         undelete listCon[1];
         test.stopTest();    // to flush any future calls.
        
-        listCon = [select Id, FirstName, LastName, AccountId from Contact];
+        listCon = [select Id, FirstName, LastName, AccountId from Contact order by Name];
         system.assertEquals(2, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
@@ -605,8 +605,8 @@ private with sharing class ACCT_HHAccounts_TEST {
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
                 system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
