@@ -385,6 +385,14 @@
         <value>Email only</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchFnameEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchFnameEmail</shortDescription>
+        <value>First Name and Email</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchFnameLname</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

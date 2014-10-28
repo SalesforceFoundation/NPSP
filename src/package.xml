@@ -493,6 +493,7 @@
     <members>bdiCompleteWithErrors</members>
     <members>bdiContactCustomIdError</members>
     <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameEmail</members>
     <members>bdiContactMatchFnameLname</members>
     <members>bdiContactMatchFnameLnameEmail</members>
     <members>bdiContactMatchLnameEmail</members>
