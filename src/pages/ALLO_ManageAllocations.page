@@ -167,7 +167,7 @@
                             <th></th>
                             <th>{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</th>
                             <th width="250px">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</th>
-                            <th width="100px">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
+                            <th width="130px">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</th>
                             <th></th>
                         </tr>
                     </thead>

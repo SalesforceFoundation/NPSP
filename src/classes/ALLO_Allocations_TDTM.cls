@@ -177,7 +177,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (allo.Percent__c != null && allo.Percent__c < 0)
                 allo.addError(Label.alloNegativePercent);
             //manually updated currency
-            if (ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != oldList[i].get('CurrencyIsoCode'))
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && ALLO_Multicurrency_TDTM.isMultiCurrency() && allo.get('CurrencyIsoCode') != oldList[i].get('CurrencyIsoCode'))
                 allo.addError(Label.alloModifyCurrency);
 
         }
