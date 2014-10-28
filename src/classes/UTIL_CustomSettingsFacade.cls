@@ -89,6 +89,10 @@ public without sharing class UTIL_CustomSettingsFacade {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
+                configRecurringDonationsSettings(recurringDonationsSettings);
+                upsert recurringDonationsSettings;
+            }
         }
         return recurringDonationsSettings;
     }
@@ -188,7 +192,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
         if(orgRecurringDonationsSettings == null) {
             orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-            if(orgRecurringDonationsSettings.Id == null) {
+            if(orgRecurringDonationsSettings.Id == null || orgRecurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(orgRecurringDonationsSettings);
                 upsert orgRecurringDonationsSettings;
             }
