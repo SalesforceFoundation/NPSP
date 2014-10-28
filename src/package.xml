@@ -464,15 +464,16 @@
     <members>Addr_Unauthorized_Endpoint</members>
     <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
-    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Not_Supported</members>
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
+    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
+    <members>Address_StateCountry_Invalid_Error</members>
     <members>Address_Verification_Limit</members>
     <members>HiddenForSecurity</members>
     <members>RecurringDonationAccountAndContactError</members>
@@ -497,6 +498,7 @@
     <members>bdiContactMatchFnameLname</members>
     <members>bdiContactMatchFnameLnameEmail</members>
     <members>bdiContactMatchLnameEmail</members>
+    <members>bdiCreated</members>
     <members>bdiDataImporterConfigTitle</members>
     <members>bdiDataImporterDescription</members>
     <members>bdiDataImporterInfoLine1</members>
@@ -506,6 +508,15 @@
     <members>bdiDataImporterInfoTitle</members>
     <members>bdiDataImporterNumToProcess</members>
     <members>bdiDataImporterTitle</members>
+    <members>bdiDonation</members>
+    <members>bdiErrorInvalidCampaignName</members>
+    <members>bdiErrorInvalidDonor</members>
+    <members>bdiErrorInvalidLastname</members>
+    <members>bdiErrorInvalidOppRTName</members>
+    <members>bdiFailed</members>
+    <members>bdiIgnored</members>
+    <members>bdiImported</members>
+    <members>bdiMatched</members>
     <members>bdiRecordsFailed</members>
     <members>bdiRecordsImported</members>
     <members>bdiRecordsProcessed</members>

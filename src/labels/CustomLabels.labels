@@ -144,14 +144,6 @@
  &lt;br/&gt;</value>
     </labels>
     <labels>
-        <fullName>Addr_Verification_Batch_Status</fullName>
-        <categories>address, verification</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Addr Verification Batch Status</shortDescription>
-        <value>Mass Verification Status</value>
-    </labels>
-    <labels>
         <fullName>Addr_Verification_Batch_Not_Supported</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>
@@ -166,6 +158,14 @@
         <protected>true</protected>
         <shortDescription>Batches of 100</shortDescription>
         <value>SmartyStreets will verify addresses in batches of 100.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Batch_Status</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Addr Verification Batch Status</shortDescription>
+        <value>Mass Verification Status</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Title</fullName>
@@ -210,6 +210,14 @@
         <protected>true</protected>
         <shortDescription>Address Not Found</shortDescription>
         <value>Address not found.</value>
+    </labels>
+    <labels>
+        <fullName>Address_StateCountry_Invalid_Error</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>{value} is not configured as a valid Country in your Organization.</shortDescription>
+        <value>&apos;{0}&apos; is not configured as a valid Country in your Organization.</value>
     </labels>
     <labels>
         <fullName>Address_Verification_Limit</fullName>
@@ -401,6 +409,14 @@
         <value>Last Name and Email</value>
     </labels>
     <labels>
+        <fullName>bdiCreated</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiCreated</shortDescription>
+        <value>Created</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -471,6 +487,78 @@
         <protected>false</protected>
         <shortDescription>bdiDataImporterTitle</shortDescription>
         <value>NPSP Data Import</value>
+    </labels>
+    <labels>
+        <fullName>bdiDonation</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiDonation</shortDescription>
+        <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidCampaignName</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidCampaignName</shortDescription>
+        <value>Invalid Donation Campaign Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidDonor</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidDonor</shortDescription>
+        <value>Invalid Donation Donor</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidLastname</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidLastname</shortDescription>
+        <value>Last Name must be specified.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorInvalidOppRTName</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorInvalidOppRTName</shortDescription>
+        <value>Invalid Donation Record Type Name</value>
+    </labels>
+    <labels>
+        <fullName>bdiFailed</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiIgnored</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiIgnored</shortDescription>
+        <value>Ignored</value>
+    </labels>
+    <labels>
+        <fullName>bdiImported</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiImported</shortDescription>
+        <value>Imported</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatched</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiMatched</shortDescription>
+        <value>Matched</value>
     </labels>
     <labels>
         <fullName>bdiRecordsFailed</fullName>
