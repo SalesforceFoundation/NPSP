@@ -34,6 +34,9 @@
 */
 public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
+    public static Boolean isStateCountryPicklistsEnabled = false;
+    public static Map<Id, String> addressErrors = new Map<Id, String>();
+
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
@@ -45,6 +48,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         list<Contact> listConAddrReset = new list<Contact>();
         Map<Id,Account> mapAccountIdAccount = null;
                 
+        // If State & Country Picklists are enabled in the org, build sets of the
+        // valid Labels and Codes for each field to use for validation
+        isStateCountryPicklistsEnabled = UTIL_Describe.initValidStateCountryCodes();
+
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
         // updating an existing contact - make their address a new default address, unless they say it is an override
@@ -160,6 +167,15 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (listConCreateAddr.size() > 0)
             createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
             
+        if (addressErrors.size() > 0) {
+            ERR_Handler errHandler = new ERR_Handler();
+            for (Id addrId : addressErrors.keySet()) {
+                errHandler.queueError('Address__c', addrId, addressErrors.get(addrId), 
+                    'Address Update Error', 'ADDR_Contact_TDTM');
+            }
+            errHandler.storeErrors();
+        }
+
         return dmlWrapper;    
     }
 
@@ -180,9 +196,31 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
             	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
             	con.MailingCity = addr.MailingCity__c;
-            	con.MailingState = addr.MailingState__c;
             	con.MailingPostalCode = addr.MailingPostalCode__c;
-            	con.MailingCountry = addr.MailingCountry__c;
+
+                if (!isStateCountryPicklistsEnabled) {
+                    con.MailingState = addr.MailingState__c;
+                    con.MailingCountry = addr.MailingCountry__c;
+                } else {
+                    if (addr.MailingCountry__c != null) {
+                        if (UTIL_Describe.validCountriesByCode.containsKey(addr.MailingCountry__c)) {
+                            con.put('MailingCountryCode', addr.MailingCountry__c);
+                            con.MailingCountry = UTIL_Describe.validCountriesByCode.get(addr.MailingCountry__c);
+                        } else {
+                            con.MailingCountry = addr.MailingCountry__c;
+                            con.put('MailingCountryCode', UTIL_Describe.validCountriesByLabel.get(addr.MailingCountry__c));
+                        }
+                    }
+                    if (addr.MailingState__c != null) {
+                        if (UTIL_Describe.validStatesByCode.containsKey(addr.MailingState__c)) {
+                            con.put('MailingStateCode', addr.MailingState__c);
+                            con.MailingState = UTIL_Describe.validStatesByCode.get(addr.MailingState__c);
+                        } else {
+                            con.MailingState = addr.MailingState__c;
+                            con.put('MailingStateCode', UTIL_Describe.validStatesByLabel.get(addr.MailingState__c));
+                        }
+                    }
+                }
             }
         }     	
     }
@@ -365,11 +403,33 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 if (addr != null) {
                 	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
                 	con.MailingCity = addr.MailingCity__c;
-                	con.MailingState = addr.MailingState__c;
                 	con.MailingPostalCode = addr.MailingPostalCode__c;
-                	con.MailingCountry = addr.MailingCountry__c;
                 	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
                 	con.Current_Address__c = addr.Id;
+
+                    if (!isStateCountryPicklistsEnabled) {
+                        con.MailingState = addr.MailingState__c;
+                        con.MailingCountry = addr.MailingCountry__c;
+                    } else {
+                        if (addr.MailingState__c != null) {
+                            if (UTIL_Describe.validStatesByCode.containsKey(addr.MailingState__c)) {
+                                con.put('MailingStateCode', addr.MailingState__c);
+                                con.MailingState = UTIL_Describe.validStatesByCode.get(addr.MailingState__c);
+                            } else {
+                                con.MailingState = addr.MailingState__c;
+                                con.put('MailingStateCode', UTIL_Describe.validStatesByLabel.get(addr.MailingState__c));
+                            }
+                        }
+                        if (addr.MailingCountry__c != null) {
+                            if (UTIL_Describe.validCountriesByCode.containsKey(addr.MailingCountry__c)) {
+                                con.put('MailingCountryCode', addr.MailingCountry__c);
+                                con.MailingCountry = UTIL_Describe.validCountriesByCode.get(addr.MailingCountry__c);
+                            } else {
+                                con.MailingCountry = addr.MailingCountry__c;
+                                con.put('MailingCountryCode', UTIL_Describe.validCountriesByLabel.get(addr.MailingCountry__c));
+                            }
+                        }
+                    }
                 }        	   
         	}
         }         
