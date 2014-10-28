@@ -204,6 +204,17 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
+    public void queueError(string objectType, Id objId, String errMessage, String errType, String stkTrace) {
+        Error__c error = new Error__c();
+        error.Datetime__c = System.now();
+        error.Object_Type__c = objectType;
+        error.Record_URL__c = getRecordURL(null, objId);
+        error.Error_Type__c = errType;
+        error.Full_Message__c = errMessage;
+        error.Stack_Trace__c = stkTrace;
+        errors.add(error);
+    }
+
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();

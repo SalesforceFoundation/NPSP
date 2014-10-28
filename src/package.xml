@@ -515,6 +515,7 @@
     <members>Addr_Verify_Settings</members>
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
+    <members>Address_StateCountry_Invalid_Error</members>
     <members>Address_Verification_Limit</members>
     <members>HiddenForSecurity</members>
     <members>RecurringDonationAccountAndContactError</members>
