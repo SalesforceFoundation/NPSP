@@ -1301,11 +1301,11 @@ private with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void ManyDIMultiContactMatchRules1() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules1') return;
-        ManyDIMultiContactMatchRules('Firstname;Lastname;Email');
+        ManyDIMultiContactMatchRules('Firstname,Lastname,Email');
     }
     static testMethod void ManyDIMultiContactMatchRules2() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules2') return;
-        ManyDIMultiContactMatchRules('Lastname;Email');
+        ManyDIMultiContactMatchRules('Lastname,Email');
     }
     static testMethod void ManyDIMultiContactMatchRules3() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules3') return;
@@ -1313,14 +1313,21 @@ private with sharing class BDI_DataImport_TEST {
     }
     static testMethod void ManyDIMultiContactMatchRules4() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules4') return;
-        ManyDIMultiContactMatchRules('Firstname;Lastname');
+        ManyDIMultiContactMatchRules('Firstname,Lastname');
+    }
+    static testMethod void ManyDIMultiContactMatchRules5() {
+        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules5') return;
+        ManyDIMultiContactMatchRules('Firstname,Email');
     }
     static void ManyDIMultiContactMatchRules(string strRule) {            
         list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='C0'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c='C1'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c=null));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));        
+        listDI.add(new DataImport__c(Account1_Name__c='a0', Contact1_Firstname__c='c0', Contact1_Lastname__c='C0'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Contact1_Firstname__c=null, Contact1_Lastname__c='C1'));
+        listDI.add(new DataImport__c(Account1_Name__c='a2', Contact1_Firstname__c='c2', Contact1_Lastname__c=null));
+        listDI.add(new DataImport__c(Account1_Name__c='a3', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));   
+        
+        // one additional di that will always match given the current rule.
+        listDI.add(new DataImport__c(Account1_Name__c='a4', Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@C3.com'));                
         insert listDI;
           
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -1337,12 +1344,16 @@ private with sharing class BDI_DataImport_TEST {
         list<Contact> listCon = [select Id, Name from Contact];
         system.assertEquals(3, listCon.size());
         
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, Contact1_Lastname__c from DataImport__c];        
-        system.assertEquals(4, listDI.size());
+        listDI = [select Account1_Name__c, Status__c, Contact1Imported__c, Contact1ImportStatus__c, Contact1_Lastname__c from DataImport__c order by Account1_Name__c];        
+        system.assertEquals(5, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
-            if (listDI[i].Contact1_Lastname__c == null) {
+            if (listDI[i].Account1_Name__c == 'a2') {
                 system.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);                
                 system.assertEquals(label.bdiFailed, listDI[i].Status__c);                
+            } else if (listDI[i].Account1_Name__c == 'a4') {
+                system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
+                system.assertEquals(label.bdiMatched, listDI[i].Contact1ImportStatus__c);                
+                system.assertEquals(label.bdiImported, listDI[i].Status__c);                
             } else {
                 system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
                 system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);                
