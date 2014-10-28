@@ -78,13 +78,14 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
         
-        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
-                from Address__c where Household_Account__c = :accountId];
+        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c, 
+                Verification_Status__c from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
         System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
         System.assertEquals('CA', av[0].MailingState__c);
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact = [select id, MailingStreet, MailingCity, MailingPostalCode, MailingState
                          from contact where id = :contact.id];
@@ -116,9 +117,10 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
 
-        Address__c[] av = [select Verified__c from Address__c where Household_Account__c = :contact.AccountId];       
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(Label.Address_Not_Found, av[0].Verification_Status__c);
     }
     
     static testMethod void testContactAmbiguousAddress() {
@@ -143,11 +145,12 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
 
-        Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
+        Address__c[] av = [select Verified__c, Ambiguous__c, Verification_Status__c from Address__c 
                             where Household_Account__c = :accountId];       
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
         System.assertEquals(true, av[0].Ambiguous__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
     }
 
     static testMethod void testContactZipOnly() {
@@ -169,10 +172,12 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
    
-        Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
-                            from Address__c where Household_Account__c = :accountId];      
+        Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c, Verification_Status__c
+                           from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
+        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);
@@ -200,10 +205,13 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId); 
 
-        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
+        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c, Verified__c, 
+                            Verification_Status__c from Address__c 
                             where Household_Account__c = :contact.AccountId];        
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
+        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);

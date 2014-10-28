@@ -50,7 +50,7 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	        		if(!system.isFuture() && !system.isBatch()) {
 	        		    address.Verification_Status__c = 'Pending verification';
 	        		} else {
-	        			address.Verification_Status__c = 'Mass address verification required';
+	        			address.Verification_Status__c = 'Verification required';
 	        		}	
         	    }
 	        }
