@@ -164,7 +164,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals(200, addresses.size());
         Integer i = 1;
         for(Address__c addr : addresses) {
-        	System.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
+        	UTIL_Debug.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
 	        System.assertEquals('1 Infinite Loop', addr.MailingStreet__c);
 	        System.assertEquals('CA', addr.MailingState__c);
 	        System.assertEquals('95014-2083', addr.MailingPostalCode__c);

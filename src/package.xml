@@ -156,6 +156,7 @@
     <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_CustomSettingsFacade</members>
+    <members>UTIL_Debug</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
@@ -409,6 +410,7 @@
     <members>Data_Import_Settings__c.Batch_Size__c</members>
     <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
     <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+    <members>Error_Settings__c.Enable_Debug__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>

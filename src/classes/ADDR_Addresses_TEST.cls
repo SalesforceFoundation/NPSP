@@ -805,7 +805,7 @@ private with sharing class ADDR_Addresses_TEST {
         /* We cannot verify error record was created because the usage of addError causes the whole transaction
         to be rolled back. 
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
-        System.debug('****Errors: ' + JSON.serializePretty(errors));
+        UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
         System.assertEquals(1, errors.size());*/
     }
 
@@ -1139,7 +1139,7 @@ private with sharing class ADDR_Addresses_TEST {
         ADDR_Seasonal_SCHED sch = new ADDR_Seasonal_SCHED();
         //Test.startTest(); already called by createHHTestData() 
         sch.executeReturnStatus();
-        system.debug('DJH**** about to call stopTest!');
+        UTIL_Debug.debug('DJH**** about to call stopTest!');
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!
