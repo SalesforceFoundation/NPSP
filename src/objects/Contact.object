@@ -867,6 +867,18 @@
         <label>BDE List FS</label>
     </fieldSets>
     <fields>
+        <fullName>Address_Verification_Status__c</fullName>
+        <description>Verification status of the current address.</description>
+        <externalId>false</externalId>
+        <formula>Current_Address__r.Verification_Status__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Verification status of the current address.</inlineHelpText>
+        <label>Address Verification Status</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>

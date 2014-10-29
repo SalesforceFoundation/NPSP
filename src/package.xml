@@ -318,6 +318,7 @@
     <members>Batch__c.Description__c</members>
     <members>Batch__c.Number_of_Items__c</members>
     <members>Batch__c.Object_Name__c</members>
+    <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
