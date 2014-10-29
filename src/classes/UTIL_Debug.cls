@@ -1,21 +1,22 @@
 public with sharing class UTIL_Debug {
 
-    public static boolean enabled = UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
+    //enable debug logs in all tests, otherwise get the setting
+    public static boolean enabled = test.isRunningTest() ? true : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
 
     public static void debug (string message) {
-        if (test.isRunningTest() || enabled) {
+        if (enabled) {
             system.debug(message);
         }
     }
 
     public static void debug (System.LoggingLevel level, string message) {
-        if (test.isRunningTest() || enabled) {
+        if (enabled) {
             system.debug(level, message);
         }
     }
 
     public static void debugWithInfo (string message) {
-        if (test.isRunningTest() || enabled) {
+        if (enabled) {
             system.debug(
                 message + 
                 ' Heap:' + Limits.getHeapSize() + '/' + Limits.getLimitHeapSize() +
@@ -27,7 +28,7 @@ public with sharing class UTIL_Debug {
     }
 
     public static void debugWithInfo (System.LoggingLevel level, string message) {
-        if (test.isRunningTest() || enabled) {
+        if (enabled) {
             system.debug(
                 level,
                 message + 
