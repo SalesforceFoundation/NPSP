@@ -28,6 +28,7 @@
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_Batch_TEST</members>
+    <members>ADDR_Validator_REST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
@@ -939,6 +940,7 @@
     <name>StaticResource</name>
   </types>
   <types>
+    <members>Address__c.Verify_Address</members>
     <members>Contact.Merge_Contacts</members>
     <members>DataImport__c.Delete_All_Data_Import_Records</members>
     <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
