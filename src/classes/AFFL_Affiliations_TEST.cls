@@ -24,7 +24,7 @@ public class AFFL_Affiliations_TEST {
     
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
+    private static string strTestOnly = 'newAccountNewAffl';
             
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
@@ -713,4 +713,50 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(8, cPrimary);
    }
 
+    /*********************************************************************************************************
+    operation:
+        Add a new account with primary affiliation to existing contact. Then, update the account's primary contact.
+    verify:
+        Affiliation created between new account and existing contact. Verify secondary affiliation created between new primary contact.
+    **********************************************************************************************************/    
+    static testMethod void newAccountNewAffl() {
+        if (strTestOnly != '*' && strTestOnly != 'newAccountNewAffl') return;
+        
+        UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+        
+        list<contact> listCon = new list<Contact>();
+        listCon.add(new Contact(LastName = 'foo1', Title='Developer'));
+        listCon.add(new Contact(LastName = 'foo2', Title='CEO'));
+        insert listCon;
+
+        test.StartTest();
+        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
+        Account acc = new Account(Name='foo', npe01__One2OneContact__c=listCon[0].id, npe01__SYSTEMIsIndividual__c=false);
+        insert acc;
+        
+        list<npe5__Affiliation__c> queryAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
+            where npe5__Organization__c = :acc.id];
+        
+        System.assertEquals(1, queryAffl.size(), 'An affiliation should be created.');
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
+        system.assertEquals(listcon[0].title, queryAffl[0].npe5__Role__c, 'The affiliation\'s role should match the first contact\'s title.');
+        system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
+        
+        AFFL_Affiliations_TDTM.hasRunForAccounts = false;
+        acc.npe01__One2OneContact__c = listCon[1].id;
+        update acc;
+        test.StopTest();
+        
+        queryAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
+            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
+            where npe5__Organization__c = :acc.id ORDER BY npe5__Contact__r.LastName];        
+        
+        System.assertEquals(2, queryAffl.size(), 'Two affiliations should exist.');
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
+        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
+        system.assertEquals(listcon[1].title, queryAffl[1].npe5__Role__c, 'The new affiliation\'s role should match the second contact\'s title.');
+        system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
+
+    }
 }
