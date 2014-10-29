@@ -134,6 +134,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                             string strComboKey = strComboKeyFromContactIdAccountId(oldContact.Id, oldContact.Primary_Affiliation__c);                     
                             AfflOps ao = mapStrComboKeyAfflOps.get(strComboKey);
                             if (ao == null) ao = new AfflOps(oldContact.Id, oldContact.Primary_Affiliation__c);
+                            ao.fFormer = true;
                             ao.fUnprimary = true;
                             mapStrComboKeyAfflOps.put(strComboKey, ao);
                         }
