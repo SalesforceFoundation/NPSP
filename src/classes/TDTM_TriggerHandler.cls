@@ -35,7 +35,7 @@ public with sharing class TDTM_TriggerHandler {
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
     	if(newList != null)
-    	   System.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
+    	   UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
     	/** This solves the problem of not being able to save error records if everything gets rolled back. 
         TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
         DML operations. It also takes care of rolling everything back in that case, just so there are no 
@@ -45,7 +45,7 @@ public with sharing class TDTM_TriggerHandler {
     	try {
     		TDTM_Runnable.Action thisAction = TDTM_TriggerActionHelper.determineTriggerAction(isBefore, 
     		                                              isAfter, isInsert, isUpdate, isDelete, isUnDelete);
-            System.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
+            UTIL_Debug.debugWithInfo('****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
         
 	        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 	        
@@ -59,7 +59,7 @@ public with sharing class TDTM_TriggerHandler {
 	        //Get the classes to run
             // note that we are using the local object name, so it works for objects from Cumulus both in the package and unmanaged dev orgs.
 	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
-	        System.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
+	        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 	        
 	        if(classesToCall != null && classesToCall.size() > 0) {
 	            //Run the relevant classes
@@ -76,6 +76,7 @@ public with sharing class TDTM_TriggerHandler {
 	                    if(dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty())
 	                        dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
 	                }          
+                    UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c'));
 	            }
 	                         
 	            //Process the result
@@ -83,7 +84,7 @@ public with sharing class TDTM_TriggerHandler {
 	               processDML(dmlWrapper);
 	        }
 	    } catch(Exception e) {
-	    	System.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
+	    	UTIL_Debug.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
@@ -112,20 +113,20 @@ public with sharing class TDTM_TriggerHandler {
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
 			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
-			        	System.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
+			        	UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
 			        	runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
 			        } else {
-			        	System.debug(LoggingLevel.WARN, '****Calling synchronously: ' + classToRunName);
+			        	UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName);
                         return classToRun.run(newlist, oldlist, thisAction, describeObj);
 			        }
 	        	} else {
-	        		System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+	        		UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	        	}
 	        } else {
-	        	System.debug(LoggingLevel.WARN, '****ClassType was null.');
+	        	UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
 	        }
         } else {
-        	System.debug(LoggingLevel.WARN, '****ClassToCall was null');
+        	UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
     }
@@ -152,17 +153,17 @@ public with sharing class TDTM_TriggerHandler {
         
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
-        //System.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
+        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
         List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
         
-        //System.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate));
+        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate));
         List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate, false);
         
-        //System.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
+        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
         //Not yet using this one, as far as I know, but no reason not to support them
-        //System.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
+        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
@@ -174,7 +175,7 @@ public with sharing class TDTM_TriggerHandler {
             dmlWrapper.objectsToUndelete, ERR_Handler.Context.TDTM);
             
         if(errorsExist) {
-        	System.debug(LoggingLevel.WARN, '****Error found when processing DML');
+        	UTIL_Debug.debug(LoggingLevel.WARN, '****Error found when processing DML');
             Database.rollback(sp);
             errorHandler.storeErrors();
         }

@@ -512,7 +512,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (lsr[i].isSuccess() == true) {
                     c.AccountId = lsr[i].getId();
                 } else {
-                    system.debug('Error inserting Accounts');
+                    UTIL_Debug.debug('Error inserting Accounts');
                     // DJH:UNDONE - need to use error class to log DML errors
                 }
                 *****/

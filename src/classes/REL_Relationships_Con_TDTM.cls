@@ -145,7 +145,7 @@ public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
             }
             
             if (!doNotCreate){
-                System.debug('****Creating relationship in createNewRelationships method');
+                UTIL_Debug.debug('****Creating relationship in createNewRelationships method');
                 npe4__Relationship__c r = new npe4__Relationship__c(
                     npe4__Contact__c = conId, 
                     npe4__RelatedContact__c = RelatedContactIds[i],

@@ -89,8 +89,8 @@ public class CON_ContactMerge {
                 loserAccountIds.add(thisloserContact.AccountId);
             }
         }
-        //system.debug('losers: ' + loserAccountIds);
-        //system.debug('winneraccountid: ' + winner.AccountId);
+        //UTIL_Debug.debug('losers: ' + loserAccountIds);
+        //UTIL_Debug.debug('winneraccountid: ' + winner.AccountId);
         //get loser contact Accounts that should be merged out--only one-to-one accounts
         loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account 
             where Id IN :loserAccountIds and 
@@ -141,7 +141,7 @@ public class CON_ContactMerge {
             winnerMakePrivate.npe01__Private__c = false;
             update winnerMakePrivate;
         }       
-        system.debug('loserAccounts: ' + loserAccountsToBeDeleted);
+        UTIL_Debug.debug('loserAccounts: ' + loserAccountsToBeDeleted);
         if(loserAccountsToBeDeleted.size()>0){
             delete loserAccountsToBeDeleted;
         }

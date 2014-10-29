@@ -134,7 +134,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // query for OppConRoles where primary=true and OppID in arg set
             map<String,Id> contactOppToContactRole = new map<String,Id>();
             OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppsForContactRoles.values() ];
-            //system.debug('DJH***** conRoles: ' + conRoles);
+            //UTIL_Debug.debug('DJH***** conRoles: ' + conRoles);
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
@@ -260,13 +260,13 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             
             if (contactrolesforCreation != null) {
             	dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
-            	//system.debug('DJH***** contractrolesforCreation: ' + contactrolesforCreation);
+            	//UTIL_Debug.debug('DJH***** contractrolesforCreation: ' + contactrolesforCreation);
                 //insert contactrolesforCreation;   
             }
             
             if (contactRolesForUpdate != null) {
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactRolesForUpdate);
-                //system.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
+                //UTIL_Debug.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
                 //update contactRolesForUpdate;   
             }   
         }
