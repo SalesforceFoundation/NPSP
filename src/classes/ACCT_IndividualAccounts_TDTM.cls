@@ -718,6 +718,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     // the default name for a new HH Account
+    // custom household naming will update this account later if enabled,
+    // but we still need one if not enabled.
     public static String strNameHHAccountForContact(Contact con) {
         return con.LastName + ' ' + system.label.npo02.DefaultHouseholdName;
     }
