@@ -71,7 +71,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.afterInsert) {
-            	System.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
+            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
                 if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
                 }
@@ -82,7 +82,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             
             // AFTER UPDATE
             if (triggerAction == TDTM_Runnable.Action.afterUpdate) {   
-            	System.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
+            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
                 if (r.npe4__ReciprocalRelationship__c == oldlist[i].npe4__ReciprocalRelationship__c 
                 && r.npe4__RelatedContact__c != null) {
                     relationshipsToUpdate.add(r);
@@ -95,7 +95,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
 
             // AFTER DELETE
             if (triggerAction == TDTM_Runnable.Action.afterDelete) {
-            	System.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
+            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
                 }
@@ -139,7 +139,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     /// <summary> Deletes Reciprocal Relationships when a Relationship is deleted </summary>
     /// <param name="relationships">  </param>
     public static DmlWrapper deleteRelationships(npe4__Relationship__c[] relationships) {
-    	System.debug('****Deleting relationships: ' + relationships);
+    	UTIL_Debug.debug('****Deleting relationships: ' + relationships);
     	DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
         for(npe4__Relationship__c r : Relationships) {
@@ -164,7 +164,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToUpdate = new List<SObject>();
         for(npe4__Relationship__c r : Relationships) {
-        	System.debug('****Creating reciprocal relatioship');
+        	UTIL_Debug.debug('****Creating reciprocal relatioship');
             npe4__Relationship__c copy = new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c, 
                                                                     npe4__ReciprocalRelationship__c = r.Id);
             relationshipsToUpdate.add(copy);
@@ -183,7 +183,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         List<SObject> relationshipsToCreate = new List<SObject>();
                 
         for(npe4__Relationship__c r : Relationships) {
-        	System.debug('****Creating relationship in createRelationship method');
+        	UTIL_Debug.debug('****Creating relationship in createRelationship method');
             npe4__Relationship__c copy = new npe4__Relationship__c();              
             copy.npe4__Contact__c = r.npe4__RelatedContact__c;
             copy.npe4__RelatedContact__c = r.npe4__Contact__c;
@@ -222,7 +222,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             || r.npe4__Type__c != oldRelationships[counter].npe4__Type__c 
             || r.npe4__Description__c != oldRelationships[counter].npe4__Description__c) 
             && r.npe4__ReciprocalRelationship__c != null) {
-            	System.debug('****Creating relationship in updateRelationship method');
+            	UTIL_Debug.debug('****Creating relationship in updateRelationship method');
                 npe4__Relationship__c copy = new npe4__Relationship__c(Id=r.npe4__ReciprocalRelationship__c);
                 
                 //SWA 2009-05-13 - only attempt to modify the Contact field if the Related Contact  has changed

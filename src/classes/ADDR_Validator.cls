@@ -45,7 +45,7 @@ public with sharing class ADDR_Validator {
     }
     
     public static void verifyRecords(set<id> recordIds) {
-    	System.debug(LoggingLevel.WARN, '****Retrieving data records');
+    	UTIL_Debug.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
@@ -58,7 +58,7 @@ public with sharing class ADDR_Validator {
     //we separate it from the query so that we can call it also from the batch process
     public static void verifyAddressRecords(List<Address__c> avList) {
     	if (!avList.isEmpty()) {
-            System.debug(LoggingLevel.WARN, '****Verifying records');
+            UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying records');
             if(settings != null) {
                 String classToRunName = String.valueOf(settings.get('Class__c'));
                 if(classToRunName != null) {
@@ -73,14 +73,14 @@ public with sharing class ADDR_Validator {
 	                        //updating the addresses with the verified version
 	                        update validator.verifyRecords(avList, settings);
 	                    } else {
-	                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+	                        UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	                    }
 	                } else {
-	                    System.debug(LoggingLevel.WARN, '****ClassType was null.');
+	                    UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
 	                }
                 }
             } else {
-                System.debug(LoggingLevel.WARN, '****ClassToCall was null');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
             }
         }
     }
