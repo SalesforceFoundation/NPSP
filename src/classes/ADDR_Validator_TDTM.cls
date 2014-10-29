@@ -48,9 +48,9 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	        	for(SObject so : newList) {
 	        		Address__c address = (Address__c)so;
 	        		if(!system.isFuture() && !system.isBatch()) {
-	        		    address.Verification_Status__c = 'Pending verification';
+	        		    address.Verification_Status__c = Label.Addr_Pending_Verification;
 	        		} else {
-	        			address.Verification_Status__c = 'Verification required';
+	        			address.Verification_Status__c = Label.Addr_Verification_Required;
 	        		}	
         	    }
 	        }
