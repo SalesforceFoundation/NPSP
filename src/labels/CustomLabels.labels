@@ -462,7 +462,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiDataImporterInfoLine2b</shortDescription>
-        <value>Addresses will not be run through the Address Verification service you have specified in NPSP Settings, to avoid service limits.</value>
+        <value>In order to avoid reaching service limits, the NPSP Data Importer does not verify addresses through the verification service you may have specified in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine3</fullName>
