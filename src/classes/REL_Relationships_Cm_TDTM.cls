@@ -61,11 +61,11 @@ public with sharing class REL_Relationships_Cm_TDTM extends TDTM_Runnable {
                     npe4__Relationship_Auto_Create__c rac = REL_Utils.getAutoCreateMap().get(s);
                     //retrieve the campaign for matching type
                     Campaign c = cMap.get(cm.CampaignId);
-                    System.debug('****Current Campaign Type: ' + c.Type);
+                    UTIL_Debug.debug('****Current Campaign Type: ' + c.Type);
                     //create a set from the rac
                     if (rac.npe4__Object__c == 'CampaignMember' && rac.npe4__Campaign_Types__c != null){
                         List<String> cTypeList = rac.npe4__Campaign_Types__c.split(';');
-                        System.debug('****All Campaign Types: ' + cTypeList);
+                        UTIL_Debug.debug('****All Campaign Types: ' + cTypeList);
                         Set<String> cTypeSet = new Set<String>();
                         cTypeSet.addAll(cTypeList);                                             
                         if (cTypeSet.contains(c.Type)){                     

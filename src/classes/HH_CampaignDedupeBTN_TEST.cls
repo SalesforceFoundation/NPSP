@@ -66,14 +66,14 @@ private class HH_CampaignDedupeBTN_TEST {
     insert con;
     id hhid = [select npo02__Household__r.id from Contact where id = :con.id].npo02__household__r.id;
     system.assert(hhid != null);
-    system.debug('HHID IS===================' + hhid);
+    UTIL_Debug.debug('HHID IS===================' + hhid);
     Contact con2 = new Contact (
       FirstName = 'Amy',
       LastName = 'Test',
       AccountId = acct.id,            
       npo02__household__c = hhid
     );
-    system.debug('HHID IS NOW===================' + hhid);
+    UTIL_Debug.debug('HHID IS NOW===================' + hhid);
     
     system.assert(con2.npo02__household__c != null);
     insert con2;

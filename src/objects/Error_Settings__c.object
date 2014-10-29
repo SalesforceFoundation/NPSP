@@ -5,6 +5,16 @@
     <description>Settings that control your error management configuration.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Enable_Debug__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Turn this on to enable debug statements in managed package code.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Turn this on to enable debug statements in managed package code.</inlineHelpText>
+        <label>Enable Debug</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Error_Notifications_On__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to send error notifications.</description>

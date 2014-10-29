@@ -923,13 +923,13 @@ public with sharing class RD_RecurringDonations {
     private static void runRecurringDonationClosedActions(list<npe03__Recurring_Donation__c> closedRDs, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // determine the update type - 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        //system.debug('IN THE PRIVATE METHOD');
+        //UTIL_Debug.debug('IN THE PRIVATE METHOD');
         if (!closedRDs.isEmpty() && rds.npe03__Open_Opportunity_Behavior__c != RecurringDonationCloseOptions.No_Action.name()) {
             map<Id, Opportunity> mapIdOpp = new map<Id, Opportunity>([select Id, StageName, npe03__Recurring_Donation__r.id 
                                     from Opportunity where npe03__Recurring_Donation__r.id IN :closedRDs and isClosed = false]);
          
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()){
-                //system.debug('IN THE PRIVATE METHOD3');
+                //UTIL_Debug.debug('IN THE PRIVATE METHOD3');
                 if (dmlWrapper != null) {
                     List<SObject> oppsToDelete = new List<SObject>();
                     for(Id oppToDeleteId : mapIdOpp.keySet()) {

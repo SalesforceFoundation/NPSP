@@ -73,7 +73,7 @@ public with sharing class ERR_Handler {
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
     	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c && errorsExist) {
-           System.debug('****Errors exist - calling Error Notifier');
+           UTIL_Debug.debug('****Errors exist - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
     	}
            
@@ -109,7 +109,7 @@ public with sharing class ERR_Handler {
 	        	}
 	        	
 	        	if(!isSuccess && message != null) {
-	        		System.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
+	        		UTIL_Debug.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
 	        		errorsExist = true;
 	        		//Creating error object
 	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
@@ -139,11 +139,11 @@ public with sharing class ERR_Handler {
     public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
     	
     	if(e != null) {
-    		System.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
+    		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
 			if(e instanceof DmlException && records != null && records.size() > 0) {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
-                   System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
+                   UTIL_Debug.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
                    /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent. 
@@ -155,13 +155,13 @@ public with sharing class ERR_Handler {
            
            if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
-               System.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
+               UTIL_Debug.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
                Database.SaveResult result = Database.insert(error, false);
            }
     	}
     	
     	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
-    	   System.debug('****Sending error notification');
+    	   UTIL_Debug.debug('****Sending error notification');
            ERR_Notifier.sendErrorNotifications(context);
     	}
     }
@@ -181,7 +181,7 @@ public with sharing class ERR_Handler {
     /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
         if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
+		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
 		  Database.insert(errors, false);
         }
     }

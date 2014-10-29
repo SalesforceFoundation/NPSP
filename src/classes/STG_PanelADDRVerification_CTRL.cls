@@ -125,7 +125,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                   and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
                   and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
                   and (not Name like :schedLikeClause) and (not Name IN :validatorExclussions)];
-        System.debug('****Validators: ' + JSON.serializePretty(classes));
+        UTIL_Debug.debug('****Validators: ' + JSON.serializePretty(classes));
         for(ApexClass c : classes) {
             Type classType = Type.forName(c.NamespacePrefix, c.Name);
             if(classType != null) {

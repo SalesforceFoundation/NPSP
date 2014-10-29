@@ -77,7 +77,7 @@ public class HH_HouseholdNaming_TEST {
             
         //get the household to be updated
         id hhid = [select npo02__Household__r.id from Contact where id = :testcons[0].id].id;                        
-        system.debug('ID IS=================='+ hhid);    
+        UTIL_Debug.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
         'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 

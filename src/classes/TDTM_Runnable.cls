@@ -139,7 +139,7 @@ global abstract class TDTM_Runnable {
                 } else if(o instanceof npe4__Relationship__c) {
                     relationships.add(o);
                 } else {
-                	System.debug(LoggingLevel.WARN, '****Not one of our basic object types');
+                	UTIL_Debug.debug(LoggingLevel.WARN, '****Not one of our basic object types');
                 	unknown.add(o);
                 }
             }

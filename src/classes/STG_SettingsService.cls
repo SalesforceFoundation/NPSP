@@ -37,7 +37,7 @@ public with sharing class STG_SettingsService {
     public static STG_SettingsService stgService = new STG_SettingsService();
     
     public STG_SettingsService() {
-    	//system.debug('***** STG_SettingsService constructor');
+    	//UTIL_Debug.debug('***** STG_SettingsService constructor');
     }
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
