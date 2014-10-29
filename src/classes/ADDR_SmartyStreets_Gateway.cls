@@ -133,7 +133,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setEndpoint(baseURL + auth); 
 	        req.setBody(body);
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-	        System.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
+	        UTIL_Debug.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
 	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
 	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
@@ -157,7 +157,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        	// execute the request
 	        	response = h.send(req);
 	        }
-	        System.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
+	        UTIL_Debug.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
     	} else {
     		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
     	}

@@ -86,8 +86,8 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     }  
     
     public override PageReference saveSettings() {
-        System.debug('****notification to drop down: ' + notificationToDropDown);
-        System.debug('****group ID: ' + groupId);
+        UTIL_Debug.debug('****notification to drop down: ' + notificationToDropDown);
+        UTIL_Debug.debug('****group ID: ' + groupId);
         if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && String.isBlank(groupId)) { 
             saveErrorMessage = 'Please enter valid Chatter group name.';
             return null;

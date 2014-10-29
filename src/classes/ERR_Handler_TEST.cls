@@ -113,7 +113,7 @@ public with sharing class ERR_Handler_TEST {
         //it in line 40 of ERR_ParentAccountUpdater_TEST (in the second pass of the Database.insert operation)
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Posted_in_Chatter__c from Error__c];
         System.assertEquals(1, errors.size());
-        System.debug('****Errors: ' + JSON.serializePretty(errors));
+        UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
         
         //Verify error was posted to chatter group
         if(Schema.SObjectType.User.isFeedEnabled()) {
@@ -267,7 +267,7 @@ public with sharing class ERR_Handler_TEST {
         //gets rolled back and then run again only with records that succeed. No error is saved.
         //**Note that we have not created a Trigger_Handler__c record with the test class that would throw an exception**
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c];
-        System.debug('****ERROR: ' + JSON.serializePretty(errors));
+        UTIL_Debug.debug('****ERROR: ' + JSON.serializePretty(errors));
         System.assertEquals(0, errors.size());                                    
     }
     

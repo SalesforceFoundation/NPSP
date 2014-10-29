@@ -99,7 +99,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
 
     private List<Address__c> verifyRecords100(List<Address__c> avList) {
-    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList.size() + ' address records');
+    	UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying ' + avList.size() + ' address records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.AddressRequest> srList = new List<ADDR_SmartyStreets_Gateway.AddressRequest>();
         
@@ -124,14 +124,14 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	        try {
 	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
 	            List<ADDR_SmartyStreets_Gateway.AddressResponse> responses = la.verifyAddresses(srList);
-	            System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
+	            UTIL_Debug.debug('****Gateway responses: ' + JSON.serializePretty(responses));
 	            if (responses != null) {
 	                List<ADDR_SmartyStreets_Gateway.AddressResponse> responseGroup;
 	                for (ADDR_SmartyStreets_Gateway.AddressResponse sr : responses) {         
 	                    Address__c av = avList[ sr.input_index ];              
 	                    if (sr.candidate_index == 0) {
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
-	                        System.debug('****Flagging address as verified. Address ID: ' + av.Id);
+	                        UTIL_Debug.debug('****Flagging address as verified. Address ID: ' + av.Id);
 	                        av.Verified__c = true;
 	                        av.MailingStreet__c = sr.delivery_line_1;
 	                        av.MailingStreet2__c = sr.delivery_line_2;
@@ -146,7 +146,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        av.Congressional_District__c = sr.metadata.congressional_district;
 	                    } else {
 	                        // more than one candidate means should mark as ambiguous
-	                        System.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
+	                        UTIL_Debug.debug('****Flagging address as NOT verified. Flagging it as ambiguous. Address ID: ' + av.Id);
 	                        av.Verified__c = false; 
 	                        av.Ambiguous__c = true;
 	                        responseGroup.add(sr);
@@ -164,7 +164,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	            }
 	        } catch (Exception ex) {
 	            for (Address__c av : avList) {
-	                System.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
+	                UTIL_Debug.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
 	                               + ' - Exception in verifyRecords100: ' + ex.getMessage() 
 	                               + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
@@ -178,7 +178,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
 
     private List<Address__c> verifyZipRecords100(List<Address__c> avList) {
-    	System.debug(LoggingLevel.WARN, '****Verifying ' + avList + ' zip records');
+    	UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying ' + avList + ' zip records');
         integer recs = 0;
         List<ADDR_SmartyStreets_Gateway.ZipRequest> zrList = new List<ADDR_SmartyStreets_Gateway.ZipRequest>();
         
@@ -198,7 +198,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	        try {
 	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(settings);
 	            List<ADDR_SmartyStreets_Gateway.ZipResponse> responses = la.verifyZips(zrList);
-	            System.debug('****Gateway responses: ' + JSON.serializePretty(responses));
+	            UTIL_Debug.debug('****Gateway responses: ' + JSON.serializePretty(responses));
 	            if (responses != null && !responses.isEmpty()) {
 	                if(responses.size() == avList.size()) {
 	                    for (integer i = 0; i < responses.size(); i++) {
@@ -207,17 +207,17 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	    
 	                        // look for an error
 	                        if (sr.status != null && sr.reason != null) {
-	                            System.debug('****Error found. Reason: ' + sr.reason);
+	                            UTIL_Debug.debug('****Error found. Reason: ' + sr.reason);
 	                            av.API_Response__c = sr.reason;
 	                        // if there is any response, serialize it and fill in location with first location value
 	                        } else if (sr.zipcodes != null) {
-	                            System.debug('****No error. Populating raw response field.');
+	                            UTIL_Debug.debug('****No error. Populating raw response field.');
 	                            av.API_Response__c = JSON.serializePretty(sr);
 	                            av.Verification_Status__c = Label.Addr_Verified;
 	                            
 	                            // if there is at least one city/state, fill in city state
 	                            if (sr.city_states != null && sr.city_states.size() > 0) {
-	                                System.debug('****Populating city and estate.');
+	                                UTIL_Debug.debug('****Populating city and estate.');
 	                                av.Verified__c = true;
 	                                av.MailingCity__c = sr.city_states[0].city;
 	                                av.MailingState__c = sr.city_states[0].state_abbreviation;
@@ -230,7 +230,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        }
 	                    }
 	                } else {
-	                    System.debug('****Responses did not match number of verifications.');
+	                    UTIL_Debug.debug('****Responses did not match number of verifications.');
 	                    for(Address__c av : avList) {
 	                    	av.Verification_Status__c = Label.Zip_Not_Found;
 	                    }
@@ -244,7 +244,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	            }
 	        } catch (Exception ex) {
 	            for (Address__c av : avList) {
-	                System.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
+	                UTIL_Debug.debug('****Flagging address as NOT verified Address ID: ' + av.Id 
 	                            + ' - Exception in verifyZipRecords100: ' + ex.getMessage()
 	                            + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;

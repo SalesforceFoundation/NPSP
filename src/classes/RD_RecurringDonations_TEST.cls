@@ -47,8 +47,8 @@ public class RD_RecurringDonations_TEST {
     {
         if (strTestOnly != '*' && strTestOnly != 'insertOpportunities') return;
         
-        system.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
-        system.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
+        UTIL_Debug.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
+        UTIL_Debug.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
         Account a = new Account();
         a.Name = 'test Individual';
         insert a;
@@ -102,7 +102,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(100,installments1[1].Amount);
         system.assertEquals(date.newinstance(1971,6,12),installments1[1].CloseDate);
         system.assertEquals(a.id,installments1[1].AccountId);
-        system.debug(installments1);        
+        UTIL_Debug.debug('****' + installments1);        
     }
     
     static testMethod void insertWeeklyOpportunities()
@@ -248,7 +248,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(33.34,installments2[2].Amount);
         system.assertEquals(date.newinstance(1970,8,12),installments2[2].CloseDate);
         system.assertEquals(a.id,installments2[0].AccountId);
-        system.debug(installments2);
+        UTIL_Debug.debug('**** '+installments2);
         RD_ProcessControl.hasRun = false;
         try{
             delete r2;
@@ -1535,7 +1535,7 @@ public class RD_RecurringDonations_TEST {
 
         Group g = new Group(Name = 'MyGroup');
         insert g;
-        system.debug('GID IS: ' + g.id);
+        UTIL_Debug.debug('GID IS: ' + g.id);
         setRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
         npe03__Error_Email_Notifications__c = g.id                
         ));         

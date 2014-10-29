@@ -105,7 +105,7 @@ public with sharing class UTIL_MasterSchedulable_TEST {
         System.assertEquals(2, jobs.size());
         
         for(Schedulable__c job : jobs) {
-            System.debug('****needsToRun - Last time run: ' + job.Last_Time_Run__c);
+            UTIL_Debug.debug('****needsToRun - Last time run: ' + job.Last_Time_Run__c);
             //Check that lastTimeRun has been modified - should have run in the last 5 mins
             System.assert(job.Last_Time_Run__c > System.now().addMinutes(-5));
         }
@@ -130,7 +130,7 @@ public with sharing class UTIL_MasterSchedulable_TEST {
         System.assertEquals(2, jobs.size());
         
         for(Schedulable__c job : jobs) {
-            System.debug('****doesNotNeedToRun - Last time run: ' + job.Last_Time_Run__c);
+            UTIL_Debug.debug('****doesNotNeedToRun - Last time run: ' + job.Last_Time_Run__c);
             //Check that lastTimeRun has been modified - should not have run since last time
             System.assertEquals(lastTimeRun, job.Last_Time_Run__c);
         }
