@@ -66,7 +66,6 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         // 4. set an existing affiliation to primary
         
         map<string, AfflOps> mapStrComboKeyAfflOps = new map<string, AfflOps>();
-        list<Id> listContactId = new list<Id>();
         
         Integer i = 0;
         if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
@@ -97,7 +96,6 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
 	            // AFTER UPDATE
 	            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {	            
-                    listContactId.add(contact.Id);
                     Contact oldContact = (Contact) oldlist[i];
                     
                     if (contact.AccountId != oldContact.AccountId) {
