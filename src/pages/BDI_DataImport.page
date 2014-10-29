@@ -90,6 +90,7 @@
 	                        <ul>
 	                            <li>{!$Label.bdiDataImporterInfoLine1}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine2}</li>
+	                            <li>{!$Label.bdiDataImporterInfoLine2b}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine3}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine4}
 	                               <br/><br/><b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b></li>

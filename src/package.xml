@@ -505,6 +505,7 @@
     <members>bdiDataImporterDescription</members>
     <members>bdiDataImporterInfoLine1</members>
     <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine2b</members>
     <members>bdiDataImporterInfoLine3</members>
     <members>bdiDataImporterInfoLine4</members>
     <members>bdiDataImporterInfoTitle</members>

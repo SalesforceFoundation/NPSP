@@ -457,6 +457,14 @@
         <value>Salesforce will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.</value>
     </labels>
     <labels>
+        <fullName>bdiDataImporterInfoLine2b</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDataImporterInfoLine2b</shortDescription>
+        <value>Addresses will not be run through the Address Verification service you have specified in NPSP Settings, to avoid service limits.</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterInfoLine3</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
