@@ -689,7 +689,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>Verification_Status__c</fullName>
         <description>Status of the address verification.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Status of the address verification.</inlineHelpText>
+        <inlineHelpText>If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information.</inlineHelpText>
         <label>Verification Status</label>
         <length>255</length>
         <required>false</required>

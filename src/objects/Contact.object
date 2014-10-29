@@ -872,7 +872,7 @@
         <externalId>false</externalId>
         <formula>Current_Address__r.Verification_Status__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>Verification status of the current address.</inlineHelpText>
+        <inlineHelpText>If this address requires verification, click the Verify Address button at the top of the Address page. Consult the Help documentation in the Power of Us Hub for more information.</inlineHelpText>
         <label>Address Verification Status</label>
         <required>false</required>
         <type>Text</type>
