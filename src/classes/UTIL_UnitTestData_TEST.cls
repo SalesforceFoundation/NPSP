@@ -154,7 +154,7 @@ public class UTIL_UnitTestData_TEST {
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
-        system.debug('recordtypeintest: ' + rtid);
+        UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
@@ -181,7 +181,7 @@ public class UTIL_UnitTestData_TEST {
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
-        system.debug('recordtypeintest: ' + rtid);
+        UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for (Account acc : listAcc) {
             Opportunity newOpp = New Opportunity (

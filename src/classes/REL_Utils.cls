@@ -88,7 +88,7 @@ public with sharing class REL_Utils {
         try {
             lines = contents.split('\n');
         } catch (System.ListException e) {
-            System.debug('Limits exceeded?' + e.getMessage());
+            UTIL_Debug.debug('Limits exceeded?' + e.getMessage());
         }
         Integer num = 0;
         for(String line : lines) {

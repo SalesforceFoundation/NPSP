@@ -108,7 +108,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                response = ADDR_Cicero_Test.respond(req);
 	            else
 	                response = h.send(req);
-	            //system.debug('****CICERO RESPONDS WITH: ' + response.getBody());
+	            //UTIL_Debug.debug('****CICERO RESPONDS WITH: ' + response.getBody());
 	            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
 	            Object objResp = JSON.deserializeUntyped(response.getBody());
 	            addr.API_Response__c = JSON.serializePretty(objResp);
