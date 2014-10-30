@@ -73,7 +73,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         system.assert(sr != null);
         system.assertEquals(sr.delivery_line_1, '1 Infinite Loop');
         system.assertEquals(37.33118, sr.metadata.latitude);
-        system.debug(logginglevel.warn, sr.getFullAddress());
+        UTIL_Debug.debug(logginglevel.warn, sr.getFullAddress());
     }
 
     public static testMethod void testMultiAddress() {
@@ -116,7 +116,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         try {
             sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
-        	System.debug('****' + e.getStackTraceString());
+        	UTIL_Debug.debug('****' + e.getStackTraceString());
             system.assertEquals('Not authenticated.', e.getMessage());
         }
         Test.stopTest();

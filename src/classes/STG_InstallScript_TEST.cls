@@ -114,7 +114,7 @@ public with sharing class STG_InstallScript_TEST {
         //npe01__DISABLE_OpportunityContactRoles_trigger__c) that point to the same TDTM class (OPP_OpportunityContactRoles_TDTM)
         System.assertEquals(tdtmClassesWithValues.size() - 1, afterScriptConfig.size());     
         for(Trigger_Handler__c handler : afterScriptConfig) {
-            System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
+            UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
             System.assertEquals(false, handler.Active__c);
         }
         
@@ -147,7 +147,7 @@ public with sharing class STG_InstallScript_TEST {
                                                                'HH_OppContactRoles_TDTM'};
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :mappedTdtmClasses];
         for(Trigger_Handler__c handler : afterScriptConfig) {
-            System.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
+            UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
             System.assertEquals(false, handler.Active__c);
         }
         

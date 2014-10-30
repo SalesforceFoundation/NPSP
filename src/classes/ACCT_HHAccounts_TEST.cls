@@ -682,7 +682,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
-        system.debug(listAcc);
+        UTIL_Debug.debug('****' +listAcc);
         system.assertEquals(4, listAcc.size()); // 3 1:1 and 1 Bucket
         
         // how clear out their accounts to cause them to get an HH Account
@@ -699,7 +699,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
-        system.debug(listAcc);
+        UTIL_Debug.debug('****' +listAcc);
         system.assertEquals(7, listAcc.size()); // 6 HH, and 1 Bucket.
         
         for (Account acc : listAcc) {
@@ -780,7 +780,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         list<Contact> listCon2 = [select Name, OwnerId, Account.Id, Account.OwnerId from Contact where Id in :listCon];
         system.assertEquals(listCon2.size(), listCon.size());
         
-        system.debug('**** listCon2: ' + listCon2);
+        UTIL_Debug.debug('**** listCon2: ' + listCon2);
         for (Contact con : listCon2) {
             if (con.Id == listCon[0].Id || con.ID == listCon[4].Id) {
                system.assertEquals(con.OwnerId, con.Account.OwnerId);

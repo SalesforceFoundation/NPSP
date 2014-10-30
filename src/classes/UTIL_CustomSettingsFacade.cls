@@ -374,6 +374,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+        es.Enable_Debug__c = false;
     }
     
     private static void configBDESettings(Batch_Data_Entry_Settings__c bds) {

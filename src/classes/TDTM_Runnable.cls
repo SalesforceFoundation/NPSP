@@ -142,7 +142,7 @@ global abstract class TDTM_Runnable {
                 } else if(o instanceof Allocation__c) {
                     allocations.add(o);
                 } else {
-                	System.debug(LoggingLevel.WARN, '****Not one of our basic object types');
+                	UTIL_Debug.debug(LoggingLevel.WARN, '****Not one of our basic object types');
                 	unknown.add(o);
                 }
             }
