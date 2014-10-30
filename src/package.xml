@@ -28,6 +28,7 @@
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_Batch_TEST</members>
+    <members>ADDR_Validator_REST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
@@ -310,6 +311,7 @@
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
+    <members>Address__c.Verification_Status__c</members>
     <members>Address__c.Verified__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
@@ -317,6 +319,7 @@
     <members>Batch__c.Description__c</members>
     <members>Batch__c.Number_of_Items__c</members>
     <members>Batch__c.Object_Name__c</members>
+    <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
@@ -449,6 +452,7 @@
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Pending_Verification</members>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -468,6 +472,8 @@
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verification_Required</members>
+    <members>Addr_Verified</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
@@ -753,7 +759,6 @@
     <members>stgLabelExamplesIGFormat</members>
     <members>stgLabelHHGeneral</members>
     <members>stgLabelHHNaming</members>
-    <members>stgLabelHHNamingProgress</members>
     <members>stgLabelHHOCR</members>
     <members>stgLabelHHObject</members>
     <members>stgLabelHHSettings</members>
@@ -939,6 +944,7 @@
     <name>StaticResource</name>
   </types>
   <types>
+    <members>Address__c.Verify_Address</members>
     <members>Contact.Merge_Contacts</members>
     <members>DataImport__c.Delete_All_Data_Import_Records</members>
     <members>DataImport__c.Delete_Imported_Data_Import_Records</members>

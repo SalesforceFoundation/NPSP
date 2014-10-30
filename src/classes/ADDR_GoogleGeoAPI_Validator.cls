@@ -92,7 +92,9 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 response = h.send(req);
             } catch (Exception e){
                 a.Verified__c = false;
-                a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
+                a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
+                ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                a.Verification_Status__c = e.getMessage();
             }
 
             if (response.getStatusCode() == 200){
@@ -101,7 +103,9 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     googresp = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse)JSON.deserialize(response.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
                 }catch (Exception e){
                     a.Verified__c = false;
-                    a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage() + '\nSTACKTRACE:\n' + e.getStackTraceString();
+                    a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
+                    ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                    a.Verification_Status__c = e.getMessage();
                 }
 
                 String verified_street = '';
@@ -137,34 +141,43 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
                     a.Verified__c = true;
                     a.API_Response__c = response.getBody();
+                    a.Verification_Status__c = Label.Addr_Verified;
                 } else if (googresp.status == 'OK' && googresp.results.size() > 1){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
                     a.API_Response__c = response.getBody();
+                    a.Verification_Status__c = 'Ambiguous';
                 } else if (googresp.status == 'OVER_QUERY_LIMIT'){
                     a.Verified__c = false;
                     a.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
+                    a.Verification_Status__c = a.API_Response__c;
                 } else if (googresp.status == 'REQUEST_DENIED'){
                     a.Verified__c = false;
                     a.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
+                    a.Verification_Status__c = a.API_Response__c;
                 } else if (googresp.status == 'UNKNOWN_ERROR'){
                     a.Verified__c = false;
                     a.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
+                    a.Verification_Status__c = a.API_Response__c;
                 } else if (googresp.status == 'INVALID_REQUEST'){
                     a.Verified__c = false;
                     a.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
+                    a.Verification_Status__c = a.API_Response__c;
                 } else if (googresp.status == 'ZERO_RESULTS'){
                     a.Verified__c = false;
                     a.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
+                    a.Verification_Status__c = a.API_Response__c;
                 }
                 else{
                     a.Verified__c = false;
                     a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+                    a.Verification_Status__c = a.API_Response__c;
                 }
             }
             else{
                 a.Verified__c = false;
                 a.API_Response__c = response.getStatusCode() + ': ' + response.getStatus();
+                a.Verification_Status__c = a.API_Response__c;
             }
         }
         else{
