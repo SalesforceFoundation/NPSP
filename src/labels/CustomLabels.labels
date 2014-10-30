@@ -16,6 +16,14 @@
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
+        <fullName>Addr_Pending_Verification</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pending verification</shortDescription>
+        <value>Pending verification</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
@@ -174,6 +182,22 @@
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Title</shortDescription>
         <value>Mass Verify Existing Addresses</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Required</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Verification required</shortDescription>
+        <value>Verification required</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verified</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Address Successfully Verified</shortDescription>
+        <value>Verified</value>
     </labels>
     <labels>
         <fullName>Addr_Verify_Endpoint</fullName>
