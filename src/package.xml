@@ -452,6 +452,7 @@
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Pending_Verification</members>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -471,6 +472,7 @@
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verification_Required</members>
     <members>Addr_Verified</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
