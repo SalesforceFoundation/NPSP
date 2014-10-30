@@ -196,7 +196,7 @@ public with sharing class ERR_Handler {
 		//are in a managed package.
 		stackTrace = e.getStackTraceString();
 		if(stackTrace == null || stackTrace == '(npsp)') {
-			stackTrace = 'No stacktrace available at the time of saving the record - ';
+			stackTrace = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			stackTrace = 'Stacktrace available at the time of saving the record - ';
 		}

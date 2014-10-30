@@ -255,7 +255,7 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
 
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');
-        if (req.getEndpoint().contains('bad-authentication-for-test')) {
+        if (req.getEndpoint().contains('401')) {
             res.setStatusCode(401);
             res.setStatus('Not authenticated.');
         } else {
