@@ -31,7 +31,12 @@ public without sharing class TDTM_DefaultConfig {
 
     public static List<Trigger_Handler__c> getDefaultRecords() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-        
+
+        //Affiliations on Contact
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 2, Object__c = 'Account', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
         //Affiliations on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
