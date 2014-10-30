@@ -762,6 +762,7 @@
     <members>stgLabelExamplesIGFormat</members>
     <members>stgLabelHHGeneral</members>
     <members>stgLabelHHNaming</members>
+    <members>stgLabelHHNamingProgress</members>
     <members>stgLabelHHOCR</members>
     <members>stgLabelHHObject</members>
     <members>stgLabelHHSettings</members>
