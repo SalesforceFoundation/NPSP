@@ -24,7 +24,7 @@ public class AFFL_Affiliations_TEST {
     
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'newAccountNewAffl';
+    private static string strTestOnly = '*';
             
     /// <name> newContactOnOrgAccount </name>
     /// <summary> test creation of affiliation for contact on an Org account </summary>
