@@ -127,7 +127,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                    for (Districts district : candidate.districts) {
 		                    if (district.district_type == 'NATIONAL_LOWER') {
 		                        addr.Congressional_District__c = district.district_id;
-		                        addr.MailingCountry__c = 'US';
+		                        addr.MailingCountry__c = district.country;
 		                        foundData = true;
 		                        break;
 		                    }
@@ -182,6 +182,14 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     
     public class Candidates {
         string match_addr;
+        
+        string match_streetaddr; // house # and street of the matched address
+        string match_postal; // postal/zip code of the matched address
+        string match_city; // city of the matched address
+        string match_subregion; // county of the matched address -- I've found our upstream geocoder is very spotty with populating this and I wouldn't rely on it, may be used more for addresses outside the U.S.
+        string match_region; // state of the matched address - doesn't seem to be part of the response, even though I was told it would be.        
+        string match_country; // country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district.
+        
         string wkid;
         list<Districts> districts;
         string x;
@@ -192,6 +200,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     public class Districts {
         string district_type;
         string district_id;
+        string country;
         string label;
         string subtype;
         string state;
