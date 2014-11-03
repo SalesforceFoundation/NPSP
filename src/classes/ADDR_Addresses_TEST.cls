@@ -830,7 +830,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(-1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(1).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -883,7 +883,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -936,7 +936,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -996,13 +996,13 @@ private with sharing class ADDR_Addresses_TEST {
 	            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
 	            listAddrT[i].Seasonal_Start_Day__c = '1';
 	            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
-	            listAddrT[i].Seasonal_End_Day__c = '31';
+	            listAddrT[i].Seasonal_End_Day__c = '28';
         	} else {
                 listAddrT[i].Household_Account__c = listAccT[iacc-1].Id;
                 listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(-1).month());
                 listAddrT[i].Seasonal_Start_Day__c = '1';
                 listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-                listAddrT[i].Seasonal_End_Day__c = '31';        	
+                listAddrT[i].Seasonal_End_Day__c = '28';        	
         	}
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
@@ -1038,7 +1038,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
@@ -1053,7 +1053,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(2).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(4).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
@@ -1123,7 +1123,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().month());
             listAddrT[i].Seasonal_Start_Day__c = string.valueOf(system.today().day());
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(1).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }

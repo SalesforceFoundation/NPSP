@@ -496,12 +496,24 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (!isSeasonalAddr(addr1) || !isSeasonalAddr(addr2))
             return false;
             
-		Date dtStart1 = dtStartOrEndOfAddrSeasonal(addr1, true);
-		Date dtEnd1 = dtStartOrEndOfAddrSeasonal(addr1, false);
-		Date dtStart2 = dtStartOrEndOfAddrSeasonal(addr2, true);
-		Date dtEnd2 = dtStartOrEndOfAddrSeasonal(addr2, false);
-                      
-        return ((dtStart1 >= dtStart2 && dtStart1 < dtEnd2) || (dtStart2 >= dtStart1 && dtStart2 < dtEnd1));
+        // we don't need to know what year we are in.
+        // we can tell if there is overlap simply by looking at three scenarios:
+        
+        boolean range1Increases = addr1.Seasonal_Start_Month__c < addr1.Seasonal_End_Month__c;
+        boolean range2Increases = addr2.Seasonal_Start_Month__c < addr2.Seasonal_End_Month__c;
+ 
+        // 1. both ranges increase, make sure start2 not in range1.
+        if (range1Increases && range2Increases) {
+            return addr2.Seasonal_Start_Month__c >= addr1.Seasonal_Start_Month__c && addr2.Seasonal_Start_Month__c <= addr1.Seasonal_End_Month__c;
+        }    
+        // 2. one range increases, one range decreases, make sure end2 not in range1
+        else if (range1Increases != range2Increases) {
+            return addr2.Seasonal_End_Month__c >= addr1.Seasonal_Start_Month__c && addr2.Seasonal_End_Month__c <= addr1.Seasonal_End_Month__c;
+        }
+        // 3. both ranges decrease, always implies an overlap of the new year!
+        else {
+            return true;
+        }
     }
 
     // verify that the account for each Address is a HH account
