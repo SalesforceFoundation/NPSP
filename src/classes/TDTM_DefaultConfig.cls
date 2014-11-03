@@ -85,7 +85,7 @@ public without sharing class TDTM_DefaultConfig {
         // HH Object contact trigger support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
                 
         // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 

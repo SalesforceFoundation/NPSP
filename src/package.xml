@@ -322,6 +322,9 @@
     <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
+    <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Name__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
     <members>Contact.Primary_Contact__c</members>
