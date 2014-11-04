@@ -127,7 +127,7 @@
         <externalId>false</externalId>
         <inlineHelpText>The congressional district to which the address belongs pertains.</inlineHelpText>
         <label>Congressional District</label>
-        <length>12</length>
+        <length>255</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
