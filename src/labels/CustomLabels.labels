@@ -409,6 +409,14 @@
         <value>Email only</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchFnameEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchFnameEmail</shortDescription>
+        <value>First Name and Email</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchFnameLname</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -471,6 +479,14 @@
         <protected>false</protected>
         <shortDescription>bdiDataImporterInfoLine2</shortDescription>
         <value>Salesforce will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine2b</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDataImporterInfoLine2b</shortDescription>
+        <value>In order to avoid reaching service limits, the NPSP Data Importer does not verify addresses through the verification service you may have specified in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine3</fullName>
@@ -2479,6 +2495,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelHHNaming</shortDescription>
         <value>Household Name Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHHNamingProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelHHNamingProgress</shortDescription>
+        <value>Naming Activation Progress</value>
     </labels>
     <labels>
         <fullName>stgLabelHHOCR</fullName>

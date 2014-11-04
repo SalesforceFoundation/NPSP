@@ -403,6 +403,7 @@
     <members>DataImport__c.Home_State_Province__c</members>
     <members>DataImport__c.Home_Street__c</members>
     <members>DataImport__c.Home_Zip_Postal_Code__c</members>
+    <members>DataImport__c.HouseholdAccountImported__c</members>
     <members>DataImport__c.ImportedDate__c</members>
     <members>DataImport__c.Payment_Check_Reference_Number__c</members>
     <members>DataImport__c.Payment_Method__c</members>
@@ -501,6 +502,7 @@
     <members>bdiCompleteWithErrors</members>
     <members>bdiContactCustomIdError</members>
     <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameEmail</members>
     <members>bdiContactMatchFnameLname</members>
     <members>bdiContactMatchFnameLnameEmail</members>
     <members>bdiContactMatchLnameEmail</members>
@@ -509,6 +511,7 @@
     <members>bdiDataImporterDescription</members>
     <members>bdiDataImporterInfoLine1</members>
     <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine2b</members>
     <members>bdiDataImporterInfoLine3</members>
     <members>bdiDataImporterInfoLine4</members>
     <members>bdiDataImporterInfoTitle</members>
@@ -759,6 +762,7 @@
     <members>stgLabelExamplesIGFormat</members>
     <members>stgLabelHHGeneral</members>
     <members>stgLabelHHNaming</members>
+    <members>stgLabelHHNamingProgress</members>
     <members>stgLabelHHOCR</members>
     <members>stgLabelHHObject</members>
     <members>stgLabelHHSettings</members>

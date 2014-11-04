@@ -194,8 +194,18 @@ j$(function () {
 	    	var isNew = card.hasClass('hhCard-new');
 	    	if (!isNew) {
 	    		var cid = card.attr('id');
+	    		var name = gwManageHH.state.activeContacts[cid]['Name'];
 	    		
-	    		gwManageHH.removeMember(cid);
+	    		// if the contact being removed is the primary contact,
+	    		// we need to clear out the primary contact field if it is present
+	    		// on the form.
+	    		var ctrl = j$('.sfField-npe01__One2OneContact__c');
+	    		if (ctrl != null && ctrl.val() == name) {
+                    ctrl.val('');
+                }
+                
+                gwManageHH.removeMember(cid);                
+
 	    	} else {
 	    		card.remove();
 	    		gwManageHH.setInsertContacts();

@@ -178,8 +178,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 		                myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
 		                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
 	                } else if (CAO_Constants.isHHAccountModel()) { 
-	                	myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
-	                	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+                        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+                        // if custom household naming is on, we need to leave the account name untouched,
+                        // so on update, it will get its correct name.
+                        if (!hs.npo02__Advanced_Household_Naming__c)
+                            myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
+                        myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
 	                }
 	                
 	                if (!CAO_Constants.isBucketModel()) {

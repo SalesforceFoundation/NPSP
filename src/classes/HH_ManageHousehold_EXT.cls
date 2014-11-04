@@ -371,6 +371,7 @@ global with sharing class HH_ManageHousehold_EXT {
     @RemoteAction
     global static string remoteSetNaming(Boolean aN, String nN, Boolean aFG, String nFG, Boolean aIG, String nIG, String state) {
         HH_ManageHousehold_EXT ManageHousehold = unpackState(state);
+        UTIL_Debug.debug('**** remoteSetName()');
         
         ManageHousehold.hh.put('npo02__SYSTEM_CUSTOM_NAMING__c', '');
         //for each of the naming exceptions, set the override field and the overridden value
@@ -399,6 +400,7 @@ global with sharing class HH_ManageHousehold_EXT {
     @RemoteAction
     global static string remoteSave(String state) {
         HH_ManageHousehold_EXT ManageHousehold = unpackState(state);      
+        UTIL_Debug.debug('**** remoteSave()');
         ManageHousehold.saveHH();
         return packState(ManageHousehold);
     }
@@ -457,6 +459,7 @@ global with sharing class HH_ManageHousehold_EXT {
         hhq += ' FROM Account WHERE Id = \''+hhId+'\'';
         String q = hhq;
         Account houseHold = database.query(q);
+        UTIL_Debug.debug('**** getHHA() requeried household: ' + household);
         return houseHold;
     }
 
@@ -492,10 +495,15 @@ global with sharing class HH_ManageHousehold_EXT {
         // If this is an existing HH and the contact was a member, add the contact to list of removes
         // don't use con.HHId__c in case they were added in this session, and not yet saved, the formula field would not be populated
         if (hh.Id != null && ((isHHAccount && con.AccountId == hh.Id) || (!isHHAccount && con.npo02__Household__c == hh.Id))) {
-        	if (isHHAccount)
+        	if (isHHAccount) {
         	    con.AccountId = null;
-        	else
+        	    // if they are removing the primary contact, clear primary contact from the hh account.
+        	    if (hhA.npe01__One2OneContact__c == cid) {
+        	       hhA.npe01__One2OneContact__c = null;
+        	    }
+        	} else {
                 con.npo02__Household__c = null;
+        	}
             removeContacts.put(con.id,con);
         }
         
@@ -828,6 +836,7 @@ global with sharing class HH_ManageHousehold_EXT {
             hhA.BillingCountry = activeCountry;
         }
         // Insert Household
+        UTIL_Debug.debug('**** saveHH() about to upsert hh: ' + hhA);
         upsert hh;
         
         // Insert new contacts.
@@ -906,16 +915,21 @@ global with sharing class HH_ManageHousehold_EXT {
     }
     
     /*******************************************************************************************************
-    * @Simply calls save, on the correct hh, using the standard controller
+    * @Simply calls save, on the correct hh.  NOTE: THis is called AFTER the javascript remote call to
+    * remoteSave(), which calls saveHH().
     * @return PageReference.
     ********************************************************************************************************/
     public PageReference save() {
-        // DJH:UNDONE: why is this needed.  Git shows Kevin checked it in to fix a bug with naming while dragging tiles?
-        //HH_ProcessControl.inFutureContext = true;
+        // since remoteSave() was first called, we've already saved the data that the javascript ui handles.
+        // now we only need to save the fields in the fieldset section with an update, and we don't want
+        // any of the normal account trigger work to run again.
+        HH_ProcessControl.inFutureContext = true;
         
         // don't call StandardController, or it will overwrite any changes we did asynchronously (like updating rollups)
         //ApexPages.StandardController sc = new ApexPages.standardController(hh);
         //PageReference sv = sc.save();
+        
+        UTIL_Debug.debug('**** save() has hhA: ' + hhA);
         
         // only update the hh fields that are in the field set.
         if (isHHAccount) {
@@ -926,7 +940,7 @@ global with sharing class HH_ManageHousehold_EXT {
 	        	} catch (Exception e) { 
 	        	  //no need to save the error here. if the field is not updateable we will just ignore it
 	        	}
-	        }          
+	        } 
 	        // add additional fields the page always uses
 	        acc.Name = hhA.Name;
 	        acc.npo02__SYSTEM_CUSTOM_NAMING__c = hhA.npo02__SYSTEM_CUSTOM_NAMING__c;
@@ -937,6 +951,7 @@ global with sharing class HH_ManageHousehold_EXT {
             acc.BillingState = hhA.BillingState;
 	        acc.BillingPostalCode = hhA.BillingPostalCode;
             acc.BillingCountry = hhA.BillingCountry;
+            UTIL_Debug.debug('**** save() about to upsert acc: ' + acc);
             upsert acc;
         } else {
             npo02__Household__c h = new npo02__Household__c(Id = hh.Id);
