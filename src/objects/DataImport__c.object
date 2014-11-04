@@ -903,6 +903,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>HouseholdAccountImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Household Account Imported</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Household Account Imported)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>ImportedDate__c</fullName>
         <description>When the Data Import record was successfully imported.</description>
         <externalId>false</externalId>

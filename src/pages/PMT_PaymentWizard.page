@@ -11,7 +11,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
     <apex:pageMessages />
     
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == false)}">
-        <apex:pageBlock title="NPSP Payments Not Enabled" >You do not have NPSP Payments Enabled.  To use the Payment Scheduling Wizard, please enable Payments on the Settings page.&nbsp;<apex:outputLink value="/apex/PaymentsSettings">Payments Settings</apex:outputLink></apex:pageBlock>
+        <apex:pageBlock title="NPSP Payments Not Enabled" >You do not have NPSP Payments Enabled.  To use the Payment Scheduling Wizard, please enable Payments on the NPSP Settings page.&nbsp;<apex:outputLink value="/apex/npsp__STG_SettingsManager">NPSP Settings</apex:outputLink></apex:pageBlock>
     </apex:outputPanel>
     
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
