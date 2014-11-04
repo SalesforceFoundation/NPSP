@@ -107,6 +107,10 @@
                 <behavior>Edit</behavior>
                 <field>Contact1ImportStatus__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>HouseholdAccountImported__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>

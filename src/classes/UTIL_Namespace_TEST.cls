@@ -87,5 +87,6 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgLabelRelSettings;
         str = Label.stgLabelTriggerHandlers;
         str = Label.stgNavContacts;
+        str = Label.stgLabelHHNamingProgress;
     }
 }
