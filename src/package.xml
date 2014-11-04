@@ -28,6 +28,7 @@
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_Batch_TEST</members>
+    <members>ADDR_Validator_REST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
@@ -156,6 +157,7 @@
     <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_CustomSettingsFacade</members>
+    <members>UTIL_Debug</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
@@ -309,6 +311,7 @@
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
+    <members>Address__c.Verification_Status__c</members>
     <members>Address__c.Verified__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
@@ -316,6 +319,7 @@
     <members>Batch__c.Description__c</members>
     <members>Batch__c.Number_of_Items__c</members>
     <members>Batch__c.Object_Name__c</members>
+    <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
     <members>Contact.HHId__c</members>
@@ -399,6 +403,7 @@
     <members>DataImport__c.Home_State_Province__c</members>
     <members>DataImport__c.Home_Street__c</members>
     <members>DataImport__c.Home_Zip_Postal_Code__c</members>
+    <members>DataImport__c.HouseholdAccountImported__c</members>
     <members>DataImport__c.ImportedDate__c</members>
     <members>DataImport__c.Payment_Check_Reference_Number__c</members>
     <members>DataImport__c.Payment_Method__c</members>
@@ -408,6 +413,7 @@
     <members>Data_Import_Settings__c.Batch_Size__c</members>
     <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
     <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+    <members>Error_Settings__c.Enable_Debug__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -447,6 +453,7 @@
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Pending_Verification</members>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -466,6 +473,8 @@
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
     <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verification_Required</members>
+    <members>Addr_Verified</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
@@ -493,6 +502,7 @@
     <members>bdiCompleteWithErrors</members>
     <members>bdiContactCustomIdError</members>
     <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameEmail</members>
     <members>bdiContactMatchFnameLname</members>
     <members>bdiContactMatchFnameLnameEmail</members>
     <members>bdiContactMatchLnameEmail</members>
@@ -501,6 +511,7 @@
     <members>bdiDataImporterDescription</members>
     <members>bdiDataImporterInfoLine1</members>
     <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine2b</members>
     <members>bdiDataImporterInfoLine3</members>
     <members>bdiDataImporterInfoLine4</members>
     <members>bdiDataImporterInfoTitle</members>
@@ -937,6 +948,7 @@
     <name>StaticResource</name>
   </types>
   <types>
+    <members>Address__c.Verify_Address</members>
     <members>Contact.Merge_Contacts</members>
     <members>DataImport__c.Delete_All_Data_Import_Records</members>
     <members>DataImport__c.Delete_Imported_Data_Import_Records</members>

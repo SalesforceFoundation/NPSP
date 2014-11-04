@@ -512,7 +512,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (lsr[i].isSuccess() == true) {
                     c.AccountId = lsr[i].getId();
                 } else {
-                    system.debug('Error inserting Accounts');
+                    UTIL_Debug.debug('Error inserting Accounts');
                     // DJH:UNDONE - need to use error class to log DML errors
                 }
                 *****/
@@ -718,6 +718,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     // the default name for a new HH Account
+    // custom household naming will update this account later if enabled,
+    // but we still need one if not enabled.
     public static String strNameHHAccountForContact(Contact con) {
         return con.LastName + ' ' + system.label.npo02.DefaultHouseholdName;
     }

@@ -57,7 +57,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         	
         // prevent recursion
         if (hasRunAddrTrigger) {
-        	//system.debug('DJH**** stop Addr Trigger recursion');
+        	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion');
             return null;
         }
 
@@ -335,15 +335,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }  
                     
         if (listAccUpdate.size() > 0) {
-            //system.debug('DJH**** listAccUpdate: ' + listAccUpdate);
+            //UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            //system.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
+            //UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            //system.debug('DJH**** listConUpdate: ' + listConUpdate);
+            //UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
@@ -489,19 +489,47 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
     }
 
+    // utility to create the month and day strings to a decimal we can use in comparisons.
+    private static decimal decimalOfMonthDay(string m, string d) {
+        if (integer.valueOf(d) < 10)
+            return decimal.valueOf(m + '.0' + d);
+        else
+            return decimal.valueOf(m + '.' + d);
+    }
+    
     // utility to see if two seasonal addresses overlap
-    private boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
+    public static boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
         if (addr1 == null || addr2 == null) 
             return false;        
         if (!isSeasonalAddr(addr1) || !isSeasonalAddr(addr2))
             return false;
             
-		Date dtStart1 = dtStartOrEndOfAddrSeasonal(addr1, true);
-		Date dtEnd1 = dtStartOrEndOfAddrSeasonal(addr1, false);
-		Date dtStart2 = dtStartOrEndOfAddrSeasonal(addr2, true);
-		Date dtEnd2 = dtStartOrEndOfAddrSeasonal(addr2, false);
-                      
-        return ((dtStart1 >= dtStart2 && dtStart1 < dtEnd2) || (dtStart2 >= dtStart1 && dtStart2 < dtEnd1));
+        // we don't need to know what year or month we are currently in, but
+        // we need to take into account days (since we could be in the same month).
+        // to make this easy to compare, we convert month & day to be a decimal of month.day.  
+        // eg., 3.01 for Feb 1st and 3.28 for Feb 28th.
+        decimal start1 = decimalOfMonthDay(addr1.Seasonal_Start_Month__c, addr1.Seasonal_Start_Day__c);
+        decimal end1 = decimalOfMonthDay(addr1.Seasonal_End_Month__c, addr1.Seasonal_End_Day__c);
+        decimal start2 = decimalOfMonthDay(addr2.Seasonal_Start_Month__c, addr2.Seasonal_Start_Day__c);
+        decimal end2 = decimalOfMonthDay(addr2.Seasonal_End_Month__c, addr2.Seasonal_End_Day__c);
+                
+        // now we see if the ranges are increasing (Jan '14 - March '14), or decreasing (Nov 14' - Feb '15),
+        boolean range1Increases = start1 < end1;
+        boolean range2Increases = start2 < end2;
+
+        // we can now tell if there is overlap simply by looking at three scenarios: 
+        // 1. both ranges increase, make sure start1 not in range2, and start2 not in range1.
+        if (range1Increases && range2Increases) {
+            return (start1 >= start2 && start1 <= end2) || (start2 >= start1 && start2 <= end1);
+        }    
+        // 2. one range increases, one range decreases, make sure end1 not in range2, and end2 not in range1.
+        else if (range1Increases != range2Increases) {
+            return (end1 >= start2 && end1 <= end2) || (end2 >= start1 && end2 <= end1);
+        }
+        // 3. both ranges decrease, always implies an overlap of the new year!
+        else {
+            return true;
+        }
     }
 
     // verify that the account for each Address is a HH account
