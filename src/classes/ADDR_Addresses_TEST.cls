@@ -1093,8 +1093,41 @@ private with sharing class ADDR_Addresses_TEST {
         system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
         system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
 
+        // test both increasing ranges in the same month, with overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '10';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
 
+        // test one increasing range, one decreasing range in the same month, no overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '11';
+        a2.Seasonal_End_Month__c = '1';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
 
+        // test one increasing range, one decreasing range in the same month, with overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '11';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '1';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
     }
 
     /*********************************************************************************************************
