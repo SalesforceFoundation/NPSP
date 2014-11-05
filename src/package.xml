@@ -700,6 +700,7 @@
     <members>stgHelpOCRDefaultRole</members>
     <members>stgHelpOCRRoleForHH</members>
     <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpOrgAccountAddressMgmt</members>
     <members>stgHelpOverrunCount</members>
     <members>stgHelpPaymentMapOppField</members>
     <members>stgHelpPaymentMapPaymentField</members>
