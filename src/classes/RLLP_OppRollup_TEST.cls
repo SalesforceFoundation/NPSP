@@ -1502,9 +1502,7 @@ public with sharing class RLLP_OppRollup_TEST {
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
-                npe01__HH_Account_RecordTypeID__c = 'foo',
-                npe01__One_to_One_RecordTypeID__c = 'bar'
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             ));
 
             npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
