@@ -85,10 +85,10 @@ global abstract class TDTM_Runnable {
         Schema.DescribeSObjectResult objResult);
         
     global class DmlWrapper {
-        public List<SObject> objectsToInsert = new List<SObject>(); 
-        public List<SObject> objectsToUpdate = new List<SObject>();
-        public List<SObject> objectsToDelete = new List<SObject>();
-        public List<SObject> objectsToUndelete = new List<SObject>();
+        global List<SObject> objectsToInsert = new List<SObject>(); 
+        global List<SObject> objectsToUpdate = new List<SObject>();
+        global List<SObject> objectsToDelete = new List<SObject>();
+        global List<SObject> objectsToUndelete = new List<SObject>();
         
         public void groupByType() {
         	objectsToInsert = groupSObjects(objectsToInsert);

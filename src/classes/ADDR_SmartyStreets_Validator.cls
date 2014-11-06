@@ -152,12 +152,14 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup.add(sr);
 	                    }
 	                    av.API_Response__c = JSON.serializePretty(responseGroup);
+	                    av.Verification_Status__c = Label.Addr_Verified;
 	                }
 	            }
 	            for (Address__c av : avList) {             
 	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
 	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
+	                    av.Verification_Status__c = Label.Address_Not_Found;
 	                }
 	            }
 	        } catch (Exception ex) {
@@ -166,7 +168,9 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                               + ' - Exception in verifyRecords100: ' + ex.getMessage() 
 	                               + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
-	                av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
+	                av.API_Response__c = ex.getMessage();
+	                av.Verification_Status__c = ex.getMessage();
+	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	            }
 	        }
         }
@@ -209,6 +213,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        } else if (sr.zipcodes != null) {
 	                            UTIL_Debug.debug('****No error. Populating raw response field.');
 	                            av.API_Response__c = JSON.serializePretty(sr);
+	                            av.Verification_Status__c = Label.Addr_Verified;
 	                            
 	                            // if there is at least one city/state, fill in city state
 	                            if (sr.city_states != null && sr.city_states.size() > 0) {
@@ -226,11 +231,15 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                    }
 	                } else {
 	                    UTIL_Debug.debug('****Responses did not match number of verifications.');
+	                    for(Address__c av : avList) {
+	                    	av.Verification_Status__c = Label.Zip_Not_Found;
+	                    }
 	                }
 	            }
 	            for (Address__c av : avList) {             
 	                if (av.API_Response__c == null) {   
 	                    av.API_Response__c = Label.Zip_Not_Found;
+	                    av.Verification_Status__c = Label.Zip_Not_Found;
 	                }
 	            }
 	        } catch (Exception ex) {
@@ -239,7 +248,9 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                            + ' - Exception in verifyZipRecords100: ' + ex.getMessage()
 	                            + '\n' + ex.getStackTraceString());
 	                av.Verified__c = false;
-	                av.API_Response__c = 'MESSAGE: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
+	                av.API_Response__c = ex.getMessage();
+	                av.Verification_Status__c = Label.Zip_Not_Found;
+	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	            }
 	            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
 	        }

@@ -90,6 +90,7 @@
 	                        <ul>
 	                            <li>{!$Label.bdiDataImporterInfoLine1}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine2}</li>
+	                            <li>{!$Label.bdiDataImporterInfoLine2b}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine3}</li>
 	                            <li>{!$Label.bdiDataImporterInfoLine4}
 	                               <br/><br/><b>{!$Label.bdiDataImporterNumToProcess}&nbsp;{!crecToProcess}</b></li>
@@ -124,6 +125,7 @@
                                     <apex:selectList value="{!diSettings.Contact_Matching_Rule__c}" size="1" multiselect="false" id="slCMR" styleClass="form-control">
                                         <apex:SelectOption itemLabel="{!$Label.bdiContactMatchFnameLnameEmail}" itemValue="Firstname,Lastname,Email" />
                                         <apex:SelectOption itemLabel="{!$Label.bdiContactMatchLnameEmail}" itemValue="Lastname,Email" />
+                                        <apex:SelectOption itemLabel="{!$Label.bdiContactMatchFnameEmail}" itemValue="Firstname,Email" />
                                         <apex:SelectOption itemLabel="{!$Label.bdiContactMatchFnameLname}" itemValue="Firstname,Lastname" />
                                         <apex:SelectOption itemLabel="{!$Label.bdiContactMatchEmail}" itemValue="Email" />
                                     </apex:selectList>                

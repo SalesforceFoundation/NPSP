@@ -16,6 +16,14 @@
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
+        <fullName>Addr_Pending_Verification</fullName>
+        <categories>address, error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pending verification</shortDescription>
+        <value>Pending verification</value>
+    </labels>
+    <labels>
         <fullName>Addr_Settings_API_Body</fullName>
         <categories>address, settings</categories>
         <language>en_US</language>
@@ -174,6 +182,22 @@
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Title</shortDescription>
         <value>Mass Verify Existing Addresses</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Required</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Verification required</shortDescription>
+        <value>Verification required</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verified</fullName>
+        <categories>address, verification</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Address Successfully Verified</shortDescription>
+        <value>Verified</value>
     </labels>
     <labels>
         <fullName>Addr_Verify_Endpoint</fullName>
@@ -561,6 +585,14 @@
         <value>Email only</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchFnameEmail</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiContactMatchFnameEmail</shortDescription>
+        <value>First Name and Email</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchFnameLname</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -623,6 +655,14 @@
         <protected>false</protected>
         <shortDescription>bdiDataImporterInfoLine2</shortDescription>
         <value>Salesforce will try to match existing Contacts and Organizations, and update their information, rather than creating duplicate records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiDataImporterInfoLine2b</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDataImporterInfoLine2b</shortDescription>
+        <value>In order to avoid reaching service limits, the NPSP Data Importer does not verify addresses through the verification service you may have specified in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine3</fullName>

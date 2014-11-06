@@ -325,13 +325,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         for (Contact con : [select Id, AccountId from Contact where Id in :listConUpsert]) {
             mapC1IdToHHId.put(con.Id, con.AccountId);
         }
-        // store it back in C1 for later use
+        // store it back in C1 and the DI for later use
         for (DataImport__c di : listDI) {
             if (di.Contact1Imported__c != null) {
                 Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
                 if (HHId != null) {
                     Contact con = ContactFromDi(di, 1);
                     con.AccountId = HHId;
+                    di.HouseholdAccountImported__c = HHId;
                 }
             }
         }

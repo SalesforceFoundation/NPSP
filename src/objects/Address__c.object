@@ -127,7 +127,7 @@
         <externalId>false</externalId>
         <inlineHelpText>The congressional district to which the address belongs pertains.</inlineHelpText>
         <label>Congressional District</label>
-        <length>12</length>
+        <length>255</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -686,6 +686,19 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Verification_Status__c</fullName>
+        <description>Status of the address verification.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information.</inlineHelpText>
+        <label>Verification Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Verified__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether the address has been verified by an external address verification service.</description>
@@ -717,4 +730,22 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <startsWith>Vowel</startsWith>
+    <webLinks>
+        <fullName>Verify_Address</fullName>
+        <availability>online</availability>
+        <description>Verify the current address record.</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Verify Address</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!requireScript(&quot;/soap/ajax/20.0/connection.js&quot;)} 
+{!requireScript(&quot;/soap/ajax/20.0/apex.js&quot;)}
+try {
+  sforce.apex.execute(&apos;npsp__ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
+} catch(exception) {
+  sforce.apex.execute(&apos;ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
+}
+window.location.reload();</url>
+    </webLinks>
 </CustomObject>
