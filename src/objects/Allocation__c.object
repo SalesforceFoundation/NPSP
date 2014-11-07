@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Amount__c</fullName>
+        <description>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</inlineHelpText>
+        <label>Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Campaign__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Campaign</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>General_Accounting_Unit__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <description>The General Accounting Unit to attribute this allocation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The General Accounting Unit to attribute this allocation.</inlineHelpText>
+        <label>General Accounting Unit</label>
+        <referenceTo>General_Accounting_Unit__c</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Percent__c</fullName>
+        <description>Percent of Opportunity or Payment to allocate to this fund.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Percent of Opportunity or Payment to allocate to this fund.</inlineHelpText>
+        <label>Percent</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Recurring_Donation__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</inlineHelpText>
+        <label>Recurring Donation</label>
+        <referenceTo>npe03__Recurring_Donation__c</referenceTo>
+        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <label>Allocation</label>
+    <nameField>
+        <displayFormat>ALL-{0}</displayFormat>
+        <label>Allocation Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Allocations</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <fullName>Manage_Allocations</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Manage Allocations</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/npsp__ALLO_ManageAllocations?{!IF(Opportunity.Id!=null,&apos;opp&apos;,IF(Campaign.Id!=null,&apos;cam&apos;,&apos;rd&apos;))}={!Campaign.Id}{!Opportunity.Id}{!npe03__Recurring_Donation__c.Id}</url>
+    </webLinks>
+</CustomObject>

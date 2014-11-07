@@ -1,0 +1,132 @@
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Batch class creates default allocations for all opportunities.
+ */
+ public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
+
+    private Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    private String query = 'SELECT Id, Amount FROM Opportunity';
+    
+    public ALLO_MakeDefaultAllocations_BATCH() {
+        string strExcludeOppRecTypesQuery = '';
+        string strExcludeOppTypesQuery = '';
+
+        //build string of opp record type names for query
+        if (alloSettings.Excluded_Opp_RecTypes__c != null) {
+            strExcludeOppRecTypesQuery = ' WHERE RecordType.Name NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
+        }
+
+        //build string of opp types for query
+        if (alloSettings.Excluded_Opp_Types__c != null) {
+            if (alloSettings.Excluded_Opp_RecTypes__c != null)
+                strExcludeOppTypesQuery = ' AND ';
+            else 
+                strExcludeOppTypesQuery = ' WHERE ';
+            strExcludeOppTypesQuery += ' Type NOT IN ' + ALLO_Rollup_SCHED.convertToQueryListFormat(alloSettings.Excluded_Opp_Types__c);
+        }
+
+        query += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
+    }
+    
+    public Database.QueryLocator start(Database.BatchableContext BC) {
+        return Database.getQueryLocator(query);
+    }
+
+    public void execute(Database.BatchableContext BC, List<sObject> scope) {
+
+        list<Opportunity> listOpps = (list<Opportunity>) scope;
+
+        map<id,Opportunity> mapIdOpp = new map<id,Opportunity>();
+        map<id,list<Allocation__c>> mapOppIdAllo = new map<id,list<Allocation__c>>();
+        list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
+        list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
+
+        for (Opportunity opp : listOpps) {
+            mapIdOpp.put(opp.id, opp);
+        }
+
+        for (Allocation__c allo : [SELECT Id, General_Accounting_Unit__c, Opportunity__c, Amount__c FROM Allocation__c WHERE Opportunity__c IN :mapIdOpp.keySet()]) {
+            if (!mapOppIdAllo.containsKey(allo.Opportunity__c)) 
+                mapOppIdAllo.put(allo.Opportunity__c, new list<Allocation__c>());
+
+            mapOppIdAllo.get(allo.Opportunity__c).add(allo);
+        }
+
+        for (Opportunity opp : listOpps) {
+            //if we have allocations for this opp, create or update the default
+            if (mapOppIdAllo.containsKey(opp.id)) {
+                decimal remainder = opp.Amount;
+                Allocation__c defaultAllo = new Allocation__c();
+
+                for (Allocation__c allo : mapOppIdAllo.get(opp.id)) {
+                    if (alloSettings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == alloSettings.Default__c)
+                        defaultAllo = allo;
+                    else
+                        remainder -= allo.Amount__c;
+                }
+
+                if (remainder > 0) {
+                    if (defaultAllo.id!=null && defaultAllo.Amount__c!=remainder) {
+                        defaultAllo.Amount__c = remainder;
+                        listAlloForUpdate.add(defaultAllo);
+                    } else if (defaultAllo.id==null) {
+                        listAlloForInsert.add(new Allocation__c(
+                            Opportunity__c = opp.id,
+                            Amount__c = remainder,
+                            General_Accounting_Unit__c = alloSettings.Default__c
+                        ));
+                    }
+                }
+            //if we have no allocations for this opp, create one
+            } else {
+                listAlloForInsert.add(new Allocation__c(
+                    Opportunity__c = opp.id,
+                    Amount__c = opp.Amount,
+                    General_Accounting_Unit__c = alloSettings.Default__c
+                ));
+            }
+        }
+
+        if (!listAlloForInsert.isEmpty()) {
+            ALLO_Allocations_TDTM.resetFlags(true);
+            insert listAlloForInsert;
+        }
+        if (!listAlloForUpdate.isEmpty()) {
+            ALLO_Allocations_TDTM.resetFlags(true);
+            update listAlloForUpdate;
+        }
+    }
+    
+    public void finish(Database.BatchableContext BC) {}
+    
+}
