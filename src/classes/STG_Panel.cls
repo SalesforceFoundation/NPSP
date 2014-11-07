@@ -274,5 +274,5 @@ public with sharing virtual class STG_Panel {
             return strOneToOneRecordTypeLabel;
         }
         private set;
-    }       
+    }     
 }
