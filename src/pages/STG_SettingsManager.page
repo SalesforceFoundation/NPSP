@@ -291,7 +291,6 @@
                 <nav role="navigation">
                     <ul id="mynavbar" >
                         <li id="idPanelHomeNav"><a href="." onclick="ShowPanel('idPanelHome');return false;" class="nav-item">{!$Label.stgNPSPSettingsTitle}</a></li>
-
                         <li class="header" id="idPanelConHomeNav"><a class="nav-item nav-section-title">{!$Label.stgNavPeople}<span class="caret"></span></a></li>
                         <ul>
                             <li class="subitem" id="idPanelConNav"><a href="." onclick="ShowPanel('idPanelCon');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAccountModel}</a></li>
@@ -313,10 +312,12 @@
                             <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
                             <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
                             <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
+                            <li class="subitem" id="idPanelAllocationsNav"><a href="." onclick="ShowPanel('idPanelAllocations');return false;" class="nav-item sub-nav-item">{!$Label.stgNavAllocations}</a></li>
                             <li class="subitem" id="idPanelOppRollupNav"><a href="." onclick="ShowPanel('idPanelOppRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavDonorStatistics}</a></li>
                             <li class="subitem" id="idPanelConRoleNav"><a href="." onclick="ShowPanel('idPanelConRole');return false;" class="nav-item sub-nav-item">{!$Label.stgNavContactRoles}</a></li>
                             <li class="subitem" id="idPanelBDENav"><a href="." onclick="ShowPanel('idPanelBDE');return false;" class="nav-item sub-nav-item">{!$Label.stgNavBDE}</a></li>
                             <li class="subitem" id="idPanelOppBatchNav"><a href="." onclick="ShowPanel('idPanelOppBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupBatch}</a></li>
+                            <li class="subitem" id="idPanelAlloBatchNav"><a href="." onclick="ShowPanel('idPanelAlloBatch');return false;" class="nav-item sub-nav-item">{!$Label.stgNavRollupAlloBatch}</a></li>
                             <li class="subitem" id="idPanelUserRollupNav"><a href="." onclick="ShowPanel('idPanelUserRollup');return false;" class="nav-item sub-nav-item">{!$Label.stgNavUserDefinedRollups}</a></li>
                         </ul>
                         
@@ -357,7 +358,7 @@
             <div class="panel noborder" id="idPanelCon" style="display:none" >
                 <apex:include pageName="STG_PanelContacts" />
             </div>
-            
+
             <div class="panel noborder" id="idPanelConRole" style="display:none" >
                 <apex:include pageName="STG_PanelContactRoles" />
             </div>
@@ -382,10 +383,18 @@
                 <apex:include pageName="STG_PanelMembership" />
             </div>
             
+            <div class="panel" id="idPanelAllocations" style="display:none" >
+                <apex:include pageName="STG_PanelAllocations" />
+            </div>
+
+            <div class="panel" id="idPanelAlloBatch" style="display:none" >
+                <apex:include pageName="STG_PanelAlloBatch" />
+            </div>
+
             <div class="panel noborder" id="idPanelOpp" style="display:none" >
                 <apex:include pageName="STG_PanelOpps" />
             </div>
-            
+
             <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
                 <apex:include pageName="STG_PanelOppRollups" />
             </div>
