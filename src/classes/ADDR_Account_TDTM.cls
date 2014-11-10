@@ -41,9 +41,10 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper = new DmlWrapper();  
         list<Account> listAccCreateAddr = new list<Account>();      
        
-        integer i = 0;        
+        integer i = -1;        
         for (SObject so : listNew) {
             Account acc = (Account)so;
+            i++;
 
             // BEFORE INSERT
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -55,7 +56,13 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-
+                // on insert, we only need to create addresses for Org accounts.
+                // Household accounts are handled during the after update, which will always occur
+                // as they are being hooked up with their primary contact. 
+                if (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+                    if (isAccountAddressSpecified(acc))
+                        listAccCreateAddr.add(acc);
+                }
             }
     
             // AFTER UPDATE
@@ -65,16 +72,14 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 // in which case we don't want to create a new address.
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
                     continue;
-                // we only support address management with HH Accounts
-                if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                    continue;
-                // if the address changed, remember the account we want to add a new address for    
-                if (isAccountAddressChanged(acc, accOld)) 
-                    listAccCreateAddr.add(acc);
-            }    
-            
-            // moving to the next item
-            i++;
+                // we only support address management with HH Accounts and Organizational Accounts (if enabled)
+                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
+	                // if the address changed, remember the account we want to add a new address for    
+	                if (isAccountAddressChanged(acc, accOld)) 
+	                    listAccCreateAddr.add(acc);
+                }
+            }                
         }
 
         // create any new Address objects
@@ -82,6 +87,19 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             createAddrFromAcc(listAccCreateAddr, dmlWrapper);
                     
         return dmlWrapper;    
+    }
+    
+    // utility to see if an address is specified
+    private boolean isAccountAddressSpecified(Account acc1) {
+        if (acc1 == null) 
+           return false;
+        
+        return (
+           acc1.BillingStreet != null ||
+           acc1.BillingCity != null ||
+           acc1.BillingState != null ||
+           acc1.BillingPostalCode != null ||
+           acc1.BillingCountry != null);
     }
 
     // utility to compare two Accounts' (billing) addresses

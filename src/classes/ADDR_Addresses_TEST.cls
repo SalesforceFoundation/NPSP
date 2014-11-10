@@ -114,7 +114,7 @@ private with sharing class ADDR_Addresses_TEST {
         create N new default Addresses for N Households (with M Contacts)  
     verify:
         N addresses created
-        N household shipping address fields updated
+        N household billing address fields updated
         M contact Mailing address fields updated
     **********************************************************************************************************/            
     static testMethod void newDefaultAddr() {
@@ -207,7 +207,7 @@ private with sharing class ADDR_Addresses_TEST {
     operation:
         update existing default Addresses  
     verify:
-        household shipping address fields updated
+        household billing address fields updated
         contact Mailing address fields updated
     **********************************************************************************************************/            
     static testMethod void updateDefaultAddr() {
@@ -1798,4 +1798,161 @@ private with sharing class ADDR_Addresses_TEST {
 
     }
 
+    /*********************************************************************************************************
+    operation:
+        create N new organizational accounts with billing addresses 
+    verify:
+        N addresses created
+        account address matches address object address
+    **********************************************************************************************************/            
+    static testMethod void newOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'newOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        for (Account acc : listAcc) {
+            acc.BillingStreet = '123 45th';
+            acc.BillingCity = 'Seattle';
+        }
+        Test.startTest();
+        insert listAcc;
+        Test.stopTest();
+
+        // verify results
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        system.assertEquals(cAcc, mapAccIdAcc.size());
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
+        system.assertEquals(cAcc, listAddr.size());
+        
+        for (Address__c addr : listAddr) {
+            Account acc = mapAccIdAcc.get(addr.Household_Account__c);
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update N organizational accounts with billing addresses 
+    verify:
+        N addresses created
+        account addresses updated
+        contact addresses not updated
+    **********************************************************************************************************/            
+    static testMethod void updateOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        // create accounts without addresses
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        insert listAcc;
+        
+        // add a contact to each account.
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listCon[i].AccountId = listAcc[i].Id;
+        }
+        insert listCon;
+
+        // update the accounts' address
+        for (Account acc : listAcc) {
+            acc.BillingStreet = '123 45th';
+            acc.BillingCity = 'Seattle';
+        }
+        Test.startTest();
+        update listAcc;
+        Test.stopTest();
+
+        // verify results
+        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account order by Account.Name];
+        system.assertEquals(cAcc, listAcc.size());
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        system.assertEquals(cAcc, listAddr.size());
+        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        system.assertEquals(cAcc, listCon.size());        
+        
+        for (integer i = 0; i < cAcc; i++) {
+            Account acc = listAcc[i];
+            Address__c addr = listAddr[i];
+            Contact con = listCon[i];
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+            system.assertEquals(null, con.Current_Address__c);
+            system.assertEquals(null, con.MailingStreet);
+            system.assertEquals(null, con.MailingCity);
+        }
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        update N organizational accounts with address objects 
+    verify:
+        account addresses updated
+        contact addresses not updated
+    **********************************************************************************************************/            
+    static testMethod void newAddrForOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'newAddrForOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        // create accounts without addresses
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        insert listAcc;
+        
+        // add a contact to each account.
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listCon[i].AccountId = listAcc[i].Id;
+        }
+        insert listCon;
+
+         // create addresses for the accounts
+        initTestAddr(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listAddrT[i].Household_Account__c = listAcc[i].Id;
+            listAddrT[i].Default_Address__c = true;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // verify results
+        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account order by Account.Name];
+        system.assertEquals(cAcc, listAcc.size());
+        listAddrT = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        system.assertEquals(cAcc, listAddrT.size());
+        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        system.assertEquals(cAcc, listCon.size());        
+        
+        for (integer i = 0; i < cAcc; i++) {
+            Account acc = listAcc[i];
+            Address__c addr = listAddrT[i];
+            Contact con = listCon[i];
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+            system.assertEquals(null, con.Current_Address__c);
+            system.assertEquals(null, con.MailingStreet);
+            system.assertEquals(null, con.MailingCity);
+        }
+    }
 }

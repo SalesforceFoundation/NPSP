@@ -45,178 +45,232 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         list<Contact> contacts = newlist;
         list<Contact> oldContacts = oldlist;
-        
-        // this code assumed newlist was filled in for AfterDelete, rather than oldlist
-        // rather than change the code to require two seperate contact loops, just
-        // continue the strategy.
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-        	contacts = oldlist;
-        	oldContacts = null;
-        }
-        
-        map<Id, Contact> newcmap = new map<Id, Contact>(contacts);
-        map<Id, Contact> oldcmap;
-        if (oldContacts != null) oldcmap = new map<Id, Contact>(oldContacts);
-        
         DmlWrapper dmlWrapper = new DmlWrapper();
-            	   
-        npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        List<Contact> householdInserts = new List<Contact>();
-        List<Contact> contactEvaluations = new List<Contact>();
-        List<Contact> householdDeletes = new List<Contact>();
-        list<id> householdnameupdates = new list<id>();        
-        list<id> oldHouseholds = new list<id>();
-        map<id, integer> oldHouseholdSize = new map<id, integer>();
-        set<Id> setHHIdToRollup = new set<Id>();
-        
-        Set<Id> mergedWinningContact = new Set<Id>();
+
+        //if this is before insert or update, sync the household name exclustions
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            for (integer i=0; i<contacts.size();i++) {
+                Contact con = contacts[i];
                 
-        //typically this is handled through the contact, but for old households
-        //being updated, we need to get the list here
-        list<SObject> blankHHDeletes = new list<SObject>();
-     
-        //if its an update, we need to get some data about their
-        //old Household for processing
-        if (triggerAction==TDTM_Runnable.Action.AfterUpdate){
+                //before insert case: 
+                //first, copy multiselect exclusions to checkboxes, then recreate multiselect values from checboxes
+                //this ensures all values from either source are kept
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    if (con.npo02__Naming_Exclusions__c != null)
+                        copyNamingExclusionsFromMSP(con);
+                    
+                    if (con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c)
+                        copyNamingExclusionsFromCheckboxes(con);
+                //before update case:
+                //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
+                //then, copy from multiselect to checkboxes if multiselect has changed
+                //if both have changed, prefers checkboxes
+                } else {
+                    Contact oldCon = oldContacts[i];
+                    if (con.Exclude_from_Household_Name__c != oldCon.Exclude_from_Household_Name__c || 
+                        con.Exclude_from_Household_Informal_Greeting__c != oldCon.Exclude_from_Household_Informal_Greeting__c ||
+                        con.Exclude_from_Household_Formal_Greeting__c != oldCon.Exclude_from_Household_Formal_Greeting__c) {
+
+                        copyNamingExclusionsFromCheckboxes(con);
+                    } else if (con.npo02__Naming_Exclusions__c != oldCon.npo02__Naming_Exclusions__c) {
+                        copyNamingExclusionsFromMSP(con);
+                    }
+                }
+            }
+        } else {
             
-            for (Contact c : Contacts){
+            // this code assumed newlist was filled in for AfterDelete, rather than oldlist
+            // rather than change the code to require two seperate contact loops, just
+            // continue the strategy.
+            if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            	contacts = oldlist;
+            	oldContacts = null;
+            }
+            
+            map<Id, Contact> newcmap = new map<Id, Contact>(contacts);
+            map<Id, Contact> oldcmap;
+            if (oldContacts != null) oldcmap = new map<Id, Contact>(oldContacts);
+            
+                	   
+            npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+            List<Contact> householdInserts = new List<Contact>();
+            List<Contact> contactEvaluations = new List<Contact>();
+            List<Contact> householdDeletes = new List<Contact>();
+            list<id> householdnameupdates = new list<id>();        
+            list<id> oldHouseholds = new list<id>();
+            map<id, integer> oldHouseholdSize = new map<id, integer>();
+            set<Id> setHHIdToRollup = new set<Id>();
+            
+            Set<Id> mergedWinningContact = new Set<Id>();
+                    
+            //typically this is handled through the contact, but for old households
+            //being updated, we need to get the list here
+            list<SObject> blankHHDeletes = new list<SObject>();
+         
+            //if its an update, we need to get some data about their
+            //old Household for processing
+            if (triggerAction==TDTM_Runnable.Action.AfterUpdate){
                 
-                if (oldcmap.get(c.id).npo02__household__c != null){
-                    oldHouseholds.add(oldcmap.get(c.id).npo02__household__c);
-                    //UTIL_Debug.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
+                for (Contact c : Contacts){
+                    
+                    if (oldcmap.get(c.id).npo02__household__c != null){
+                        oldHouseholds.add(oldcmap.get(c.id).npo02__household__c);
+                        //UTIL_Debug.debug('ID ADDED================' + oldcmap.get(c.id).npo02__household__c);
+                    }
+                    
+                }            
+                
+                //create a map from the old household id and its size
+                for (AggregateResult a : [select npo02__Household__c oldhh, count(id) membercount from Contact where npo02__Household__c IN :oldHouseholds group by npo02__Household__c]){
+                    //UTIL_Debug.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
+                    oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
                 }
                 
-            }            
-            
-            //create a map from the old household id and its size
-            for (AggregateResult a : [select npo02__Household__c oldhh, count(id) membercount from Contact where npo02__Household__c IN :oldHouseholds group by npo02__Household__c]){
-                //UTIL_Debug.debug('AR RESULTS=====ID: ' + (id)a.get('oldhh') + ' MEMBERCOUNT: ' + (integer)a.get('membercount'));
-                oldHouseholdSize.put((id)a.get('oldhh'), (integer)a.get('membercount'));
+                //an agg query doesn't pick empty HHs, so if we have an ID, and no
+                //HH in the ag, we know we have an empty hh
+                for (id hhid : oldHouseholds){
+                    if (!oldHouseholdSize.containskey(hhid))
+                       oldHouseholdSize.put(hhid, 0);               
+                }            
             }
-            
-            //an agg query doesn't pick empty HHs, so if we have an ID, and no
-            //HH in the ag, we know we have an empty hh
-            for (id hhid : oldHouseholds){
-                if (!oldHouseholdSize.containskey(hhid))
-                   oldHouseholdSize.put(hhid, 0);               
-            }            
-        }
-     
-        Integer i = 0;
-        for(Contact c : contacts) {
-            //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
-            //since we don't have the contact's household ids until after the insert
-            //we'll check the trigger action again there to make sure it doesn't run twice
-            if ( triggerAction==TDTM_Runnable.Action.AfterInsert )
-            {
-                //If the user has chosen for all Contacts to have households, add them all to the list
-                //for Household creation
-                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
-                    householdInserts.add(c);
-                //If the user has chosen for only Contacts connected to Individual Accounts to have Households
-                //add them all to a list for evaluation
-                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
-                    contactEvaluations.add(c);
-                else if  (c.npo02__household__c != null)
-                    householdnameupdates.add(c.npo02__household__c);
-            }
+         
+            Integer i = 0;
+            for(Contact c : contacts) {
+                //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts, 
+                //since we don't have the contact's household ids until after the insert
+                //we'll check the trigger action again there to make sure it doesn't run twice
+                if ( triggerAction==TDTM_Runnable.Action.AfterInsert )
+                {
+                    //If the user has chosen for all Contacts to have households, add them all to the list
+                    //for Household creation
+                    if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
+                        householdInserts.add(c);
+                    //If the user has chosen for only Contacts connected to Individual Accounts to have Households
+                    //add them all to a list for evaluation
+                    else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
+                        contactEvaluations.add(c);
+                    else if  (c.npo02__household__c != null)
+                        householdnameupdates.add(c.npo02__household__c);
+                }
 
-            //AFTER UPDATE
-            if ( triggerAction==TDTM_Runnable.Action.AfterUpdate )
-            {            
-                //if we're doing an update, pile up all of the households into a list
-                //and send it to our naming code for action
-                //first contact's names to their old names, and see if anything changed
-                //salutation
-                if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
-                    householdInserts.add(c);
-                else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
-                    contactEvaluations.add(c);
+                //AFTER UPDATE
+                if ( triggerAction==TDTM_Runnable.Action.AfterUpdate )
+                {            
+                    //if we're doing an update, pile up all of the households into a list
+                    //and send it to our naming code for action
+                    //first contact's names to their old names, and see if anything changed
+                    //salutation
+                    if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR)
+                        householdInserts.add(c);
+                    else if (c.npo02__household__c == null && currentHouseholdsSettings.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR)
+                        contactEvaluations.add(c);
+                    
+                    if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
+                        householdnameupdates.add(c.npo02__household__c);
+                    else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
+                        householdnameupdates.add(c.npo02__household__c);
+                    else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
+                        householdnameupdates.add(c.npo02__household__c);    
+                    
+                    //if they've changed households, we need to query the old
+                    //household to see if anybody is left, if so, send it for renaming
+                    //if not, delete it.
+                    else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
+                        householdnameupdates.add(c.npo02__household__c);
+                        setHHIdToRollup.add(c.npo02__household__c);
+                        if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
+                            householdnameupdates.add(oldcmap.get(c.id).npo02__household__c);
+                            setHHIdToRollup.add(oldcmap.get(c.id).npo02__household__c);
+                        }
+                        else if(oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0){
+                            blankHHDeletes.add(new npo02__Household__c(Id = oldcmap.get(c.id).npo02__household__c));
+                        }       
+                    }                    
+                    else if (newcmap.get(c.id).npo02__Naming_Exclusions__c != oldcmap.get(c.id).npo02__Naming_Exclusions__c)
+                        householdnameupdates.add(c.npo02__household__c);
+                }
                 
-                if (newcmap.get(c.id).Salutation != oldcmap.get(c.id).Salutation)
-                    householdnameupdates.add(c.npo02__household__c);
-                else if (newcmap.get(c.id).FirstName != oldcmap.get(c.id).Firstname )
-                    householdnameupdates.add(c.npo02__household__c);
-                else if (newcmap.get(c.id).LastName != oldcmap.get(c.id).LastName)
-                    householdnameupdates.add(c.npo02__household__c);    
+                if ( triggerAction==TDTM_Runnable.Action.AfterDelete ){
+                    if (c.npo02__household__c != null )
+                        householdDeletes.add(c);
                 
-                //if they've changed households, we need to query the old
-                //household to see if anybody is left, if so, send it for renaming
-                //if not, delete it.
-                else if (newcmap.get(c.id).npo02__household__c != oldcmap.get(c.id).npo02__household__c){
-                    householdnameupdates.add(c.npo02__household__c);
-                    setHHIdToRollup.add(c.npo02__household__c);
-                    if (oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) > 0){
-                        householdnameupdates.add(oldcmap.get(c.id).npo02__household__c);
-                        setHHIdToRollup.add(oldcmap.get(c.id).npo02__household__c);
-                    }
-                    else if(oldHouseholdSize.get(oldcmap.get(c.id).npo02__household__c) == 0){
-                        blankHHDeletes.add(new npo02__Household__c(Id = oldcmap.get(c.id).npo02__household__c));
-                    }       
-                }                    
-                else if (newcmap.get(c.id).npo02__Naming_Exclusions__c != oldcmap.get(c.id).npo02__Naming_Exclusions__c)
-                    householdnameupdates.add(c.npo02__household__c);
+                    //check if this Contact is the loser in a merge
+                    if (c.MasterRecordId != null)
+                        mergedWinningContact.add(c.MasterRecordId);
+                }
+                i += 1;
             }
             
-            if ( triggerAction==TDTM_Runnable.Action.AfterDelete ){
-                if (c.npo02__household__c != null )
-                    householdDeletes.add(c);
-            
-                //check if this Contact is the loser in a merge
-                if (c.MasterRecordId != null)
-                    mergedWinningContact.add(c.MasterRecordId);
+            if (mergedWinningContact.size() > 0) {
+            	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
+                contactMergeUpdate(mergedWinningContact);        
             }
-            i += 1;
+            
+            if(!blankHHDeletes.isEmpty()) {
+                //Database.delete(blankHHDeletes);
+                dmlWrapper.objectsToDelete.addAll(blankHHDeletes);
+            }
+            
+            if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
+                insertHousehold(householdInserts, true, dmlWrapper);
+            else if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
+                insertHousehold(householdInserts, false, dmlWrapper);
+            
+            if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
+                evaluateContacts(contactEvaluations, true, dmlWrapper);
+            else if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
+                evaluateContacts(contactEvaluations, false, dmlWrapper);
+            
+            if (householdDeletes.size() > 0)        
+                deleteHousehold(householdDeletes, dmlWrapper);
+            
+            if (householdnameupdates.size() > 0){
+                              
+                if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
+                    HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
+                else{
+                    HH_HouseholdNaming hn = new HH_HouseholdNaming(); 
+                    hn.UpdateNames(householdnameupdates);
+                }                   
+            }
+            
+            if (setHHIdToRollup.size() > 0) {
+                if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
+                    RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+                    map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
+                                                                                    ' where id IN :setHHIdToRollup'));
+                    RLLP_OppRollup rg = new RLLP_OppRollup();
+                    rg.rollupHouseholds(hhmap);
+                } else {
+                    RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
+                }                                                                         
+            }
         }
-        
-        if (mergedWinningContact.size() > 0) {
-        	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            contactMergeUpdate(mergedWinningContact);        
-        }
-        
-        if(!blankHHDeletes.isEmpty()) {
-            //Database.delete(blankHHDeletes);
-            dmlWrapper.objectsToDelete.addAll(blankHHDeletes);
-        }
-        
-        if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
-            insertHousehold(householdInserts, true, dmlWrapper);
-        else if (householdInserts.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
-            insertHousehold(householdInserts, false, dmlWrapper);
-        
-        if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterInsert)        
-            evaluateContacts(contactEvaluations, true, dmlWrapper);
-        else if (contactEvaluations.size() > 0 && triggerAction==TDTM_Runnable.Action.AfterUpdate)
-            evaluateContacts(contactEvaluations, false, dmlWrapper);
-        
-        if (householdDeletes.size() > 0)        
-            deleteHousehold(householdDeletes, dmlWrapper);
-        
-        if (householdnameupdates.size() > 0){
-                          
-            if (currentHouseholdsSettings.npo02__Async_Household_Naming__c == true)
-                HH_HouseholdNaming.FutureUpdateNames(householdnameupdates);
-            else{
-                HH_HouseholdNaming hn = new HH_HouseholdNaming(); 
-                hn.UpdateNames(householdnameupdates);
-            }                   
-        }
-        
-        if (setHHIdToRollup.size() > 0) {
-            if (system.isFuture() || system.isBatch() || setHHIdToRollup.size() <= 2) {
-                RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-                map<id, npo02__Household__c> hhmap = new map<id, npo02__Household__c>((list<npo02__Household__c>)Database.query(oppRollupUtil.buildHouseholdQuery() +
-                                                                                ' where id IN :setHHIdToRollup'));
-                RLLP_OppRollup rg = new RLLP_OppRollup();
-                rg.rollupHouseholds(hhmap);
-            } else {
-                RLLP_OppRollup.rollupHouseholdsFuture(setHHIdToRollup);
-            }                                                                         
-        }
-        
         return dmlWrapper;
     }
     
+    public void copyNamingExclusionsFromMSP(Contact con) {
+        con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
+        con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
+        con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
+    }
+
+    public void copyNamingExclusionsFromCheckboxes(Contact con) {
+        string mspValue = '';
+        
+        if (con.Exclude_from_Household_Name__c)
+            mspValue += 'Household__c.Name;';
+        if (con.Exclude_from_Household_Formal_Greeting__c)
+            mspValue += 'Household__c.Formal_Greeting__c;';
+        if (con.Exclude_from_Household_Informal_Greeting__c)
+            mspValue += 'Household__c.Informal_Greeting__c;';
+        
+        if (mspValue.endsWith(';'))
+            mspValue = mspValue.substring(0,mspValue.length()-1);
+
+        con.npo02__Naming_Exclusions__c = mspValue;
+    }
+
     public static void contactMergeUpdate(Set<Id> winningContacts){     
         Set<Id> oppIDs = new Set<Id>();
         List<OpportunityContactRole> ocrlist = new List<OpportunityContactRole>();

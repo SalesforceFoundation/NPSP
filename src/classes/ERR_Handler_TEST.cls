@@ -37,6 +37,9 @@ public with sharing class ERR_Handler_TEST {
     private static Id chatterGroupId;
     
     private static void setupWithChatterNotifications() {
+    	// all these tests are about testing our error handling, so we can't let the assert interfere
+    	TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;        
+    	
     	UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     	UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
@@ -57,6 +60,9 @@ public with sharing class ERR_Handler_TEST {
     }
     
     private static void setupWithEmailNotifications() {
+        // all these tests are about testing our error handling, so we can't let the assert interfere
+        TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;        
+
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
@@ -385,6 +391,7 @@ public with sharing class ERR_Handler_TEST {
         delete acc2;
 
         Test.startTest();
+        TDTM_TriggerHandler.suppressDebugAssertAfterErrorLogging = true;        
         List<Contact> contacts = new Contact[]{contact1, contact2, contact3};
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();

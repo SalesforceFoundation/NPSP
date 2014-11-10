@@ -202,6 +202,15 @@
         <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <customButtons>Manage_Allocations</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>NAME</fields>
+        <fields>General_Accounting_Unit__c</fields>
+        <fields>Amount__c</fields>
+        <fields>Percent__c</fields>
+        <relatedList>Allocation__c.Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -233,7 +242,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000003BQoW</masterLabel>
+        <masterLabel>00ho0000002RGP4</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

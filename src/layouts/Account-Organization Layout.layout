@@ -310,6 +310,8 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Formula_MailingAddress__c</fields>
+        <fields>Verified__c</fields>
         <fields>Verification_Status__c</fields>
         <relatedList>Address__c.Household_Account__c</relatedList>
     </relatedLists>
