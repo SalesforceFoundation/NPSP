@@ -486,7 +486,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //fill wrapper with all allocations for this opportunity
         //getting payment and opportunity info here to avoid excess queries
-        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c 
+        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c, Recurring_Donation__c, Campaign__c FROM Allocation__c 
                 WHERE (Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId) 
                 AND Id NOT IN :setExistingAlloId]) {
 
@@ -502,7 +502,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 continue;
             }
 
-            wrap.totalAmount += allo.Amount__c;
+            if (allo.Amount__c!=null)
+                wrap.totalAmount += allo.Amount__c;
 
             //add this allocation to the list
             wrap.listAllo.add(allo);

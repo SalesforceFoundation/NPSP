@@ -350,6 +350,9 @@
     <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
+    <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Name__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
     <members>Contact.Primary_Contact__c</members>
@@ -491,6 +494,7 @@
     <members>Trigger_Handler__c.Trigger_Action__c</members>
     <members>Trigger_Handler__c.User_Managed__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
@@ -771,6 +775,7 @@
     <members>stgHelpOCRDefaultRole</members>
     <members>stgHelpOCRRoleForHH</members>
     <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpOrgAccountAddressMgmt</members>
     <members>stgHelpOverrunCount</members>
     <members>stgHelpPaymentMapOppField</members>
     <members>stgHelpPaymentMapPaymentField</members>
