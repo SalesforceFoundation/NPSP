@@ -14,4 +14,14 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Organizational_Account_Addresses_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Enables Address management for Organizational Accounts when selected.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables Address management for Organizational Accounts when selected.</inlineHelpText>
+        <label>Organizational Account Addresses Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
