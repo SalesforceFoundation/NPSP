@@ -979,7 +979,7 @@
     <members>Address__c-Address Layout</members>
     <members>Allocation__c-Allocation Layout</members>
     <members>Batch__c-Batch Layout</members>
-    <members>Campaign-Campaign Layout</members>
+    <members>Campaign-NPSP Campaign Layout</members>
     <members>Contact-Contact Layout</members>
     <members>DataImport__c-Data Import Layout</members>
     <members>Error__c-Error Layout</members>
