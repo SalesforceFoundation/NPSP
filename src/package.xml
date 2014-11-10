@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -945,6 +944,7 @@
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
     <members>DataImport__c</members>
+    <members>General_Accounting_Unit__c</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <members>npe01__OppPayment__c</members>
@@ -976,6 +976,7 @@
     <members>Address__c-Address Layout</members>
     <members>Allocation__c-Allocation Layout</members>
     <members>Batch__c-Batch Layout</members>
+    <members>Campaign-Campaign Layout</members>
     <members>Contact-Contact Layout</members>
     <members>DataImport__c-Data Import Layout</members>
     <members>Error__c-Error Layout</members>
