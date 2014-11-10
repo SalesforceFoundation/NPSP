@@ -683,4 +683,26 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(lastname + ' Household',createdContacts[0].npo02__household__r.Name);
     }
+
+    /// <name> testHouseholdExclusion </name>
+    /// <summary> insert a contact with naming exclusion checkboxes checked. verify multiselect picklist filled. Update MSP. verify checkboxes changed.  </summary>
+    static testMethod void testHouseholdExclusion() {
+
+        Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS, Exclude_from_Household_Name__c=true, Exclude_from_Household_Formal_Greeting__c=true);
+        insert con;
+
+        list<Contact> queryCon = [SELECT Id, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
+        system.assert(queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Name'), 'Naming Exclusions field should include Household Name.');
+        system.assert(queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c'), 'Naming Exclusions field should include Household Formal Greeting.');
+        system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c'), 'Naming Exclusions field should not include Household Informal Greeting.');
+
+        queryCon[0].npo02__Naming_Exclusions__c = 'Household__c.Name';
+        update queryCon[0];
+
+        queryCon = [SELECT Id, Exclude_from_Household_Name__c, Exclude_from_Household_Formal_Greeting__c, Exclude_from_Household_Informal_Greeting__c FROM Contact WHERE Id = :con.id];
+        system.assert(queryCon[0].Exclude_from_Household_Name__c, 'Exclude from Household Name checkbox should be checked.');
+        system.assert(!queryCon[0].Exclude_from_Household_Formal_Greeting__c, 'Exclude from Household Formal Greeting checkbox should not be checked.');
+        system.assert(!queryCon[0].Exclude_from_Household_Informal_Greeting__c, 'Exclude from Household Informal Greeting checkbox not should be checked.');
+
+    }
 }

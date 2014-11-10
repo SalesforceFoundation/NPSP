@@ -39,7 +39,7 @@
                 <div class="panel-body">
                     <div class="col-sm-5">
                         <h4><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/hub-logo.png')}" alt="Power of Us Hub" /></h4>
-                        <p>Got questions? Got answers? Join the <a href="https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CkCM" target="_blank">System Administrators</a> group in the <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
+                        <p>Got questions? Got answers? Join the <a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">System Administrators</a> group in the <a href="https://powerofus.force.com/" title="Power of Us Hub" target="_blank">Power of Us Hub</a>!</p>
                     </div>
 
                     <div class="col-sm-7">
@@ -52,9 +52,9 @@
                         
                         <h4 class="h5">Salesforce Documentation &amp; Quick Starts</h4>
                         <ul class="list-unstyled">
-                            <li><a href="https://help.salesforce.com/apex/HTViewGettingStarted?id=000176053&language=en_US" target="_blank" >Getting Started Implementation Guide</a></li>
-                            <li><a href="https://help.salesforce.com/apex/HTViewQuickStarts?id=000120152&language=en_US" target="_blank" >Adding and Managing Users Quick Start</a></li>
-                            <li><a href="https://help.salesforce.com/apex/HTViewQuickStarts?id=000113376&language=en_US" target="_blank" >Importing Data Quick Start</a></li>
+                            <li><a href="https://powerofus.force.com/SF_Getting_Started_Guide" target="_blank" >Getting Started Implementation Guide</a></li>
+                            <li><a href="https://powerofus.force.com/SF_Managing_Users_Guide" target="_blank" >Adding and Managing Users Quick Start</a></li>
+                            <li><a href="https://powerofus.force.com/SF_Importing_Data_Quick_Start" target="_blank" >Importing Data Quick Start</a></li>
                         </ul>
                     </div>
                 </div>
@@ -77,8 +77,8 @@
     
                         <h4 class="h5">Documentation</h4>
                         <ul class="list-unstyled">
-                            <li><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-RN" target="_blank" >NPSP 3.0 Release Notes</a></li>
-                            <li><a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
+                            <li><a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank" >NPSP 3.0 Release Notes</a></li>
+                            <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >NPSP 3.0 Documentation</a></li>
                         </ul>
                     </div>
                 </div>

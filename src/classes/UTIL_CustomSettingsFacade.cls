@@ -423,6 +423,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c;
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
+        contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         upsert contactsSettings;
         return contactsSettings;
     }
