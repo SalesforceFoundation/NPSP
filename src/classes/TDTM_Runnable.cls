@@ -115,6 +115,7 @@ global abstract class TDTM_Runnable {
             List<SObject> payments = new List<SObject>();
             List<SObject> recDonations = new List<SObject>();
             List<SObject> relationships = new List<SObject>();
+            list<SObject> allocations = new list<SObject>();
             List<SObject> unknown = new List<SObject>();
             
             for(SObject o : sobjects) {
@@ -138,6 +139,8 @@ global abstract class TDTM_Runnable {
                     recDonations.add(o);
                 } else if(o instanceof npe4__Relationship__c) {
                     relationships.add(o);
+                } else if(o instanceof Allocation__c) {
+                    allocations.add(o);
                 } else {
                 	UTIL_Debug.debug(LoggingLevel.WARN, '****Not one of our basic object types');
                 	unknown.add(o);
@@ -153,6 +156,7 @@ global abstract class TDTM_Runnable {
             sorted.addAll(payments);
             sorted.addAll(recDonations);
             sorted.addAll(relationships);
+            sorted.addAll(allocations);
             sorted.addAll(unknown);
             
             return sorted;

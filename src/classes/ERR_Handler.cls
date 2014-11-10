@@ -31,7 +31,7 @@ public with sharing class ERR_Handler {
     
     private List<Error__c> errors = new List<Error__c>();
    
-    public enum Context {AFFL, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
+    public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
     
     private static String stackTrace;
     
@@ -116,7 +116,7 @@ public with sharing class ERR_Handler {
 	                errors.add(err);
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
+                     or error notification sent.
 	                if(sObjects != null && sObjects.size() > i)
 	                   addErrorMessage(sObjects[i], message);*/
 	                if(ApexPages.currentPage() != null)

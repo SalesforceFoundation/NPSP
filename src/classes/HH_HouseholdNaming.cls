@@ -504,7 +504,7 @@ public without sharing class HH_HouseholdNaming {
                             hhlist.add(h.id);       
                         else if (h.get('npo02__SYSTEM_CUSTOM_NAMING__c') != mapIdHHOld.get(h.id).get('npo02__SYSTEM_CUSTOM_NAMING__c'))
                             hhlist.add(h.id);                        
-                        else if (h.get('npe01__One2OneContact__c') != mapIdHHOld.get(h.id).get('npe01__One2OneContact__c'))
+                        else if (h.getSObjectType() == Account.sObjectType && h.get('npe01__One2OneContact__c') != mapIdHHOld.get(h.id).get('npe01__One2OneContact__c'))
                             hhlist.add(h.id);                        
                     }
                 }
