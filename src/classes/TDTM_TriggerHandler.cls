@@ -31,6 +31,8 @@ public with sharing class TDTM_TriggerHandler {
 
     private static Boolean defaultRecordsInserted = false;
     
+    public static boolean suppressDebugAssertAfterErrorLogging = false;
+    
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
@@ -90,6 +92,13 @@ public with sharing class TDTM_TriggerHandler {
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
             will be rolled back by the platform, and our error record won't be saved or error notifications sent. **/ 
+            
+            // but we do want our tests to fail if they encountered this error!
+            // we do need to allow some specific tests that are testing our error handling
+            // to avoid the assert, because by allowing it to throw an exception within our catch, it
+            // changes system behavior.
+            if (Test.isRunningTest() && !suppressDebugAssertAfterErrorLogging)
+                system.assertEquals(null, e.getMessage()); 
         }
     }
     

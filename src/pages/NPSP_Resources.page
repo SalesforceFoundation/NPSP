@@ -74,10 +74,10 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading"><h3 class="panel-title">Quick Links</h3></div>
                     <ul class="list-group">
-                        <li class="list-group-item">See <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-RN" target="_blank">what's new</a> in Nonprofit Starter Pack 3.0</li>
-                        <li class="list-group-item">Get started with the <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-Workbook" target="_blank">Nonprofit Starter Pack Workbook</a></li>
-                        <li class="list-group-item">NPSP 3.0 <a href="https://powerofus.force.com/articles/Resource/Nonprofit-Starter-Pack-3-Documentation" target="_blank">documentation</a></li>
-                        <li class="list-group-item">Ask a question at <a href="http://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
+                        <li class="list-group-item">See <a href="https://powerofus.force.com/NPSP_Release_Notes" target="_blank">what's new</a> in Nonprofit Starter Pack 3.0</li>
+                        <li class="list-group-item">Get started with the <a href="https://powerofus.force.com/NPSP_Workbook" target="_blank">Nonprofit Starter Pack Workbook</a></li>
+                        <li class="list-group-item">NPSP 3.0 <a href="https://powerofus.force.com/NPSP_Documentation" target="_blank">documentation</a></li>
+                        <li class="list-group-item">Ask a question at <a href="https://powerofus.force.com/HUB_Foundation_Office_Hours" title="Office Hours" target="_blank">Foundation Office Hours</a></li>
                     </ul>
                 </div>
             </div>

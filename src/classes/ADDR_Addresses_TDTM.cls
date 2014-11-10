@@ -211,8 +211,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return mapAccIdHHInfo;
 
         // get all Contacts by HH, that might need updating
+        // note that if we have an organizational account, our query will not pick up any contacts (by design!)
         map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
-        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId from Contact where AccountId in :mapAccIdAddr.keySet()];
+        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId from Contact where HHId__c in :mapAccIdAddr.keySet()];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
@@ -277,7 +278,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             
 	        // check other addresses on this household that are no longer the default
-	        if(mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
+	        if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
 	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
 	                if (addrHH.Id == addrDefault.Id)
 	                    continue;
@@ -290,7 +291,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
 
             // check the Contacts on this household
-            if(mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
+            if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
 	                    con.MailingStreet = getMultilineStreet(addr);
@@ -533,6 +534,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     // verify that the account for each Address is a HH account
+    // or an Organizational account if enabled.
     private void verifyAddrHHAccOnly(list<Address__c> listAddr) {    	
     	set<Id> setAccId = new set<Id>();
     	for (Address__c addr : listAddr) {
@@ -540,7 +542,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     			setAccId.add(addr.Household_Account__c);
     		}
     	}    	
-    	map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c from Account where Id in :setAccId]);
+    	map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c, npe01__SYSTEMIsIndividual__c 
+    	   from Account where Id in :setAccId]);
         for (Address__c addr : listAddr) {
             if (addr.Household_Account__c == null) {
                 //throw(new MyException(Label.addrHHAccountOnly));
@@ -548,7 +551,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 addr.addError(Label.addrHHAccountOnly);
             } else {
                 Account acc = mapAccIdAcc.get(addr.Household_Account__c);
-                if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                if ( (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) &&
+                    (acc.npe01__SYSTEMIsIndividual__c || !UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
                 	//throw(new MyException(Label.addrHHAccountOnly));
                 	// had to use addError, or Salesforce would not stop its DML.
                     addr.addError(Label.addrHHAccountOnly);

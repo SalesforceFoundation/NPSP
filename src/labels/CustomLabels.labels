@@ -326,7 +326,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>addrHHAccountOnly</shortDescription>
-        <value>Address objects are only supported on Household Accounts.</value>
+        <value>Address objects are only supported on Household Accounts and Organizational Accounts (if enabled).</value>
     </labels>
     <labels>
         <fullName>addrHHAddressAlwaysDefault</fullName>
@@ -2215,6 +2215,14 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOrgAccountAddressMgmt</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOrgAccountAddressMgmt</shortDescription>
+        <value>Enables Address management for Organizational Accounts when selected.</value>
     </labels>
     <labels>
         <fullName>stgHelpOverrunCount</fullName>
