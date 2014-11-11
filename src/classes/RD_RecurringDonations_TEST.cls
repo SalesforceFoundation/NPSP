@@ -94,7 +94,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = 'None'; 
         insert r1;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id];
+        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
         system.assertEquals(2,installments1.size());
         system.assertEquals(100,installments1[0].Amount);
         system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
@@ -130,7 +130,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = 'None'; 
         insert r1;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id];
+        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
         system.assertEquals(2,installments1.size());
         system.assertEquals(100,installments1[0].Amount);
         system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
@@ -165,7 +165,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = 'None'; 
         insert r1;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id];
+        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
         system.assertEquals(2,installments1.size());
         system.assertEquals(100,installments1[0].Amount);
         system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
@@ -208,7 +208,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = 'None'; 
         insert r1;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,CampaignId from Opportunity where npe03__Recurring_Donation__c = :r1.id];
+        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,CampaignId from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
         system.assertEquals(2,installments1.size());
         system.assertEquals(100,installments1[0].Amount);
         system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
@@ -416,7 +416,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);          
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
         
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
@@ -465,7 +465,7 @@ public class RD_RecurringDonations_TEST {
         Test.startTest();
         insert r1;
         Test.stopTest();
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);          
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
         system.assertEquals(24, originalOpps.size());
         system.assertEquals(100, originalOpps.values()[0].Amount);        
     }
@@ -502,7 +502,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);          
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
         
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
@@ -547,7 +547,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);          
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
         
         system.assertEquals(12, originalOpps.size());
         system.assertEquals(100, originalOpps.values()[0].Amount);
@@ -592,7 +592,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);          
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
         
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
@@ -640,7 +640,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         
@@ -698,7 +698,7 @@ public class RD_RecurringDonations_TEST {
         insert rdlist; 
         
         system.assertNotEquals(null, r1.id);
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id order by CloseDate]);
         system.assertEquals(1, originalOpps.size());          
         
         Opportunity o1 = originalOpps.values()[0];
@@ -753,7 +753,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(4, originalOpps.size());          
         
         Opportunity o = originalOpps.values()[0];
@@ -814,7 +814,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         integer cOpp = originalOpps.size();
         system.assert(cOpp == 26 || cOpp == 27);          
         
@@ -877,7 +877,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(15, originalOpps.size());          
         
         Opportunity o = originalOpps.values()[0];
@@ -940,8 +940,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity 
-            where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(6, originalOpps.size());          
         
         Opportunity o = originalOpps.values()[0];
@@ -1003,7 +1002,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(1, originalOpps.size());          
         
         Opportunity o = originalOpps.values()[0];
@@ -1058,7 +1057,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(1, originalOpps.size());          
         
         Opportunity o = originalOpps.values()[0];
@@ -1112,7 +1111,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         integer cOpp =  originalOpps.size();
         system.assert(cOpp == 52 || cOpp == 53);        
         RD_ProcessControl.hasRun = false;
@@ -1158,7 +1157,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         Opportunity o = originalOpps.values()[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
@@ -1217,7 +1216,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         Opportunity o = originalOpps.values()[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
         o.StageName = closedstage;
@@ -1624,7 +1623,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Next_Payment_Date__c = system.today();
         insert r1;
         
-        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        map<id, Opportunity> originalOpps = new map<id, Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         
         Opportunity o = originalOpps.values()[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
