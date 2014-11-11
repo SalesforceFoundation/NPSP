@@ -77,6 +77,18 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>Description__c</fullName>
+        <description>Extra information about this general accounting unit.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Extra information about this general accounting unit.</inlineHelpText>
+        <label>Description</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>First_Allocation_Date__c</fullName>
         <description>The first Opportunity Close Date of an Allocation associated with this General Accounting Unit.</description>
         <externalId>false</externalId>
