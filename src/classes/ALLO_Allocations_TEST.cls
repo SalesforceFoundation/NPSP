@@ -233,7 +233,7 @@ private with sharing class ALLO_Allocations_TEST {
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
             Name = 'foo', 
             npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly, 
-            npe03__Date_Established__c=date.newinstance(1984,01,29), 
+            npe03__Date_Established__c= system.today(),  
             npe03__Organization__c = acc.id, 
             npe03__Amount__c = 20,
             npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
