@@ -1,5 +1,6 @@
 <apex:page showHeader="true" sidebar="false">
 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
 
