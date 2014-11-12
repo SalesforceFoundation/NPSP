@@ -442,11 +442,13 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     private void verifyOppContactRoles() {
         try {
             // detect duplicate primary ocr's
+            // we understand this will fail if there are over 50k OCR's in they system,
+            // but it is better than nothing, since for many orgs that will be fine.
             integer cOpp = 0;
-			for (list<AggregateResult> listAR : [select count(Id), OpportunityId from OpportunityContactRole 
-			     where IsPrimary=true group by OpportunityId having count(Id) > 1 limit 9999]) {
-                cOpp += listAR.size();
-			}
+			list<AggregateResult> listAR = [select count(Id), OpportunityId from OpportunityContactRole 
+			     where IsPrimary=true group by OpportunityId having count(Id) > 1 limit 50000];
+			cOpp = listAR.size();
+
 			if (cOpp > 0) {
 		        createDR(label.healthLabelOCRCheck, 'Error', 
 		          string.format(label.healthDetailsOCRDupPrimary, new string[]{string.valueOf(cOpp)}), label.healthSolutionOCRDupPrimary);    	
