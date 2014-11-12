@@ -459,6 +459,7 @@
     <members>Error__c.Stack_Trace__c</members>
     <members>General_Accounting_Unit__c.Active__c</members>
     <members>General_Accounting_Unit__c.Average_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Description__c</members>
     <members>General_Accounting_Unit__c.First_Allocation_Date__c</members>
     <members>General_Accounting_Unit__c.Largest_Allocation__c</members>
     <members>General_Accounting_Unit__c.Last_Allocation_Date__c</members>
