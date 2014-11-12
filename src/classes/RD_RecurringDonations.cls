@@ -383,7 +383,6 @@ public with sharing class RD_RecurringDonations {
                 if (r.npe03__Open_Ended_Status__c == system.label.npe03.RecurringDonationOpenStatus){
                     //get settings so we can figure out how many donations to create                    
                     date OppCloseDate;
-                    date loop_date;
                   
                     if (r.npe03__Next_Payment_Date__c != null)                     
                         OppCloseDate = r.npe03__Next_Payment_Date__c;
@@ -394,12 +393,17 @@ public with sharing class RD_RecurringDonations {
                     if (r.npe03__Total_Paid_Installments__c > 0){
                             OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
                     } */   
-                    date incrementdate = OppCloseDate;
+                    //date incrementdate = OppCloseDate;
+                    integer forecast_months = (integer)rds.npe03__Opportunity_Forecast_Months__c;
+                    Date dtForecast =  system.today().toStartOfMonth().addMonths(forecast_months);         
+                    
                     integer rdcounter = 1;
                     if (r.npe03__Total_Paid_Installments__c > 0)
                         rdcounter = (integer)r.npe03__Total_Paid_Installments__c + 1;
                             
-                    do{
+                    //do{
+                    while (OppCloseDate < dtForecast) {
+                    	UTIL_Debug.debug('****DJH insert rdcounter: ' + rdcounter + ' OppCloseDate: ' + OppCloseDate + ' dtForecast: ' + dtForecast);
                         Opportunity o = new Opportunity();
                         o.CloseDate = OppCloseDate;
                         o.OwnerId = r.OwnerId;
@@ -452,7 +456,7 @@ public with sharing class RD_RecurringDonations {
                         }
                         opportunityInserts.add(o);    
                         rdcounter++;                                                                                       
-                    }while (OppCloseDate < incrementdate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c));                                                            
+                    }//while (OppCloseDate < dtForecast);                                                            
                 }
             }                 
         }
@@ -800,7 +804,10 @@ public with sharing class RD_RecurringDonations {
                            
                 if (dtForecast > lastOppMap.get(rd.id)){
                     date oppclosedate = lastOppMap.get(rd.id);
-                    do{
+                    oppclosedate = getNextDate(oppclosedate, rd.npe03__Installment_Period__c);
+                    //do{
+                    while(oppclosedate < dtForecast) {
+                        UTIL_Debug.debug('****DJH evaluate oppCounter: ' + oppCounter + ' OppCloseDate: ' + OppCloseDate + ' dtForecast: ' + dtForecast);
                         Opportunity o = new Opportunity();
                         o.OwnerId = rd.OwnerId;
 
@@ -820,7 +827,6 @@ public with sharing class RD_RecurringDonations {
                             }
                         }                    
                     
-                        oppclosedate = getNextDate(oppclosedate, rd.npe03__Installment_Period__c);
                         o.CloseDate = oppclosedate;                                                                                        
                         string oName = rd.npe03__Donor_Name__c + ' ' + system.label.npe03.RecurringDonationPrefix +
                         ' (' + string.valueOf(oppCounter) + ') ' + o.CloseDate.format();
@@ -845,7 +851,8 @@ public with sharing class RD_RecurringDonations {
                                             
                         oppCounter++;
                         oppInsertList.add(o);                   
-                    }while(oppclosedate < dtForecast);
+                        oppclosedate = getNextDate(oppclosedate, rd.npe03__Installment_Period__c);
+                    }//while(oppclosedate < dtForecast);
                 }
             }
             else{
