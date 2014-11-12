@@ -456,7 +456,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 		        createDR(label.healthLabelOCRCheck, 'Success', null, label.healthDetailsOCRDupPrimaryValid);
 			}    
         } catch (exception ex) {
-            createDR(Label.healthLabelOCRCheck, 'Error',  ex.getMessage(), null);                   
+            createDR(Label.healthLabelOCRCheck, 'Error',  ex.getMessage(), label.healthSolutionOCRException);                   
         }    
     }
     

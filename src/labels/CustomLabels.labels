@@ -1535,6 +1535,14 @@
         <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  Use a report to find the Opportunities with mulitple Primary OpportunityContactRoles.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionOCRException</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionOCRException</shortDescription>
+        <value>If you have a large amount of Opportunties and Opportunity Contact Roles, over 50,000, you can safely ignore any error dealing with soql limits.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>
         <language>en_US</language>
         <protected>false</protected>
