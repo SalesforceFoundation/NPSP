@@ -434,7 +434,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<string> setLname = new set<string>();
         set<string> setEmail = new set<string>();
         set<string> setCustomID = new set<string>();
-        
+        set<Id> setHHId = new set<Id>();
+                
         string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
         
         for (DataImport__c di : listDI) {
@@ -470,7 +471,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setCustomID.add(string.valueOf(di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix)));
         }
         
-        string strSoql = 'Select Id, Firstname, Lastname, ';
+        string strSoql = 'Select Id, Firstname, Lastname, AccountId, ';
         if (isCustomIDInContactMatchRules)
             strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
         strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
@@ -503,6 +504,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
         //system.debug('****DJH after adding potential contacts mapDIKeyToContact: ' + mapDIKeyToContact);
         
+        // first we process c1's
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -513,6 +515,11 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (con != null) {
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = label.bdiMatched;
+                // remember all the existing household accounts, so we can query for and add "looser" keys for c2
+                if (con.AccountId != null) {
+                    di.HouseholdAccountImported__c = con.AccountId;
+                    setHHId.add(con.AccountId);
+                }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
                 di.Contact1ImportStatus__c = label.bdiCreated;
@@ -523,9 +530,22 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             for (string diKey : listDiKey) 
                 mapDIKeyToContact.put(diKey, con);
             //system.debug('****DJH after add di keys to mapDIKeyToContact: ' + mapDIKeyToContact);
-            
-            con = ContactFromDi(di, 2);
-            listDiKey = listDiKeyC2(di);
+        }
+                    
+        // before we process c2's, we want to add some "looser" keys
+        // for any c2's to match against existing household members just by firstname
+        list<Contact> listHHContacts = [select Firstname, Lastname, AccountId from Contact where AccountId in :setHHId];
+        for (Contact con : listHHContacts) {
+            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con); 
+        } 
+        
+        // now process c2's
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
+            Contact con = ContactFromDi(di, 2);
+            list<string> listDiKey = listDiKeyC2(di);
             if (con != null) {
                 di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = label.bdiMatched;
@@ -609,7 +629,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         |Smith|fred@smith.com 
         ||fred@smith.com
 
-    In this same same example, if our DI record is John Doe john@doe.com, then its diKeys would be:
+    In this same example, if our DI record is John Doe john@doe.com, then its diKeys would be:
         John|Doe|john@doe.com
         John||john@doe.com
         |Doe|john@doe.com
@@ -745,7 +765,11 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	        if (diKey != '||')
 	           listDiKey.add(diKey);
         }
-                       
+        
+        // for c2's that we know their household, we want to add a "looser" key to match by as well.
+        if (strCx == 'Contact2' && di.HouseholdAccountImported__c != null && di.get('Contact2_Firstname__c') != null) {
+            listDiKey.add(di.get('Contact2_Firstname__c') + '|' + di.HouseholdAccountImported__c);
+        }               
         return listDiKey;
     }
     
