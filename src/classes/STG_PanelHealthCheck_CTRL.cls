@@ -123,6 +123,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
         verifyScheduledJobs();
         ERR_Notifier.verifyErrorSettings(this);
+        verifyOppContactRoles();
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -435,6 +436,28 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             createDR(Label.healthLabelScheduler, 'Error',  ex.getMessage(), null);                   
         }    
 	        
+    }
+    
+    // verify that no Opportunities have multiple primary contact roles, which would throw off opp rollups.
+    private void verifyOppContactRoles() {
+        try {
+            // detect duplicate primary ocr's
+            // we understand this will fail if there are over 50k OCR's in they system,
+            // but it is better than nothing, since for many orgs that will be fine.
+            integer cOpp = 0;
+			list<AggregateResult> listAR = [select count(Id), OpportunityId from OpportunityContactRole 
+			     where IsPrimary=true group by OpportunityId having count(Id) > 1 limit 50000];
+			cOpp = listAR.size();
+
+			if (cOpp > 0) {
+		        createDR(label.healthLabelOCRCheck, 'Error', 
+		          string.format(label.healthDetailsOCRDupPrimary, new string[]{string.valueOf(cOpp)}), label.healthSolutionOCRDupPrimary);    	
+			} else {
+		        createDR(label.healthLabelOCRCheck, 'Success', null, label.healthDetailsOCRDupPrimaryValid);
+			}    
+        } catch (exception ex) {
+            createDR(Label.healthLabelOCRCheck, 'Error',  ex.getMessage(), label.healthSolutionOCRException);                   
+        }    
     }
     
 }

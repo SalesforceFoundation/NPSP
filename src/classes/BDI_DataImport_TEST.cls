@@ -1688,4 +1688,93 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(cAddr, listAddr.size());
     }
 
+    /*********************************************************************************************************
+    operation:
+        import multiple di records with C2 not fully providing match critera, in the same batch
+    verify:
+        duplicate C2's not created
+    **********************************************************************************************************/            
+    static testMethod void TwoDINewC2PartialMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDINewC2PartialMatch') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
+            Contact2_Firstname__c='c2'));   
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
+            Contact2_Firstname__c='c2'));   
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        system.assertEquals(2, listCon.size());
+        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
+        system.assertEquals(listDI[1].Contact2Imported__c, listCon[1].Id);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import multiple di records with Existing C2 not fully providing match critera, in the same batch
+    verify:
+        duplicate C2's not created
+    **********************************************************************************************************/            
+    static testMethod void TwoDIExistingC2PartialMatch() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingC2PartialMatch') return;
+            
+         // existing contacts in same household
+        Account hh = new Account(Name='household', npe01__SYSTEM_AccountType__c=CAO_Constants.HH_ACCOUNT_TYPE);
+        insert hh;
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', AccountId=hh.Id));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', AccountId=hh.Id));
+        insert listConExisting;
+ 
+        // data import records
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
+            Contact2_Firstname__c='c2'));   
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
+            Contact2_Firstname__c='c2'));   
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        system.assertEquals(2, listCon.size());
+        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
+        system.assertEquals(2, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
+        system.assertEquals(listDI[1].Contact2Imported__c, listCon[1].Id);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);
+        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
+    }
+
 }
