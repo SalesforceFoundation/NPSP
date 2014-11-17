@@ -477,15 +477,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }
                 a.Phone = c.Phone;
                 a.Fax = c.Fax;
-                a.BillingStreet = c.MailingStreet;
-                a.BillingCity = c.MailingCity;
-                a.BillingState = c.MailingState;
-                a.BillingPostalCode = c.MailingPostalCode;
-                a.BillingCountry = c.MailingCountry;
-                a.ShippingStreet = c.OtherStreet;
-                a.ShippingCity = c.OtherCity;
-                a.ShippingState = c.OtherState;
-                a.ShippingCountry = c.OtherCountry;
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (rtIdAcccount != null) {                
                     a.put('RecordTypeID', rtIdAcccount);
@@ -544,16 +538,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             //if any address data has changed on the contact, push it all to the Account
             {
                 // Update Account fields
-                a.BillingStreet = c.MailingStreet;
-                a.BillingCity = c.MailingCity;
-                a.BillingState = c.MailingState;
-                a.BillingPostalCode = c.MailingPostalCode;
-                a.BillingCountry = c.MailingCountry;
-                a.ShippingStreet = c.OtherStreet;
-                a.ShippingCity = c.OtherCity;
-                a.ShippingState = c.OtherState;
-                a.ShippingPostalCode = c.OtherPostalCode;
-                a.ShippingCountry = c.OtherCountry;  
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+
                 if (a.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)               
                     a.Name = strNameOne2OneAccountForContact(c);
                 // HH Account naming updates handled seperately to deal with asyncronous naming

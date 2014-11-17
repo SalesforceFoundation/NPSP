@@ -37,8 +37,18 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     // static flags to prevent recursive call 
     public static boolean hasRunAddrTrigger = false;
 
-    public static Boolean isStateCountryPicklistsEnabled = false;
     public static Map<Id, String> addressErrors = new Map<Id, String>();
+    
+    // hold valid state & country picklist values, if enabled in the Org
+    public static Boolean isStateCountryPicklistsEnabled = false;
+    
+    // The maps by convert the Code to a Label and Vice-Versa
+    // Required because Salesforce expects either two Codes or two Labels, but not a mix
+    public static Map<String, String> validCountriesByLabel = new Map<String, String>();
+    public static Map<String, String> validStatesByLabel = new Map<String, String>();
+    public static Map<String, String> validCountriesByCode = new Map<String, String>();
+    public static Map<String,string> mapCountryStateCodeToStateLabel = new map<string, string>();
+    
 
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
@@ -60,10 +70,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion');
             return null;
         }
-
-        // If State & Country Picklists are enabled in the org, build sets of the
-        // valid Labels and Codes for each field to use for validation
-        isStateCountryPicklistsEnabled = UTIL_Describe.initValidStateCountryCodes();
 
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>(); // map of HH Accounts, and their default Address 
@@ -240,42 +246,46 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            acc.BillingStreet = getMultilineStreet(addr);
-            acc.BillingCity = addr.MailingCity__c;
-            acc.BillingPostalCode = addr.MailingPostalCode__c;
-
+            
+            //UTIL_Debug.debug('**** DJH addr.MailingState__c: ' + addr.MailingState__c);
+            //UTIL_Debug.debug('**** DJH addr.MailingCountry__c: ' + addr.MailingCountry__c);
+            
+            copyAddressAddrSObj(addr, acc, 'Billing');
+/****
             if (!isStateCountryPicklistsEnabled) {
                 acc.BillingState = addr.MailingState__c;
                 acc.BillingCountry = addr.MailingCountry__c;
             } else {
                 if (addr.MailingCountry__c != null) {
-                    if (UTIL_Describe.validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
+                    if (validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
                         acc.BillingCountry = addr.MailingCountry__c;
-                        acc.put('BillingCountryCode', UTIL_Describe.validCountriesByLabel.get(addr.MailingCountry__c));
-                    } else if (UTIL_Describe.validCountriesByCode.containsKey(addr.MailingCountry__c)) {
+                        acc.put('BillingCountryCode', validCountriesByLabel.get(addr.MailingCountry__c));
+                    } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
                         acc.put('BillingCountryCode', addr.MailingCountry__c);
-                        acc.BillingCountry = UTIL_Describe.validCountriesByCode.get(addr.MailingCountry__c);
+                        acc.BillingCountry = validCountriesByCode.get(addr.MailingCountry__c.toUpperCase());
                     } else {
                         addressErrors.put(addr.Id, 
                             Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c));
                     }
                 }
                 if (addr.MailingState__c != null) {
-                    if (UTIL_Describe.validStatesByLabel.containsKey(addr.MailingState__c)) {
+                    if (validStatesByLabel.containsKey(addr.MailingState__c)) {
                         acc.BillingState = addr.MailingState__c;
-                        acc.put('BillingStateCode', UTIL_Describe.validStatesByLabel.get(addr.MailingState__c));
-                    } else if (UTIL_Describe.validStatesByCode.containsKey(addr.MailingState__c)) {
-                        acc.put('BillingStateCode', addr.MailingState__c);
-                        acc.BillingState = UTIL_Describe.validStatesByCode.get(addr.MailingState__c);
+                        acc.put('BillingStateCode', validStatesByLabel.get(addr.MailingState__c));
+                    } else if (validStatesByCode.containsKey(addr.MailingState__c.toUpperCase())) {
+                        acc.put('BillingStateCode', addr.MailingState__c.toUpperCase());
+                        acc.BillingState = validStatesByCode.get(addr.MailingState__c.toUpperCase());
                     } else {
                         addressErrors.put(addr.Id, 
                             Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c));
                     }
                 }
             }
+****/
+            //UTIL_Debug.debug('**** DJH acc.BillingState: ' + acc.BillingState);
+            //UTIL_Debug.debug('**** DJH acc.BillingCountry: ' + acc.BillingCountry);
 
             listAccUpdate.add(acc);
-
             
 	        // check other addresses on this household that are no longer the default
 	        if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
@@ -294,41 +304,40 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-	                    con.MailingStreet = getMultilineStreet(addr);
-	                    con.MailingCity = addr.MailingCity__c;
-	                    con.MailingPostalCode = addr.MailingPostalCode__c;
 	                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
 	                    con.Current_Address__c = addr.Id;
-
+                        copyAddressAddrSObj(addr, con, 'Mailing');
+/*************
                         if (!isStateCountryPicklistsEnabled) {
                             con.MailingState = addr.MailingState__c;
                             con.MailingCountry = addr.MailingCountry__c;
                         } else {
                             if (addr.MailingCountry__c != null) {
-                                if (UTIL_Describe.validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
+                                if (validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
                                     con.MailingCountry = addr.MailingCountry__c;
-                                    con.put('MailingCountryCode', UTIL_Describe.validCountriesByLabel.get(addr.MailingCountry__c));
-                                } else if (UTIL_Describe.validCountriesByCode.containsKey(addr.MailingCountry__c)) {
+                                    con.put('MailingCountryCode', validCountriesByLabel.get(addr.MailingCountry__c));
+                                } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
                                     con.put('MailingCountryCode', addr.MailingCountry__c);
-                                    con.MailingCountry = UTIL_Describe.validCountriesByCode.get(addr.MailingCountry__c);
+                                    con.MailingCountry = validCountriesByCode.get(addr.MailingCountry__c.toUpperCase());
                                 } else {
                                     addressErrors.put(addr.Id, 
                                         Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c));
                                 }
                             }
                             if (addr.MailingState__c != null) {
-                                if (UTIL_Describe.validStatesByLabel.containsKey(addr.MailingState__c)) {
+                                if (validStatesByLabel.containsKey(addr.MailingState__c)) {
                                     con.MailingState = addr.MailingState__c;
-                                    con.put('MailingStateCode', UTIL_Describe.validStatesByLabel.get(addr.MailingState__c));
-                                } else if (UTIL_Describe.validStatesByCode.containsKey(addr.MailingState__c)) {
-                                    con.put('MailingStateCode', addr.MailingState__c);
-                                    con.MailingState = UTIL_Describe.validStatesByCode.get(addr.MailingState__c);
+                                    con.put('MailingStateCode', validStatesByLabel.get(addr.MailingState__c));
+                                } else if (validStatesByCode.containsKey(addr.MailingState__c.toUpperCase())) {
+                                    con.put('MailingStateCode', addr.MailingState__c.toUpperCase());
+                                    con.MailingState = validStatesByCode.get(addr.MailingState__c.toUpperCase());
                                 } else {
                                     addressErrors.put(addr.Id, 
                                         Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c));
                                 }
                             }
                         }
+********/
 	                    listConUpdate.add(con);
 	                }   
 	            }
@@ -336,19 +345,20 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }  
                     
         if (listAccUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
+            UTIL_Debug.debug('DJH**** listAccUpdate: ' + listAccUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
         }
         if (listAddrUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
+            UTIL_Debug.debug('DJH**** listAddrUpdate: ' + listAddrUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
         }
         if (listConUpdate.size() > 0) {
-            //UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
+            UTIL_Debug.debug('DJH**** listConUpdate: ' + listConUpdate);
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
         if (addressErrors.size() > 0) {
+        	UTIL_Debug.debug('**** DJH addressErrors: ' + addressErrors);
             ERR_Handler errHandler = new ERR_Handler();
             for (Id addrId : addressErrors.keySet()) {
                 errHandler.queueError('Address__c', addrId, addressErrors.get(addrId), 
@@ -407,39 +417,38 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
     		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            con.MailingStreet = getMultilineStreet(addr);
-            con.MailingCity = addr.MailingCity__c;
-            con.MailingPostalCode = addr.MailingPostalCode__c;
-
+            copyAddressAddrSObj(addr, con, 'Mailing');
+/*************
             if (!isStateCountryPicklistsEnabled) {
                 con.MailingState = addr.MailingState__c;
                 con.MailingCountry = addr.MailingCountry__c;
             } else {
                 if (addr.MailingCountry__c != null) {
-                    if (UTIL_Describe.validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
+                    if (validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
                         con.MailingCountry = addr.MailingCountry__c;
-                        con.put('MailingCountryCode', UTIL_Describe.validCountriesByLabel.get(addr.MailingCountry__c));
-                    } else if (UTIL_Describe.validCountriesByCode.containsKey(addr.MailingCountry__c)) {
+                        con.put('MailingCountryCode', validCountriesByLabel.get(addr.MailingCountry__c));
+                    } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
                         con.put('MailingCountryCode', addr.MailingCountry__c);
-                        con.MailingCountry = UTIL_Describe.validCountriesByCode.get(addr.MailingCountry__c);
+                        con.MailingCountry = validCountriesByCode.get(addr.MailingCountry__c.toUpperCase());
                     } else {
                         addressErrors.put(addr.Id, 
                             Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c));
                     }
                 }
                 if (addr.MailingState__c != null) {
-                    if (UTIL_Describe.validStatesByLabel.containsKey(addr.MailingState__c)) {
+                    if (validStatesByLabel.containsKey(addr.MailingState__c)) {
                         con.MailingState = addr.MailingState__c;
-                        con.put('MailingStateCode', UTIL_Describe.validStatesByLabel.get(addr.MailingState__c));
-                    } else if (UTIL_Describe.validStatesByCode.containsKey(addr.MailingState__c)) {
-                        con.put('MailingStateCode', addr.MailingState__c);
-                        con.MailingState = UTIL_Describe.validStatesByCode.get(addr.MailingState__c);
+                        con.put('MailingStateCode', validStatesByLabel.get(addr.MailingState__c));
+                    } else if (validStatesByCode.containsKey(addr.MailingState__c.toUpperCase())) {
+                        con.put('MailingStateCode', addr.MailingState__c.toUpperCase());
+                        con.MailingState = validStatesByCode.get(addr.MailingState__c.toUpperCase());
                     } else {
                         addressErrors.put(addr.Id, 
                             Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c));
                     }
                 }
             }
+****************/
 
             con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
             dmlWrapper.objectsToUpdate.add(con);    		
@@ -621,7 +630,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             mapAccIdAddr.put(addr.Household_Account__c, addr);
         
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = true;       
+        hasRunAddrTrigger = true;       
 
         Dmlwrapper dmlWrapper = new Dmlwrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
@@ -632,7 +641,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     // as Default if the caller specifies it on the new address.
     public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper) {  
     	
-    	map<Address__c, Address__c> mapAddrDupAddr= ADDR_Addresses_TDTM.findDuplicateAddresses(listAddr);
+    	map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
     	for (Address__c addrNew : listAddr) {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
@@ -696,4 +705,162 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             str += '\n' + addr.MailingStreet2__c;
         return str;
     }
+    
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @return void
+    */ 
+    public static void copyAddressStdSObj(sobject sobjSrc, string strFieldPrefixSrc, sobject sobjDst, string strFieldPrefixDst) {
+        // make sure our mapping data is loaded.
+        initValidStateCountryCodes();
+        
+        sobjDst.put(strFieldPrefixDst + 'Street', sobjSrc.get(strFieldPrefixSrc + 'Street'));
+        sobjDst.put(strFieldPrefixDst + 'City', sobjSrc.get(strFieldPrefixSrc + 'City'));
+        sobjDst.put(strFieldPrefixDst + 'PostalCode', sobjSrc.get(strFieldPrefixSrc + 'PostalCode'));
+        sobjDst.put(strFieldPrefixDst + 'State', sobjSrc.get(strFieldPrefixSrc + 'State'));
+        sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
+        
+        if (isStateCountryPicklistsEnabled) {
+            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
+            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
+        }    
+    }
+
+    /*******************************************************************************************************
+    * @description utility to copy Address fields from a Contact or Account to an Address object.
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @return void
+    */ 
+    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr) {
+        // make sure our mapping data is loaded.
+        initValidStateCountryCodes();
+        
+        addr.MailingStreet__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Street');
+        handleMultilineStreet(addr);
+        addr.MailingCity__c = (string)sobjSrc.get(strFieldPrefixSrc + 'City');
+        addr.MailingPostalCode__c = (string)sobjSrc.get(strFieldPrefixSrc + 'PostalCode');
+        addr.MailingState__c = (string)sobjSrc.get(strFieldPrefixSrc + 'State');
+        addr.MailingCountry__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Country');
+        
+        // try to find state and country by code if they aren't specified?
+        if (isStateCountryPicklistsEnabled) {
+
+            // lookup country if needed, by country code
+            string strCountryCode = (string)sobjSrc.get(strFieldPrefixSrc + 'CountryCode');
+            if (addr.MailingCountry__c == null && strCountryCode != null) {
+                addr.MailingCountry__c = validCountriesByCode.get(strCountryCode);
+            }
+            
+            // lookup state if needed, by country code and state code.
+            string strStateCode = (string)sobjSrc.get(strFieldPrefixSrc + 'StateCode');
+            if (addr.MailingState__c == null && strCountryCode != null && strStateCode != null) {
+                addr.MailingState__c = mapCountryStateCodeToStateLabel.get(strCountryCode + '|' + strStateCode);
+            }
+        }    
+    }
+
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields from an Address object to a Contact or Account.
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @return void
+    */ 
+    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix) {
+
+        // make sure our mapping data is loaded.
+        initValidStateCountryCodes();
+        
+        sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
+        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
+        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
+        
+        if (!isStateCountryPicklistsEnabled) {
+            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+        } else {
+            if (addr.MailingCountry__c != null) {
+                if (validCountriesByLabel.containsKey(addr.MailingCountry__c)) {
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                    sobjDst.put(strFieldPrefix + 'CountryCode', validCountriesByLabel.get(addr.MailingCountry__c));
+                } else if (validCountriesByCode.containsKey(addr.MailingCountry__c.toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
+                    sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
+                } else {
+                    // UNDONE: DJH: throw exception or store error ourselves?
+                    //addressErrors.put(addr.Id, Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c));
+                }
+            }
+            if (addr.MailingState__c != null) {             
+                if (validStatesByLabel.containsKey(addr.MailingState__c)) {
+                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+                    sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c));
+                } else {
+                    // do lookup by country code and state code.
+                    string strKey = string.valueOf(sobjDst.get(strFieldPrefix + 'CountryCode'));
+                    if (strKey != null) {
+                        strKey += '|' + addr.MailingState__c.toUpperCase();
+                        string strState = mapCountryStateCodeToStateLabel.get(strKey);
+                        if (strState != null) {
+                            sobjDst.put(strFieldPrefix + 'State', strState);
+                            sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
+                        }
+                    }
+                /*****
+                    
+                } else if (validStatesByCode.containsKey(addr.MailingState__c.toUpperCase())) {
+                    acc.put('BillingStateCode', addr.MailingState__c.toUpperCase());
+                    acc.BillingState = validStatesByCode.get(addr.MailingState__c.toUpperCase());
+                } else {
+                    addressErrors.put(addr.Id, 
+                        Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c));
+                *****/
+                }
+            }
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
+    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
+    */ 
+    public static Boolean initValidStateCountryCodes() {
+        if (isStateCountryPicklistsEnabled == true) {
+            return true;
+        }
+
+        // If State & Country Picklists are enabled in the org, build sets of the
+        // valid Labels and Codes for each field to use for validation
+        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
+        isStateCountryPicklistsEnabled = acctFields.containsKey('BillingCountryCode');
+        if (isStateCountryPicklistsEnabled) {
+            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
+            for (Schema.Picklistentry p : countryPLValues) {
+                if (p.isActive()) { 
+                    validCountriesByLabel.put(p.getLabel(), p.getValue()); 
+                    validCountriesByCode.put(p.getValue(), p.getLabel());
+                }
+            }
+            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
+            for (Schema.Picklistentry p : statePLValues) {
+                if (p.isActive()) { 
+                    //UTIL_Debug.debug('**** DJH state code: ' + p.getValue() + ' state label: ' + p.getLabel());
+                    validStatesByLabel.put(p.getLabel(), p.getValue()); 
+                }
+            }
+            
+            // turns out multiple "states" have the same code, when you consider all countries!
+            // so we really needs a map of Country+StateCode -> State Label
+            // Unfortunately, Salesforce doesn't provide a direct way to get the dependency information
+            // between dependent picklists.  but I was able to find some code from
+            // http://titancronus.com/blog/2014/05/01/salesforce-acquiring-dependent-picklists-in-apex/
+            // that solves the problem.  the code i grabbed follows this function.  i changed the
+            // code from returning a map of <controlling label> to a list of <dependent label> to be
+            // a map of <controlling value>|<dependent value> to a single <dependent label>
+            // in our case, this will be a map of "countrycode|statecode" to "statelabel"
+            mapCountryStateCodeToStateLabel = UTIL_Describe.GetDependentOptions('Account', 'BillingCountryCode', 'BillingStateCode');
+        }
+        return isStateCountryPicklistsEnabled;
+    }
+    
 }
