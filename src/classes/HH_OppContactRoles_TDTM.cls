@@ -67,7 +67,6 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         	   strSoql += ' IsClosed = false and ';
         	strSoql += '(Id in :opportunities or Id in :oldOpportunities)';
             
-            list<Opportunity> listOpp = null;
             map<Id, Opportunity> mapIdToOpp = null;
             
             // track which opps are moving between HH accounts
@@ -78,10 +77,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 if (opportunities[i].AccountId != oldOpportunities[i].AccountId) {
 
                     // delay our soql until we know we need it.
-                    if (listOpp == null) {
+                    if (mapIdToOpp == null) {
 			            // query for the Opps of household accounts involved.
-			            listOpp = database.query(strSoql); 
-			            mapIdToOpp = new map<Id, Opportunity>(listOpp);
+			            mapIdToOpp = new map<Id, Opportunity>((list<Opportunity>)database.query(strSoql));
                     }
 
                     if (mapIdToOpp.get(opportunities[i].Id) != null && mapIdToOpp.get(oldOpportunities[i].Id) != null) {
