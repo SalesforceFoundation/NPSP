@@ -39,15 +39,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
     public static Map<Id, String> addressErrors = new Map<Id, String>();
     
-    // hold valid state & country picklist values, if enabled in the Org
-    public static Boolean isStateCountryPicklistsEnabled = false;
-    
     // The maps by convert the Code to a Label and Vice-Versa
     // Required because Salesforce expects either two Codes or two Labels, but not a mix
-    public static Map<String, String> validCountriesByLabel = new Map<String, String>();
-    public static Map<String, String> validStatesByLabel = new Map<String, String>();
-    public static Map<String, String> validCountriesByCode = new Map<String, String>();
-    public static Map<String,string> mapCountryStateCodeToStateLabel = new map<string, string>();
+    private static Map<String, String> validCountriesByLabel = new Map<String, String>();
+    private static Map<String, String> validStatesByLabel = new Map<String, String>();
+    private static Map<String, String> validCountriesByCode = new Map<String, String>();
+    private static Map<String,string> mapCountryStateCodeToStateLabel = new map<string, string>();
     
 
     // the main entry point for TDTM to invoke our trigger handlers.
@@ -357,6 +354,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
         }
         
+        /******
+        DJH: address failures now throw exceptions
+         
         if (addressErrors.size() > 0) {
         	UTIL_Debug.debug('**** DJH addressErrors: ' + addressErrors);
             ERR_Handler errHandler = new ERR_Handler();
@@ -366,7 +366,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
             errHandler.storeErrors();
         }
-
+        ******/
+        
         return mapAccIdHHInfo;
     }
     
@@ -712,9 +713,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @return void
     */ 
     public static void copyAddressStdSObj(sobject sobjSrc, string strFieldPrefixSrc, sobject sobjDst, string strFieldPrefixDst) {
-        // make sure our mapping data is loaded.
-        initValidStateCountryCodes();
-        
         sobjDst.put(strFieldPrefixDst + 'Street', sobjSrc.get(strFieldPrefixSrc + 'Street'));
         sobjDst.put(strFieldPrefixDst + 'City', sobjSrc.get(strFieldPrefixSrc + 'City'));
         sobjDst.put(strFieldPrefixDst + 'PostalCode', sobjSrc.get(strFieldPrefixSrc + 'PostalCode'));
@@ -733,9 +731,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @return void
     */ 
     public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr) {
-        // make sure our mapping data is loaded.
-        initValidStateCountryCodes();
-        
         addr.MailingStreet__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
         addr.MailingCity__c = (string)sobjSrc.get(strFieldPrefixSrc + 'City');
@@ -766,10 +761,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @return void
     */ 
     public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix) {
-
-        // make sure our mapping data is loaded.
-        initValidStateCountryCodes();
-        
         sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
@@ -786,8 +777,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
                     sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
                 } else {
-                    // UNDONE: DJH: throw exception or store error ourselves?
-                    //addressErrors.put(addr.Id, Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c));
+                    throw(new MyException(Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c)));
                 }
             }
             if (addr.MailingState__c != null) {             
@@ -803,31 +793,33 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         if (strState != null) {
                             sobjDst.put(strFieldPrefix + 'State', strState);
                             sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
-                        }
+                        } else {
+	                        throw(new MyException(Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c)));
+	                    }
                     }
-                /*****
-                    
-                } else if (validStatesByCode.containsKey(addr.MailingState__c.toUpperCase())) {
-                    acc.put('BillingStateCode', addr.MailingState__c.toUpperCase());
-                    acc.BillingState = validStatesByCode.get(addr.MailingState__c.toUpperCase());
-                } else {
-                    addressErrors.put(addr.Id, 
-                        Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c));
-                *****/
                 }
             }
         }
     }
 
+    /*******************************************************************************************************
+    * @description specifies whether state and country picklists are enabled in this org.
+    * @return true if enabled;
+    */ 
+    public static Boolean isStateCountryPicklistsEnabled {
+        get {
+        	if (isStateCountryPicklistsEnabled == null)
+                isStateCountryPicklistsEnabled = initValidStateCountryCodes();
+            return isStateCountryPicklistsEnabled;
+        }
+        private set;
+    }
 
     /*******************************************************************************************************
     * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
     * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
     */ 
-    public static Boolean initValidStateCountryCodes() {
-        if (isStateCountryPicklistsEnabled == true) {
-            return true;
-        }
+    private static Boolean initValidStateCountryCodes() {
 
         // If State & Country Picklists are enabled in the org, build sets of the
         // valid Labels and Codes for each field to use for validation

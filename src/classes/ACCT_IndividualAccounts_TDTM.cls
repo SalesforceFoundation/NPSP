@@ -83,11 +83,15 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
-               contacts = [select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                    Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
-                    Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,
-                    MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
-                    Phone, Fax from Contact where Id IN :contacts];
+               string strSoql = 'select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,' +
+                    'Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,' +
+                    'firstname, lastname, OwnerId, Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,' +
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ' + 
+                    'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry,'; 
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
+                strSoql += 'Phone, Fax from Contact where Id IN :contacts';
+                contacts = database.query(strSoql);
             }        
                         
             // AFTER DELETE

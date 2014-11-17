@@ -39,11 +39,6 @@ public with sharing class ADDR_Validator_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
     
-
-    // If State & Country Picklists are enabled in the org, build sets of the
-    // valid Labels and Codes for each field to use for validation
-    private static boolean isStateCountryPicklistsEnabled = ADDR_Addresses_TDTM.initValidStateCountryCodes();
-    
     public static Addr_Verification_Settings__c createDefaultSettings() {
         // use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
@@ -99,7 +94,7 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        if (isStateCountryPicklistsEnabled)            
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)            
             System.assertEquals('California', contact.MailingState);
         else
             System.assertEquals('CA', contact.MailingState);
