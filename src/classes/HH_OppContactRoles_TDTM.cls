@@ -67,19 +67,24 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         	   strSoql += ' IsClosed = false and ';
         	strSoql += '(Id in :opportunities or Id in :oldOpportunities)';
             
-	        // query for the Opps of household accounts involved.
-	        list<Opportunity> listOpp = database.query(strSoql); 
-	        map<Id, Opportunity> mapIdToOpp = new map<Id, Opportunity>(listOpp);
-
+            map<Id, Opportunity> mapIdToOpp = null;
+            
             // track which opps are moving between HH accounts
             list<Opportunity> listOppToProcess = new list<Opportunity>();
 
             // see if we have any Opps who have changed Household Accounts.
             for (integer i = 0; i < opportunities.size(); i++) {
-                if (opportunities[i].AccountId != oldOpportunities[i].AccountId &&
-                    mapIdToOpp.get(opportunities[i].Id) != null &&
-                    mapIdToOpp.get(oldOpportunities[i].Id) != null) {
+                if (opportunities[i].AccountId != oldOpportunities[i].AccountId) {
+
+                    // delay our soql until we know we need it.
+                    if (mapIdToOpp == null) {
+			            // query for the Opps of household accounts involved.
+			            mapIdToOpp = new map<Id, Opportunity>((list<Opportunity>)database.query(strSoql));
+                    }
+
+                    if (mapIdToOpp.get(opportunities[i].Id) != null && mapIdToOpp.get(oldOpportunities[i].Id) != null) {
                         listOppToProcess.add(opportunities[i]);
+                    }
                 }
             }
             // bail out if the hh accounts did not change.

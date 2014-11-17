@@ -1096,6 +1096,22 @@
         <value>The NPSP Global Scheduled class is not scheduled.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsOCRDupPrimary</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsOCRDupPrimary</shortDescription>
+        <value>There were {0} opportunities found that had more than one Opportunity Contact Role marked as Primary.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsOCRDupPrimaryValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsOCRDupPrimaryValid</shortDescription>
+        <value>No Opportunities were found with multiple Primary Opportunity Contact Roles.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsPaymentMappingBadDataTypes</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1262,6 +1278,14 @@
         <protected>false</protected>
         <shortDescription>healthLabelNone</shortDescription>
         <value>(none)</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelOCRCheck</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelOCRCheck</shortDescription>
+        <value>Opportunity Contact Roles</value>
     </labels>
     <labels>
         <fullName>healthLabelPassed</fullName>
@@ -1501,6 +1525,22 @@
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
         <value>You must schedule the class UTIL_MasterSchedulable to run daily with the job name {0}.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionOCRDupPrimary</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionOCRDupPrimary</shortDescription>
+        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  Use a report to find the Opportunities with mulitple Primary OpportunityContactRoles.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionOCRException</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionOCRException</shortDescription>
+        <value>If you have a large amount of Opportunties and Opportunity Contact Roles, over 50,000, you can safely ignore any error dealing with soql limits.</value>
     </labels>
     <labels>
         <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>
