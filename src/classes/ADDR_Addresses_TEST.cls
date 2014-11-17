@@ -1682,7 +1682,7 @@ private with sharing class ADDR_Addresses_TEST {
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
         for (Contact con : listConT) {
-            con.MailingStreet = 'new street\nsecond line';
+            con.MailingStreet = 'new street\r\nsecond line';
             con.MailingCity = 'new city';
         }
         insert listConT;        
@@ -1701,7 +1701,7 @@ private with sharing class ADDR_Addresses_TEST {
         
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
-            system.assertEquals('new street\nsecond line', con.MailingStreet);
+            system.assertEquals('new street\r\nsecond line', con.MailingStreet);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
@@ -1743,8 +1743,8 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assertEquals('New Default Street\nSecond Line', con.MailingStreet);
-            system.assertEquals('New Default Street\nSecond Line', acc.BillingStreet);
+            system.assertEquals('New Default Street\r\nSecond Line', con.MailingStreet);
+            system.assertEquals('New Default Street\r\nSecond Line', acc.BillingStreet);
         }
         
     }
@@ -1766,7 +1766,7 @@ private with sharing class ADDR_Addresses_TEST {
         // modify some of the account addresses directly
         for (integer i = 0; i < cHH; i++) {
             Account acc = listAccT[i];
-            acc.BillingStreet = 'Direct Street Edit\nSecond Line';
+            acc.BillingStreet = 'Direct Street Edit\r\nSecond Line';
             acc.BillingCity = 'Direct City Edit';
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -1780,8 +1780,8 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assertEquals('Direct Street Edit\nSecond Line', acc.BillingStreet);
-            system.assertEquals('Direct Street Edit\nSecond Line', con.MailingStreet);
+            system.assertEquals('Direct Street Edit\r\nSecond Line', acc.BillingStreet);
+            system.assertEquals('Direct Street Edit\r\nSecond Line', con.MailingStreet);
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }

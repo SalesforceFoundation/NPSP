@@ -683,9 +683,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
         if (addr.MailingStreet__c == null)
             return;
-        integer ich = addr.MailingStreet__c.indexOf('\n');
+        integer ich = addr.MailingStreet__c.indexOf('\r\n');
         if (ich > -1) {
-            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
             addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
         }
     }
@@ -693,7 +693,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     public static string getMultilineStreet(Address__c addr) {
         string str = addr.MailingStreet__c;
         if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0)
-            str += '\n' + addr.MailingStreet2__c;
+            str += '\r\n' + addr.MailingStreet2__c;
         return str;
     }
 }
