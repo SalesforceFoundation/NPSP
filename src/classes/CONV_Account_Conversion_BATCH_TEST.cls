@@ -227,6 +227,11 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         h.npo02__MailingCity__c = null;
         h.npo02__MailingState__c = null;
         update h;
+        
+        h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        system.assertEquals(null, h.npo02__MailingStreet__c);
+        system.assertEquals(null, h.npo02__MailingCity__c);
+        system.assertEquals(null, h.npo02__MailingState__c);
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
