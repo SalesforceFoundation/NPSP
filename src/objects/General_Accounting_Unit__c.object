@@ -65,9 +65,9 @@
     <fields>
         <fullName>Average_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The average of all allocations of all time to this General Accounting Unit.</description>
+        <description>The average of all allocations of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The average of all allocations of all time to this General Accounting Unit.</inlineHelpText>
+        <inlineHelpText>The average of all allocations of all time to this general accounting unit.</inlineHelpText>
         <label>Average Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -90,9 +90,9 @@
     </fields>
     <fields>
         <fullName>First_Allocation_Date__c</fullName>
-        <description>The first Opportunity Close Date of an Allocation associated with this General Accounting Unit.</description>
+        <description>The first Opportunity Close Date of an allocation associated with this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The first Opportunity Close Date of an Allocation associated with this General Accounting Unit.</inlineHelpText>
+        <inlineHelpText>The first Opportunity Close Date of an allocation associated with this general accounting unit.</inlineHelpText>
         <label>First Allocation Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -102,9 +102,9 @@
     <fields>
         <fullName>Largest_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The largest allocation of all time to this General Accounting Unit.</description>
+        <description>The largest allocation of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The largest allocation of all time to this General Accounting Unit.</inlineHelpText>
+        <inlineHelpText>The largest allocation of all time to this general accounting unit.</inlineHelpText>
         <label>Largest Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -115,9 +115,9 @@
     </fields>
     <fields>
         <fullName>Last_Allocation_Date__c</fullName>
-        <description>The last Opportunity Close Date of an Allocation associated with this General Accounting Unit.</description>
+        <description>The last Opportunity Close Date of an allocation associated with this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The last Opportunity Close Date of an Allocation associated with this General Accounting Unit.</inlineHelpText>
+        <inlineHelpText>The last Opportunity Close Date of an allocation associated with this general accounting unit.</inlineHelpText>
         <label>Last Allocation Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -127,9 +127,9 @@
     <fields>
         <fullName>Number_of_Allocations_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of Allocations of Opportunities in a Closed and Won stage in the last N days. The value of N can be modified in settings.</description>
+        <description>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of Allocations of Opportunities in a Closed and Won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
         <label>Number of Allocations Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -142,9 +142,9 @@
     <fields>
         <fullName>Number_of_Allocations_Last_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of Allocations of Opportunities in a Closed and Won stage last year.</description>
+        <description>Total number of allocations of opportunities in a closed and won stage last year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of Allocations of Opportunities in a Closed and Won stage last year.</inlineHelpText>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage last year.</inlineHelpText>
         <label>Number of Allocations Last Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -157,9 +157,9 @@
     <fields>
         <fullName>Number_of_Allocations_This_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of Allocations of Opportunities in a Closed and Won stage this year.</description>
+        <description>Total number of allocations of opportunities in a closed and won stage this year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of Allocations of Opportunities in a Closed and Won stage this year.</inlineHelpText>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage this year.</inlineHelpText>
         <label>Number of Allocations This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -172,9 +172,9 @@
     <fields>
         <fullName>Number_of_Allocations_Two_Years_Ago__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of Allocations of Opportunities in a Closed and Won stage two years ago.</description>
+        <description>Total number of allocations of opportunities in a closed and won stage two years ago.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of Allocations of Opportunities in a Closed and Won stage two years ago.</inlineHelpText>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage two years ago.</inlineHelpText>
         <label>Number of Allocations Two Years Ago</label>
         <precision>18</precision>
         <required>false</required>
@@ -187,9 +187,9 @@
     <fields>
         <fullName>Smallest_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The smallest allocation of all time to this General Accounting Unit.</description>
+        <description>The smallest allocation of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The smallest allocation of all time to this General Accounting Unit.</inlineHelpText>
+        <inlineHelpText>The smallest allocation of all time to this general accounting unit.</inlineHelpText>
         <label>Smallest Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -201,9 +201,9 @@
     <fields>
         <fullName>Total_Allocations_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all Allocations of Opportunities in a Closed and Won stage in the last N days. The value of N can be modified in settings.</description>
+        <description>Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all Allocations of Opportunities in a Closed and Won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
         <label>Total Allocations Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -215,9 +215,9 @@
     <fields>
         <fullName>Total_Allocations_Last_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all Allocations of Opportunities in a Closed and Won stage last year.</description>
+        <description>Sum total of all allocations of opportunities in a closed and won stage last year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all Allocations of Opportunities in a Closed and Won stage last year.</inlineHelpText>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage last year.</inlineHelpText>
         <label>Total Allocations Last Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -229,9 +229,9 @@
     <fields>
         <fullName>Total_Allocations_This_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all Allocations of Opportunities in a Closed and Won stage this year.</description>
+        <description>Sum total of all allocations of opportunities in a closed and won stage this year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all Allocations of Opportunities in a Closed and Won stage this year.</inlineHelpText>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage this year.</inlineHelpText>
         <label>Total Allocations This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -243,9 +243,9 @@
     <fields>
         <fullName>Total_Allocations_Two_Years_Ago__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all Allocations of Opportunities in a Closed and Won stage two years ago.</description>
+        <description>Sum total of all allocations of opportunities in a closed and won stage two years ago.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all Allocations of Opportunities in a Closed and Won stage two years ago.</inlineHelpText>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage two years ago.</inlineHelpText>
         <label>Total Allocations Two Years Ago</label>
         <precision>18</precision>
         <required>false</required>
@@ -257,9 +257,9 @@
     <fields>
         <fullName>Total_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all Allocations of Opportunities in a Closed and Won stage.</description>
+        <description>Sum total of all allocations of opportunities in a closed and won stage.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all Allocations of Opportunities in a Closed and Won stage.</inlineHelpText>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage.</inlineHelpText>
         <label>Total Allocations</label>
         <precision>18</precision>
         <required>false</required>
@@ -271,9 +271,9 @@
     <fields>
         <fullName>Total_Number_of_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of Allocations of Opportunities in a Closed and Won stage.</description>
+        <description>Total number of allocations of opportunities in a closed and won stage.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of Allocations of Opportunities in a Closed and Won stage.</inlineHelpText>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage.</inlineHelpText>
         <label>Total Number of Allocations</label>
         <precision>18</precision>
         <required>false</required>

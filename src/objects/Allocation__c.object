@@ -52,9 +52,9 @@
     <enableReports>true</enableReports>
     <fields>
         <fullName>Amount__c</fullName>
-        <description>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</description>
+        <description>Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Amount of the Opportunity or Payment to allocate to this Fund. Leave blank for the total amount or remaining unallocated amount.</inlineHelpText>
+        <inlineHelpText>Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.</inlineHelpText>
         <label>Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -65,10 +65,12 @@
     <fields>
         <fullName>Campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <description>Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.</inlineHelpText>
         <label>Campaign</label>
         <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipLabel>GAU Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -77,12 +79,12 @@
     <fields>
         <fullName>General_Accounting_Unit__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
-        <description>The General Accounting Unit to attribute this allocation.</description>
+        <description>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The General Accounting Unit to attribute this allocation.</inlineHelpText>
+        <inlineHelpText>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</inlineHelpText>
         <label>General Accounting Unit</label>
         <referenceTo>General_Accounting_Unit__c</referenceTo>
-        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipLabel>GAU Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
         <required>true</required>
         <trackTrending>false</trackTrending>
@@ -91,10 +93,12 @@
     <fields>
         <fullName>Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <description>Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation&apos;s general accounting unit.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation&apos;s general accounting unit.</inlineHelpText>
         <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipLabel>GAU Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -102,9 +106,9 @@
     </fields>
     <fields>
         <fullName>Percent__c</fullName>
-        <description>Percent of Opportunity or Payment to allocate to this fund.</description>
+        <description>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Percent of Opportunity or Payment to allocate to this fund.</inlineHelpText>
+        <inlineHelpText>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</inlineHelpText>
         <label>Percent</label>
         <precision>3</precision>
         <required>false</required>
@@ -115,24 +119,24 @@
     <fields>
         <fullName>Recurring_Donation__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</description>
+        <description>Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Optionally attributes allocations to a recurring donation. All new Opportunities created with this recurring donation schedule will contain automatically be allocated in the same way.</inlineHelpText>
+        <inlineHelpText>Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.</inlineHelpText>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
-        <relationshipLabel>Allocations</relationshipLabel>
+        <relationshipLabel>GAU Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
-    <label>Allocation</label>
+    <label>GAU Allocation</label>
     <nameField>
         <displayFormat>ALL-{0}</displayFormat>
-        <label>Allocation Name</label>
+        <label>GAU Allocation Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Allocations</pluralLabel>
+    <pluralLabel>GAU Allocations</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <startsWith>Vowel</startsWith>
