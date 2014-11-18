@@ -2026,7 +2026,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpDefaultAllocationsEnabled</shortDescription>
-        <value>Enables the automatic creation and management of Allocation records to the default General Accounting Unit. This feature enables better reporting on the default General Accounting Unit, but uses more data storage.</value>
+        <value>Enables the automatic creation and management of GAU Allocation records to the default General Accounting Unit. This feature enables better reporting on the default General Accounting Unit, but uses more data storage.</value>
     </labels>
     <labels>
         <fullName>stgHelpDefaultGAU</fullName>
@@ -2518,7 +2518,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupExcludeAlloOppRecType</shortDescription>
-        <value>Names of Opportunity Record Types to exclude from statistics when rolling up Allocations.</value>
+        <value>Names of Opportunity Record Types to exclude from statistics when rolling up GAU Allocations.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupExcludeAlloOppType</fullName>
@@ -2703,7 +2703,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
-        <value>Allocations Rollup Settings</value>
+        <value>GAU Allocations Rollup Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAllocationsSettings</fullName>
@@ -3143,7 +3143,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgNavAllocations</shortDescription>
-        <value>Allocations</value>
+        <value>GAU Allocations</value>
     </labels>
     <labels>
         <fullName>stgNavBDE</fullName>

@@ -50,13 +50,13 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
-    <label>Fund</label>
+    <label>DEPRECATED-Fund</label>
     <nameField>
-        <label>Fund Name</label>
+        <label>DEPRECATED-Fund Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Funds</pluralLabel>
+    <pluralLabel>DEPRECATED-Funds</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>
