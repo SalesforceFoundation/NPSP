@@ -750,7 +750,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // lookup state if needed, by country code and state code.
             string strStateCode = (string)sobjSrc.get(strFieldPrefixSrc + 'StateCode');
             if (addr.MailingState__c == null && strCountryCode != null && strStateCode != null) {
-                addr.MailingState__c = mapCountryStateCodeToStateLabel.get(strCountryCode + '|' + strStateCode);
+                //UNDONE: addr.MailingState__c = mapCountryStateCodeToStateLabel.get(strCountryCode + '|' + strStateCode);
+                addr.MailingState__c = strStateCode;
             }
         }    
     }
@@ -777,7 +778,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
                     sobjDst.put(strFieldPrefix + 'Country', validCountriesByCode.get(addr.MailingCountry__c.toUpperCase()));
                 } else {
-                    throw(new MyException(Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c)));
+                    //throw(new MyException(Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingCountry__c)));
                 }
             }
             if (addr.MailingState__c != null) {             
@@ -785,6 +786,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
                     sobjDst.put(strFieldPrefix + 'StateCode', validStatesByLabel.get(addr.MailingState__c));
                 } else {
+                	// too expensive for us to create the map of CountryCode|StateCode to StateLabel
+                	// so we will just try to save any state that isn't a label as a code.
+                	sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
+                	/**********
                     // do lookup by country code and state code.
                     string strKey = string.valueOf(sobjDst.get(strFieldPrefix + 'CountryCode'));
                     if (strKey != null) {
@@ -797,6 +802,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	                        throw(new MyException(Label.Address_StateCountry_Invalid_Error.replace('{0}', addr.MailingState__c)));
 	                    }
                     }
+                ******/
                 }
             }
         }
@@ -821,11 +827,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     */ 
     private static Boolean initValidStateCountryCodes() {
 
+        UTIL_Debug.debugWithInfo('****DJH entering initValidStateCountryCode');
         // If State & Country Picklists are enabled in the org, build sets of the
         // valid Labels and Codes for each field to use for validation
         map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
-        isStateCountryPicklistsEnabled = acctFields.containsKey('BillingCountryCode');
-        if (isStateCountryPicklistsEnabled) {
+        boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
+        if (isCodesEnabled) {
             list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
             for (Schema.Picklistentry p : countryPLValues) {
                 if (p.isActive()) { 
@@ -836,7 +843,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
             for (Schema.Picklistentry p : statePLValues) {
                 if (p.isActive()) { 
-                    //UTIL_Debug.debug('**** DJH state code: ' + p.getValue() + ' state label: ' + p.getLabel());
+                    UTIL_Debug.debug('**** DJH state code: ' + p.getValue() + ' state label: ' + p.getLabel());
                     validStatesByLabel.put(p.getLabel(), p.getValue()); 
                 }
             }
@@ -850,9 +857,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // code from returning a map of <controlling label> to a list of <dependent label> to be
             // a map of <controlling value>|<dependent value> to a single <dependent label>
             // in our case, this will be a map of "countrycode|statecode" to "statelabel"
+            UTIL_Debug.debugWithInfo('****DJH calling GetDependentOptions');
             mapCountryStateCodeToStateLabel = UTIL_Describe.GetDependentOptions('Account', 'BillingCountryCode', 'BillingStateCode');
+            UTIL_Debug.debugWithInfo('****DJH returning GetDependentOptions');
         }
-        return isStateCountryPicklistsEnabled;
+
+        UTIL_Debug.debugWithInfo('****DJH leaving initValidStateCountryCode');
+        return isCodesEnabled;
     }
     
 }

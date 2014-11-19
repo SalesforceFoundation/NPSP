@@ -501,8 +501,10 @@ public with sharing class UTIL_Describe {
             Schema.PicklistEntry dep_entry = dep_ple[pDependentIndex];
             objEntries.add(dep_entry);            
         } 
-        //serialize once        
+        //serialize once  
+        UTIL_Debug.debugWithInfo('****DJH calling JSON.deserialize');
         objDS_Entries = (List<TPicklistEntry>)JSON.deserialize(JSON.serialize(objEntries), List<TPicklistEntry>.class);
+        UTIL_Debug.debugWithInfo('****DJH returned JSON.deserialize');
         List<Integer> validIndexes;
         for (TPicklistEntry objDepPLE : objDS_Entries){
             //if valid for is empty, skip    
@@ -510,7 +512,9 @@ public with sharing class UTIL_Describe {
                 continue;
             }
             //get the test for the controlling indexes
+        UTIL_Debug.debugWithInfo('****DJH calling testBits');
             validIndexes = BitSetInstance.testBits(objDepPLE.validFor,lstControllingIndexes);
+        UTIL_Debug.debugWithInfo('****DJH returned testBits');
             for (Integer validIndex : validIndexes){                
                 //get the label
                 String pControllingValue = ctrl_ple[validIndex].getValue();
