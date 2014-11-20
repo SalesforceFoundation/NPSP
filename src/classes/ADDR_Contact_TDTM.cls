@@ -34,8 +34,6 @@
 */
 public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
-    public static Map<Id, String> addressErrors = new Map<Id, String>();
-
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
@@ -162,15 +160,6 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (listConCreateAddr.size() > 0)
             createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
             
-        if (addressErrors.size() > 0) {
-            ERR_Handler errHandler = new ERR_Handler();
-            for (Id addrId : addressErrors.keySet()) {
-                errHandler.queueError('Address__c', addrId, addressErrors.get(addrId), 
-                    'Address Update Error', 'ADDR_Contact_TDTM');
-            }
-            errHandler.storeErrors();
-        }
-
         return dmlWrapper;    
     }
 

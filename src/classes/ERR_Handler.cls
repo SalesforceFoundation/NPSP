@@ -117,15 +117,22 @@ public with sharing class ERR_Handler {
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent.
-	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);*/
+		                if(sObjects != null && sObjects.size() > i)
+		                    addErrorMessage(sObjects[i], message); */
 	                if(ApexPages.currentPage() != null)
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
+	                   
+                    if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
+                        UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
+                        throw(new MyException(err.Full_Message__c));
+                    }
+
 	        	}
 	        }
     	}
     	return errorsExist;
     }
+    private class MyException extends Exception {}
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
     public static void processError(Exception e, ERR_Handler.Context context) {
@@ -204,6 +211,9 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
+    /****************
+    not used, and not really standard usage?
+    
     public void queueError(string objectType, Id objId, String errMessage, String errType, String stkTrace) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
@@ -214,7 +224,8 @@ public with sharing class ERR_Handler {
         error.Stack_Trace__c = stkTrace;
         errors.add(error);
     }
-
+    *************/
+    
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
