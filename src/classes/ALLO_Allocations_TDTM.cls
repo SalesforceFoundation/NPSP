@@ -122,7 +122,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //don't do anything on insert if we don't have an amount
                 if (opp.Amount == null)
                     continue;
-                //if this new opportunity has a Campaign, add to list for campaign processing
+                //if this new opportunity has a Campaign or RD, add to list for processing
                 else if (opp.CampaignId != null || opp.npe03__Recurring_Donation__c != null)
                     listOppsForProcessing.add(opp);
                 //create a default allocation for the total amount, only if there's no possibility of other allocations from related objects
@@ -312,8 +312,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 else 
                     wrap = mapWrapper.get(opp.CampaignId);
 
-                //multi currency field is cloned here
-                list<Allocation__c> listAlloForInsert = wrap.listAllo.deepclone();
+                list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
+                
+                //add only allocations to active GAUs
+                for (Allocation__c allo : wrap.listAllo.deepclone())
+                    if (allo.General_Accounting_Unit__r.Active__c)
+                        listAlloForInsert.add(allo);
 
                 decimal remainder = opp.Amount;
 
@@ -383,7 +387,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (mapWrapper.containsKey(opp.id)) {
                 alloWrapper oppWrap = mapWrapper.get(opp.id);
 
-                system.debug('LookHere!: ' + oppWrap);
                 //null amount: delete all associated allocations
                 if (opp.Amount == null) {
                     dmlWrapper.objectsToDelete.addAll((list<sObject>)oppWrap.listAllo);
@@ -563,13 +566,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
             
         string alloQueryString = 'SELECT Id, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' + 
-            'Amount__c, Percent__c, General_Accounting_Unit__c';
+            'Amount__c, Percent__c, General_Accounting_Unit__c, General_Accounting_Unit__r.Active__c';
         
         //query for multicurrency string if multicurrency org
         if (ALLO_Multicurrency_TDTM.isMultiCurrency())
             alloQueryString += ', CurrencyIsoCode';
 
-        alloQueryString += ' FROM Allocation__c WHERE Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId';
+        alloQueryString += ' FROM Allocation__c WHERE (Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
+        //alloQueryString += ' AND General_Accounting_Unit__r.Active__c = TRUE';
 
         for (Allocation__c allo : database.query(alloQueryString)) {
         
