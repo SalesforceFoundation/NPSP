@@ -48,7 +48,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         get {
             if (listSOGeneralAccountingUnitIds == null) {
                 listSOGeneralAccountingUnitIds = new list<SelectOption>();
-                list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c ORDER BY Name];
+                list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c WHERE Active__c = TRUE ORDER BY Name];
                 if (listGAU.isEmpty()) {
                     listSOGeneralAccountingUnitIds.add(new SelectOption('', Label.stgLabelNone, true));
                 } else for (General_Accounting_Unit__c gau : listGAU) {

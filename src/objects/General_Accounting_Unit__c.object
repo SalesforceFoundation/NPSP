@@ -297,6 +297,7 @@
     <namedFilters>
         <fullName>nf_01Io00000014Jd8EAE_00No0000007el11EAA</fullName>
         <active>true</active>
+        <errorMessage>Allocations can only be assigned to active general accounting units. Allocations assigned to inactive general accounting units cannot be modified.</errorMessage>
         <field>Allocation__c.General_Accounting_Unit__c</field>
         <filterItems>
             <field>General_Accounting_Unit__c.Active__c</field>
