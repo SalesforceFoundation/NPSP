@@ -102,8 +102,12 @@ public with sharing class TDTM_TriggerHandler {
             // to propogate to the household account and contacts, but may fail due to State & Country picklists.
             // we don't know which object on the list caused the problem, so we just add the error to the first.
             // this should cause the ui to display one error message, rather than repeating the same error for each object.
-            if (isPropogateErrorsFromTrigger)
-                newlist[0].addError(e.getMessage());
+            if (isPropogateErrorsFromTrigger) {
+                if (newlist != null && newlist.size() > 0)
+                    newlist[0].addError(e.getMessage());
+                else if (oldlist != null && oldlist.size() > 0)
+                    oldlist[0].addError(e.getMessage());
+            }
             
             // but we do want our tests to fail if they encountered this error!
             // we do need to allow some specific tests that are testing our error handling
