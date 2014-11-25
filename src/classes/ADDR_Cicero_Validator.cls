@@ -127,7 +127,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                    addr.Ambiguous__c = true;
 	                }             
 		            // find the congressional legislative district
-		            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
+		            if (listCandidates.size() == 1 || (listCandidates.size() > 1 && !settings.Reject_Ambiguous_Addresses__c)) {
 	                    Candidates candidate = listCandidates[0];
 	                    for (Districts district : candidate.districts) {
 		                    if (district.district_type == 'NATIONAL_LOWER') {
