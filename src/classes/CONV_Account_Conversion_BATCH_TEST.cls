@@ -161,7 +161,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
         Id indID = [select id from Account where Name = 'Individual'].id;
 
@@ -205,7 +205,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
 
         c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
@@ -215,7 +215,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
                                 MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
-                                MailingPostalCode = '21230', MailingState = 'MD', npo02__TotalOppAmount__c = 100.00,
+                                MailingPostalCode = '21230', MailingState = 'Maryland', MailingCountry = 'United States', npo02__TotalOppAmount__c = 100.00,
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
 
@@ -227,6 +227,11 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         h.npo02__MailingCity__c = null;
         h.npo02__MailingState__c = null;
         update h;
+        
+        h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        system.assertEquals(null, h.npo02__MailingStreet__c);
+        system.assertEquals(null, h.npo02__MailingCity__c);
+        system.assertEquals(null, h.npo02__MailingState__c);
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -269,7 +274,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
 
         Account a = new Account(Name = 'NonIndividualAccount');

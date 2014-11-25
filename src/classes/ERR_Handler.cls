@@ -117,15 +117,25 @@ public with sharing class ERR_Handler {
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent.
-	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);*/
+                     It is also worth noting that Salesforce only allows one to do addError on an object in the trigger handler. So
+                     if this object is actually not in the trigger, but one that a trigger object is trying to modify, setting addError
+                     on this related object will cause an Exception from Salesforce.
+		                if(sObjects != null && sObjects.size() > i)
+		                    addErrorMessage(sObjects[i], message); */
 	                if(ApexPages.currentPage() != null)
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
+	                   
+                    if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
+                        UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
+                        throw(new PropogateException(err.Full_Message__c));
+                    }
+
 	        	}
 	        }
     	}
     	return errorsExist;
     }
+    private class PropogateException extends Exception {}
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
     public static void processError(Exception e, ERR_Handler.Context context) {
@@ -203,17 +213,6 @@ public with sharing class ERR_Handler {
 		error.Stack_Trace__c = stacktrace + e.getStackTraceString();
 		return error;
 	}
-
-    public void queueError(string objectType, Id objId, String errMessage, String errType, String stkTrace) {
-        Error__c error = new Error__c();
-        error.Datetime__c = System.now();
-        error.Object_Type__c = objectType;
-        error.Record_URL__c = getRecordURL(null, objId);
-        error.Error_Type__c = errType;
-        error.Full_Message__c = errMessage;
-        error.Stack_Trace__c = stkTrace;
-        errors.add(error);
-    }
 
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
