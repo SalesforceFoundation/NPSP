@@ -52,9 +52,9 @@ public with sharing class HH_Households_TEST {
             
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -111,9 +111,9 @@ public with sharing class HH_Households_TEST {
             
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -164,9 +164,9 @@ public with sharing class HH_Households_TEST {
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -213,9 +213,9 @@ public with sharing class HH_Households_TEST {
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
 
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -252,9 +252,9 @@ public with sharing class HH_Households_TEST {
         
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -318,9 +318,9 @@ public with sharing class HH_Households_TEST {
         
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -620,9 +620,9 @@ public with sharing class HH_Households_TEST {
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         String lastname = 'SmithForTest99';
         
         List<Contact> cons = new List<contact>();

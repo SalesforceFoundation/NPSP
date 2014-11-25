@@ -45,10 +45,10 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
                 
         npo02__Household__c hh = new npo02__Household__c(
            npo02__MailingStreet__c = '123 Main St.',
-           npo02__MailingState__c = 'PA',
+           npo02__MailingState__c = 'Pennsylvania',
            npo02__MailingPostalCode__c = '18940',
            npo02__MailingCity__c = 'Newtown',
-           npo02__MailingCountry__c = 'USA'
+           npo02__MailingCountry__c = 'United States'
         );        
         insert hh;
         
@@ -56,10 +56,10 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
            npo02__Household__c = hh.id,
            LastName = 'TestLName',
            MailingStreet = '1 Oak Lane',
-           MailingState = 'WA',
+           MailingState = 'British Columbia',
            MailingPostalCode = '98122',
-           MailingCity = 'Seattle',
-           MailingCountry = 'CAN'
+           MailingCity = 'Vancouver',
+           MailingCountry = 'Canada'
         );        
         insert cc;
         

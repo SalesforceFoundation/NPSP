@@ -83,11 +83,15 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                // requery to get correct Account values (and all the other fields we will look at)
-               contacts = [select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,
-                    Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,firstname, lastname, OwnerId,
-                    Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,
-                    MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, 
-                    Phone, Fax from Contact where Id IN :contacts];
+               string strSoql = 'select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,' +
+                    'Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,' +
+                    'firstname, lastname, OwnerId, Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,' +
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ' + 
+                    'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry,'; 
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
+                strSoql += 'Phone, Fax from Contact where Id IN :contacts';
+                contacts = database.query(strSoql);
             }        
                         
             // AFTER DELETE
@@ -477,15 +481,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }
                 a.Phone = c.Phone;
                 a.Fax = c.Fax;
-                a.BillingStreet = c.MailingStreet;
-                a.BillingCity = c.MailingCity;
-                a.BillingState = c.MailingState;
-                a.BillingPostalCode = c.MailingPostalCode;
-                a.BillingCountry = c.MailingCountry;
-                a.ShippingStreet = c.OtherStreet;
-                a.ShippingCity = c.OtherCity;
-                a.ShippingState = c.OtherState;
-                a.ShippingCountry = c.OtherCountry;
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 if (rtIdAcccount != null) {                
                     a.put('RecordTypeID', rtIdAcccount);
@@ -544,16 +542,9 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             //if any address data has changed on the contact, push it all to the Account
             {
                 // Update Account fields
-                a.BillingStreet = c.MailingStreet;
-                a.BillingCity = c.MailingCity;
-                a.BillingState = c.MailingState;
-                a.BillingPostalCode = c.MailingPostalCode;
-                a.BillingCountry = c.MailingCountry;
-                a.ShippingStreet = c.OtherStreet;
-                a.ShippingCity = c.OtherCity;
-                a.ShippingState = c.OtherState;
-                a.ShippingPostalCode = c.OtherPostalCode;
-                a.ShippingCountry = c.OtherCountry;  
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+
                 if (a.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)               
                     a.Name = strNameOne2OneAccountForContact(c);
                 // HH Account naming updates handled seperately to deal with asyncronous naming

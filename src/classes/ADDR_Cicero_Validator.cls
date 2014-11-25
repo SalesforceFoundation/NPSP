@@ -38,7 +38,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private String strAuthToken;
     private String strEndPoint;
     private Double dblTimeout;
-
+    
     public String getServiceName() {
     	return 'Cicero';
     }
@@ -87,9 +87,9 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         if (addr.MailingState__c != null)
             strRequest += 'search_state=' + addr.MailingState__c.replace(' ', '+') + '&';
         if (addr.MailingPostalCode__c != null)
-            strRequest += 'search_postal=' + addr.MailingPostalCode__c + '&';
+            strRequest += 'search_postal=' + addr.MailingPostalCode__c.replace(' ', '+') + '&';
         if (addr.MailingCountry__c != null)
-            strRequest += 'search_country=' + addr.MailingCountry__c + '&';
+            strRequest += 'search_country=' + addr.MailingCountry__c.replace(' ', '+') + '&';
 
         try {
 	        if (strAuthToken != null && strEndPoint != null) {
@@ -108,7 +108,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                response = ADDR_Cicero_Test.respond(req);
 	            else
 	                response = h.send(req);
-	            //UTIL_Debug.debug('****CICERO RESPONDS WITH: ' + response.getBody());
+	            UTIL_Debug.debug('****CICERO RESPONDS WITH Status: ' + response.getStatus() + ' StatusCode: ' + response.getStatusCode());
+	            UTIL_Debug.debug('****CICERO response.body: ' + response.getBody());
+	            if (response.getStatusCode() != 200) {
+	            	string strError = response.getStatusCode() + ': ' + response.getStatus() + '\r\n' + response.getBody();
+	            	throw(new CiceroException(strError));
+	            }
 	            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
 	            Object objResp = JSON.deserializeUntyped(response.getBody());
 	            addr.API_Response__c = JSON.serializePretty(objResp);
@@ -122,7 +127,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                    addr.Ambiguous__c = true;
 	                }             
 		            // find the congressional legislative district
-		            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
+		            if (listCandidates.size() == 1 || (listCandidates.size() > 1 && !settings.Reject_Ambiguous_Addresses__c)) {
 	                    Candidates candidate = listCandidates[0];
 	                    for (Districts district : candidate.districts) {
 		                    if (district.district_type == 'NATIONAL_LOWER') {

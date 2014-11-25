@@ -29,6 +29,11 @@
 */
 public with sharing class TDTM_TriggerHandler {
 
+    // a public flag to allow code to specify that they want errors propogated from the trigger
+    // to Salesforce, rather than just logged.  This allows DML to produce errors that get
+    // displayed in the standard ui, rather than just logged.
+    public static boolean isPropogateErrorsFromTrigger = false;
+    
     private static Boolean defaultRecordsInserted = false;
     
     public static boolean suppressDebugAssertAfterErrorLogging = false;
@@ -92,6 +97,17 @@ public with sharing class TDTM_TriggerHandler {
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
             will be rolled back by the platform, and our error record won't be saved or error notifications sent. **/ 
+            
+            // some code may want the DML to be rolled back!  eg, an Address object update, than then needs
+            // to propogate to the household account and contacts, but may fail due to State & Country picklists.
+            // we don't know which object on the list caused the problem, so we just add the error to the first.
+            // this should cause the ui to display one error message, rather than repeating the same error for each object.
+            if (isPropogateErrorsFromTrigger) {
+                if (newlist != null && newlist.size() > 0)
+                    newlist[0].addError(e.getMessage());
+                else if (oldlist != null && oldlist.size() > 0)
+                    oldlist[0].addError(e.getMessage());
+            }
             
             // but we do want our tests to fail if they encountered this error!
             // we do need to allow some specific tests that are testing our error handling
@@ -179,6 +195,7 @@ public with sharing class TDTM_TriggerHandler {
         //Also, should we support Database.merge?
         
         //Process the results
+        // if isPropogateErrorsFromTrigger == true, processResults will throw an exception instead of returning failure.
         Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
             dmlWrapper.objectsToUndelete, ERR_Handler.Context.TDTM);
