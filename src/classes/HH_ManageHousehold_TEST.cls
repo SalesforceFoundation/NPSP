@@ -43,9 +43,9 @@ public with sharing class HH_ManageHousehold_TEST {
             npo02__Household__c = hh.id,
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         insert con;
         
@@ -103,9 +103,9 @@ public with sharing class HH_ManageHousehold_TEST {
             Name = 'test_hh',
             npo02__MailingStreet__c = '1234 Testing Drive Suite 1000',
             npo02__MailingCity__c = 'Seattle',
-            npo02__MailingState__c = 'WA',
+            npo02__MailingState__c = 'Washington',
             npo02__MailingPostalCode__c = '98101',
-            npo02__MailingCountry__c = 'USA'
+            npo02__MailingCountry__c = 'United States'
             );
         insert hh;
         
@@ -173,9 +173,9 @@ public with sharing class HH_ManageHousehold_TEST {
             npo02__Household__c = hh.id,
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         insert con1;
         
@@ -186,9 +186,9 @@ public with sharing class HH_ManageHousehold_TEST {
             npo02__Household__c = hh.id,
             MailingStreet = '5678 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         insert con2;
         
@@ -246,9 +246,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail@groundwiretest.org',
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         insert con;
         
@@ -257,9 +257,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail2@groundwiretest.org',
             MailingStreet = 'Drastically Different',
             MailingCity = 's',
-            MailingState = 'd',
+            MailingState = 'Delaware',
             MailingPostalCode = '1',
-            MailingCountry = 'b'
+            MailingCountry = 'United States'
             );
         insert con2;
         
@@ -322,9 +322,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail@groundwiretest.org',
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         
         Contact con2 = new Contact(
@@ -332,10 +332,10 @@ public with sharing class HH_ManageHousehold_TEST {
             LastName = 'TEST Monkey abc',
             email = 'testemail@groundwiretest.org',
             MailingStreet = '1234 Testing Drive Suite 1000',
-            MailingCity = 'Seattle ',
-            MailingState = ' WA',
+            MailingCity = 'Seattle',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA '
+            MailingCountry = 'United States'
             );
         
         Contact con3 = new Contact(
@@ -344,8 +344,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail@groundwiretest.org',
             MailingStreet = '54321 Anderson',
             MailingCity = 'Kirkland',
-            MailingState = 'WA',
-            MailingPostalCode = '98034'
+            MailingState = 'Washington',
+            MailingPostalCode = '98034',
+            MailingCountry = 'United States'
             );
         
         Contact con4 = new Contact(
@@ -476,9 +477,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail@groundwiretest.org',
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle',
-            MailingState = 'WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA'
+            MailingCountry = 'United States'
             );
         insert con1;
         
@@ -488,9 +489,9 @@ public with sharing class HH_ManageHousehold_TEST {
             email = 'testemail@groundwiretest.org',
             MailingStreet = '1234 Testing Drive Suite 1000',
             MailingCity = 'Seattle ',
-            MailingState = ' WA',
+            MailingState = 'Washington',
             MailingPostalCode = '98101',
-            MailingCountry = 'USA '
+            MailingCountry = 'United States'
             );
         insert con2;
                         

@@ -91,9 +91,9 @@ private with sharing class ADDR_Addresses_TEST {
     		addr.Address_Type__c = 'Home';
     		addr.MailingStreet__c = 'Street' + i;
     		addr.MailingCity__c = 'City' + i;
-            addr.MailingState__c = 'State' + i;
+            addr.MailingState__c = 'Washington';
             addr.MailingPostalCode__c = 'Zip' + i;
-            addr.MailingCountry__c = 'Country' + i;
+            addr.MailingCountry__c = 'United States';
             listAddrT.add(addr);    		
     	}
     }
@@ -1598,6 +1598,8 @@ private with sharing class ADDR_Addresses_TEST {
         	listCon[i].AccountId = listAccT[i].Id;
             listCon[i].MailingStreet = 'New Mailing Street' + i;
         	listCon[i].MailingCity = 'New Mailing City' + i;
+        	listCon[i].MailingState = 'California';
+        	listCon[i].MailingCountry = 'United States';
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listCon;         

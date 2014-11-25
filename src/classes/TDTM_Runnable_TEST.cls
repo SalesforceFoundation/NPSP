@@ -70,8 +70,9 @@ public with sharing class TDTM_Runnable_TEST {
 		    Contact contact = new contact(firstname='Test', lastname='Person' + i);
 		    contact.MailingStreet = 'multiple-address';
 		    contact.MailingCity = 'Cupertino';
-		    contact.MailingState = 'ca';
+		    contact.MailingState = 'California';
 		    contact.MailingPostalCode = '95014';
+		    contact.MailingCountry = 'United States';
 		    contacts.add(contact);
 		}
 		

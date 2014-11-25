@@ -47,16 +47,7 @@ public with sharing class UTIL_Describe {
     private static Map<String, Schema.DescribeSObjectResult> objectDescribes = new Map<String, Schema.DescribeSObjectResult>();
     private static Map<String, Map<String, Schema.SObjectField>> fieldTokens = new Map<String,Map<String, Schema.SObjectField>>();
     private static Map<String, Map<String, Schema.DescribeFieldResult>> fieldDescribes = new Map<String,Map<String, Schema.DescribeFieldResult>>();
-
-    // hold valid state & country picklist values, if enabled in the Org
-    public static Boolean isStateCountryPicklistsEnabled = false;
-    // The maps by convert the Code to a Label and Vice-Versa
-    // Required because Salesforce expects either two Codes or two Labels, but not a mix
-    public static Map<String, String> validCountriesByLabel = new Map<String, String>();
-    public static Map<String, String> validStatesByLabel = new Map<String, String>();
-    public static Map<String, String> validCountriesByCode = new Map<String, String>();
-    public static Map<String, String> validStatesByCode = new Map<String, String>();
-
+    
     /*******************************************
     * Gets describe maps for a new object
     ********************************************/
@@ -306,6 +297,8 @@ public with sharing class UTIL_Describe {
     
     /*******************************************************************************************************
     * @description utility to check for compatible datatypes for data copying
+    * @param dtSrc the DisplayType of the source object
+    * @param dtTgt the DisplayType of the target object
     * @return true if the types can be copied between
     */ 
     public static boolean canDisplaytypesCopy(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
@@ -335,37 +328,5 @@ public with sharing class UTIL_Describe {
         
         return false;
     }
-
-    /*******************************************************************************************************
-    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
-    * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
-    */ 
-    public static Boolean initValidStateCountryCodes() {
-        if (isStateCountryPicklistsEnabled == true) {
-            return true;
-        }
-
-        // If State & Country Picklists are enabled in the org, build sets of the
-        // valid Labels and Codes for each field to use for validation
-        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
-        isStateCountryPicklistsEnabled = acctFields.containsKey('BillingCountryCode');
-        if (isStateCountryPicklistsEnabled) {
-            list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : countryPLValues) {
-                if (p.isActive()) { 
-                    validCountriesByLabel.put(p.getLabel(), p.getValue()); 
-                    validCountriesByCode.put(p.getValue(), p.getLabel());
-                }
-            }
-            list<Schema.Picklistentry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
-            for (Schema.Picklistentry p : statePLValues) {
-                if (p.isActive()) { 
-                    validStatesByLabel.put(p.getLabel(), p.getValue()); 
-                    validStatesByCode.put(p.getValue(), p.getLabel());
-                }
-            }
-        }
-        return isStateCountryPicklistsEnabled;
-    }
-
+           
 }
