@@ -188,7 +188,6 @@ private with sharing class ALLO_Allocations_TEST {
 
         //verify campaign allocation and default allocation created
         list<Allocation__c> queryAllo = [SELECT Id, General_Accounting_Unit__c, General_Accounting_Unit__r.Name, Amount__c, Percent__c FROM Allocation__c WHERE Opportunity__c=:opp.id ORDER BY Amount__c];
-        system.debug('LookHere: queryallo ' + queryAllo);
         system.assertEquals(3,queryAllo.size(), 'An allocation for the Campaign Opportunity should be created.');
         system.assertEquals(defaultgau.id, queryAllo[0].General_Accounting_Unit__c, 'A default allocation should be created.');
         system.assertEquals(1, queryAllo[0].Amount__c, 'The default allocation should cover the remainder of the amount.');
@@ -260,7 +259,6 @@ private with sharing class ALLO_Allocations_TEST {
         insert alloForInsert;
 
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :queryOpp[0].id ORDER BY Percent__c];
-        system.debug('LookHere: queryAllo' + queryAllo);
         system.assertEquals(2,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically after they are created for the Recurring Donation.');
         system.assertEquals(gau.id,queryAllo[0].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
         system.assertEquals(gau.id,queryAllo[1].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
@@ -289,6 +287,7 @@ private with sharing class ALLO_Allocations_TEST {
         insert exceedAllo;
         
         queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id ORDER BY Percent__c];
+        system.debug('Look:' + queryAllo);
         system.assertEquals(2,queryAllo.size(), 'Only percent based Opportunity Allocation should exist.');
         system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
 
@@ -337,7 +336,6 @@ private with sharing class ALLO_Allocations_TEST {
         insert oppList;
 
         list<AggregateResult> queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
-        system.debug(logginglevel.warn, 'LookHere: bulkOppInsert' + queryAggResult);
         system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should be created.');
         system.assertEquals(100, queryAggResult[1].get('expr0'), 'One hundred default allocations should be created.');
 
@@ -348,7 +346,6 @@ private with sharing class ALLO_Allocations_TEST {
         update oppList;
 
         queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
-        system.debug(logginglevel.warn, 'LookHere: bulkOppInsert' + queryAggResult);
         system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should still exist.');
         system.assertEquals(50, queryAggResult[1].get('expr0'), 'Fifty default allocations should remain.');
 
@@ -415,6 +412,56 @@ private with sharing class ALLO_Allocations_TEST {
 
         queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(0,queryAllo.size(),'A default allocation should be created for the opporunity that now has an amount.');
+    }
+
+    //create a campaign allocation, mark that allocation's GAU as inactive
+    //insert an opportunity assigned to the campaign, verify only default allocation is created and no error is thrown
+    //mark opportunity allocation's gau as inactive, update opp amount, verify
+    @isTest
+    static void testInactiveGAU() {
+        if (strTestOnly != '*' && strTestOnly != 'testInactiveGAU') return;
+
+        setupSettings(null);
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+
+        list<General_Accounting_Unit__c> listGau = new list<General_Accounting_Unit__c>();
+        listGau.add(new General_Accounting_Unit__c(Name='Campaign Allocation 1'));
+        listGau.add(new General_Accounting_Unit__c(Name='Campaign Allocation 2'));
+        insert listGau;
+
+        Campaign cam = new Campaign(Name='Foo', IsActive=true);
+        insert cam;
+
+        list<Allocation__c> listAllo = new list<Allocation__c>();
+        listAllo.add(new Allocation__c(Campaign__c=cam.id, Amount__c = 3, General_Accounting_Unit__c = listGau[0].id));
+        listAllo.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = listGau[1].id));
+        insert listAllo;
+
+        listGau[0].Active__c = false;
+        update listGau[0];
+
+        ALLO_Allocations_TDTM.resetFlags(false);
+        Opportunity opp = new Opportunity(Name='foo', CampaignId=cam.id, Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
+        system.assertEquals(1,queryAllo.size(), 'A single allocation should be created.');
+        system.assertEquals(listGau[1].id, queryAllo[0].General_Accounting_Unit__c, 'The single allocation should be assigned to the active GAU.');
+        system.assertEquals(50, queryAllo[0].Percent__c, 'The allocation should be percent based.');
+
+        listGau[1].Active__c = false;
+        update listGau[1];
+
+        ALLO_Allocations_TDTM.resetFlags(false);
+        opp.Amount = 80;
+
+        update opp;
+
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
+        system.assertEquals(4,queryAllo[0].Amount__c, 'Allocation to inactive GAU should not be modified.');
+        
     }
 
 }
