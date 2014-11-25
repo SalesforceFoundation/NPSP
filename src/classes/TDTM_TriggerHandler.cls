@@ -100,6 +100,8 @@ public with sharing class TDTM_TriggerHandler {
             
             // some code may want the DML to be rolled back!  eg, an Address object update, than then needs
             // to propogate to the household account and contacts, but may fail due to State & Country picklists.
+            // we don't know which object on the list caused the problem, so we just add the error to the first.
+            // this should cause the ui to display one error message, rather than repeating the same error for each object.
             if (isPropogateErrorsFromTrigger)
                 newlist[0].addError(e.getMessage());
             
