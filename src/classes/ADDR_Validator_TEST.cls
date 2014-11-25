@@ -66,8 +66,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'ca';
+        contact.MailingState = 'California';
         contact.MailingPostalCode = '95014';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -93,7 +94,10 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        System.assertEquals('CA', contact.MailingState);
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)            
+            System.assertEquals('California', contact.MailingState);
+        else
+            System.assertEquals('CA', contact.MailingState);
     }
 
     static testMethod void testContactInvalidAddress() {
@@ -105,8 +109,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'invalid-address';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -134,8 +139,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'main st 123';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -163,8 +169,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'main st 123';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -192,8 +199,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'main st 123';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -221,8 +229,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'main st 123';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -249,8 +258,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'ambiguous-address';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -278,6 +288,8 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingPostalCode = 'single-zip';
+        contact.MailingState = 'California';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -310,7 +322,8 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingCity = 'single-zip';
-        contact.MailingState = 'IL';
+        contact.MailingState = 'Illinois';
+        contact.MailingCountry = 'United States';
         
         Test.startTest();
         insert contact;
