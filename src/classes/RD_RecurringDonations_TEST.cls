@@ -1319,7 +1319,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today();
+        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         rdlist.add(r1);
                 
         npe03__Recurring_Donation__c r2 = new npe03__Recurring_Donation__c();
@@ -1331,14 +1331,14 @@ public class RD_RecurringDonations_TEST {
         r2.npe03__Date_Established__c = date.newinstance(1970,6,12);
         r2.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r2.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r2.npe03__Next_Payment_Date__c = system.today();
+        r2.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
         rdlist.add(r2);
                                         
         Test.startTest();
         insert rdlist;
         rdlist[0].npe03__Amount__c = 50;
         rdlist[1].npe03__Amount__c = 50;
-        rdlist[1].npe03__Next_Payment_Date__c = system.today().addDays(5);
+        rdlist[1].npe03__Next_Payment_Date__c = system.today().toStartOfMonth().addDays(5);
         RD_ProcessControl.hasRun = false;
         update rdlist;        
         Test.stopTest();
