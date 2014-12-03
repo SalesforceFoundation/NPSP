@@ -15,6 +15,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Disable_Error_Handling__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If checked, NPSP&apos;s error handling framework is disabled.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If checked, NPSP&apos;s error handling framework is disabled.</inlineHelpText>
+        <label>Disable Error Handling</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Error_Notifications_On__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Flag that determines whether to send error notifications.</description>
