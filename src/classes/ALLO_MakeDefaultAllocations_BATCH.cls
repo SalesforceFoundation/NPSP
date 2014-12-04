@@ -35,11 +35,18 @@
  public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
 
     private Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-    private String query = 'SELECT Id, Amount FROM Opportunity';
+    private String query;
     
     public ALLO_MakeDefaultAllocations_BATCH() {
+        
         string strExcludeOppRecTypesQuery = '';
         string strExcludeOppTypesQuery = '';
+
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
+            query = 'SELECT Id, Amount, CurrencyIsoCode FROM Opportunity';
+        } else {
+            query = 'SELECT Id, Amount FROM Opportunity';
+        }
 
         //build string of opp record type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
@@ -100,20 +107,14 @@
                         defaultAllo.Amount__c = remainder;
                         listAlloForUpdate.add(defaultAllo);
                     } else if (defaultAllo.id==null) {
-                        listAlloForInsert.add(new Allocation__c(
-                            Opportunity__c = opp.id,
-                            Amount__c = remainder,
-                            General_Accounting_Unit__c = alloSettings.Default__c
-                        ));
+                        Allocation__c allo = ALLO_Allocations_TDTM.makeDefaultAllocation(opp);
+                        allo.Amount__c = remainder;
+                        listAlloForInsert.add(allo);
                     }
                 }
             //if we have no allocations for this opp, create one
             } else {
-                listAlloForInsert.add(new Allocation__c(
-                    Opportunity__c = opp.id,
-                    Amount__c = opp.Amount,
-                    General_Accounting_Unit__c = alloSettings.Default__c
-                ));
+                listAlloForInsert.add(ALLO_Allocations_TDTM.makeDefaultAllocation(opp));
             }
         }
 
