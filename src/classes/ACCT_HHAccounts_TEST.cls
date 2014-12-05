@@ -30,24 +30,28 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
+* @group Accounts
 * @description tests specific to the Household Account model 
 */
 
 @isTest
 private with sharing class ACCT_HHAccounts_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /**
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
     	
     /*********************************************************************************************************
-    operation:
-        create N new contacts, no accounts 
-    verify:
-        N hh accounts created
-		accounts' name and naming fields set
-		hh accounts' primary contact set to new contact
+    * @description
+    * operation:
+    *     create N new contacts, no accounts 
+    * verify:
+    *   N hh accounts created
+	*	accounts' name and naming fields set
+	*	hh accounts' primary contact set to new contact
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccounts() {
     	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
@@ -83,13 +87,14 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        create N new contacts, M empty hh account supplied 
-    verify:
-        contacts added to existing hh accounts
-        (N - M) accounts have multiple contacts
-        accounts' name and naming fields updated
-        hh accounts' primary contact updated to contact
+    * @description
+    * operation:
+    *   create N new contacts, M empty hh account supplied 
+    * verify:
+    *    contacts added to existing hh accounts
+    *    (N - M) accounts have multiple contacts
+    *    accounts' name and naming fields updated
+    *    hh accounts' primary contact updated to contact
     **********************************************************************************************************/            
     static testMethod void NewContactsEmptyHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'NewContactsEmptyHHAccounts') return;
@@ -553,6 +558,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         delete and then undelete contacts from single and multi-contact HH Accounts
     verify:
@@ -953,10 +959,11 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        add a contact to an exiting HH Account with auto-naming off
-    verify:
-        the Account's Number of Household Members is still updated
+    * @description
+    * operation:
+    *     add a contact to an exiting HH Account with auto-naming off
+    * verify:
+    *    the Account's Number of Household Members is still updated
     **********************************************************************************************************/            
     static testMethod void addContactCheckNumberHHMembers() {
         if (strTestOnly != '*' && strTestOnly != 'addContactCheckNumberHHMembers') return;
