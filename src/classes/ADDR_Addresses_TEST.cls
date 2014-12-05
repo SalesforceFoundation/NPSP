@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
+* @group Address Management
 * @description Tests specific to Address Management. 
 */
 
