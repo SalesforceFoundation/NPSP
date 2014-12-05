@@ -19,6 +19,14 @@
  *
  * See the Apex Language Reference for more information about Testing and Code Coverage.
  */
+/**
+* @author Salesforce.com Foundation
+* @date 2009
+*
+* @group Affiliations
+*
+* @description  
+*/
 @isTest
 public class AFFL_Affiliations_TEST {
     
