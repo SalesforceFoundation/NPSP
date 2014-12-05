@@ -881,7 +881,8 @@ public class RD_RecurringDonations_TEST {
         insert r1;
         
         list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        system.assertEquals(15, originalOpps.size());          
+        integer cOpp =  originalOpps.size();
+        system.assert(cOpp == 14 || cOpp == 15 || cOpp == 16);        
         
         Opportunity o = originalOpps[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
@@ -896,7 +897,7 @@ public class RD_RecurringDonations_TEST {
         
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
         
-        system.assertEquals(14, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
+        system.assertEquals(cOpp - 1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     

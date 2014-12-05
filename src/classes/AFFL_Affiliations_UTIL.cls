@@ -27,6 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.com Foundation
+* @date 2009
+*
+* @group Affiliations
+*
+* @description  
+*/
 
 public with sharing class AFFL_Affiliations_UTIL {
 

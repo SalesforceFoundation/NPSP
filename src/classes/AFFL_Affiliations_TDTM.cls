@@ -27,6 +27,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.com Foundation
+* @date 2009
+*
+* @group Affiliations
+*
+* @description  
+*/
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
     // static flags to prevent recursive call 
