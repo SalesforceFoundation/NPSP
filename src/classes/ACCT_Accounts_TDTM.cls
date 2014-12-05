@@ -30,10 +30,25 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Accounts
+* @group-content ./documentation/accounts.html
+*
 * @description handles triggers on Account to deal with initializing system fields for Household and One2One Accounts 
 */
 public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         
+    
+    /*******************************************************************************************************
+    * @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
+    * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
+    * name updating.
+    * @param listNew the list of Accounts from trigger new. 
+    * @param listOld the list of Accounts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Accounts 
+    * @return dmlWrapper.  always null.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         

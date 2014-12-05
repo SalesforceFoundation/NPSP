@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Accounts
 * @description Tests for ACCT_IndividualAccounts_TDTM
 */
 @isTest
