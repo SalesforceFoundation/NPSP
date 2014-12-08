@@ -109,7 +109,7 @@ public without sharing class PMT_PaymentCreator {
                 }
                 soqlStatement += soqlSub;
                 soqlStatement += 'npe01__scheduled_date__c ';
-                soqlStatement += 'from Opportunity.npe01__OppPayment__r) from Opportunity WHERE id in :newOpps';
+                soqlStatement += 'from Opportunity.npe01__OppPayment__r WHERE npe01__Opportunity__c IN :newOpps) from Opportunity WHERE id in :newOpps';
                 updatedOpps = Database.query(soqlStatement);
             }
     
