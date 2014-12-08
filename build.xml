@@ -1,487 +1,76 @@
-<project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
-
-    <include file="${basedir}/lib/ant-salesforce.xml" />
-
-    <taskdef 
-         resource="net/sf/antcontrib/antlib.xml"
-         classpath="${basedir}/lib/ant-contrib-1.0b2.jar" />
-
-    <!-- If no propertyfile was passed in command line, attempt to load a build.properties if it exists -->
-    <if>
-      <and>
-        <not><isset property="sf:username" /></not>
-        <available file="${basedir}/build.properties" />
-      </and>
-      <then>
-        <loadproperties srcFile="${basedir}/build.properties"/>
-      </then>
-    </if>
-
-    <!-- Load up cumulusci.properties file with package specific properties -->
-    <loadproperties srcFile="${basedir}/cumulusci.properties"/>
-
-    <!-- Load up the version.properties file to get desired versions -->
+<project default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
+    <!-- Load the package requirements from version.properties -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 
-    <!-- Setup a blank namespace prefix string.  Managed deployments need to override this property before calling deployUnpackagedPost -->
-    <property name="cumulusci.namespace.prefix" value="" />
+    <!-- Load environment variables -->
+    <property environment="env" />
 
-    <!-- Cumulus specific macros -->
-    <macrodef name="getPackageVersions" description="Gets the version for all installed packages">
-      <sequential>
-        <delete dir="${basedir}/installedPackages"/>
-        <mkdir dir="${basedir}/installedPackages"/>
+    <!-- Load CumulusCI build targets -->
+    <import file="${env.CUMULUSCI_PATH}/build/build.xml" />
 
-        <sf:bulkRetrieve
-            username="${sf.username}"
-            password="${sf.password}"
-            metadataType="InstalledPackage"
-            retrieveTarget="${basedir}/installedPackages"/>
-
-        <getPackageVersion namespace="npe01" refresh="false" />
-        <getPackageVersion namespace="npo02" refresh="false" />
-        <getPackageVersion namespace="npe03" refresh="false" />
-        <getPackageVersion namespace="npe4" refresh="false" />
-        <getPackageVersion namespace="npe5" refresh="false" />
-        <getPackageVersion namespace="npsp" refresh="false" />
-
-        <echo>Dependent Package Versions:
--------------------------------
-npe01: ${InstalledPackage.npe01.versionNumber} (${version.npe01} required)
-npo02: ${InstalledPackage.npo02.versionNumber} (${version.npo02} required)
-npe03: ${InstalledPackage.npe03.versionNumber} (${version.npe03} required)
-npe4: ${InstalledPackage.npe4.versionNumber} (${version.npe4} required)
-npe5: ${InstalledPackage.npe5.versionNumber} (${version.npe5} required)
-npsp: ${InstalledPackage.npsp.versionNumber} (${version.npsp} required)
-
-        </echo>
-
-        <delete dir="${basedir}/installedPackages"/>
-
-      </sequential>
-    </macrodef>
-
-
-    <macrodef name="updateDependentPackages">
-      <sequential>
-        <getPackageVersions />
-
+    <!-- Add project specific build targets and CumulusCI overrides here -->
+    <target name="preUpdateRequiredPackages">
         <!-- npsp depends on all other packages.  If it is installed and other packages need to be downgraded (uninstalled), uninstall npsp first -->
         <if>
-          <and>
-            <not><equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" /></not>
-            <or>
-              <bool><isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="version.npe01" /></bool>
-              <bool><isgreaterthan arg1="${InstalledPackage.npo02.versionNumber}" arg2="version.npo02" /></bool>
-              <bool><isgreaterthan arg1="${InstalledPackage.npe03.versionNumber}" arg2="version.npe03" /></bool>
-              <bool><isgreaterthan arg1="${InstalledPackage.npe4.versionNumber}" arg2="version.npe4" /></bool>
-              <bool><isgreaterthan arg1="${InstalledPackage.npe5.versionNumber}" arg2="version.npe5" /></bool>
-            </or>
-          </and>
-          <then>
-            <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber} to allow for downgrade</echo>
-            <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />
+            <and>
+                <not>
+                    <equals arg1="${InstalledPackage.npsp.versionNumber}" arg2="Not Installed" />
+                </not>
+                <or>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="version.npe01" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npo02.versionNumber}" arg2="version.npo02" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe03.versionNumber}" arg2="version.npe03" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe4.versionNumber}" arg2="version.npe4" />
+                    </bool>
+                    <bool>
+                        <isgreaterthan arg1="${InstalledPackage.npe5.versionNumber}" arg2="version.npe5" />
+                    </bool>
+                </or>
+            </and>
+            <then>
+                <echo>Uninstalling npsp ${InstalledPackage.npsp.versionNumber} to allow for downgrade</echo>
+                <uninstallPackage namespace="npsp" username="${sf.username}" password="${sf.password}" />
 
-            <!-- Override the cached installed version of npsp so we don't have to fetch versions again -->
-            <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
-          </then>
+                <!-- Override the cached installed version of npsp so we don't have to fetch versions again -->
+                <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
+            </then>
         </if>
 
         <!-- npo02 depends on npe01 so we have to uninstall npo02 first if npo02 needs downgraded -->
         <if>
-          <and>
-            <!-- npo02 is installed -->
-            <not><equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" /></not>
-            <!-- and npe01 need downgraded -->
-            <bool><isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" /></bool>
-          </and>  
-          <then>
-            <echo>Uninstalling npo02 ${InstalledPackage.npe01.versionNumber} to allow for npe01 downgrade</echo>
-            <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}" />
+            <and>
+                <!-- npo02 is installed -->
+                <not>
+                    <equals arg1="${InstalledPackage.npo02.versionNumber}" arg2="Not Installed" />
+                </not>
+                <!-- and npe01 need downgraded -->
+                <bool>
+                    <isgreaterthan arg1="${InstalledPackage.npe01.versionNumber}" arg2="${version.npe01}" />
+                </bool>
+            </and>
+            <then>
+                <echo>Uninstalling npo02 ${InstalledPackage.npe01.versionNumber} to allow for npe01 downgrade</echo>
+                <uninstallPackage namespace="npo02" username="${sf.username}" password="${sf.password}" />
 
-            <!-- Override the cached installed version of npo02 so we don't have to fetch versions again -->
-            <var name="InstalledPackage.npo02.versionNumber" value="Not Installed" />
-          </then>
+                <!-- Override the cached installed version of npo02 so we don't have to fetch versions again -->
+                <var name="InstalledPackage.npo02.versionNumber" value="Not Installed" />
+            </then>
         </if>
-
-        <updatePackageVersion namespace="npe01" version="${version.npe01}" />
-        <updatePackageVersion namespace="npo02" version="${version.npo02}" />
-        <updatePackageVersion namespace="npe03" version="${version.npe03}" />
-        <updatePackageVersion namespace="npe4" version="${version.npe4}" />
-        <updatePackageVersion namespace="npe5" version="${version.npe5}" />
-        <updatePackageVersion namespace="npsp" version="${version.npsp}" />
-
-      </sequential>
-    </macrodef>
-
-
-    <!-- Primary Build Targets -->
-
-    <!-- deploy: Run a full deployment including running all tests.  Does not attempt to clean target org or ensure dependent package versions are correct -->
-    <target name="deploy">
-      <antcall target="deployWithoutTest" />
-      <antcall target="runAllTests" />
-      <!-- Changed to deploy then test due to suspicion that staging the deployment to run tests was causing a failure with every other build
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="true" maxPoll="${cumulusci.maxPoll.test}" />
-      -->
     </target>
 
-    <!-- deployWithoutTest: Run a full deployment but don't run all tests.  This is useful if you already know tests will pass from previous runs and just want to deploy faster -->
-    <target name="deployWithoutTest">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
-    </target>
-
-    <!-- deployUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
-    <target name="deployUnpackagedPre">
-      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" />
-    </target>
-
-    <!-- deployUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
-    <target name="deployUnpackagedPost">
-      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" />
-    </target>
-
-    <!-- deployManagedUnpackagedPre: Deploy the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
-    <target name="deployManagedUnpackagedPre">
-      <deployMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
-    </target>
-
-    <!-- deployManagedUnpackagedPost: Deploy the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package.  Use the managed namespace prefix -->
-    <target name="deployManagedUnpackagedPost">
-      <deployMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" nsprefix="${cumulusci.package.namespace}__" />
-    </target>
-
-    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with non-namespaced versions of all pre and post deployment bundles -->
-    <target name="zipUnpackagedBundles">
-      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
-      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/zipped" />
-    </target>
-
-    <!-- zipUnpackagedBundles: Populates unpackaged/zipped with namespaced versions of all pre and post deployment bundles -->
-    <target name="zipManagedUnpackagedBundles">
-      <zipMetadataBundles dir="${basedir}/unpackaged/pre" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
-      <zipMetadataBundles dir="${basedir}/unpackaged/post" stagedir="${basedir}/unpackaged_stage" zipdir="unpackaged/namespaced_zipped" nsprefix="${cumulusci.package.namespace}__" />
-    </target>
-
-
-    <!-- uninstallUnpackagedPre: Uninstall the unpackaged/pre subdirectories containing metadata used in builds but not included in the managed package -->
-    <target name="uninstallUnpackagedPre">
-      <if>
-        <available file="${basedir}/unpackaged/pre/" type="dir" />
-        <then>
-          <for param="dir">
-            <path>
-              <dirset dir="${basedir}/unpackaged/pre/" includes="*" />
-            </path>
-            <sequential>  
-              <echo>Uninstalling unpackaged bundle @{dir}</echo>
-              <delete dir="uninstall" />
-              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
-              <delete dir="uninstall" />
-            </sequential>
-          </for>
-        </then>
-      </if>
-    </target>
-
-    <!-- uninstallUnpackagedPost: Uninstall the unpackaged/post subdirectories containing metadata used in builds but not included in the managed package -->
-    <target name="uninstallUnpackagedPost">
-      <if>
-        <available file="${basedir}/unpackaged/post/" type="dir" />
-        <then>
-          <for param="dir">
-            <path>
-              <dirset dir="${basedir}/unpackaged/post/" includes="*" />
-            </path>
-            <sequential>  
-              <echo>Deploying unpackaged bundle @{dir}</echo>
-              <echo>Uninstalling unpackaged bundle @{dir}</echo>
-              <delete dir="uninstall" />
-              <buildPackagedDestructiveChanges srcdir="@{dir}" dir="uninstall" package="${cumulusci.package.name}" />
-              <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" ignoreWarnings="true" maxPoll="${cumulusci.maxPoll.notest}" />
-              <delete dir="uninstall" />
-            </sequential>
-          </for>
-        </then>
-      </if>
-    </target>
-
-    <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests --> 
-    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
-    <target name="deployCI">
-      <!-- First, uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
-      <antcall target="uninstall" />
-
-      <!-- Update any managed packages which are not at the right version -->
-      <antcall target="updateDependentPackages" />
-
-      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-      <antcall target="deployUnpackagedPre" />
-
-      <!-- Finally, do a deploy with all tests -->
-      <antcall target="deploy" />
-
-      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-      <antcall target="deployUnpackagedPost" />
-
-      <!-- Uninstall unpackaged post bundles since they may reference code in the package -->
-      <antcall target="uninstallUnpackagedPost" />
-    </target>
-
-    <!-- deployCIPackageOrg: Does a full build against the package org.  This differs from deployCI in that it uses destroyStaleMetadata instead of uninstall.
-         There are a few assumptions.  We never downgrade a dependent managed package in the packaging org.  This removes the need to completely remove
-         all metadata to allow a package downgrade.  In the package org, we can't delete all metadata once a production managed release is cut so this approach is required -->
-    <target name="deployCIPackageOrg">
-      <!-- Update any managed packages which are not at the right version -->
-      <antcall target="updateDependentPackages" />
-
-      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-      <antcall target="deployUnpackagedPre" />
-
-      <!-- Attempt to destroy any stale metadata but continue even if this fails -->
-      <trycatch>
-        <try>
-          <antcall target="destroyStaleMetadata" />
-        </try>
-        <catch>
-          <echo>First run of destroyStaleMetadata failed.  Ignoring for now but it may cause build failures in other targets.</echo>
-        </catch>
-      </trycatch>
-
-      <!-- Update the package.xml to managed package mode, adding install and uninstall script classes -->
-      <antcall target="updatePackageXmlManaged" />
-
-      <!-- Do a deploy skipping tests for now since the upload will run tests -->
-      <antcall target="deploy" />
-
-      <!-- Finally, delete any metadata from the org which is not in the repo -->
-      <antcall target="destroyStaleMetadata" />
-
-      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-      <antcall target="deployUnpackagedPost" />
-
-    </target>
-
-    <!-- Deploys the latest managed beta (UAT) release to an org -->
-    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
-    <target name="deployManagedUAT">
-      <property environment="env" />
-
-      <echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
-      <if>
-        <and>
-          <isset property="env.BUILD_COMMIT" />
-          <not><equals arg1="env.BUILD_COMMIT" arg2="" /></not>
-          <isset property="env.PACKAGE_VERSION" />
-          <not><equals arg1="env.PACKAGE_VERSION" arg2="" /></not>
-        </and>
-        <then>
-          <!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
-          <property name="managed_uat_tag" value="${env.BUILD_COMMIT}" />
-          <property name="version.npsp.uat" value="${env.PACKAGE_VERSION}" />
-          <echo>Building with environment variables: BUILD_COMMIT=${managed_uat_tag}, PACKAGE_VERSION=${version.npsp.uat}</echo>
-        </then>
-        <else>
-          <!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
-          <!-- Get the latest beta release tag name -->
-          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta/tag" dest="${basedir}/managed_uat_tag" />
-          <loadfile property="managed_uat_tag" srcfile="${basedir}/managed_uat_tag" />
-          <delete file="${basedir}/managed_uat_tag" />
-
-          <!-- Get the latest beta release version number -->
-          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/beta" dest="${basedir}/version_uat" />
-          <loadfile property="version.npsp.uat" srcfile="${basedir}/version_uat" />
-          <delete file="${basedir}/version_uat" />
-        </else>
-      </if>
-      
-      <!-- Fetch the version.properties file for the release from GitHub -->
-      <get src="${cumulusci.github.url.raw}/${managed_uat_tag}/version.properties" dest="${basedir}/version.properties.uat" />
-
-      <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.uat file -->
-      <var name="version.npe01" unset="true" />
-      <var name="version.npo02" unset="true" />
-      <var name="version.npe03" unset="true" />
-      <var name="version.npe4" unset="true" />
-      <var name="version.npe5" unset="true" />
-      <loadproperties srcFile="${basedir}/version.properties.uat"/>
-      <delete file="${basedir}/version.properties.uat" />
-
-      <!-- At this point, version.npsp is set to Not Install.  Call updateDependentPackages to install the correct packages and uninstall the current Cumulus beta version -->
-      <updateDependentPackages />
-
-      <!-- Deploy any unpackaged metadata bundles needed before the deployment -->
-      <antcall target="deployManagedUnpackagedPre" />
-
-      <!-- Now set the version.npsp property to the beta version and the installed version to Not Installed -->
-      <var name="InstalledPackage.npsp.versionNumber" value="Not Installed" />
-      <var name="version.npsp" value="${version.npsp.uat}" />
-
-      <!-- This call should only install the beta package -->
-      <antcall target="updateDependentPackages" />
-
-      <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
-      <antcall target="deployManagedUnpackagedPost" />
-
-      <antcall target="uninstallUnpackagedPost" />
-
-    </target>
-
-    <!-- Deploys the latest production managed release to an org -->
-    <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
-    <target name="deployManaged">
-      <property environment="env" />
-
-      <echo>BUILD_COMMIT = ${env.BUILD_COMMIT}</echo>
-      <if>
-        <and>
-          <isset property="env.BUILD_COMMIT" />
-          <not><equals arg1="env.BUILD_COMMIT" arg2="" /></not>
-          <isset property="env.PACKAGE_VERSION" />
-          <not><equals arg1="env.PACKAGE_VERSION" arg2="" /></not>
-        </and>
-        <then>
-          <!-- If a BUILD_COMMIT and PACKAGE_VERSION are provided in the environment, use them -->
-          <property name="managed_prod_tag" value="${env.BUILD_COMMIT}" />
-          <property name="version.npsp.prod" value="${env.PACKAGE_VERSION}" />
-          <echo>Building with environment variables: BUILD_COMMIT=${managed_prod_tag}, PACKAGE_VERSION=${version.npsp.prod}</echo>
-        </then>
-        <else>
-          <!-- If no BUILD_COMMIT or PACKAGE_VERSION was provided in environment, call mrbelvedere to fetch latest released version -->
-          <!-- Get the latest production release tag name -->
-          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version/tag" dest="${basedir}/managed_prod_tag" />
-          <loadfile property="managed_prod_tag" srcfile="${basedir}/managed_prod_tag" />
-          <delete file="${basedir}/managed_prod_tag" />
-
-          <!-- Get the latest production release version number -->
-          <get src="${cumulusci.mrbelvedere.url}/mrbelvedere/repo/${cumulusci.mrbelvedere.repo.owner}/${cumulusci.mrbelvedere.repo.name}/version" dest="${basedir}/version_prod" />
-          <loadfile property="version.npsp.prod" srcfile="${basedir}/version_prod" />
-          <delete file="${basedir}/version_prod" />
-        </else>
-      </if>
-      
-      <!-- Fetch the version.properties file for the release from GitHub -->
-      <get src="${cumulusci.github.url.raw}/${managed_prod_tag}/version.properties" dest="${basedir}/version.properties.prod" />
-
-      <!-- Since we want to use the versions required by the tag rather than the currently checked out code, unset all version properties and load the version.properties.prod file -->
-      <var name="version.npe01" unset="true" />
-      <var name="version.npo02" unset="true" />
-      <var name="version.npe03" unset="true" />
-      <var name="version.npe4" unset="true" />
-      <var name="version.npe5" unset="true" />
-      <loadproperties srcFile="${basedir}/version.properties.prod"/>
-      <delete file="${basedir}/version.properties.prod" />
-
-      <!-- Now set the version.npsp property to the prod version -->
-      <var name="version.npsp" value="${version.npsp.prod}" />
-
-      <!-- Run updateDependentPackages to install the correct versions of the 5 original NPSP packages and the Cumulus package -->
-      <antcall target="updateDependentPackages" />
-
-      <!-- Deploy any unpackaged metadata bundles needed for builds -->
-      <antcall target="deployUnpackagedPre" />
-      <antcall target="deployUnpackagedPost" />
-
-    </target>
-
-    <!-- Utility Build Targets -->
-
-    <target name="destroyStaleMetadata">
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-
-      <!-- Fetch all metadata in the  package from target org -->
-      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name.managed}" />
-
-      <!-- Build a destructiveChanges.xml pacckage to delete metadata in org but not in repo -->
-      <buildDestroyStaleMetadata srcdir="uninstallsrc" commdir="src" dir="uninstall" />
-
-      <!-- deploy the destructiveChanges.xml package -->
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
-
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-    </target>
-
-    <!-- uninstall: Removes all metadata from the package -->
-    <target name="uninstall">
-      <antcall target="uninstallUnpackagedPost" />
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-      <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
-      <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="${cumulusci.package.name}" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-      <antcall target="uninstallUnpackagedPre" />
-    </target>
-
-    <!-- uninstall: Removes all non-standard unpackaged metadata from the org -->
-    <target name="uninstallUnpackaged">
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-      <retrieveUnpackaged dir="uninstallsrc" />
-      <deleteWhitelistedMetadata dir="uninstallsrc/unpackaged" />
-      <buildUnpackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/standard" runAllTests="false" maxPoll="${cumulusci.maxPoll.notest}" />
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall/unpackaged" runAllTests="false" purgeOnDelete="true" maxPoll="${cumulusci.maxPoll.notest}" />
-      <delete dir="uninstallsrc" />
-      <delete dir="uninstall" />
-    </target>
-
-    <!-- updateDependendentPackages: Ensures all dependent packages are the correct version -->
-    <target name="updateDependentPackages">
-      <updateDependentPackages />
-    </target>
-
-    <!-- Developer focused build targets -->
-
-    <!-- retrieveUnpackaged: Retrieves all unpackaged metadata from target org into the unpackaged directory -->
-    <target name="retrieveUnpackaged">
-      <retrieveUnpackaged dir="org_unpackaged" /> 
-    </target>
-
-    <!-- retrievePackaged: Retrieves all metadata from the package in the target org into the packaged directory -->
-    <target name="retrievePackaged">
-      <retrievePackaged dir="packaged" package="${cumulusci.package.name}" /> 
-    </target>
-
-    <!-- retrievePackagedToSrc: Retrieves all metadata from the package in the target org into the src directory --> 
-    <target name="retrievePackagedToSrc"> 
-      <retrievePackaged dir="src" package="${cumulusci.package.name}" mkdir="false" /> 
-    </target>
-
-    <!-- runAllTests: Uses an empty package manifest to trigger execution of all tests in the target org without deploying any actual code changes -->
-    <target name="runAllTests">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="lib/empty" runAllTests="true" maxPoll="${cumulusci.maxPoll.test}" />
-    </target>
-
-    <!-- updatePackageXml: Builds a new package.xml based upon the metadata in the src directory -->
-    <target name="updatePackageXml">
-      <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" />
-    </target>
-
-    <target name="updatePackageXmlManaged">
-      <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
-    </target>
-
+    <!-- This is only overridden for now until we start using updateMetaXml to also set api version -->
     <target name="updateMetaXml">
-      <updateMetaXml dir="${basedir}/src" namespace="npe01" version="${version.npe01}" />
-      <updateMetaXml dir="${basedir}/src" namespace="npo02" version="${version.npo02}" />
-      <updateMetaXml dir="${basedir}/src" namespace="npe03" version="${version.npe03}" />
-      <updateMetaXml dir="${basedir}/src" namespace="npe4" version="${version.npe4}" />
-      <updateMetaXml dir="${basedir}/src" namespace="npe5" version="${version.npe5}" />
-    </target>
-
-    <target name="testXml">
-      <xmlproperty file="src/package.xml" />
-      <echoproperties />
-    </target>
-
-    <target name="deployPassingTest">
-      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="unpackaged/pre/passing_test" runAllTests="false" maxPoll="${cumulusci.maxPoll.test}">
-        <runTest>NPSPAlwaysPassingTest</runTest>
-      </sf:deploy>
+        <for list="${required.packages}" delimiter="," param="packageNamespace">
+            <sequential>
+                <updateMetaXml dir="${basedir}/src" namespace="@{packageNamespace}" version="${version.@{packageNamespace}}" />
+            </sequential>
+        </for>
     </target>
 </project>
