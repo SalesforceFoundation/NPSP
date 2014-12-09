@@ -464,4 +464,42 @@ private with sharing class ALLO_Allocations_TEST {
         
     }
 
+    static void testMakeDefaultAllocations() {
+        if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
+        
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        insert defaultGau;
+
+        General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
+
+        setupSettings(null);
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp1 = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp2 = new Opportunity(Name='foo2', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp1;
+        insert opp2;
+
+        list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];
+        system.assertEquals(0,queryAllo.size(), 'No default allocation should be created.');
+
+        Allocation__c nonDefaultAllo = new Allocation__c(Opportunity__c=opp1.id, Amount__c = 4, General_Accounting_Unit__c = otherGau.id);
+        insert nonDefaultAllo;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        Test.startTest();
+        id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
+        Test.stopTest();
+
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id];
+        system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
+        system.assertEquals(4, queryAllo[0].Amount__c, 'The default allocation should be of the unallocated amount of the Opportunity.');
+
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp2.id];
+        system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
+        system.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
+    }
+
 }

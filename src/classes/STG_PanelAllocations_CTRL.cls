@@ -83,7 +83,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     //so that the rerender queries for the newly created GAU
     public pagereference enableDefaultAllocations() {
         if (listSOGeneralAccountingUnitIds.size() == 1 && listSOGeneralAccountingUnitIds[0].getValue()=='') {
-            General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='General');
+            General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='General Fund');
             insert gau;
             listSOGeneralAccountingUnitIds = null;
         }
