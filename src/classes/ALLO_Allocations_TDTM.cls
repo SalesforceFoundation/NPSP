@@ -48,7 +48,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     public static Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
     //holds the default General Accounting Unit if creating default allocations is enabled
-    public static id idDefaultGAU = null;
+    public static id idDefaultGAU = settings.Default__c;
 
     //wrapper class to hold all allocation and payment information for a single parent (opp, campaign, or recurring donation)
     private class alloWrapper {
@@ -67,12 +67,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //if default allocations are enabled, verify that we have an ID value for the default fund
-        if (settings.Default_Allocations_Enabled__c) {
-            if (settings.Default__c == null) {
-                sObject obj = newList.isEmpty() ? oldList[0] : newList[0];
-                obj.addError(Label.alloDefaultGAUMissing);
-            } else
-                idDefaultGAU = settings.Default__c;
+        if (settings.Default_Allocations_Enabled__c && settings.Default__c == null) {
+            sObject obj = newList.isEmpty() ? oldList[0] : newList[0];
+            obj.addError(Label.alloDefaultGAUMissing);
         }
 
         // dispatch to the correct handler
@@ -635,7 +632,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     //method returns a default allocation for a specifid opportunity
-    public Allocation__c makeDefaultAllocation(Opportunity opp) {
+    public static Allocation__c makeDefaultAllocation(Opportunity opp) {
         Allocation__c defaultAllo = new Allocation__c(
             Opportunity__c = opp.id,
             Amount__c = opp.Amount,
