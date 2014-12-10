@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Batch class creates default allocations for all opportunities.
  */
  public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {

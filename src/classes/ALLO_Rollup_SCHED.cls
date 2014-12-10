@@ -30,8 +30,11 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Allocations Rollups to General Accounting Units
- */
+*/
 public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
     public Boolean executeReturnStatus() {

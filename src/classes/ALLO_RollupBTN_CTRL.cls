@@ -30,8 +30,11 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Controller for button that recalculates Allocations rollups for a single General Accounting Unit.
- */
+*/
 public with sharing class ALLO_RollupBTN_CTRL {
 	public ALLO_RollupBTN_CTRL() {}
 

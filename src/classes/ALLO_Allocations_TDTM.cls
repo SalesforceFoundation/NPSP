@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Trigger handler on Allocation object, forces allocations for a single parent to not exceed the parent amount,
 *              and calculates amount for percentage based allocations.
 */
