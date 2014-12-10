@@ -1702,6 +1702,182 @@
         <value>Show more</value>
     </labels>
     <labels>
+        <fullName>lblNPSPSettings</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>lblNPSPSettings</shortDescription>
+        <value>NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardBtnCalcPayments</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardBtnCalcPayments</shortDescription>
+        <value>Calculate Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardBtnCreatePayments</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardBtnCreatePayments</shortDescription>
+        <value>Create Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardBtnRemovePaidPayments</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardBtnRemovePaidPayments</shortDescription>
+        <value>Remove Paid Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardCreateSchedule</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardCreateSchedule</shortDescription>
+        <value>Create a Payment Schedule</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardFirstPaymentDate</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardFirstPaymentDate</shortDescription>
+        <value>Date of First Payment</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardInterval</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardInterval</shortDescription>
+        <value>Interval</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardMsgNoOppFound</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardMsgNoOppFound</shortDescription>
+        <value>No opportunity found.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardNoUnpaidAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardNoUnpaidAmount</shortDescription>
+        <value>NOTE: This opportunity has no unpaid amount. To create payments, first edit the opportunity record and enter an amount or click the button to delete existing payments. If the opportunity is closed, you may need to reopen it.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardNoWriteoffAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardNoWriteoffAmount</shortDescription>
+        <value>NOTE: This opportunity has no unpaid amount. To writeoff payments, first edit the opportunity record and enter an amount or delete existing payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardNumberOfPayments</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardNumberOfPayments</shortDescription>
+        <value># of Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardPaymentNumber</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardPaymentNumber</shortDescription>
+        <value>Payment Number</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardPaymentsDisabled</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardPaymentsDisabled</shortDescription>
+        <value>You do not have NPSP Payments Enabled. To use the Payment Scheduling Wizard, please enable Payments on the NPSP Settings page.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardPaymentsDisabledTitle</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardPaymentsDisabledTitle</shortDescription>
+        <value>NPSP Payments Not Enabled</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardSectionTitle</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardSectionTitle</shortDescription>
+        <value>Current Opportunity Info</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardSectionWriteoff</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardSectionWriteoff</shortDescription>
+        <value>Writeoff Remaining Balance</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardSectionWriteoffPayments</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardSectionWriteoffPayments</shortDescription>
+        <value>Writeoff Payments</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardSubtitle</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardSubtitle</shortDescription>
+        <value>Create one or more Payments for this Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardToBeCreated</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardToBeCreated</shortDescription>
+        <value>Payments to be Created</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWarning</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardWarning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteoffDate</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardWriteoffDate</shortDescription>
+        <value>Which date would you like to use?</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteoffMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardWriteoffMessage</shortDescription>
+        <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

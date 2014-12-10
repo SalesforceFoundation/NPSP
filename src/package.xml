@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -713,6 +714,28 @@
     <members>labelListViewPrevious</members>
     <members>labelMessageLoading</members>
     <members>labelShowMore</members>
+    <members>lblNPSPSettings</members>
+    <members>pmtWizardBtnCalcPayments</members>
+    <members>pmtWizardBtnCreatePayments</members>
+    <members>pmtWizardBtnRemovePaidPayments</members>
+    <members>pmtWizardCreateSchedule</members>
+    <members>pmtWizardFirstPaymentDate</members>
+    <members>pmtWizardInterval</members>
+    <members>pmtWizardMsgNoOppFound</members>
+    <members>pmtWizardNoUnpaidAmount</members>
+    <members>pmtWizardNoWriteoffAmount</members>
+    <members>pmtWizardNumberOfPayments</members>
+    <members>pmtWizardPaymentNumber</members>
+    <members>pmtWizardPaymentsDisabled</members>
+    <members>pmtWizardPaymentsDisabledTitle</members>
+    <members>pmtWizardSectionTitle</members>
+    <members>pmtWizardSectionWriteoff</members>
+    <members>pmtWizardSectionWriteoffPayments</members>
+    <members>pmtWizardSubtitle</members>
+    <members>pmtWizardToBeCreated</members>
+    <members>pmtWizardWarning</members>
+    <members>pmtWizardWriteoffDate</members>
+    <members>pmtWizardWriteoffMessage</members>
     <members>stgBtnCancel</members>
     <members>stgBtnClearErrorLog</members>
     <members>stgBtnCreateAutoRel</members>
