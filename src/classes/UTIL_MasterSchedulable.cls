@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
+* @group Utilities
 * @description Master Schedulable for the NPSP package. This should be the only
 * class that implements schedulable that exists in the package. UTIL_GlobalSchedulable
 * is deprecated and should not be used.

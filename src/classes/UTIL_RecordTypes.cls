@@ -1,6 +1,7 @@
 /**
 * @author Evan Callahan
 * @date 2010 
+* @group Utilities
 * @description Provides recordtype wrapper for easy access in other codeblocks 
 */
 
