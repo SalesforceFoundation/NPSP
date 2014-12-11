@@ -88,5 +88,6 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.stgLabelTriggerHandlers;
         str = Label.stgNavContacts;
         str = Label.stgLabelHHNamingProgress;
+        str = Label.Address_StateCountry_Invalid_Error;
     }
 }
