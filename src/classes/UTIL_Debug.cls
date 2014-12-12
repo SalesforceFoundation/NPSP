@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Utilities
 * @description Utility class for debug statements to turn them off in a managed context, as well as to display relevant performance information.
 */
 public with sharing class UTIL_Debug {
