@@ -54,21 +54,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Fiscal</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>FiscalQuarter</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>FiscalYear</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>ForecastCategory</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -280,21 +265,6 @@
         </availableFields>
         <availableFields>
             <field>ExpectedRevenue</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Fiscal</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>FiscalQuarter</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>FiscalYear</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
