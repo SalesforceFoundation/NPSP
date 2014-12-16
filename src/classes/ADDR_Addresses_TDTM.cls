@@ -577,12 +577,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     // has null for no match, and the matching address if there is a match.
     // NOTE: we allow soft matches, where we think it is probably the same address,
     // because only a single field is changing, or the changes are all just spacing and casing.
+    // Soft match behavior is controlled by the Simple_Address_Change_Treated_as_Update__c
+    // custom setting.
     public static map<Address__c, Address__c> findDuplicateAddresses(list<Address__c> listAddr) {      
         // for each address, create a map of HHId to lists of Addresses
         list<Id> listAccId = new list<Id>();
         for (Address__c addr : listAddr)
            listAccId.add(addr.Household_Account__c);
         map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
         
         // create our map for returning information in
         map<Address__c, Address__c> mapAddrDupAddr = new map<Address__c, Address__c>();
@@ -599,7 +602,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         addrMatch = addrHH;
                         break;
                     }
-                    if (isAddressMatchFuzzy(addr, addrHH)) {
+                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH)) {
                         // found fuzzy match, remember it and continue searching
                         addrMatch = addrHH;
                         continue;

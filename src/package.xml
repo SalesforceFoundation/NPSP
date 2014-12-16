@@ -497,6 +497,7 @@
     <members>Trigger_Handler__c.User_Managed__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
@@ -541,6 +542,7 @@
     <members>Zipcode_Verification_Limit</members>
     <members>addrCiceroMissingAPIKey</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
+    <members>addrGeneralSettings</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
@@ -842,6 +844,7 @@
     <members>stgHelpRollupExcludeContactOppType</members>
     <members>stgHelpRollupNDayValue</members>
     <members>stgHelpRollupPrimaryContact</members>
+    <members>stgHelpSimpleAddrChangeIsUpdate</members>
     <members>stgHelpSoftCreditRoles</members>
     <members>stgHelpStoreErrorsOn</members>
     <members>stgHelpTHActive</members>
