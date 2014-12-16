@@ -40,6 +40,10 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public String groupId { public get; public set; }
     public String saveErrorMessage {public get; set; }
  
+    public STG_PanelERR_CTRL() {
+    	notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
+    }
+    
     //Displays the values of the drop-down (Edit Mode only)
     public List<SelectOption> listSOERRNotifOptions {
         get {
