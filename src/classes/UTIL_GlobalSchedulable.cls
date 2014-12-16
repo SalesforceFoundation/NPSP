@@ -30,8 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
-* @group Utilities
-* @description The UTIL_GlobalSchedulable class is deprecated.
+* @description Global Schedulable for the NPSP package. This will be the only
+* schedulable that exists in the package.
 */
 public with sharing class UTIL_GlobalSchedulable implements Schedulable {
 
