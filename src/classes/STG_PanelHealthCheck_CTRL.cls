@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2014
+* @group Settings
 * @description Controller for the Health Check wizard
 */
 public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {

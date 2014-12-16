@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Uninstall Script for the NPSP package. 
 */
 global class STG_UninstallScript implements UninstallHandler {

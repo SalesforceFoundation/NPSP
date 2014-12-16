@@ -30,8 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the address verification settings page.
- */
+*/
 public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
