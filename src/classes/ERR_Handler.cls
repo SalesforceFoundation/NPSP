@@ -32,9 +32,7 @@ public with sharing class ERR_Handler {
     private List<Error__c> errors = new List<Error__c>();
    
     public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
-    
-    private static String stackTrace;
-    
+        
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
@@ -204,13 +202,14 @@ public with sharing class ERR_Handler {
 		error.Full_Message__c = e.getMessage();
 		//Putting it into a local string to see if that helps storing the stack trace when we
 		//are in a managed package.
-		stackTrace = e.getStackTraceString();
-		if(stackTrace == null || stackTrace == '(npsp)') {
-			stackTrace = 'No stacktrace available at the time of saving the record. ';
+		String stackTrace = e.getStackTraceString();
+		String message;
+		if(String.isBlank(stackTrace) || stackTrace == '(npsp)') {
+			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
-			stackTrace = 'Stacktrace available at the time of saving the record - ';
+			message = 'Stacktrace available at the time of saving the record - ';
 		}
-		error.Stack_Trace__c = stacktrace + e.getStackTraceString();
+		error.Stack_Trace__c = message + stackTrace;
 		return error;
 	}
 
