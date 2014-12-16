@@ -204,8 +204,10 @@ public with sharing class TDTM_TriggerHandler {
             
         if(errorsExist) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Error found when processing DML');
-            Database.rollback(sp);
-            errorHandler.storeErrors();
+            if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
+                Database.rollback(sp);
+                errorHandler.storeErrors();
+            }
         }
     }
 }
