@@ -24,4 +24,14 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
+    <fields>
+        <fullName>Simple_Address_Change_Treated_as_Update__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.</inlineHelpText>
+        <label>Simple Address Change Treated as Update</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
