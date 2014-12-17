@@ -373,7 +373,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
     
     // utility to compare two address objects address fields
-    private static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
+    public static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;        
         return (
@@ -384,6 +384,35 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
            addrNew.MailingCountry__c != addrOld.MailingCountry__c ||
            (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
+    }
+
+    // utility to compare two address objects address fields and support fuzzy matching.
+    // our definition of fuzzy is only one field has changed, ignoring whitespace and letter casing changes.
+    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
+        if (addrNew == null || addrOld == null) 
+           return false;     
+           
+        integer cChange = 0;
+        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+            cChange++;
+        return cChange <= 1;
+    }
+
+    // utility to remove all whitespace and to lowercase the string    
+    private static string strCleanup(string str) {
+        if (str != null) {
+            str = str.replace(' ', '');
+            str = str.toLowerCase();
+        }
+        return str;
     }
 
     // utility to create the month and day strings to a decimal we can use in comparisons.
@@ -528,9 +557,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	for (Address__c addrNew : listAddr) {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
-               if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
-                   addrDup.Default_Address__c = true;
-                   dmlWrapper.objectsToUpdate.add(addrDup);
+                // if it is a fuzzy match, not exact, then we want to update the existing address.
+                if (isAddressChanged(addrNew, addrDup, false)) {
+                    copyAddressObj(addrNew, addrDup);
+                    if (addrNew.Default_Address__c)
+                        addrDup.Default_Address__c = true;
+                    dmlWrapper.objectsToUpdate.add(addrDup);
+                } else if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
+                    addrDup.Default_Address__c = true;
+                    dmlWrapper.objectsToUpdate.add(addrDup);
                }
             } else {
                 dmlWrapper.objectsToInsert.add(addrNew);
@@ -540,12 +575,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
     // for the given addresses, find if they have a match, and return a map that
     // has null for no match, and the matching address if there is a match.
+    // NOTE: we allow soft matches, where we think it is probably the same address,
+    // because only a single field is changing, or the changes are all just spacing and casing.
+    // Soft match behavior is controlled by the Simple_Address_Change_Treated_as_Update__c
+    // custom setting.
     public static map<Address__c, Address__c> findDuplicateAddresses(list<Address__c> listAddr) {      
         // for each address, create a map of HHId to lists of Addresses
         list<Id> listAccId = new list<Id>();
         for (Address__c addr : listAddr)
            listAccId.add(addr.Household_Account__c);
         map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
         
         // create our map for returning information in
         map<Address__c, Address__c> mapAddrDupAddr = new map<Address__c, Address__c>();
@@ -555,13 +595,22 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             boolean hasMatch = false;
             if (listAddrHH != null) {
+                Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
                     if (!isAddressChanged(addr, addrHH, false)) {
-                       // found match, record it and bail out
-                       hasMatch = true;
-                       mapAddrDupAddr.put(addr, addrHH);
-                       break;
+                        // found exact match, record it and bail out
+                        addrMatch = addrHH;
+                        break;
                     }
+                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH)) {
+                        // found fuzzy match, remember it and continue searching
+                        addrMatch = addrHH;
+                        continue;
+                    }
+                }
+                if (addrMatch != null) {
+                    hasMatch = true;
+                    mapAddrDupAddr.put(addr, addrMatch);
                 }
             }
             if (!hasMatch)
@@ -589,6 +638,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return str;
     }
     
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields between to Address objects.
+    * @param addrSrc the source Address
+    * @param addrSrc the destination Address
+    * @return void
+    */ 
+    public static void copyAddressObj(Address__c addrSrc, Address__c addrDst) {
+        addrDst.MailingStreet__c = addrSrc.MailingStreet__c;
+        addrDst.MailingStreet2__c = addrSrc.MailingStreet2__c;
+        addrDst.MailingCity__c = addrSrc.MailingCity__c;
+        addrDst.MailingState__c = addrSrc.MailingState__c;
+        addrDst.MailingPostalCode__c = addrSrc.MailingPostalCode__c;
+        addrDst.MailingCountry__c = addrSrc.MailingCountry__c;
+    }
+
     /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.

@@ -11,12 +11,12 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
     <apex:pageMessages />
     
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == false)}">
-        <apex:pageBlock title="NPSP Payments Not Enabled" >You do not have NPSP Payments Enabled.  To use the Payment Scheduling Wizard, please enable Payments on the NPSP Settings page.&nbsp;<apex:outputLink value="/apex/npsp__STG_SettingsManager">NPSP Settings</apex:outputLink></apex:pageBlock>
+        <apex:pageBlock title="{!$Label.pmtWizardPaymentsDisabledTitle}" >{!$Label.pmtWizardPaymentsDisabled}&nbsp;<apex:outputLink value="/apex/npsp__STG_SettingsManager">{!$Label.lblNPSPSettings}</apex:outputLink></apex:pageBlock>
     </apex:outputPanel>
     
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
-        <apex:sectionHeader title="Payments" subtitle="Create one or more Payments for this Opportunity"/>
-        <apex:pageBlock title="Current Opportunity Info">
+        <apex:sectionHeader title="{!$ObjectType.npe01__OppPayment__c.LabelPlural}" subtitle="{!$Label.pmtWizardSubtitle}}"/>
+        <apex:pageBlock title="{!$Label.pmtWizardSectionTitle}">
             <apex:pageBlockSection id="theGrid" columns="2" rendered="{!NOT(ISNULL(currentOpp))}">       
                 <apex:pageBlockSectionItem > 
                    <apex:outputLabel value="{!$ObjectType.Opportunity.label}" for="OppLink"/>
@@ -29,34 +29,33 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 <apex:outputField value="{!currentOpp.CloseDate}" />
               <apex:outputField value="{!currentOpp.npe01__Amount_Outstanding__c}" />
             </apex:pageBlockSection>
-            <apex:outputText value="No opportunity found."  rendered="{!ISNULL(CurrentOpp)}"/>
+            <apex:outputText value="{!$Label.pmtWizardMsgNoOppFound}"  rendered="{!ISNULL(CurrentOpp)}"/>
         </apex:pageBlock>
      
     <apex:form >
-        <apex:pageBlock title="Warning" rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount))}">
-            NOTE: This opportunity has no unpaid amount. To create payments, 
-            first&nbsp;<apex:outputLink value="{!'/' + currentOpp.id}">edit the opportunity record</apex:outputLink> and 
-            enter an amount or click the button to delete existing payments. If the opportunity is closed, you may need to reopen it.
+        <apex:pageBlock title="{!$Label.pmtWizardWarning}" rendered="{!AND(NOT(ISNULL(CurrentOpp)),NOT(haveAmount))}">
+            {!$Label.pmtWizardNoUnpaidAmount}&nbsp;&nbsp;
+            <apex:outputLink value="{!'/' + currentOpp.id}">{!currentOpp.Name}</apex:outputLink>
         <div style="text-align: center;">        
-        <apex:commandButton action="{!RemovePaidPayments}" value="Remove Paid Payments"/></div>
+        <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}"/></div>
         </apex:pageBlock>
         
-        <apex:pageBlock title="Create a Payment Schedule" rendered="{!OR(haveAmount, removePaidPayments)}">
+        <apex:pageBlock title="{!$Label.pmtWizardCreateSchedule}" rendered="{!OR(haveAmount, removePaidPayments)}">
             <apex:pageBlockSection id="pmtGrid" columns="1">
                 <apex:pageBlockSectionItem >       
-                    <apex:outputLabel value="# of Payments" />
+                    <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" />
                     <apex:selectList value="{!numberofPayments}" id="paymentCount" multiselect="false" size="1">
                         <apex:selectOptions value="{!items}"/>
                     </apex:selectList>
                 </apex:pageBlockSectionitem>
             
                 <apex:pageBlockSectionItem >       
-                    <apex:outputLabel value="Date of First Payment"/>
+                    <apex:outputLabel value="{!$Label.pmtWizardFirstPaymentDate}"/>
                     <apex:inputField value="{!samplePayment.npe01__Scheduled_Date__c}"/>
                 </apex:pageBlockSectionItem>
             
                 <apex:pageBlockSectionItem >       
-                    <apex:outputLabel value="Interval" />
+                    <apex:outputLabel value="{!$Label.pmtWizardInterval}" />
                     <apex:outputpanel >
                         <apex:selectList value="{!interval}" id="intervals" multiselect="false" size="1">
                             <apex:selectOptions value="{!intervals}"/>
@@ -69,41 +68,41 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 </apex:pageBlockSectionItem> 
     
                 <apex:pageBlockSectionItem >       
-                    <apex:outputLabel value="Payment Method"/>
+                    <apex:outputLabel value="{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Payment_Method__c.Label}"/>
                     <apex:inputField value="{!samplePayment.npe01__Payment_Method__c}"/>
                 </apex:pageBlockSectionItem>
             </apex:pageblocksection>
             <div style="text-align: center;">
-            <apex:commandButton action="{!calculate}" rerender="theTable" value="Calculate Payments"/></div>
+            <apex:commandButton action="{!calculate}" rerender="theTable" value="{!$Label.pmtWizardBtnCalcPayments}"/></div>
         </apex:pageBlock>
     </apex:form>
 
     <apex:form >
-        <apex:pageBlock title="Payments to be Created" mode="edit" rendered="{!haveAmount}">
+        <apex:pageBlock title="{!$Label.pmtWizardToBeCreated}" mode="edit" rendered="{!haveAmount}">
             <apex:pageBlockTable id="theTable" value="{!payments}" var="p" style="margin-bottom:12px;"> 
                 <apex:column >
-                    <apex:facet name="header">Payment #</apex:facet>
+                    <apex:facet name="header">{!$Label.pmtWizardPaymentNumber}</apex:facet>
                     <apex:outputText value="{!p.paymentNumber}"/>
                 </apex:column>
                 <apex:column >
-                    <apex:facet name="header">Amount</apex:facet>
+                    <apex:facet name="header">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Payment_Amount__c.Label}</apex:facet>
                     <apex:inputField value="{!p.OppPayment.npe01__Payment_Amount__c}"/>
                 </apex:column>
                 <apex:column >
-                    <apex:facet name="header">Scheduled Date</apex:facet>
+                    <apex:facet name="header">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Scheduled_Date__c.Label}</apex:facet>
                     <apex:inputField value="{!p.OppPayment.npe01__Scheduled_Date__c}"/>
                 </apex:column>
                 <apex:column >
-                    <apex:facet name="header">Paid Date</apex:facet>
+                    <apex:facet name="header">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Payment_Date__c.Label}</apex:facet>
                     <apex:inputField value="{!p.OppPayment.npe01__Payment_Date__c}"/>
                 </apex:column>
                 <apex:column >
-                    <apex:facet name="header">Paid?</apex:facet>
+                    <apex:facet name="header">{!$ObjectType.npe01__OppPayment__c.Fields.npe01__Paid__c.Label}</apex:facet>
                     <apex:inputField value="{!p.OppPayment.npe01__Paid__c}"/>
                 </apex:column>
             </apex:pageBlockTable>
             <div style="text-align: center;">
-            <apex:commandButton action="{!createPayments}" value="Create Payments"/></div>
+            <apex:commandButton action="{!createPayments}" value="{!$Label.pmtWizardBtnCreatePayments}"/></div>
         </apex:pageBlock>
     </apex:form>    
     </apex:outputPanel>
@@ -112,8 +111,8 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
    <!-- START PAYMENT WRITEOFF  --> 
         
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}">
-    <apex:sectionHeader title="Payments" subtitle="Writeoff Remaining Balance"/>
-    <apex:pageBlock title="Current Opportunity Info">
+    <apex:sectionHeader title="{!$ObjectType.npe01__OppPayment__c.LabelPlural}" subtitle="{!$Label.pmtWizardSectionWriteoff}"/>
+    <apex:pageBlock title="{!$Label.pmtWizardSectionTitle}">
         <apex:pageBlockSection id="theGrid" columns="2" rendered="{!NOT(ISNULL(currentOpp))}">       
             <apex:outputField value="{!currentOpp.Name}" />
             <apex:outputField value="{!currentOpp.Amount}" />
@@ -122,25 +121,24 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             <apex:outputField value="{!currentOpp.CloseDate}" />
             <apex:outputField value="{!currentOpp.npe01__Amount_Outstanding__c}" />
        </apex:pageBlockSection>
-       <apex:outputText value="No opportunity found."  rendered="{!ISNULL(CurrentOpp)}"/>
+       <apex:outputText value="{!$Label.pmtWizardMsgNoOppFound}"  rendered="{!ISNULL(CurrentOpp)}"/>
     </apex:pageBlock>
     <apex:form >
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(CurrentOpp)), NOT(haveAmount), NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}">
-    NOTE: This opportunity has no unpaid amount. To writeoff payments, 
-    first&nbsp;<apex:outputLink value="{!'/' + currentOpp.id}">edit the opportunity record</apex:outputLink> and 
-    enter an amount or delete existing payments.
+            {!$Label.pmtWizardNoWriteoffAmount}&nbsp;&nbsp;
+            <apex:outputLink value="{!'/' + currentOpp.id}">{!currentOpp.Name}</apex:outputLink>
     </apex:outputPanel>
-    <apex:pageBlock title="Writeoff Payments" rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}">
+    <apex:pageBlock title="{!$Label.pmtWizardSectionWriteoffPayments}" rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}">
         <apex:OutputPanel >
-        You are preparing to writeoff&nbsp;
-            <apex:outputText value="{!outstanding_payments}" />
-        Payment(s) totaling&nbsp;
-            <apex:outputField value="{!currentOpp.npe01__Amount_Outstanding__c}" />
-        .<br /><br/> 
-        Which date would you like to use?&nbsp;<apex:inputField value="{!writeoffPayment.npe01__Payment_Date__c}" />
-        </apex:OutputPanel>
+	        <apex:outputText value="{!$Label.pmtWizardWriteoffMessage}">
+	           <apex:param value="{!outstanding_payments}"/>
+	           <apex:param value="{!currentOpp.npe01__Amount_Outstanding__c}"/>
+	        </apex:outputText>        
+            <br/><br/> 
+            {!$Label.pmtWizardWriteoffDate}&nbsp;<apex:inputField value="{!writeoffPayment.npe01__Payment_Date__c}" />
+        </apex:OutputPanel>       
         <div style="text-align: center;">
-        <apex:commandButton action="{!writeoff}" value="Writeoff Payments"/></div>
+        <apex:commandButton action="{!writeoff}" value="{!$Label.pmtWizardSectionWriteoffPayments}"/></div>
     </apex:pageBlock>
     </apex:form>
 

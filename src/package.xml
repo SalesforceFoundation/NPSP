@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -444,6 +445,7 @@
     <members>Data_Import_Settings__c.Batch_Size__c</members>
     <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
     <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+    <members>Error_Settings__c.Disable_Error_Handling__c</members>
     <members>Error_Settings__c.Enable_Debug__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
@@ -496,6 +498,7 @@
     <members>Trigger_Handler__c.User_Managed__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
@@ -540,6 +543,7 @@
     <members>Zipcode_Verification_Limit</members>
     <members>addrCiceroMissingAPIKey</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
+    <members>addrGeneralSettings</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
@@ -713,6 +717,28 @@
     <members>labelListViewPrevious</members>
     <members>labelMessageLoading</members>
     <members>labelShowMore</members>
+    <members>lblNPSPSettings</members>
+    <members>pmtWizardBtnCalcPayments</members>
+    <members>pmtWizardBtnCreatePayments</members>
+    <members>pmtWizardBtnRemovePaidPayments</members>
+    <members>pmtWizardCreateSchedule</members>
+    <members>pmtWizardFirstPaymentDate</members>
+    <members>pmtWizardInterval</members>
+    <members>pmtWizardMsgNoOppFound</members>
+    <members>pmtWizardNoUnpaidAmount</members>
+    <members>pmtWizardNoWriteoffAmount</members>
+    <members>pmtWizardNumberOfPayments</members>
+    <members>pmtWizardPaymentNumber</members>
+    <members>pmtWizardPaymentsDisabled</members>
+    <members>pmtWizardPaymentsDisabledTitle</members>
+    <members>pmtWizardSectionTitle</members>
+    <members>pmtWizardSectionWriteoff</members>
+    <members>pmtWizardSectionWriteoffPayments</members>
+    <members>pmtWizardSubtitle</members>
+    <members>pmtWizardToBeCreated</members>
+    <members>pmtWizardWarning</members>
+    <members>pmtWizardWriteoffDate</members>
+    <members>pmtWizardWriteoffMessage</members>
     <members>stgBtnCancel</members>
     <members>stgBtnClearErrorLog</members>
     <members>stgBtnCreateAutoRel</members>
@@ -819,6 +845,7 @@
     <members>stgHelpRollupExcludeContactOppType</members>
     <members>stgHelpRollupNDayValue</members>
     <members>stgHelpRollupPrimaryContact</members>
+    <members>stgHelpSimpleAddrChangeIsUpdate</members>
     <members>stgHelpSoftCreditRoles</members>
     <members>stgHelpStoreErrorsOn</members>
     <members>stgHelpTHActive</members>

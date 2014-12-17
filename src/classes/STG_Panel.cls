@@ -51,7 +51,7 @@ public with sharing virtual class STG_Panel {
     
     static public STG_SettingsService stgService {
         get {
-            if (stgService == null)  { 
+            if (stgService == null) { 
             	stgService = STG_SettingsService.stgService;
                 //UTIL_Debug.debug('***** getting STG_SettingsService.stgService: ' + stgService);
             }

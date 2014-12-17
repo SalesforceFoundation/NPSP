@@ -241,11 +241,11 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     private void verifyNoOrphanedHouseholds() {
     	try {
 	        integer cHHObj = [select Count() from npo02__Household__c 
-	            where Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0 limit 9999];
+	            where Number_of_Household_Members__c = 0 limit 9999];
 	            //where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
 	        integer cHHAcc = [select Count() from Account 
 	            where npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and 
-	                (Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0) limit 9999];
+	                Number_of_Household_Members__c = 0 limit 9999];
 	                //Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
 	        if (cHHObj > 0) {
 	            createDR(Label.healthLabelHHObjData, 'Error', 

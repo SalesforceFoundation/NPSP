@@ -370,10 +370,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     }
 
-    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {     
+    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {   
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+        es.Disable_Error_Handling__c = false;
         es.Enable_Debug__c = false;
     }
     
@@ -424,6 +425,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
+        contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         upsert contactsSettings;
         return contactsSettings;
     }
