@@ -28,10 +28,12 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
-* @date 2014 (2.0)
-* @description The controller for the VF page invoked by using the bulk Account model conversion utility
+* @author Salesforce.com Foundation 
+* @date 2014 
+* @group Account Model Converter
+* @description The controller for the VF page invoked by using the bulk Account model conversion utility.  This controller handles basic logic for checking the user setup and any invalid states prior to allowing the utility to run.  
 */
+
 public with sharing class CONV_Account_Conversion_CTRL {
 
     // properties for page
