@@ -30,12 +30,6 @@
     
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
 
-    <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
-    <div>
-       <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
-    </div>
-    
-
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock mode="maindetail">
@@ -45,6 +39,29 @@
                                 rerender="fields, commandButtons, addrValidationTest, saveApiSettingsFailure" styleClass="btn-sm btn-primary" />
         </apex:outputPanel>
         
+
+        <section>
+            <h3 class="section-header" >{!$Label.addrGeneralSettings}</h3>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Organizational_Account_Addresses_Enabled__c.Label}" for="cbxOAAE" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgCon.Organizational_Account_Addresses_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxOAAE" />
+                </div>
+                <div class="col-md-offset-4 col-md-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpOrgAccountAddressMgmt}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Simple_Address_Change_Treated_as_Update__c.Label}" for="cbxSACT" styleClass="col-md-4 control-label" />
+                <div class="col-md-8 form-control-column">
+                    <apex:inputCheckbox value="{!stgService.stgCon.Simple_Address_Change_Treated_as_Update__c}" disabled="{!isReadOnlyMode}" id="cbxSACT" />
+                </div>
+                <div class="col-md-offset-4 col-md-8 help-block">
+                    <apex:outputText value="{!$Label.stgHelpSimpleAddrChangeIsUpdate}" />
+                </div>
+            </div>
+        </section>
+
         <apex:outputPanel id="helpTextMapper">
             <apex:repeat value="{!servicesHelpTextMap}" var="key">
                 <script>
@@ -63,6 +80,10 @@
         
         <section>
             <h3 class="section-header" >{!$Label.Addr_Settings_API_Title}</h3>
+		    <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body1}" />
+		    <div>
+		       <apex:outputText escape="false" value="{!$Label.Addr_Settings_Intro_Body2}" />
+		    </div>
             <div class="form-group">
                 <apex:outputLabel value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.Label}" for="iEnable_Automatic_Verification__c" 
                                     styleClass="col-sm-4 control-label" />

@@ -44,15 +44,6 @@
                     <apex:outputText value="{!$Label.stgHelpOneToOneRTID}" />
                 </div>
             </div>
-            <div class="form-group">
-                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Organizational_Account_Addresses_Enabled__c.Label}" for="cbxOAAE" styleClass="col-md-4 control-label" />
-                <div class="col-md-8 form-control-column">
-                    <apex:inputCheckbox value="{!stgService.stgCon.Organizational_Account_Addresses_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxOAAE" />
-                </div>
-                <div class="col-md-offset-4 col-md-8 help-block">
-                    <apex:outputText value="{!$Label.stgHelpOrgAccountAddressMgmt}" />
-                </div>
-            </div>
 
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
