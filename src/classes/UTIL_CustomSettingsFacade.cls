@@ -370,10 +370,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     }
 
-    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {     
+    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {   
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+        es.Disable_Error_Handling__c = false;
         es.Enable_Debug__c = false;
     }
     
