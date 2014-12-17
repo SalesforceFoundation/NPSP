@@ -92,8 +92,10 @@ public with sharing class TDTM_TriggerHandler {
 	        }
 	    } catch(Exception e) {
 	    	UTIL_Debug.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+            if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
+                Database.rollback(sp);
+                ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+            }
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
             will be rolled back by the platform, and our error record won't be saved or error notifications sent. **/ 
@@ -202,8 +204,10 @@ public with sharing class TDTM_TriggerHandler {
             
         if(errorsExist) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Error found when processing DML');
-            Database.rollback(sp);
-            errorHandler.storeErrors();
+            if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
+                Database.rollback(sp);
+                errorHandler.storeErrors();
+            }
         }
     }
 }
