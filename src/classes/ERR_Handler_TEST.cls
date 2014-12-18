@@ -222,15 +222,15 @@ public with sharing class ERR_Handler_TEST {
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
         
-        //Database.insert will roll everything back if there is an error, and then run again only with the records that
-        //don't produce exceptions
-        System.assertEquals(true, results[0].isSuccess());  
+        //All the records will be flagged as failure now, since an unhandled exception went out.
+        //(The platform rolls everything back in this case.)
+        System.assertEquals(false, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
-        System.assertEquals(true, results[2].isSuccess()); 
+        System.assertEquals(false, results[2].isSuccess()); 
 
         //Verify 2 contacts were properly inserted
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
-        System.assertEquals(2, insertedContacts.size()); 
+        System.assertEquals(0, insertedContacts.size()); 
         
         //Verify no error record was created
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
