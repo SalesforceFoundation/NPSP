@@ -216,8 +216,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // get all Contacts by HH, that might need updating
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
-        map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
-        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId from Contact where HHId__c in :mapAccIdAddr.keySet()];
+        map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>(); 
+        set<Id> setHHId =  mapAccIdAddr.keySet();
+        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId 
+            from Contact where 
+                (Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and AccountId != null and AccountId in :setHHId)];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
