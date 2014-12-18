@@ -220,8 +220,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         set<Id> setHHId =  mapAccIdAddr.keySet();
         list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId 
             from Contact where 
-                (Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and AccountId != null and AccountId in :setHHId) or 
-                (npo02__Household__c != null and npo02__Household__c in :setHHId)];
+                (Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and AccountId != null and AccountId in :setHHId)];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
