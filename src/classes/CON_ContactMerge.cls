@@ -91,7 +91,7 @@ public class CON_ContactMerge {
                 winnerAccountIsOneToOne = true;
             }
             
-            if (winnerAccount[0].isPersonAccount)
+            if (isPAEnabled && (boolean)winnerAccount[0].get('isPersonAccount'))
                 throw new ConMergeException('Person accounts are not supported.');
             
         }   
@@ -103,7 +103,7 @@ public class CON_ContactMerge {
         losers = database.query(strSoql);
         
         for(Contact thisloserContact : losers){
-            if (thisloserContact.Account.isPersonAccount)
+            if (isPAEnabled && (boolean)thisloserContact.get('Account.isPersonAccount'))
                 throw new ConMergeException('Person accounts are not supported.');
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
