@@ -92,7 +92,7 @@ public class CON_ContactMerge {
             }
             
             if (isPAEnabled && (boolean)winnerAccount[0].get('isPersonAccount'))
-                throw new ConMergeException('Person accounts are not supported.');
+                throw new ConMergeException(label.conMergeErrNoPersonAccounts);
             
         }   
         //losers = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :losers];
@@ -104,7 +104,7 @@ public class CON_ContactMerge {
         
         for(Contact thisloserContact : losers){
             if (isPAEnabled && (boolean)thisloserContact.get('Account.isPersonAccount'))
-                throw new ConMergeException('Person accounts are not supported.');
+                throw new ConMergeException(label.conMergeErrNoPersonAccounts);
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
             if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId){
