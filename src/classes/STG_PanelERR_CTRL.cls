@@ -38,8 +38,12 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
     public String notificationToDropDown { public get; public set; }
     public String groupId { public get; public set; }
-    public String saveErrorMessage {public get; set; }
+    public String saveErrorMessage { public get; set; }
  
+    public STG_PanelERR_CTRL() {
+    	notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
+    }
+    
     //Displays the values of the drop-down (Edit Mode only)
     public List<SelectOption> listSOERRNotifOptions {
         get {
@@ -104,5 +108,13 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public override PageReference cancelEdit() {
     	saveErrorMessage = null;
     	return super.cancelEdit();
+    }
+    
+    public override PageReference editSettings() {
+    	if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
+    		notificationToDropDown = ERR_Notifier.NotificationOptions.chatterGroup;
+    	}
+    	
+    	return super.editSettings();
     }
 }
