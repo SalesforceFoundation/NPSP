@@ -172,6 +172,7 @@
     <members>UTIL_Debug</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
+    <members>UTIL_GlobalProxy</members>
     <members>UTIL_GlobalSchedulable</members>
     <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_IScheduled</members>
