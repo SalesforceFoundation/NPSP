@@ -75,9 +75,9 @@ public class CON_ContactMerge {
         if (winner.AccountId!=null){
             //winnerAccount = [Select Id,npe01__SYSTEM_AccountType__c,Name from Account where Id=:winner.accountid];
             ID winnerAccId = winner.AccountId;
-	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name ';
+	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name';
 	        if (isPAEnabled)
-	            strSoql += ', isPersonAccount ';
+	            strSoql += ', PersonContactId ';  // note: we originally used isPersonAccount, but having the field in the sobject caused merge to fail.
 	        strSoql += ' from Account where Id=:winnerAccId';
 	        winnerAccount = database.query(strSoql);
         }
@@ -91,19 +91,19 @@ public class CON_ContactMerge {
                 winnerAccountIsOneToOne = true;
             }
             
-            if (isPAEnabled && (boolean)winnerAccount[0].get('isPersonAccount'))
+            if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
             
         }   
         //losers = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :losers];
         string strSoql = 'Select Account.Id,Account.npe01__SYSTEM_AccountType__c ';
         if (isPAEnabled)
-            strSoql += ', Account.isPersonAccount ';
-        strSoql += ' from Contact where Id IN :losers';
+            strSoql += ', isPersonAccount ';
+        strSoql += ' from Contact where Id IN :losers ORDER BY Id ASC';
         losers = database.query(strSoql);
         
         for(Contact thisloserContact : losers){
-            if (isPAEnabled && (boolean)thisloserContact.get('Account.isPersonAccount'))
+            if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
