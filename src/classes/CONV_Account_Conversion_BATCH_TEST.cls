@@ -28,9 +28,10 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
-* @date 2014 (2.0)
-* @description Test for the controller for the VF page invoked by using the bulk Account model conversion utility
+* @author Salesforce.com Foundation 
+* @date 2014 
+* @group Account Model Converter
+* @description Test class to support the Account model converter conversion process 
 */
 @isTest
 public with sharing class CONV_Account_Conversion_BATCH_TEST {
