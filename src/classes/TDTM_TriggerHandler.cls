@@ -95,6 +95,8 @@ public with sharing class TDTM_TriggerHandler {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+            } else { // re-throwing exception if error handling is disabled 
+            	throw e;
             }
             /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 

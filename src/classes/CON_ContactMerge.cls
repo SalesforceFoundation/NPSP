@@ -48,7 +48,8 @@ public class CON_ContactMerge {
     
     //List for the losing records
     public List<Contact> losers {get; set;}
-        
+       
+    public class ConMergeException extends Exception {} 
         
     //method to merge the winner and losers
     public static Boolean mergeContacts(Contact winner, List<Contact> losers) {
@@ -64,11 +65,21 @@ public class CON_ContactMerge {
         Boolean winnerAccountIsOneToOne = false;
         winner = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id=:winner.Id];
 
-        // DJH:UNDONE handle HH Accounts the same way as 1:1 Accounts?
 
+        // NOTE: we currently handle HH Accounts the same way as 1:1 Accounts
+
+        // detect PersonAccounts
+        boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
+        
         //get winner contact Account
         if (winner.AccountId!=null){
-            winnerAccount = [Select Id,npe01__SYSTEM_AccountType__c,Name from Account where Id=:winner.accountid];
+            //winnerAccount = [Select Id,npe01__SYSTEM_AccountType__c,Name from Account where Id=:winner.accountid];
+            ID winnerAccId = winner.AccountId;
+	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name';
+	        if (isPAEnabled)
+	            strSoql += ', PersonContactId ';  // note: we originally used isPersonAccount, but having the field in the sobject caused merge to fail.
+	        strSoql += ' from Account where Id=:winnerAccId';
+	        winnerAccount = database.query(strSoql);
         }
             
         if (winnerAccount.size()>0) {
@@ -80,10 +91,21 @@ public class CON_ContactMerge {
                 winnerAccountIsOneToOne = true;
             }
             
+            if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
+                throw new ConMergeException(label.conMergeErrNoPersonAccounts);
+            
         }   
-        losers = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :losers];
+        //losers = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :losers];
+        string strSoql = 'Select Account.Id,Account.npe01__SYSTEM_AccountType__c ';
+        if (isPAEnabled)
+            strSoql += ', isPersonAccount ';
+        strSoql += ' from Contact where Id IN :losers ORDER BY Id ASC';
+        losers = database.query(strSoql);
         
         for(Contact thisloserContact : losers){
+            if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
+                throw new ConMergeException(label.conMergeErrNoPersonAccounts);
+                
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
             if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId){
                 loserAccountIds.add(thisloserContact.AccountId);

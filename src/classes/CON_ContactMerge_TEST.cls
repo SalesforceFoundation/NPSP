@@ -35,11 +35,18 @@
 @isTest
 private class CON_ContactMerge_TEST {
 
+    /**
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';
     
     static testMethod void exerciseUIOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'exerciseUIOne2One') return;
         exerciseUI(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void exerciseUIHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'exerciseUIHHAccount') return;
         exerciseUI(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //exercise the many UI variables
@@ -135,9 +142,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void failNextStepWithDeletedRecordSelectedOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'failNextStepWithDeletedRecordSelectedOne2One') return;
         failNextStepWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void failNextStepWithDeletedRecordSelectedHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'failNextStepWithDeletedRecordSelectedHHAccount') return;
         failNextStepWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     // Try selecting a deleted record for merge
@@ -188,9 +197,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void failMergeWithDeletedRecordSelectedOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'failMergeWithDeletedRecordSelectedOne2One') return;
         failMergeWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'failMergeWithDeletedRecordSelectedHHAccount') return;
         failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
         // Try selecting a deleted record for merge
@@ -247,9 +258,11 @@ private class CON_ContactMerge_TEST {
     }
    
     static testMethod void tooFewContactsSelectedOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'tooFewContactsSelectedOne2One') return;
         tooFewContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void tooFewContactsSelectedHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'tooFewContactsSelectedHHAccount') return;
         tooFewContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void tooFewContactsSelected(string strProcessor) {
@@ -283,9 +296,11 @@ private class CON_ContactMerge_TEST {
     
     
     static testMethod void tooManyContactsSelectedOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'tooManyContactsSelectedOne2One') return;
         tooManyContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void tooManyContactsSelectedHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'tooManyContactsSelectedHHAccount') return;
         tooManyContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void tooManyContactsSelected(string strProcessor) {
@@ -342,9 +357,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OneToOneOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOne2One') return;
         merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneHHAccount') return;
         merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -399,9 +416,11 @@ private class CON_ContactMerge_TEST {
 
 
     static testMethod void merge2OneToOneOppsOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsOne2One') return;
         merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneOppsHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsHHAccount') return;
         merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -466,9 +485,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OrganizationsOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OrganizationsOne2One') return;
         merge2Organizations(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OrganizationsHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OrganizationsHHAccount') return;
         merge2Organizations(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge a one-to-one contact with one in a normal organzation
@@ -533,9 +554,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2PrivateContactsOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsOne2One') return;
         merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2PrivateContactsHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsHHAccount') return;
         merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two private contacts
@@ -588,9 +611,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2IndividualsOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsOne2One') return;
         merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2IndividualsHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsHHAccount') return;
         merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts in the Individual Account
@@ -746,9 +771,11 @@ private class CON_ContactMerge_TEST {
 
 
     static testMethod void merge1Org1OneToOneOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneOne2One') return;
         merge1Org1OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge1Org1OneToOneHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneHHAccount') return;
         merge1Org1OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge one contacts in the Individual Account, one in one-to-one model
@@ -808,9 +835,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge3OneToOneOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneOne2One') return;
         merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge3OneToOneHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneHHAccount') return;
         merge3OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void merge3OneToOne(string strProcessor) {
@@ -871,9 +900,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneInSameAccountOne2One') return;
         merge2OneToOneInSameAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneInSameAccountHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneInSameAccountHHAccount') return;
         merge2OneToOneInSameAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -939,9 +970,11 @@ private class CON_ContactMerge_TEST {
     }
     
     static testMethod void ghIssue6One2One(){
+        if (strTestOnly != '*' && strTestOnly != 'ghIssue6One2One') return;
         ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void ghIssue6HHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'ghIssue6HHAccount') return;
         ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void ghIssue6(string strProcessor){
@@ -996,6 +1029,7 @@ private class CON_ContactMerge_TEST {
     }
   
     public static testmethod  void householdDifferentFromMaster() {
+        if (strTestOnly != '*' && strTestOnly != 'householdDifferentFromMaster') return;
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -1053,6 +1087,7 @@ private class CON_ContactMerge_TEST {
     
     //check a standard set controller passed into the page is handled correctly
     static testMethod void testStandardSetSelected(){
+        if (strTestOnly != '*' && strTestOnly != 'testStandardSetSelected') return;
         
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1083,6 +1118,7 @@ private class CON_ContactMerge_TEST {
   
     //check a search term passed into the page is handled correctly
     static testMethod void testSearchSpecPassed(){
+        if (strTestOnly != '*' && strTestOnly != 'testSearchSpecPassed') return;
         
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1112,6 +1148,7 @@ private class CON_ContactMerge_TEST {
     
     //check a comma separated list of Ids are handled correctly
     static testMethod void testGoodIdsPassed(){
+        if (strTestOnly != '*' && strTestOnly != 'testGoodIdsPassed') return;
         
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1139,6 +1176,7 @@ private class CON_ContactMerge_TEST {
     
     //check invalid Ids are handled
     static testMethod void testBadIdsPassed(){
+        if (strTestOnly != '*' && strTestOnly != 'testBadIdsPassed') return;
         
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1165,5 +1203,58 @@ private class CON_ContactMerge_TEST {
         //check error message logged to the page
         system.assert(ApexPages.hasMessages()); 
         
+    }
+    
+    static testMethod void personAccountErrorDetection() {
+        if (strTestOnly != '*' && strTestOnly != 'personAccountErrorDetection') return;
+        
+        // detect PersonAccounts
+        boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
+        if (!isPAEnabled)
+            return;
+        
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        
+		RecordType personAccountRecordType =  [SELECT Id FROM RecordType WHERE DeveloperName = 'PersonAccount' and SObjectType = 'Account'];
+		Account pa1 = new Account();
+		
+		pa1.put('FirstName', 'Fred');
+		pa1.put('LastName', 'Smith');
+		pa1.RecordType = personAccountRecordType;
+		insert pa1;
+		    	
+        Account pa2 = new Account();
+        pa2.put('FirstName', 'Freddy');
+        pa2.put('LastName', 'Smith');
+        pa2.RecordType = personAccountRecordType;
+        insert pa2;
+
+        list<Id> fixedSearchResults = new List<Id>(); 
+        fixedSearchResults.add(pa1.Id);
+        fixedSearchResults.add(pa2.Id);  
+        Test.setFixedSearchResults(fixedSearchResults); 
+        
+        PageReference pr = Page.CON_ContactMerge;
+        pr.getParameters().put('mergeIds', pa1.Id + ',' + pa2.Id);
+        
+        Test.setCurrentPageReference(pr);
+        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        
+        //check we ended up on step 1 of the merge
+        system.assertEquals(1, controller.step); 
+        
+        selectMasterRecord(controller, pa1.id);
+        
+        //merge them
+        controller.mergeContacts();
+
+        //check error message logged to the page
+        system.assert(ApexPages.hasMessages());
+        
+        // no merge occurred
+        system.assertEquals(2, [select count() from Account]); 
+
     }
 }

@@ -25,12 +25,13 @@
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-    POSSIBILITY OF SUCH DAMAGE.  
+    POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
-* @date 2014
-* @description Provides a batch conversion interface for porting 1x1 or Individual Contacts to the Household Account model
+* @author Salesforce.com Foundation 
+* @date 2014 
+* @group Account Model Converter
+* @description Account model conversion utility main class. This class holds all conversion logic 
 */
 global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
