@@ -389,7 +389,6 @@ public without sharing class HH_HouseholdNaming {
 		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
 		        
 		        set<string> setStrField = iNaming.setHousholdNameFieldsOnContact();
-		        system.debug('****DJH setStrField: ' + setStrField);
 		        for (string strF : setStrField) {
                     if (strF == 'Salutation') strF = 'toLabel(Salutation)';
                     strSoql += ', ' + strF;

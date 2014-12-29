@@ -849,6 +849,14 @@
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>conMergeErrNoPersonAccounts</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>conMergeErrNoPersonAccounts</shortDescription>
+        <value>Person accounts are not supported.</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>

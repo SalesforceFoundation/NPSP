@@ -448,7 +448,12 @@ global with sharing class HH_ManageHousehold_EXT {
     public Account getHHA(Id hhId) {
         Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Account.fields.getMap();
         list<String> fields = new list<String>();
-        fields.addAll(fieldMap.keySet());
+        for (string strField : fieldMap.keySet()) {
+            // don't include Person Account fields
+            if (!strField.endsWith('__pc'))
+                fields.add(strField);
+        }
+
         String hhq = 'SELECT ';
         Integer i = 1;
         for (String fld : fields) {
