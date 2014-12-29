@@ -302,7 +302,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.label.npe03.RecurringDonationContactRole,installmentCRs[0].Role);
     }
     
-    static testMethod void testSettingsCreation(){
+    static testMethod void testSettingsCreation() {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
 
         delete [select id from npe03__Recurring_Donations_Settings__c];
@@ -1498,7 +1498,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+        errorHandler.doErrorsExist(lsr, badOpps);
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1539,7 +1539,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+        errorHandler.doErrorsExist(lsr, badOpps);
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1582,7 +1582,7 @@ public class RD_RecurringDonations_TEST {
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+        errorHandler.doErrorsExist(lsr, badOpps);
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------

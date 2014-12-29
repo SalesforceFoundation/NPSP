@@ -199,16 +199,21 @@ public with sharing class TDTM_TriggerHandler {
         //Also, should we support Database.merge?
         
         //Process the results
-        // if isPropogateErrorsFromTrigger == true, processResults will throw an exception instead of returning failure.
-        Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
+        // if isPropogateErrorsFromTrigger == true, doErrorsExist will throw an exception instead of returning failure.
+        Boolean errorsExist = errorHandler.doErrorsExist(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
-            dmlWrapper.objectsToUndelete, ERR_Handler.Context.TDTM);
+            dmlWrapper.objectsToUndelete);
             
         if(errorsExist) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Error found when processing DML');
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
                 errorHandler.storeErrors();
+                
+                if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
+		           UTIL_Debug.debug('****Calling Error Notifier');
+		           ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.TDTM);
+		        }
             }
         }
     }

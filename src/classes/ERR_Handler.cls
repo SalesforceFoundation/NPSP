@@ -31,111 +31,99 @@ public with sharing class ERR_Handler {
     
     private List<Error__c> errors = new List<Error__c>();
    
+    /*******************************************************************************************************
+    * @description Enum used to categorize errors as coming from specific functionality. Each enum value matches 
+    *              one of the prefixes used throughout the package.
+    */
     public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
-        
-    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
+    
+    /*******************************************************************************************************
+    * @description Processes the result of multiple DML operations performed using the Database class, to determine 
+    *              if errors occurred. It does not store errors or send error email notifications. These operations
+    *              should be performed after the rollback.
+    *
+    * @param insertResults The result of a Database.Insert operation.
+    * @param updateResults The result of a Database.Update operation.
+    * @param deleteResults The result of a Database.Delete operation.
+    * @param undeleteResults The result of a Database.Undelete operation.
+    * @param insertedObjects Objects that were inserted in the Database.Insert operation.
+    * @param updatedObjects Objects that were updated in the Database.Update operation.
+    * @param deletedObjects Objects that were deleted in the Database.Delete operation.
+    * @param undeletedObjects Objects that were Undeleted in the Database.Undelete operation.
+    *
+    * @return True if errors occurred in one of the DML operations. False otherwise.
+    */
+    public Boolean doErrorsExist(
+    List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
-    List<SObject> objectsToDelete, List<SObject> objectsToUndelete) {
-    	
-    	return processResults(insertResults, updateResults, deleteResults, undeleteResults, objectsToInsert, objectsToUpdate, 
-    	               objectsToDelete, objectsToUndelete, null);
-    }
-    
-    public Boolean processInsertResults(List<Database.SaveResult> insertResults, List<SObject> objectsToInsert, 
-    ERR_Handler.Context context) {
-    	return processResults(insertResults, null, null, null, objectsToInsert, null, null, null, context);
-    }
-    
-    public Boolean processUpdateResults(List<Database.SaveResult> updateResults, List<SObject> objectsToUpdate, 
-    ERR_Handler.Context context) {
-        return processResults(null, updateResults, null, null, null, objectsToUpdate, null, null, context);
-    }
-    
-    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
-    List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
-    List<SObject> objectsToDelete, List<SObject> objectsToUndelete, ERR_Handler.Context context) {
+    List<SObject> insertedObjects, List<SObject> updatedObjects, 
+    List<SObject> deletedObjects, List<SObject> undeletedObjects) {
                     
         Boolean errorsExist = false;
         	
-    	Boolean errorsExistOnInserts = processResults(insertResults, objectsToInsert);  //Insert
-    	Boolean errorsExistOnUpdates = processResults(updateResults, objectsToUpdate);  //Update
-    	Boolean errorsExistOnDeletes = processResults(deleteResults, objectsToDelete);  //Delete
-    	Boolean errorsExistOnUndeletes = processResults(undeleteResults, objectsToUndelete);  //Undelete
+    	Boolean errorsExistOnInserts = doErrorsExist(insertResults, insertedObjects);  //Insert
+    	Boolean errorsExistOnUpdates = doErrorsExist(updateResults, updatedObjects);  //Update
+    	Boolean errorsExistOnDeletes = doErrorsExist(deleteResults, deletedObjects);  //Delete
+    	Boolean errorsExistOnUndeletes = doErrorsExist(undeleteResults, undeletedObjects);  //Undelete
     	
     	if(errorsExistOnInserts || errorsExistOnUpdates || errorsExistOnDeletes || errorsExistOnUndeletes) {
     		errorsExist = true;
     	}
     	
-    	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
-    	
-    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c && errorsExist) {
-           UTIL_Debug.debug('****Errors exist - calling Error Notifier');
-           ERR_Notifier.sendErrorNotifications(context);
-    	}
-           
+    	// We do NOT want to try to store errors or send error email notifications here. We want to be able to 
+    	//manually do that after the rollback.
+ 
     	return ErrorsExist;
     }
 
-    private Boolean processResults(List<Object> results, List<SObject> sObjects) {    	
+    /*******************************************************************************************************
+    * @description Processes the results of a single DML operation performed using the Database class to determine 
+    *              if errors occurred. It does not store errors or send error email notifications. These operations
+    *              should be performed after the rollback. 
+    */    
+    public Boolean doErrorsExist(List<Object> results, List<SObject> sObjects) {    	
     	Boolean errorsExist = false;
     	
     	if(results != null) {	
 	    	for(Integer i=0; i<results.size(); i++) {
-	        	String message;
 	        	Boolean isSuccess = true;
-	        	List<Object> resultErrors;
 	        	if(results[i] instanceof Database.SaveResult) {
 	        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.SaveResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.SaveResult)results[i]).getErrors();
-	        		}
 	        	} else if(results[i] instanceof Database.DeleteResult) {
 	        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.DeleteResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.DeleteResult)results[i]).getErrors();
-	        		}
 	        	} else if(results[i] instanceof Database.UndeleteResult) {
 	        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.UndeleteResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.UndeleteResult)results[i]).getErrors();
-	        		}
 	        	}
 	        	
-	        	if(!isSuccess && message != null) {
-	        		UTIL_Debug.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
+	        	if(!isSuccess) {
 	        		errorsExist = true;
+	        		
 	        		//Creating error object
 	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
 	                errors.add(err);
-	                //Adding error message to the record
-	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent.
-                     It is also worth noting that Salesforce only allows one to do addError on an object in the trigger handler. So
-                     if this object is actually not in the trigger, but one that a trigger object is trying to modify, setting addError
-                     on this related object will cause an Exception from Salesforce.
-		                if(sObjects != null && sObjects.size() > i)
-		                    addErrorMessage(sObjects[i], message); */
+	                
+	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
+	                //no error record will be saved,or error notification sent.
+	                
+	                //Displaying an error message to the user
 	                if(ApexPages.currentPage() != null)
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
-	                   
+	                
+	                //Bubbling the exception, if necessary.   
                     if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
                         UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
-                        throw(new PropogateException(err.Full_Message__c));
+                        throw new PropogateException(err.Full_Message__c);
                     }
-
 	        	}
 	        }
     	}
     	return errorsExist;
     }
+    
+    
     private class PropogateException extends Exception {}
     
-    /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
+    
     public static void processError(Exception e, ERR_Handler.Context context) {
         processError(e, new List<SObject>(), context);
     }
@@ -152,10 +140,10 @@ public with sharing class ERR_Handler {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
                    UTIL_Debug.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
-                   Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-                   /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
-                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
+                   
+                   //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
+                   //no error record will be saved,or error notification sent.
+                    
                    if(ApexPages.currentPage() != null)
                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
                }
@@ -172,18 +160,6 @@ public with sharing class ERR_Handler {
     	   UTIL_Debug.debug('****Sending error notification');
            ERR_Notifier.sendErrorNotifications(context);
     	}
-    }
-    
-    private static void addErrorMessage(SObject record, String defaultMessage) {
-    	String message = '';
-    	if(record.getSObjectType().getDescribe().getName() != null)
-            message = 'Error on record of type ' + record.getSObjectType().getDescribe().getName() + ' - ';
-    	if(record.get('Id') != null)
-            message = message + 'Record ID: ' + record.get('Id') + ' - ';
-        if(record.get('Name') != null)
-            message = message + 'Record Name: ' + record.get('Name') + ' - ';
-        message = message + '"' + defaultMessage + '"';
-        record.addError(message);
     }
     
     /*** We want this method to be public to be able to explicitly call it after a rollback. ***/

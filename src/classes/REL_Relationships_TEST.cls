@@ -47,7 +47,7 @@ private class REL_Relationships_TEST {
     private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs){
         
         //set running user to avoid dml issue            
-        System.runAs(new User(id = UserInfo.getUserId())){ 
+        System.runAs(new User(id = UserInfo.getUserId())){
                      
             if (rs != null)
                 UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(rs);
@@ -578,7 +578,7 @@ private class REL_Relationships_TEST {
         
         //process error
         ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
+        errorHandler.doErrorsExist(updateResults, (List<SObject>)relationships);
         UTIL_Debug.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
         //no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);
