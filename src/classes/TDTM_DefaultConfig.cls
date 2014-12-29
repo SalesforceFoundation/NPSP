@@ -27,8 +27,20 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
+               settings and the new ones. 
+*/
 public without sharing class TDTM_DefaultConfig {
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public static List<Trigger_Handler__c> getDefaultRecords() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
 
@@ -155,9 +167,11 @@ public without sharing class TDTM_DefaultConfig {
         return handlers;
     }
     
-    /**
-      * Returns a map that specifies how the old NPSP settings match to the new Cumulus TDTM classes
-      */
+    /*******************************************************************************************************
+    * @description Specifies how the old NPSP settings match to the new Cumulus TDTM classes
+    * @param
+    * @return 
+    */
     public static Map<String, String> getNpspToCumulusMap() {
     	Map<String, String> npspToCumulusMap = new Map<String, String>();
     	

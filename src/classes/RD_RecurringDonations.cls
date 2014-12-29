@@ -208,7 +208,7 @@ public with sharing class RD_RecurringDonations {
      
     //future wrapper for rds with no opptys closed
     @future
-    public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids){
+    public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids) {
         delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
 
         list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
@@ -503,8 +503,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()) {
-            	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.doErrorsExist(badSRs, badOpps);
+                ERR_Handler.getErrors(badSRs, badOpps);
+                //TODO: process result??!?!
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -894,8 +894,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-            	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.doErrorsExist(badSRs, badOpps);
+                ERR_Handler.getErrors(badSRs, badOpps);
+                //TODO: process result?!?!
             }
         }
         

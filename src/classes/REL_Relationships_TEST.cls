@@ -577,9 +577,9 @@ private class REL_Relationships_TEST {
         UTIL_Debug.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
         
         //process error
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.doErrorsExist(updateResults, (List<SObject>)relationships);
-        UTIL_Debug.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
+        ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
+        //TODO: process errors!?!?
+    
         //no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }

@@ -36,12 +36,22 @@ public with sharing class ERR_Notifier {
 
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public class NotificationOptions {
         public final String sysAdmins = 'All Sys Admins';
         public final String user = '005';  //specific user (should be a system admin)
         public final String chatterGroup = '0F9'; //chatter group
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public static void sendErrorNotifications(ERR_Handler.Context context) {
 
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -72,6 +82,11 @@ public with sharing class ERR_Notifier {
         }
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             sendErrorQueueEmailNotificationFuture(sendList);
@@ -80,11 +95,21 @@ public with sharing class ERR_Notifier {
         }
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     @future
     private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
         sendErrorQueueEmailNotification(null, sendList); 
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     private static void sendErrorQueueEmailNotification(ERR_Handler.Context context, List<String> sendList) {
         List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
                                         Stack_Trace__c from Error__c where Email_Sent__c = false];
@@ -100,6 +125,11 @@ public with sharing class ERR_Notifier {
         }
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> rdeqList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
@@ -120,6 +150,11 @@ public with sharing class ERR_Notifier {
         return mail;        
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public static void postErrorsToChatter(String chatterGroupId) {
 
         if(chatterGroupId instanceof Id) {
@@ -144,6 +179,11 @@ public with sharing class ERR_Notifier {
         }
     }
 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     private static String getErrorMessageBody(Error__c error) {
         String body = '\nError Type: ' + error.Error_Type__c;
         body += '\nError Date: ' + error.Datetime__c;
@@ -155,8 +195,12 @@ public with sharing class ERR_Notifier {
         body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
         return body;
     }
-    
-    // verify error settings are still valid - called by Health Check
+     
+    /*******************************************************************************************************
+    * @description Verifies error settings are still valid.
+    * @param
+    * @return 
+    */
     public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
         
         Error_Settings__c es = UTIL_CustomSettingsFacade.getErrorSettings();
@@ -204,8 +248,11 @@ public with sharing class ERR_Notifier {
         }
     }
 
-    //For some reason this method does not seem to be working when the installation of the package fails. We'll
-    //leave it here for future debugging purposes. 
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public static void sendEmailOnInstallError(Exception e, InstallContext context) {
         try {
             String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  

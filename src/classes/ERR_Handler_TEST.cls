@@ -356,8 +356,8 @@ public with sharing class ERR_Handler_TEST {
         Database.SaveResult[] updateResults = Database.update(relationships, false);
         
         //process error
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.doErrorsExist(updateResults, (List<SObject>)relationships);
+        ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
+        //TODO: assertion here?!?
 
         //assert no additional error was created on update
         system.assertEquals(1, [select count() from Error__c]);

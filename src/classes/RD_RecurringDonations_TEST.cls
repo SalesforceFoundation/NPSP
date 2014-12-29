@@ -77,7 +77,7 @@ public class RD_RecurringDonations_TEST {
         try {
             insert r0;
         } catch (Exception e) {
-            ERR_Handler.processError(e, r0, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e, ERR_Handler.Context.RD);
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -253,7 +253,7 @@ public class RD_RecurringDonations_TEST {
         try{
             delete r2;
         } catch (exception e1) {
-            ERR_Handler.processError(e1, r2, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e1, ERR_Handler.Context.RD);
         }
         
         //delete should have failed
@@ -1497,8 +1497,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.doErrorsExist(lsr, badOpps);
+        ERR_Handler.doErrorsExist(lsr, badOpps);
+        
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1538,8 +1538,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.doErrorsExist(lsr, badOpps);
+        ERR_Handler.getErrors(lsr, badOpps);
+        //TODO: process result?!?
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1581,8 +1581,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.doErrorsExist(lsr, badOpps);
+        ERR_Handler.doErrorsExist(lsr, badOpps);
+        //TODO: process result?!?
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------

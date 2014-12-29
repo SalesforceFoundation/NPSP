@@ -27,15 +27,35 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Helps to determine if errors occurred during the DML operations, and with the necessary
+               storing and notification of these errors. 
+*/
 public with sharing class ERR_Handler {
-    
-    private List<Error__c> errors = new List<Error__c>();
-   
+       
     /*******************************************************************************************************
     * @description Enum used to categorize errors as coming from specific functionality. Each enum value matches 
     *              one of the prefixes used throughout the package.
     */
-    public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
+    public enum Context { AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI }
+    
+    /*******************************************************************************************************
+    * @description
+    */
+    public class Errors {
+    	/*
+        * @description True if errors occurred in one of the DML operations. False otherwise.
+        */
+    	public Boolean errorsExist = false;
+        /*
+        * @description Error records.
+        */
+    	public List<Error__c> errorRecords = new List<Error__c>();
+    }
+    
     
     /*******************************************************************************************************
     * @description Processes the result of multiple DML operations performed using the Database class, to determine 
@@ -51,29 +71,33 @@ public with sharing class ERR_Handler {
     * @param deletedObjects Objects that were deleted in the Database.Delete operation.
     * @param undeletedObjects Objects that were Undeleted in the Database.Undelete operation.
     *
-    * @return True if errors occurred in one of the DML operations. False otherwise.
+    * @return Errors Combined result od all the DML operations.
     */
-    public Boolean doErrorsExist(
+    public static Errors getErrors(
     List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> insertedObjects, List<SObject> updatedObjects, 
     List<SObject> deletedObjects, List<SObject> undeletedObjects) {
                     
-        Boolean errorsExist = false;
+        Errors errors = new Errors();
         	
-    	Boolean errorsExistOnInserts = doErrorsExist(insertResults, insertedObjects);  //Insert
-    	Boolean errorsExistOnUpdates = doErrorsExist(updateResults, updatedObjects);  //Update
-    	Boolean errorsExistOnDeletes = doErrorsExist(deleteResults, deletedObjects);  //Delete
-    	Boolean errorsExistOnUndeletes = doErrorsExist(undeleteResults, undeletedObjects);  //Undelete
+    	Errors insertErrors = getErrors(insertResults, insertedObjects);  //Insert
+    	Errors updateErrors = getErrors(updateResults, updatedObjects);  //Update
+    	Errors deleteErrors = getErrors(deleteResults, deletedObjects);  //Delete
+    	Errors undeleteErrors= getErrors(undeleteResults, undeletedObjects);  //Undelete
     	
-    	if(errorsExistOnInserts || errorsExistOnUpdates || errorsExistOnDeletes || errorsExistOnUndeletes) {
-    		errorsExist = true;
+    	if(insertErrors.errorsExist || updateErrors.errorsExist || deleteErrors.errorsExist || undeleteErrors.errorsExist) {
+    		errors.errorsExist = true;
+    		errors.errorRecords.addAll(insertErrors.errorRecords);
+    		errors.errorRecords.addAll(updateErrors.errorRecords);
+    		errors.errorRecords.addAll(deleteErrors.errorRecords);
+    		errors.errorRecords.addAll(undeleteErrors.errorRecords);
     	}
     	
     	// We do NOT want to try to store errors or send error email notifications here. We want to be able to 
     	//manually do that after the rollback.
  
-    	return ErrorsExist;
+    	return errors;
     }
 
     /*******************************************************************************************************
@@ -81,8 +105,8 @@ public with sharing class ERR_Handler {
     *              if errors occurred. It does not store errors or send error email notifications. These operations
     *              should be performed after the rollback. 
     */    
-    public Boolean doErrorsExist(List<Object> results, List<SObject> sObjects) {    	
-    	Boolean errorsExist = false;
+    public static Errors getErrors(List<Object> results, List<SObject> sObjects) {    	
+    	Errors errors = new Errors();
     	
     	if(results != null) {	
 	    	for(Integer i=0; i<results.size(); i++) {
@@ -96,11 +120,11 @@ public with sharing class ERR_Handler {
 	        	}
 	        	
 	        	if(!isSuccess) {
-	        		errorsExist = true;
+	        		errors.errorsExist = true;
 	        		
 	        		//Creating error object
 	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
-	                errors.add(err);
+	                errors.errorRecords.add(err);
 	                
 	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
 	                //no error record will be saved,or error notification sent.
@@ -117,60 +141,55 @@ public with sharing class ERR_Handler {
 	        	}
 	        }
     	}
-    	return errorsExist;
+    	return errors;
     }
     
-    
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     private class PropogateException extends Exception {}
     
-    
+    /*******************************************************************************************************
+    * @description 
+    * @param
+    * @return 
+    */
     public static void processError(Exception e, ERR_Handler.Context context) {
-        processError(e, new List<SObject>(), context);
-    }
-    
-    public static void processError(Exception e, SObject record, ERR_Handler.Context context) {
-    	processError(e, new SObject[]{record}, context);
-    }
-    
-    public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
     	
     	if(e != null) {
     		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
-			if(e instanceof DmlException && records != null && records.size() > 0) {
-                DmlException de = (DmlException) e;
-                for(Integer i=0; i<de.getNumDml(); i++) {
-                   UTIL_Debug.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
-                   
-                   //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
-                   //no error record will be saved,or error notification sent.
-                    
-                   if(ApexPages.currentPage() != null)
-                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-               }
-           }
+			
+			if(ApexPages.currentPage() != null)
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
            
            if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
-               UTIL_Debug.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
                Database.SaveResult result = Database.insert(error, false);
            }
     	}
-    	
-    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
-    	   UTIL_Debug.debug('****Sending error notification');
-           ERR_Notifier.sendErrorNotifications(context);
-    	}
+           
+        ERR_Notifier.sendErrorNotifications(context);
     }
-    
-    /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
-    public void storeErrors() {        
+
+    /*******************************************************************************************************
+    * @description We want this method to be public to be able to explicitly call it after a rollback.
+    * @param
+    * @return 
+    */
+    public static void storeErrors(List<Error__c> errorRecords) {        
         if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
-		  Database.insert(errors, false);
+		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errorRecords));
+		  Database.insert(errorRecords, false);
         }
     }
     
-    /*** Error creation methods ***/
+    /*******************************************************************************************************
+    * @description
+    * @param
+    * @return 
+    */
 	private static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();        
@@ -189,6 +208,11 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
+    /*******************************************************************************************************
+    * @description
+    * @param
+    * @return 
+    */
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
@@ -214,7 +238,11 @@ public with sharing class ERR_Handler {
         return error;
     }
     
-    /*** Helper methods ***/
+    /*******************************************************************************************************
+    * @description
+    * @param
+    * @return 
+    */
     private static String getRecordURL(Id saveResultId, Id objId) {
     	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
@@ -228,6 +256,11 @@ public with sharing class ERR_Handler {
         return recordURL;
     }
     
+    /*******************************************************************************************************
+    * @description
+    * @param
+    * @return 
+    */
     private static String getStatusCode(system.StatusCode status) {
     	if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
             return 'Required Field Missing';   

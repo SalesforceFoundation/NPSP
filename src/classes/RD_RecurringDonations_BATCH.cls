@@ -67,7 +67,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
 	     } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, result, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e, ERR_Handler.Context.RD);
         }    
     }
     public void finish(Database.BatchableContext bc) {
