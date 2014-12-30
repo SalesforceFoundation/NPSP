@@ -37,9 +37,8 @@ public with sharing class ERR_Notifier {
     public static NotificationOptions notificationOptions = new NotificationOptions();
     
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Inner class with the 3 types of notification options: user, chatter group, and all system
+    *              administrators.
     */
     public class NotificationOptions {
         public final String sysAdmins = 'All Sys Admins';
@@ -48,9 +47,9 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Send error notifications to the receivers specified in the settings, if error notifications are enabled.
+    * @param context The context that triggered the error notification.
+    * @return void
     */
     public static void sendErrorNotifications(ERR_Handler.Context context) {
 
@@ -67,7 +66,7 @@ public with sharing class ERR_Notifier {
             } else {
                 List<String> sendList = new List<String>();
                 if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
-                    List<User> useremaillist = new List<User>(); 
+                    List<User> useremaillist = new List<User>();
                     useremaillist = [select email from User where id = :errorNotifRecipient and isActive = true];
                     for (User u : useremaillist)
                         sendList.add(u.email);
@@ -83,12 +82,14 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Sends error email notifications.
+    * @param context The context that triggered the error notification
+    * @param sendList The list of email addresses to send notifications to.
+    * @return void
     */
     private static void sendEmailNotifications(ERR_Handler.Context context, List<String> sendList) {
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
+            //We cannot pass the context, because only primitive types can be passed to future methods.
             sendErrorQueueEmailNotificationFuture(sendList);
         } else if (system.isFuture()) {
             sendErrorQueueEmailNotification(context, sendList);
@@ -96,19 +97,23 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Sends error email notifications in a future (asynchronously). It will send an email with all the 
+    *              existing error records not already sent in a notification.
+    * @param context The context that triggered the error notification.
+    * @param sendList The list of email addresses to send notifications to.
+    * @return void
     */
     @future
-    private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) { 
-        sendErrorQueueEmailNotification(null, sendList); 
+    private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) {
+        sendErrorQueueEmailNotification(null, sendList);
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Sends error email notifications synchronously. It will send an email with all the existing error
+    *              records not already sent in a notification.
+    * @param context The context that triggered the error notification.
+    * @param sendList The list of email addresses to send notifications to.
+    * @return void
     */
     private static void sendErrorQueueEmailNotification(ERR_Handler.Context context, List<String> sendList) {
         List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
@@ -126,11 +131,13 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
+    * @description Creates the email message to send as error notification.
+    * @param context The context that triggered the error notification.
+    * @param errorList The list of errors to include in the email.
+    * @param sendList The list of email recipients.
     * @return 
     */
-    private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> rdeqList, List<String> sendList) {
+    private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler.Context context, List<Error__c> errorList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setReplyTo('donotreply@salesforcefoundation.org');
@@ -141,8 +148,8 @@ public with sharing class ERR_Notifier {
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
         Integer i = 1;
-        for (Error__c rdeq : rdeqlist){
-            bodystring += '\n\n----------\n Error #' + i + ': \n' + getErrorMessageBody(rdeq);
+        for (Error__c error : errorList){
+            bodystring += '\n\n----------\n Error #' + i + ': \n' + getErrorMessageBody(error);
             i++;
         }
         mail.setPlainTextBody(bodyString);
@@ -151,9 +158,9 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Post a message to Chatter with information about all the existing error records that were not already posted.
+    * @param chatterGroupId The ID of the Chatter group to post to.
+    * @return void
     */
     public static void postErrorsToChatter(String chatterGroupId) {
 
@@ -180,9 +187,9 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Creates the body of the error message for a specific error record.
+    * @param error The error record to create the message string from.
+    * @return String The string representing the error record.
     */
     private static String getErrorMessageBody(Error__c error) {
         String body = '\nError Type: ' + error.Error_Type__c;
@@ -198,8 +205,8 @@ public with sharing class ERR_Notifier {
      
     /*******************************************************************************************************
     * @description Verifies error settings are still valid.
-    * @param
-    * @return 
+    * @param ctrl The controller that calls the method.
+    * @return void
     */
     public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
         
@@ -249,9 +256,10 @@ public with sharing class ERR_Notifier {
     }
 
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Sends an email to the user installing the package warning of package installation failure.
+    * @param e Exception thrown during the package installation process.
+    * @param context The installation context.
+    * @return void
     */
     public static void sendEmailOnInstallError(Exception e, InstallContext context) {
         try {

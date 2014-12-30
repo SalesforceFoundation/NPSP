@@ -104,27 +104,31 @@ public with sharing class ERR_Handler {
     /*******************************************************************************************************
     * @description Processes the results of a single DML operation performed using the Database class to determine 
     *              if errors occurred. It does not store errors or send error email notifications. These operations
-    *              should be performed after the rollback. 
+    *              should be performed after the rollback.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The erros that occurred during the DML operation perfored using the Database class.
     */    
-    public static Errors getErrors(List<Object> results, List<SObject> sObjects) {    	
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {    	
     	Errors errors = new Errors();
     	
-    	if(results != null) {	
-	    	for(Integer i=0; i<results.size(); i++) {
+    	if(dmlResults != null) {	
+	    	for(Integer i=0; i<dmlResults.size(); i++) {
 	        	Boolean isSuccess = true;
-	        	if(results[i] instanceof Database.SaveResult) {
-	        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
-	        	} else if(results[i] instanceof Database.DeleteResult) {
-	        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
-	        	} else if(results[i] instanceof Database.UndeleteResult) {
-	        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
+	        	if(dmlResults[i] instanceof Database.SaveResult) {
+	        		isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
+	        	} else if(dmlResults[i] instanceof Database.DeleteResult) {
+	        		isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
+	        	} else if(dmlResults[i] instanceof Database.UndeleteResult) {
+	        		isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
 	        	}
 	        	
 	        	if(!isSuccess) {
 	        		errors.errorsExist = true;
 	        		
 	        		//Creating error object
-	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
+	        		Error__c err = createError(dmlResults[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
 	                errors.errorRecords.add(err);
 	                
 	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
@@ -180,7 +184,7 @@ public with sharing class ERR_Handler {
     * @param errorRecords List of errors to store in the database.
     * @return void
     */
-    public static void storeErrors(List<Error__c> errorRecords) {        
+    public static void storeErrors(List<Error__c> errorRecords) {
         if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
 		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errorRecords));
 		  Database.insert(errorRecords, false);
