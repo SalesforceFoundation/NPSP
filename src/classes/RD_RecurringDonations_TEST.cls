@@ -1497,8 +1497,8 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         //run it using bulk setup
-        ERR_Handler.doErrorsExist(lsr, badOpps);
-        
+        ERR_Handler.getErrors(lsr, badOpps);
+        //TODO: process resuts?!?
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1581,7 +1581,7 @@ public class RD_RecurringDonations_TEST {
         Database.saveresult[] lsr = Database.insert(olist, false);
         list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
         
-        ERR_Handler.doErrorsExist(lsr, badOpps);
+        ERR_Handler.getErrors(lsr, badOpps);
         //TODO: process result?!?
     }     
 
