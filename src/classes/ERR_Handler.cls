@@ -43,7 +43,8 @@ public with sharing class ERR_Handler {
     public enum Context { AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI }
     
     /*******************************************************************************************************
-    * @description
+    * @description Inner class that groups the result of processing the result of multiple DML operations performed
+    *              using the Database class.
     */
     public class Errors {
     	/*
@@ -71,7 +72,7 @@ public with sharing class ERR_Handler {
     * @param deletedObjects Objects that were deleted in the Database.Delete operation.
     * @param undeletedObjects Objects that were Undeleted in the Database.Undelete operation.
     *
-    * @return Errors Combined result od all the DML operations.
+    * @return Errors Combined result of all the DML operations.
     */
     public static Errors getErrors(
     List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
@@ -145,16 +146,16 @@ public with sharing class ERR_Handler {
     }
     
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Custom class that extends the Exception built-in class, and indicates that there is an unrecoverable
+    *              error that should be propagated all the way up the stack.
     */
     private class PropogateException extends Exception {}
     
     /*******************************************************************************************************
-    * @description 
-    * @param
-    * @return 
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
     */
     public static void processError(Exception e, ERR_Handler.Context context) {
     	
@@ -174,9 +175,10 @@ public with sharing class ERR_Handler {
     }
 
     /*******************************************************************************************************
-    * @description We want this method to be public to be able to explicitly call it after a rollback.
-    * @param
-    * @return 
+    * @description Stores a list of error records in the database (if enabled in the settings). This method needs to be 
+    *              public so we can call it explicitly after a manual rollback.
+    * @param errorRecords List of errors to store in the database.
+    * @return void
     */
     public static void storeErrors(List<Error__c> errorRecords) {        
         if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
@@ -186,9 +188,9 @@ public with sharing class ERR_Handler {
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param
-    * @return 
+    * @description Creates an error record from an exception.
+    * @param e Exception to create error record from.
+    * @return Error__c Error record.
     */
 	private static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
@@ -199,7 +201,7 @@ public with sharing class ERR_Handler {
 		//are in a managed package.
 		String stackTrace = e.getStackTraceString();
 		String message;
-		if(String.isBlank(stackTrace) || stackTrace == '(npsp)') {
+		if(String.isBlank(stackTrace) || stackTrace == '(npsp)' || stackTrace == 'npsp') {
 			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			message = 'Stacktrace available at the time of saving the record - ';
@@ -209,9 +211,12 @@ public with sharing class ERR_Handler {
 	}
 
     /*******************************************************************************************************
-    * @description
-    * @param
-    * @return 
+    * @description Creates an error record from the result of a DML operation performed through the Database class.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of 
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error. 
+    * @return The error record.
     */
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
@@ -239,9 +244,10 @@ public with sharing class ERR_Handler {
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param
-    * @return 
+    * @description Returns the URL of a record, if available.
+    * @param saveResultId The id resulting from a DML operation of the Database class.
+    * @param objId The id of the record the DML operation was performed on.
+    * @return The URL of the record. Warning: it may not necessarily be valid.
     */
     private static String getRecordURL(Id saveResultId, Id objId) {
     	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
@@ -257,9 +263,10 @@ public with sharing class ERR_Handler {
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param
-    * @return 
+    * @description Returns the status of the error that happened as a result of a DML operation performed through
+    *              the Database class as a string.
+    * @param status The status code.
+    * @return The error status as a string.
     */
     private static String getStatusCode(system.StatusCode status) {
     	if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
