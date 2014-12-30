@@ -120,7 +120,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        }
     	} catch(Exception e) {
     		Database.rollback(sp);
-    		ERR_Handler.processError(e, ERR_Handler.Context.HH);
+    		ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.HH);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     		return null;
     	}
@@ -251,7 +251,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }
         }            
         catch (Exception e){
-            ERR_Handler.processError(e, ERR_Handler.Context.HH);
+            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.HH);
             showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
         }
         

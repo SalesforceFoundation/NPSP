@@ -64,7 +64,7 @@ public with sharing class ERR_Handler_CTRL_TEST {
         } catch(Exception e) {
         	UTIL_Debug.debug('****Exception caught: ' + e.getMessage());
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.TDTM);
         }
         return null;
     }

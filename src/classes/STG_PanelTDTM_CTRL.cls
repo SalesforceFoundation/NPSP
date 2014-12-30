@@ -70,7 +70,7 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
             thNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
@@ -97,7 +97,7 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
             }
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;

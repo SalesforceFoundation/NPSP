@@ -34,6 +34,12 @@
 * @description Class where elements of the package to expose externaly are centralized. 
 */
 global with sharing class UTIL_GlobalProxy {
+	
+	/*******************************************************************************************************
+    * @description Enum used to categorize errors as coming from specific functionality. Each enum value matches 
+    *              one of the prefixes used throughout the package.
+    */
+    global enum ErrorContext { ADDR, AFFL, BDI, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, SCH, STTG, TDTM }
 
     /*******************************************************************************************************
     * @description Returns the default TDTM configuration. 
@@ -133,16 +139,24 @@ global with sharing class UTIL_GlobalProxy {
         return UTIL_CustomSettingsFacade.getAllocationsSettings();
     }
     
-     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Stores a list of error records in the database (if enabled in the settings). This method needs to be 
+    *              public so we can call it explicitly after a manual rollback.
+    * @param errorRecords List of errors to store in the database.
+    * @return void
     */
-    global void processError() {
-    	//send error notification, according to configuration
-    	
-    	//store error record
+    global void storeErrors(List<Error__c> errorRecords) {
+    	ERR_Handler.storeErrors(errorRecords);
+    }
+    
+    /*******************************************************************************************************
+    * @description Sends error notifications to the receivers specified in the settings, if error notifications are enabled, with
+    *              all the existing error records that have not been included in previous error notifications.
+    * @param context The context that triggered the error notification.
+    * @return void
+    */
+    global void sendErrorNotifications(ErrorContext context) {
+        ERR_Notifier.sendErrorNotifications(context);
     }
     
     /*******************************************************************************************************

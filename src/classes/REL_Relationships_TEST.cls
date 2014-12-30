@@ -589,7 +589,7 @@ private class REL_Relationships_TEST {
     	
         setupRelationshipTestData(null);
         
-        ERR_Handler.processError(new MyException('TestException'), ERR_Handler.Context.REL);
+        ERR_Handler.processError(new MyException('TestException'), UTIL_GlobalProxy.ErrorContext.REL);
         List<Error__c> errors = [select Full_Message__c from Error__c];
         System.assertEquals(1, errors.size());
         System.assertEquals('TestException', errors[0].Full_Message__c);       

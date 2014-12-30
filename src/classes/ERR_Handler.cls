@@ -35,13 +35,7 @@
                storing and notification of these errors. 
 */
 public with sharing class ERR_Handler {
-       
-    /*******************************************************************************************************
-    * @description Enum used to categorize errors as coming from specific functionality. Each enum value matches 
-    *              one of the prefixes used throughout the package.
-    */
-    public enum Context { AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI }
-    
+
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
     *              using the Database class.
@@ -161,7 +155,7 @@ public with sharing class ERR_Handler {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, ERR_Handler.Context context) {
+    public static void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {
     	
     	if(e != null) {
     		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());

@@ -132,7 +132,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ID batchprocessid = Database.executeBatch(cacv, scopesize);
 
         } catch(Exception e) {
-            ERR_Handler.processError(e, ERR_Handler.Context.CONV);
+            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.CONV);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;

@@ -93,7 +93,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             } catch (Exception e){
                 a.Verified__c = false;
                 a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
-                ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.ADDR);
                 a.Verification_Status__c = e.getMessage();
             }
 
@@ -104,7 +104,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }catch (Exception e){
                     a.Verified__c = false;
                     a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
-                    ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                    ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.ADDR);
                     a.Verification_Status__c = e.getMessage();
                 }
 
