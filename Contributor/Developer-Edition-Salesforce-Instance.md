@@ -1,7 +1,3 @@
----
-title: Developer Edition Salesforce Instance
-layout: post
----
 # Create a DE Org
 
 Each developer for NPSP has their own development environment that all their development takes place in. Developer edition salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend a new developer instance to avoid any potential conflicts.
@@ -36,7 +32,7 @@ At this point, we’ve got some heavy lifting to do here, so its going to take a
 
 You can fill the remainder of your time watching…
 
-![Running DeployCI](/img/running-deployci-example.png)
+![Running DeployCI](img/running-deployci-example.png)
 
 Deployment succeeded in 15 minutes – not bad.
 
@@ -44,6 +40,6 @@ Deployment succeeded in 15 minutes – not bad.
 
 Back in your DE Org, navigate to Setup > Create > Packages. You should have an unmanaged package named Cumulus. We use this Cumulus package in our build scripts to more easily track what belongs to the NPSP package, and to move metadata around through various processes.
 
-![Cumulus Package Contents Example](/img/cumulus-package-example.png)
+![Cumulus Package Contents Example](img/cumulus-package-example.png)
 
 Depending on what we’re doing, we can make the org functional by adding the overrides, etc. from the [post-install instructions](https://powerofus.force.com/articles/Resource/NPSP-Nonprofit-Starter-Pack-Post-Install-Checklist), or we can just leave it.  For now, we’ll leave it.
