@@ -160,58 +160,69 @@ global with sharing class UTIL_GlobalProxy {
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run.
+    * @param message The message to print.
+    * @return void
     */
     global static void debug(string message) {
-    	
+    	UTIL_Debug.debug(message);
     }
     
-    /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+   /*******************************************************************************************************
+    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run, at the specified
+    *              logging level.
+    * @param message The message to print.
+    * @param level The level to output the message at.
+    * @return void
     */
     global static void debug(System.LoggingLevel level, string message) {
-    	
+    	UTIL_Debug.debug(level, message);
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Prints a debug message to the debug log, if debugging enabled or a test is being run, with additional info, 
+                   such as heap, cpu, query, and rows usage.
+    * @param message The message to print.
+    * @return void
     */
     global static void debugWithInfo(string message) {
-     	
+     	UTIL_Debug.debugWithInfo(message);
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run, at the specified logging
+    *              level, with additional info, such as heap, cpu, query, and rows usage.
+    * @param message The message to print.
+    * @param level The level to output the message at.
+    * @return void
     */
     global static void debugWithInfo(System.LoggingLevel level, string message) {
-    	
+    	UTIL_Debug.debugWithInfo(level, message);
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Returns object describe data.
+    * @param objectName The name of the object to lookup. 
+    * @return Schema.DescribeSObjectResult Object that contains methods for describing the SObject.
     */
     global static Schema.DescribeSObjectResult getObjectDescribe(String objectName) {
-    	
-    	return null;
+    	return UTIL_Describe.getObjectDescribe(objectName);
     }
     
     /*******************************************************************************************************
-    * @description
-    * @param 
-    * @return
+    * @description Returns all field describe data.
+    * @param objectName The name of the object to look up.
+    * @return Map<String, Schema.DescribeFieldResult> A map of object names to describe file results.
+    */  
+    global static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
+    	return UTIL_Describe.getAllFieldsDescribe(objectName);
+    }
+    
+    /*******************************************************************************************************
+    * @description Tells us if we are running the managed or the unmanaged version of the NPSP.
+    * @return Boolean True if we are in the managed package, False otherwise.
     */
     public static Boolean inManagedPackage() {
-    
-        return null;	
+        return UTIL_Namespace.inManagedPackage;	
     }
 }
