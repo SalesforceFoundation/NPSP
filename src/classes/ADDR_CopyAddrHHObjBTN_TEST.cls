@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Address Management
 * @description test class for the Copy Address button controller
 */
 @isTest
