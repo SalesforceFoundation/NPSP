@@ -140,8 +140,7 @@ global with sharing class UTIL_GlobalProxy {
     }
     
     /*******************************************************************************************************
-    * @description Stores a list of error records in the database (if enabled in the settings). This method needs to be 
-    *              public so we can call it explicitly after a manual rollback.
+    * @description Stores a list of error records in the database (if enabled in the settings).
     * @param errorRecords List of errors to store in the database.
     * @return void
     */
@@ -222,7 +221,7 @@ global with sharing class UTIL_GlobalProxy {
     * @description Tells us if we are running the managed or the unmanaged version of the NPSP.
     * @return Boolean True if we are in the managed package, False otherwise.
     */
-    public static Boolean inManagedPackage() {
+    global static Boolean inManagedPackage() {
         return UTIL_Namespace.inManagedPackage;	
     }
 }
