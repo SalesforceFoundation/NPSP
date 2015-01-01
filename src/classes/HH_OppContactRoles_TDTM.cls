@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
+* @group Households
 * @description Updates and managed opportunity contact roles for Household members, invoked via opp trigger 
 */
 public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 

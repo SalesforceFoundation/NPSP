@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description Controls generation of household names for lists of households 
 * NOTE: This class handles both household naming for the Household__c object
 * as well as for HH Account objects. 

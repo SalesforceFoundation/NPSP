@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
+* @group Households
 * @description tests specific to the HH_NameSpec custom household naming class 
 */
 
