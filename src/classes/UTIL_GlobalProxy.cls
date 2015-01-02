@@ -140,22 +140,13 @@ global with sharing class UTIL_GlobalProxy {
     }
     
     /*******************************************************************************************************
-    * @description Stores a list of error records in the database (if enabled in the settings).
-    * @param errorRecords List of errors to store in the database.
-    * @return void
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
     */
-    global void storeErrors(List<Error__c> errorRecords) {
-    	ERR_Handler.storeErrors(errorRecords);
-    }
-    
-    /*******************************************************************************************************
-    * @description Sends error notifications to the receivers specified in the settings, if error notifications are enabled, with
-    *              all the existing error records that have not been included in previous error notifications.
-    * @param context The context that triggered the error notification.
-    * @return void
-    */
-    global void sendErrorNotifications(ErrorContext context) {
-        ERR_Notifier.sendErrorNotifications(context);
+    global void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {
+    	ERR_Handler.processError(e, context);
     }
     
     /*******************************************************************************************************

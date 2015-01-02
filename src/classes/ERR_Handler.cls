@@ -163,26 +163,23 @@ public with sharing class ERR_Handler {
 			if(ApexPages.currentPage() != null)
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
            
-           if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-               Error__c error = createError(e);
-               Database.SaveResult result = Database.insert(error, false);
-           }
-    	}
-           
-        ERR_Notifier.sendErrorNotifications(context);
+            Error__c error = createError(e);
+            processErrors(new Error__c[]{error}, context);
+    	}   
     }
-
+    
     /*******************************************************************************************************
-    * @description Stores a list of error records in the database (if enabled in the settings). This method needs to be 
-    *              public so we can call it explicitly after a manual rollback.
-    * @param errorRecords List of errors to store in the database.
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
     * @return void
     */
-    public static void storeErrors(List<Error__c> errorRecords) {
-        if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errorRecords));
-		  Database.insert(errorRecords, false);
-        }
+    public static void processErrors(List<Error__c> errorRecords, UTIL_GlobalProxy.ErrorContext context) {
+    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+    	   Database.insert(errorRecords, false);
+    	}
+    	//ERR_Notifier takes care of checking the settings itself.
+        ERR_Notifier.sendErrorNotifications(context);
     }
     
     /*******************************************************************************************************
