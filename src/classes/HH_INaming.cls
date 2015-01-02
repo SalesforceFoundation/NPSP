@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Households
 * @description Interface that classes that provide Household Naming must implement.
 */
 public Interface HH_INaming {

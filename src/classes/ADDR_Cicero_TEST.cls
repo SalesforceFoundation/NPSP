@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description test class that provides address validation/normalization services
 * through the Cicero API.
  */

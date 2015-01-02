@@ -36,15 +36,27 @@
 */
 public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
-    // static flag to prevent recursive call 
+    /*******************************************************************************************************
+    * @description static flag to prevent recursive call 
+    */
     public static boolean hasRunAddrTrigger = false;
 
-    // The maps to convert the State/Country Code to a State/Country Label and Vice-Versa
+    /*******************************************************************************************************
+    * @description The maps to convert the State/Country Code to a State/Country Label and Vice-Versa 
+    */
     private static Map<String, String> validCountriesByLabel = new Map<String, String>();
     private static Map<String, String> validStatesByLabel = new Map<String, String>();
     private static Map<String, String> validCountriesByCode = new Map<String, String>();
     
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger Handler on Address that handles address management.  Updates the appropriate
+    * Accounts and Contacts when an Address is changed.
+    * @param listNew the list of Addresses from trigger new. 
+    * @param listOld the list of Addresses from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Addresses 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
@@ -154,11 +166,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
     
     
-    // the main routine for finding the appropriate address to currently use for the
-    // household and its contacts.  Prioritizes the Optional mapped Address as the Default
-    // address, as well as checking to see if there is a seasonal address that should be used instead.
-    // if the flag isCalcHHInfoOnly is set, then this routine will return the map of HHId to HHInfo,
-    // and not do any changes to dmlWrapper. 
+    /*******************************************************************************************************
+    * @description The main routine for finding the appropriate address to currently use for the
+    * household and its contacts.  Prioritizes the Optional mapped Address as the Default
+    * address, as well as checking to see if there is a seasonal address that should be used instead.
+    * if the flag isCalcHHInfoOnly is set, then this routine will return the map of HHId to HHInfo,
+    * and not do any changes to dmlWrapper. 
+    * @param mapAccIdAddr a map of Account Id to the Account's default Address.
+    * @isCalcHHInfoOnly is set, then this routine will return the map of HHId to HHInfo,
+    * and not do any changes to dmlWrapper. 
+    * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account  
+    ********************************************************************************************************/
     public static map<Id, HHInfo> refreshCurrentHHAddress(map<Id, Address__c> mapAccIdAddr, DmlWrapper dmlWrapper, boolean isCalcHHInfoOnly) {
     	
     	// assumptions:
@@ -289,15 +307,22 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         
         return mapAccIdHHInfo;
     }
-    
-    // helper class to keep track of the default and seasonal address for a household
+        
+    /*******************************************************************************************************
+    * @description helper class to keep track of the default and seasonal address for a household
+    */ 
     public class HHInfo {
     	public Id accId;              
     	public Address__c addrDefault;      
     	public Address__c addrSeasonal;        
     }
 
-    // utility to return the current StartDate or EndDate of a Seasonal Address 
+    /*******************************************************************************************************
+    * @description utility to return the current StartDate or EndDate of a Seasonal Address
+    * @param addr the Address to look at
+    * @param fStart whether to return the StartDate or EndDate
+    * @return Date
+    */ 
     private static Date dtStartOrEndOfAddrSeasonal(Address__c addr, boolean fStart) {    
         integer startMonth = integer.valueOf(addr.Seasonal_Start_Month__c);
         integer startDay = integer.valueOf(addr.Seasonal_Start_Day__c);
@@ -316,13 +341,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return (fStart ? dtStart : dtEnd);
     }
     
-    // utility to see if the address has seasonal fields set
+    /*******************************************************************************************************
+    * @description utility to see if the address has seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */ 
     private static boolean isSeasonalAddr(Address__c addr) {
     	return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
     	   addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
     
-    // utility to see if the address has only a subset of its seasonal fields set
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */ 
     private static boolean isPartialSeasonalAddr(Address__c addr) {
         integer cParts = 0;
         if (addr.Seasonal_Start_Month__c != null) cParts++;
@@ -332,7 +365,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return (cParts > 0 && cParts < 4);
     }
     
-    // for the map of addresses, update any contact's mailing fields that are using the address as an override.
+    /*******************************************************************************************************
+    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
+    * @param mapAddrIdAddr a map of Address Id's to Addresses
+    * @dmlWrapper to hold the Contacts to update
+    * @return void
+    */ 
     private void updateAddrOverrides(map<Id, Address__c> mapAddrIdAddr, DmlWrapper dmlWrapper) {    	
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
@@ -343,7 +381,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	}
     }
     
-    // utility to create a map of HH Account Id to a list of Addresses in that HH, given a list of HH Account Id.
+    /*******************************************************************************************************
+    * @description utility to create a map of HH Account Id to a list of Addresses in that HH, given a list of HH Account Id.
+    * @param listAccId the list of Account Id's
+    * @return map<Id, list<Address__c>> map that contains the Addresses for each HH Account Id
+    */ 
     private static map<Id, list<Address__c>> getMapAccIdListAddrHH(list<Id> listAccId) {
         map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
         list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
@@ -362,7 +404,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return mapAccIdListAddrHH;
     }
  
-    // utility to compare two address objects seasonal fields
+    /*******************************************************************************************************
+    * @description utility to compare two address objects seasonal fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @return boolean. true if any of the seasonal fields have changed on the Address
+    */ 
     private boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
     	if (addrNew == null || addrOld == null) 
     	   return false;    	
@@ -373,7 +420,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
     }
     
-    // utility to compare two address objects address fields
+    /*******************************************************************************************************
+    * @description utility to compare two address objects address fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @param includeAddressType whether to include comparing the AddressType field
+    * @return boolean. true if any of the fields fields have changed on the Address
+    */ 
     private static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;        
@@ -387,7 +440,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
            (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
     }
 
-    // utility to create the month and day strings to a decimal we can use in comparisons.
+    /*******************************************************************************************************
+    * @description utility to create the month and day strings to a decimal we can use in comparisons.
+    * @param m the month ordinal as a string
+    * @param d the day ordinal as a string
+    * @return decimal
+    */ 
     private static decimal decimalOfMonthDay(string m, string d) {
         if (integer.valueOf(d) < 10)
             return decimal.valueOf(m + '.0' + d);
@@ -395,7 +453,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return decimal.valueOf(m + '.' + d);
     }
     
-    // utility to see if two seasonal addresses overlap
+    // 
+    /*******************************************************************************************************
+    * @description utility to see if two seasonal addresses overlap
+    * @param addr1 an Address
+    * @param addr2 an Address
+    * @return boolean. true if the seasonal fields of the two addresses overlap
+    */ 
     public static boolean isSeasonalOverlap(Address__c addr1, Address__c addr2) {
         if (addr1 == null || addr2 == null) 
             return false;        
@@ -430,8 +494,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
     }
 
-    // verify that the account for each Address is a HH account
-    // or an Organizational account if enabled.
+    // 
+    /*******************************************************************************************************
+    * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
+    * Adds an Error to each Address object that has an illegal account.
+    * @param listAddr a list of Addresses to verify
+    * @return void. 
+    */ 
     private void verifyAddrHHAccOnly(list<Address__c> listAddr) {    	
     	set<Id> setAccId = new set<Id>();
     	for (Address__c addr : listAddr) {
@@ -456,7 +525,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }    	
     }
     
-    // verify that any seasonal addresses don't overlap
+    // 
+    /*******************************************************************************************************
+    * @description verify that any seasonal addresses don't overlap
+    * Adds an Error to each Address object that has an illegal seasonal fields
+    * @param listAddr a list of Addresses to verify
+    * @return void. 
+    */ 
     private void verifyAddrSeasonalNoOverlap(list<Address__c> listAddr) { 
     	
     	// first get just the seasonal addresses
@@ -505,7 +580,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	}
     }
     
-    // routine the scheduled batch job calls to update households with the specified Seasonal addresses
+    /*******************************************************************************************************
+    * @description routine the scheduled batch job calls to update households with the specified Seasonal addresses
+    * @param listAddr a list of Addresses to update
+    * @return void
+    */ 
     public static void batchSeasonalUpdate(list<Address__c> listAddr) {
         if (listAddr == null || listAddr.size() == 0) return;
         
@@ -521,8 +600,14 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlWrapper);
     }
     
-    // create only unique addresses from their respective household, and mark any existing matches 
-    // as Default if the caller specifies it on the new address.
+    /*******************************************************************************************************
+    * @description For the list of Addresses, sees if there is already an existing Address in the Account that
+    * matches. Creates only unique addresses from their respective household, and mark any existing matches 
+    * as Default if the caller specifies it on the new address.
+    * @param listAddr a list of Addresses to update
+    * @param dmlWrapper the Addresses to update
+    * @return void
+    */ 
     public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper) {  
     	
     	map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
@@ -539,8 +624,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	}	
     }
     
-    // for the given addresses, find if they have a match, and return a map that
-    // has null for no match, and the matching address if there is a match.
+    /*******************************************************************************************************
+    * @description for the given addresses, find if they have a match, and return a map that
+    * has null for no match, and the matching address if there is a match.
+    * @param listAddr a list of Addresses to update
+    * @return map<Address__c, Address__c>
+    */ 
     public static map<Address__c, Address__c> findDuplicateAddresses(list<Address__c> listAddr) {      
         // for each address, create a map of HHId to lists of Addresses
         list<Id> listAccId = new list<Id>();
@@ -572,6 +661,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return mapAddrDupAddr;               
     }
     
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */ 
     public static void handleMultilineStreet(Address__c addr) {
     
         if (addr.MailingStreet__c == null)
@@ -583,6 +677,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
     }
     
+    /*******************************************************************************************************
+    * @description utility to see if the address has only a subset of its seasonal fields set
+    * @param addr the Address to look at
+    * @return boolean
+    */ 
     public static string getMultilineStreet(Address__c addr) {
         string str = addr.MailingStreet__c;
         if (addr.MailingStreet2__c != null && addr.MailingStreet2__c.length() > 0)

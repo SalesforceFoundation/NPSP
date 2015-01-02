@@ -30,12 +30,20 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description Supports the automatic scheduling of Seasonal Address updates  
 */ 
 public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
+    /*******************************************************************************************************
+    * @description holds the soql string that queries all Addresses in the current month and day
+    */
     public String strQuery { get; set; }
     
+    /*******************************************************************************************************
+    * @description executes the batch job
+    * @return boolean. true if the batch runs, false if the batch cannot run.  
+    ********************************************************************************************************/
     public Boolean executeReturnStatus() { 
     	//call the batch job, processing 10 at a time
         if(UTIL_JobScheduler.canRunBatch()) {
@@ -53,16 +61,30 @@ public with sharing class ADDR_Seasonal_SCHED implements Database.Batchable<SObj
         return false;
     }
 
-
-    //***** Methods for Database.Batchable interface *****
+    /*******************************************************************************************************
+    * @description start Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return database.Querylocator  
+    ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc){       
         return Database.getQueryLocator(strQuery);      
     }
     
+    /*******************************************************************************************************
+    * @description execute Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @param listSobj the list of Address objects to process
+    * @return void  
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
     	ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Address__c>) listSobj);        
     }
 
+    /*******************************************************************************************************
+    * @description finish Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return void  
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {
 
     }   

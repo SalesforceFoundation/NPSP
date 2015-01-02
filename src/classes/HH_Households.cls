@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
+* @group Households
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
 public with sharing class HH_Households { 

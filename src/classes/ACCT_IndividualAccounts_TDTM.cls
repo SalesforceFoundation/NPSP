@@ -35,25 +35,36 @@
 */
 public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description the current Contact Settings object
+    */ 
     private static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
     
+    /*******************************************************************************************************
+    * @description a set of languages that require different naming conventions
+    */ 
     private static Set<String> EasternOrderLanguages = new Set<String>{
         'ja','ko','vi','hu','ro','zh_CN','zh_TW'
     };
               
+    /*******************************************************************************************************
+    * @description the current user's Locale/Language
+    */ 
     private static String OrgLanguage { get {
         if (OrgLanguage == null)
             OrgLanguage = UserInfo.getLocale();// [Select LanguageLocaleKey From Organization].LanguageLocaleKey;
         return OrgLanguage;             
     } set; }       
-    
-    /// <name> IndividualAccounts </name>
-    /// <summary> Overloads the IndividualAccounts object constructor to handle Contact processing </summary>
-    /// <param name="contacts"> Contact objects that are being triggered </param>
-    /// <param name="oldContacts"> Contact object values before trigger event </param>
-    /// <param name="ta"> Trigger action that is occuring </param>
-    // public ACCT_IndividualAccounts(Contact[] contacts, Contact[] oldContacts, CAO_Constants.triggerAction ta) {
-    	
+        	
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contact that handles account management.  Depending on the Account
+    * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
+    * @param listNew the list of Contacts from trigger new. 
+    * @param listOld the list of Contacts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Contacts 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
@@ -291,9 +302,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     return dmlWrapper;
     }
 
-    /// <name> updateAccountPrimaryContact </name>
-    /// <summary> Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts. </summary>
-    /// <param name="accounts"> Map of account Ids, contact Ids </param>
+    /*******************************************************************************************************
+    * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
+    * @param mapAccountIdContactId a map of AccountId's to ContactId's which specifies which accounts need updating.
+    * @param dmlWrapper to hold the Accounts that need updating.
+    * @return void
+    */ 
     private void updateAccountPrimaryContact(Map<Id, Id> mapAccountIdContactId, DmlWrapper dmlWrapper) {
         List<Account> listAccount = new List<Account>(); 
         for (Id i : mapAccountIdContactId.keySet()) {
@@ -306,15 +320,24 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }      
     }
 
-    /// <name> updateHHAccount </name>
-    /// <summary> Updates an HH Account's naming, primary contact, and rollups </summary>
-    /// <param name="contacts"> list of Accounts</param>
+    /*******************************************************************************************************
+    * @description Updates an HH Account's naming, primary contact, and rollups
+    * @param listAccountId the list of Account (Id's) that need updating.
+    * @param dmlWrapper to hold the Accounts that need updating.
+    * @return void
+    */ 
     private void updateHHAccount(list<Id> listAccountId, DmlWrapper dmlWrapper) {
         resetPrimaryContactForAccount(listAccountId, dmlWrapper);        
         renameHHAccounts(listAccountId); 
         rollupHHAccounts(listAccountId);                  
     }
     
+    /*******************************************************************************************************
+    * @description sets the Primary Account for each Account in the list of Accounts
+    * @param listAccountId the list of Account (Id's) that need updating.
+    * @param dmlWrapper to hold the Accounts that need updating.
+    * @return void
+    */ 
     private void resetPrimaryContactForAccount(list<Id> listAccountId, DmlWrapper dmlWrapper) {
     
         // for each account, we need a set of their contacts.
@@ -345,17 +368,24 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);
         //update listAccToUpdate;
     }
-    
-    
+        
+    /*******************************************************************************************************
+    * @description returns the first Id from the specified set
+    * @param setId a set of Id's
+    * @return Id.  null if the set is empty.
+    */ 
     private Id firstIdFromSet(set<Id> setId) {
         for (ID id : setId) {
             return Id;
         }
         return null;
     }
-    /// <name> rollupHHAccounts </name>
-    /// <summary> for the list of HH AccountId's, recalc their rollups </summary>
-    /// <param name="listAccountId">list of Account Id</param>
+
+    /*******************************************************************************************************
+    * @description for the list of HH AccountId's, recalc their rollups 
+    * @param listAccountId the list of Account (Id's) that need updating.
+    * @return void
+    */ 
     private void rollupHHAccounts(list<Id> listAccountId) {
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
@@ -368,9 +398,11 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         } 
     }
     
-    /// <name> renameHHAccounts </name>
-    /// <summary> for the list of HH AccountId's, force their renaming </summary>
-    /// <param name="listAccountId">list of Account Id</param>
+    /*******************************************************************************************************
+    * @description for the list of HH AccountId's, update their Household Names 
+    * @param listAccountId the list of Account (Id's) that need updating.
+    * @return void
+    */ 
     private void renameHHAccounts(list<Id> listAccountId) {
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
@@ -380,9 +412,11 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    /// <name> attachToBucketAccount </name>
-    /// <summary> Updates Contacts to relate to a single Individual Account</summary>
-    /// <param name="contacts"> Contacts meeting the trigger criteria</param>
+    /*******************************************************************************************************
+    * @description Updates Contacts to relate to a single Individual Account 
+    * @param contacts the list of Contacts that need updating.
+    * @return void
+    */ 
     private void attachToBucketAccount(Contact[] contacts)
     {
         //grab the first Account that is named Individual
@@ -416,12 +450,19 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    // utility to return the recordtypeId for a new account, given the account model.
-    // if none is explicitly specified, returns null.
+    /*******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model. 
+    * @return Id. if none is explicitly specified, returns null.
+    */ 
     public static ID rtIdForNewAccount() {
     	return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
     }
 
+    /*******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model. 
+    * @param isHHAccountModel whether we are using the Household Account Model
+    * @return Id. recordtype Id to use, or null if none is specified for the account model.
+    */ 
     public static ID rtIdForAccountModel(boolean isHHAccountModel) {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         Schema.Recordtypeinfo rtById = null;
@@ -437,9 +478,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    /// <name> insertContactAccount </name>
-    /// <summary> Inserts a new 1:1 or HH Account for an Individual Contact</summary>
-    /// <param name="contacts"> Contacts meeting the trigger criteria</param>
+    /*******************************************************************************************************
+    * @description Inserts a new 1:1 or HH Account for an Individual Contact
+    * @param contacts the list of Contacts that need updating.
+    * @param dmlWrapper to hold the Contacts that need updating.
+    * @return void
+    */ 
     private void insertContactAccount(Contact[] contacts, DmlWrapper dmlWrapper)
     {
         List<Id> contactIds = new List<Id>();
@@ -520,9 +564,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    /// <name> updateContactAccount </name>
-    /// <summary> Updates an Individual Account for an Individual Contact</summary>
-    /// <param name="contacts"> Contacts meeting the trigger criteria</param>
+    /*******************************************************************************************************
+    * @description Updates an Individual Account for an Individual Contact
+    * @param contacts the list of Contacts that need updating.
+    * @param dmlWrapper to hold the Contacts that need updating.
+    * @return void
+    */ 
     private void updateContactAccount(Contact[] contacts, DmlWrapper dmlWrapper)
     {
         Map<Id,Contact> accConMap = new Map<Id,Contact>();
@@ -560,7 +607,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
     
-    //delete the accounts for contacts that have been deleted if they are empty (no ops, no hh members)
+    /*******************************************************************************************************
+    * @description Deletes the accounts for contacts that have been deleted if they are empty (no ops, no hh members)
+    * @param contacts the list of Contacts that need to be considered
+    * @param dmlWrapper to hold the Accounts that need updating.
+    * @return void
+    */ 
     public void deleteContactAccountsIfEmpty(Contact[] contacts, DmlWrapper dmlWrapper) {
         List<Id> accountIds = new List<Id>();
         List<Account> accountsOnContacts = new List<Account>();
@@ -599,7 +651,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             updateHHAccount(listAccountIdUpdate, dmlWrapper);        
     }
 
-    // contact's owner has changed.  consider updating related account owner.
+    /*******************************************************************************************************
+    * @description contact's owner has changed.  consider updating related account owner.
+    * @param mapContactIdContactOwnerChange a map of Contact Id to Contact, for the contacts to consider
+    * @param dmlWrapper to hold the Contacts that need updating.
+    * @return void
+    */ 
     private void updateOwners(map<Id, Contact> mapContactIdContactOwnerChange, DmlWrapper dmlWrapper) {        
         if (mapContactIdContactOwnerChange.size() > 0) {
             list<Account> listAccToUpdate = new list<Account>();
@@ -630,7 +687,13 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
     
-    // moves all opps for the Primary OCR provided contacts to their new hh account
+    /*******************************************************************************************************
+    * @description Moves all opps for the Primary OCR provided contacts to their new hh account
+    * @param mapContactIdAccountIdNew a map of Contact Id to Account Id, for the Accounts to move opps to
+    * @param mapContactIdAccountIdOld a map of Contact Id to Account Id, for the Accounts to move opps from
+    * @param dmlWrapper to hold the Opps that need updating.
+    * @return void
+    */ 
     private void moveOppsToContactHHAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
         set<Id> setConId = mapContactIdAccountIdNew.keySet();
         list<Id> listAccIdOld = mapContactIdAccountIdOld.values();
@@ -653,7 +716,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    // returns whether changes in the contact require an update to the 1:1 account   
+    /*******************************************************************************************************
+    * @description returns whether changes in the contact require an update to the 1:1 account 
+    * @param conNew the new version of the Contact
+    * @param conOld the old version of the Contact
+    * @return boolean
+    */ 
     private boolean needsOne2OneAccountUpdate(Contact conNew, Contact conOld) {      
         if(conNew == null && conOld != null)
             return true;
@@ -679,7 +747,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 conNew.Fax != conOld.Fax);
     }
  
-    // returns whether changes in the contact require a rename of a HH Account   
+    /*******************************************************************************************************
+    * @description returns whether changes in the contact require a rename of a HH Account 
+    * @param conNew the new version of the Contact
+    * @param conOld the old version of the Contact
+    * @return boolean
+    */ 
     private boolean needsHHAccountRename(Contact conNew, Contact conOld) {          
         if(conNew == null && conOld != null)
             return true;
@@ -695,7 +768,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c);
     }   
     
-    // returns whether changes in the contact require an address change in the HH Account
+    /*******************************************************************************************************
+    * @description returns whether changes in the contact require an address change in the HH Account 
+    * @param conNew the new version of the Contact
+    * @param conOld the old version of the Contact
+    * @return boolean
+    */ 
     private boolean needsHHAccountAddressUpdate(Contact conNew, Contact conOld) {              
        return (conNew.MailingStreet != conOld.MailingStreet ||
                 conNew.MailingCity != conOld.MailingCity ||
@@ -709,14 +787,21 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 conNew.OtherCountry != conOld.OtherCountry);
     }
 
-    // the default name for a new HH Account
-    // custom household naming will update this account later if enabled,
-    // but we still need one if not enabled.
+    /*******************************************************************************************************
+    * @description returns the default name for a new HH Account. Custom household naming will update this 
+    * account later if enabled, but we still need one if not enabled.
+    * @param con the Contact
+    * @return string. the Household account name
+    */ 
     public static String strNameHHAccountForContact(Contact con) {
         return con.LastName + ' ' + system.label.npo02.DefaultHouseholdName;
     }
 
-    // the default name for a new 1:1 Account
+    /*******************************************************************************************************
+    * @description returns the default name for a new 1:1 Account 
+    * @param con the Contact
+    * @return string. the 1:1 account name
+    */ 
     public static String strNameOne2OneAccountForContact(Contact con) {
         String str = '';
         
