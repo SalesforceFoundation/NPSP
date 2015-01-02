@@ -308,12 +308,18 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         Date dtStart;
         Date dtEnd;
         Date dtToday = system.today();
+        //seasonal address is contained within a single year
         if (startMonth <= endMonth) { 
             dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-        } else {
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);                           
+        //seasonal address overlaps the year, and this month is past the start month
+        } else if (startMonth <= dtToday.month()){
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
+        //seasonal address overlaps the year, and this month is before the start month
+        } else {
+            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
         }
         return (fStart ? dtStart : dtEnd);
     }
