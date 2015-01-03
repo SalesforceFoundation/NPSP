@@ -503,8 +503,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()) {
-                ERR_Handler.getErrors(badSRs, badOpps);
-                //TODO: process result??!?!
+                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
+                ERR_Handler.processErrors(errors.errorRecords, UTIL_GlobalProxy.ErrorContext.RD);
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -894,8 +894,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-                ERR_Handler.getErrors(badSRs, badOpps);
-                //TODO: process result?!?!
+                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
+                ERR_Handler.processErrors(errors.errorRecords, UTIL_GlobalProxy.ErrorContext.RD);
             }
         }
         

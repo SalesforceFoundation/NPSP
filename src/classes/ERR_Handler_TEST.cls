@@ -349,17 +349,21 @@ public with sharing class ERR_Handler_TEST {
         
         insert relationships;
         //assert an error record was created - Required fields are missing: [npe4__Contact__c]
+        //npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
         system.assertEquals(1, [select count() from Error__c]);
         
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = contact1.id;
         Database.SaveResult[] updateResults = Database.update(relationships, false);
+        system.assertNotEquals(null, relationships[0].npe4__Contact__c);
         
-        //process error
-        ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
-        //TODO: assertion here?!?
+        //get errors
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
+        //we still get an error, because of the Related_Contact_Do_Not_Change validation rule on Relationship
+        system.assertEquals(true, errors.errorsExist);
+        system.assertEquals(1, errors.errorRecords.size());
 
-        //assert no additional error was created on update
+        //assert no additional error record was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }
     
