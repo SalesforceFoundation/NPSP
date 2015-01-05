@@ -155,14 +155,8 @@ public with sharing class ERR_Handler {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {
-    	
-    	if(e != null) {
-    		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
-			
-			if(ApexPages.currentPage() != null)
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-           
+    public static void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {   	
+    	if(e != null) {			
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
     	}   
@@ -175,11 +169,18 @@ public with sharing class ERR_Handler {
     * @return void
     */
     public static void processErrors(List<Error__c> errorRecords, UTIL_GlobalProxy.ErrorContext context) {
-    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-    	   Database.insert(errorRecords, false);
+    	
+    	if(errorRecords != null && errorRecords.size() > 0) {
+	    	if(ApexPages.currentPage() != null) {
+	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
+	    	}
+	                
+	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+	    	   Database.insert(errorRecords, false);
+	    	}
+	    	//ERR_Notifier takes care of checking the settings itself.
+	        ERR_Notifier.sendErrorNotifications(context);
     	}
-    	//ERR_Notifier takes care of checking the settings itself.
-        ERR_Notifier.sendErrorNotifications(context);
     }
     
     /*******************************************************************************************************
