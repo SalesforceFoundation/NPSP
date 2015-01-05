@@ -235,8 +235,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // get all Contacts by HH, that might need updating
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
-        map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>();  
-        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId from Contact where HHId__c in :mapAccIdAddr.keySet()];
+        map<Id, list<Contact>> mapAccIdListCon = new map<Id, list<Contact>>(); 
+        set<Id> setHHId =  mapAccIdAddr.keySet();
+        list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c, AccountId 
+            from Contact where 
+                (Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and AccountId != null and AccountId in :setHHId)];
         for (Contact con : listCon) {
             list<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
@@ -331,12 +334,18 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         Date dtStart;
         Date dtEnd;
         Date dtToday = system.today();
+        //seasonal address is contained within a single year
         if (startMonth <= endMonth) { 
             dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
-        } else {
-            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);                           
+        //seasonal address overlaps the year, and this month is past the start month
+        } else if (startMonth <= dtToday.month()){
+            dtStart = date.newInstance(dtToday.year(), startMonth, startDay);
             dtEnd = date.newInstance(dtToday.year()+1, endMonth, endDay);
+        //seasonal address overlaps the year, and this month is before the start month
+        } else {
+            dtStart = date.newInstance(dtToday.year()-1, startMonth, startDay);
+            dtEnd = date.newInstance(dtToday.year(), endMonth, endDay);
         }
         return (fStart ? dtStart : dtEnd);
     }
@@ -441,6 +450,44 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
+    * @description tility to compare two address objects address fields and support fuzzy matching; our definition of fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @param includeAddressType whether to include comparing the AddressType field
+    * @return boolean true if more than one of the fields fields have changed on the Address, ignoring whitespace and case changes
+    */     
+    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
+        if (addrNew == null || addrOld == null) 
+           return false;     
+           
+        integer cChange = 0;
+        if (strCleanup(addrNew.MailingStreet__c) != strCleanup(addrOld.MailingStreet__c) && addrOld.MailingStreet__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+            cChange++;
+        return cChange <= 1;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to remove all whitespace and to lowercase the string
+    * @param str the string to clean up
+    * @return string
+    */ 
+    private static string strCleanup(string str) {
+        if (str != null) {
+            str = str.replace(' ', '');
+            str = str.toLowerCase();
+        }
+        return str;
+    }
+
+    /*******************************************************************************************************
     * @description utility to create the month and day strings to a decimal we can use in comparisons.
     * @param m the month ordinal as a string
     * @param d the day ordinal as a string
@@ -453,7 +500,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return decimal.valueOf(m + '.' + d);
     }
     
-    // 
     /*******************************************************************************************************
     * @description utility to see if two seasonal addresses overlap
     * @param addr1 an Address
@@ -494,7 +540,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
     }
 
-    // 
     /*******************************************************************************************************
     * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
     * Adds an Error to each Address object that has an illegal account.
@@ -525,7 +570,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }    	
     }
     
-    // 
     /*******************************************************************************************************
     * @description verify that any seasonal addresses don't overlap
     * Adds an Error to each Address object that has an illegal seasonal fields
@@ -614,9 +658,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	for (Address__c addrNew : listAddr) {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
-               if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
-                   addrDup.Default_Address__c = true;
-                   dmlWrapper.objectsToUpdate.add(addrDup);
+                // if it is a fuzzy match, not exact, then we want to update the existing address.
+                if (isAddressChanged(addrNew, addrDup, false)) {
+                    copyAddressObj(addrNew, addrDup);
+                    if (addrNew.Default_Address__c)
+                        addrDup.Default_Address__c = true;
+                    dmlWrapper.objectsToUpdate.add(addrDup);
+                } else if (addrNew.Default_Address__c && !addrDup.Default_Address__c) {
+                    addrDup.Default_Address__c = true;
+                    dmlWrapper.objectsToUpdate.add(addrDup);
                }
             } else {
                 dmlWrapper.objectsToInsert.add(addrNew);
@@ -636,6 +686,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         for (Address__c addr : listAddr)
            listAccId.add(addr.Household_Account__c);
         map<Id, list<Address__c>> mapAccIdListAddrHH = getMapAccIdListAddrHH(listAccId);
+        boolean tryFuzzy = UTIL_CustomSettingsFacade.getContactsSettings().Simple_Address_Change_Treated_as_Update__c;
         
         // create our map for returning information in
         map<Address__c, Address__c> mapAddrDupAddr = new map<Address__c, Address__c>();
@@ -645,13 +696,22 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             boolean hasMatch = false;
             if (listAddrHH != null) {
+                Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
                     if (!isAddressChanged(addr, addrHH, false)) {
-                       // found match, record it and bail out
-                       hasMatch = true;
-                       mapAddrDupAddr.put(addr, addrHH);
-                       break;
+                        // found exact match, record it and bail out
+                        addrMatch = addrHH;
+                        break;
                     }
+                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH)) {
+                        // found fuzzy match, remember it and continue searching
+                        addrMatch = addrHH;
+                        continue;
+                    }
+                }
+                if (addrMatch != null) {
+                    hasMatch = true;
+                    mapAddrDupAddr.put(addr, addrMatch);
                 }
             }
             if (!hasMatch)
@@ -689,6 +749,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return str;
     }
     
+    /*******************************************************************************************************
+    * @description Utility to copy Address fields between to Address objects.
+    * @param addrSrc the source Address
+    * @param addrSrc the destination Address
+    * @return void
+    */ 
+    public static void copyAddressObj(Address__c addrSrc, Address__c addrDst) {
+        addrDst.MailingStreet__c = addrSrc.MailingStreet__c;
+        addrDst.MailingStreet2__c = addrSrc.MailingStreet2__c;
+        addrDst.MailingCity__c = addrSrc.MailingCity__c;
+        addrDst.MailingState__c = addrSrc.MailingState__c;
+        addrDst.MailingPostalCode__c = addrSrc.MailingPostalCode__c;
+        addrDst.MailingCountry__c = addrSrc.MailingCountry__c;
+    }
+
     /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.

@@ -1,11 +1,12 @@
 <apex:page controller="STG_PanelERR_CTRL">
- 
+
     <script>
         /* 
          * We are using JavaScript instead of the Rerender atrribute of Visualforce components because of the 
          * impossibility to rerender elements based on a specific dropdown (apex:selectList) value.
          */
         var errNotif = {}
+        var errHandling = {}
         jerr$ = jQuery.noConflict();
 
         errNotif.hideNotifDisplayName = function() { jerr$('[id$=errorNotifDisplayName]').hide(); }
@@ -16,7 +17,17 @@
         
         errNotif.hideChatterGroupBox =  function() { jerr$('span[id$=chatterGroupBox]').hide(); }
         errNotif.showChatterGroupBox = function() { jerr$('span[id$=chatterGroupBox]').show(); }
-                
+        
+        errHandling.disabled = function() { 
+            jerr$('[id$=cbxENO]').prop('checked', false);
+            jerr$('[id$=cbxSEO]').prop('checked', false);
+        }
+        
+        errHandling.enabled = function() { 
+            jerr$('[id$=cbxENO]').prop('checked', true);
+            jerr$('[id$=cbxSEO]').prop('checked', true);
+        }
+        
         //initially hiding the auto-complete chatter group textarea
         jerr$(document).ready(function() {
             errNotif.hideNotifDropDown();   
@@ -61,6 +72,15 @@
             //errNotif.hideNotifDropDown();
             errNotif.hideChatterGroupBox();
         });
+        
+        //detecting click on disabling error handling checkbox
+        jerr$(document).on('click', 'input[id$=cbxDEH]', function() {
+            if(jerr$(this).is(':checked')) {
+                errHandling.disabled();
+            } else {
+                errHandling.enabled();
+            }
+        });
    </script>
     
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
@@ -78,6 +98,7 @@
                     <apex:commandButton id="editNotif" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" 
                         rendered="{!isReadOnlyMode}" immediate="true" rerender="fields, commandButtons, saveError" styleClass="btn-sm btn-primary" />
                 </apex:outputPanel>
+                
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" styleClass="col-sm-4 control-label" />
                    <div class="col-sm-8 form-control-column">
@@ -87,6 +108,7 @@
                         <apex:outputText value="{!$Label.stgHelpStoreErrorsOn}" />
                    </div>
                </div>
+               
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" styleClass="col-sm-4 control-label" />
                    <div class="col-sm-8 form-control-column">
@@ -96,6 +118,17 @@
                         <apex:outputText value="{!$Label.stgHelpErrorNotifyOn}" />
                    </div>
                </div>
+               
+               <div class="form-group">
+	                <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.Label}" for="cbxDEH" styleClass="col-sm-4 control-label" />
+	                <div class="col-sm-8 form-control-column">
+	                    <apex:inputCheckbox value="{!stgService.stgErr.Disable_Error_Handling__c}" disabled="{!isReadOnlyMode}" id="cbxDEH" />
+	                </div>
+	                <div class="col-sm-offset-4 col-sm-8 help-block">
+	                    <apex:outputText value="{!$ObjectType.Error_Settings__c.Fields.Disable_Error_Handling__c.inlineHelpText}" />
+	                </div>
+	           </div>
+               
                <div class="form-group">
                    <apex:outputLabel id="recipientLabel" value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_To__c.Label}" for="notificationOption" styleClass="col-sm-4 control-label" />
                    <div class="col-sm-8 form-control-column">
@@ -126,7 +159,7 @@
 	            </div>
                 <apex:inputHidden id="groupId" value="{!groupId}" />
             </apex:outputPanel>  
-            
+   
             <div class="button-block">
                 <apex:outputPanel id="commandButtons">
                     <apex:commandButton id="saveNotif" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" 
