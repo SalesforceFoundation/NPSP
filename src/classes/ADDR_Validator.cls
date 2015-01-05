@@ -73,7 +73,13 @@ public with sharing class ADDR_Validator {
 	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
 	                        ADDR_Validator_TDTM.alreadyRun = true;
 	                        //updating the addresses with the verified version
-	                        update validator.verifyRecords(avList, settings);
+	                        Savepoint sp = Database.setSavepoint();
+	                        try {
+	                           update validator.verifyRecords(avList, settings);
+	                        } catch(Exception e) {
+				                Database.rollback(sp);
+				                ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.ADDR);
+				            }
 	                    } else {
 	                        ERR_Handler.processError(new ValidationException(
 	                           'The address validation class does not implement the required interface.'), 
