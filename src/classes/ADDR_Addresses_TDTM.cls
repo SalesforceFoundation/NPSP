@@ -436,7 +436,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param includeAddressType whether to include comparing the AddressType field
     * @return boolean. true if any of the fields fields have changed on the Address
     */ 
-    private static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
+    public static boolean isAddressChanged(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;        
         return (
