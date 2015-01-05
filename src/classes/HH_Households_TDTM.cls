@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
+* @group Households
+* @group-content ../../ApexDocContent/Households.htm
 * @description Handles creation, deleting and moving of Households between Contacts 
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {

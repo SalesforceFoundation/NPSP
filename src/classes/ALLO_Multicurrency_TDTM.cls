@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Class for multicurrency triggers and allocations rollup multicurrency related code.
 */
 public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {

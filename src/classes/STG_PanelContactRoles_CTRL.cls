@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Contact Roles panel.
 */
 public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {

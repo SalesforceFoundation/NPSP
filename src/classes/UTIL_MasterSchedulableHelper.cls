@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
+* @group Utilities
 * @description Calls all classes to execute at a specific run of the master scheduler.
 */
 public without sharing class UTIL_MasterSchedulableHelper {

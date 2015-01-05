@@ -27,8 +27,22 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE. 
 */
+/**
+* @author Salesforce.com Foundation
+* @date 2011 (1.x)
+* @group Households
+* @description Trigger Handler for Household Objects, to deal with Household name updates 
+*/
 public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
     
+    /*******************************************************************************************************
+    * @description Trigger Handler on Household Object 
+    * @param listNew the list of Household Objects from trigger new. 
+    * @param listOld the list of Household Objects from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Household Objects 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	

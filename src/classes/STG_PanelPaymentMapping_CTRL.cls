@@ -28,8 +28,9 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Nick Bailey 
+* @author Salesforce Foundation 
 * @date 2011 (2.1)
+* @group Settings
 * @description Controller for the payment mapping wizard
 */
 public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel { 

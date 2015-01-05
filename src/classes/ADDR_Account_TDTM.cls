@@ -35,7 +35,14 @@
 */
 public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger Handler on Account that handles Address management.
+    * @param listNew the list of Accounts from trigger new. 
+    * @param listOld the list of Accounts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Accounts 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
@@ -90,7 +97,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
     
-    // utility to see if an address is specified
+    /*******************************************************************************************************
+    * @description utility to see if an address is specified
+    * @param acc1 an Account
+    * @return boolean.  true if an address is specified in any of the Account Billing fields
+    ********************************************************************************************************/
     private boolean isAccountAddressSpecified(Account acc1) {
         if (acc1 == null) 
            return false;
@@ -103,7 +114,12 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingCountry != null);
     }
 
-    // utility to compare two Accounts' (billing) addresses
+    /*******************************************************************************************************
+    * @description utility to compare two Accounts' (billing) addresses
+    * @param acc1 an Account
+    * @param acc2 an Account
+    * @return boolean. true if there are any changes between the two accounts.
+    ********************************************************************************************************/
     private boolean isAccountAddressChanged(Account acc1, Account acc2) {
         if (acc1 == null || acc2 == null) 
            return false;
@@ -116,7 +132,13 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingCountry != acc2.BillingCountry);
     }
 
-    // for each Account, create a new default address and add it to dmlWrapper
+    // 
+    /*******************************************************************************************************
+    * @description for each Account, create a new default address and add it to dmlWrapper
+    * @param listAcc a list of Accounts
+    * @param dmlWrapper to hold the Addresses that need creating
+    * @return void
+    ********************************************************************************************************/
     private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
         list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {

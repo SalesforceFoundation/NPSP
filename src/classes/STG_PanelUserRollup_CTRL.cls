@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Settings
 * @description Controller class for the User Rollup Settings panel  
 */
 public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel { 
