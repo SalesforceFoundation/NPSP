@@ -65,7 +65,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	        RD_ProcessControl.batchButton = true;
 	        recCount += result.size();
 	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
-	     } catch(Exception e) {
+	    } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.RD);
         }    
