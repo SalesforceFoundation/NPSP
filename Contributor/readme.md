@@ -1,5 +1,6 @@
 ---
 title: How to contribute code to the Nonprofit Starter Pack
+layout: default
 base_url: "./"
 ---
 
