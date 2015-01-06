@@ -30,11 +30,13 @@ After entering the credentials for your DE org, click apply, but make sure that 
 Now you can finally go back into your IDE and turn back on the Build Automatically setting.  Your Force.com IDE should now be fully configured to do some actual coding on the Nonprofit Starter Pack codebase!
 
 ### Optional: Set Force.com to run Ant targets
+
 Click on Window > Show View > Other > Ant
 
 ![Selecting ANT in Eclipse](img/eclipse-select-ant.png)
 
 From the Ant view in the IDE click on "Add build files" (the Ant with a plus sign on top icon) and select the build.xml from your project
+
 From the Ant view select the task to run, for example "deployCI", and click the arrow with the green circle icon to execute it.
 
 ![Selecting ANT Targets in Eclipse](img/eclipse-ant-targets.png)

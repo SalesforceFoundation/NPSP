@@ -4,7 +4,7 @@ layout: default
 ---
 # Do the Work!
 
-### Great… What should I do?
+### Great ... What should I do?
 
 Phew! You are now all set up to contribute code to NPSP. For each new feature, you should:
 Find an existing [github issue](github.com/SalesforceFoundation/Cumulus/issues) or create a new one.

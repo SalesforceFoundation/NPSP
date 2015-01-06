@@ -14,9 +14,11 @@ Since this is our own copy of the repository, we can modify this as much as we�
 # Get the NPSP code onto your computer
 
 Now, lets pull the repo down into a local repository on our machine using git clone.  At the command lane change into the directory where you want your code to live, then run:
+
 ```sh
 git clone https://github.com/<user_name>/Cumulus.git
 ```
+
 If you have trouble cloning the repository, you may need to setup github ssh access. Remember the directory where you have cloned the repository as we’ll be coming back here often throughout the process.
 
 ### Cloning…
@@ -30,6 +32,7 @@ CumulusCI is a continuous integration system that aids in our development proces
 ### Cloning CumulusCI.
 
 In the command line, go to another directory where you'd like to store CumulusCI, and run:
+
 ```sh
 git clone https://github.com/SalesforceFoundation/CumulusCI.git
 ```
@@ -41,15 +44,20 @@ Make sure to take note of this directory as we'll need it later. We're not creat
 We need to add the environment variable CUMULUSCI_PATH with the path to our local CumulusCI repository.
 
 First, open your ~/.bash_profile file, creating one first if you don't have one:
+
 ```sh
 touch ~/.bash_profile
 open ~/.bash_profile
 ```
+
 Then, put the following line in your file:
+
 ```
 export CUMULUSCI_PATH=~/Documents/dev/CumulusCI/
 ```
+
 Lastly, back in the command line, run:
+
 ```
 source ~/.bash_profile
 ```

@@ -17,9 +17,11 @@ sf.serverurl=https://login.salesforce.com
 sf.username=your_dev_environment@login.com
 sf.password=your_dev_password_and_security_token
 ```
+
 The next step will clean your developer instance and install the unmanaged code for NPSP to allow you to do your dev work.
 
 From your git repository, run this command:
+
 ```
 ant deployCI
 ```
