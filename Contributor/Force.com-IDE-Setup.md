@@ -1,8 +1,12 @@
+---
+title: Setup the Project in the Force.com IDE
+layout: default
+---
 # Setup the Project in the Force.com IDE
 
 If you haven’t done so already, install your IDE of choice. Here are instructions on setting up the Force.com IDE up from scratch: https://developer.salesforce.com/page/Force.com_IDE_Installation
 
-In the Force.com IDE, you want to uncheck ‘Build Automatically’ under ‘Project’.   We don’t want the IDE to start sending random pieces of metadata up to the cloud until we’ve configured everything properly. 
+In the Force.com IDE, you want to uncheck ‘Build Automatically’ under ‘Project’.   We don’t want the IDE to start sending random pieces of metadata up to the cloud until we’ve configured everything properly.
 
 Setup a new project in Eclipse.  Right click in the project pane and go to ‘New’ and ‘Project’.  
 
@@ -14,7 +18,7 @@ If your Eclipse workspace is pointed at the same location as your local git repo
 
 ![Setup Eclipse Project Example](img/eclipse-project.png)
 
-Now that we’ve configured our DE org and source control repositories, lets get our IDE setup to do some actual coding work.  Back over in Eclipse, right click on the project name and select ‘Add Force.com Nature’. Now’s a good time to double-check that the ‘Build Automatically’ setting is disabled in your org. 
+Now that we’ve configured our DE org and source control repositories, lets get our IDE setup to do some actual coding work.  Back over in Eclipse, right click on the project name and select ‘Add Force.com Nature’. Now’s a good time to double-check that the ‘Build Automatically’ setting is disabled in your org.
 
 ![Add Force.com Nature Example](img/eclipse-add-forcecom-nature.png)
 ![Properties for Cumulus Dialog](img/eclipse-properties-for-cumulus.png)

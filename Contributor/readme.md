@@ -1,4 +1,7 @@
-# Contributing Code to the Nonprofit Starter Pack
+---
+title: How to contribute code to the Nonprofit Starter Pack
+base_url: "./"
+---
 
 The Nonprofit Starter Pack (NPSP) is an application that integrates directly with Salesforce to help nonprofits and higher ed institutions use Salesforce more effectively. The NPSP is an open-source project that thrives on the generosity of its developer community.
 
