@@ -29,7 +29,7 @@ public class UTIL_RecordTypes {
     /*******************************************
     * Gets record type maps for a new object
     ********************************************/
-    static void fillMapsForObject(string objectName) {
+    private static void fillMapsForObject(string objectName) {
         // get the object map the first time
         if (gd==null) gd = Schema.getGlobalDescribe();
         
@@ -162,28 +162,13 @@ public class UTIL_RecordTypes {
         
         return recordTypeMap;
     }
-
-    /*******************************************
-    * Gets record type naming suffix from record type name
-    ********************************************/
-    public static String GetOppNamingSuffix(String RecordTypeName){
-        Map<String,String> OpportunitySufix =  new Map<String,String>();
-
-        //add overrides for naming suffixes
-        //OpportunitySufix.put('Gift','Gift Suffix');
-
-        String Suffix;
-        Suffix = OpportunitySufix.get(RecordTypeName);
-        return (Suffix==null) ? RecordTypeName : Suffix;    
-    }
     
     /****************************************************************
     * function to get a list of select options for a Visualforce picklist of record types. 
     *****************************************************************/
     public static List<SelectOption> getRecordTypesForSelectList(String objectName) {
         
-        List<SelectOption> recordTypesOptions = new List<SelectOption>();
-        
+        List<SelectOption> recordTypesOptions = new List<SelectOption>();     
         Map<String,Id> availRecordTypes = getRecordTypeIdMap(objectName);
         if (!availRecordTypes.isEmpty()) {
             for (string thisRecordType : availRecordTypes.keyset()) {

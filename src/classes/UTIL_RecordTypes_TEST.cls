@@ -49,7 +49,6 @@ private class UTIL_RecordTypes_TEST {
         set<Id> oppRtSet = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
         Map<String, Id> oppTypeMap = UTIL_RecordTypes.GetRecordTypeIdMap('Opportunity');
         List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
-        system.assertEquals('TestName',UTIL_RecordTypes.GetOppNamingSuffix('TestName'));
         
         // check against queried rectypes
         list<recordtype> ort = [select id, name from recordtype where isactive=true and sobjecttype='Opportunity' limit 1];
@@ -80,9 +79,7 @@ private class UTIL_RecordTypes_TEST {
             system.AssertEquals(idGift, mapRCId.get(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));       
             
             system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetRecordTypeName('Opportunity', idGift));        
-            
-            system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetOppNamingSuffix(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));        
-    
+                
             List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
             system.Assert(listSO.IsEmpty() == false);       
         }
