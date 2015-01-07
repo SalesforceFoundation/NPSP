@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description The controller for the TDTM Trigger Handler panel 
 */
 public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {

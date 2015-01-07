@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Install Script for the NPSP package. 
 */
 global without sharing class STG_InstallScript implements InstallHandler {

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description Process control class to prevent trigger recursion in async process for household naming 
 */
 //process control class to prevent async trigger recursion

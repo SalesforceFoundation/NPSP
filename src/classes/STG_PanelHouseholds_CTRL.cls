@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Households panel.
 */
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {

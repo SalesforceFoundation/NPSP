@@ -32,9 +32,11 @@
 * @date 2014
 *
 * @group Accounts
-* @group-content ./documentation/accounts.html
+* @group-content ../../ApexDocContent/Accounts.htm
 *
-* @description handles triggers on Account to deal with initializing system fields for Household and One2One Accounts 
+* @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
+* our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
+* name updating.
 */
 public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
         

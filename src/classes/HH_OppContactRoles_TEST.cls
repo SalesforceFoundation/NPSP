@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Households
 * @description This class contains unit tests for validating the behavior of the Household Opportunity Contact Role class
 */
 @isTest

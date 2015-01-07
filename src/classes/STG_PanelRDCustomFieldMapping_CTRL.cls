@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
+* @group Settings
 * @description The controller for the Recurring Donations Custom Field Mapping panel 
 */
 public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {

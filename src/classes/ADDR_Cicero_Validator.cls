@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description Class that provides address validation/normalization services
 * through the Cicero API.
  */
@@ -39,26 +40,47 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private String strEndPoint;
     private Double dblTimeout;
     
+    /*******************************************************************************************************
+    * @description returns the name of the Service (Cicero)
+    */     
     public String getServiceName() {
     	return 'Cicero';
     }
     
+    /*******************************************************************************************************
+    * @description returns the default URL to use with the Cicero address verification service
+    */     
     public String getDefaultURL() {
     	return 'https://cicero.azavea.com/v3.1/legislative_district';
     }
     
+    /*******************************************************************************************************
+    * @description returns the Cicero specific help text to display on the settings page
+    */     
     public String getHelpText() {
     	return Label.stgHelpCiceroAddrVerification; 
     }
     
+    /*******************************************************************************************************
+    * @description returns false, since Cicero does not support a batch verification mode
+    */     
     public Boolean supportsBatch() {
     	return false;
     }
     
+    /*******************************************************************************************************
+    * @description returns a message saying batch is not supported with Cicero
+    */     
     public String getBatchHelpText() {
     	return Label.Addr_Verification_Batch_Not_Supported;
     }
     
+    /*******************************************************************************************************
+    * @description Verifies the list of Address objects using the Cicero service.
+    * @param listAddr the list of Address objects
+    * @param settings an address verification settings object
+    * @return List<Address__c> a list of verified and potentially updated addresses
+    */ 
     public List<Address__c> verifyRecords(List<Address__c> listAddr, Addr_Verification_Settings__c settings) {
 
         List<Address__c> listAddrChecked = new List<Address__c>();
@@ -77,6 +99,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         return listAddrChecked;
     }
 
+    /*******************************************************************************************************
+    * @description Verifies a single Address object using the Cicero service.
+    * @param addr the Address object
+    * @param settings an address verification settings object
+    * @return Address__c a verified and potentially updated address
+    */ 
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
     
         String strRequest = '?';
@@ -169,22 +197,37 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         return addr;
     }
 
+    /*******************************************************************************************************
+    * @description an exception object wrapper for Cicero
+    */ 
     public class CiceroException extends Exception {}
         
     // The following classes represent the response object from Cicero
 
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero Response
+    */ 
 	public class CiceroResponse {
 		Response response;
 	}
 
+    /*******************************************************************************************************
+    * @description a class to contain a list of Response results
+    */ 
     public class Response {
         Results results;               
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a list of Cicero Candidates
+    */ 
     public class Results {
     	list<Candidates> candidates;
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero Candidate
+    */ 
     public class Candidates {
         string match_addr;
         
@@ -202,6 +245,9 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         string geoservice;
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero District
+    */ 
     public class Districts {
         string district_type;
         string district_id;

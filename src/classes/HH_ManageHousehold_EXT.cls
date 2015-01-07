@@ -18,6 +18,7 @@
 /**
 * @author Ryan Foster, James Melville
 * @date 2012 (2.4)
+* @group Households
 * @description This class is the VF page extension for the Manage Household interface. This allows users to
 * setup their household members, name, and greeting before creating the household. It will also allow the user
 * to set the address on the household.  

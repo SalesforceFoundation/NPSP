@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Tests specific to Opportunity Allocations rollup to General Accounting Units. 
 */
 @isTest
