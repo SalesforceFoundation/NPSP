@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description The controller for the Error Log panel 
 */
 public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UTIL_iSoqlListViewConsumer  { 

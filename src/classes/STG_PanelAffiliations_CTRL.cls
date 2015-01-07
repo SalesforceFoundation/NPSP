@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Affiliations panel.
 */
 public with sharing class STG_PanelAffiliations_CTRL  extends STG_Panel {

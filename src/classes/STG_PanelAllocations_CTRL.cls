@@ -30,8 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Allocations settings page.
- */
+*/
 
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 

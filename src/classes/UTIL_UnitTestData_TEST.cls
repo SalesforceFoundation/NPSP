@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Utilities
 * @description Provides automated generation of unit test data for tests throughout the org 
 */
 

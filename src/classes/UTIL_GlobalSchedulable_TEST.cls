@@ -27,14 +27,16 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.com Foundation
+* @date 2014 
+* @group Utilities
+* @description The UTIL_GlobalSchedulable class is deprecated. We cannot remove it from the package
+* because there are clients that already have it installed and scheduled. This test is here
+* just for test coverage purposes.
+*/
 @isTest
 public with sharing class UTIL_GlobalSchedulable_TEST {
-
-    /**
-     * NOTE: the UTIL_GlobalSchedulable class is deprecated. We cannot remove it from the package
-     * because there are clients that already have it installed and scheduled. This test is here
-     * just for test coverage purposes.
-     **/
     public static testmethod void scheduleJob() {
         
         List<Schedulable__c> jobs = new List<Schedulable__c>();

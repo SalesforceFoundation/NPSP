@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Donor Statistics panel.
 */
 public with sharing class STG_PanelOpps_CTRL extends STG_Panel { 

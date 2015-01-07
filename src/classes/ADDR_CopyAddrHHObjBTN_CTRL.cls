@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Address Management
 * @description The controller for the VF page invoked by using the address copy button 
 */
 public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {

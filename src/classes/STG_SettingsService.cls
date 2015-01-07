@@ -29,6 +29,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @author Salesforce Foundation
 * @date 01/13/2014
+* @group Settings
 * @description Settings Service class
 */
 

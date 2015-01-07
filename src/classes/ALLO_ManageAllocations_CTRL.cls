@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+*
+* @group Allocations
+*
 * @description Controller for the Manage Allocations page.
 */
 public with sharing class ALLO_ManageAllocations_CTRL {

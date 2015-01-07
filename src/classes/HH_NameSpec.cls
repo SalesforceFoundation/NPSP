@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Households
 * @description HH_NameSpec class that implements template based naming for Households.
 */
 public with sharing class HH_NameSpec implements HH_INaming {
