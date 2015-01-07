@@ -45,8 +45,9 @@ global with sharing class UTIL_GlobalProxy {
     * @description Returns the default TDTM configuration. 
     * @return List<Trigger_Handler__c> a list of trigger handler records with the default values.
     */
+    //TDTM_DefaultConfig_API
     global List<Trigger_Handler__c> getDefaultTdtmConfig() {
-    	return TDTM_DefaultConfig.getDefaultRecords();
+    	return TDTM_DefaultConfig.getDefaultRecords(); 
     }
     
     /*******************************************************************************************************
@@ -54,6 +55,7 @@ global with sharing class UTIL_GlobalProxy {
     * @return Custom settings record for Contacts and Orgs configuration. At the org level, if no user level
     *         settings are defined.
     */
+    //UTIL_CustomSettings_API
     global npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
     	return UTIL_CustomSettingsFacade.getContactsSettings();
     }
@@ -145,49 +147,9 @@ global with sharing class UTIL_GlobalProxy {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
+    //ERR_Handler_API
     global void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {
     	ERR_Handler.processError(e, context);
-    }
-    
-    /*******************************************************************************************************
-    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run.
-    * @param message The message to print.
-    * @return void
-    */
-    global static void debug(string message) {
-    	UTIL_Debug.debug(message);
-    }
-    
-   /*******************************************************************************************************
-    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run, at the specified
-    *              logging level.
-    * @param message The message to print.
-    * @param level The level to output the message at.
-    * @return void
-    */
-    global static void debug(System.LoggingLevel level, string message) {
-    	UTIL_Debug.debug(level, message);
-    }
-    
-    /*******************************************************************************************************
-    * @description Prints a debug message to the debug log, if debugging enabled or a test is being run, with additional info, 
-                   such as heap, cpu, query, and rows usage.
-    * @param message The message to print.
-    * @return void
-    */
-    global static void debugWithInfo(string message) {
-     	UTIL_Debug.debugWithInfo(message);
-    }
-    
-    /*******************************************************************************************************
-    * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run, at the specified logging
-    *              level, with additional info, such as heap, cpu, query, and rows usage.
-    * @param message The message to print.
-    * @param level The level to output the message at.
-    * @return void
-    */
-    global static void debugWithInfo(System.LoggingLevel level, string message) {
-    	UTIL_Debug.debugWithInfo(level, message);
     }
     
     /*******************************************************************************************************
@@ -202,17 +164,23 @@ global with sharing class UTIL_GlobalProxy {
     /*******************************************************************************************************
     * @description Returns all field describe data.
     * @param objectName The name of the object to look up.
-    * @return Map<String, Schema.DescribeFieldResult> A map of object names to describe file results.
+    * @return Map<String, Schema.DescribeFieldResult> A map of object names to describe field results.
     */  
     global static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
     	return UTIL_Describe.getAllFieldsDescribe(objectName);
     }
     
-    /*******************************************************************************************************
-    * @description Tells us if we are running the managed or the unmanaged version of the NPSP.
-    * @return Boolean True if we are in the managed package, False otherwise.
-    */
-    global static Boolean inManagedPackage() {
-        return UTIL_Namespace.inManagedPackage;	
+    
+    //Describe_API
+    global static Id GetRecordTypeId(String objectName, String RecordTypeName) {
+    	return UTIL_RecordTypes.GetRecordTypeId(objectName, RecordTypeName);
+    }
+    
+    global static String GetRecordTypeName(String objectName, string RecordTypeId) {
+    	return UTIL_RecordTypes.GetRecordTypeName(objectName, RecordTypeId);
+    }
+    
+    global static set<Id> GetRecordTypeIdSet(String objectName, set<string> RecordTypeNameSet) {
+    	return UTIL_RecordTypes.GetRecordTypeIdSet(objectName, RecordTypeNameSet);
     }
 }
