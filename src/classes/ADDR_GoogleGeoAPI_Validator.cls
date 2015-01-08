@@ -42,7 +42,6 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     public Boolean supportsBatch(){return false;}
     public String getServiceName(){return 'The Google Geocoding API';} 
     public String getDefaultURL(){return 'https://maps.googleapis.com/maps/api/geocode/json?';}
-    public String getHelpText(){return Label.Addr_Verify_Google_Help;}
     public String getBatchHelpText() { return Label.Addr_Verification_Batch_Not_Supported;}
 
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings){
