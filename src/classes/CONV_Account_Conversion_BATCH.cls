@@ -75,7 +75,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
 
-            consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, MailingPostalCode from Contact where npo02__Household__c IN :hhscope];
+            consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, 
+                            npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, 
+                            MailingPostalCode from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
 
             /********************************************************************/
             /** Generating a new Household Account for each Household in scope **/
@@ -602,9 +604,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         }
 
         public Boolean isSameAddress(Address__c add){
-        	string strStreet = add.MailingStreet__c;
-        	if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0)
-        	   strStreet += '\n' + add.MailingStreet2__c;
+            string strStreet = add.MailingStreet__c;
+            if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0)
+               strStreet += '\n' + add.MailingStreet2__c;
             if(this.MailingStreet == strStreet && 
                this.MailingCity == add.MailingCity__c && 
                this.MailingState == add.MailingState__c &&
