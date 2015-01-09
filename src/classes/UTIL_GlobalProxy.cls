@@ -151,27 +151,7 @@ global with sharing class UTIL_GlobalProxy {
     global void processError(Exception e, UTIL_GlobalProxy.ErrorContext context) {
     	ERR_Handler.processError(e, context);
     }
-    
-    /*******************************************************************************************************
-    * @description Returns object describe data.
-    * @param objectName The name of the object to lookup. 
-    * @return Schema.DescribeSObjectResult Object that contains methods for describing the SObject.
-    */
-    global static Schema.DescribeSObjectResult getObjectDescribe(String objectName) {
-    	return UTIL_Describe.getObjectDescribe(objectName);
-    }
-    
-    /*******************************************************************************************************
-    * @description Returns all field describe data.
-    * @param objectName The name of the object to look up.
-    * @return Map<String, Schema.DescribeFieldResult> A map of object names to describe field results.
-    */  
-    global static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
-    	return UTIL_Describe.getAllFieldsDescribe(objectName);
-    }
-    
-    
-    //Describe_API
+
     global static Id GetRecordTypeId(String objectName, String RecordTypeName) {
     	return UTIL_RecordTypes.GetRecordTypeId(objectName, RecordTypeName);
     }
