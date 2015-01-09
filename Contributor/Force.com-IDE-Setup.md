@@ -43,4 +43,4 @@ From the Ant view select the task to run, for example "deployCI", and click the 
 
 Note: The task in blue is the default one, which will be run by Ant if you do not specify any when running it.
 
-You're all done and ready to [do the work!](Contributor/Do-the-Work.html)
+You're all done and ready to [do the work!](/Contributor/Do-the-Work.html)

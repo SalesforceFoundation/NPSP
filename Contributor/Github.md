@@ -64,4 +64,4 @@ source ~/.bash_profile
 
 # Woot!
 
-Congratulations, you are all set up with github! The next step create your free [Salesforce Developer Edition instance](Contributor/Developer-Edition-Salesforce-Instance.html).
+Congratulations, you are all set up with github! The next step create your free [Salesforce Developer Edition instance](/Contributor/Developer-Edition-Salesforce-Instance.html).

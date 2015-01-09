@@ -36,4 +36,4 @@ If you've added any metadata that needs to be part of NPSP as part of your featu
 5. Check the box next to your component
 6. Click Add To Package
 
-Next up, learn how to push your changes to github, and [submit them to the Salesforce Foundation for review](Contributor/Submit-Your-Feature.html).
+Next up, learn how to push your changes to github, and [submit them to the Salesforce Foundation for review](/Contributor/Submit-Your-Feature.html).

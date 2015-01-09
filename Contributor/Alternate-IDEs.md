@@ -34,4 +34,4 @@ From the command line in your git repository, run:
 ant deployCI
 ```
 
-Now you’re ready to [start coding](Contributor/Do-the-Work.html)!
+Now you’re ready to [start coding](/Contributor/Do-the-Work.html)!

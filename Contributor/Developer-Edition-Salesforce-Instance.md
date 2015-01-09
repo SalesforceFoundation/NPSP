@@ -52,4 +52,4 @@ Depending on what we’re doing, we can make the org functional by adding the ov
 
 # Yay!
 
-Great work. Now comes a choice: do you want to use the [Force.com IDE](Contributor/Force.com-IDE-Setup.html) or would you rather use [an IDE of your own choosing](Contributor/Alternate-IDEs.html)?
+Great work. Now comes a choice: do you want to use the [Force.com IDE](Contributor/Force.com-IDE-Setup.html) or would you rather use [an IDE of your own choosing](/Contributor/Alternate-IDEs.html)?
