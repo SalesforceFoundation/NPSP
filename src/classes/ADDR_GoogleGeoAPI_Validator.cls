@@ -89,7 +89,9 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             req.setHeader('Accept','application/json');
             req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN); 
             try{
+            	UTIL_Debug.debug('****Request body: \n' + req);
                 response = h.send(req);
+                UTIL_Debug.debug('****Response body: \n' + response.getBody());
             } catch (Exception e){
                 a.Verified__c = false;
                 a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
