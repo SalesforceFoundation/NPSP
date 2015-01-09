@@ -34,21 +34,4 @@ From the command line in your git repository, run:
 ant deployCI
 ```
 
-Now you’re ready to start coding! Remember to add any new metadata that’s part of the feature you’re working on to the Cumulus unmanaged package.
-
-### Commit your changes to git
-
-When you’re finished a feature, or if you just want to commit the work you’ve done so far to git, you can retrieve that code and other metadata changes that are part of the Cumulus package in your DE org by running:
-
-```sh
-ant retrievePackagedToSrc
-ant updatePackageXml
-```
-
-At this point you’re ready to commit to git, push the changes to github, and if the feature is complete, submit a pull request.
-
-```sh
-git add .
-git commit -am “My first contribution to NPSP!”
-git push
-```
+Now you’re ready to [start coding](Contributor/Do-the-Work.html)!

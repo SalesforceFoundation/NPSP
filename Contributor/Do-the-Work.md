@@ -4,7 +4,7 @@ layout: default
 ---
 # Do the Work!
 
-### Great ... What should I do?
+### I've got my IDE. Great ... What should I do?
 
 Phew! You are now all set up to contribute code to NPSP. For each new feature, you should:
 Find an existing [github issue](github.com/SalesforceFoundation/Cumulus/issues) or create a new one.
@@ -21,9 +21,13 @@ If you see something that’s interesting to you, need clarification, have somet
 
 We recommend always posting on the issue to see if it makes sense to pick it up, just in case somebody else is already working what you’ve selected! Also feel free to ask questions about the issue or discuss proposed solutions directly in the github issue.
 
+# NPSP Apex Documentation
+
+We've put together a handy site that's an invaluable tool in understanding the NPSP code base: [ApexDocs](http://developer.salesforcefoundation.org/Cumulus/). Now all that's left to do is to do the coding!
+
 # Add To The Cumulus Unmanaged Package
 
-If you've added any metadata that needs to be part of NPSP, it needs to be added to the Cumulus unmanaged package. Examples include a new class, trigger, or page, or really anything else like a new field, custom setting, page layout, etc.
+If you've added any metadata that needs to be part of NPSP as part of your feature, it needs to be added to the Cumulus unmanaged package. Examples include a new class, trigger, or page, or really anything else like a new field, custom setting, page layout, etc.
 
 1. Navigate to Setup > Create > Packages
 2. Click on the Cumulus package name
@@ -31,3 +35,5 @@ If you've added any metadata that needs to be part of NPSP, it needs to be added
 4. Select the correct Component Type
 5. Check the box next to your component
 6. Click Add To Package
+
+Next up, learn how to push your changes to github, and [submit them to the Salesforce Foundation for review](Contributor/Submit-Your-Feature.html).

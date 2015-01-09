@@ -4,7 +4,7 @@ layout: default
 ---
 # Setup the Project in the Force.com IDE
 
-If you haven’t done so already, install your IDE of choice. Here are instructions on setting up the Force.com IDE up from scratch: https://developer.salesforce.com/page/Force.com_IDE_Installation
+If you haven’t done so already, the Force.com IDE for Eclipse. Here are instructions on setting up the Force.com IDE up from scratch: https://developer.salesforce.com/page/Force.com_IDE_Installation
 
 In the Force.com IDE, you want to uncheck ‘Build Automatically’ under ‘Project’.   We don’t want the IDE to start sending random pieces of metadata up to the cloud until we’ve configured everything properly.
 
@@ -42,3 +42,5 @@ From the Ant view select the task to run, for example "deployCI", and click the 
 ![Selecting ANT Targets in Eclipse](img/eclipse-ant-targets.png)
 
 Note: The task in blue is the default one, which will be run by Ant if you do not specify any when running it.
+
+You're all done and ready to [do the work!](Contributor/Do-the-Work.html)

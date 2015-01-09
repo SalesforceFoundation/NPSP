@@ -64,4 +64,4 @@ source ~/.bash_profile
 
 # Woot!
 
-Congratulations, you are all set up with github! The next step is to choose an IDE. Any IDE will work, we provide instructions for setting up the [Force.com IDE](https://developer.salesforce.com/page/Force.com_IDE) as well as instructions for working with any IDE of your choice.
+Congratulations, you are all set up with github! The next step create your free [Salesforce Developer Edition instance](Contributor/Developer-Edition-Salesforce-Instance.html).

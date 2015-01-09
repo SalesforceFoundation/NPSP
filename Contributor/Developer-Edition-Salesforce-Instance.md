@@ -4,7 +4,7 @@ layout: default
 ---
 # Create a DE Org
 
-Each developer for NPSP has their own development environment that all their development takes place in. Developer edition salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend a new developer instance to avoid any potential conflicts.
+Now that you're done [setting up github](Contributor/Github.html), each developer for NPSP needs their own development environment that all their coding takes place in. Developer edition salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend a new developer instance to avoid any potential conflicts.
 
 Be sure to write down your login and remember your password. Once you have logged in, [reset your security token](https://help.salesforce.com/apex/HTViewHelpDoc?id=user_security_token.htm) and copy that down too for later.
 
@@ -49,3 +49,7 @@ Back in your DE Org, navigate to Setup > Create > Packages. You should have an u
 ![Cumulus Package Contents Example](img/cumulus-package-example.png)
 
 Depending on what we’re doing, we can make the org functional by adding the overrides, etc. from the [post-install instructions](https://powerofus.force.com/articles/Resource/NPSP-Nonprofit-Starter-Pack-Post-Install-Checklist), or we can just leave it.  For now, we’ll leave it.
+
+# Yay!
+
+Great work. Now comes a choice: do you want to use the [Force.com IDE](Contributor/Force.com-IDE-Setup.html) or would you rather use [an IDE of your own choosing](Contributor/Alternate-IDEs.html)?
