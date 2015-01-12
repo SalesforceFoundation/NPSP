@@ -4,7 +4,7 @@ layout: default
 ---
 # Setup the Project in the Force.com IDE
 
-If you haven’t done so already, the Force.com IDE for Eclipse. [Here are instructions on setting up the Force.com IDE up from scratch.](https://developer.salesforce.com/page/Force.com_IDE_Installation)
+If you haven’t done so already, install the Force.com IDE for Eclipse. [Here are instructions on setting up the Force.com IDE up from scratch.](https://developer.salesforce.com/page/Force.com_IDE_Installation)
 
 In the Force.com IDE, you want to uncheck ‘Build Automatically’ under ‘Project’.   We don’t want the IDE to start sending random pieces of metadata up to the cloud until we’ve configured everything properly.
 
