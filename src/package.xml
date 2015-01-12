@@ -63,6 +63,7 @@
     <members>CON_ContactMerge_TEST</members>
     <members>ERR_AddError_TEST</members>
     <members>ERR_Handler</members>
+    <members>ERR_Handler_API</members>
     <members>ERR_Handler_CTRL_TEST</members>
     <members>ERR_Handler_TEST</members>
     <members>ERR_Notifier</members>
@@ -159,6 +160,7 @@
     <members>STG_SettingsService</members>
     <members>STG_UninstallScript</members>
     <members>STG_UninstallScript_TEST</members>
+    <members>TDTM_Config_API</members>
     <members>TDTM_DefaultConfig</members>
     <members>TDTM_ObjectDataGateway</members>
     <members>TDTM_Runnable</members>
@@ -169,10 +171,10 @@
     <members>TDTM_iTableDataGateway</members>
     <members>UTIL_AbstractRollup_BATCH</members>
     <members>UTIL_CustomSettingsFacade</members>
+    <members>UTIL_CustomSettings_API</members>
     <members>UTIL_Debug</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
-    <members>UTIL_GlobalProxy</members>
     <members>UTIL_GlobalSchedulable</members>
     <members>UTIL_GlobalSchedulable_TEST</members>
     <members>UTIL_IScheduled</members>
@@ -186,6 +188,7 @@
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
+    <members>UTIL_RecordTypes_API</members>
     <members>UTIL_RecordTypes_TEST</members>
     <members>UTIL_SoqlListView_CTRL</members>
     <members>UTIL_Typeahead</members>
