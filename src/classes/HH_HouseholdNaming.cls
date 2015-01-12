@@ -51,7 +51,7 @@ public without sharing class HH_HouseholdNaming {
             hn.UpdateNames(hhids);
         } catch(Exception e) {
         	Database.rollback(sp);
-        	ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.HH);
+        	ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.HH);
         }      
         HH_ProcessControl.inFutureContext = false;    
     }

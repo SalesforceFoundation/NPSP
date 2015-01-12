@@ -506,7 +506,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         //rollback the entire transaction on any failure, DML or otherwise
         }catch (Exception e){
             Database.rollback(sp);
-            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.CONV);
+            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.CONV);
             //crash the transaction
             throw new AccountModelConversionException(e.getMessage());
         }

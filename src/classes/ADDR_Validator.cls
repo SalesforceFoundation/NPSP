@@ -77,16 +77,16 @@ public with sharing class ADDR_Validator {
 	                    } else {
 	                        ERR_Handler.processError(new ValidationException(
 	                           'The address validation class does not implement the required interface.'), 
-	                           UTIL_GlobalProxy.ErrorContext.ADDR);
+	                           ERR_Handler_API.ErrorContext.ADDR);
 	                    }
 	                } else {
 	                    ERR_Handler.processError(new ValidationException('No class named ' + classToRunName + ' exists.'), 
-                            UTIL_GlobalProxy.ErrorContext.ADDR);
+                            ERR_Handler_API.ErrorContext.ADDR);
 	                }
                 }
             } else {
                 ERR_Handler.processError(new ValidationException('Address validation class not defined in the settings.'), 
-                     UTIL_GlobalProxy.ErrorContext.ADDR);
+                     ERR_Handler_API.ErrorContext.ADDR);
             }
         }
     }

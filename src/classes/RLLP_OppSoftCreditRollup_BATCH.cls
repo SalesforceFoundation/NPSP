@@ -42,7 +42,7 @@ public with sharing class RLLP_OppSoftCreditRollup_BATCH implements Database.Bat
 	            return true;
             } catch(Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.RLLP);
+                ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
             }
         }
         return false;

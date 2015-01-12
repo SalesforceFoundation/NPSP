@@ -231,7 +231,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        return oldOppPage;
     	} catch(Exception e) {
     		Database.rollback(sp);
-    		ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.PMT);
+    		ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.PMT);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     		return null;
     	}
@@ -300,7 +300,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.PMT);
+            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

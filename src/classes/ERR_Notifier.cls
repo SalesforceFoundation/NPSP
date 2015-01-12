@@ -52,7 +52,7 @@ public with sharing class ERR_Notifier {
     * @param context The context that triggered the error notification.
     * @return void
     */
-    public static void sendErrorNotifications(UTIL_GlobalProxy.ErrorContext context) {
+    public static void sendErrorNotifications(ERR_Handler_API.ErrorContext context) {
 
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
@@ -88,7 +88,7 @@ public with sharing class ERR_Notifier {
     * @param sendList The list of email addresses to send notifications to.
     * @return void
     */
-    private static void sendEmailNotifications(UTIL_GlobalProxy.ErrorContext context, List<String> sendList) {
+    private static void sendEmailNotifications(ERR_Handler_API.ErrorContext context, List<String> sendList) {
         if (!system.isBatch() && !system.isFuture() && Limits.getFutureCalls() < Limits.getLimitFutureCalls()) {
             //We cannot pass the context, because only primitive types can be passed to future methods.
             sendErrorQueueEmailNotificationFuture(sendList);
@@ -116,7 +116,7 @@ public with sharing class ERR_Notifier {
     * @param sendList The list of email addresses to send notifications to.
     * @return void
     */
-    private static void sendErrorQueueEmailNotification(UTIL_GlobalProxy.ErrorContext context, List<String> sendList) {
+    private static void sendErrorQueueEmailNotification(ERR_Handler_API.ErrorContext context, List<String> sendList) {
         List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
                                         Stack_Trace__c from Error__c where Email_Sent__c = false];
 
@@ -138,14 +138,14 @@ public with sharing class ERR_Notifier {
     * @param sendList The list of email recipients.
     * @return 
     */
-    private static Messaging.SingleEmailMessage createEmailMessage(UTIL_GlobalProxy.ErrorContext context, List<Error__c> errorList, List<String> sendList) {
+    private static Messaging.SingleEmailMessage createEmailMessage(ERR_Handler_API.ErrorContext context, List<Error__c> errorList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('Nonprofit Starter Pack');
         mail.setSubject('NPSP Error');
         string bodyString = '';
-        if (context == UTIL_GlobalProxy.ErrorContext.RD)
+        if (context == ERR_Handler_API.ErrorContext.RD)
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
         Integer i = 1;

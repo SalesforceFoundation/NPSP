@@ -77,7 +77,7 @@ public class RD_RecurringDonations_TEST {
         try {
             insert r0;
         } catch (Exception e) {
-            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.RD);
+            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RD);
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -253,7 +253,7 @@ public class RD_RecurringDonations_TEST {
         try{
             delete r2;
         } catch (exception e1) {
-            ERR_Handler.processError(e1, UTIL_GlobalProxy.ErrorContext.RD);
+            ERR_Handler.processError(e1, ERR_Handler_API.ErrorContext.RD);
         }
         
         //delete should have failed

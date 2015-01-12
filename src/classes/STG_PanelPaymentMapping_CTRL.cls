@@ -254,7 +254,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
 	        STG_Panel.stgService.listPMTFieldMapping = null;
 	        listPMTFieldMapping = null;
 	    } catch(Exception e) {
-            ERR_Handler.processError(e, UTIL_GlobalProxy.ErrorContext.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.STTG);
   	        showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
 	        showMsg('Exception type' + e, ApexPages.Severity.INFO);            
         }

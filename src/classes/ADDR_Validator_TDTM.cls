@@ -60,13 +60,13 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
                     alreadyRun = true;
                 } else if(system.isFuture()) {
                 	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'), 
-                	                           UTIL_GlobalProxy.ErrorContext.ADDR);
+                	                           ERR_Handler_API.ErrorContext.ADDR);
                 } else if(system.isBatch()) {
                 	UTIL_Debug.debug('****ADDR_Validator_TDTM called from batch, addresses not verified.');
                     /*We don't want to log an error here. Instead, we'll just do a debug statement.
 
                     ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
-                                               UTIL_GlobalProxy.ErrorContext.ADDR);*/
+                                               ERR_Handler_API.ErrorContext.ADDR);*/
                 }
 	        }
         }
