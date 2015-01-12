@@ -31,6 +31,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group API
+* @group-content ../../ApexDocContent/API.htm
 * @description API class that exposes the TDTM (Table-Driven Trigger Management) configuration.
 */
 global with sharing class TDTM_Config_API {

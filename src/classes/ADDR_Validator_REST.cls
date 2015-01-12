@@ -30,10 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
-* @group Accounts
-* @group-content ./documentation/???.html
-*
+* @group Address Management
+* @group-content ../../ApexDocContent/Addresses.htm
 * @description Called from a custom button, through Javascript, to verify a single address record.
 */
 global with sharing class ADDR_Validator_REST {
