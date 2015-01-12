@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Households
 * @description This class contains unit tests for validating the behavior of the Household Opportunity Contact Role class
 */
 @isTest
@@ -323,5 +324,133 @@ private class HH_OppContactRoles_TEST {
         system.assertequals(2,(integer)[select count() from OpportunityContactRole]);
     }  
     
+    /*********************************************************************************************************
+    operation:
+        move a contact with Opportunities to a different Household Account
+    verify:
+        both open and closed opps where the contact is primary, are moved to the new HH Account
+        soft credit OCR's from the old Household are deleted
+        soft credit OCR's for the new Household are created
+    **********************************************************************************************************/            
+    static testmethod void updateOppHHAccountRefreshNone() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshNone') return;
+        updateOppHHAccount('none');
+    }
+    static testmethod void updateOppHHAccountRefreshOpen() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshOpen') return;
+        updateOppHHAccount('Open Opportunities');
+    }
+	static testmethod void updateOppHHAccountRefreshOpenAndClosed() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccounRefreshOpenAndClosed') return;
+        updateOppHHAccount('Open and Closed Opportunities');
+	}
+    static void updateOppHHAccount(string strRefresh) {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccount') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'));
+        
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Household_Member_Contact_Role__c='Household Member'));
+        //UNDONE: add setting strRefresh into custom settings
+        HH_OppContactRoles_TDTM.strRefreshSetting = strRefresh;
+                
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        system.assertEquals(null, listCon[0].AccountId); 
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(3, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert listAcc;
+        system.assertNotEquals(null, listAcc[0].Id);
+        
+        // specify the account for each contact, some sharing HH account.
+        listCon[0].AccountId = listAcc[0].Id;
+        listCon[1].AccountId = listAcc[0].Id;
+        listCon[2].AccountId = listAcc[1].Id;
+        listCon[3].AccountId = listAcc[1].Id;
+        listCon[4].AccountId = listAcc[2].Id;
+        insert listCon;
+        
+        list<Opportunity> listOppClosed = UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+            System.Today(), 100, null, null);
+        insert listOppClosed;
+                    
+        list<Opportunity> listOppOpen = UTIL_UnitTestData_TEST.OppsForContactList(listCon, null, UTIL_UnitTestData_TEST.getOpenStage(),
+            System.Today(), 10, null, null);
+        insert listOppOpen;
+        
+        //check for contact roles
+        List<OpportunityContactRole> listOCR = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
+        system.assertEquals(18, listOCR.size());
+        
+        // now let's move a contact to a different household
+        listCon[0].AccountId = listAcc[1].Id;
+        update listCon[0];
+        
+        List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
+        list<integer> listPrimary = new integer[5];
+        list<integer> listSoft = new integer[5];
+        for (integer i = 0; i < 5; i++) {
+        	listPrimary[i] = 0;
+        	listSoft[i] = 0;
+        }        
+        
+        for (OpportunityContactRole ocr : listOCR2) {
+        	integer i = 0;
+            if (ocr.ContactId == listCon[1].Id)
+                i = 1;
+            else if (ocr.ContactId == listCon[2].Id)
+                i = 2;
+            else if (ocr.ContactId == listCon[3].Id)
+                i = 3;
+            else if (ocr.ContactId == listCon[4].Id)
+                i = 4;
+            if (ocr.IsPrimary)
+                listPrimary[i]++;
+            else
+                listSoft[i]++;                   
+        }
+        
+        if (strRefresh == 'none') {
+            system.assertEquals(18, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(2, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(2, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(2, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        } else if (strRefresh == 'Open Opportunities') {        
+            system.assertEquals(19, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(1, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(3, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(3, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        } else {
+            system.assertEquals(20, listOCR2.size());
+            system.assertEquals(2, listPrimary[0]);
+            system.assertEquals(2, listSoft[0]);
+            system.assertEquals(2, listPrimary[1]);
+            system.assertEquals(0, listSoft[1]);
+            system.assertEquals(2, listPrimary[2]);
+            system.assertEquals(4, listSoft[2]);
+            system.assertEquals(2, listPrimary[3]);
+            system.assertEquals(4, listSoft[3]);
+            system.assertEquals(2, listPrimary[4]);
+            system.assertEquals(0, listSoft[4]);
+        }
+    }
        
 }

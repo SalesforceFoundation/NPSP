@@ -172,7 +172,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         //we still need to query to make sure its not a custom fiscal year
         //or else we'll throw errors when calling Fiscal_Year in queries
         if (household_settings.npo02__Use_Fiscal_Year_for_Rollups__c == true){
-            String fyQuery = 'select id from FiscalYearSettings';            
+            String fyQuery = 'select id from FiscalYearSettings  where IsStandardYear = false';            
             List<SObject> fySettings = new List<SObject>();
             fySettings = Database.query(fyQuery);
             integer hasCustomFYRecord = fySettings.size();
@@ -715,9 +715,11 @@ public without sharing class RLLP_OppRollup_UTIL {
                 SoftCreditQuery += 'AND Opportunity.RecordTypeId NOT IN :rectypeset ';
             }
             SoftCreditQuery += 'AND Opportunity.Type NOT IN :typeset ';
+            /** soft credits should always roll up to contacts with those OCR's regardless of the tpe of account. 
             if (!hh_settings.npo02__Always_Rollup_to_Primary_Contact__c){
                 SoftCreditQuery += 'AND (Opportunity.AccountId = null OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = true) ';
             }
+            */
             SoftCreditQuery += 'AND ContactId IN :cset ';            
             if (useFiscalYear)
                 SoftCreditQuery += 'GROUP BY ROLLUP(ContactId, Fiscal_Year(Opportunity.CloseDate)) ';

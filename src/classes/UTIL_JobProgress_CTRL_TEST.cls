@@ -30,7 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 (3.0)
-* @description Tests for the JobProgress indicator component controller  
+* @group Utilities
+* @description Tests for the JobProgress indicator component controller.
 */
 @isTest
 public with sharing class UTIL_JobProgress_CTRL_TEST {

@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2014
+* @group Settings
 * @description Controller for the Health Check wizard
 */
 public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
@@ -45,6 +46,18 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     public boolean hasResults { 
         get {
             return (listDR != null && listDR.size() > 0);
+        }
+    }
+    
+    public boolean isAllTestsPassed { 
+        get {
+            if (!hasResults)
+                return false;
+            for (DetectResult dr : listDR) {
+                if (dr.strStatus == 'Error')
+                    return false;
+            }
+            return true;
         }
     }
     
@@ -111,6 +124,7 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
         verifyScheduledJobs();
         ERR_Notifier.verifyErrorSettings(this);
+        verifyOppContactRoles();
 
         DateTime dtEnd = system.now();
         double msec = dtEnd.getTime() - dtStart.getTime();
@@ -228,11 +242,11 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     private void verifyNoOrphanedHouseholds() {
     	try {
 	        integer cHHObj = [select Count() from npo02__Household__c 
-	            where Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0 limit 9999];
+	            where Number_of_Household_Members__c = 0 limit 9999];
 	            //where Id not in (select npo02__Household__c from Contact where npo02__Household__c <> null) limit 9999];        
 	        integer cHHAcc = [select Count() from Account 
 	            where npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE and 
-	                (Number_of_Household_Members__c = null or Number_of_Household_Members__c = 0) limit 9999];
+	                Number_of_Household_Members__c = 0 limit 9999];
 	                //Id not in (select AccountId from Contact where AccountId <> null and Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE) limit 9999];        
 	        if (cHHObj > 0) {
 	            createDR(Label.healthLabelHHObjData, 'Error', 
@@ -423,6 +437,28 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             createDR(Label.healthLabelScheduler, 'Error',  ex.getMessage(), null);                   
         }    
 	        
+    }
+    
+    // verify that no Opportunities have multiple primary contact roles, which would throw off opp rollups.
+    private void verifyOppContactRoles() {
+        try {
+            // detect duplicate primary ocr's
+            // we understand this will fail if there are over 50k OCR's in they system,
+            // but it is better than nothing, since for many orgs that will be fine.
+            integer cOpp = 0;
+			list<AggregateResult> listAR = [select count(Id), OpportunityId from OpportunityContactRole 
+			     where IsPrimary=true group by OpportunityId having count(Id) > 1 limit 50000];
+			cOpp = listAR.size();
+
+			if (cOpp > 0) {
+		        createDR(label.healthLabelOCRCheck, 'Error', 
+		          string.format(label.healthDetailsOCRDupPrimary, new string[]{string.valueOf(cOpp)}), label.healthSolutionOCRDupPrimary);    	
+			} else {
+		        createDR(label.healthLabelOCRCheck, 'Success', null, label.healthDetailsOCRDupPrimaryValid);
+			}    
+        } catch (exception ex) {
+            createDR(Label.healthLabelOCRCheck, 'Error',  ex.getMessage(), label.healthSolutionOCRException);                   
+        }    
     }
     
 }

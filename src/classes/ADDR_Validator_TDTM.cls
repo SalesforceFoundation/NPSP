@@ -44,6 +44,16 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
         
         if(!alreadyRun) {
 	        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+	        if(trigger.isBefore && settings.enable_automatic_verification__c) {        	
+	        	for(SObject so : newList) {
+	        		Address__c address = (Address__c)so;
+	        		if(!system.isFuture() && !system.isBatch()) {
+	        		    address.Verification_Status__c = Label.Addr_Pending_Verification;
+	        		} else {
+	        			address.Verification_Status__c = Label.Addr_Verification_Required;
+	        		}	
+        	    }
+	        }
 	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
                 if(!system.isFuture() && !system.isBatch()) {
                     ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
@@ -52,8 +62,11 @@ public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
                 	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from future'), 
                 	                           ERR_Handler.Context.ADDR);
                 } else if(system.isBatch()) {
-                	ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
-                                               ERR_Handler.Context.ADDR);
+                	UTIL_Debug.debug('****ADDR_Validator_TDTM called from batch, addresses not verified.');
+                    /*We don't want to log an error here. Instead, we'll just do a debug statement.
+
+                    ERR_Handler.processError(new ADDR_Validator_Exception('ADDR_Validator_TDTM called from batch'), 
+                                               ERR_Handler.Context.ADDR);*/
                 }
 	        }
         }

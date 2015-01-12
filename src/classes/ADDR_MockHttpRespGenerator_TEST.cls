@@ -37,7 +37,7 @@
 public with sharing class ADDR_MockHttpRespGenerator_TEST implements HttpCalloutMock {
   
     public HTTPResponse respond(HTTPRequest req) {
-    	System.debug(LoggingLevel.WARN, '****Mock responding.');
+    	UTIL_Debug.debug(LoggingLevel.WARN, '****Mock responding.');
     	
     	String singleAddressResponse = 
 	        '['+
@@ -136,34 +136,43 @@ public with sharing class ADDR_MockHttpRespGenerator_TEST implements HttpCallout
 	    String invalidZipResponse = '[{"input_index":0,"status":"invalid_zipcode","reason":"Invalid ZIP Code."}]';
     
     
-        System.debug(LoggingLevel.WARN, '****Request received by mock: \n' + req.getBody());
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Request received by mock: \n' + req.getBody());
         
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');
-        if (req.getEndpoint().contains('bad-authentication-for-test')) {
+        if (req.getEndpoint().contains('400')) {
+            res.setStatusCode(400);
+            res.setStatus('Bad input. Required fields missing from input or are malformed.');
+        } else if (req.getEndpoint().contains('401')) {
             res.setStatusCode(401);
-            res.setStatus('Not authenticated.');
+            res.setStatus('Unauthorized. Authentication failure; invalid credentials.');
+        } else if (req.getEndpoint().contains('402')) {
+            res.setStatusCode(402);
+            res.setStatus('Payment required. No active subscription found.');
+        } else if (req.getEndpoint().contains('500')) {
+            res.setStatusCode(500);
+            res.setStatus('Internal server error. General service failure; retry request.');
         } else {
             res.setStatusCode(200);
             res.setStatus('OK');   
             
             if(req.getBody().contains('single-address')) {
-            	System.debug(LoggingLevel.WARN, '****Returning simple address mock response');
+            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple address mock response');
             	res.setBody(singleAddressResponse);
             } else if(req.getBody().contains('multiple-address')) {
-                System.debug(LoggingLevel.WARN, '****Returning multiple address mock response');
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Returning multiple address mock response');
                 res.setBody(multipleAddressResponse);
             } else if(req.getBody().contains('invalid-address')) {
-            	System.debug(LoggingLevel.WARN, '****Returning invalid address mock response');
+            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid address mock response');
                 res.setBody(invalidAddressResponse);
             } else if(req.getBody().contains('ambiguous-address')) {
-            	System.debug(LoggingLevel.WARN, '****Returning simple ambiguos mock response');
+            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning simple ambiguos mock response');
                 res.setBody(ambiguousAddressResponse);            
             } else if(req.getBody().contains('single-zip')) {
-            	System.debug(LoggingLevel.WARN, '****Returning single zip mock response');
+            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning single zip mock response');
                 res.setBody(zipResponse); 
             } else if(req.getBody().contains('invalid-zip')) {
-            	System.debug(LoggingLevel.WARN, '****Returning invalid zip mock response');
+            	UTIL_Debug.debug(LoggingLevel.WARN, '****Returning invalid zip mock response');
                 res.setBody(invalidZipResponse);
             }
         }

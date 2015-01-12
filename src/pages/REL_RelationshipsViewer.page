@@ -1,11 +1,11 @@
 <apex:page extensions="REL_RelationshipsViewer_CTRL" standardController="Contact" sidebar="false">
-    <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/colors.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/primitives.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/src/graphics/graphics.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/colors.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/primitives.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/graphics.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.npe4__ArborJS, '/arbor-v0.92/lib/arbor-tween.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor-tween.js')}"/> 
     <body>
         <canvas id="viewport" width="1000" height="600"></canvas>  
         <script> 

@@ -30,16 +30,21 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the error notifications settings page.
- */
+*/
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
     public override String idPanel() { return 'idPanelErrors'; }
     
     public String notificationToDropDown { public get; public set; }
     public String groupId { public get; public set; }
-    public String saveErrorMessage {public get; set; }
+    public String saveErrorMessage { public get; set; }
  
+    public STG_PanelERR_CTRL() {
+    	notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
+    }
+    
     //Displays the values of the drop-down (Edit Mode only)
     public List<SelectOption> listSOERRNotifOptions {
         get {
@@ -86,8 +91,8 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     }  
     
     public override PageReference saveSettings() {
-        System.debug('****notification to drop down: ' + notificationToDropDown);
-        System.debug('****group ID: ' + groupId);
+        UTIL_Debug.debug('****notification to drop down: ' + notificationToDropDown);
+        UTIL_Debug.debug('****group ID: ' + groupId);
         if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && String.isBlank(groupId)) { 
             saveErrorMessage = 'Please enter valid Chatter group name.';
             return null;
@@ -104,5 +109,13 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public override PageReference cancelEdit() {
     	saveErrorMessage = null;
     	return super.cancelEdit();
+    }
+    
+    public override PageReference editSettings() {
+    	if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
+    		notificationToDropDown = ERR_Notifier.NotificationOptions.chatterGroup;
+    	}
+    	
+    	return super.editSettings();
     }
 }

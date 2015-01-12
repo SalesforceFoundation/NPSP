@@ -25,12 +25,13 @@
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-    POSSIBILITY OF SUCH DAMAGE.  
+    POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation
-* @date 2014
-* @description Provides a batch conversion interface for porting 1x1 or Individual Contacts to the Household Account model
+* @author Salesforce.com Foundation 
+* @date 2014 
+* @group Account Model Converter
+* @description Account model conversion utility main class. This class holds all conversion logic 
 */
 global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
@@ -364,7 +365,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     Boolean hasDefaultAddr = false;
                     Integer addresscount = uniqueContactAddress.keySet().size();
                     Integer counter = 0;
-                    String masteraddresshash = '';
+                    String masteraddresshash = null;
 
                     for (String MD5Hash : uniqueContactAddress.keySet()){
                         ContactAddress cadd = uniqueContactAddress.get(MD5Hash);
@@ -396,24 +397,30 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                         if(!hasDefaultAddr && counter == addresscount)
                             hasDefaultAddr = true;
 
-                            Address__c a = new Address__c(
-                                                MailingStreet__c = cadd.MailingStreet,
-                                                MailingState__c = cadd.MailingState,
-                                                MailingPostalCode__c = cadd.MailingZip,
-                                                MailingCountry__c = cadd.MailingCountry,
-                                                MailingCity__c = cadd.MailingCity,
-                                                Default_Address__c = (hasDefaultAddr ? true : false),
-                                                Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
-                                                Household_Account__c = cadd.contact.AccountId
-                                                );
-                            ADDR_Addresses_TDTM.handleMultilineStreet(a);                                                
-
-                        if (hasDefaultAddr){
+                        // save our master address
+                        if (hasDefaultAddr && masteraddresshash == null)
                             masteraddresshash = MD5Hash;
+
+                        Address__c a = new Address__c(
+                                            MailingStreet__c = cadd.MailingStreet,
+                                            MailingState__c = cadd.MailingState,
+                                            MailingPostalCode__c = cadd.MailingZip,
+                                            MailingCountry__c = cadd.MailingCountry,
+                                            MailingCity__c = cadd.MailingCity,
+                                            Default_Address__c = (masteraddresshash == MD5Hash ? true : false),
+                                            Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
+                                            Household_Account__c = cadd.contact.AccountId
+                                            );
+                        ADDR_Addresses_TDTM.handleMultilineStreet(a);
+
+                        if (masteraddresshash == MD5Hash){
                             addressesForInsert.put(cadd.AccountId, a);
+                            UTIL_Debug.debug('****DJH default address: ' + a);                                                
                         }
-                        else
+                        else {
                             addressesForInsert.put(cadd.ConId, a);
+                            UTIL_Debug.debug('****DJH not default address: ' + a); 
+                        }                                                
                     }
 
                     //set the household address fields to the default address values

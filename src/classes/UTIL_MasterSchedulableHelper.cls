@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
+* @group Utilities
 * @description Calls all classes to execute at a specific run of the master scheduler.
 */
 public without sharing class UTIL_MasterSchedulableHelper {
@@ -79,7 +80,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                Object instance = classType.newInstance(); 
                if(instance instanceof UTIL_IRecurring) {
                    try {
-                       System.debug(LoggingLevel.WARN, '****Running ' + instance);
+                       UTIL_Debug.debug(LoggingLevel.WARN, '****Running ' + instance);
                        Boolean wasRun = ((UTIL_IRecurring)instance).executeReturnStatus();
                        //Update last time run
                        if(wasRun) {

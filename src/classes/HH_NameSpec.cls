@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Households
 * @description HH_NameSpec class that implements template based naming for Households.
 */
 public with sharing class HH_NameSpec implements HH_INaming {
@@ -58,6 +59,19 @@ public with sharing class HH_NameSpec implements HH_INaming {
     public string getExampleName(Household_Naming_Settings__c hnsMem, string strField, list<Contact> listCon) {
         NameSpec ns = new NameSpec(hnsMem, strField);
         return strNameFromNameSpec(ns, listCon);        
+    }
+    
+    // to allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
+    public set<string> setHousholdNameFieldsOnContact() {
+        set<string> setStrField = new set<string>(); 
+        NameSpec ns;
+        ns = new NameSpec(hns, 'Household_Name_Format__c');
+        setStrField.addAll(ns.setStrFieldsInNameSpec());
+        ns = new NameSpec(hns, 'Formal_Greeting_Format__c');
+        setStrField.addAll(ns.setStrFieldsInNameSpec());
+        ns = new NameSpec(hns, 'Informal_Greeting_Format__c');
+        setStrField.addAll(ns.setStrFieldsInNameSpec());
+        return setStrField;
     }
     
     // our cached copy of the Household Naming Settings
@@ -137,6 +151,15 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strFullNameSpec = strNameSpec;
             }
         }
+        
+        // return a set of all field names in all parts of the namespec.
+        public set<string> setStrFieldsInNameSpec() {
+            set<string> setStrField = new set<string>();
+            if (strFirstNameSpec != null)
+                setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
+            setStrField.add('LastName');    
+            return setStrField;
+        }
     }
     
     
@@ -212,7 +235,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
-            string val = string.valueOf(con.get(strField));
+            string val = string.valueOf(con.get(strField.trim()));
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
             if (val == null) {   
@@ -224,6 +247,24 @@ public with sharing class HH_NameSpec implements HH_INaming {
             str = str.replace(strField, val == null ? '' : val);
         }
         return str;     
+    }
+
+    // given a namespec string, returns a list of contact fieldnames
+    // specified in that string.
+    private static set<string> setStrFieldFromStrFSpec(string strFSpec) {
+        set<string> setStrField = new set<string>();
+                
+        // First, instantiate a new Pattern object looking for {...} without any nested {'s.
+        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
+        // Then instantiate a new Matcher object 
+        Matcher MyMatcher = MyPattern.matcher(strFSpec);
+        
+        while (MyMatcher.find()) {
+            // get the fieldname without the {}'s
+            string strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-1);
+            setStrField.add(strField.trim());
+        }
+        return setStrField;     
     }
 
 }

@@ -62,7 +62,7 @@ public with sharing class ERR_Handler_CTRL_TEST {
             insert relationships;
         
         } catch(Exception e) {
-        	System.debug('****Exception caught: ' + e.getMessage());
+        	UTIL_Debug.debug('****Exception caught: ' + e.getMessage());
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
         }

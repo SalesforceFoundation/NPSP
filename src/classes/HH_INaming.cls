@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Households
 * @description Interface that classes that provide Household Naming must implement.
 */
 public Interface HH_INaming {
@@ -45,4 +46,7 @@ public Interface HH_INaming {
     // hns holds an in-memory Household Naming Settings object, and strField is one of:
     // Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
     string getExampleName(Household_Naming_Settings__c hns, string strField, list<Contact> listCon);
+    
+    // to allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
+    set<string> setHousholdNameFieldsOnContact();
 }

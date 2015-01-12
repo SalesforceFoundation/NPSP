@@ -30,11 +30,22 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description support needed on Contact for Address management 
 */
 public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contact that handles Address Management.
+    * 	Rules:
+    * 		inserting new contact - make their address a new default address, unless they say it is an override
+    * 		updating an existing contact - make their address a new default address, unless they say it is an override
+    * @param listNew the list of Contacts from trigger new. 
+    * @param listOld the list of Contacts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Contacts 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
@@ -127,7 +138,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
                 // note that we detect whether the address change is coming from the address trigger,
                 // in which case we don't want to create a new address.
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger) {
-                	//system.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
+                	//UTIL_Debug.debug('DJH**** stop Addr Trigger recursion in ADDR_Contact_TDTM');
                     continue;
                 }
 
@@ -163,7 +174,11 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    // for each contact, refresh its mailing address from its Address lookup
+    /*******************************************************************************************************
+    * @description for each contact, refresh its mailing address from its Address lookup
+    * @param listCon the list of Contacts to update
+    * @return void  
+    ********************************************************************************************************/
     private void setConAddrFromLookup(list<Contact> listCon) {
     	set<Id> setAddrId = new set<Id>();
     	for (Contact con : listCon) {
@@ -178,16 +193,17 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (addr != null) {
             	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-            	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
-            	con.MailingCity = addr.MailingCity__c;
-            	con.MailingState = addr.MailingState__c;
-            	con.MailingPostalCode = addr.MailingPostalCode__c;
-            	con.MailingCountry = addr.MailingCountry__c;
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing');
             }
         }     	
     }
 
-    // utility to compare two contacts' addresses
+    /*******************************************************************************************************
+    * @description utility to compare two contacts' addresses
+    * @param con1 a Contact
+    * @param con2 a Contact
+    * @return boolean. true if the Mailing Address fields have changed 
+    ********************************************************************************************************/
     private boolean isContactAddressChanged(Contact con1, Contact con2) {
     	// if both null, no change
         if (con1 == null && con2 == null) 
@@ -215,7 +231,11 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
            con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c);
     }
 
-    // utility to see if the contact's mailing address is empty
+    /*******************************************************************************************************
+    * @description utility to see if the contact's mailing address is empty
+    * @param con1 a Contact
+    * @return boolean. true if the Mailing Address fields are all empty 
+    ********************************************************************************************************/
     private boolean isContactAddressEmpty(Contact con1) {
         return (con1.MailingStreet == null &&
            con1.MailingCity == null &&
@@ -224,10 +244,16 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
            con1.MailingCountry == null );
     }
        
-    // for each contact, create a new address or match an existing one.
-    // this routine is called both by BeforeInsert/Update and AfterInsert/Update.
-    // when pushing a new default address, we need to do it in the AfterInsert/Update.
-    // otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
+    /*******************************************************************************************************
+    * @description For each contact, create a new address or match an existing one.
+    * this routine is called both by BeforeInsert/Update and AfterInsert/Update.
+    * when pushing a new default address, we need to do it in the AfterInsert/Update.
+    * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
+    * @param listConAll the list of Contacts
+    * @param dmlWrapper to hold the Addresses that need inserting/updating 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @return void  
+    ********************************************************************************************************/
     private void createAddrFromCon(list<Contact> listConAll, DmlWrapper dmlWrapper,  TDTM_Runnable.Action triggerAction) {
     	
     	// Strategy:
@@ -259,14 +285,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	addr.Household_Account__c = con.AccountId;
         	addr.Default_Address__c = !con.is_Address_Override__c;
         	addr.Latest_Start_Date__c = system.today();
-        	addr.Latest_End_Date__c = null;
-        	addr.MailingStreet__c = con.MailingStreet;
-        	addr.MailingCity__c = con.MailingCity;
-        	addr.MailingState__c = con.MailingState;
-        	addr.MailingPostalCode__c = con.MailingPostalCode;
-        	addr.MailingCountry__c = con.MailingCountry;
+        	addr.Latest_End_Date__c = null;        	
+        	ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr);
         	addr.Address_Type__c = con.npe01__Primary_Address_Type__c;
-        	ADDR_Addresses_TDTM.handleMultilineStreet(addr);
             mapConAddr.put(con, addr);
         }
 
@@ -288,12 +309,20 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
                     con.npe01__Primary_Address_Type__c = addrDup.Address_Type__c; 
-            	}
-                
-                // we aren't specifying override, so the address should become the new hh default address
-                if (!isBefore && !con.is_Address_Override__c && !addrDup.Default_Address__c) {
-                	addrDup.Default_Address__c = true;
-                	listAddrUpdateDefault.add(addrDup);
+            	} else {
+	                
+	                // if it is a fuzzy match, not exact, then we want to update the existing address.
+	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, false)) {
+	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
+	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c)
+	                        addrDup.Default_Address__c = true;
+	                    listAddrUpdateDefault.add(addrDup);
+	                }                  
+	                // exact match. we aren't specifying override, so the address should become the new hh default address
+	                else if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
+	                	addrDup.Default_Address__c = true;
+	                	listAddrUpdateDefault.add(addrDup);
+	                }
                 }
             }
 
@@ -328,7 +357,12 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         }
     }
 
-    // update the Latest date fields on any address overrides
+    /*******************************************************************************************************
+    * @description update the Latest date fields on any address overrides
+    * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
+    * @param dmlWrapper to hold the Addresses that need updating 
+    * @return void  
+    ********************************************************************************************************/
     private void updateAddrIsOverride(Map<Id, boolean> mapAddrIdIsOverride, DmlWrapper dmlWrapper) {
 
         for (ID id : mapAddrIdIsOverride.keySet()) {
@@ -344,7 +378,12 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         }        
     }
 
-    // for each Contact, find its HH current address (either Default or Seasonal) and update the contact's address fields
+    /*******************************************************************************************************
+    * @description for each Contact, find its HH current address (either Default or Seasonal) and update 
+    * the contact's address fields
+    * @param listCon list of Contacts 
+    * @return void  
+    ********************************************************************************************************/
     private void resetConAddr(list<Contact> listCon) {
         if (listCon == null || listCon.size() == 0) return;
         
@@ -363,13 +402,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         		if (addr == null)
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
-                	con.MailingStreet = ADDR_Addresses_TDTM.getMultilineStreet(addr);
-                	con.MailingCity = addr.MailingCity__c;
-                	con.MailingState = addr.MailingState__c;
-                	con.MailingPostalCode = addr.MailingPostalCode__c;
-                	con.MailingCountry = addr.MailingCountry__c;
                 	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
                 	con.Current_Address__c = addr.Id;
+                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing');
                 }        	   
         	}
         }         

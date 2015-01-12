@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Utilities
 * @description Helper class that retrieves custom settings and sets defaults.
 * Needs to be "without sharing" so that the Install Script can run it.
 */
@@ -46,6 +47,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Batch_Data_Entry_Settings__c bdeSettings;
     static Addr_Verification_Settings__c addressVerificationSettings;
     static Household_Naming_Settings__c householdNamingSettings;
+    static Allocations_Settings__c allocationsSettings;
     static Data_Import_Settings__c dataImportSettings;
     
     //storing org-level custom settings in-memory to avoid slowing down the settings page
@@ -58,6 +60,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Batch_Data_Entry_Settings__c orgBdeSettings;
     static Addr_Verification_Settings__c orgAddressVerificationSettings;
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
+    static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
     
     /**
@@ -87,6 +90,10 @@ public without sharing class UTIL_CustomSettingsFacade {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
+                configRecurringDonationsSettings(recurringDonationsSettings);
+                upsert recurringDonationsSettings;
+            }
         }
         return recurringDonationsSettings;
     }
@@ -145,6 +152,16 @@ public without sharing class UTIL_CustomSettingsFacade {
         return householdNamingSettings;
     }
     
+    public static Allocations_Settings__c getAllocationsSettings() {
+        if (allocationsSettings == null) {
+            allocationsSettings = Allocations_Settings__c.getInstance();
+            if (allocationsSettings.Id == null) {
+                allocationsSettings = getOrgAllocationsSettings();
+            }
+        }
+        return allocationsSettings;
+    }
+
     /**
      * Methods that try retrieving the org-level custom settings. Default org-level settings will be created if none exist.
      * Meant to be called only from settings page and install script.
@@ -176,7 +193,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
         if(orgRecurringDonationsSettings == null) {
             orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-            if(orgRecurringDonationsSettings.Id == null) {
+            if(orgRecurringDonationsSettings.Id == null || orgRecurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(orgRecurringDonationsSettings);
                 upsert orgRecurringDonationsSettings;
             }
@@ -250,6 +267,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgHouseholdNamingSettings;
     }
     
+    public static Allocations_Settings__c getOrgAllocationsSettings() {
+        if (orgAllocationsSettings==null) {
+            orgAllocationsSettings = Allocations_Settings__c.getOrgDefaults();
+            if (orgAllocationsSettings.Id == null) {
+                configAllocationsSettings(orgAllocationsSettings);
+                upsert orgAllocationsSettings;
+            }
+        }
+        return orgAllocationsSettings;
+    }
+
     /**
      * Private methods that will configure the default org-level custom settings.
      **/
@@ -310,7 +338,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_OCR_Excluded_Recordtypes__c = null;
         hs.npo02__Household_Creation_Excluded_Recordtypes__c = null;
         hs.npo02__Enable_Soft_Credit_Rollups__c = true;
-        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit; Household Member;';
+        hs.npo02__Soft_Credit_Roles__c = 'Soft Credit;Household Member';
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
@@ -343,10 +371,12 @@ public without sharing class UTIL_CustomSettingsFacade {
         afs.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
     }
 
-    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {     
+    private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {   
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+        es.Disable_Error_Handling__c = false;
+        es.Enable_Debug__c = false;
     }
     
     private static void configBDESettings(Batch_Data_Entry_Settings__c bds) {
@@ -370,6 +400,16 @@ public without sharing class UTIL_CustomSettingsFacade {
         hns.Implementing_Class__c = 'HH_NameSpec';
     }
     
+    public static void configAllocationsSettings(Allocations_Settings__c allosettings) {
+        //disable allocations by default
+        allosettings.Default_Allocations_Enabled__c = false;
+        allosettings.Default__c = null;
+        allosettings.Excluded_Opp_RecTypes__c = null;
+        allosettings.Excluded_Opp_Types__c = null;
+        allosettings.Rollup_N_Day_Value__c = 365;
+        allosettings.Use_Fiscal_Year_for_Rollups__c = false;
+    }
+
     /**
      * Methods that will create custom settings for tests.
      **/
@@ -385,6 +425,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c;
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
+        contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
+        contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         upsert contactsSettings;
         return contactsSettings;
     }
@@ -437,23 +479,38 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
-    	if(affiliationsSettings == null)
-    	   affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
-    	   
-    	affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
+        if(affiliationsSettings == null)
+           affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+           
+        affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
         upsert affiliationsSettings;
         return affiliationsSettings;
     }
     
     public static Error_Settings__c getErrorSettingsForTests(Error_Settings__c mySettings) {
-    	if(errorSettings == null)
-    	   errorSettings = Error_Settings__c.getInstance();
-    	   
-    	errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
-    	errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
-    	errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
-    	upsert errorSettings;
-    	return errorSettings;  
+        if(errorSettings == null)
+           errorSettings = Error_Settings__c.getInstance();
+           
+        errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
+        errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
+        errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
+        upsert errorSettings;
+        return errorSettings;  
+    }
+
+    public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
+        if (allocationsSettings == null)
+            allocationsSettings = getOrgAllocationsSettings();
+
+        allocationsSettings.Default_Allocations_Enabled__c = mySettings.Default_Allocations_Enabled__c;
+        allocationsSettings.Default__c = mySettings.Default__c;
+        allocationsSettings.Excluded_Opp_RecTypes__c = mySettings.Excluded_Opp_RecTypes__c;
+        allocationsSettings.Excluded_Opp_Types__c = mySettings.Excluded_Opp_Types__c;
+        allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
+        allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
+
+        upsert allocationsSettings;
+        return allocationsSettings;
     }
 
     //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script

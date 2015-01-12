@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Utilities
 * @description Provides automated generation of unit test data for tests throughout the org 
 */
 
@@ -154,7 +155,7 @@ public class UTIL_UnitTestData_TEST {
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
         id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
-        system.debug('recordtypeintest: ' + rtid);
+        UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
@@ -174,6 +175,33 @@ public class UTIL_UnitTestData_TEST {
         return oppsToAdd;
     }
     
+    public static List<Opportunity> OppsForAccountList (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+     
+        // given a List of Accounts,
+        // add one Opp per Account w/ the specified data
+    
+        List<Opportunity> OppsToAdd = new List<Opportunity> ();
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        UTIL_Debug.debug('recordtypeintest: ' + rtid);
+
+        for (Account acc : listAcc) {
+            Opportunity newOpp = New Opportunity (
+                Name = 'Test Opp ' + acc.Name,
+                AccountId = acc.Id,
+                Amount = Amt,
+                CloseDate = Close,
+                StageName = Stage,
+                CampaignId = CampId,
+                type = oppType
+            );
+            if (rtid != null){
+                newOpp.put('RecordTypeId',rtid);
+            }
+            oppsToAdd.add (newOpp);
+        }
+        return oppsToAdd;
+    }
+
     public static List<Account> CreateMultipleTestAccounts (integer n, string strType) {
         
         List<Account> AcctsToAdd = New List<Account> ();

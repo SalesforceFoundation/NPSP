@@ -309,6 +309,13 @@
         <relatedList>npe03__Recurring_Donation__c.npe03__Organization__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Formula_MailingAddress__c</fields>
+        <fields>Verified__c</fields>
+        <fields>Verification_Status__c</fields>
+        <relatedList>Address__c.Household_Account__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>TASK.WHAT_NAME</fields>
@@ -339,7 +346,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hi0000003BQQC</masterLabel>
+        <masterLabel>00hi0000004q6Tz</masterLabel>
         <sizeX>1</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

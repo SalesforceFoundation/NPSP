@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Households
 * @description This class contains unit tests for validating the behavior of the Households class 
 */
 @isTest
@@ -52,9 +53,9 @@ public with sharing class HH_Households_TEST {
             
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -69,7 +70,10 @@ public with sharing class HH_Households_TEST {
             MailingCountry = country
         );
         insert con;
-        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
+            from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -78,12 +82,16 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
         
         //blank out the HH
         con.npo02__household__c = null;
         update con;
         
-        createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
+        createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
+            from Contact where id=:con.id];
         
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -92,6 +100,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
     
     static testMethod void newPrivateContactAllContactsProcessor() {
@@ -103,9 +112,9 @@ public with sharing class HH_Households_TEST {
             
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -156,9 +165,9 @@ public with sharing class HH_Households_TEST {
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -205,9 +214,9 @@ public with sharing class HH_Households_TEST {
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
 
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
@@ -244,9 +253,9 @@ public with sharing class HH_Households_TEST {
         
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -262,7 +271,10 @@ public with sharing class HH_Households_TEST {
             AccountId = acct.id
         );
         insert con;
-        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
+        Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__Household__r.Number_of_Household_Members__c 
+            from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -271,12 +283,16 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
         
         //blank out the HH
         con.npo02__household__c = null;
         update con;
         
-        createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
+        createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
+            npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
+            npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__Household__r.Number_of_Household_Members__c 
+            from Contact where id=:con.id];
         
         system.assertNotEquals(firstHouseholdId,createdContacts[0].npo02__household__c);
         system.assertEquals(street,createdContacts[0].npo02__household__r.npo02__MailingStreet__c);
@@ -285,6 +301,7 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
+        system.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
     }
 
     /// <name> newOrgContactIndividualsProcessor </name>
@@ -302,9 +319,9 @@ public with sharing class HH_Households_TEST {
         
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         Contact con = new Contact(
             FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
             LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
@@ -392,8 +409,9 @@ public with sharing class HH_Households_TEST {
         
         delete con;
         
-        npo02__Household__c[] remainingHousehold = [select id from npo02__Household__c where id=:firstHouseholdId];
+        npo02__Household__c[] remainingHousehold = [select id, Number_Of_Household_Members__c from npo02__Household__c where id=:firstHouseholdId];
         system.assert(remainingHousehold.size()==1);
+        system.assertEquals(1, remainingHousehold[0].Number_Of_Household_Members__c);
     }
 
 /************************************ Not Used ***************************************
@@ -548,9 +566,10 @@ public with sharing class HH_Households_TEST {
         Test.stopTest();
         
         //get c1s household
-        npo02__Household__c hh1 = [select Name from npo02__Household__c where id = :c1t.npo02__household__c];
+        npo02__Household__c hh1 = [select Name, Number_Of_Household_Members__c from npo02__Household__c where id = :c1t.npo02__household__c];
         //assert the naming worked as c2t was moved into the c1 households
         system.assert(hh1.Name.contains('c2test')); 
+        system.assertEquals(2, hh1.Number_Of_Household_Members__c);
         
         //the second household should be deleted
         system.assertEquals(0, [select count() from npo02__Household__c where id = :c2thhid]);     
@@ -602,9 +621,9 @@ public with sharing class HH_Households_TEST {
                 
         String street = '2345 Elm St.';
         String city = 'Seattle';
-        String state = 'WA';
+        String state = 'Washington';
         String zip = '88777';
-        String country = 'US';
+        String country = 'United States';
         String lastname = 'SmithForTest99';
         
         List<Contact> cons = new List<contact>();
@@ -664,5 +683,27 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(zip,createdContacts[0].npo02__household__r.npo02__MailingPostalCode__c);
         system.assertEquals(country,createdContacts[0].npo02__household__r.npo02__MailingCountry__c);
         system.assertEquals(lastname + ' Household',createdContacts[0].npo02__household__r.Name);
+    }
+
+    /// <name> testHouseholdExclusion </name>
+    /// <summary> insert a contact with naming exclusion checkboxes checked. verify multiselect picklist filled. Update MSP. verify checkboxes changed.  </summary>
+    static testMethod void testHouseholdExclusion() {
+
+        Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS, Exclude_from_Household_Name__c=true, Exclude_from_Household_Formal_Greeting__c=true);
+        insert con;
+
+        list<Contact> queryCon = [SELECT Id, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
+        system.assert(queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Name'), 'Naming Exclusions field should include Household Name.');
+        system.assert(queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c'), 'Naming Exclusions field should include Household Formal Greeting.');
+        system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c'), 'Naming Exclusions field should not include Household Informal Greeting.');
+
+        queryCon[0].npo02__Naming_Exclusions__c = 'Household__c.Name';
+        update queryCon[0];
+
+        queryCon = [SELECT Id, Exclude_from_Household_Name__c, Exclude_from_Household_Formal_Greeting__c, Exclude_from_Household_Informal_Greeting__c FROM Contact WHERE Id = :con.id];
+        system.assert(queryCon[0].Exclude_from_Household_Name__c, 'Exclude from Household Name checkbox should be checked.');
+        system.assert(!queryCon[0].Exclude_from_Household_Formal_Greeting__c, 'Exclude from Household Formal Greeting checkbox should not be checked.');
+        system.assert(!queryCon[0].Exclude_from_Household_Informal_Greeting__c, 'Exclude from Household Informal Greeting checkbox not should be checked.');
+
     }
 }

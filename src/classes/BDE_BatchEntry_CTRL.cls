@@ -79,7 +79,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                     }
 
                     q = q.subString(0, q.length() - 2);
-                    system.debug('Q IS: ' + q);
+                    UTIL_Debug.debug('Q IS: ' + q);
                     q += ' from ' + UTIL_Namespace.StrTokenNSPrefix('Batch__c') + ' where id = \'' + stdController.getId() + '\' limit 1';
                     batch = Database.query(q);        
                 }
@@ -156,8 +156,9 @@ public with sharing class BDE_BatchEntry_CTRL {
                 } 
                 else{
                     objectSettingsList = new List<SelectOption>();
-                    for(String str : BDE_BatchDataEntry.listStrBDEObjects()) {
-                        objectSettingsList.add(new SelectOption(str, str));
+                    map<string, string> mapBDE = BDE_BatchDataEntry.mapDevNameToLabelBDEObjects();
+                    for(String strDevName : mapBDE.keySet()) {
+                        objectSettingsList.add(new SelectOption(strDevName, mapBDE.get(strDevName)));
                     }
                     
                     pageSubtitle = 'Batch Data Entry Home';

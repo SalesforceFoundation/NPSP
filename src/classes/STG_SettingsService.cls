@@ -29,6 +29,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @author Salesforce Foundation
 * @date 01/13/2014
+* @group Settings
 * @description Settings Service class
 */
 
@@ -37,7 +38,7 @@ public with sharing class STG_SettingsService {
     public static STG_SettingsService stgService = new STG_SettingsService();
     
     public STG_SettingsService() {
-    	//system.debug('***** STG_SettingsService constructor');
+    	//UTIL_Debug.debug('***** STG_SettingsService constructor');
     }
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
@@ -104,6 +105,14 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    public Allocations_Settings__c stgAllo {
+        get {
+            if (stgAllo == null) stgAllo = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+            return stgAllo;
+        }
+        private set;
+    }
+
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
     	get {
     		if (mapRDCustomField == null) {
@@ -157,5 +166,7 @@ public with sharing class STG_SettingsService {
         upsert stgAffl;
         upsert stgBDE;
         upsert stgErr;
+        system.debug('lookhere: stgallo: ' + stgAllo);
+        upsert stgAllo;
     }
 }

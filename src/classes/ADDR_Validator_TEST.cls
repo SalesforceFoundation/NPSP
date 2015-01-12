@@ -39,7 +39,7 @@ public with sharing class ADDR_Validator_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
     
-    public static void createDefaultSettings() {
+    public static Addr_Verification_Settings__c createDefaultSettings() {
         // use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -54,6 +54,7 @@ public with sharing class ADDR_Validator_TEST {
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
         upsert settings;
+        return settings;
     }
     
     static testMethod void testContactAddress() {
@@ -65,8 +66,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'ca';
+        contact.MailingState = 'California';
         contact.MailingPostalCode = '95014';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -78,20 +80,24 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
         
-        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
-                from Address__c where Household_Account__c = :accountId];
+        Address__c[] av = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c, 
+                Verification_Status__c from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
         System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
         System.assertEquals('CA', av[0].MailingState__c);
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact = [select id, MailingStreet, MailingCity, MailingPostalCode, MailingState
                          from contact where id = :contact.id];
         System.assertEquals('1 Infinite Loop', contact.MailingStreet);
         System.assertEquals('Cupertino', contact.MailingCity);
         System.assertEquals('95014-2083', contact.MailingPostalCode);
-        System.assertEquals('CA', contact.MailingState);
+        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)            
+            System.assertEquals('California', contact.MailingState);
+        else
+            System.assertEquals('CA', contact.MailingState);
     }
 
     static testMethod void testContactInvalidAddress() {
@@ -103,8 +109,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'invalid-address';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -116,9 +123,130 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
 
-        Address__c[] av = [select Verified__c from Address__c where Household_Account__c = :contact.AccountId];       
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(Label.Address_Not_Found, av[0].Verification_Status__c);
+    }
+    
+    static testMethod void test400() {
+        if (strTestOnly != '*' && strTestOnly != 'test400') return;
+        
+        Addr_Verification_Settings__c settings = createDefaultSettings();
+        settings.Address_Verification_Endpoint__c = '400';
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+              
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'main st 123';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'Illinois';
+        contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
+        
+        Test.StartTest();
+        insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+        System.assertEquals(1, av.size());
+        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals('Bad input. Required fields missing from input or are malformed.', av[0].Verification_Status__c);
+    }
+    
+    static testMethod void test401() {
+        if (strTestOnly != '*' && strTestOnly != 'test401') return;
+        
+        Addr_Verification_Settings__c settings = createDefaultSettings();
+        settings.Address_Verification_Endpoint__c = '401';
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+              
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'main st 123';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'Illinois';
+        contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
+        
+        Test.StartTest();
+        insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+        System.assertEquals(1, av.size());
+        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals('Unauthorized. Authentication failure; invalid credentials.', av[0].Verification_Status__c);
+    }
+    
+    static testMethod void test402() {
+        if (strTestOnly != '*' && strTestOnly != 'test402') return;
+        
+        Addr_Verification_Settings__c settings = createDefaultSettings();
+        settings.Address_Verification_Endpoint__c = '402';
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+              
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'main st 123';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'Illinois';
+        contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
+        
+        Test.StartTest();
+        insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+        System.assertEquals(1, av.size());
+        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals('Payment required. No active subscription found.', av[0].Verification_Status__c);
+    }
+    
+    static testMethod void test500() {
+        if (strTestOnly != '*' && strTestOnly != 'test400') return;
+        
+        Addr_Verification_Settings__c settings = createDefaultSettings();
+        settings.Address_Verification_Endpoint__c = '500';
+        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+              
+        Contact contact = new contact(firstname='Test', lastname='Person'); 
+        contact.MailingStreet = 'main st 123';
+        contact.MailingCity = 'chicago';
+        contact.MailingState = 'Illinois';
+        contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
+        
+        Test.StartTest();
+        insert contact;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.StopTest();
+        
+        //check household got created for contact
+        contact = [select Account.Id from Contact where Id = :contact.Id];
+        Id accountId = contact.Account.Id;
+        System.assertNotEquals(null, accountId);
+
+        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+        System.assertEquals(1, av.size());
+        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals('Internal server error. General service failure; retry request.', av[0].Verification_Status__c);
     }
     
     static testMethod void testContactAmbiguousAddress() {
@@ -130,8 +258,9 @@ public with sharing class ADDR_Validator_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingStreet = 'ambiguous-address';
         contact.MailingCity = 'chicago';
-        contact.MailingState = 'il';
+        contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -143,11 +272,12 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
 
-        Address__c[] av = [select Verified__c, Ambiguous__c from Address__c 
+        Address__c[] av = [select Verified__c, Ambiguous__c, Verification_Status__c from Address__c 
                             where Household_Account__c = :accountId];       
         System.assertEquals(1, av.size());
         System.assertEquals(false, av[0].Verified__c);
         System.assertEquals(true, av[0].Ambiguous__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
     }
 
     static testMethod void testContactZipOnly() {
@@ -158,6 +288,8 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingPostalCode = 'single-zip';
+        contact.MailingState = 'California';
+        contact.MailingCountry = 'United States';
         
         Test.StartTest();
         insert contact;
@@ -169,10 +301,12 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId);
    
-        Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c 
-                            from Address__c where Household_Account__c = :accountId];      
+        Address__c[] av = [select MailingCity__c, MailingPostalCode__c, Verified__c, Verification_Status__c
+                           from Address__c where Household_Account__c = :accountId];      
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
+        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);
@@ -188,7 +322,8 @@ public with sharing class ADDR_Validator_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingCity = 'single-zip';
-        contact.MailingState = 'IL';
+        contact.MailingState = 'Illinois';
+        contact.MailingCountry = 'United States';
         
         Test.startTest();
         insert contact;
@@ -200,10 +335,13 @@ public with sharing class ADDR_Validator_TEST {
         Id accountId = contact.Account.Id;
         System.assertNotEquals(null, accountId); 
 
-        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c from Address__c 
+        Address__c[] av = [select id, MailingCity__c, MailingPostalCode__c, Verified__c, 
+                            Verification_Status__c from Address__c 
                             where Household_Account__c = :contact.AccountId];        
         System.assertEquals('98236', av[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av[0].MailingCity__c);
+        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
         contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);
@@ -252,7 +390,7 @@ public with sharing class ADDR_Validator_TEST {
         Test.stopTest();
         
         System.assertEquals(null, sc.apiSettingsSaveMessage);
-        System.debug('****Error message: ' + sc.apiSettingsErrorMessage);
+        UTIL_Debug.debug('****Error message: ' + sc.apiSettingsErrorMessage);
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'));
         System.assertEquals(true, sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'));
     }

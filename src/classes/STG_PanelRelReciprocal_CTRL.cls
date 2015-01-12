@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description The controller for the Reciprocal Relationships panel 
 */
 public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {

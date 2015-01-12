@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
+* @group Address Management
 * @description Tests specific to Address Management. 
 */
 
@@ -91,9 +92,9 @@ private with sharing class ADDR_Addresses_TEST {
     		addr.Address_Type__c = 'Home';
     		addr.MailingStreet__c = 'Street' + i;
     		addr.MailingCity__c = 'City' + i;
-            addr.MailingState__c = 'State' + i;
+            addr.MailingState__c = 'Washington';
             addr.MailingPostalCode__c = 'Zip' + i;
-            addr.MailingCountry__c = 'Country' + i;
+            addr.MailingCountry__c = 'United States';
             listAddrT.add(addr);    		
     	}
     }
@@ -114,7 +115,7 @@ private with sharing class ADDR_Addresses_TEST {
         create N new default Addresses for N Households (with M Contacts)  
     verify:
         N addresses created
-        N household shipping address fields updated
+        N household billing address fields updated
         M contact Mailing address fields updated
     **********************************************************************************************************/            
     static testMethod void newDefaultAddr() {
@@ -207,7 +208,7 @@ private with sharing class ADDR_Addresses_TEST {
     operation:
         update existing default Addresses  
     verify:
-        household shipping address fields updated
+        household billing address fields updated
         contact Mailing address fields updated
     **********************************************************************************************************/            
     static testMethod void updateDefaultAddr() {
@@ -665,8 +666,8 @@ private with sharing class ADDR_Addresses_TEST {
         new Default Address created
         HH and Contacts get new Address
     **********************************************************************************************************/            
-    static testMethod void updateConAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddr') return;
+    static testMethod void updateConAddrNew() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrNew') return;
         
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -681,6 +682,22 @@ private with sharing class ADDR_Addresses_TEST {
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = 'another Street Edit';
+            con.MailingCity = 'another City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = 'final Street Edit';
+            con.MailingCity = 'final City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address
@@ -690,18 +707,86 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assert(con.MailingStreet.contains('Direct Street Edit'));
-            system.assert(con.MailingCity.contains('Direct City Edit'));
+            system.assert(con.MailingStreet.contains('final Street Edit'));
+            system.assert(con.MailingCity.contains('final City Edit'));
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }
  
          // verify the previous addresses got Default cleared.
         list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
-        system.assertEquals(cHH * 2, listAddr.size());
+        // each set of edits created a new address object 
+        system.assertEquals(cHH * 4, listAddr.size());
         for (Address__c addr : listAddr) {
-            boolean fNewDefault = (addr.MailingStreet__c.contains('Direct Street Edit'));
+            boolean fNewDefault = (addr.MailingStreet__c.contains('final Street Edit'));
             system.assertEquals(fNewDefault, addr.Default_Address__c);
+        }                
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update contacts' mailing address to cause an update to default Address object  
+    verify:
+        existing Default Address updated
+        HH and Contacts get updated Address
+    **********************************************************************************************************/            
+    static testMethod void updateConAddrExisting() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrExisting') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+        ));
+                
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the contact addresses directly
+        // NOTE: we only modify 1 field, so it will be treated as an update to an existing address!
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = 'Direct Street Edit';
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingState = 'Washington';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = ' direct street  edit ';  // whitespace and casing should not count as a real edit.
+            con.MailingState = 'Oregon';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('direct street  edit'));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify that no new address was created
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assertEquals('direct street  edit', addr.MailingStreet__c);
         }                
     }
 
@@ -712,8 +797,8 @@ private with sharing class ADDR_Addresses_TEST {
         new Default Address created
         HH and Contacts get new Address
     **********************************************************************************************************/            
-    static testMethod void updateAccAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'updateAccAddr') return;
+    static testMethod void updateAccAddrNew() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccAddrNew') return;
         
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -726,6 +811,22 @@ private with sharing class ADDR_Addresses_TEST {
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         update listAccT;
+
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'another Street Edit';
+            acc.BillingCity = 'another City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'final Street Edit';
+            acc.BillingCity = 'final City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address
@@ -735,18 +836,84 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assert(acc.BillingStreet.contains('Direct Street Edit'));
-            system.assert(con.MailingStreet.contains('Direct Street Edit')); 
+            system.assert(acc.BillingStreet.contains('final Street Edit'));
+            system.assert(con.MailingStreet.contains('final Street Edit')); 
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }
  
          // verify the previous addresses got Default cleared.
         list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
-        system.assertEquals(cHH * 2, listAddr.size());
+        // each set of edits created a new address object 
+        system.assertEquals(cHH * 4, listAddr.size());
         for (Address__c addr : listAddr) {
-            boolean fNewDefault = (addr.MailingStreet__c.contains('Direct Street Edit'));
+            boolean fNewDefault = (addr.MailingStreet__c.contains('final Street Edit'));
             system.assertEquals(fNewDefault, addr.Default_Address__c);
+        }        
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update accounts' billing address to cause an update of the default Address object  
+    verify:
+        existing Default Address updated
+        HH and Contacts get updated Address
+    **********************************************************************************************************/            
+    static testMethod void updateAccAddrExisting() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccAddrExisting') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+        ));
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the account addresses directly
+        // NOTE: we only modify 1 field, so it will be treated as an update to an existing address!
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'Direct Street Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingState = 'Washington';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = ' direct street  edit ';    // whitespace and casing should not count as real edit.
+            acc.BillingState = 'Oregon';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(acc.BillingStreet.contains('direct street  edit'));
+            system.assert(con.MailingStreet.contains('direct street  edit')); 
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify that no new address was created
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assertEquals('direct street  edit', addr.MailingStreet__c);
         }        
     }
 
@@ -805,7 +972,7 @@ private with sharing class ADDR_Addresses_TEST {
         /* We cannot verify error record was created because the usage of addError causes the whole transaction
         to be rolled back. 
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c, Email_Sent__c from Error__c];
-        System.debug('****Errors: ' + JSON.serializePretty(errors));
+        UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
         System.assertEquals(1, errors.size());*/
     }
 
@@ -830,7 +997,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(-1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(1).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -883,7 +1050,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -936,7 +1103,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -996,13 +1163,13 @@ private with sharing class ADDR_Addresses_TEST {
 	            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
 	            listAddrT[i].Seasonal_Start_Day__c = '1';
 	            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
-	            listAddrT[i].Seasonal_End_Day__c = '31';
+	            listAddrT[i].Seasonal_End_Day__c = '28';
         	} else {
                 listAddrT[i].Household_Account__c = listAccT[iacc-1].Id;
                 listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(-1).month());
                 listAddrT[i].Seasonal_Start_Day__c = '1';
                 listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(2).month());
-                listAddrT[i].Seasonal_End_Day__c = '31';        	
+                listAddrT[i].Seasonal_End_Day__c = '28';        	
         	}
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
@@ -1017,6 +1184,117 @@ private with sharing class ADDR_Addresses_TEST {
         }
         system.assert(false); //we shouldn't get here!
         
+    }
+
+    /*********************************************************************************************************
+    operation:
+        create multiple seasonal address that overlap with eachother  
+    verify:
+        overlap detected
+    **********************************************************************************************************/            
+    static testMethod void testSeasonalAddrOverlapLogic() {
+        if (strTestOnly != '*' && strTestOnly != 'testSeasonalAddrOverlapLogic') return;
+        
+        Address__c a1 = new Address__c();
+        Address__c a2 = new Address__c();
+
+        // test both increasing ranges, no overlap
+        a1.Seasonal_Start_Month__c = '1';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '3';
+        a1.Seasonal_End_Day__c = '28';
+        a2.Seasonal_Start_Month__c = '4';
+        a2.Seasonal_Start_Day__c = '1';
+        a2.Seasonal_End_Month__c = '6';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        
+        // test both increasing ranges, with overlap
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_End_Month__c = '6';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        
+        // test one increasing range, one decreasing range, no overlap
+        a1.Seasonal_Start_Month__c = '3';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '5';
+        a1.Seasonal_End_Day__c = '28';
+        a2.Seasonal_Start_Month__c = '11';
+        a2.Seasonal_Start_Day__c = '1';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+
+        // test one increasing range, one decreasing range, with overlap
+        a2.Seasonal_Start_Month__c = '11';
+        a2.Seasonal_Start_Day__c = '1';
+        a2.Seasonal_End_Month__c = '4';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+
+        // test both decreasing ranges, always overlap
+        a1.Seasonal_Start_Month__c = '9';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '28';
+        a2.Seasonal_Start_Month__c = '12';
+        a2.Seasonal_Start_Day__c = '1';
+        a2.Seasonal_End_Month__c = '3';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+        
+        // test both increasing ranges in the same month, no overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '11';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+
+        // test both increasing ranges in the same month, with overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '10';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+
+        // test one increasing range, one decreasing range in the same month, no overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '11';
+        a2.Seasonal_End_Month__c = '1';
+        a2.Seasonal_End_Day__c = '28';
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(false, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
+
+        // test one increasing range, one decreasing range in the same month, with overlap
+        a1.Seasonal_Start_Month__c = '2';
+        a1.Seasonal_Start_Day__c = '1';
+        a1.Seasonal_End_Month__c = '2';
+        a1.Seasonal_End_Day__c = '10';
+        a2.Seasonal_Start_Month__c = '2';
+        a2.Seasonal_Start_Day__c = '11';
+        a2.Seasonal_End_Month__c = '2';
+        a2.Seasonal_End_Day__c = '1';
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a1, a2));
+        system.assertEquals(true, ADDR_Addresses_TDTM.isSeasonalOverlap(a2, a1));
     }
 
     /*********************************************************************************************************
@@ -1038,7 +1316,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
@@ -1053,7 +1331,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(2).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(4).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
@@ -1123,7 +1401,7 @@ private with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().month());
             listAddrT[i].Seasonal_Start_Day__c = string.valueOf(system.today().day());
             listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(1).month());
-            listAddrT[i].Seasonal_End_Day__c = '31';
+            listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
             listAddrT[i].MailingCity__c = 'New Seasonal City' + i;
         }
@@ -1139,7 +1417,7 @@ private with sharing class ADDR_Addresses_TEST {
         ADDR_Seasonal_SCHED sch = new ADDR_Seasonal_SCHED();
         //Test.startTest(); already called by createHHTestData() 
         sch.executeReturnStatus();
-        system.debug('DJH**** about to call stopTest!');
+        UTIL_Debug.debug('DJH**** about to call stopTest!');
         Test.stopTest();
         
         // verify that the HH and Contacts share the same address and it's new!
@@ -1487,6 +1765,8 @@ private with sharing class ADDR_Addresses_TEST {
         	listCon[i].AccountId = listAccT[i].Id;
             listCon[i].MailingStreet = 'New Mailing Street' + i;
         	listCon[i].MailingCity = 'New Mailing City' + i;
+        	listCon[i].MailingState = 'California';
+        	listCon[i].MailingCountry = 'United States';
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listCon;         
@@ -1571,7 +1851,7 @@ private with sharing class ADDR_Addresses_TEST {
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
         for (Contact con : listConT) {
-            con.MailingStreet = 'new street\nsecond line';
+            con.MailingStreet = 'new street\r\nsecond line';
             con.MailingCity = 'new city';
         }
         insert listConT;        
@@ -1590,7 +1870,7 @@ private with sharing class ADDR_Addresses_TEST {
         
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
-            system.assertEquals('new street\nsecond line', con.MailingStreet);
+            system.assertEquals('new street\r\nsecond line', con.MailingStreet);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
@@ -1632,8 +1912,8 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assertEquals('New Default Street\nSecond Line', con.MailingStreet);
-            system.assertEquals('New Default Street\nSecond Line', acc.BillingStreet);
+            system.assertEquals('New Default Street\r\nSecond Line', con.MailingStreet);
+            system.assertEquals('New Default Street\r\nSecond Line', acc.BillingStreet);
         }
         
     }
@@ -1655,7 +1935,7 @@ private with sharing class ADDR_Addresses_TEST {
         // modify some of the account addresses directly
         for (integer i = 0; i < cHH; i++) {
             Account acc = listAccT[i];
-            acc.BillingStreet = 'Direct Street Edit\nSecond Line';
+            acc.BillingStreet = 'Direct Street Edit\r\nSecond Line';
             acc.BillingCity = 'Direct City Edit';
         }
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -1669,8 +1949,8 @@ private with sharing class ADDR_Addresses_TEST {
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
-            system.assertEquals('Direct Street Edit\nSecond Line', acc.BillingStreet);
-            system.assertEquals('Direct Street Edit\nSecond Line', con.MailingStreet);
+            system.assertEquals('Direct Street Edit\r\nSecond Line', acc.BillingStreet);
+            system.assertEquals('Direct Street Edit\r\nSecond Line', con.MailingStreet);
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }
@@ -1687,4 +1967,161 @@ private with sharing class ADDR_Addresses_TEST {
 
     }
 
+    /*********************************************************************************************************
+    operation:
+        create N new organizational accounts with billing addresses 
+    verify:
+        N addresses created
+        account address matches address object address
+    **********************************************************************************************************/            
+    static testMethod void newOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'newOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        for (Account acc : listAcc) {
+            acc.BillingStreet = '123 45th';
+            acc.BillingCity = 'Seattle';
+        }
+        Test.startTest();
+        insert listAcc;
+        Test.stopTest();
+
+        // verify results
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        system.assertEquals(cAcc, mapAccIdAcc.size());
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c];
+        system.assertEquals(cAcc, listAddr.size());
+        
+        for (Address__c addr : listAddr) {
+            Account acc = mapAccIdAcc.get(addr.Household_Account__c);
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        update N organizational accounts with billing addresses 
+    verify:
+        N addresses created
+        account addresses updated
+        contact addresses not updated
+    **********************************************************************************************************/            
+    static testMethod void updateOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        // create accounts without addresses
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        insert listAcc;
+        
+        // add a contact to each account.
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listCon[i].AccountId = listAcc[i].Id;
+        }
+        insert listCon;
+
+        // update the accounts' address
+        for (Account acc : listAcc) {
+            acc.BillingStreet = '123 45th';
+            acc.BillingCity = 'Seattle';
+        }
+        Test.startTest();
+        update listAcc;
+        Test.stopTest();
+
+        // verify results
+        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account order by Account.Name];
+        system.assertEquals(cAcc, listAcc.size());
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        system.assertEquals(cAcc, listAddr.size());
+        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        system.assertEquals(cAcc, listCon.size());        
+        
+        for (integer i = 0; i < cAcc; i++) {
+            Account acc = listAcc[i];
+            Address__c addr = listAddr[i];
+            Contact con = listCon[i];
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+            system.assertEquals(null, con.Current_Address__c);
+            system.assertEquals(null, con.MailingStreet);
+            system.assertEquals(null, con.MailingCity);
+        }
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        update N organizational accounts with address objects 
+    verify:
+        account addresses updated
+        contact addresses not updated
+    **********************************************************************************************************/            
+    static testMethod void newAddrForOrgAccounts() {
+        if (strTestOnly != '*' && strTestOnly != 'newAddrForOrgAccounts') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Organizational_Account_Addresses_Enabled__c = true
+        ));
+ 
+        // create accounts without addresses
+        integer cAcc = 3;
+        list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, null);
+        insert listAcc;
+        
+        // add a contact to each account.
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listCon[i].AccountId = listAcc[i].Id;
+        }
+        insert listCon;
+
+         // create addresses for the accounts
+        initTestAddr(cAcc);
+        for (integer i = 0; i < cAcc; i++) {
+            listAddrT[i].Household_Account__c = listAcc[i].Id;
+            listAddrT[i].Default_Address__c = true;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // verify results
+        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account order by Account.Name];
+        system.assertEquals(cAcc, listAcc.size());
+        listAddrT = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        system.assertEquals(cAcc, listAddrT.size());
+        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        system.assertEquals(cAcc, listCon.size());        
+        
+        for (integer i = 0; i < cAcc; i++) {
+            Account acc = listAcc[i];
+            Address__c addr = listAddrT[i];
+            Contact con = listCon[i];
+            system.assertEquals(acc.BillingStreet, addr.MailingStreet__c);
+            system.assertEquals(acc.BillingCity, addr.MailingCity__c);
+            system.assertEquals(true, addr.Default_Address__c);
+            system.assertEquals(null, con.Current_Address__c);
+            system.assertEquals(null, con.MailingStreet);
+            system.assertEquals(null, con.MailingCity);
+        }
+    }
 }

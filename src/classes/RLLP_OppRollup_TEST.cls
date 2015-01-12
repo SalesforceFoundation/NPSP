@@ -1483,6 +1483,91 @@ public with sharing class RLLP_OppRollup_TEST {
             system.assertEquals(100, c2.npo02__Soft_Credit_Two_Years_Ago__c);
     }
 
+    /*********************************************************************************************************
+    operation:
+        create Organizational Opportunities, with Soft Credit OCR's
+    verify:
+        soft credits correctly rollup to their appropriate contacts
+    **********************************************************************************************************/            
+    static testMethod void testOrgSoftCreditsOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsOne2One') return;
+        testOrgSoftCredits(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    static testMethod void testOrgSoftCreditsHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'testOrgSoftCreditsHHAccount') return;
+        testOrgSoftCredits(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+   static void testOrgSoftCredits(string strProcessor) {
+
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = strProcessor,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+            ));
+
+            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                    npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                    npo02__Always_Rollup_to_Primary_Contact__c = false,
+                    npo02__Enable_Opp_Rollup_Triggers__c = false,
+                    npo02__Excluded_Account_Opp_Rectypes__c = null,
+                    npo02__Excluded_Account_Opp_Types__c = null,
+                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                    npo02__Excluded_Contact_Opp_Types__c = null,
+                    npo02__Membership_Record_Types__c = null,
+                    npo02__Enable_Soft_Credit_Rollups__c = true,
+                    npo02__Soft_Credit_Roles__c = 'TestOCR',
+                    npo02__Advanced_Household_Naming__c = false
+                ));
+
+            Date datClose = System.Today();
+            
+            integer cTest = 5;
+
+            // create & insert contact(s)
+            list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5) ;
+            insert listCon;
+
+            // create accounts
+            list<Account> listAcc = new list<Account>();
+            for (integer i = 0; i < cTest; i++) {
+            	listAcc.add(new Account(name='Test Account' + string.valueOf(i), npe01__SYSTEMIsIndividual__c=false));
+            }
+            insert listAcc;
+            listAcc = [select Id, Name, npe01__SYSTEMIsIndividual__c from Account where Name like 'Test Account%'];
+            system.assertEquals(cTest, listAcc.size());
+            system.assertEquals(false, listAcc[0].npe01__SYSTEMIsIndividual__c);
+            
+            // create new opps
+            list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountList(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), datClose, 1000 , giftRecordTypeNameForTests ,null);
+            insert listOpp;
+
+            // create our soft credit ocr's
+            list<OpportunityContactRole> listOCR = new list<OpportunityContactRole>();            
+            for (integer i = 0; i < cTest; i++) {
+            	listOCR.add(new OpportunityContactRole(ContactId=listCon[i].Id, OpportunityId=listOpp[i].Id, Role='TestOCR', IsPrimary=false));
+            }
+            insert listOCR;
+            
+
+            // test the batch rollup method
+            Test.StartTest();
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAll();
+            Test.StopTest();
+
+            // verify expected results
+            listCon = [select Id, Name, npo02__Soft_Credit_Two_Years_Ago__c, npo02__Soft_Credit_Total__c, 
+                                npo02__Soft_Credit_This_Year__c, npo02__Soft_Credit_Last_Year__c From Contact];
+
+            for (Contact con : listCon) {
+	            system.assertEquals(1000, con.npo02__Soft_Credit_Total__c);
+	            system.assertEquals(1000, con.npo02__Soft_Credit_This_Year__c);
+	            system.assertEquals(0, con.npo02__Soft_Credit_Last_Year__c);
+	            system.assertEquals(0, con.npo02__Soft_Credit_Two_Years_Ago__c);
+            }
+    }
+    
     static testMethod void testFutureMethodsOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testFutureMethodsOne2One') return;
         testFutureMethods(CAO_Constants.ONE_TO_ONE_PROCESSOR);

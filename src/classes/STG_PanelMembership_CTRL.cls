@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Membership Settings page 
 */
 public with sharing class STG_PanelMembership_CTRL extends STG_Panel {

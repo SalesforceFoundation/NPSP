@@ -30,28 +30,78 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
+* @group Households
 * @description Updates and managed opportunity contact roles for Household members, invoked via opp trigger 
 */
 public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 
 	
     public HH_OppContactRoles_TDTM() {}    
 
+    public static string strRefreshSetting = 'Open and Closed Opportunities';
+
 //  public HH_OppContactRoles_TDTM(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        list<Opportunity> opportunities = newlist;
-        list<Opportunity> oldOpportunities = oldlist;
-   
-        DmlWrapper dmlWrapper = new DmlWrapper();
-             
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         
         // bail out if the user has disabled household contact roles.
         if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
             return null;
-                
+
+        list<Opportunity> opportunities = newlist;
+        list<Opportunity> oldOpportunities = oldlist;
+   
+        // for AfterInserts, we can just go ahead and do our work to create the household soft credits.
+        // but for AfterUpdates, we only do work if the Opp's HH account has changed.
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+        	// from custom settings, see whether the user wants us to refresh soft credit ocrs.
+        	// UNDONE: waiting to add the actual custom setting to use.
+        	if (strRefreshSetting == null || strRefreshSetting == 'none')
+        	   return null;
+        	boolean isOpenOnly = (strRefreshSetting == 'Open Opportunities');
+        	   
+        	string strSoql = 'select Id, AccountId from Opportunity where Account.npe01__SYSTEM_AccountType__c = \'' + 
+        	   CAO_Constants.HH_ACCOUNT_TYPE + '\' and ';
+        	if (isOpenOnly)
+        	   strSoql += ' IsClosed = false and ';
+        	strSoql += '(Id in :opportunities or Id in :oldOpportunities)';
+            
+            map<Id, Opportunity> mapIdToOpp = null;
+            
+            // track which opps are moving between HH accounts
+            list<Opportunity> listOppToProcess = new list<Opportunity>();
+
+            // see if we have any Opps who have changed Household Accounts.
+            for (integer i = 0; i < opportunities.size(); i++) {
+                if (opportunities[i].AccountId != oldOpportunities[i].AccountId) {
+
+                    // delay our soql until we know we need it.
+                    if (mapIdToOpp == null) {
+			            // query for the Opps of household accounts involved.
+			            mapIdToOpp = new map<Id, Opportunity>((list<Opportunity>)database.query(strSoql));
+                    }
+
+                    if (mapIdToOpp.get(opportunities[i].Id) != null && mapIdToOpp.get(oldOpportunities[i].Id) != null) {
+                        listOppToProcess.add(opportunities[i]);
+                    }
+                }
+            }
+            // bail out if the hh accounts did not change.
+            if (listOppToProcess.size() == 0)
+                return null;
+            
+            // delete the old household soft credits.
+            delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
+                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
+            
+            // now continue with our processing to create the new household soft credits
+            opportunities = listOppToProcess;
+        }
+   
+        DmlWrapper dmlWrapper = new DmlWrapper();
+                             
         set<string> HouseholdOCRRecordTypeExclusions = new set<string>();
         set<id> conRecordTypesToExclude = new set<id>();
         if (currentHouseholdsSettings.npo02__Household_OCR_Excluded_Recordtypes__c != null) {
@@ -90,7 +140,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // query for OppConRoles where primary=true and OppID in arg set
             map<String,Id> contactOppToContactRole = new map<String,Id>();
             OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppsForContactRoles.values() ];
-            //system.debug('DJH***** conRoles: ' + conRoles);
+            //UTIL_Debug.debug('DJH***** conRoles: ' + conRoles);
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
@@ -216,13 +266,13 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             
             if (contactrolesforCreation != null) {
             	dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
-            	//system.debug('DJH***** contractrolesforCreation: ' + contactrolesforCreation);
+            	//UTIL_Debug.debug('DJH***** contractrolesforCreation: ' + contactrolesforCreation);
                 //insert contactrolesforCreation;   
             }
             
             if (contactRolesForUpdate != null) {
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactRolesForUpdate);
-                //system.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
+                //UTIL_Debug.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
                 //update contactRolesForUpdate;   
             }   
         }

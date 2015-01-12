@@ -30,24 +30,28 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
+* @group Accounts
 * @description tests specific to the Household Account model 
 */
 
 @isTest
 private with sharing class ACCT_HHAccounts_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /**
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
     	
     /*********************************************************************************************************
-    operation:
-        create N new contacts, no accounts 
-    verify:
-        N hh accounts created
-		accounts' name and naming fields set
-		hh accounts' primary contact set to new contact
+    * @description
+    * operation:
+    *     create N new contacts, no accounts 
+    * verify:
+    *   N hh accounts created
+	*	accounts' name and naming fields set
+	*	hh accounts' primary contact set to new contact
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccounts() {
     	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
@@ -62,7 +66,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         test.stopTest();    // to flush any future calls.
         
         list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(5, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -72,6 +76,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
             system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
+            system.assertEquals(1, acc.Number_of_Household_Members__c);
             if (acc.npe01__One2OneContact__c == listCon[1].Id) {
             	system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
@@ -82,13 +87,14 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        create N new contacts, M empty hh account supplied 
-    verify:
-        contacts added to existing hh accounts
-        (N - M) accounts have multiple contacts
-        accounts' name and naming fields updated
-        hh accounts' primary contact updated to contact
+    * @description
+    * operation:
+    *   create N new contacts, M empty hh account supplied 
+    * verify:
+    *    contacts added to existing hh accounts
+    *    (N - M) accounts have multiple contacts
+    *    accounts' name and naming fields updated
+    *    hh accounts' primary contact updated to contact
     **********************************************************************************************************/            
     static testMethod void NewContactsEmptyHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'NewContactsEmptyHHAccounts') return;
@@ -115,10 +121,20 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Test.startTest();      
         insert listCon;
+
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listAcc[0].Id, npe01__One2OneContact__c = listCon[0].Id),
+            new Account(Id=listAcc[1].Id, npe01__One2OneContact__c = listCon[2].Id),
+            new Account(Id=listAcc[2].Id, npe01__One2OneContact__c = listCon[4].Id)
+        };
+        update updtAccts;        
         test.stopTest();    // to flush any future calls.
-        
+
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -134,18 +150,21 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[4].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[4].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[4].FirstName + ' ' + listCon[4].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(1, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, different lastname
             if (acc.Id == listCon[2].AccountId) {
                 system.assertEquals(listCon[2].LastName + ' and ' + listCon[3].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[2].FirstName + ' and ' + listCon[3].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[2].FirstName + ' ' + listCon[2].LastName + ' and ' + listCon[3].FirstName + ' ' + listCon[3].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
     
@@ -193,7 +212,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -209,18 +228,21 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[4].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[4].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[4].FirstName + ' ' + listCon[4].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(1, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, different lastname
             if (acc.Id == listCon[2].AccountId) {
                 system.assertEquals(listCon[2].LastName + ' and ' + listCon[3].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[2].FirstName + ' and ' + listCon[3].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[2].FirstName + ' ' + listCon[2].LastName + ' and ' + listCon[3].FirstName + ' ' + listCon[3].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
     
@@ -259,7 +281,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         for (Contact con : listCon) 
             setConId.add(con.Id);
         list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account
             where npe01__One2OneContact__c in :setConId];
         system.assertEquals(5, listAcc.size());
         
@@ -274,6 +296,7 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[1].FirstName + ' ' + listCon[1].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(1, acc.Number_of_Household_Members__c);
             }
         }
         
@@ -320,13 +343,19 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEqualS(listCon[0].LastName, listCon[1].LastName);
         listCon[3].LastName = 'DifferentLastName';
         system.assertNotEquals(listCon[2].LastName, listCon[3].LastName);
-        
+
+        // Force the primary contact on each to ensure proper naming order
+        listAcc[0].npe01__One2OneContact__c = listCon[0].Id;
+        listAcc[1].npe01__One2OneContact__c = listCon[2].Id;
+        listAcc[2].npe01__One2OneContact__c = listCon[4].Id;
+        update listAcc;
+                
         Test.startTest();      
         update listCon;
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -342,18 +371,21 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[4].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[4].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[4].FirstName + ' ' + listCon[4].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(1, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[0].FirstName + ' and ' + listCon[1].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, different lastname
             if (acc.Id == listCon[2].AccountId) {
                 system.assertEquals(listCon[2].LastName + ' and ' + listCon[3].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[2].FirstName + ' and ' + listCon[3].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[2].FirstName + ' ' + listCon[2].LastName + ' and ' + listCon[3].FirstName + ' ' + listCon[3].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
     }
@@ -406,12 +438,22 @@ private with sharing class ACCT_HHAccounts_TEST {
         listCon[1].AccountId = listAcc[2].Id;
         listCon[4].AccountId = listAcc[2].Id;
         
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listCon[0].AccountId, npe01__One2OneContact__c = listCon[0].Id),
+            new Account(Id=listCon[1].AccountId, npe01__One2OneContact__c = listCon[1].Id),
+            new Account(Id=listCon[2].AccountId, npe01__One2OneContact__c = listCon[2].Id)
+        };
+        update updtAccts;        
+        
         Test.startTest();      
         update listCon;
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account order by Name];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account order by Name];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -426,6 +468,7 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[1].FirstName + ' and ' + listCon[4].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[1].FirstName + ' and ' + listCon[4].FirstName + ' ' + listCon[4].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
             // now single contact
             if (acc.Id == listCon[0].AccountId) {
@@ -433,12 +476,14 @@ private with sharing class ACCT_HHAccounts_TEST {
                 system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(1, acc.Number_of_Household_Members__c);
             }
             // 2 contacts, different lastname
             if (acc.Id == listCon[2].AccountId) {
                 system.assertEquals(listCon[2].LastName + ' and ' + listCon[3].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[2].FirstName + ' and ' + listCon[3].FirstName, acc.npo02__Informal_Greeting__c);
                 system.assertEquals(listCon[2].FirstName + ' ' + listCon[2].LastName + ' and ' + listCon[3].FirstName + ' ' + listCon[3].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
     }
@@ -498,7 +543,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEquals(1, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(1, listAcc.size());
         
         Account acc = listAcc[0];
@@ -509,9 +554,11 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
         system.assertEquals(listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
         system.assertEquals(listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+        system.assertEquals(1, acc.Number_of_Household_Members__c);
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         delete and then undelete contacts from single and multi-contact HH Accounts
     verify:
@@ -541,7 +588,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         insert listCon;
         
         // refresh our contacts to get their accounts
-        listCon = [select Name, FirstName, LastName, AccountId from Contact];
+        listCon = [select Name, FirstName, LastName, AccountId from Contact order by Name];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);        
         
@@ -559,7 +606,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Test.startTest();      
         delete listConDel;
-        list<Contact> listCon2 = [select Id, Name from Contact];
+        list<Contact> listCon2 = [select Id, Name from Contact order by Name];
         system.assertEquals(1, listCon2.size());
         list<Account> listAcc2 = [select Id, Name from Account];
         system.assertEquals(1, listAcc2.size());
@@ -573,13 +620,17 @@ private with sharing class ACCT_HHAccounts_TEST {
         undelete listCon[1];
         test.stopTest();    // to flush any future calls.
        
-        listCon = [select Id, FirstName, LastName, AccountId from Contact];
+        listCon = [select Id, FirstName, LastName, AccountId from Contact order by Name];
         system.assertEquals(2, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
         system.assertEquals(1, listAcc.size());
         
+        // Determine which contact is the primary contact
+        Integer contact1 = (listAcc[0].npe01__One2OneContact__c == listCon[0].Id ? 0 : 1);
+        Integer contact2 = (contact1 == 1 ? 0 : 1);
+
         for (Account acc : listAcc) {
             system.assertNotEquals(null, acc.npe01__One2OneContact__c);
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
@@ -589,9 +640,10 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
             // 2 contacts, same lastname
             if (acc.Id == listCon[0].AccountId) {
-                system.assertEquals(listCon[0].LastName + ' Household', acc.Name);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName, acc.npo02__Informal_Greeting__c);
-                system.assertEquals(listCon[1].FirstName + ' and ' + listCon[0].FirstName + ' ' + listCon[0].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(listCon[contact1].LastName + ' Household', acc.Name);
+                system.assertEquals(listCon[contact1].FirstName + ' and ' + listCon[contact2].FirstName, acc.npo02__Informal_Greeting__c);
+                system.assertEquals(listCon[contact1].FirstName + ' and ' + listCon[contact2].FirstName + ' ' + listCon[contact1].LastName, acc.npo02__Formal_Greeting__c);
+                system.assertEquals(2, acc.Number_of_Household_Members__c);
             }
         }
     
@@ -636,7 +688,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
-        system.debug(listAcc);
+        UTIL_Debug.debug('****' +listAcc);
         system.assertEquals(4, listAcc.size()); // 3 1:1 and 1 Bucket
         
         // how clear out their accounts to cause them to get an HH Account
@@ -652,8 +704,8 @@ private with sharing class ACCT_HHAccounts_TEST {
         Test.stopTest();
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
-        system.debug(listAcc);
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account];
+        UTIL_Debug.debug('****' +listAcc);
         system.assertEquals(7, listAcc.size()); // 6 HH, and 1 Bucket.
         
         for (Account acc : listAcc) {
@@ -665,6 +717,7 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertEquals(null, acc.npo02__SYSTEM_CUSTOM_NAMING__c);
             system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);
             system.assertEquals(true, acc.npe01__SYSTEMIsIndividual__c);
+            system.assertEquals(1, acc.Number_of_Household_Members__c);
             if (acc.npe01__One2OneContact__c == listCon[1].Id) {
                 system.assertEquals(listCon[1].LastName + ' Household', acc.Name);
                 system.assertEquals(listCon[1].FirstName, acc.npo02__Informal_Greeting__c);
@@ -709,7 +762,15 @@ private with sharing class ACCT_HHAccounts_TEST {
         listCon[6].AccountId = listAcc[5].Id;   // Org
         
         insert listCon;
-                
+
+        // Force the primary contact on each to ensure proper naming order
+        // Update separately so that Name field doesn't accidentally get overwritten
+        // Don't want to re-query first because the list may come back in a different order
+        list<Account> updtAccts = new list<Account>{
+            new Account(Id=listAcc[1].Id, npe01__One2OneContact__c = listCon[1].Id)
+        };
+        update updtAccts;        
+
         listCon[0].ownerId = u2.Id;   // single HH
         listCon[1].ownerId = u2.Id;   // multi HH
         //listCon[2].ownerId = u2.Id;   // multi HH
@@ -725,7 +786,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         list<Contact> listCon2 = [select Name, OwnerId, Account.Id, Account.OwnerId from Contact where Id in :listCon];
         system.assertEquals(listCon2.size(), listCon.size());
         
-        system.debug('**** listCon2: ' + listCon2);
+        UTIL_Debug.debug('**** listCon2: ' + listCon2);
         for (Contact con : listCon2) {
             if (con.Id == listCon[0].Id || con.ID == listCon[4].Id) {
                system.assertEquals(con.OwnerId, con.Account.OwnerId);
@@ -895,6 +956,52 @@ private with sharing class ACCT_HHAccounts_TEST {
             system.assertEquals(true, acc.npe01__SYSTEMISINDIVIDUAL__c);
             system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE, acc.npe01__SYSTEM_AccountType__c);            
         }
+    }
+
+    /*********************************************************************************************************
+    * @description
+    * operation:
+    *     add a contact to an exiting HH Account with auto-naming off
+    * verify:
+    *    the Account's Number of Household Members is still updated
+    **********************************************************************************************************/            
+    static testMethod void addContactCheckNumberHHMembers() {
+        if (strTestOnly != '*' && strTestOnly != 'addContactCheckNumberHHMembers') return;
+
+        // turn off household naming        
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                npo02__Advanced_Household_Naming__c = false
+            ));
+        
+        list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        system.assertEquals(null, listCon[0].AccountId);
+        insert listCon;
+        listCon = [select Id, AccountId, Account.npe01__One2OneContact__c from Contact];
+        for (integer i = 0; i < 6; i++) {
+            system.assertNotEquals(null, listCon[i].AccountId);        
+            system.assertNotEquals(null, listCon[i].Account.npe01__One2OneContact__c);        
+        } 
+        
+        list<Contact> listCon2 = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        system.assertEquals(null, listCon2[0].AccountId);
+        for (integer i = 0; i < 6; i++) {
+            listCon2[i].AccountId = listCon[i].AccountId;
+        }
+        Test.startTest();
+        insert listCon2;
+        Test.stopTest(); // needed for FutureUpdateNames to update number of household members
+                
+        listCon2 = [select Id, AccountId, Account.npe01__One2OneContact__c, Account.Number_of_Household_Members__c from Contact where Id in :listCon2];
+        list<Account> listAcc = [select Id, Name, Number_of_Household_Members__c from Account];
+        system.assertEquals(6, listAcc.size());
+        for (integer i = 0; i < 6; i++) {
+            system.assertEquals(listCon2[i].AccountId, listCon[i].AccountId);        
+            system.assertEquals(listCon2[i].Account.npe01__One2OneContact__c, listCon[i].Account.npe01__One2OneContact__c);
+            system.assertEquals(2, listAcc[i].Number_of_Household_Members__c);
+            system.assertEquals(2, listCon2[i].Account.Number_of_Household_Members__c);
+        } 
     }
 
     /*********************************************************************************************************

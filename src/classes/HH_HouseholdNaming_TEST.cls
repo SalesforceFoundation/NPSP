@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description test class for Household naming functionality.
 */
 @isTest
@@ -77,7 +78,7 @@ public class HH_HouseholdNaming_TEST {
             
         //get the household to be updated
         id hhid = [select npo02__Household__r.id from Contact where id = :testcons[0].id].id;                        
-        system.debug('ID IS=================='+ hhid);    
+        UTIL_Debug.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
         'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 
@@ -95,6 +96,7 @@ public class HH_HouseholdNaming_TEST {
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Advanced_Household_Naming__c = true,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,

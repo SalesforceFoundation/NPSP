@@ -31,10 +31,8 @@ public with sharing class ERR_Handler {
     
     private List<Error__c> errors = new List<Error__c>();
    
-    public enum Context {AFFL, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
-    
-    private static String stackTrace;
-    
+    public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
+        
     public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
     List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
@@ -73,7 +71,7 @@ public with sharing class ERR_Handler {
     	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
     	
     	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c && errorsExist) {
-           System.debug('****Errors exist - calling Error Notifier');
+           UTIL_Debug.debug('****Errors exist - calling Error Notifier');
            ERR_Notifier.sendErrorNotifications(context);
     	}
            
@@ -109,23 +107,33 @@ public with sharing class ERR_Handler {
 	        	}
 	        	
 	        	if(!isSuccess && message != null) {
-	        		System.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
+	        		UTIL_Debug.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
 	        		errorsExist = true;
 	        		//Creating error object
 	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
 	                errors.add(err);
 	                //Adding error message to the record
 	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
-	                if(sObjects != null && sObjects.size() > i)
-	                   addErrorMessage(sObjects[i], message);*/
+                     or error notification sent.
+                     It is also worth noting that Salesforce only allows one to do addError on an object in the trigger handler. So
+                     if this object is actually not in the trigger, but one that a trigger object is trying to modify, setting addError
+                     on this related object will cause an Exception from Salesforce.
+		                if(sObjects != null && sObjects.size() > i)
+		                    addErrorMessage(sObjects[i], message); */
 	                if(ApexPages.currentPage() != null)
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
+	                   
+                    if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
+                        UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
+                        throw(new PropogateException(err.Full_Message__c));
+                    }
+
 	        	}
 	        }
     	}
     	return errorsExist;
     }
+    private class PropogateException extends Exception {}
     
     /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
     public static void processError(Exception e, ERR_Handler.Context context) {
@@ -139,11 +147,11 @@ public with sharing class ERR_Handler {
     public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
     	
     	if(e != null) {
-    		System.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
+    		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
 			if(e instanceof DmlException && records != null && records.size() > 0) {
                 DmlException de = (DmlException) e;
                 for(Integer i=0; i<de.getNumDml(); i++) {
-                   System.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
+                   UTIL_Debug.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
                    Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
                    /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
                      or error notification sent. 
@@ -155,13 +163,13 @@ public with sharing class ERR_Handler {
            
            if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
                Error__c error = createError(e);
-               System.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
+               UTIL_Debug.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
                Database.SaveResult result = Database.insert(error, false);
            }
     	}
     	
     	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
-    	   System.debug('****Sending error notification');
+    	   UTIL_Debug.debug('****Sending error notification');
            ERR_Notifier.sendErrorNotifications(context);
     	}
     }
@@ -181,7 +189,7 @@ public with sharing class ERR_Handler {
     /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
     public void storeErrors() {        
         if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-		  System.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
+		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
 		  Database.insert(errors, false);
         }
     }
@@ -194,13 +202,14 @@ public with sharing class ERR_Handler {
 		error.Full_Message__c = e.getMessage();
 		//Putting it into a local string to see if that helps storing the stack trace when we
 		//are in a managed package.
-		stackTrace = e.getStackTraceString();
-		if(stackTrace == null || stackTrace == '(npsp)') {
-			stackTrace = 'No stacktrace available at the time of saving the record - ';
+		String stackTrace = e.getStackTraceString();
+		String message;
+		if(String.isBlank(stackTrace) || stackTrace == '(npsp)') {
+			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
-			stackTrace = 'Stacktrace available at the time of saving the record - ';
+			message = 'Stacktrace available at the time of saving the record - ';
 		}
-		error.Stack_Trace__c = stacktrace + e.getStackTraceString();
+		error.Stack_Trace__c = message + stackTrace;
 		return error;
 	}
 

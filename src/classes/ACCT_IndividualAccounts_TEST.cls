@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Accounts
 * @description Tests for ACCT_IndividualAccounts_TDTM
 */
 @isTest
@@ -232,9 +233,9 @@ private class ACCT_IndividualAccounts_TEST {
         insert con;
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,npe01__Organization_Type__c,Account.npe01__SYSTEMIsIndividual__c  from Contact where id=:con.id];
-        system.debug(insertedContacts);
-        system.debug(insertedcontacts[0].id);
-        system.debug(insertedContacts);
+        UTIL_Debug.debug('****' +insertedContacts);
+        UTIL_Debug.debug('****' +insertedcontacts[0].id);
+        UTIL_Debug.debug('****' +insertedContacts);
         //one contact should have been created
         system.assertEquals(1,insertedContacts.size());
         //the account should have the right type
@@ -287,7 +288,7 @@ private class ACCT_IndividualAccounts_TEST {
         Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.Salutation;
             List<Schema.PicklistEntry> P = F.getPicklistValues();
             for(Schema.PicklistEntry pe : P){
-                system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                UTIL_Debug.debug('****' +pe.getValue() + ' : ' + pe.isDefaultValue());
                 if (pe.isDefaultValue()){
                         aDefaultIsSelected = true;
                 }
