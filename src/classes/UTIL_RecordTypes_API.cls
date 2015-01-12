@@ -35,15 +35,33 @@
 */
 global with sharing class UTIL_RecordTypes_API {
     
-    global static Id GetRecordTypeId(String objectName, String RecordTypeName) {
-        return UTIL_RecordTypes.GetRecordTypeId(objectName, RecordTypeName);
+    /*******************************************************************************************************
+    * @description Provides the Id of the Record Type with an specific name in an specific Object.
+    * @param objectName The name of the Object.
+    * @param  recordTypeName The name of the Record Type.
+    * @return Id The Id of the Record Type.
+    */
+    global static Id GetRecordTypeId(String objectName, String recordTypeName) {
+        return UTIL_RecordTypes.GetRecordTypeId(objectName, recordTypeName);
     }
     
-    global static String GetRecordTypeName(String objectName, string RecordTypeId) {
-        return UTIL_RecordTypes.GetRecordTypeName(objectName, RecordTypeId);
+    /*******************************************************************************************************
+    * @description Provides the name of the Record Type with a specific Id in an specific Object.
+    * @param objectName The name of the Object.
+    * @param  recordTypId The Id of the Record Type.
+    * @return String The name of the Record Type.
+    */
+    global static String GetRecordTypeName(String objectName, String recordTypeId) {
+        return UTIL_RecordTypes.GetRecordTypeName(objectName, recordTypeId);
     }
     
-    global static set<Id> GetRecordTypeIdSet(String objectName, set<string> RecordTypeNameSet) {
-        return UTIL_RecordTypes.GetRecordTypeIdSet(objectName, RecordTypeNameSet);
+    /*******************************************************************************************************
+    * @description Provides the Ids of the Record Types with specific names in an specific Object.
+    * @param objectName The name of the Object.
+    * @param  recordTypeNameSet The names of the Record Types.
+    * @return Set<Id> The Ids of the Record Types.
+    */
+	global static Set<Id> GetRecordTypeIdSet(String objectName, Set<String> recordTypeNameSet) {
+        return UTIL_RecordTypes.GetRecordTypeIdSet(objectName, recordTypeNameSet);
     }
 }

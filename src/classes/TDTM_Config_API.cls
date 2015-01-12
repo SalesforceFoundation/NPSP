@@ -37,7 +37,10 @@ global with sharing class TDTM_Config_API {
 
     /*******************************************************************************************************
     * @description Returns the default TDTM configuration. 
-    * @return List<Trigger_Handler__c> a list of trigger handler records with the default values.
+    * @return List<Trigger_Handler__c> a list of trigger handler records with the default values. The records
+    *         have not yet been inserted in the database. You can manipulate them, if necessary, and insert 
+    *         them. If no Trigger_Handler__c records exist, the application will insert the defaults when any 
+    *         of the NPSP triggers run. 
     */
     global List<Trigger_Handler__c> getDefaultTdtmConfig() {
         return TDTM_DefaultConfig.getDefaultRecords(); 
