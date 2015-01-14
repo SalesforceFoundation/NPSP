@@ -113,10 +113,14 @@ global with sharing class UTIL_CustomSettings_API {
     * @return Custom settings record for Address Verification configuration. At the org level, if no user level
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
-    */
+    *
+    *
+    * NOTE: this method should not be exposed because these settings are protected, and are not therefore 
+          accessible by managed or unmanaged code outside the package.
+    
     global Addr_Verification_Settings__c getAddressVerificationSettings() {
         return UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-    }
+    }*/
     
     /*******************************************************************************************************
     * @description Returns the default Household Naming settings. 
