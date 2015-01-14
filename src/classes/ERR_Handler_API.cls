@@ -36,12 +36,6 @@
 * @description API class that exposes error handling.
 */
 global with sharing class ERR_Handler_API {
-
-    /*******************************************************************************************************
-    * @description Enum used to categorize errors as coming from specific functionality. Each enum value matches 
-    *              one of the prefixes used throughout the package.
-    */
-    global enum ErrorContext { ADDR, AFFL, BDI, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, SCH, STTG, TDTM }
     
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
@@ -49,7 +43,7 @@ global with sharing class ERR_Handler_API {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    global void processError(Exception e, ErrorContext context) {
+    global void processError(Exception e, ERR_Context_API context) {
         ERR_Handler.processError(e, context);
     }
 }

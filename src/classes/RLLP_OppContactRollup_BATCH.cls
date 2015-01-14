@@ -42,7 +42,7 @@ public with sharing class RLLP_OppContactRollup_BATCH implements Database.Batcha
                 return true;
             } catch(Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
+                ERR_Handler.processError(e, ERR_Context_API.RLLP);
             }
         }
         return false;

@@ -155,7 +155,7 @@ public with sharing class ERR_Handler {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, ERR_Handler_API.ErrorContext context) {   	
+    public static void processError(Exception e, ERR_Context_API context) {   	
     	if(e != null) {			
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
@@ -168,7 +168,7 @@ public with sharing class ERR_Handler {
     * @param context The context the errors were raised on.
     * @return void
     */
-    public static void processErrors(List<Error__c> errorRecords, ERR_Handler_API.ErrorContext context) {
+    public static void processErrors(List<Error__c> errorRecords, ERR_Context_API context) {
     	
     	if(errorRecords != null && errorRecords.size() > 0) {
 	    	if(ApexPages.currentPage() != null) {

@@ -102,7 +102,7 @@ public with sharing class TDTM_TriggerHandler {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
                 //Store error record and send error email notification
-                ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.TDTM);
+                ERR_Handler.processError(e, ERR_Context_API.TDTM);
             } else { // re-throwing exception if error handling is disabled 
             	throw e;
             }
@@ -213,7 +213,7 @@ public with sharing class TDTM_TriggerHandler {
         if(errors.errorsExist) {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
-                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.ErrorContext.TDTM);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Context_API.TDTM);
             }
         }
     }

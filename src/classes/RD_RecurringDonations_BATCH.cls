@@ -67,7 +67,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
 	    } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RD);
+            ERR_Handler.processError(e, ERR_Context_API.RD);
         }    
     }
     public void finish(Database.BatchableContext bc) {
@@ -82,7 +82,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
         update rds;                            
         
         //if needed, send error notifications
-        ERR_Notifier.sendErrorNotifications(ERR_Handler_API.ErrorContext.RD);        
+        ERR_Notifier.sendErrorNotifications(ERR_Context_API.RD);        
     }
     
     

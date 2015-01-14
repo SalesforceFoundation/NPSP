@@ -111,7 +111,7 @@ public without sharing class RLLP_OppRollup {
             rollupContactsandHouseholdsForTrigger(OppIds);
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
+            ERR_Handler.processError(e, ERR_Context_API.RLLP);
         }
     }
 
@@ -156,7 +156,7 @@ public without sharing class RLLP_OppRollup {
 	        }
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
+            ERR_Handler.processError(e, ERR_Context_API.RLLP);
         }
     }
     
@@ -173,7 +173,7 @@ public without sharing class RLLP_OppRollup {
 	        }
 	    } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
+            ERR_Handler.processError(e, ERR_Context_API.RLLP);
         }     
     }
     @future
@@ -189,7 +189,7 @@ public without sharing class RLLP_OppRollup {
 	        }
 	    } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.RLLP);
+            ERR_Handler.processError(e, ERR_Context_API.RLLP);
         }       
     } 
     /*************************************************************/

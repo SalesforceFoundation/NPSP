@@ -135,7 +135,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        }
     	} catch(Exception e) {
     		Database.rollback(sp);
-    		ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.HH);
+    		ERR_Handler.processError(e, ERR_Context_API.HH);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     		return null;
     	}
@@ -273,7 +273,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         }            
         catch (Exception e){
         	Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.HH);
+            ERR_Handler.processError(e, ERR_Context_API.HH);
         }
         
         return returnsize;

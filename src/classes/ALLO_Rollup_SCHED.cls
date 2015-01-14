@@ -46,7 +46,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 	            return true;
         	} catch(Exception e) {
         		Database.rollback(sp);
-        		ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.ALLO);
+        		ERR_Handler.processError(e, ERR_Context_API.ALLO);
         	}
         }
         return false;

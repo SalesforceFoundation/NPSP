@@ -81,7 +81,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             isEditMode = false;
         } catch (Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.ErrorContext.STTG);
+            ERR_Handler.processError(e, ERR_Context_API.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
     	return null;
