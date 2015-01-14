@@ -141,8 +141,6 @@ public with sharing class RD_RecurringDonations {
                 else if (isClosed == true && isWon == true) {
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
 
-                    system.debug('LOOKHERE: total pre conversion: ' + obj.get('Total') + 'RDCurrencyField' + rd.get(RDCurrencyField));
-
                     //convert rollup total to RD's currency
                     if (RLLP_OppRollup_UTIL.isMultiCurrency())
                         rd.npe03__Paid_Amount__c = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)rd.get(RDCurrencyField), (decimal)obj.get('Total'));
