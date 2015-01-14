@@ -78,7 +78,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         if (a.MailingPostalCode__c != null)
             address_request_string += a.MailingPostalCode__c + '+';
         if (a.MailingCountry__c != null)
-            address_request_string += a.MailingCountry__c;
+            address_request_string += a.MailingCountry__c.replace(' ', '+');
 
         HttpResponse response = new HttpResponse();
 
