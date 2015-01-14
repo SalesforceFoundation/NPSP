@@ -39,43 +39,43 @@ public with sharing class BDE_DescribeHelper_TEST {
         
         string s;
         
-        Schema.DescribeSObjectResult res = BDE_DescribeHelper_UTIL.getObjectDescribe('Contact');     
+        Schema.DescribeSObjectResult res = UTIL_Describe.getObjectDescribe('Contact');     
         system.assertEquals(res.getName(), 'Contact');
-        s = BDE_DescribeHelper_UTIL.getObjectLabel('Contact');
+        s = UTIL_Describe.getObjectLabel('Contact');
         system.assertEquals (s, res.getLabel());
 
         account a = new account(name='Test');
         insert a;
-        system.assert(BDE_DescribeHelper_UTIL.isObjectIdThisType(a.id, 'Account'));
+        system.assert(UTIL_Describe.isObjectIdThisType(a.id, 'Account'));
         
-        s = BDE_DescribeHelper_UTIL.getFieldLabel('Account', 'LastModifiedDate');
+        s = UTIL_Describe.getFieldLabel('Account', 'LastModifiedDate');
         integer calls = limits.getfieldsdescribes();
         
-        Schema.DescribeFieldResult fr = BDE_DescribeHelper_UTIL.getFieldDescribe('Account', 'CreatedDate');      
-        s = BDE_DescribeHelper_UTIL.getFieldLabel('Account', 'CreatedDate');
+        Schema.DescribeFieldResult fr = UTIL_Describe.getFieldDescribe('Account', 'CreatedDate');      
+        s = UTIL_Describe.getFieldLabel('Account', 'CreatedDate');
         system.assertEquals (s, fr.getLabel());
 
-        Map<String, Schema.DescribeFieldResult> afd = BDE_DescribeHelper_UTIL.getAllFieldsDescribe('Account');
+        Map<String, Schema.DescribeFieldResult> afd = UTIL_Describe.getAllFieldsDescribe('Account');
         system.assertEquals ('BillingCity', afd.get('billingcity').getName());
-        afd = BDE_DescribeHelper_UTIL.getAllFieldsDescribe('Account');
+        afd = UTIL_Describe.getAllFieldsDescribe('Account');
 
-        SObject acctObj = BDE_DescribeHelper_UTIL.getPrototypeObject('Account');
+        SObject acctObj = UTIL_Describe.getPrototypeObject('Account');
         // should be able to cast to account
         account acct = (account)(acctObj);
 
         // another call should not use another describe
         system.assertEquals(limits.getfieldsdescribes(), calls);
         
-        s = BDE_DescribeHelper_UTIL.getFieldType('Account', 'CreatedDate');
+        s = UTIL_Describe.getFieldType('Account', 'CreatedDate');
         system.assertEquals('DATETIME', s);
         
         try {
-            s = BDE_DescribeHelper_UTIL.getObjectLabel('sdlkfjsdlkfjsldkfjlsdkfj');
+            s = UTIL_Describe.getObjectLabel('sdlkfjsdlkfjsldkfjlsdkfj');
         } catch (exception e) {
             system.assertEquals('Invalid object name \'sdlkfjsdlkfjsldkfjlsdkfj\'', e.getMessage());
         } 
         try {
-            s = BDE_DescribeHelper_UTIL.getFieldLabel('Opportunity', 'sdlkfjsdlkfjsldkfjlsdkfj');
+            s = UTIL_Describe.getFieldLabel('Opportunity', 'sdlkfjsdlkfjsldkfjlsdkfj');
         } catch (exception e) {
             system.assertEquals('Invalid field name \'sdlkfjsdlkfjsldkfjlsdkfj\'', e.getMessage());
         } 
