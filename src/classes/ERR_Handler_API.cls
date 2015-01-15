@@ -36,6 +36,27 @@
 * @description API class that exposes error handling.
 */
 global with sharing class ERR_Handler_API {
+	
+	/********** Option B *************/
+	global Interface Context {
+		String val(); 
+	}
+	
+	global class ADDR implements Context {
+		global String val() {
+			return 'ADDR';
+		}
+	}
+	
+	/********** Option C *************/
+	//But then we are just passing a string as argument to those methods that receive
+	//a context.
+	global static Map<String, String> contextMap = new Map<String, String>();
+	
+	global ERR_Handler_API() {
+		contextMap.put('ADDR', 'ADDR');
+	}
+	
     
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error

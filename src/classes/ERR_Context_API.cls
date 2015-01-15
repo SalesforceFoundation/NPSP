@@ -121,5 +121,8 @@ global enum ERR_Context_API {
     /**
      * @description Table-Driven Trigger Management context.
      */
-    TDTM
+    TDTM,
+    
+    /********** Option A *************/
+    EXTERNAL
 }
