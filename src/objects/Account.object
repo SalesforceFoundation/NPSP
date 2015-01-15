@@ -113,6 +113,16 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
+            <field>Membership_Span__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Membership_Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
             <field>NumberOfEmployees</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -199,16 +209,6 @@
         </availableFields>
         <availableFields>
             <field>SystemModstamp</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Membership_Span__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Membership_Status__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -774,7 +774,6 @@
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
-        <trackHistory>false</trackHistory>
         <type>Number</type>
         <unique>false</unique>
     </fields>
@@ -788,7 +787,6 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <inlineHelpText>Formula: Current, expired, or grace period.  Default grace period set in Household Settings.</inlineHelpText>
         <label>Membership Status</label>
         <required>false</required>
-        <trackHistory>false</trackHistory>
         <type>Text</type>
         <unique>false</unique>
     </fields>
