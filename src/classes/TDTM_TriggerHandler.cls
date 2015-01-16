@@ -213,7 +213,7 @@ public with sharing class TDTM_TriggerHandler {
         if(errors.errorsExist) {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
-                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.TDTM);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.TDTM.name());
             }
         }
     }

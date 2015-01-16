@@ -82,7 +82,7 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
         update rds;                            
         
         //if needed, send error notifications
-        ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.RD);        
+        ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.RD.name());        
     }
     
     

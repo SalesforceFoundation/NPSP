@@ -62,7 +62,6 @@
     <members>CON_ContactMerge_CTRL</members>
     <members>CON_ContactMerge_TEST</members>
     <members>ERR_AddError_TEST</members>
-    <members>ERR_Context_API</members>
     <members>ERR_Handler</members>
     <members>ERR_Handler_API</members>
     <members>ERR_Handler_CTRL_TEST</members>
