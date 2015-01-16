@@ -1007,8 +1007,6 @@
     <members>Contact.BDE_List_FS</members>
     <members>Lead.BDE_Entry_FS</members>
     <members>Lead.BDE_List_FS</members>
-    <members>Opportunity.BDE_Entry_FS</members>
-    <members>Opportunity.BDE_List_FS</members>
     <name>FieldSet</name>
   </types>
   <types>
@@ -1030,7 +1028,6 @@
     <name>Layout</name>
   </types>
   <types>
-    <members>Account.AllAccounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
