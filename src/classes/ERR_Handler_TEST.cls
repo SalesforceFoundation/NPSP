@@ -194,8 +194,8 @@ public with sharing class ERR_Handler_TEST {
         if (strTestOnly != '*' && strTestOnly != 'errorHandlingDisabled') return;
         
         setupWithEmailNotifications();
-        //Disable error handling
-        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+        //Disable error handling. Using the API class just to give it test coverage.
+        Error_Settings__c errorSettings = UTIL_CustomSettings_API.getErrorSettings();
         errorSettings.Disable_Error_Handling__c = true;
         update errorSettings;
         

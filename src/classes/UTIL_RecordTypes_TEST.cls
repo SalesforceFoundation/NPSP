@@ -43,10 +43,10 @@ private class UTIL_RecordTypes_TEST {
         Id reallyBogus = UTIL_RecordTypes.GetRecordTypeId('Bogus', 'Bogus');
         Id bogus = UTIL_RecordTypes.GetRecordTypeId('Opportunity', 'Bogus');
         bogus = UTIL_RecordTypes.GetRecordTypeId('Contact', 'Bogus');
-        bogus = UTIL_RecordTypes.GetRecordTypeId('Campaign', 'Bogus');
+        bogus = UTIL_RecordTypes_API.GetRecordTypeId('Campaign', 'Bogus');
         
         // try all the functions
-        set<Id> oppRtSet = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
+        set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
         Map<String, Id> oppTypeMap = UTIL_RecordTypes.GetRecordTypeIdMap('Opportunity');
         List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
         
@@ -55,7 +55,7 @@ private class UTIL_RecordTypes_TEST {
         if (!ort.isEmpty()) {
             Id rtId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', ort[0].name);
             system.assertEquals(ort[0].id, rtId); 
-            String rtName = UTIL_RecordTypes.GetRecordTypeName('Opportunity', ort[0].id);
+            String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', ort[0].id);
             system.assertEquals(ort[0].name, rtName); 
 
             // the sets above should contain something too

@@ -306,7 +306,8 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
 
         delete [select id from npe03__Recurring_Donations_Settings__c];
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        //Using the API class just to give it test coverage.
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettings_API.getRecurringDonationsSettings();
         system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(50, rds.npe03__Maximum_Donations__c);
         system.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           

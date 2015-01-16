@@ -103,8 +103,9 @@ public with sharing class STG_InstallScript_TEST {
         
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
-              
-        List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
+        
+        //Using the API class just to give it test coverage.      
+        List<Trigger_Handler__c> defaultConfig = TDTM_Config_API.getDefaultRecords();
         
         assertTriggerHandlersEqual(afterScriptConfig, defaultConfig);
     }
