@@ -35,7 +35,7 @@
                storing and notification of these errors. 
 */
 public with sharing class ERR_Handler {
-
+    
     /*******************************************************************************************************
     * @description Inner class that groups the result of processing the result of multiple DML operations performed
     *              using the Database class.
@@ -152,14 +152,26 @@ public with sharing class ERR_Handler {
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
+                   This method should be used from inside the NPSP package, instead of the same one with that same name
+                   that takes a String instead of an Enum as the second parameter.
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    public static void processError(Exception e, ERR_Context_API context) {   	
-    	if(e != null) {			
+    public static void processError(Exception e, ERR_Handler_API.Context context) {     
+        processError(e, context.name());   
+    }
+    
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
+    */
+    public static void processError(Exception e, String context) {     
+        if(e != null) {         
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
-    	}   
+        }   
     }
     
     /*******************************************************************************************************
@@ -168,7 +180,7 @@ public with sharing class ERR_Handler {
     * @param context The context the errors were raised on.
     * @return void
     */
-    public static void processErrors(List<Error__c> errorRecords, ERR_Context_API context) {
+    public static void processErrors(List<Error__c> errorRecords, String context) {
     	
     	if(errorRecords != null && errorRecords.size() > 0) {
 	    	if(ApexPages.currentPage() != null) {

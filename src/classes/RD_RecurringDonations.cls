@@ -75,7 +75,7 @@ public with sharing class RD_RecurringDonations {
             updateRecurringDonationOnOppChange(RDids, null);
         } catch(Exception e) {
         	Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Context_API.RD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
     } 
     
@@ -225,7 +225,7 @@ public with sharing class RD_RecurringDonations {
 	        insertOppsOnRecurringDonationInsert(reclist);
         } catch(Exception e) {
         	Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Context_API.RD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
     }
     
@@ -518,7 +518,7 @@ public with sharing class RD_RecurringDonations {
             
             if (!badSRs.isEmpty()) {
                 ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
-                ERR_Handler.processErrors(errors.errorRecords, ERR_Context_API.RD);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD);
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -536,7 +536,7 @@ public with sharing class RD_RecurringDonations {
     	   oppContactRoles(oppIds);
     	} catch(Exception e) {
     	   Database.rollback(sp);
-           ERR_Handler.processError(e, ERR_Context_API.RD);
+           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
     }
     
@@ -593,7 +593,7 @@ public with sharing class RD_RecurringDonations {
     	   updateExistingOpps(recIDs, null);
     	} catch(Exception e) {
     	   Database.rollback(sp);
-           ERR_Handler.processError(e, ERR_Context_API.RD);
+           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
     }
     
@@ -927,7 +927,7 @@ public with sharing class RD_RecurringDonations {
             
             if (!badSRs.isEmpty()){
                 ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
-                ERR_Handler.processErrors(errors.errorRecords, ERR_Context_API.RD);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD);
             }
         }
         

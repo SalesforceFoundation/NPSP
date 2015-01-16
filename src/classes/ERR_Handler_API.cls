@@ -36,35 +36,51 @@
 * @description API class that exposes error handling.
 */
 global with sharing class ERR_Handler_API {
-	
-	/********** Option B *************/
-	global Interface Context {
-		String val(); 
-	}
-	
-	global class ADDR implements Context {
-		global String val() {
-			return 'ADDR';
-		}
-	}
-	
-	/********** Option C *************/
-	//But then we are just passing a string as argument to those methods that receive
-	//a context.
-	global static Map<String, String> contextMap = new Map<String, String>();
-	
-	global ERR_Handler_API() {
-		contextMap.put('ADDR', 'ADDR');
-	}
-	
     
+    global enum Context {
+    	/* @description Address context. */
+	    ADDR, 
+	    /* @description Affiliations context. */
+	    AFFL, 
+	    /* @description Allocations context. */
+	    ALLO, 
+	    /* @description Batch Data Entry context. */
+	    BDE, 
+	    /* @description Batch Data Import context. */
+	    BDI, 
+	    /* @description Contacts context. */
+	    CON, 
+	    /* @description Account Conversion context. */
+	    CONV, 
+	    /* @description Households context. */
+	    HH, 
+	    /* @description Lead Conversion context. */
+	    LD, 
+	    /* @description Opportunities context. */
+	    OPP, 
+	    /* @description Payments context. */
+	    PMT, 
+	    /* @description Relationships context. */
+	    REL, 
+	    /* @description Recurring Donations context. */
+	    RD,  
+	    /* @description Rollups context. */
+	    RLLP, 
+	    /* @description Schedulable context. */
+	    SCH, 
+	    /* @description Settings context. */
+	    STTG, 
+	    /* @description Table-Driven Trigger Management context. */
+	    TDTM
+    }
+     
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    global void processError(Exception e, ERR_Context_API context) {
+    global void processError(Exception e, String context) {
         ERR_Handler.processError(e, context);
     }
 }
