@@ -80,7 +80,7 @@ global with sharing class ERR_Handler_API {
     * @param e Exception to create error record from.
     * @return context The context the exception was raised on.
     */
-    global void processError(Exception e, String context) {
+    global static void processError(Exception e, String context) {
         ERR_Handler.processError(e, context);
     }
 }

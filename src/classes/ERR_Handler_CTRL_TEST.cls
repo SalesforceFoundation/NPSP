@@ -65,7 +65,7 @@ public with sharing class ERR_Handler_CTRL_TEST {
         	UTIL_Debug.debug('****Exception caught: ' + e.getMessage());
             Database.rollback(sp);
             //Using the API class just to give it test coverage.
-            ERR_Handler_API.processError(e, ERR_Handler_API.Context.TDTM);
+            ERR_Handler_API.processError(e, ERR_Handler_API.Context.TDTM.name());
         }
         return null;
     }

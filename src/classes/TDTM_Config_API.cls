@@ -44,7 +44,7 @@ global with sharing class TDTM_Config_API {
     *         them. If no Trigger_Handler__c records exist, the application will insert the defaults when any 
     *         of the NPSP triggers run. 
     */
-    global List<Trigger_Handler__c> getDefaultTdtmConfig() {
+    global static List<Trigger_Handler__c> getDefaultRecords() {
         return TDTM_DefaultConfig.getDefaultRecords(); 
     }    
 }

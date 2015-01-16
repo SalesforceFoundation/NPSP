@@ -44,7 +44,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         exists or doesn't exist in the database.
     *         
     */
-    global npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
+    global static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
         return UTIL_CustomSettingsFacade.getContactsSettings();
     }
     
@@ -54,7 +54,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         are defined. The ID field should be checked to determine if the returned record already exists or 
     *         doesn't exist in the database.
     */
-    global npo02__Households_Settings__c getHouseholdsSettings() {
+    global static npo02__Households_Settings__c getHouseholdsSettings() {
         return UTIL_CustomSettingsFacade.getHouseholdsSettings();
     }
     
@@ -64,7 +64,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
+    global static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
         return UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
     }
     
@@ -74,7 +74,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global npe4__Relationship_Settings__c getRelationshipSettings() {
+    global static npe4__Relationship_Settings__c getRelationshipSettings() {
         return UTIL_CustomSettingsFacade.getRelationshipSettings();
     }
     
@@ -84,7 +84,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global npe5__Affiliations_Settings__c getAffiliationsSettings() {
+    global static npe5__Affiliations_Settings__c getAffiliationsSettings() {
         return UTIL_CustomSettingsFacade.getAffiliationsSettings();
     }
     
@@ -94,7 +94,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global Error_Settings__c getErrorSettings() {
+    global static Error_Settings__c getErrorSettings() {
         return UTIL_CustomSettingsFacade.getErrorSettings();
     }
     
@@ -104,7 +104,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global Batch_Data_Entry_Settings__c getBDESettings() {
+    global static Batch_Data_Entry_Settings__c getBDESettings() {
         return UTIL_CustomSettingsFacade.getBDESettings();
     }
     
@@ -118,7 +118,7 @@ global with sharing class UTIL_CustomSettings_API {
     * NOTE: this method should not be exposed because these settings are protected, and are not therefore 
           accessible by managed or unmanaged code outside the package.
     
-    global Addr_Verification_Settings__c getAddressVerificationSettings() {
+    global static Addr_Verification_Settings__c getAddressVerificationSettings() {
         return UTIL_CustomSettingsFacade.getAddressVerificationSettings();
     }*/
     
@@ -128,7 +128,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global Household_Naming_Settings__c getHouseholdNamingSettings() {
+    global static Household_Naming_Settings__c getHouseholdNamingSettings() {
         return UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
     }
     
@@ -138,7 +138,7 @@ global with sharing class UTIL_CustomSettings_API {
     *         settings are defined. The ID field should be checked to determine if the returned record already
     *         exists or doesn't exist in the database.
     */
-    global Allocations_Settings__c getAllocationsSettings() {
+    global static Allocations_Settings__c getAllocationsSettings() {
         return UTIL_CustomSettingsFacade.getAllocationsSettings();
     }
 }
