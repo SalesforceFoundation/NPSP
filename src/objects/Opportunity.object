@@ -27,7 +27,7 @@
         <label>NPSP Donation Compact Layout</label>
     </compactLayouts>
     <fieldSets>
-        <fullName>BDE_Entry_FS</fullName>
+        <fullName>BDE_Entry_FS_v2</fullName>
         <availableFields>
             <field>CampaignId</field>
             <isFieldManaged>false</isFieldManaged>
@@ -204,10 +204,10 @@
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>BDE Entry FS</label>
+        <label>BDE Entry FS v2</label>
     </fieldSets>
     <fieldSets>
-        <fullName>BDE_List_FS</fullName>
+        <fullName>BDE_List_FS_v2</fullName>
         <availableFields>
             <field>npe01__Amount_Outstanding__c</field>
             <isFieldManaged>false</isFieldManaged>
@@ -444,7 +444,7 @@
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>BDE List FS</label>
+        <label>New BDE List v2</label>
     </fieldSets>
     <fields>
         <fullName>Batch__c</fullName>
