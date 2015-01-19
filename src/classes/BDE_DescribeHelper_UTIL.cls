@@ -213,17 +213,17 @@ public class  BDE_DescribeHelper_UTIL {
         Schema.DescribeSObjectResult d = targetType.getDescribe(); 
         Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
         if (fs == null) {
-        	throw (new MyException('Field set \'' + strFS + '\' does not exist.'));
-        }      
-
-        for(Schema.FieldSetMember f : fs.getFields()) {
-            if (f.getFieldPath().contains('.')) {
-                throw (new MyException('Related field \'' + f.getFieldPath() + '\' not supported ' +
-                    'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
-            }
-            listStrFields.add(f.getFieldPath());
+        	return null;
+        } else {
+	        for(Schema.FieldSetMember f : fs.getFields()) {
+	            if (f.getFieldPath().contains('.')) {
+	                throw (new MyException('Related field \'' + f.getFieldPath() + '\' not supported ' +
+	                    'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
+	            }
+	            listStrFields.add(f.getFieldPath());
+	        }
+	        return listStrFields;
         }
-        return listStrFields;
     }
     
     // utility to return a comma separated string of field names from a field set
