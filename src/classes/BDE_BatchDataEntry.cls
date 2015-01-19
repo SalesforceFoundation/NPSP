@@ -85,12 +85,12 @@ public class BDE_BatchDataEntry {
                 if(this.saveBatch && !checkLookupExists()) { 
                     this.statusMessage = this.FAIL + this.objectName + ' does not have a lookup field to the ' + String.valueOf(Batch__c.sObjectType) + ' object. If this is a standard object, you can go to Setup->Customize-><objectname>->Fields to create a lookup field to the Batch. For custom object, please go to Setup->Create->Objects-><objectname> and click \'New\' under the Fields section.';
                 } else {
-                    this.entryFieldList = BDE_DescribeHelper_UTIL.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_Entry_FS'));
+                    /*this.entryFieldList = BDE_DescribeHelper_UTIL.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_Entry_FS'));
                     this.listFieldList = BDE_DescribeHelper_UTIL.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_List_FS'));                  
                                             
                     buildFieldSet();
                     buildQueryString();
-					this.statusMessage = this.SUCCESS;
+					this.statusMessage = this.SUCCESS;*/
                 }
             }           
         }catch(Exception e){

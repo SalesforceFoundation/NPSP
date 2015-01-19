@@ -999,8 +999,8 @@
     <name>Document</name>
   </types>
   <types>
-    <members>Account.BDE_Entry_FS</members>
-    <members>Account.BDE_List_FS</members>
+    <!-- <members>Account.BDE_Entry_FS</members>
+    <members>Account.BDE_List_FS</members> -->
     <members>Account.Manage_Household_Custom</members>
     <members>Batch__c.BatchDetailView</members>
     <members>Contact.BDE_Entry_FS</members>
@@ -1030,7 +1030,7 @@
     <name>Layout</name>
   </types>
   <types>
-    <members>Account.AllAccounts</members>
+    <!-- <members>Account.AllAccounts</members> -->
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>

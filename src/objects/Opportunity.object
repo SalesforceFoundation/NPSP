@@ -26,6 +26,7 @@
         <fields>StageName</fields>
         <label>NPSP Donation Compact Layout</label>
     </compactLayouts>
+    <!-- 
     <fieldSets>
         <fullName>BDE_Entry_FS</fullName>
         <availableFields>
@@ -445,7 +446,7 @@
             <isRequired>false</isRequired>
         </displayedFields>
         <label>BDE List FS</label>
-    </fieldSets>
+    </fieldSets> -->
     <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>

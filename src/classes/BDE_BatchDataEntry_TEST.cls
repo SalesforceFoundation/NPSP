@@ -48,8 +48,8 @@ private class BDE_BatchDataEntry_TEST {
         bde = new BDE_BatchDataEntry('Opportunity');
         System.assertEquals('Opportunity', bde.getObjectName());
         System.assertEquals(true, bde.getSaveBatch());
-        System.assertNotEquals(null, bde.getEntryFieldList());
-        System.assertNotEquals(null, bde.getListFieldList());       
+        //System.assertNotEquals(null, bde.getEntryFieldList());
+        //System.assertNotEquals(null, bde.getListFieldList());       
         System.assertEquals('Success', bde.getStatusMessage());
         System.assert(bde.getFieldSet().contains('Name'));
         System.assertNotEquals(null, bde.getQueryString());
