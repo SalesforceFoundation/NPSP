@@ -765,7 +765,6 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <!-- 
     <listViews>
         <fullName>AllAccounts</fullName>
         <columns>ACCOUNT.NAME</columns>
@@ -777,5 +776,5 @@
         <columns>npo02__AverageAmount__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Accounts</label>
-    </listViews> -->
+    </listViews>
 </CustomObject>
