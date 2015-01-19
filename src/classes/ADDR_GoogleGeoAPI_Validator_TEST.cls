@@ -199,5 +199,6 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
         system.assertEquals('The Google Geocoding API', testValidator.getServiceName());
         system.assertEquals('https://maps.googleapis.com/maps/api/geocode/json?', testValidator.getDefaultURL());
+        system.assertNotEquals(null, testValidator.getHelpText());
     }
 }

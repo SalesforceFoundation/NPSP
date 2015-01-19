@@ -68,7 +68,7 @@ public class BDE_BatchDataEntry {
         try{
             if(pObjectName != null){
                 try {
-                    String s = UTIL_Describe.getObjectLabel(pObjectName); 
+                    String s = BDE_DescribeHelper_UTIL.getObjectLabel(pObjectName); 
                     isValidObject=true;
                 } catch (exception e) {
                     isValidObject=false;
@@ -85,8 +85,8 @@ public class BDE_BatchDataEntry {
                 if(this.saveBatch && !checkLookupExists()) { 
                     this.statusMessage = this.FAIL + this.objectName + ' does not have a lookup field to the ' + String.valueOf(Batch__c.sObjectType) + ' object. If this is a standard object, you can go to Setup->Customize-><objectname>->Fields to create a lookup field to the Batch. For custom object, please go to Setup->Create->Objects-><objectname> and click \'New\' under the Fields section.';
                 } else {
-                    this.entryFieldList = UTIL_Describe.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_Entry_FS'));
-                    this.listFieldList = UTIL_Describe.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_List_FS'));                  
+                    this.entryFieldList = BDE_DescribeHelper_UTIL.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_Entry_FS'));
+                    this.listFieldList = BDE_DescribeHelper_UTIL.listStrFromFieldSet(pObjectName, UTIL_Namespace.StrTokenNSPrefix('BDE_List_FS'));                  
                                             
                     buildFieldSet();
                     buildQueryString();
@@ -120,7 +120,7 @@ public class BDE_BatchDataEntry {
     }
     
     private boolean checkLookupExists() {
-        Map<String, Schema.DescribeFieldResult> allFieldsMap = UTIL_Describe.getAllFieldsDescribe(this.objectName);
+        Map<String, Schema.DescribeFieldResult> allFieldsMap = BDE_DescribeHelper_UTIL.getAllFieldsDescribe(this.objectName);
         for(Schema.DescribeFieldResult fr: allFieldsMap.values()) {
             if(fr.getType() == Schema.Displaytype.Reference) {
                 Schema.sObjectType parent = fr.getReferenceTo()[0];
