@@ -42,7 +42,7 @@
         <fullName>Class__c</fullName>
         <description>Verification Service</description>
         <externalId>false</externalId>
-        <inlineHelpText>Salesforce class responsible for contacting the web service and verifying addresses.</inlineHelpText>
+        <inlineHelpText>The web service used for verifying addresses.</inlineHelpText>
         <label>Verification Service</label>
         <length>255</length>
         <required>false</required>

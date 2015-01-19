@@ -58,6 +58,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public Map<String, String> servicesHelpTextMap { public get; set; }
     public Map<String, String> servicesURLMap  { public get; set; }
+    public string serviceName { public get; set; }
     
     public String validatorSelection;     
     public String getValidatorSelection() { return validatorSelection; }  
@@ -101,6 +102,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     private void setDynamicFields(ADDR_IValidator validator) {
         batchVerifEnabled = validator.supportsBatch();
         validatorBatchHelpText = validator.getBatchHelpText();	
+        serviceName = validator.getServiceName();
     }
     
     public List<SelectOption> validators { public get; set; }
