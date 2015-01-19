@@ -55,6 +55,18 @@ private class BDE_BatchDataEntry_TEST {
         System.assertNotEquals(null, bde.getQueryString());
         System.assertNotEquals(null, bde.getFailureMessage());
         System.assertNotEquals(null, bde.getBatchLookupFieldName());
-        System.assertNotEquals(0, BDE_BatchDataEntry.mapDevNameToLabelBDEObjects().size());       
+        System.assertNotEquals(0, BDE_BatchDataEntry.mapDevNameToLabelBDEObjects().size());
+        
+        //Adding hard references to fieldset to make sure they don't get deleted from the package
+        System.assertNotEquals(null, Schema.SObjectType.Account.fieldSets.BDE_Entry_FS.getFields());
+        System.assertNotEquals(null, Schema.SObjectType.Account.fieldSets.BDE_List_FS.getFields());
+        System.assertNotEquals(null, Schema.SObjectType.Account.fieldSets.Manage_Household_Custom.getFields());
+        System.assertNotEquals(null, Schema.SObjectType.Batch__c.fieldSets.BatchDetailView.getFields());
+        System.assertNotEquals(null, Schema.SObjectType.Contact.fieldSets.BDE_Entry_FS.getFields());       
+	    System.assertNotEquals(null, Schema.SObjectType.Contact.fieldSets.BDE_List_FS.getFields());
+	    System.assertNotEquals(null, Schema.SObjectType.Lead.fieldSets.BDE_Entry_FS.getFields());
+	    System.assertNotEquals(null, Schema.SObjectType.Lead.fieldSets.BDE_List_FS.getFields());
+	    System.assertNotEquals(null, Schema.SObjectType.Opportunity.fieldSets.BDE_Entry_FS_v2.getFields());
+	    System.assertNotEquals(null, Schema.SObjectType.Opportunity.fieldSets.BDE_List_FS_v2.getFields());
     }
 }
