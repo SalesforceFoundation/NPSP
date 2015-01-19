@@ -58,7 +58,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public Map<String, String> servicesHelpTextMap { public get; set; }
     public Map<String, String> servicesURLMap  { public get; set; }
-    public string serviceName { public get; set; }
     
     public String validatorSelection;     
     public String getValidatorSelection() { return validatorSelection; }  
@@ -96,13 +95,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     private void clearDynamicFields() {
     	batchVerifEnabled = false;
+        settingsHelpText = '';
         validatorBatchHelpText = '';
     }
     
     private void setDynamicFields(ADDR_IValidator validator) {
+        settingsHelpText = validator.getHelpText();
         batchVerifEnabled = validator.supportsBatch();
         validatorBatchHelpText = validator.getBatchHelpText();	
-        serviceName = validator.getServiceName();
     }
     
     public List<SelectOption> validators { public get; set; }
@@ -133,6 +133,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 	            Object classInstance = classType.newInstance();
 	            if(classInstance instanceof ADDR_IValidator) {
 	                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+	                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
 	                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
 	            }
             }
