@@ -83,6 +83,17 @@
         <externalId>false</externalId>
         <inlineHelpText>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</inlineHelpText>
         <label>General Accounting Unit</label>
+        <lookupFilter>
+            <active>true</active>
+            <errorMessage>Allocations can only be assigned to active general accounting units. Allocations assigned to inactive general accounting units cannot be modified.</errorMessage>
+            <filterItems>
+                <field>General_Accounting_Unit__c.Active__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </filterItems>
+            <infoMessage>Only active general accounting units can be selected.</infoMessage>
+            <isOptional>false</isOptional>
+        </lookupFilter>
         <referenceTo>General_Accounting_Unit__c</referenceTo>
         <relationshipLabel>GAU Allocations</relationshipLabel>
         <relationshipName>Allocations</relationshipName>

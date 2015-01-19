@@ -70,7 +70,7 @@
 
 &lt;li&gt;Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;/li&gt;
 
-&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information.&lt;/li&gt;</value>
+&lt;li&gt;Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
