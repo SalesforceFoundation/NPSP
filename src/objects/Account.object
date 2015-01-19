@@ -776,6 +776,6 @@
         <columns>npo02__OppAmountLastNDays__c</columns>
         <columns>npo02__AverageAmount__c</columns>
         <filterScope>Everything</filterScope>
-        <label>All Accounts</label> -->
-    </listViews>
+        <label>All Accounts</label>
+    </listViews> -->
 </CustomObject>
