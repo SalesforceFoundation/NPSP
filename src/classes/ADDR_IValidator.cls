@@ -41,10 +41,6 @@ public Interface ADDR_IValidator {
     /** Return the default endpoint URL. **/
     String getDefaultURL();
     
-    /** Return the help text to be shown when the user selects the service from the drop-down. It
-    may specify things such as the required fields. **/
-    String getHelpText();
-    
     /** Return true if batch address validation is supported. If not, the batch address validation button
     will be disabled. **/
     Boolean supportsBatch();

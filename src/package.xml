@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -48,8 +47,6 @@
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
     <members>BDE_BatchEntry_TEST</members>
-    <members>BDE_DescribeHelper_TEST</members>
-    <members>BDE_DescribeHelper_UTIL</members>
     <members>BDI_DataImport_BATCH</members>
     <members>BDI_DataImport_CTRL</members>
     <members>BDI_DataImport_TEST</members>
@@ -284,6 +281,8 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Account.Membership_Span__c</members>
+    <members>Account.Membership_Status__c</members>
     <members>Account.Number_of_Household_Members__c</members>
     <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Addr_Verification_Settings__c.Auth_ID__c</members>
