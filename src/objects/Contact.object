@@ -906,6 +906,16 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Deceased__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Denotes a contact as deceased; excludes from household name, emails, and calls.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Denotes a contact as deceased; excludes from household name, emails, and calls.</inlineHelpText>
+        <label>Deceased</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Exclude_from_Household_Formal_Greeting__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Checking this box will exclude this contact from the Household Formal Greeting.</description>
