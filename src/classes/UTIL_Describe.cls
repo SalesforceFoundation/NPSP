@@ -336,24 +336,24 @@ public with sharing class UTIL_Describe {
     * @param strFS the name of the object's field set
     * @return a list of strings of field names in the field set
     */
+    // utility to return a list of strings from a field set.
     public static list<string> listStrFromFieldSet(string strObject, string strFS) {
         list<string> listStrFields = new list<string>();
-
-        fillMapsForObject(strObject);
-        Schema.DescribeSObjectResult d = objectDescribes.get(strObject);
-        Schema.FieldSet fs = d.fieldSets.getMap().get(strFS);
+        Schema.SObjectType targetType = Schema.getGlobalDescribe().get(strObject);
+        Schema.DescribeSObjectResult d = targetType.getDescribe(); 
+        Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
         if (fs == null) {
-            throw (new SchemaDescribeException('Field set \'' + strFS + '\' does not exist.'));
-        }
-
-        for(Schema.FieldSetMember f : fs.getFields()) {
-            if (f.getFieldPath().contains('.')) {
-                throw (new SchemaDescribeException('Related field \'' + f.getFieldPath() + '\' not supported ' +
-                'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
+            return null;
+        } else {
+            for(Schema.FieldSetMember f : fs.getFields()) {
+                if (f.getFieldPath().contains('.')) {
+                    throw (new SchemaDescribeException('Related field \'' + f.getFieldPath() + '\' not supported ' +
+                        'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
+                }
+                listStrFields.add(f.getFieldPath());
             }
-            listStrFields.add(f.getFieldPath());
+            return listStrFields;
         }
-        return listStrFields;
     }
 
     /*******************************************************************************************************
