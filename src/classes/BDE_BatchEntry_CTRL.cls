@@ -109,7 +109,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                     displayBatchSection = bde.getSaveBatch();                       
                     displayRecInfoSection = true;
                             
-                    String pluralName = BDE_DescribeHelper_UTIL.getObjectDescribe(objname).getLabelPlural();
+                    String pluralName = UTIL_Describe.getObjectDescribe(objname).getLabelPlural();
                     pageSubtitle = pluralName;
                                                     
                     entryFieldList = new list<EntryField>();
@@ -194,7 +194,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                         
                 public entryField(string obj, string fld) {
                     fieldName = fld;
-                    fieldLabel = BDE_DescribeHelper_UTIL.getFieldLabel(obj, fld);
+                    fieldLabel = UTIL_Describe.getFieldLabel(obj, fld);
                     if(fieldName.toUpperCase().endsWith('ID') && fieldLabel.toUpperCase().endsWith('ID'))     
                         fieldLabel=fieldLabel.substring(0, fieldLabel.length()-2);               
                 }
@@ -236,7 +236,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                                 
                 public BatchItem(BDE_BatchEntry_CTRL parentClass) {
                         mydad = parentClass;       
-                        sobj = BDE_DescribeHelper_UTIL.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
+                        sobj = UTIL_Describe.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
                         renderNPSPContact = false;
                         if (mydad.displayBatchSection) {
                             sobj.put(mydad.batchLookupField, parentClass.batch.id);

@@ -124,21 +124,6 @@
             <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initEditMode();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
             </apex:outputPanel>
-	        <section>                    
-	            <h3 class="section-header">{!$Label.stgLabelHHGeneral}</h3>
-	            <div class="form-group">
-	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
-		                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="form-control" >
-		                    <apex:selectOptions value="{!listSOMailingReportIds}"/>
-		                </apex:selectList>
-		            </div>
-		            <div class="col-sm-offset-4 col-sm-8 help-block">
-	                    <apex:outputText value="{!$Label.stgHelpHHMailingListReport}" />
-		            </div>
-	            </div>                      
-	        </section>
 	        <section>
 	            <h3 class="section-header">{!$Label.stgLabelHHNaming}</h3>
 	            <div class="form-group">
@@ -321,7 +306,22 @@
                     </div>
                 </div>
             </section>
-
+            
+            <section>                    
+                <h3 class="section-header">{!$Label.stgLabelHHGeneral}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOMailingReportIds}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpHHMailingListReport}" />
+                    </div>
+                </div>                      
+            </section>
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />

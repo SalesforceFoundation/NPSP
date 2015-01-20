@@ -55,13 +55,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     }
     
     /*******************************************************************************************************
-    * @description returns the Cicero specific help text to display on the settings page
-    */     
-    public String getHelpText() {
-    	return Label.stgHelpCiceroAddrVerification; 
-    }
-    
-    /*******************************************************************************************************
     * @description returns false, since Cicero does not support a batch verification mode
     */     
     public Boolean supportsBatch() {
