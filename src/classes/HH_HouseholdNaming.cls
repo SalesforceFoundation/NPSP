@@ -389,7 +389,7 @@ public without sharing class HH_HouseholdNaming {
 		        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
 		        string strSoql = 'SELECT Id, HHId__c, npo02__Naming_Exclusions__c';
 		        
-		        set<string> setStrField = iNaming.setHousholdNameFieldsOnContact();
+		        set<string> setStrField = iNaming.setHouseholdNameFieldsOnContact();
 		        for (string strF : setStrField) {
                     if (strF == 'Salutation') strF = 'toLabel(Salutation)';
                     strSoql += ', ' + strF;
