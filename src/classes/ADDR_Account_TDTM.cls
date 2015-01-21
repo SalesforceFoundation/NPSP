@@ -81,8 +81,10 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
                     continue;
                 // we only support address management with HH Accounts and Organizational Accounts (if enabled)
-                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
-                    (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
+                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                		!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && 
+                    	UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
 	                // if the address changed, remember the account we want to add a new address for    
 	                if (isAccountAddressChanged(acc, accOld)) 
 	                    listAccCreateAddr.add(acc);
