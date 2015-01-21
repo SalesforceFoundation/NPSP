@@ -762,6 +762,7 @@
     <members>stgBtnSave</members>
     <members>stgErrorINaming</members>
     <members>stgErrorInvalidClass</members>
+    <members>stgErrorInvalidNameFormat</members>
     <members>stgHHNameRefreshTitle</members>
     <members>stgHelpAccountModel</members>
     <members>stgHelpAlloFiscalYearRollups</members>
@@ -781,6 +782,7 @@
     <members>stgHelpContactRTExcluded</members>
     <members>stgHelpDefaultAllocationsEnabled</members>
     <members>stgHelpDefaultGAU</members>
+    <members>stgHelpDisableHHAccountAddr</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
