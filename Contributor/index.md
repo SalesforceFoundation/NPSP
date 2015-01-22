@@ -15,9 +15,7 @@ This document outlines everything you need to know to start contributing code to
     - Fork the NPSP repository
     - Set up SSH access to github
     - Copy your forked repository to your local machine
-```sh
-git clone https://github.com/SalesforceFoundation/Cumulus.git
-```
+        - ```git clone https://github.com/SalesforceFoundation/Cumulus.git```
     - Create a build.properties file at the root of your git repository, with these lines:
         ```
         sf.serverurl=https://login.salesforce.com
