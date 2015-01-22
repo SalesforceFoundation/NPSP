@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,41 +13,60 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
-* @date 2014 
+* @author Salesforce.com Foundation
+* @date 2014
 * @group Account Model Converter
-* @description Account model conversion utility main class. This class holds all conversion logic 
+* @description Account model conversion utility main class. This class holds all conversion logic
 */
 global with sharing class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject>{
 
+    /*******************************************************************************************************
+    * @description Query string set in the constructor
+    */
     public String query {get; set;}
+    /*******************************************************************************************************
+    * @description Not yet implemented mapping of fields between the old Household object and new Household Account
+    */
     public Map<String, String> fieldmap {get;set;}
+    /*******************************************************************************************************
+    * @description Field used to store the old Household Id on the Account
+    */
     public String HouseholdIdField {get;set;}
 
-    /** @description constructor for the class */
+    /*******************************************************************************************************
+    * @description Constructs the class, sets the properties
+    * @param q Query string
+    * @param hhIdField Field for Household Id from the controller
+    * @param Unimplemented map of fields to be copied
+    */
     public CONV_Account_Conversion_BATCH(String q, String hhIdField, Map<String, String> fm) {
         fieldmap = fm;
         query = q;
         HouseholdIdField = hhIdField;
     }
 
+    /*******************************************************************************************************
+    * @description Turns off the TDTM triggers and returns the query locator
+    * @param bc BatchableContext passed by the system call
+    * @return database.Querylocator
+    */
     global database.Querylocator start(Database.BatchableContext bc) {
-        
+
         //turn off all existing TDTM-related trigger operations to avoid duplicative processing
         List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
         for (Trigger_Handler__c t : [select Active__c from Trigger_Handler__c]){
@@ -59,6 +78,11 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         return Database.getQueryLocator(query);
     }
 
+    /*******************************************************************************************************
+    * @description Executes the conversion process. This method contains all of the actual conversion logic
+    * @param bc BatchableContext passed by the system call
+    * @param result Results to be processed from the query
+    */
     global void execute(Database.BatchableContext bc, Sobject[] result) {
 
         SavePoint sp = Database.setSavepoint();
@@ -85,7 +109,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             //remove hh that have existing hh accounts
             hhscope = removeHouseholdAccountsFromList(hhscope, consForUpdate);
-            //use the filtered list of accounts to remove the cons 
+            //use the filtered list of accounts to remove the cons
             consForUpdate = removeContactsWithHouseholdAccount(hhscope, consForUpdate);
 
             for (npo02__Household__c hh : hhscope){
@@ -193,7 +217,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             }
 
             for (Account a : hh2Account.values()){
-                a.Number_of_Household_Members__c = hhMemberCount.get(a.Id); 
+                a.Number_of_Household_Members__c = hhMemberCount.get(a.Id);
             }
 
             Database.update(consForUpdate, true);
@@ -221,7 +245,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             tasksForUpdate = [select WhatId from Task where WhatId IN :hhscope];
 
             for (Task t : tasksForUpdate)
-                t.WhatId = hh2Account.get(t.WhatId).Id; 
+                t.WhatId = hh2Account.get(t.WhatId).Id;
 
             Database.update(tasksForUpdate, true);
 
@@ -295,7 +319,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     }
 
                     //we do not have a household address, but the contact has one
-                    //use the contact's address as the default and do not set the override for the 
+                    //use the contact's address as the default and do not set the override for the
                     //contact
                     else if (!addressedHouseholds.containsKey(conList[0].npo02__Household__c) && cadd.hasAddress()){
                         Address__c a = new Address__c(MailingStreet__c = cadd.MailingStreet,
@@ -417,12 +441,12 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
                         if (masteraddresshash == MD5Hash){
                             addressesForInsert.put(cadd.AccountId, a);
-                            UTIL_Debug.debug('****DJH default address: ' + a);                                                
+                            UTIL_Debug.debug('****DJH default address: ' + a);
                         }
                         else {
                             addressesForInsert.put(cadd.ConId, a);
-                            UTIL_Debug.debug('****DJH not default address: ' + a); 
-                        }                                                
+                            UTIL_Debug.debug('****DJH not default address: ' + a);
+                        }
                     }
 
                     //set the household address fields to the default address values
@@ -515,7 +539,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
     }//close execute method
 
-    /** @description Finish method for the batchable class. */
+    /*******************************************************************************************************
+    * @description Cleans up after the conversion process.  Resets settings, resets TDTM records
+    * @param bc BatchableContext passed by the system call
+    */
     global void finish(Database.BatchableContext bc) {
         //restore the trigger handlers
         List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
@@ -540,7 +567,12 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         update HHSettings;
     }
 
-    //remove households that already have a household account associated
+    /*******************************************************************************************************
+    * @description Utility method to remove Households that already have Household Accounts from the batch scope
+    * @param hhList List of Households to remove from the conversion scope
+    * @param conList List of Contacts to possibly be removed
+    * @return List<npo02__Household__c>
+    */
     private List<npo02__Household__c> removeHouseholdAccountsFromList(List<npo02__Household__c> hhList, List<Contact> conList){
         Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
         for (Contact c : conList){
@@ -555,6 +587,12 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         return hhScopeMap.values();
     }
 
+    /*******************************************************************************************************
+    * @description Utility method to remove Contacts that already have Household Accounts from the batch scope
+    * @param hhList List of Households to remove from the conversion scope
+    * @param conList List of Contacts to possibly be removed
+    * @return List<Contact>
+    */
     private List<Contact> removeContactsWithHouseholdAccount(List<npo02__Household__c> hhList, List<Contact> cList){
         Map<Id, Contact> filteredMap = new Map<Id, Contact>(cList);
         Map<Id, npo02__Household__c> hhScopeMap = new Map<Id, npo02__Household__c>(hhList);
@@ -567,6 +605,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         return filteredMap.values();
     }
 
+    /*******************************************************************************************************
+    * @description Holds information about addresses.  Used for determining primacy of Contact addresses and deduplication
+    */
     public class ContactAddress{
 
         public ContactAddress(Contact c){
@@ -592,9 +633,14 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         private Blob AddressBlob;
         private String MD5;
 
+        /*******************************************************************************************************
+        * @description Compares a CONV_Account_Conversion_BATCH.ContactAddress object with the current object
+        * @param ca A ContactAddress object
+        * @return Boolean
+        */
         public Boolean isSameAddress(CONV_Account_Conversion_BATCH.ContactAddress ca){
-            if(this.MailingStreet == ca.MailingStreet && 
-               this.MailingCity == ca.MailingCity && 
+            if(this.MailingStreet == ca.MailingStreet &&
+               this.MailingCity == ca.MailingCity &&
                this.MailingState == ca.MailingState &&
                this.MailingZip == ca.MailingZip &&
                this.MailingCountry == ca.MailingCountry)
@@ -603,6 +649,11 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 return false;
         }
 
+        /*******************************************************************************************************
+        * @description Compares an Address__c object with the current object
+        * @param ca An Address__c object
+        * @return Boolean
+        */
         public Boolean isSameAddress(Address__c add){
             string strStreet = add.MailingStreet__c;
             if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0)
@@ -617,6 +668,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 return false;
         }
 
+        /*******************************************************************************************************
+        * @description Gets the MD5 hash of this addresses information. Used for equality comparisons
+        * @return String
+        */
         public String getMD5(){
             if (MD5 != null){
                 return MD5;
@@ -629,6 +684,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             }
         }
 
+        /*******************************************************************************************************
+        * @description Determines of there is an address value passed
+        * @return Boolean
+        */
         public Boolean hasAddress(){
             if(MailingStreet != null ||
                MailingCity != null ||
@@ -640,5 +699,8 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 return false;
         }
     }
+    /*******************************************************************************************************
+    * @description Thrown after the rollback when a batch fails
+    */
     public class AccountModelConversionException extends Exception {}
 }
