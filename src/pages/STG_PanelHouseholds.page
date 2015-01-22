@@ -328,5 +328,6 @@
             </apex:outputPanel>
 
         </apex:pageBlock>
+        <apex:pageMessages />
     </apex:form>
 </apex:page>

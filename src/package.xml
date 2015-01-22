@@ -495,6 +495,7 @@
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
     <members>Trigger_Handler__c.User_Managed__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
@@ -761,6 +762,7 @@
     <members>stgBtnSave</members>
     <members>stgErrorINaming</members>
     <members>stgErrorInvalidClass</members>
+    <members>stgErrorInvalidNameFormat</members>
     <members>stgHHNameRefreshTitle</members>
     <members>stgHelpAccountModel</members>
     <members>stgHelpAlloFiscalYearRollups</members>
@@ -780,6 +782,7 @@
     <members>stgHelpContactRTExcluded</members>
     <members>stgHelpDefaultAllocationsEnabled</members>
     <members>stgHelpDefaultGAU</members>
+    <members>stgHelpDisableHHAccountAddr</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
