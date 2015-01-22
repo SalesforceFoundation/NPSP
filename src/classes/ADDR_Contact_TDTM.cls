@@ -55,6 +55,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         map<Id, boolean> mapAddrIdIsOverride = new map<Id, boolean>();
         list<Contact> listConAddrReset = new list<Contact>();
         Map<Id,Account> mapAccountIdAccount = null;
+        
+		// bail out if address mgmt turned off.
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
+        	return dmlWrapper;
                 
         // Rules:
         // inserting new contact - make their address a new default address, unless they say it is an override
