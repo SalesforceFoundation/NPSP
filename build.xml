@@ -1,4 +1,4 @@
-<project default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
+<project name="Cumulus" default="deploy" basedir="." xmlns:sf="antlib:com.salesforce">
     <!-- Load the package requirements from version.properties -->
     <loadproperties srcFile="${basedir}/version.properties"/>
 

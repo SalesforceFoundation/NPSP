@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,29 +13,33 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
-* @date 2014 
+* @author Salesforce.com Foundation
+* @date 2014
 * @group Account Model Converter
-* @description Test class to support the Account model conversion utility controller  
+* @group-content ../../ApexDocContent/Conv.htm
+* @description Test class to support the Account model conversion utility controller
 */
 
 @isTest
 public with sharing class CONV_Account_Conversion_CTRL_TEST {
+    /*******************************************************************************************************
+    * @description Envokes a successful run of the controller
+    */
     public static testmethod void testConversionCtrl() {
 
         //set account model to 1:1 for the test and enable household creation
@@ -54,9 +58,9 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         Test.startTest();
 
-        // create the page 
-        PageReference pageRef=Page.CONV_Account_Conversion; 
-        Test.setCurrentPage(pageRef); 
+        // create the page
+        PageReference pageRef=Page.CONV_Account_Conversion;
+        Test.setCurrentPage(pageRef);
 
         // instantiate the controller
         CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
@@ -80,16 +84,18 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         testBool = CONV_Account_Conversion_CTRL.verifyFieldTypeForIds('Name');
         system.assert(testBool);
     }
-
+    /*******************************************************************************************************
+    * @description Envokes the controller and triggers an error state
+    */
     public static testMethod void testConversionCTRLErrorState(){
 
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
         //create a new user w/ sysadmin profile
         Id sysadminId = [select id from Profile where Name = 'System Administrator' limit 1].Id;
-        User u = new User(LastName = 'TestUser', Email = 'UserEmail@email.com', ProfileId = sysadminId, 
+        User u = new User(LastName = 'TestUser', Email = 'UserEmail@email.com', ProfileId = sysadminId,
                             isActive = true, UserName = 'UserEmail@email.com',
-                            Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles', 
+                            Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
                             LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
                             EmailEncodingKey = 'ISO-8859-1');
         insert u;
@@ -122,9 +128,9 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             u.isActive = false;
             update u;
 
-            // create the page 
-            PageReference pageRef=Page.CONV_Account_Conversion; 
-            Test.setCurrentPage(pageRef); 
+            // create the page
+            PageReference pageRef=Page.CONV_Account_Conversion;
+            Test.setCurrentPage(pageRef);
 
             // instantiate the controller
             CONV_Account_Conversion_CTRL controller = new CONV_Account_Conversion_CTRL();
