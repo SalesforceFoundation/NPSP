@@ -17,11 +17,9 @@ This document outlines everything you need to know to start contributing code to
     - Copy your forked repository to your local machine
         - ```git clone https://github.com/SalesforceFoundation/Cumulus.git```
     - Create a build.properties file at the root of your git repository, with these lines:
-        ```
-        sf.serverurl=https://login.salesforce.com
-        sf.username=your_de_login@salesforce.com
-        sf.password=passwordAndSecurityToken
-        ```
+        - ```sf.serverurl=https://login.salesforce.com
+        - sf.username=your_de_login@salesforce.com
+        - sf.password=passwordAndSecurityToken```
 2.  [Set up Salesforce Developer Edition](Contributor/Developer-Edition-Salesforce-Instance.html)
     - Create a new Salesforce Developer Edition organization
     - Create the Cumulus Unmanaged Package
