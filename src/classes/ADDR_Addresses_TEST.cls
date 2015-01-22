@@ -2124,4 +2124,44 @@ private with sharing class ADDR_Addresses_TEST {
             system.assertEquals(null, con.MailingCity);
         }
     }
+
+    /*********************************************************************************************************
+    operation:
+        create N contacts with Household Accounts when the setting for Address Mgmt is off. 
+    verify:
+        no Address objects created
+        HH Account addresses set
+        Contact addresses set
+    **********************************************************************************************************/            
+    static testMethod void testDisabledHHAccountAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'testDisabledHHAccountAddr') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Household_Account_Addresses_Disabled__c = true
+        ));
+ 
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
+        for (Contact con : listConT) {
+            con.MailingStreet = 'new street';
+            con.MailingCity = 'new city';
+        }
+        insert listConT;        
+
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertEquals(null, con.Current_Address__c);
+        }
+        
+        // verify no address objects created
+        list<Address__c> listAddr = [select Id from Address__c];
+        system.assertEquals(0, listAddr.size());
+    }
 }
