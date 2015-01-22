@@ -192,6 +192,30 @@
         <value>Verification required</value>
     </labels>
     <labels>
+        <fullName>Addr_Verification_Undefined_Class</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No address verification class defined</shortDescription>
+        <value>Address verification class not defined in the settings. Cannot perform address verification.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Wrong_Class</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Wrong address verification class</shortDescription>
+        <value>No class with the specified name exists. Cannot perform address verification.</value>
+    </labels>
+    <labels>
+        <fullName>Addr_Verification_Wrong_Interface</fullName>
+        <categories>address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Wrong address verification interface</shortDescription>
+        <value>The address validation class does not implement the required interface. Cannot perform address verification.</value>
+    </labels>
+    <labels>
         <fullName>Addr_Verified</fullName>
         <categories>address, verification</categories>
         <language>en_US</language>

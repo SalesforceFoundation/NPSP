@@ -75,18 +75,14 @@ public with sharing class ADDR_Validator {
 	                        //updating the addresses with the verified version
 	                        update validator.verifyRecords(avList, settings);
 	                    } else {
-	                        ERR_Handler.processError(new ValidationException(
-	                           'The address validation class does not implement the required interface.'), 
-	                           ERR_Handler_API.Context.ADDR);
+	                        ERR_Handler.processError(new ValidationException(Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
 	                    }
 	                } else {
-	                    ERR_Handler.processError(new ValidationException('No class named ' + classToRunName + ' exists.'), 
-                            ERR_Handler_API.Context.ADDR);
+	                    ERR_Handler.processError(new ValidationException(Addr_Verification_Wrong_Class), ERR_Handler_API.Context.ADDR);
 	                }
                 }
             } else {
-                ERR_Handler.processError(new ValidationException('Address validation class not defined in the settings.'), 
-                     ERR_Handler_API.Context.ADDR);
+                ERR_Handler.processError(new ValidationException(Addr_Verification_Undefined_Class), ERR_Handler_API.Context.ADDR);
             }
         }
     }
