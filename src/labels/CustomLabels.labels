@@ -2070,6 +2070,14 @@
         <value>Invalid Implementing Class.</value>
     </labels>
     <labels>
+        <fullName>stgErrorInvalidNameFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgErrorInvalidNameFormat</shortDescription>
+        <value>Error in {0}: {1}</value>
+    </labels>
+    <labels>
         <fullName>stgHHNameRefreshTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2227,6 +2235,14 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <protected>false</protected>
         <shortDescription>stgHelpDefaultGAU</shortDescription>
         <value>Default General Accounting Unit for default allocation of unallocated Opportunities, and remainders of partially allocated Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpDisableHHAccountAddr</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpDisableHHAccountAddr</shortDescription>
+        <value>Disables Address management for Household Accounts when selected.</value>
     </labels>
     <labels>
         <fullName>stgHelpEnableSoftCreditRollups</fullName>

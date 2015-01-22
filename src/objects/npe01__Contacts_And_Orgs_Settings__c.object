@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>Household_Account_Addresses_Disabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Disables Address management for Household Accounts when selected.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Disables Address management for Household Accounts when selected.</inlineHelpText>
+        <label>Household Account Addresses Disabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Max_Payments__c</fullName>
         <defaultValue>12</defaultValue>
         <description>Determines the maximum number of payments available in the Payment Creation Wizard.</description>
