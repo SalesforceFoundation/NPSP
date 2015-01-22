@@ -140,12 +140,13 @@ public with sharing class RD_RecurringDonations {
                 //if this is the closed set of opps    
                 else if (isClosed == true && isWon == true) {
                     rd.npe03__Last_Payment_Date__c = (date)obj.get('MaxDate');
-                    rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');
 
                     //convert rollup total to RD's currency
-                    if (isMultiCurrency)
-                        rd.npe03__Paid_Amount__c = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)rd.get(RDCurrencyField), rd.npe03__Paid_Amount__c);
-                    
+                    if (RLLP_OppRollup_UTIL.isMultiCurrency())
+                        rd.npe03__Paid_Amount__c = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)rd.get(RDCurrencyField), (decimal)obj.get('Total'));
+                    else
+                        rd.npe03__Paid_Amount__c = (decimal)obj.get('Total');
+
                     rd.npe03__Total_Paid_Installments__c = (integer)obj.get('oppcount');
                     updateMap.put(rdid, rd);                        
                 }                   
