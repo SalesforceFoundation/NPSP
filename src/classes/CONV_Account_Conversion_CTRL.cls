@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,49 +13,74 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permissio
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.com Foundation 
-* @date 2014 
+* @author Salesforce.com Foundation
+* @date 2014
 * @group Account Model Converter
-* @description The controller for the VF page invoked by using the bulk Account model conversion utility.  This controller handles basic logic for checking the user setup and any invalid states prior to allowing the utility to run.  
+* @description The controller for the VF page invoked by using the bulk Account model conversion utility.  This controller handles basic logic for checking the user setup and any invalid states prior to allowing the utility to run.
 */
 
 public with sharing class CONV_Account_Conversion_CTRL {
 
-    // properties for page
-    public Boolean batching { get; set; }
+    /*******************************************************************************************************
+    * @description Set to true before the batch job is envoked
+    */
     public Boolean batchRunning { get; set; }
+    /*******************************************************************************************************
+    * @description Bound to the picklist for selecting field for storing the original Household Id
+    */
     public String AccountHouseholdIdField {get;set;}
-    public Map<String, String> copyFieldSet {get;set;}
+    /*******************************************************************************************************
+    * @description Determines if the page is rendered displaying an error state
+    */
     public Boolean runCheckErrorState {get;set;}
+    /*******************************************************************************************************
+    * @description List of select options displayed to the user when choosing AccountHouseholdIdField field
+    */
     public List<SelectOption> targetAccountfields = new list<SelectOption>();
+    /*******************************************************************************************************
+    * @description List of async jobs to show progress to the user as job is being run
+    */
     private List<AsyncApexJob> aaj = new List<AsyncApexJob>();
+    /*******************************************************************************************************
+    * @description Displays a job to the user as the progress meter
+    */
     public AsyncApexJob apexjob {get{
             if (aaj.isEmpty())
-                aaj = [select a.Id, a.TotalJobItems, a.Status, a.NumberOfErrors, 
-                                a.JobType, a.JobItemsProcessed, a.ExtendedStatus, 
-                                a.CompletedDate, a.ApexClassId From AsyncApexJob a 
-                                where (a.Status = 'Completed' or a.Status = 'Aborted' or a.Status = 'Failed') and a.JobType = 'BatchApex' 
+                aaj = [select a.Id, a.TotalJobItems, a.Status, a.NumberOfErrors,
+                                a.JobType, a.JobItemsProcessed, a.ExtendedStatus,
+                                a.CompletedDate, a.ApexClassId From AsyncApexJob a
+                                where (a.Status = 'Completed' or a.Status = 'Aborted' or a.Status = 'Failed') and a.JobType = 'BatchApex'
                                 order by CompletedDate desc limit 1];
         return !aaj.isEmpty() ? aaj[0] : null;
     }set;}
-    private Map<String, String> pageParams = new Map<String, String>();
-    private Integer scopesize = 200;
 
+    /*******************************************************************************************************
+    * @description Parameter for the page passed via URL.  Currently supports 'scopsize' only
+    */
+    private Map<String, String> pageParams = new Map<String, String>();
+    /*******************************************************************************************************
+    * @description Default scope size for the batch job. Can be overridden by passing the 'scopesize' param
+    */
+    private Integer scopesize = 200;
+    /*******************************************************************************************************
+    * @description Getter for list of possible fields to store Household Account Id displayed on the page
+    * @return List<SelectOption>
+    */
     public list<SelectOption> getTargetAccountFields(){
         targetAccountfields.clear();
         Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
@@ -82,9 +107,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
         return targetAccountfields;
     }
-
+    /*******************************************************************************************************
+    * @description Set of fields to query from the original npo02__Household__c object.  Passed to the query
+    */
     private static Set<String> HouseholdFields = new Set<String>{'Name', +
-        'npo02__TotalOppAmount__c', 'npo02__TotalMembershipOppAmount__c', 'npo02__SmallestAmount__c', + 
+        'npo02__TotalOppAmount__c', 'npo02__TotalMembershipOppAmount__c', 'npo02__SmallestAmount__c', +
         'npo02__SYSTEM_CUSTOM_NAMING__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', +
         'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastYear__c', +
         'npo02__OppAmountLastNDays__c', 'npo02__OppAmount2YearsAgo__c', 'npo02__NumberOfMembershipOpps__c', 'npo02__NumberOfClosedOpps__c', +
@@ -97,8 +124,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
         'npo02__Best_Gift_Year_Total__c', 'npo02__AverageAmount__c', 'npo02__Always_Anonymous__c', 'npo02__Addressee__c', +
         'OwnerId '
     };
+    /*******************************************************************************************************
+    * @description Set of Account fields invalid for storing the Household Account Id - helps to cull list displayed to the user
+    */
     private static Set<String> AccountFields = new Set<String>{
-        'npo02__TotalOppAmount__c', 'npo02__TotalMembershipOppAmount__c', 'npo02__SmallestAmount__c', 'npo02__SYSTEM_CUSTOM_NAMING__c', 'npo02__OppsClosedThisYear__c', + 
+        'npo02__TotalOppAmount__c', 'npo02__TotalMembershipOppAmount__c', 'npo02__SmallestAmount__c', 'npo02__SYSTEM_CUSTOM_NAMING__c', 'npo02__OppsClosedThisYear__c', +
         'npo02__OppsClosedLastYear__c', 'npo02__OppsClosedLastNDays__c', 'npo02__OppsClosed2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastYear__c', +
         'npo02__OppAmountLastNDays__c', 'npo02__OppAmount2YearsAgo__c', 'npo02__NumberOfMembershipOpps__c', 'npo02__NumberOfClosedOpps__c', 'npo02__MembershipJoinDate__c', +
         'npo02__MembershipEndDate__c', 'npo02__LastOppAmount__c', 'npo02__LastMembershipOrigin__c', 'npo02__LastMembershipLevel__c', 'npo02__LastMembershipDate__c', +
@@ -107,9 +137,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
         'npe01__One2OneContact__c', 'npe01__LifetimeDonationHistory_Number__c', 'npe01__LifetimeDonationHistory_Amount__c', 'npe01__LastDonationDate__c', 'npe01__FirstDonationDate__c'
     };
 
-    // constructor
+    /*******************************************************************************************************
+    * @description Constructs the page.  Sets defaults, gets params from URL if any
+    */
     public CONV_Account_Conversion_CTRL() {
-        batching = true;
+
         batchRunning = false;
         runCheckErrorState = false;
         pageParams = ApexPages.currentPage().getParameters();
@@ -124,6 +156,10 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Envokes the convert action when the button is pressed. Gets the query, instantiates the batch job and run executeBatch
+    * @return PageReference
+    */
     public PageReference convert() {
         try {
             batchRunning = true;
@@ -138,12 +174,20 @@ public with sharing class CONV_Account_Conversion_CTRL {
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description Sends the user back to the Home tab when the page 'cancel' button is pressed
+    * @return PageReference
+    */
     public PageReference cancel() {
         PageReference ref = new PageReference('/home/home.jsp');
         ref.setRedirect(true);
         return ref;
     }
 
+    /*******************************************************************************************************
+    * @description Creates the query for the batch job utilizing the set of Household fields
+    * @return String
+    */
     public static String getBatchQuery(){
         String query ='SELECT id';
         for (String s : CONV_Account_Conversion_CTRL.HouseholdFields)
@@ -154,6 +198,10 @@ public with sharing class CONV_Account_Conversion_CTRL {
         return query;
     }
 
+    /*******************************************************************************************************
+    * @description Checks the status of the org data when the page is envoked. Queries Contacts, Opportunities, Accounts, Tasks and
+    * Users to display warnings about existing Household Accounts, objects owned by inactive users, and record type configuration
+    */
     public void runCheck(){
         Integer HHAccountCount = 0;
         Integer ContactConnectedCount;
@@ -220,8 +268,11 @@ public with sharing class CONV_Account_Conversion_CTRL {
         }
     }
 
-    public class FieldValidationException extends Exception {}
-
+    /*******************************************************************************************************
+    * @description Tests the field selected by the user to ensure its a valid target for the Household Id
+    * @param HHField User selected Id field to check
+    * @return Boolean
+    */
     @RemoteAction
     public static Boolean verifyFieldTypeForIds(String HHField){
         Map<string, Schema.Sobjectfield> targetTokenMap = new Map<string, Schema.Sobjectfield>();
