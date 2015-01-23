@@ -9,7 +9,7 @@ This document outlines everything you need to know to start contributing code to
 
 # GIT and Initial Setup
 
-1.  [Set up git and github](Contributor/Github.html)
+1.  [Set up git and github](Github.html)
     - Create a github account
     - Fork the NPSP repository
     - Set up SSH access to github
@@ -19,7 +19,7 @@ This document outlines everything you need to know to start contributing code to
         - ```sf.serverurl=https://login.salesforce.com```
         - ```sf.username=your_de_login@salesforce.com```
         - ```sf.password=passwordAndSecurityToken```
-2.  [Set up Salesforce Developer Edition](Contributor/Developer-Edition-Salesforce-Instance.html)
+2.  [Set up Salesforce Developer Edition](Developer-Edition-Salesforce-Instance.html)
     - Create a new Salesforce Developer Edition organization
     - Create the Cumulus Unmanaged Package
         - Each time new metadata is added through the UI or created via your IDE, it must be added to the unmanaged package.
@@ -27,10 +27,10 @@ This document outlines everything you need to know to start contributing code to
     - Use ant build target to set up your DE org
         - ```ant deployCI```
 3. Set up an IDE
-    - [Force.com IDE](Contributor/Force.com-IDE-Setup.html)
-    - [Alternate IDEs](Contributor/Alternate-IDEs.html) (MavensMate, et al.)
-4. [Do the work!](Contributor/Do-the-Work.html)
-    - [ApexDoc](http://developer.salesforcefoundation.org/Cumulus/)
+    - [Force.com IDE](Force.com-IDE-Setup.html)
+    - [Alternate IDEs](Alternate-IDEs.html) (MavensMate, et al.)
+4. [Do the work!](Do-the-Work.html)
+    - [ApexDoc](http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/)
     - Coding conventions
     - TDTM
     - Error Handling
@@ -42,4 +42,4 @@ This document outlines everything you need to know to start contributing code to
         - After a pull, to update your dev environment with any changes pulled down from github:
             - ```ant updatePackageXml```
             - ```ant deployWithoutTest```
-5. [Submit the work](Contributor/Submit-Your-Feature.html)
+5. [Submit the work](Submit-Your-Feature.html)
