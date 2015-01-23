@@ -1,12 +1,3 @@
-body {
-    font-family: "ProximaNovaSoft-Regular", Calibri, "Gill Sans", "Gill Sans MT", Candara, Segoe, "Segoe UI", Arial, sans-serif;
-    font-size:100%;
-    margin:0px;
-    padding:0px;
-}
-
-/* the top page banner  */
-
 .topsection {
     background-color: #003672;
     width:100%;
@@ -20,6 +11,10 @@ body {
 }
 
 .topsection a {
+    color: white;
+}
+
+.topsection.h2 {
     color: white;
 }
 
