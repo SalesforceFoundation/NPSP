@@ -13,7 +13,7 @@ ant updatePackageXml
 
 Or use the eGit plugin like this:
 
-![commit a change using the eGit plugin](img/eclipse-egit-commit.png)
+![commit a change using the eGit plugin](img/eclipse-egit-commit.png =500x)
 
 Now we can verify our changes are correct by viewing changes in git, with commands like
 
@@ -29,11 +29,11 @@ git commit -am “Fixing #905 and some more explanatory information.”
 git push
 ```
 
-![github feature commit](img/github-feature-commit.png)
+![github feature commit](img/github-feature-commit.png =500x)
 
 # Create a Pull Request
 
-![creating a pull request in github](img/github-creating-pull-request.png)
+![creating a pull request in github](img/github-creating-pull-request.png =500x)
 
 
 
@@ -48,12 +48,12 @@ Fixed #905
 
 The purpose of the Warning section is to highlight changes that all users need to be aware of on upgrade.  These are generally rare.  The Info section should contain anything that the users should act on.  For example, if a new field was added, let the users know the field is added and they should grant permissions in profiles and add to layouts to use it.
 
-![github active pull request](img/github-active-pull-req.png)
+![github active pull request](img/github-active-pull-req.png =500x)
 
 At this point we’ll review your pull request. We may come back to you with changes, in which case you can push updates to the same github branch and they’ll be automatically included in the pull request.
 
 Once everything is hunkey dorey, we’ll approve your pull request and your changes will officially be part of NPSP! Congratulations!
 
 
-![github approve pull request](img/github-approve-pull-req.png)
-![github pull request merged](img/github-pull-req-merged.png)
+![github approve pull request](img/github-approve-pull-req.png =500x)
+![github pull request merged](img/github-pull-req-merged.png =500x)

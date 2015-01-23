@@ -12,20 +12,21 @@ Setup a new project in Eclipse.  Right click in the project pane and go to ‘Ne
 
 Enter a new project name.  
 
-![Eclipse New Project Dialog](img/eclipse-new-project.png)
+![Eclipse New Project Dialog](img/eclipse-new-project.png =500x)
 
 If your Eclipse workspace is pointed at the same location as your local git repo, you’ll be good to go.  Otherwise you may need to add version control to your project.  Its under Team -> Share Project, then ‘git’, select an existing repository.  Once you’re ready to roll, it should look something like this:
 
-![Setup Eclipse Project Example](img/eclipse-project.png)
+![Setup Eclipse Project Example](img/eclipse-project.png =500x)
 
 Now that we’ve configured our DE org and source control repositories, lets get our IDE setup to do some actual coding work.  Back over in Eclipse, right click on the project name and select ‘Add Force.com Nature’. Now’s a good time to double-check that the ‘Build Automatically’ setting is disabled in your org.
 
-![Add Force.com Nature Example](img/eclipse-add-forcecom-nature.png)
-![Properties for Cumulus Dialog](img/eclipse-properties-for-cumulus.png)
+![Add Force.com Nature Example](img/eclipse-add-forcecom-nature.png =500x)
+
+![Properties for Cumulus Dialog](img/eclipse-properties-for-cumulus.png =500x)
 
 After entering the credentials for your DE org, click apply, but make sure that you click ‘No’ when asked if you want to fetch and overwrite anything.  While the code should be pretty much identical, there are enough subtle differences (think about white spacing, order of unordered elements, etc.) to cause git to see differences when there are in fact none.
 
-![Eclipse Overwrite Components Dialog](img/eclipse-overwrite-components.png)
+![Eclipse Overwrite Components Dialog](img/eclipse-overwrite-components.png =500x)
 
 Now you can finally go back into your IDE and turn back on the Build Automatically setting.  Your Force.com IDE should now be fully configured to do some actual coding on the Nonprofit Starter Pack codebase!
 
