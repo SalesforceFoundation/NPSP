@@ -27,40 +27,24 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Batch class for opportunity household rollups. 
+* @group API
+* @group-content ../../ApexDocContent/API.htm
+* @description API class that exposes the TDTM (Table-Driven Trigger Management) configuration.
 */
-public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
-    
-    public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-            try {
-	            Database.executeBatch(this);
-	            return true;
-	        } catch(Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-            }
-        }
-        return false;
-    }
-    
-    public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
-        return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
-    }
-    
-    public void execute(Database.BatchableContext bc, List<npo02__Household__c> result) { 
-        // NOTE: we don't capture exception and log errors here, because if we don't let the 
-        // exception percolate up the call stack, then the batch will think it all succeeded.
-        // but if we were to log it, and then propagate the exception, the transaction will 
-        // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
-    }
+global with sharing class TDTM_Config_API {
 
-    public void finish(Database.BatchableContext bc) {}
+    /*******************************************************************************************************
+    * @description Returns the default TDTM configuration. 
+    * @return List<Trigger_Handler__c> a list of trigger handler records with the default values. The records
+    *         have not yet been inserted in the database. You can manipulate them, if necessary, and insert 
+    *         them. If no Trigger_Handler__c records exist, the application will insert the defaults when any 
+    *         of the NPSP triggers run. 
+    */
+    global static List<Trigger_Handler__c> getDefaultRecords() {
+        return TDTM_DefaultConfig.getDefaultRecords(); 
+    }    
 }

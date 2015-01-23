@@ -72,7 +72,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             fmNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
@@ -118,7 +118,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             }
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, null);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;

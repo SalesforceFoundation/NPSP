@@ -46,8 +46,15 @@ public without sharing class HH_HouseholdNaming {
         //and pass in our param
         //this is b/c of the public visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        hn.UpdateNames(hhids);
-        HH_ProcessControl.inFutureContext = false;
+
+        Savepoint sp = Database.setSavepoint();
+        try {
+            hn.UpdateNames(hhids);
+        } catch(Exception e) {
+        	Database.rollback(sp);
+        	ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
+        }      
+        HH_ProcessControl.inFutureContext = false;    
     }
 
     // we now want to always call UpdateNames() because it will set Number_Of_Household_Members__c, and

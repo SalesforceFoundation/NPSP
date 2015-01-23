@@ -56,7 +56,8 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void NewContactsNoAccounts() {
     	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
     	
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
+    	//Using the API class just to give it test coverage.
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettings_API.getContactsSettings();
     
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
         system.assertEquals(null, listCon[0].AccountId); 

@@ -394,7 +394,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             }
         
             catch(Exception e){
-            	ERR_Handler.processError(e, ERR_Handler.Context.STTG);            	
+            	ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);            	
                 mydad.showMsg('An unhandled exception has occurred. Please try again.',ApexPages.Severity.FATAL);
                 mydad.showMsg('Exception type' + e, ApexPages.Severity.INFO);          
             }           

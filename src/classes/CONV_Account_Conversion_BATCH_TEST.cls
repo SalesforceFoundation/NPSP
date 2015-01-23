@@ -100,7 +100,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //assert the task was ported as well
         system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        //Using the API class just to give it test coverage.
+        system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
     /*******************************************************************************************************

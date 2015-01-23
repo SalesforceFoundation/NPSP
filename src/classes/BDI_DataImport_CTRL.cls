@@ -138,7 +138,7 @@ public with sharing class BDI_DataImport_CTRL {
             // no reason to log the error if we haven't started the batch,
             // since it is just a validation error that we are displaying on the page.
             if (batchRunning)
-                ERR_Handler.processError(ex, ERR_Handler.Context.BDI);
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
         }
         return null;

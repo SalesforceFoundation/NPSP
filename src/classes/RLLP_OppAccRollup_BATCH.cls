@@ -36,8 +36,14 @@ public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<
 		
 	public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
-            Database.executeBatch(this);
-            return true;
+        	Savepoint sp = Database.setSavepoint();
+        	try {
+                Database.executeBatch(this);
+                return true;
+        	} catch(Exception e) {
+	            Database.rollback(sp);
+	            ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
+	        }
         }
         return false;
     }
