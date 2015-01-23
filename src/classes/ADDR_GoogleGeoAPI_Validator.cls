@@ -88,11 +88,13 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             req.setHeader('Accept','application/json');
             req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN);
             try{
+            	UTIL_Debug.debug('****Request body: \n' + req);
                 response = h.send(req);
+                UTIL_Debug.debug('****Response body: \n' + response.getBody());
             } catch (Exception e){
                 a.Verified__c = false;
                 a.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
-                ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
                 a.Verification_Status__c = e.getMessage();
             }
 
@@ -103,7 +105,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }catch (Exception e){
                     a.Verified__c = false;
                     a.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
-                    ERR_Handler.processError(e, ERR_Handler.Context.ADDR);
+                    ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
                     a.Verification_Status__c = e.getMessage();
                 }
 

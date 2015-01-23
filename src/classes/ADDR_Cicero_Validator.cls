@@ -185,7 +185,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	        addr.Verified__c = false;
 	        addr.API_Response__c = ex.getMessage();
 	        addr.Verification_Status__c = addr.API_Response__c; 
-            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
         }
         return addr;
     }

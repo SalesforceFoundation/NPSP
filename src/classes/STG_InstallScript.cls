@@ -55,7 +55,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             }
         } catch(Exception e) {
             ERR_Notifier.sendEmailOnInstallError(e, context);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             //We won't rethrow the exception, to avoid package failure installation due to install script error
        }
     }

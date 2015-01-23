@@ -27,6 +27,13 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
+               settings and the new ones. 
+*/
 public with sharing class TDTM_TriggerHandler {
 
     // a public flag to allow code to specify that they want errors propogated from the trigger
@@ -43,10 +50,10 @@ public with sharing class TDTM_TriggerHandler {
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
     	if(newList != null)
     	   UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
-    	/** This solves the problem of not being able to save error records if everything gets rolled back. 
-        TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
-        DML operations. It also takes care of rolling everything back in that case, just so there are no 
-        issues (side effects) with re-entrant flags. **/
+    	// This solves the problem of not being able to save error records if everything gets rolled back. 
+        // TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
+        // DML operations. It also takes care of rolling everything back in that case, just so there are no 
+        // issues (side effects) with re-entrant flags.
     	Savepoint sp = Database.setSavepoint();
     	
     	try {
@@ -56,15 +63,15 @@ public with sharing class TDTM_TriggerHandler {
         
 	        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 	        
-	        //If there are no records insert the defaults.
+	        // If there are no records, insert the defaults.
 	        if(!defaultRecordsInserted && dao.isEmpty()) {
 	        	List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
 	        	insert defaultConfig;
 	        	defaultRecordsInserted = true;
 	        }
 	        
-	        //Get the classes to run
-            // note that we are using the local object name, so it works for objects from Cumulus both in the package and unmanaged dev orgs.
+	        // Get the classes to run. Note that we are using the local object name, so it works for objects 
+	        // from Cumulus both in the package and unmanaged dev orgs.
 	        List<SObject> classesToCall = dao.getclassesToCallForObject(describeObj.getLocalName(), thisAction);
 	        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 	        
@@ -94,15 +101,16 @@ public with sharing class TDTM_TriggerHandler {
 	    	UTIL_Debug.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+                //Store error record and send error email notification
+                ERR_Handler.processError(e, ERR_Handler_API.Context.TDTM);
             } else { // re-throwing exception if error handling is disabled 
             	throw e;
             }
-            /** We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
-            for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
-            will be rolled back by the platform, and our error record won't be saved or error notifications sent. **/ 
+            // We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
+            // for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
+            // will be rolled back by the platform, and our error record won't be saved or error notifications sent.
             
-            // some code may want the DML to be rolled back!  eg, an Address object update, than then needs
+            // Some code may want the DML to be rolled back!  eg, an Address object update, than then needs
             // to propogate to the household account and contacts, but may fail due to State & Country picklists.
             // we don't know which object on the list caused the problem, so we just add the error to the first.
             // this should cause the ui to display one error message, rather than repeating the same error for each object.
@@ -173,8 +181,6 @@ public with sharing class TDTM_TriggerHandler {
     
     //We want this method to be static so that it can be called from the future method in TDTM_Runnable
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
-    	ERR_Handler errorHandler = new ERR_Handler();
-
         //Create transaction
         Savepoint sp = Database.setSavepoint();
         
@@ -191,7 +197,7 @@ public with sharing class TDTM_TriggerHandler {
         //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
         
-        //Not yet using this one, as far as I know, but no reason not to support them
+        //Not yet using this one, as far as I know, but no reason not to support it.
         //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
         List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
         
@@ -199,16 +205,15 @@ public with sharing class TDTM_TriggerHandler {
         //Also, should we support Database.merge?
         
         //Process the results
-        // if isPropogateErrorsFromTrigger == true, processResults will throw an exception instead of returning failure.
-        Boolean errorsExist = errorHandler.processResults(insertResults, updateResults, deleteResults, undeleteResults, 
+        // if isPropogateErrorsFromTrigger == true, getErrors will throw an exception instead of returning the errors.
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
-            dmlWrapper.objectsToUndelete, ERR_Handler.Context.TDTM);
+            dmlWrapper.objectsToUndelete);
             
-        if(errorsExist) {
-        	UTIL_Debug.debug(LoggingLevel.WARN, '****Error found when processing DML');
+        if(errors.errorsExist) {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
-                errorHandler.storeErrors();
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.TDTM.name());
             }
         }
     }

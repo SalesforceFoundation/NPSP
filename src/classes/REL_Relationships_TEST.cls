@@ -47,7 +47,7 @@ private class REL_Relationships_TEST {
     private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs){
         
         //set running user to avoid dml issue            
-        System.runAs(new User(id = UserInfo.getUserId())){ 
+        System.runAs(new User(id = UserInfo.getUserId())){
                      
             if (rs != null)
                 UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(rs);
@@ -569,18 +569,21 @@ private class REL_Relationships_TEST {
         };
         Database.SaveResult[] insertResults = Database.insert(relationships, false);
         //assert an error - Required fields are missing: [npe4__Contact__c]
+        //npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
         system.assertEquals(1, [select count() from Error__c]);
         
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
-        Database.SaveResult[] updateResults = Database.update(relationships, false);
-        UTIL_Debug.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
+        Database.SaveResult[] updateResults = Database.update(relationships, false);   
+        system.assertNotEquals(null, relationships[0].npe4__Contact__c);
         
-        //process error
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
-        UTIL_Debug.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
-        //no additional error was created on update
+        //get errors
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
+        //we still get an error, because of the Related_Contact_Do_Not_Change validation rule on Relationship
+        system.assertEquals(true, errors.errorsExist);
+        system.assertEquals(1, errors.errorRecords.size());
+
+        //assert no additional error record was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }
     
@@ -589,7 +592,7 @@ private class REL_Relationships_TEST {
     	
         setupRelationshipTestData(null);
         
-        ERR_Handler.processError(new MyException('TestException'), ERR_Handler.Context.REL);
+        ERR_Handler.processError(new MyException('TestException'), ERR_Handler_API.Context.REL);
         List<Error__c> errors = [select Full_Message__c from Error__c];
         System.assertEquals(1, errors.size());
         System.assertEquals('TestException', errors[0].Full_Message__c);       

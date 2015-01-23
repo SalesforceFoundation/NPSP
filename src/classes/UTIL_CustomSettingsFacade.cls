@@ -349,7 +349,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c rds) {
         //if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its 
         //the only field w/o a default defined
-        if (rds.npe03__Open_Opportunity_Behavior__c == null){          
+        if (rds.npe03__Open_Opportunity_Behavior__c == null) {
             rds.npe03__Add_Campaign_to_All_Opportunites__c = true;
             rds.npe03__Enable_Update_Check__c = true;
             //rds.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting

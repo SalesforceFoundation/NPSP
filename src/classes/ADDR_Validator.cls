@@ -55,6 +55,8 @@ public with sharing class ADDR_Validator {
         verifyAddressRecords(avList);
     }
     
+    private class ValidationException extends Exception {}
+    
     //we separate it from the query so that we can call it also from the batch process
     public static void verifyAddressRecords(List<Address__c> avList) {
     	if (!avList.isEmpty()) {
@@ -73,14 +75,14 @@ public with sharing class ADDR_Validator {
 	                        //updating the addresses with the verified version
 	                        update validator.verifyRecords(avList, settings);
 	                    } else {
-	                        UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+	                        ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
 	                    }
 	                } else {
-	                    UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
+	                    ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Class), ERR_Handler_API.Context.ADDR);
 	                }
                 }
             } else {
-                UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
+                ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Undefined_Class), ERR_Handler_API.Context.ADDR);
             }
         }
     }
