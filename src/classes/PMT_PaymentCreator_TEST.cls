@@ -61,6 +61,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             Name='Test Account'
         );
         insert acct;
+        		list<Opportunity> testOppList = new list<Opportunity>();
         Opportunity opp1 = new Opportunity (
             Name='Test Opp',
             AccountId = acct.id,
@@ -68,7 +69,23 @@ private with sharing class PMT_PaymentCreator_TEST {
             CloseDate = date.today(), 
             StageName = 'Closed Won'
         );
-        insert opp1;
+        testOppList.add(opp1);
+        Opportunity opp2 = new Opportunity (
+            Name='Test Opp_noAmount',
+            AccountId = acct.id,
+        //    Amount = 150, for this test case the amount should be NULL   BUG #1285
+            CloseDate = date.today(), 
+            StageName = 'Qualification'
+        );
+		testOppList.add(opp2);
+		insert(testOppList);
+        //at this moment no payments should have been created for opp2, cause amount is null BUG #1285
+        system.assertEquals(0, [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp2.Id].size());
+		opp2.amount = 150;
+		update(opp2);
+        //at this moment payments should have been created for opp2, cause amount is changed to >0 BUG #1285
+        system.assertEquals(1, [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp2.Id].size());
+
         
         npe01__OppPayment__c[] opmtUpdate = [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
         opmtUpdate[0].npe01__payment_amount__c = 50;
