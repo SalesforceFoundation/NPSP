@@ -27,40 +27,60 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Batch class for opportunity household rollups. 
+* @group API
+* @group-content ../../ApexDocContent/API.htm
+* @description API class that exposes error handling.
 */
-public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
+global with sharing class ERR_Handler_API {
     
-    public Boolean executeReturnStatus() {
-        if(UTIL_JobScheduler.canRunBatch()) {
-        	Savepoint sp = Database.setSavepoint();
-            try {
-	            Database.executeBatch(this);
-	            return true;
-	        } catch(Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
-            }
-        }
-        return false;
+    global enum Context {
+    	/* @description Address context. */
+	    ADDR, 
+	    /* @description Affiliations context. */
+	    AFFL, 
+	    /* @description Allocations context. */
+	    ALLO, 
+	    /* @description Batch Data Entry context. */
+	    BDE, 
+	    /* @description Batch Data Import context. */
+	    BDI, 
+	    /* @description Contacts context. */
+	    CON, 
+	    /* @description Account Conversion context. */
+	    CONV, 
+	    /* @description Households context. */
+	    HH, 
+	    /* @description Lead Conversion context. */
+	    LD, 
+	    /* @description Opportunities context. */
+	    OPP, 
+	    /* @description Payments context. */
+	    PMT, 
+	    /* @description Relationships context. */
+	    REL, 
+	    /* @description Recurring Donations context. */
+	    RD,  
+	    /* @description Rollups context. */
+	    RLLP, 
+	    /* @description Schedulable context. */
+	    SCH, 
+	    /* @description Settings context. */
+	    STTG, 
+	    /* @description Table-Driven Trigger Management context. */
+	    TDTM
     }
-    
-    public database.Querylocator start(Database.BatchableContext bc) {
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
-        return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
+     
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
+    */
+    global static void processError(Exception e, String context) {
+        ERR_Handler.processError(e, context);
     }
-    
-    public void execute(Database.BatchableContext bc, List<npo02__Household__c> result) { 
-        // NOTE: we don't capture exception and log errors here, because if we don't let the 
-        // exception percolate up the call stack, then the batch will think it all succeeded.
-        // but if we were to log it, and then propagate the exception, the transaction will 
-        // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
-    }
-
-    public void finish(Database.BatchableContext bc) {}
 }

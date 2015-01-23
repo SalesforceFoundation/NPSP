@@ -77,7 +77,7 @@ public class RD_RecurringDonations_TEST {
         try {
             insert r0;
         } catch (Exception e) {
-            ERR_Handler.processError(e, r0, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
         //insert should fail because there is no Contact
         system.assertEquals(null,r0.id);
@@ -253,7 +253,7 @@ public class RD_RecurringDonations_TEST {
         try{
             delete r2;
         } catch (exception e1) {
-            ERR_Handler.processError(e1, r2, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e1, ERR_Handler_API.Context.RD);
         }
         
         //delete should have failed
@@ -302,11 +302,12 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.label.npe03.RecurringDonationContactRole,installmentCRs[0].Role);
     }
     
-    static testMethod void testSettingsCreation(){
+    static testMethod void testSettingsCreation() {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsCreation') return;
 
         delete [select id from npe03__Recurring_Donations_Settings__c];
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        //Using the API class just to give it test coverage.
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettings_API.getRecurringDonationsSettings();
         system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(50, rds.npe03__Maximum_Donations__c);
         system.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           
@@ -1494,11 +1495,13 @@ public class RD_RecurringDonations_TEST {
         }
         //invalidate one opp        
         olist[0].Name = null;
+        //insert all opps
         Database.saveresult[] lsr = Database.insert(olist, false);
-        list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
-        //run it using bulk setup
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+        //process the DML results
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(lsr, olist);
+        //check for errors
+        System.assertEquals(true, errors.errorsExist);
+        System.assertEquals(1, errors.errorRecords.size());
     }
     
     static testMethod void testErrorHandlingUser(){
@@ -1535,11 +1538,13 @@ public class RD_RecurringDonations_TEST {
         }
         //invalidate one opp        
         olist[0].Name = null;
-        Database.saveresult[] lsr = Database.insert(olist, false);
-        list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
-        
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+        //perform DML
+        Database.saveresult[] lsr = Database.insert(olist, false); 
+        //process the DML results
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(lsr, olist);
+        //check for errors
+        System.assertEquals(true, errors.errorsExist);
+        System.assertEquals(1, errors.errorRecords.size());
     }
     
     static testMethod void testErrorHandlingPublicGroup(){
@@ -1578,11 +1583,13 @@ public class RD_RecurringDonations_TEST {
         }
         //invalidate one opp        
         olist[0].Name = null;
-        Database.saveresult[] lsr = Database.insert(olist, false);
-        list<Opportunity> badOpps = new list<Opportunity>{olist[0]};
-        
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processInsertResults(lsr, badOpps, ERR_Handler.Context.RD);
+       //perform DML
+        Database.saveresult[] lsr = Database.insert(olist, false); 
+        //process the DML results
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(lsr, olist);
+        //check for errors
+        System.assertEquals(true, errors.errorsExist);
+        System.assertEquals(1, errors.errorRecords.size());
     }     
 
     //--------------------TEST METHOD from RD_RecurringDonations_BATCH -----------------------

@@ -241,7 +241,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             return new PageReference('/' + lcr.getContactId());                  
     	} catch (exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.LD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.LD);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

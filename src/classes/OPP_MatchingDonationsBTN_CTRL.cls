@@ -98,7 +98,7 @@ public with sharing class OPP_MatchingDonationsBTN_CTRL {
             return pageRef;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.OPP);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.OPP);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

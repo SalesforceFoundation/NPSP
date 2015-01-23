@@ -126,58 +126,6 @@ public class AFFL_Affiliations_TEST {
         
         system.assertEquals(0, createdAffiliations.size());    
     }
-
-
-    /// <name> newContactOnOrgAccount </name>
-    /// <summary> test creation of affiliation for contact on an Org account </summary>
-    /****  A NEW VERSION CREATED WITH ONLY TWO EXECUTION CONTEXTS (ONE BEFORE STARTTEST AND ONE AFTER) - See below
-    static testMethod void contactWithMultipleAffiliations() {
-        
-        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
-            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
-        
-        Account acc = new Account(Name='test77');
-        insert acc;
-        
-        Account acc2 = new Account(Name='test88');
-        insert acc2;
-        
-        Account acc3 = new Account(Name='test99');
-        insert acc3;
-        
-        Contact con = getContact(acc.ID, 'CEO');
-        insert con;
-        
-        npe5__Affiliation__c[] createdAffiliations = [select id from npe5__Affiliation__c where npe5__Contact__c=:con.id 
-                                                        AND npe5__Organization__c = :acc.id];
-        Id firstAffiliationId = createdAffiliations[0].Id;
-        //@TODO: no assertion here?
-        
-        Test.startTest();
-        con.AccountId = acc2.id;
-        update con;
-        Test.stopTest();
-          
-        npe5__Affiliation__c[] createdAffiliations2 = [select id from npe5__Affiliation__c where npe5__Contact__c=:con.id 
-                                                        AND npe5__Organization__c = :acc2.id];   
-        Id secondAffiliationId = createdAffiliations2[0].id;
-        
-        con.AccountId = acc3.id;
-
-        update con;
-        
-        npe5__Affiliation__c[] createdAffiliations3 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, 
-            npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc3.id];
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations3[0].npe5__Status__c);
-        
-        createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
-            npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc.id];
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
-        
-        createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
-            npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations2[0].npe5__Status__c);        
-    }*/
     
     //Modifying the test above to have only two DMLs, one before StartTest and one after
     static testMethod void contactWithMultipleAffiliations_v2() {

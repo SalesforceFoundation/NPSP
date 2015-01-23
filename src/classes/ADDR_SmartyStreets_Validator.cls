@@ -166,7 +166,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                av.Verified__c = false;
 	                av.API_Response__c = ex.getMessage();
 	                av.Verification_Status__c = ex.getMessage();
-	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
+	                ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
 	            }
 	        }
         }
@@ -246,9 +246,9 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                av.Verified__c = false;
 	                av.API_Response__c = ex.getMessage();
 	                av.Verification_Status__c = Label.Zip_Not_Found;
-	                ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
+	                ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
 	            }
-	            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
+	            ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
 	        }
         }
         return avList;

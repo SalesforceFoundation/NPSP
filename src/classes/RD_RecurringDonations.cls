@@ -69,9 +69,17 @@ public with sharing class RD_RecurringDonations {
     /*** BEGIN STATIC METHODS ***/    
     
     @future
-    public static void updateRecurringDonationOnOppChangeFuture(set<id> RDids){updateRecurringDonationOnOppChange(RDids, null);} 
-    public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){
-  
+    public static void updateRecurringDonationOnOppChangeFuture(set<id> RDids){
+        Savepoint sp = Database.setSavepoint();
+        try {
+            updateRecurringDonationOnOppChange(RDids, null);
+        } catch(Exception e) {
+        	Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
+        }
+    } 
+    
+    public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){   
         //set of RDs to be updated         
         map<id, npe03__Recurring_Donation__c> updateMap = new map<id, npe03__Recurring_Donation__c>();
         
@@ -209,11 +217,17 @@ public with sharing class RD_RecurringDonations {
      
     //future wrapper for rds with no opptys closed
     @future
-    public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids){
-        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
-
-        list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
-        insertOppsOnRecurringDonationInsert(reclist);
+    public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids) {
+        Savepoint sp = Database.setSavepoint();
+        try {
+	        delete [select id from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id IN :recids];
+	
+	        list<npe03__Recurring_Donation__c> reclist = requeryListRD(recids);
+	        insertOppsOnRecurringDonationInsert(reclist);
+        } catch(Exception e) {
+        	Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
+        }
     }
     
     //Creates new Opportunities when a RecurringDonation is inserted
@@ -504,8 +518,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()) {
-            	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
+                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }            
             
             if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
@@ -517,7 +531,16 @@ public with sharing class RD_RecurringDonations {
     
     //async wrapper for oppcontact role creation
     @future 
-    public static void oppContactRolesFuture(set<id> oppIds){oppContactRoles(oppIds);}
+    public static void oppContactRolesFuture(set<id> oppIds){
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+    	   oppContactRoles(oppIds);
+    	} catch(Exception e) {
+    	   Database.rollback(sp);
+           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
+        }
+    }
+    
     public static void oppContactRoles( Set<Id> oppIds ){
         List<OpportunityContactRole> contactRoleInserts = new List<OpportunityContactRole>();
         map <String,Id> contactOppToContactRole = new Map <String,Id> ();
@@ -565,7 +588,16 @@ public with sharing class RD_RecurringDonations {
     
     //updates opps that are part of a recurring donation that was updated
     @future
-    public static void updateExistingOppsFuture(set<id>recIDs){updateExistingOpps(recIDs, null);}
+    public static void updateExistingOppsFuture(set<id>recIDs){
+    	Savepoint sp = Database.setSavepoint();
+    	try {
+    	   updateExistingOpps(recIDs, null);
+    	} catch(Exception e) {
+    	   Database.rollback(sp);
+           ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
+        }
+    }
+    
     public static void updateExistingOpps(set<id> recIDs, TDTM_Runnable.DmlWrapper dmlWrapper){
         
         
@@ -895,8 +927,8 @@ public with sharing class RD_RecurringDonations {
             }
             
             if (!badSRs.isEmpty()){
-            	ERR_Handler errorHandler = new ERR_Handler();
-                errorHandler.processInsertResults(badSRs, badOpps, ERR_Handler.Context.RD);
+                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }
         }
         

@@ -27,174 +27,179 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Helps to determine if errors occurred during the DML operations, and with the necessary
+               storing and notification of these errors. 
+*/
 public with sharing class ERR_Handler {
     
-    private List<Error__c> errors = new List<Error__c>();
-   
-    public enum Context {AFFL, ALLO, BDE, CON, CONV, HH, LD, OPP, PMT, REL, RD, RLLP, STTG, TDTM, SCH, ADDR, BDI}
-        
-    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
+    /*******************************************************************************************************
+    * @description Inner class that groups the result of processing the result of multiple DML operations performed
+    *              using the Database class.
+    */
+    public class Errors {
+    	/*
+        * @description True if errors occurred in one of the DML operations. False otherwise.
+        */
+    	public Boolean errorsExist = false;
+        /*
+        * @description Error records.
+        */
+    	public List<Error__c> errorRecords = new List<Error__c>();
+    }
+    
+    
+    /*******************************************************************************************************
+    * @description Processes the result of multiple DML operations performed using the Database class, to determine 
+    *              if errors occurred. It does not store errors or send error email notifications. These operations
+    *              should be performed after the rollback.
+    *
+    * @param insertResults The result of a Database.Insert operation.
+    * @param updateResults The result of a Database.Update operation.
+    * @param deleteResults The result of a Database.Delete operation.
+    * @param undeleteResults The result of a Database.Undelete operation.
+    * @param insertedObjects Objects that were inserted in the Database.Insert operation.
+    * @param updatedObjects Objects that were updated in the Database.Update operation.
+    * @param deletedObjects Objects that were deleted in the Database.Delete operation.
+    * @param undeletedObjects Objects that were Undeleted in the Database.Undelete operation.
+    *
+    * @return Errors Combined result of all the DML operations.
+    */
+    public static Errors getErrors(
+    List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
     List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
-    List<SObject> objectsToDelete, List<SObject> objectsToUndelete) {
-    	
-    	return processResults(insertResults, updateResults, deleteResults, undeleteResults, objectsToInsert, objectsToUpdate, 
-    	               objectsToDelete, objectsToUndelete, null);
-    }
-    
-    public Boolean processInsertResults(List<Database.SaveResult> insertResults, List<SObject> objectsToInsert, 
-    ERR_Handler.Context context) {
-    	return processResults(insertResults, null, null, null, objectsToInsert, null, null, null, context);
-    }
-    
-    public Boolean processUpdateResults(List<Database.SaveResult> updateResults, List<SObject> objectsToUpdate, 
-    ERR_Handler.Context context) {
-        return processResults(null, updateResults, null, null, null, objectsToUpdate, null, null, context);
-    }
-    
-    public Boolean processResults(List<Database.SaveResult> insertResults, List<Database.SaveResult> updateResults, 
-    List<Database.DeleteResult> deleteResults, List<Database.UndeleteResult> undeleteResults, 
-    List<SObject> objectsToInsert, List<SObject> objectsToUpdate, 
-    List<SObject> objectsToDelete, List<SObject> objectsToUndelete, ERR_Handler.Context context) {
+    List<SObject> insertedObjects, List<SObject> updatedObjects, 
+    List<SObject> deletedObjects, List<SObject> undeletedObjects) {
                     
-        Boolean errorsExist = false;
+        Errors errors = new Errors();
         	
-    	Boolean errorsExistOnInserts = processResults(insertResults, objectsToInsert);  //Insert
-    	Boolean errorsExistOnUpdates = processResults(updateResults, objectsToUpdate);  //Update
-    	Boolean errorsExistOnDeletes = processResults(deleteResults, objectsToDelete);  //Delete
-    	Boolean errorsExistOnUndeletes = processResults(undeleteResults, objectsToUndelete);  //Undelete
+    	Errors insertErrors = getErrors(insertResults, insertedObjects);  //Insert
+    	Errors updateErrors = getErrors(updateResults, updatedObjects);  //Update
+    	Errors deleteErrors = getErrors(deleteResults, deletedObjects);  //Delete
+    	Errors undeleteErrors= getErrors(undeleteResults, undeletedObjects);  //Undelete
     	
-    	if(errorsExistOnInserts || errorsExistOnUpdates || errorsExistOnDeletes || errorsExistOnUndeletes) {
-    		errorsExist = true;
+    	if(insertErrors.errorsExist || updateErrors.errorsExist || deleteErrors.errorsExist || undeleteErrors.errorsExist) {
+    		errors.errorsExist = true;
+    		errors.errorRecords.addAll(insertErrors.errorRecords);
+    		errors.errorRecords.addAll(updateErrors.errorRecords);
+    		errors.errorRecords.addAll(deleteErrors.errorRecords);
+    		errors.errorRecords.addAll(undeleteErrors.errorRecords);
     	}
     	
-    	/*** We do NOT want to call storeErrors here. We want to be able to manually do that after a rollback.***/
-    	
-    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c && errorsExist) {
-           UTIL_Debug.debug('****Errors exist - calling Error Notifier');
-           ERR_Notifier.sendErrorNotifications(context);
-    	}
-           
-    	return ErrorsExist;
+    	// We do NOT want to try to store errors or send error email notifications here. We want to be able to 
+    	//manually do that after the rollback.
+ 
+    	return errors;
     }
 
-    private Boolean processResults(List<Object> results, List<SObject> sObjects) {    	
-    	Boolean errorsExist = false;
+    /*******************************************************************************************************
+    * @description Processes the results of a single DML operation performed using the Database class to determine 
+    *              if errors occurred. It does not store errors or send error email notifications. These operations
+    *              should be performed after the rollback.
+    *
+    * @param dmlResults The results of a single DML operation performed using the Database class.
+    * @param sObjects The records the DML operation was performed on.
+    * @return Errors The erros that occurred during the DML operation perfored using the Database class.
+    */    
+    public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {    	
+    	Errors errors = new Errors();
     	
-    	if(results != null) {	
-	    	for(Integer i=0; i<results.size(); i++) {
-	        	String message;
+    	if(dmlResults != null) {	
+	    	for(Integer i=0; i<dmlResults.size(); i++) {
 	        	Boolean isSuccess = true;
-	        	List<Object> resultErrors;
-	        	if(results[i] instanceof Database.SaveResult) {
-	        		isSuccess = ((Database.SaveResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.SaveResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.SaveResult)results[i]).getErrors();
-	        		}
-	        	} else if(results[i] instanceof Database.DeleteResult) {
-	        		isSuccess = ((Database.DeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.DeleteResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.DeleteResult)results[i]).getErrors();
-	        		}
-	        	} else if(results[i] instanceof Database.UndeleteResult) {
-	        		isSuccess = ((Database.UndeleteResult)results[i]).isSuccess();
-	        		if(!isSuccess) {
-	        		  message = ((Database.UndeleteResult)results[i]).getErrors()[0].getMessage();
-	        		  resultErrors = ((Database.UndeleteResult)results[i]).getErrors();
-	        		}
+	        	if(dmlResults[i] instanceof Database.SaveResult) {
+	        		isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
+	        	} else if(dmlResults[i] instanceof Database.DeleteResult) {
+	        		isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
+	        	} else if(dmlResults[i] instanceof Database.UndeleteResult) {
+	        		isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
 	        	}
 	        	
-	        	if(!isSuccess && message != null) {
-	        		UTIL_Debug.debug('****Process result errors: ' + JSON.serializePretty(resultErrors));
-	        		errorsExist = true;
+	        	if(!isSuccess) {
+	        		errors.errorsExist = true;
+	        		
 	        		//Creating error object
-	        		Error__c err = createError(results[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
-	                errors.add(err);
-	                //Adding error message to the record
-	                /* If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent.
-                     It is also worth noting that Salesforce only allows one to do addError on an object in the trigger handler. So
-                     if this object is actually not in the trigger, but one that a trigger object is trying to modify, setting addError
-                     on this related object will cause an Exception from Salesforce.
-		                if(sObjects != null && sObjects.size() > i)
-		                    addErrorMessage(sObjects[i], message); */
+	        		Error__c err = createError(dmlResults[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
+	                errors.errorRecords.add(err);
+	                
+	                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and 
+	                //no error record will be saved,or error notification sent.
+	                
+	                //Displaying an error message to the user
 	                if(ApexPages.currentPage() != null)
 	                   ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c)); 
-	                   
+	                
+	                //Bubbling the exception, if necessary.   
                     if (TDTM_TriggerHandler.isPropogateErrorsFromTrigger) {
                         UTIL_Debug.debug('**** isPropogateErrorsFromTrigger is true, so wanted to addError to: ' + sObjects[i]);
-                        throw(new PropogateException(err.Full_Message__c));
+                        throw new PropogateException(err.Full_Message__c);
                     }
-
 	        	}
 	        }
     	}
-    	return errorsExist;
+    	return errors;
     }
+    
+    /*******************************************************************************************************
+    * @description Custom class that extends the Exception built-in class, and indicates that there is an unrecoverable
+    *              error that should be propagated all the way up the stack.
+    */
     private class PropogateException extends Exception {}
     
-    /*** Error processing methods - Right now we are just saving errors to the DB, but we could do something else ***/
-    public static void processError(Exception e, ERR_Handler.Context context) {
-        processError(e, new List<SObject>(), context);
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+                   This method should be used from inside the NPSP package, instead of the same one with that same name
+                   that takes a String instead of an Enum as the second parameter.
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
+    */
+    public static void processError(Exception e, ERR_Handler_API.Context context) {     
+        processError(e, context.name());   
     }
     
-    public static void processError(Exception e, SObject record, ERR_Handler.Context context) {
-    	processError(e, new SObject[]{record}, context);
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
+    *              notifications (if enabled).
+    * @param e Exception to create error record from.
+    * @return context The context the exception was raised on.
+    */
+    public static void processError(Exception e, String context) {     
+        if(e != null) {         
+            Error__c error = createError(e);
+            processErrors(new Error__c[]{error}, context);
+        }   
     }
     
-    public static void processError(Exception e, List<SObject> records, ERR_Handler.Context context) {
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrors(List<Error__c> errorRecords, String context) {
     	
-    	if(e != null) {
-    		UTIL_Debug.debug(LoggingLevel.WARN, '****Exception to process: ' + e.getMessage() + '\n\nStack trace: ' + e.getStackTraceString());
-			if(e instanceof DmlException && records != null && records.size() > 0) {
-                DmlException de = (DmlException) e;
-                for(Integer i=0; i<de.getNumDml(); i++) {
-                   UTIL_Debug.debug(LoggingLevel.WARN, '****Position of failed record in original list: ' + de.getDmlIndex(i));
-                   Integer failedRecordIndex = de.getDmlIndex(i); //Position of failed record in original list
-                   /*If we use addError on a record the whole transaction will be rolled back, and no error record will be saved,
-                     or error notification sent. 
-                   addErrorMessage(records[failedRecordIndex], de.getDmlMessage(i)); */
-                   if(ApexPages.currentPage() != null)
-                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-               }
-           }
-           
-           if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-               Error__c error = createError(e);
-               UTIL_Debug.debug(LoggingLevel.WARN, '****Error record to store: ' + JSON.serializePretty(error));
-               Database.SaveResult result = Database.insert(error, false);
-           }
-    	}
-    	
-    	if(UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_On__c) {
-    	   UTIL_Debug.debug('****Sending error notification');
-           ERR_Notifier.sendErrorNotifications(context);
+    	if(errorRecords != null && errorRecords.size() > 0) {
+	    	if(ApexPages.currentPage() != null) {
+	            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorRecords[0].Full_Message__c));
+	    	}
+	                
+	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+	    	   Database.insert(errorRecords, false);
+	    	}
+	    	//ERR_Notifier takes care of checking the settings itself.
+	        ERR_Notifier.sendErrorNotifications(context);
     	}
     }
     
-    private static void addErrorMessage(SObject record, String defaultMessage) {
-    	String message = '';
-    	if(record.getSObjectType().getDescribe().getName() != null)
-            message = 'Error on record of type ' + record.getSObjectType().getDescribe().getName() + ' - ';
-    	if(record.get('Id') != null)
-            message = message + 'Record ID: ' + record.get('Id') + ' - ';
-        if(record.get('Name') != null)
-            message = message + 'Record Name: ' + record.get('Name') + ' - ';
-        message = message + '"' + defaultMessage + '"';
-        record.addError(message);
-    }
-    
-    /*** We want this method to be public to be able to explicitly call it after a rollback. ***/
-    public void storeErrors() {        
-        if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-		  UTIL_Debug.debug(LoggingLevel.WARN, '****Storing errors: ' + JSON.serializePretty(errors));
-		  Database.insert(errors, false);
-        }
-    }
-    
-    /*** Error creation methods ***/
+    /*******************************************************************************************************
+    * @description Creates an error record from an exception.
+    * @param e Exception to create error record from.
+    * @return Error__c Error record.
+    */
 	private static Error__c createError(Exception e) {
 		Error__c error = new Error__c();
 		error.Datetime__c = System.now();        
@@ -204,7 +209,7 @@ public with sharing class ERR_Handler {
 		//are in a managed package.
 		String stackTrace = e.getStackTraceString();
 		String message;
-		if(String.isBlank(stackTrace) || stackTrace == '(npsp)') {
+		if(String.isBlank(stackTrace) || stackTrace == '(npsp)' || stackTrace == 'npsp') {
 			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			message = 'Stacktrace available at the time of saving the record - ';
@@ -213,6 +218,14 @@ public with sharing class ERR_Handler {
 		return error;
 	}
 
+    /*******************************************************************************************************
+    * @description Creates an error record from the result of a DML operation performed through the Database class.
+    * @param result The result of the Database DML operation. It cannot be more specific than Object, because the result of 
+    *               the different DML operations that the Database class can perform don't have a common parent.
+    * @param objectType The name of the type of object that caused the error.
+    * @param objId The id of the record that caused the error. 
+    * @return The error record.
+    */
     private static Error__c createError(Object result, string objectType, id objId) {
     	Error__c error = new Error__c();
         error.Datetime__c = System.now();
@@ -238,7 +251,12 @@ public with sharing class ERR_Handler {
         return error;
     }
     
-    /*** Helper methods ***/
+    /*******************************************************************************************************
+    * @description Returns the URL of a record, if available.
+    * @param saveResultId The id resulting from a DML operation of the Database class.
+    * @param objId The id of the record the DML operation was performed on.
+    * @return The URL of the record. Warning: it may not necessarily be valid.
+    */
     private static String getRecordURL(Id saveResultId, Id objId) {
     	String recordURL = URL.getSalesforceBaseUrl().toExternalForm() + '/';
         if (saveResultId != null)
@@ -252,6 +270,12 @@ public with sharing class ERR_Handler {
         return recordURL;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the status of the error that happened as a result of a DML operation performed through
+    *              the Database class as a string.
+    * @param status The status code.
+    * @return The error status as a string.
+    */
     private static String getStatusCode(system.StatusCode status) {
     	if (status == system.Statuscode.REQUIRED_FIELD_MISSING)
             return 'Required Field Missing';   
