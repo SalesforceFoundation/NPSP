@@ -12,10 +12,11 @@
 
 .topsection a {
     color: white;
+    text-decoration: none;
 }
 
 .topsection h1 {
-    font-size: 23px;
+    font-size: 28px;
     color: white;
 }
 
