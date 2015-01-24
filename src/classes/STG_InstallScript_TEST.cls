@@ -173,7 +173,7 @@ public with sharing class STG_InstallScript_TEST {
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
         settingsToUpdate.add(npo02Settings); 
         
-        update settingsToUpdate;
+        upsert settingsToUpdate;
 
         Test.testInstall(new STG_InstallScript(), null);
         
@@ -218,7 +218,7 @@ public with sharing class STG_InstallScript_TEST {
         npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
         settingsToUpdate.add(npe04Settings);
         
-        update settingsToUpdate;
+        //update settingsToUpdate;
     }
     
     private static void assertNpspFlagsDeactivated() {

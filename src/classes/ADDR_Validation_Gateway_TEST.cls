@@ -109,7 +109,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '400';
-        update settings;
+        //update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -128,7 +128,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
     	
     	settings.Address_Verification_Endpoint__c = '401';
-        update settings;
+        //update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -147,7 +147,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '402';
-        update settings;
+        ////update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -166,7 +166,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '500';
-        update settings;
+        ////update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;

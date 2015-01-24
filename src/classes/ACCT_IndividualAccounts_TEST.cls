@@ -104,7 +104,7 @@ private class ACCT_IndividualAccounts_TEST {
     	
     	//Change to Household Account
     	contactsSettings.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
-        update contactsSettings;
+        //update contactsSettings;
             
     	//Create a Contact
     	Contact contact2 = new Contact(FirstName = 'Test2', LastName = 'Testerson2');
