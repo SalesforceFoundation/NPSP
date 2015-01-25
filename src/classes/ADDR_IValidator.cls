@@ -46,14 +46,7 @@ public Interface ADDR_IValidator {
     * @return string
     */
     String getDefaultURL();
-    
-    /** 
-    * @description returns the help text to be shown when the user selects the service from the drop-down. It
-    * may specify things such as the required fields. 
-    * @return string
-    */
-    String getHelpText();
-    
+        
     /** 
     * @description returns true if batch address validation is supported. If not, the batch address validation button
     * will be disabled.
