@@ -170,6 +170,9 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
                 // all or nothing so errors not lost.
                 update updatelist;
         }
+        
+        //No error handling necessary, because the only place this is called from is the widget that displays the batch
+        //process status in the UI.
 
         //now run the regular process for completing the batch run                
         HH_HouseholdNaming hn = new HH_HouseholdNaming();

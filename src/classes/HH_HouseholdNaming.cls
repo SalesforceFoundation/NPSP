@@ -46,7 +46,13 @@ public without sharing class HH_HouseholdNaming {
         //and pass in our param
         //this is b/c of the public visibility
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
-        hn.UpdateNames(hhids);      
+        Savepoint sp = Database.setSavepoint();
+        try {
+            hn.UpdateNames(hhids);
+        } catch(Exception e) {
+        	Database.rollback(sp);
+        	ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
+        }      
         HH_ProcessControl.inFutureContext = false;    
     }
 

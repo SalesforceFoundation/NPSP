@@ -27,8 +27,22 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
+               settings and the new ones. 
+*/
 public without sharing class TDTM_DefaultConfig {
 
+    /*******************************************************************************************************
+    * @description Returns the default TDTM configuration. 
+    * @return List<Trigger_Handler__c> a list of trigger handler records with the default values. The records
+    *         have not yet been inserted in the database. You can manipulate them, if necessary, and insert 
+    *         them. If no Trigger_Handler__c records exist, the application will insert the defaults when any 
+    *         of the NPSP triggers run. 
+    */
     public static List<Trigger_Handler__c> getDefaultRecords() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
 
@@ -155,9 +169,11 @@ public without sharing class TDTM_DefaultConfig {
         return handlers;
     }
     
-    /**
-      * Returns a map that specifies how the old NPSP settings match to the new Cumulus TDTM classes
-      */
+    /*******************************************************************************************************
+    * @description Specifies how the old NPSP settings match to the new Cumulus TDTM classes.
+    * @return Map<String, String> Map of each of the old Custom Settings names to the new TDTM record that 
+    *                             replaces that functionality.
+    */
     public static Map<String, String> getNpspToCumulusMap() {
     	Map<String, String> npspToCumulusMap = new Map<String, String>();
     	
@@ -183,7 +199,7 @@ public without sharing class TDTM_DefaultConfig {
     	//No code refs in Cumulus or NPSP
     	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', 'RLLP_OppRollup_TDTM');
     	
-    	////Flag removed from line 57 of RD_RecurringDonations_TDTM
+    	//Flag removed from line 57 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'RD_RecurringDonations_Opp_TDTM');
     	//Flag removed from line 107 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD_RecurringDonations_TDTM');

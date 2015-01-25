@@ -181,7 +181,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	        Database.rollback(sp);
 	        
 	        // log the unexpected error
-	        ERR_Handler.processError(e, ERR_Handler.Context.BDI);
+	        ERR_Handler.processError(e, ERR_Handler_API.Context.BDI);
 	        
             // update all the di's with errors with the error state.
             // those di's without specific errors will get the exception's error

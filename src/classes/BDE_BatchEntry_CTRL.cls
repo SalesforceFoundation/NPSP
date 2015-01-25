@@ -324,7 +324,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         	
         	} catch(Exception e) {
         		Database.rollback(sp);
-                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));  
         	}
             return null;
@@ -378,7 +378,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 return null; 
             } catch(Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             }
             return null;   
@@ -402,7 +402,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 saveBatch();
             } catch(Exception e) {
 			    Database.rollback(sp);
-			    ERR_Handler.processError(e, ERR_Handler.Context.BDE);
+			    ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
 			    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 			}        
         }

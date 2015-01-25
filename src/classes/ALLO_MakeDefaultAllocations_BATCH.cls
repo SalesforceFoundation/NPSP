@@ -121,6 +121,8 @@
             }
         }
 
+        //No error handling necessary, because the only place this is called from is the widget that displays the batch
+        //process status in the UI.
         if (!listAlloForInsert.isEmpty()) {
             ALLO_Allocations_TDTM.resetFlags(true);
             insert listAlloForInsert;

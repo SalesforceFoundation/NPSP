@@ -39,9 +39,15 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
 
     public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
-            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
-            rollup.runRollups();
-            return true;
+        	Savepoint sp = Database.setSavepoint();
+        	try {
+	            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(200);
+	            rollup.runRollups();
+	            return true;
+        	} catch(Exception e) {
+        		Database.rollback(sp);
+        		ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
+        	}
         }
         return false;
     }
