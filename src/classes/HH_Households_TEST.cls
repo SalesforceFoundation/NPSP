@@ -713,9 +713,7 @@ public with sharing class HH_Households_TEST {
         insert con;
 
         list<Contact> queryCon = [SELECT Id, HasOptedOutOfEmail, DoNotCall, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
-        system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Name'), 'Naming Exclusions field should not include Household Name.');
-        system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c'), 'Naming Exclusions field should not include Household Formal Greeting.');
-        system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c'), 'Naming Exclusions field should not include Household Informal Greeting.');
+        system.assertEquals(null, queryCon[0].npo02__Naming_Exclusions__c, 'Naming Exclusions field should be null.');
         system.assert(queryCon[0].HasOptedOutOfEmail, 'Contact should not be opted out of email.');
 
         //RIP
