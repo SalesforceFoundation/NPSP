@@ -154,11 +154,15 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 fieldClass = theCheckbox.id;
                 j$("."+fieldClass).each( function(i, theInput) {
                     var myvalue = theInput.value;
-                    if (!theCheckbox.checked || !theInput.value || theInput.value=='') {
+                    if (theInput.type == 'checkbox')
+                        myvalue = theInput.checked;
+                    if (!theCheckbox.checked || !myvalue || myvalue=='') {
                         if(theInput.id.indexOf('_lkwgt') == -1)
                             delete defaultValues[fieldClass];                                            
                     } else {
-                        defaultValues[fieldClass] = theInput.value;                        
+                        defaultValues[fieldClass] = theInput.value;
+                        if (theInput.type == 'checkbox')
+                            defaultValues[fieldClass] = theInput.checked;
                         // if the input field was a lookup store the Id of the referenced record as well                        
                         var theInputLookup = document.getElementById(theInput.id + '_lkid');
                         if(theInputLookup!=null) {
@@ -185,6 +189,8 @@ by Veronica Waters, Evan Callahan, Derek Dsouza, Mike Fullmore, and Kevin Bromer
                 j$("."+fieldClass).each( function(i, theInput) {
                     if (defaultValues[fieldClass] != null) {
                         theInput.value = defaultValues[fieldClass];
+                        if (theInput.type == 'checkbox')
+                            theInput.checked = defaultValues[fieldClass];
                         // Set the lookup Id element if the input field is a lookup
                         if(defaultValuesLookupIds[fieldClass] != null) {                      
                             var theInputLookup = document.getElementById(theInput.id + '_lkid');
