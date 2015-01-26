@@ -96,7 +96,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         for (String s : targetTokenMap.keyset()){
             if (s.endsWith('__c')){
                 List<String> nameSegs = s.split('__');
-                if (nameSegs.size() < 3 && Limits.getFieldsDescribes() < Limits.getLimitFieldsDescribes()){
+                if (nameSegs.size() < 3){
                     Schema.DescribeFieldResult f = targetTokenMap.get(s).getDescribe();
                     Schema.DisplayType payType = f.getType();
                     if(payType == Schema.DisplayType.Id || payType == Schema.DisplayType.TextArea || payType == Schema.DisplayType.String){
