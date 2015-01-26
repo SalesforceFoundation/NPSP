@@ -1459,7 +1459,8 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testErrorHandlingAllSysAdmins') return;
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
-        npe03__Error_Email_Notifications__c ='All Sys Admins'                
+            npe03__Error_Email_Notifications__c ='All Sys Admins',
+            npe03__Opportunity_Forecast_Months__c = 12                
         ));         
         
         Account a = new Account(Name = 'Test');
@@ -1502,7 +1503,8 @@ public class RD_RecurringDonations_TEST {
 
         User u = [select id from User limit 1];
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
-        npe03__Error_Email_Notifications__c = u.id                
+            npe03__Error_Email_Notifications__c = u.id,
+            npe03__Opportunity_Forecast_Months__c = 12
         ));  
         
         Account a = new Account(Name = 'Test');
@@ -1547,7 +1549,8 @@ public class RD_RecurringDonations_TEST {
         insert g;
         UTIL_Debug.debug('GID IS: ' + g.id);
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c( 
-        npe03__Error_Email_Notifications__c = g.id                
+            npe03__Error_Email_Notifications__c = g.id,
+            npe03__Opportunity_Forecast_Months__c = 12
         ));         
         
         Account a = new Account(Name = 'Test');

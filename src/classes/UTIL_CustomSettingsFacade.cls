@@ -465,7 +465,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
-        //upsert contactsSettings;
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
@@ -494,14 +493,12 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c;
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
-        //upsert householdsSettings;
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
             if (getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
                 getContactsSettings().npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
-                //upsert contactsSettings;    
             }   
         }
         return householdsSettings;
@@ -511,10 +508,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(relationshipsSettings == null)
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
         
-        //create our own based on what's passed in from the test
         relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
         relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
-        //upsert relationshipsSettings;
         orgRelationshipsSettings = relationshipsSettings;
         return relationshipsSettings;
     }
@@ -524,7 +519,6 @@ public without sharing class UTIL_CustomSettingsFacade {
            affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
            
         affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
-        //upsert affiliationsSettings;
         orgAffiliationsSettings = affiliationsSettings;
         return affiliationsSettings;
     }
@@ -536,7 +530,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
-        //upsert errorSettings;
         orgErrorSettings = errorSettings;
         return errorSettings;  
     }
@@ -551,7 +544,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Excluded_Opp_Types__c = mySettings.Excluded_Opp_Types__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
-        //upsert allocationsSettings;
         orgAllocationsSettings = allocationsSettings;
         return allocationsSettings;
     }
@@ -565,8 +557,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
         recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = mySettings.npe03__Open_Opportunity_Behavior__c;
         recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = mySettings.npe03__Add_Campaign_to_All_Opportunites__c;
-        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;
-        
+        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;  
         orgRecurringDonationsSettings = recurringDonationsSettings;
         return recurringDonationsSettings;
     }
