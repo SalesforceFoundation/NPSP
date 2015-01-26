@@ -62,7 +62,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
     }
     
     // to allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
-    public set<string> setHousholdNameFieldsOnContact() {
+    public set<string> setHouseholdNameFieldsOnContact() {
         set<string> setStrField = new set<string>(); 
         NameSpec ns;
         ns = new NameSpec(hns, 'Household_Name_Format__c');

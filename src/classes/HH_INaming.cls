@@ -31,22 +31,49 @@
 * @author Salesforce.com Foundation
 * @date 2014
 * @group Households
-* @description Interface that classes that provide Household Naming must implement.
+* @description Interface for classes that will provide Household Naming functionality.
 */
 public Interface HH_INaming {
-
-    // Methods to get the appropriate name/greeting for the passed in list of Contacts from a single Household.
-    // Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name/greeting, are not included in the list of Contacts.
-    // If the list of Contacts is empty, return the appropriate 'anonymous' name/greeting.
+    
+    /*******************************************************************************************************
+    * @description Get the Household name for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' name.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household name
+    */ 
     string getHouseholdName(list<Contact> listCon);
+
+    /*******************************************************************************************************
+    * @description Get the Household Formal Greeting for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household Formal Greeting
+    */ 
     string getHouseholdFormalGreeting(list<Contact> listCon);
+
+    /*******************************************************************************************************
+    * @description Get the Household Informal Greeting for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household Informal Greeting
+    */ 
     string getHouseholdInformalGreeting(list<Contact> listCon);
     
-    // for the Settings page, get the formatted name for the list of Contacts.
-    // hns holds an in-memory Household Naming Settings object, and strField is one of:
-    // Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
+    /*******************************************************************************************************
+    * @description For the Settings page, get the formatted name or greeting for the list of Contacts.
+    * @param hns an in-memory Household Naming Settings object
+	* @param strField is one of: Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
+    * @param listCon the list of Contacts in the Household
+    * @return the appropriate Household name or greeting
+    */ 
     string getExampleName(Household_Naming_Settings__c hns, string strField, list<Contact> listCon);
     
-    // to allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
-    set<string> setHousholdNameFieldsOnContact();
+    /*******************************************************************************************************
+    * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
+    * @return set of strings of all fields referenced from Contact.
+    */
+    set<string> setHouseholdNameFieldsOnContact();
 }
