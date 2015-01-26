@@ -32,7 +32,8 @@
 * @date 2014
 * @group Settings
 * @description Test Class for the Install Script for the NPSP package. 
-*/@isTest
+*/
+@isTest
 public with sharing class STG_InstallScript_TEST {
 
     // if you only want to run one test in this class, fill in its name here.
