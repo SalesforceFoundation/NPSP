@@ -177,7 +177,7 @@ global with sharing class HH_ManageHousehold_EXT {
                     'is_Address_Override__c, Current_Address__c, ' + 
                     'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, CreatedDate ';
                 
-                set<string> setStrField = HH_HouseholdNaming.iNaming.setHousholdNameFieldsOnContact();
+                set<string> setStrField = HH_HouseholdNaming.iNaming.setHouseholdNameFieldsOnContact();
                 for (string strF : setStrField) {
                 	if (!strSoql.contains(' ' + strF))
                         strSoql += ', ' + strF;
