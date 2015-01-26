@@ -35,6 +35,9 @@
 */
 public with sharing class  ACCT_ViewOverride_CTRL {
 
+    /*******************************************************************************************************
+    * @description The Account object being viewed.
+    */ 
     private final Account account;
 
     /*******************************************************************************************************
