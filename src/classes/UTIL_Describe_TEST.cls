@@ -55,7 +55,6 @@ public with sharing class UTIL_Describe_TEST {
         system.assert(UTIL_Describe.isObjectIdThisType(a.id, 'Account'));
         
         s = UTIL_Describe.getFieldLabel('Account', 'LastModifiedDate');
-        integer calls = limits.getfieldsdescribes();
         
         Schema.DescribeFieldResult fr = UTIL_Describe.getFieldDescribe('Account', 'CreatedDate');     
         s = UTIL_Describe.getFieldLabel('Account', 'CreatedDate');
@@ -69,9 +68,6 @@ public with sharing class UTIL_Describe_TEST {
         // should be able to cast to account
         account acct = (account)(acctObj);
 
-        // another call should not use another describe
-        system.assertEquals(limits.getfieldsdescribes(), calls);
-        
         s = UTIL_Describe.getFieldType('Account', 'CreatedDate');
         system.assertEquals('DATETIME', s);
         

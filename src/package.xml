@@ -1047,10 +1047,6 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>General_Accounting_Unit__c.nf_01Io00000014Jd8EAE_00No0000007el11EAA</members>
-    <name>NamedFilter</name>
-  </types>
-  <types>
     <members>Account.New_Address</members>
     <members>Account.New_Affiliation</members>
     <members>Account.Quick_Household_Update</members>
@@ -1096,5 +1092,5 @@
     <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
     <name>WebLink</name>
   </types>
-  <version>29.0</version>
+  <version>32.0</version>
 </Package>
