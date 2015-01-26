@@ -58,12 +58,16 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
         	List<SObject> toUpdate = new List<SObject>();
-        	if(STG_Panel.stgService.stgRD != null)
+        	
+        	if(STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
+        	}
+        	
         	if(rdSched != null) {
                 rdSched.Active__c = !isRDScheduleDisabled;
                 toUpdate.add(rdSched);
         	}
+        	
             update toUpdate;
             
             strRDOppRecordTypeLabel = null;
