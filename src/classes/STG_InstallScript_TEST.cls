@@ -165,16 +165,13 @@ public with sharing class STG_InstallScript_TEST {
         //Create NPSP custom settings with some disable flags on
         List<SObject> settingsToUpdate = new List<SObject>();
         
+        //Modify settings only in-memory for the test, so it can be run in parallel
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = true;
         npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = true;
-        settingsToUpdate.add(npe01Settings);    
         
         npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
         npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = true;
-        settingsToUpdate.add(npo02Settings); 
-        
-        upsert settingsToUpdate;
 
         Test.testInstall(new STG_InstallScript(), null);
         
