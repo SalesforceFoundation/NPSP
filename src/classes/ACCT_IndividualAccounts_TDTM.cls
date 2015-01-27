@@ -195,10 +195,12 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
                             // Avoid creating a new contact with the 1:1 account of another contact  
-                            if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id)
+                            if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&
+                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != null)
                                 c.AccountId = null;
-
-                            listContactNeedAccount.add(c);
+                            
+                            if (c.AccountId == null)
+                                listContactNeedAccount.add(c);
                         }          
                         /*contact should be connected to the bucket account if:
                             1. The account has been blanked out by the user
