@@ -214,9 +214,7 @@ public with sharing class STG_InstallScript_TEST {
         npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
         npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
-        settingsToUpdate.add(npe04Settings);
-        
-        //update settingsToUpdate;
+        settingsToUpdate.add(npe04Settings);   
     }
     
     private static void assertNpspFlagsDeactivated() {
