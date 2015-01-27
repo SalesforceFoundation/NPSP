@@ -112,7 +112,7 @@ public with sharing class CAO_Constants {
 
     /*******************************************************************************************************
     * @description Returns whether we are in the One-to-One Account Model
-    * @returns boolean
+    * @return  boolean
     */ 
     public static boolean isOneToOne() {
         //if no settings exist, create defaults
@@ -125,7 +125,7 @@ public with sharing class CAO_Constants {
 
     /*******************************************************************************************************
     * @description Returns whether we are in the Individual Bucket Account Model
-    * @returns boolean
+    * @return  boolean
     */ 
     public static boolean isBucketModel() {
         return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == BUCKET_PROCESSOR);
@@ -133,7 +133,7 @@ public with sharing class CAO_Constants {
 
     /*******************************************************************************************************
     * @description Returns whether we are in the Household Account Model
-    * @returns boolean
+    * @return  boolean
     */ 
     public static boolean isHHAccountModel() {
         return (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == HH_ACCOUNT_PROCESSOR);
@@ -151,7 +151,7 @@ public with sharing class CAO_Constants {
 
     /*******************************************************************************************************
     * @description returns the Salesforce Id of the Individual Bucket Account
-    * @returns Id
+    * @return  Id
     */ 
     public static id getIndividualAccountId () {
     
@@ -172,7 +172,7 @@ public with sharing class CAO_Constants {
 
     /*******************************************************************************************************
     * @description Creates an Individual Bucket Account, for use in test code.
-    * @returns Id of the Individual Bucket Account
+    * @return  Id of the Individual Bucket Account
     */ 
     public static Id setIndividualAccountForTests(String accountName) {
         //create a fake Individual Account for tests
