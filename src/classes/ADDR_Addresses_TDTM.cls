@@ -42,10 +42,18 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     public static boolean hasRunAddrTrigger = false;
 
     /*******************************************************************************************************
-    * @description The maps to convert the State/Country Code to a State/Country Label and Vice-Versa 
+    * @description map from Country name to Country Code
     */
     private static Map<String, String> validCountriesByLabel = new Map<String, String>();
+
+    /*******************************************************************************************************
+    * @description map from State name to State Code
+    */
     private static Map<String, String> validStatesByLabel = new Map<String, String>();
+
+    /*******************************************************************************************************
+    * @description map from Country Code to Country Name
+    */
     private static Map<String, String> validCountriesByCode = new Map<String, String>();
     
     /*******************************************************************************************************
@@ -170,10 +178,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default
     * address, as well as checking to see if there is a seasonal address that should be used instead.
-    * if the flag isCalcHHInfoOnly is set, then this routine will return the map of HHId to HHInfo,
-    * and not do any changes to dmlWrapper. 
     * @param mapAccIdAddr a map of Account Id to the Account's default Address.
-    * @isCalcHHInfoOnly is set, then this routine will return the map of HHId to HHInfo,
+    * @param dmlWrapper to hold the objects that get updated
+    * @param isCalcHHInfoOnly if set, then this routine will return the map of HHId to HHInfo,
     * and not do any changes to dmlWrapper. 
     * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account  
     ********************************************************************************************************/
