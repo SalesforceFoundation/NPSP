@@ -36,6 +36,10 @@
 @isTest
 private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
+    /*******************************************************************************************************
+    * @description tests the Copy Address button controller
+    * @return void
+    */
     static testMethod void TEST_AddressUtility(){
        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(

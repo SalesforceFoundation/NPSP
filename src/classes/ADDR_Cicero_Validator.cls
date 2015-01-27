@@ -36,8 +36,19 @@
  */
 public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
+    /*******************************************************************************************************
+    * @description holds the Cicero authorization token from NPSP Settings
+    */     
     private String strAuthToken;
+
+    /*******************************************************************************************************
+    * @description holds the Cicero endpoint from NPSPS Settings
+    */     
     private String strEndPoint;
+
+    /*******************************************************************************************************
+    * @description holds the timeout value from NPSP Settings
+    */     
     private Double dblTimeout;
     
     /*******************************************************************************************************
@@ -201,54 +212,66 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     * @description a class to contain a Cicero Response
     */ 
 	public class CiceroResponse {
-		Response response;
+		public Response response;
 	}
 
     /*******************************************************************************************************
     * @description a class to contain a list of Response results
     */ 
     public class Response {
-        Results results;               
+        public Results results;               
     }
     
     /*******************************************************************************************************
     * @description a class to contain a list of Cicero Candidates
     */ 
     public class Results {
-    	list<Candidates> candidates;
+    	public list<Candidates> candidates;
     }
     
     /*******************************************************************************************************
     * @description a class to contain a Cicero Candidate
     */ 
     public class Candidates {
-        string match_addr;
+        /** @description the full normalized address that looks like street, city, state, zip */
+        public string match_addr;
         
-        string match_streetaddr; // house # and street of the matched address
-        string match_postal; // postal/zip code of the matched address
-        string match_city; // city of the matched address
-        string match_subregion; // county of the matched address -- I've found our upstream geocoder is very spotty with populating this and I wouldn't rely on it, may be used more for addresses outside the U.S.
-        string match_region; // state of the matched address - doesn't seem to be part of the response, even though I was told it would be.        
-        string match_country; // country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district.
+        /** @description house # and street of the matched address */
+        public string match_streetaddr;
         
-        string wkid;
-        list<Districts> districts;
-        string x;
-        string y;
-        string geoservice;
+        /** @description postal/zip code of the matched address */ 
+        public string match_postal; 
+        
+        /** @description city of the matched address */
+        public string match_city; 
+        
+        /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */        
+        public string match_subregion; 
+
+        /** @description state of the matched address - doesn't seem to be part of the response, even though I was told it would be. */
+        public string match_region; 
+        
+        /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */        
+        public string match_country; 
+        
+        public string wkid;
+        public list<Districts> districts;
+        public string x;
+        public string y;
+        public string geoservice;
     }
     
     /*******************************************************************************************************
     * @description a class to contain a Cicero District
     */ 
     public class Districts {
-        string district_type;
-        string district_id;
-        string country;
-        string label;
-        string subtype;
-        string state;
-        string id;
+        public string district_type;
+        public string district_id;
+        public string country;
+        public string label;
+        public string subtype;
+        public string state;
+        public string id;
     }   
     
 }

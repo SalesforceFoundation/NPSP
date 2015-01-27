@@ -31,23 +31,42 @@
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
 * @group Address Management
-* @description The controller for the VF page invoked by using the address copy button 
+* @description The controller for the VF page invoked by using the address copy button. 
+*   This is a simple utility for transferring a contact address to a household    
+*   or pushing a household address out to its member contacts 
+*   NOTE: This is only supported for Household__c objects.
+*   NOTE: For Household Accounts, the new Address__c object and its associated features provide this functionality. 
 */
 public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     
-    //simple utility for transferring a contact address to a household    
-    //or pushing a household address out to its member contacts 
-    // NOTE: This is only supported for Household__c objects.
-    // NOTE: For Household Account objects, the new Address__c object and its associated features provide this functionality. 
-
+    /*******************************************************************************************************
+    * @description the source object to copy address fields from
+    */
     private sobject obj;
+
+    /*******************************************************************************************************
+    * @description the result message (success or errors)
+    */
     public string resulttext{get; set;}
+
+    /*******************************************************************************************************
+    * @description the URL to return to after running.
+    */
     public string returnurl{get; set;}  
+
+    /*******************************************************************************************************
+    * @description the type of source object (Contact, npo02__Household__c)
+    */
     public string strSrcObject { get; set; }
     
-    //we redirect on success, hold on page for errors
+    /*******************************************************************************************************
+    * @description whether to redirect on success, or stay on the page for errors.
+    */
     private boolean redirectPage = true;
     
+    /*******************************************************************************************************
+    * @description Constructor for the class
+    */
     public ADDR_CopyAddrHHObjBTN_CTRL(){
             
         obj = null;
@@ -70,6 +89,10 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Action method called when the user clicks on the copy button.
+    * @return PageReference
+    */
     public PageReference buttonClick(){
         
         if (strSrcObject == 'Contact'){
@@ -198,6 +221,10 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description adds a Message to the Page
+    * @return void
+    */
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);

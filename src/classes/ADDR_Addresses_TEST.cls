@@ -37,20 +37,42 @@
 @isTest
 private with sharing class ADDR_Addresses_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
+
+    /*********************************************************************************************************
+    * @description Holds the number of Households to create in tests.
+    */
     static integer cHH = 2;
+
+    /*********************************************************************************************************
+    * @description Holds the number of Contacts per Household to create in tests.
+    */
     static integer cCon = 2;    
 
     /*********************************************************************************************************
-    utility to set up common test data for the Address tests.
-        - this will create & insert N household Accounts, each with M contacts
-        - also will create a Default Addresses for each HH Account
-        - will also setup the default Account Processor to be HH Accounts
-    **********************************************************************************************************/
+    * @description The list of created test Contacts.
+    */
     private static list<Contact> listConT;
+
+    /*********************************************************************************************************
+    * @description The list of created test Accounts.
+    */
     private static list<Account> listAccT;            
+
+    /*********************************************************************************************************
+    * @description
+    * utility to set up common test data for the Address tests.
+    *    - this will create & insert N household Accounts, each with M contacts
+    *    - also will create a Default Addresses for each HH Account
+    *    - will also setup the default Account Processor to be HH Accounts
+    * @param cHHT the number of Household Accounts to create
+    * @param cConT the number of Contacts to create per Household
+    * @return  void
+    **********************************************************************************************************/
     private static void createHHTestData(integer cHHT, integer cConT) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -82,9 +104,15 @@ private with sharing class ADDR_Addresses_TEST {
     }
     
     /*********************************************************************************************************
-    utility to initialize (but not insert) N new Address objects.
-    **********************************************************************************************************/
+    * @description The list of created test Addresses.
+    */
     private static list<Address__c> listAddrT;
+
+    /*********************************************************************************************************
+    * @description Initializes (but not inserts) N new Address objects.
+    * @param cAddr the number of Address objects to create
+    * @return  void
+    **********************************************************************************************************/
     private static void initTestAddr(integer cAddr) {
     	listAddrT = new list<Address__c>();
     	for (integer i = 0; i < cAddr; i++) {
@@ -100,7 +128,8 @@ private with sharing class ADDR_Addresses_TEST {
     }
     
     /*********************************************************************************************************
-    utility to verify an Account Billing address matches a Contact Mailing address
+    * @description Returns whether an Account Billing address matches a Contact Mailing address
+    * @return  boolean 
     **********************************************************************************************************/
     private static boolean isMatchAddressAccCon(Account acc, Contact con) {
         return (acc.BillingStreet == con.MailingStreet &&          
@@ -111,7 +140,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
         
     /*********************************************************************************************************
-    operation:
+    @description
         create N new default Addresses for N Households (with M Contacts)  
     verify:
         N addresses created
@@ -138,7 +167,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert contact w/ address
     verify:
         new default Address created
@@ -170,7 +199,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
         
     /*********************************************************************************************************
-    operation:
+    @description
         insert contact w/ new address override
     verify:
         new non-default Address created
@@ -205,7 +234,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
         
     /*********************************************************************************************************
-    operation:
+    @description
         update existing default Addresses  
     verify:
         household billing address fields updated
@@ -243,7 +272,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update existing non-default Addresses  
     verify:
         no change to HH and contact addresses
@@ -281,7 +310,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         set contact address override  
     verify:
         contact's address matches override
@@ -341,7 +370,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         set contact current address, but not override  
     verify:
         contact's address updated, but not override
@@ -404,7 +433,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new default addresses to HH w/ existing default addresses  
     verify:
         contact's && hh address matches new default
@@ -460,7 +489,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
+    @description
         insert new default addresses to HH w/ existing default addresses, and then go back  
     verify:
         contact's && hh address matches original default
@@ -528,7 +557,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update contacts' Address Override  
     verify:
         contacts' Mailing address fields updated to the Address Override's fields.
@@ -593,7 +622,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
         
     /*********************************************************************************************************
-    operation:
+    @description
         clear contacts' Address Override  
     verify:
         contacts' Mailing address fields updated to the HH default address
@@ -660,7 +689,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update contacts' mailing address to cause creation of new default Address object  
     verify:
         new Default Address created
@@ -724,7 +753,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update contacts' mailing address to cause an update to default Address object  
     verify:
         existing Default Address updated
@@ -791,7 +820,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update accounts' billing address to cause creation of new default Address object  
     verify:
         new Default Address created
@@ -853,7 +882,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update accounts' billing address to cause an update of the default Address object  
     verify:
         existing Default Address updated
@@ -918,7 +947,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create an Address with no Account 
     verify:
         runtime error
@@ -942,7 +971,7 @@ private with sharing class ADDR_Addresses_TEST {
 
 
     /*********************************************************************************************************
-    operation:
+    @description
         create an Address with a NON-Household Account 
     verify:
         runtime error
@@ -977,7 +1006,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new seasonal addresses to HH w/ existing default addresses  
     verify:
         contact's && hh address matches new seasonal
@@ -1030,7 +1059,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new seasonal addresses, not current, to HH w/ existing default addresses  
     verify:
         contact's && hh address stay with default
@@ -1083,7 +1112,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update seasonal addresses to current, on HH w/ existing default addresses  
     verify:
         contact's && hh address updated to seasonal address
@@ -1143,7 +1172,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create multiple seasonal address that overlap with eachother  
     verify:
         overlap detected, seasonal addresses don't save
@@ -1187,7 +1216,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create multiple seasonal address that overlap with eachother  
     verify:
         overlap detected
@@ -1298,7 +1327,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create multiple seasonal address that overlap existing seasonal addresses  
     verify:
         overlap detected, seasonal addresses don't save
@@ -1348,7 +1377,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create multiple partial seasonal address  
     verify:
         partial seasonal detected, seasonal addresses don't save
@@ -1381,7 +1410,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         schedule a seasonal address update 
     verify:
         contact's && hh address matches new seasonal
@@ -1444,7 +1473,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N new duplicate Addresses from Account  
     verify:
         duplicates not created
@@ -1473,7 +1502,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N new duplicate Addresses from Contact  
     verify:
         duplicates not created
@@ -1504,7 +1533,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N new duplicate Addresses from Account, with non-default existing  
     verify:
         duplicates not created
@@ -1565,7 +1594,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N new duplicate Addresses from Contact, with non-default existing  
     verify:
         duplicates not created
@@ -1628,7 +1657,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update contacts' mailing address when they have an address override
     verify:
         new non-default Address created
@@ -1714,7 +1743,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new contacts with no addresses to existing households that have default addresses
     verify:
         new contacts get the default hh address
@@ -1748,7 +1777,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new contacts with addresses to existing households that have default addresses
     verify:
         all contacts and hh get the new default hh address from the new contacts
@@ -1788,7 +1817,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new contacts with default addresses to existing households that have default addresses       
         (this is to mimic the behavior of doing New Contact from the HH Account, in which case Salesforce
         brings up the new contact page in edit mode, with the account's billing address copied into the 
@@ -1838,7 +1867,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert contact w/ multiline street address
     verify:
         new default Address created and the street address is broken up into street and street2
@@ -1878,7 +1907,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         insert new default multiline street addresses to HH w/ existing default addresses  
     verify:
         contact's && hh address matches new default
@@ -1919,7 +1948,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
+    @description
         update accounts' billing address with multiline street address  
     verify:
         new Default Address created
@@ -1968,7 +1997,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N new organizational accounts with billing addresses 
     verify:
         N addresses created
@@ -2008,7 +2037,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         update N organizational accounts with billing addresses 
     verify:
         N addresses created
@@ -2067,7 +2096,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
+    @description
         update N organizational accounts with address objects 
     verify:
         account addresses updated
@@ -2126,7 +2155,7 @@ private with sharing class ADDR_Addresses_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
+    @description
         create N contacts with Household Accounts when the setting for Address Mgmt is off. 
     verify:
         no Address objects created
