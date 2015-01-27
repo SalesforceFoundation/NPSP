@@ -188,6 +188,7 @@ public with sharing class ERR_Handler {
 	    	}
 	                
 	    	if(UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+	    	   UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
 	    	   Database.insert(errorRecords, false);
 	    	}
 	    	//ERR_Notifier takes care of checking the settings itself.
@@ -248,6 +249,7 @@ public with sharing class ERR_Handler {
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
     	}
     
+        UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
     }
     

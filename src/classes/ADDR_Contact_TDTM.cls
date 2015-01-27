@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2014
 * @group Address Management
-* @description support needed on Contact for Address management 
+* @description Trigger Handler on Contact for Address management 
 */
 public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 
@@ -203,7 +203,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description utility to compare two contacts' addresses
+    * @description compares two contacts' addresses
     * @param con1 a Contact
     * @param con2 a Contact
     * @return boolean. true if the Mailing Address fields have changed 
@@ -236,7 +236,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description utility to see if the contact's mailing address is empty
+    * @description returns whether the contact's mailing address is empty
     * @param con1 a Contact
     * @return boolean. true if the Mailing Address fields are all empty 
     ********************************************************************************************************/
@@ -249,8 +249,8 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
        
     /*******************************************************************************************************
-    * @description For each contact, create a new address or match an existing one.
-    * this routine is called both by BeforeInsert/Update and AfterInsert/Update.
+    * @description Creates a new address or matches an existing one, for each Contact.
+    * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
     * when pushing a new default address, we need to do it in the AfterInsert/Update.
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param listConAll the list of Contacts
@@ -362,7 +362,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description update the Latest date fields on any address overrides
+    * @description Updates the Latest date fields on any address overrides
     * @param mapAddrIdIsOverride map of Address Id's to an isOverride boolean
     * @param dmlWrapper to hold the Addresses that need updating 
     * @return void  
@@ -383,7 +383,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description for each Contact, find its HH current address (either Default or Seasonal) and update 
+    * @description Finds each Contact's HH current address (either Default or Seasonal) and updates 
     * the contact's address fields
     * @param listCon list of Contacts 
     * @return void  

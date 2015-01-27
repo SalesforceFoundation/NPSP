@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2014
 * @group Address Management
-* @description support needed on Account for Address management 
+* @description Trigger Handler on Account for Address management 
 */
 public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 

@@ -37,7 +37,7 @@
 @isTest
 private with sharing class ACCT_HHAccounts_TEST {
 
-    /**
+    /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
@@ -172,12 +172,13 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        create N new contacts, M non-empty hh account supplied 
-    verify:
-        contacts added to existing hh accounts
-        accounts' name and naming fields updated
-        hh accounts' primary contact not updated
+    * @description
+    * operation:
+    *    create N new contacts, M non-empty hh account supplied 
+    * verify:
+    *    contacts added to existing hh accounts
+    *    accounts' name and naming fields updated
+    *    hh accounts' primary contact not updated
     **********************************************************************************************************/            
     static testMethod void NewContactsNonEmptyHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'NewContactsNonEmptyHHAccounts') return;
@@ -250,13 +251,13 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        create N new contacts, household object supplied 
-    verify:
-        N hh accounts created
-        accounts' name and naming fields set
-        hh accounts' primary contact set to new contact
-        UNDONE: household object ignored or set???
+    * @description
+    * operation:
+    *    create N new contacts, household object supplied 
+    * verify:
+    *    N hh accounts created
+    *    accounts' name and naming fields set
+    *    hh accounts' primary contact set to new contact
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccountsWithHHObj() {
         if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccountsWithHHObj') return;
@@ -302,18 +303,18 @@ private with sharing class ACCT_HHAccounts_TEST {
         }
         
         list<Contact> listCon2 = [select Id, Name, npo02__Household__c from Contact where npo02__Household__c = :hh.Id];
-        // UNDONE: what do we want to happen
         system.assertEquals(3, listCon2.size());
     
     }
 
     /*********************************************************************************************************
-    operation:
-        update N existing contacts w/ HH accounts to M different HH accounts 
-    verify:
-        N-M hh accounts originally created get deleted
-        accounts' name and naming fields set
-        hh accounts' primary contact set to one of the HH contacts
+    * @description
+    * operation:
+    *     update N existing contacts w/ HH accounts to M different HH accounts 
+    * verify:
+    *    N-M hh accounts originally created get deleted
+    *    accounts' name and naming fields set
+    *    hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void UpdateContactsMergeHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'UpdateContactsMergeHHAccounts') return;
@@ -392,12 +393,13 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
     
     /*********************************************************************************************************
-    operation:
-        split N multi member HH accounts into 2N HH accounts 
-    verify:
-        2N HH accounts remain
-        accounts' name and naming fields set
-        hh accounts' primary contact set to one of the HH contacts
+    * @description
+    * operation:
+    *    split N multi member HH accounts into 2N HH accounts 
+    * verify:
+    *    2N HH accounts remain
+    *    accounts' name and naming fields set
+    *    hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void UpdateContactsSplitHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'UpdateContactsSplitHHAccounts') return;
@@ -490,13 +492,14 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        delete contacts from single and multi-contact HH Accounts
-    verify:
-        HH Accounts with no remaining contacts are deleted
-        HH Accounts with remaining contacts remain
-        accounts' name and naming fields set
-        hh accounts' primary contact set to one of the HH contacts
+    * @description
+    * operation:
+    *    delete contacts from single and multi-contact HH Accounts
+    * verify:
+    *    HH Accounts with no remaining contacts are deleted
+    *    HH Accounts with remaining contacts remain
+    *    accounts' name and naming fields set
+    *    hh accounts' primary contact set to one of the HH contacts
     **********************************************************************************************************/            
      static testMethod void DeleteContactsFromHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'DeleteContactsFromHHAccounts') return;
@@ -559,13 +562,13 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    @description
-    operation:
-        delete and then undelete contacts from single and multi-contact HH Accounts
-    verify:
-        contacts added back to existing hh accounts
-        accounts' name and naming fields updated
-        hh accounts' primary contact valid
+    * @description
+    * operation:
+    *    delete and then undelete contacts from single and multi-contact HH Accounts
+    * verify:
+    *    contacts added back to existing hh accounts
+    *    accounts' name and naming fields updated
+    *     hh accounts' primary contact valid
     **********************************************************************************************************/            
     static testMethod void UndeleteContactsFromHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'UndeleteContactsFromHHAccounts') return;
@@ -651,12 +654,13 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        updating existing contacts from 1:1 and bucket model to HH Accounts
-    verify:
-        1:1 accounts deleted, bucket account left alone
-        accounts' name and naming fields updated
-        hh accounts' primary contact valid
+    * @description
+    * operation:
+    *    updating existing contacts from 1:1 and bucket model to HH Accounts
+    * verify:
+    *    1:1 accounts deleted, bucket account left alone
+    *    accounts' name and naming fields updated
+    *    hh accounts' primary contact valid
     **********************************************************************************************************/    
     static testmethod void UpdateOneToOneAndBucketContactsToHHAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'UpdateOneToOneAndBucketContactsToHHAccounts') return;
@@ -728,13 +732,14 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        change owner on N contacts with various types of accounts
-    verify:
-        accounts' owner changed to match
-        works for 1:1 and HH accounts
-        no change for HH accounts with multiple contacts
-        no change for any other type of account
+    * @description
+    * operation:
+    *    change owner on N contacts with various types of accounts
+    * verify:
+    *    accounts' owner changed to match
+    *    works for 1:1 and HH accounts
+    *    no change for HH accounts with multiple contacts
+    *    no change for any other type of account
     **********************************************************************************************************/                
     static testMethod void changeContactOwners() {
         if (strTestOnly != '*' && strTestOnly != 'changeContactOwners') return;
@@ -805,11 +810,12 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        change N contacts with HH accounts and primary opps to new HH accounts 
-    verify:
-        closed opps stay with old HH accounts
-        open opps move to new HH accounts
+    * @description
+    * operation:
+    *    change N contacts with HH accounts and primary opps to new HH accounts 
+    * verify:
+    *    closed opps stay with old HH accounts
+    *    open opps move to new HH accounts
     **********************************************************************************************************/            
     static testMethod void changeContactsCheckOpps() {
         if (strTestOnly != '*' && strTestOnly != 'changeContactsCheckOpps') return;
@@ -876,10 +882,11 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        add a contact to an exiting HH Account that has a Primary Contact
-    verify:
-        the Account's Primary Contact doesn't change
+    * @description
+    * operation:
+    *    add a contact to an exiting HH Account that has a Primary Contact
+    * verify:
+    *    the Account's Primary Contact doesn't change
     **********************************************************************************************************/            
     static testMethod void addContactCheckAccountPrimaryContact() {
         if (strTestOnly != '*' && strTestOnly != 'addContactCheckAccountPrimaryContact') return;
@@ -913,10 +920,11 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
         
     /*********************************************************************************************************
-    operation:
-        create a new account with HH record type
-    verify:
-        the system fields on the account are set correctly
+    * @description
+    * operation:
+    *    create a new account with HH record type
+    * verify:
+    *    the system fields on the account are set correctly
     **********************************************************************************************************/            
     static testMethod void newHHAccountWithRecordTypeOnly() {
         if (strTestOnly != '*' && strTestOnly != 'newHHAccountWithRecordTypeOnly') return;
@@ -933,10 +941,11 @@ private with sharing class ACCT_HHAccounts_TEST {
     }
 
     /*********************************************************************************************************
-    operation:
-        update an existing account to the HH record type
-    verify:
-        the system fields on the account are set correctly
+    * @description
+    * operation:
+    *    update an existing account to the HH record type
+    * verify:
+    *    the system fields on the account are set correctly
     **********************************************************************************************************/            
     static testMethod void updateAccountToHHRecordType() {
         if (strTestOnly != '*' && strTestOnly != 'updateAccountToHHRecordType') return;
