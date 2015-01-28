@@ -64,8 +64,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     if (con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c)
                         copyNamingExclusionsFromCheckboxes(con);
 
-                    if (con.Deceased__c)
-                        markContactDeceased(con);
                 //before update case:
                 //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
                 //then, copy from multiselect to checkboxes if multiselect has changed
@@ -80,9 +78,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     } else if (con.npo02__Naming_Exclusions__c != oldCon.npo02__Naming_Exclusions__c) {
                         copyNamingExclusionsFromMSP(con);
                     }
-
-                    if (con.Deceased__c && !oldCon.Deceased__c)
-                        markContactDeceased(con);
                 }
             }
         } else {
@@ -257,13 +252,13 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    public void copyNamingExclusionsFromMSP(Contact con) {
+    public static void copyNamingExclusionsFromMSP(Contact con) {
         con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
         con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
         con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
     }
 
-    public void copyNamingExclusionsFromCheckboxes(Contact con) {
+    public static void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
         
         if (con.Exclude_from_Household_Name__c)
@@ -277,16 +272,6 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             mspValue = mspValue.substring(0,mspValue.length()-1);
 
         con.npo02__Naming_Exclusions__c = mspValue;
-    }
-
-    public void markContactDeceased(Contact con) {
-        con.HasOptedOutOfEmail = true;
-        con.DoNotCall = true;
-        con.Exclude_from_Household_Name__c = true;
-        con.Exclude_from_Household_Formal_Greeting__c = true;
-        con.Exclude_from_Household_Informal_Greeting__c = true;
-        
-        copyNamingExclusionsFromCheckboxes(con);
     }
 
     public static void contactMergeUpdate(Set<Id> winningContacts){     
