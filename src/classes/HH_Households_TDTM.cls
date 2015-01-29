@@ -32,16 +32,18 @@
 * @date 2011 (2.0)
 * @group Households
 * @group-content ../../ApexDocContent/Households.htm
-* @description Handles creation, deleting and moving of Households between Contacts 
+* @description Trigger Handler on Contact to deal with managing Households (Accounts and Objects)
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
-        
-    /// <name> HH_Households_TDTM </name>
-    /// <summary> Overloads the HH_Households_TDTM object constructor to handle Household processing </summary>
-    /// <param name="households"> Household objects that are being triggered </param>
-    /// <param name="oldHouseholds"> Household object values before trigger event </param>
-    /// <param name="ta"> Trigger action that is occuring </param>
-  	
+          	
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contacts that handles managing Households
+    * @param listNew the list of Contacts from trigger new. 
+    * @param listOld the list of Contacts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Contacts 
+    * @return dmlWrapper.  the objects to insert/update/delete
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
