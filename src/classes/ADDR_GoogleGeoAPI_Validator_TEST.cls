@@ -48,7 +48,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        update settings;
+        
         return settings;
     }
 
@@ -183,7 +183,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
-        update settings;
+        
 
         Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino');
 

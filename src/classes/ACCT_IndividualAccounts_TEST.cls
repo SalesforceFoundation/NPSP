@@ -94,7 +94,7 @@ private class ACCT_IndividualAccounts_TEST {
     	//Set Individual (Bucket) settings
     	npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
     	contactsSettings.npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR;
-        update contactsSettings;
+        
         
     	//Create a contact
     	Contact contact1 = new Contact(FirstName = 'Test', LastName = 'Testerson');
@@ -110,7 +110,6 @@ private class ACCT_IndividualAccounts_TEST {
     	
     	//Change to Household Account
     	contactsSettings.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
-        update contactsSettings;
             
     	//Create a Contact
     	Contact contact2 = new Contact(FirstName = 'Test2', LastName = 'Testerson2');
