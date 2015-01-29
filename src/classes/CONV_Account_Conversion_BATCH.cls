@@ -559,12 +559,13 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
         if(householdAccount != null)
             ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
-
-        update ContactsSettings;
+        if(!Test.isRunningTest())
+            upsert ContactsSettings;
 
         npo02__Households_Settings__c HHSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         HHSettings.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
-        update HHSettings;
+        if(!Test.isRunningTest())
+            upsert HHSettings;
     }
 
     /*******************************************************************************************************

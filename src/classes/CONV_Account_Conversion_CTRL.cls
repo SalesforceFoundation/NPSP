@@ -258,7 +258,8 @@ public with sharing class CONV_Account_Conversion_CTRL {
         if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c == null && householdAccount != null){
             npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
             ContactsSettings.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
-            update ContactsSettings;
+            if(!Test.isRunningTest())
+                upsert ContactsSettings;
         }
 
         //check the running user's profile access to the account rec type to be used for HH accounts

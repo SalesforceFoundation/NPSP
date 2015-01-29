@@ -128,7 +128,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if(npe04Settings != null) npspCustomSettings.add(npe04Settings);
         if(npspCustomSettings.size() > 0) {
             UTIL_Debug.debug('****Deactivating pre-cumulus flags');
-            update npspCustomSettings;
+            if(!Test.isRunningTest())
+                update npspCustomSettings;
         }
         
         return npspExistingSettings;

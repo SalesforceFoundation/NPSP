@@ -125,8 +125,10 @@ public with sharing class TDTM_TriggerHandler {
             // we do need to allow some specific tests that are testing our error handling
             // to avoid the assert, because by allowing it to throw an exception within our catch, it
             // changes system behavior.
-            if (Test.isRunningTest() && !suppressDebugAssertAfterErrorLogging)
+            if (Test.isRunningTest() && !suppressDebugAssertAfterErrorLogging) {
+                UTIL_Debug.debug('****Stack trace: ' + e.getStackTraceString());
                 system.assertEquals(null, e.getMessage()); 
+            }
         }
     }
     

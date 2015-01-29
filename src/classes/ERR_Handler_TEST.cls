@@ -197,7 +197,6 @@ public with sharing class ERR_Handler_TEST {
         //Disable error handling. Using the API class just to give it test coverage.
         Error_Settings__c errorSettings = UTIL_CustomSettings_API.getErrorSettings();
         errorSettings.Disable_Error_Handling__c = true;
-        update errorSettings;
         
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ERR_ParentAccountUpdater_TEST', Load_Order__c = 1, Object__c = 'Contact', 

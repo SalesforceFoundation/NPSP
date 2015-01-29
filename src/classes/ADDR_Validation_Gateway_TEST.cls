@@ -55,7 +55,6 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        upsert settings;
         
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         return new ADDR_SmartyStreets_Gateway(settings);
@@ -109,7 +108,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '400';
-        update settings;
+        
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -128,7 +127,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
     	
     	settings.Address_Verification_Endpoint__c = '401';
-        update settings;
+        
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -147,7 +146,6 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '402';
-        update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
@@ -166,7 +164,6 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
         
         settings.Address_Verification_Endpoint__c = '500';
-        update settings;
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
