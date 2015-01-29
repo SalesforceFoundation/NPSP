@@ -368,7 +368,7 @@ private with sharing class HH_NameSpec_TEST {
         hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         hns.Name_Connector__c = '&';
-        update hns;    
+            
 
         // refresh all names
         Test.startTest();
@@ -466,14 +466,11 @@ private with sharing class HH_NameSpec_TEST {
         hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         hns.Name_Connector__c = '&';
-        update hns;    
         
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
-        update householdSettingsForTests;
         npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update householdsSettings;
 
         // refresh all names
         Test.startTest();
@@ -530,14 +527,11 @@ private with sharing class HH_NameSpec_TEST {
         hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
         hns.Informal_Greeting_Format__c = '{!{!FirstName} Dude}';
         hns.Name_Connector__c = '&';
-        update hns;    
         
         // turn on hh naming
         householdSettingsForTests.npo02__Advanced_Household_Naming__c = true;
-        update householdSettingsForTests;
          npo02__Households_Settings__c householdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         householdsSettings.npo02__Advanced_Household_Naming__c = true;
-        update householdsSettings;
 
         // refresh all names
         Test.startTest();

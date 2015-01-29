@@ -53,7 +53,6 @@ public with sharing class ADDR_Validator_Batch_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = false;
         settings.Reject_Ambiguous_Addresses__c = true;
-        upsert settings;
    
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
     }

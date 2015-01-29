@@ -45,7 +45,8 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     	Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         if(avs.Class__c == 'ADDR_SmartyStreets_Validator') {
     	   avs.Using_SmartyStreets__c = true;
-            update avs;
+           if(!Test.isRunningTest())
+               upsert avs;
         }
         
         //query for all US addresses

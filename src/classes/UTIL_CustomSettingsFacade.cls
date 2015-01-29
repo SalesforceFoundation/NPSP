@@ -161,6 +161,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
         return allocationsSettings;
     }
+    
+    public static Data_Import_Settings__c getDataImportSettings() {        
+        if (dataImportSettings == null) {
+            dataImportSettings = Data_Import_Settings__c.getInstance();
+            if (dataImportSettings.Id == null) 
+                dataImportSettings = getOrgDataImportSettings();
+        }
+        return dataImportSettings;
+    }
 
     /**
      * Methods that try retrieving the org-level custom settings. Default org-level settings will be created if none exist.
@@ -172,7 +181,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             if(orgContactsSettings.Id == null) {
                 configContactsSettings(orgContactsSettings);
                 orgContactsSettings.Setupownerid = UserInfo.getOrganizationId();
-                upsert orgContactsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgContactsSettings;
             }
         }
         return orgContactsSettings;
@@ -184,7 +194,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             if(orgHouseholdsSettings.Id == null) {
                 configHouseholdSettings(orgHouseholdsSettings);
                 orgHouseholdsSettings.Setupownerid = UserInfo.getOrganizationId();
-                upsert orgHouseholdsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgHouseholdsSettings;
             }
         }
         return orgHouseholdsSettings;
@@ -195,7 +206,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
             if(orgRecurringDonationsSettings.Id == null || orgRecurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(orgRecurringDonationsSettings);
-                upsert orgRecurringDonationsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgRecurringDonationsSettings;
             }
         }
         return orgRecurringDonationsSettings;
@@ -206,7 +218,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgRelationshipsSettings = npe4__Relationship_Settings__c.getOrgDefaults();
             if(orgRelationshipsSettings.Id == null) {
                 configRelationshipsSettings(orgRelationshipsSettings);
-                upsert orgRelationshipsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgRelationshipsSettings;
             }
         }
         return orgRelationshipsSettings;
@@ -217,7 +230,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgAffiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
             if(orgAffiliationsSettings.Id == null) {
                 configAffiliationsSettings(orgAffiliationsSettings);
-                upsert orgAffiliationsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgAffiliationsSettings;
             }
         }
         return orgAffiliationsSettings;
@@ -228,7 +242,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgErrorSettings = Error_Settings__c.getOrgDefaults();
             if(orgErrorSettings.Id == null) {
                 configErrorSettings(orgErrorSettings, null);
-                upsert orgErrorSettings;
+                if(!Test.isRunningTest())
+                    upsert orgErrorSettings;
             }
         }
         return orgErrorSettings;
@@ -239,7 +254,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgBDESettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
             if(orgBDESettings.Id == null) {
                 configBDESettings(orgBDESettings);
-                upsert orgBDESettings;
+                if(!Test.isRunningTest())
+                    upsert orgBDESettings;
             }
         }
         return orgBDESettings;
@@ -250,7 +266,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgAddressVerificationSettings = Addr_Verification_Settings__c.getOrgDefaults();
             if(orgAddressVerificationSettings.Id == null) {
                 configAddressVerificationSettings(orgAddressVerificationSettings);
-                upsert orgAddressVerificationSettings;
+                if(!Test.isRunningTest())
+                    upsert orgAddressVerificationSettings;
             }
         }
         return orgAddressVerificationSettings;
@@ -261,7 +278,8 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgHouseholdNamingSettings = Household_Naming_Settings__c.getOrgDefaults();
             if(orgHouseholdNamingSettings.Id == null) {
                 configHouseholdNamingSettings(orgHouseholdNamingSettings);
-                upsert orgHouseholdNamingSettings;
+                if(!Test.isRunningTest())
+                    upsert orgHouseholdNamingSettings;
             }
         }
         return orgHouseholdNamingSettings;
@@ -272,10 +290,24 @@ public without sharing class UTIL_CustomSettingsFacade {
             orgAllocationsSettings = Allocations_Settings__c.getOrgDefaults();
             if (orgAllocationsSettings.Id == null) {
                 configAllocationsSettings(orgAllocationsSettings);
-                upsert orgAllocationsSettings;
+                if(!Test.isRunningTest())
+                    upsert orgAllocationsSettings;
             }
         }
         return orgAllocationsSettings;
+    }
+    
+    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    public static Data_Import_Settings__c getOrgDataImportSettings() {
+        if (orgDataImportSettings == null) {
+            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
+            if (orgDataImportSettings.Id == null) {
+                configDataImportSettings(orgDataImportSettings);
+                if(!Test.isRunningTest())
+                    upsert orgDataImportSettings;
+            }
+        }
+        return orgDataImportSettings;
     }
 
     /**
@@ -409,6 +441,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         allosettings.Rollup_N_Day_Value__c = 365;
         allosettings.Use_Fiscal_Year_for_Rollups__c = false;
     }
+    
+    private static void configDataImportSettings(Data_Import_Settings__c dis) {
+        dis.Batch_Size__c = 50;
+        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+    }
 
     /**
      * Methods that will create custom settings for tests.
@@ -428,7 +465,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
-        upsert contactsSettings;
+        orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
     
@@ -456,13 +493,12 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c;
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
-        upsert householdsSettings;
+        orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
             if (getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
                 getContactsSettings().npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
-                upsert contactsSettings;    
             }   
         }
         return householdsSettings;
@@ -472,10 +508,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(relationshipsSettings == null)
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
         
-        //create our own based on what's passed in from the test
         relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
         relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
-        upsert relationshipsSettings;
+        orgRelationshipsSettings = relationshipsSettings;
         return relationshipsSettings;
     }
     
@@ -484,7 +519,7 @@ public without sharing class UTIL_CustomSettingsFacade {
            affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
            
         affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
-        upsert affiliationsSettings;
+        orgAffiliationsSettings = affiliationsSettings;
         return affiliationsSettings;
     }
     
@@ -495,7 +530,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
-        upsert errorSettings;
+        orgErrorSettings = errorSettings;
         return errorSettings;  
     }
 
@@ -509,37 +544,21 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Excluded_Opp_Types__c = mySettings.Excluded_Opp_Types__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
-
-        upsert allocationsSettings;
+        orgAllocationsSettings = allocationsSettings;
         return allocationsSettings;
     }
-
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
-    public static Data_Import_Settings__c getOrgDataImportSettings() {
-        if (orgDataImportSettings == null) {
-            orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
-            if (orgDataImportSettings.Id == null) {
-                configDataImportSettings(orgDataImportSettings);
-                upsert orgDataImportSettings;
-            }
-        }
-        return orgDataImportSettings;
-    }
     
-    //zero-arguments method that will set custom setting defaults
-    public static Data_Import_Settings__c getDataImportSettings() {        
-        if (dataImportSettings == null) {
-            dataImportSettings = Data_Import_Settings__c.getInstance();
-            if (dataImportSettings.Id == null) 
-                dataImportSettings = getOrgDataImportSettings();
-        }
-        return dataImportSettings;
+            
+    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c mySettings) {
+        if (recurringDonationsSettings == null)
+            recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            
+        recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = mySettings.npe03__Opportunity_Forecast_Months__c;
+        recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
+        recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = mySettings.npe03__Open_Opportunity_Behavior__c;
+        recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = mySettings.npe03__Add_Campaign_to_All_Opportunites__c;
+        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;  
+        orgRecurringDonationsSettings = recurringDonationsSettings;
+        return recurringDonationsSettings;
     }
-    
-    private static void configDataImportSettings(Data_Import_Settings__c dis) {
-        dis.Batch_Size__c = 50;
-        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
-    }
-
-
 }

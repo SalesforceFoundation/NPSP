@@ -79,7 +79,8 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
         rds.npe03__Last_Batch_Run__c = a.CompletedDate;
         rds.npe03__Number_of_Successes__c = recCount - failuresCount;
         rds.npe03__Number_of_Failures__c = failuresCount;
-        update rds;                            
+        if(!Test.isRunningTest())
+            upsert rds;                            
         
         //if needed, send error notifications
         ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.RD.name());        
