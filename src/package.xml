@@ -32,8 +32,6 @@
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
-    <members>AFFL_Affiliations_UTIL</members>
-    <members>AFFL_BulkTests_TEST</members>
     <members>ALLO_Allocations_TDTM</members>
     <members>ALLO_Allocations_TEST</members>
     <members>ALLO_MakeDefaultAllocations_BATCH</members>
