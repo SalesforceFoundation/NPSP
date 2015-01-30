@@ -147,7 +147,7 @@ public with sharing class CON_ContactMerge_CTRL {
     // This is an action method for the "Select All" command link on the page to select all the values of a certain record.
     public void selectDefaultRecord() {
         String recordId = Apexpages.currentPage().getParameters().get('recordId');
-        //System.debug('Selected Record: ' + recordId);
+        //UTIL_Debug.debug('Selected Record: ' + recordId);
         if (recordId != null && selectedRecords.keySet().contains(recordId)) {
             for (FieldRow row : fieldRows) {
                 if (row.showRadio) {
@@ -216,7 +216,7 @@ public with sharing class CON_ContactMerge_CTRL {
         // Finally completing the query by appending the table name and the filter clause
         query += ' from Contact where id IN :mergeCandidates';
         
-        //System.debug('The contact query is: ' + query);
+        //UTIL_Debug.debug('The contact query is: ' + query);
         
         List<Contact> contacts;
         try {
@@ -405,7 +405,7 @@ public with sharing class CON_ContactMerge_CTRL {
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
         String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + '*\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
-        //System.debug('Search Query: ' + searchquery);
+        //UTIL_Debug.debug('Search Query: ' + searchquery);
         
         return search.query(searchquery);
         //List<List<SObject>> searchList = new List<List<SObject>>();
@@ -418,19 +418,19 @@ public with sharing class CON_ContactMerge_CTRL {
         //loop through the contacts putting them in an array of wrappers
         if(mySearchList.size()>0){
             for (List<SObject> returnedObjects : mySearchList) {
-                //System.debug('List size' + returnedObjects.size());
+                //UTIL_Debug.debug('List size' + returnedObjects.size());
                 for (SObject returnedObject : returnedObjects){
                     //if the returned object is a contact, add it to the Contact list
                     if(returnedObject.getSObjectType() == Contact.sObjectType){
                         contactWrapper thisResult = new contactWrapper((Contact) returnedObject);   
-                        //System.debug('Contact Id: ' + returnedObject.id);
-                        //System.debug('Contact: ' + returnedObject);         
+                        //UTIL_Debug.debug('Contact Id: ' + returnedObject.id);
+                        //UTIL_Debug.debug('Contact: ' + returnedObject);         
                         res.add(thisResult);   
                     }
                 }
             }
         }
-        //System.debug('Search Results Map Size: ' + res.size());
+        //UTIL_Debug.debug('Search Results Map Size: ' + res.size());
         return res;       
     }
     
@@ -451,7 +451,7 @@ public with sharing class CON_ContactMerge_CTRL {
                 if (row.showRadio && !row.fieldName.equals(MASTER_KEY) && row.selectedValue != master.id) {
                     SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
                     
-                    //System.debug('Assigning field: ' + row.fieldName);
+                    //UTIL_Debug.debug('Assigning field: ' + row.fieldName);
                     
                     // Sobject.put is not happy when sobject.get returns null. It throws an exception System.SObjectException: Illegal assignment from Object to String.
                     // But instead when you pass a null directly to put, it works fine. And hence, this if statement.
@@ -459,9 +459,9 @@ public with sharing class CON_ContactMerge_CTRL {
                         master.put(row.fieldName, null);    
                     } else {
                         Object val = selectedRecord.get(row.fieldName);
-                        //System.debug('Setting value: ' + val);
+                        //UTIL_Debug.debug('Setting value: ' + val);
                         master.put(row.fieldName, val);
-                        //System.debug('Set value: ' + master.get(row.fieldName));
+                        //UTIL_Debug.debug('Set value: ' + master.get(row.fieldName));
                     }
                 }
             }
@@ -494,7 +494,7 @@ public with sharing class CON_ContactMerge_CTRL {
             	return new PageReference('/' + master.id);
             } catch (Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler.Context.CON);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.CON);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
             }
         } else {

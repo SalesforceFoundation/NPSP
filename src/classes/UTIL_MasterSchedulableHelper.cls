@@ -30,9 +30,10 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014 
+* @group Utilities
 * @description Calls all classes to execute at a specific run of the master scheduler.
 */
-public with sharing class UTIL_MasterSchedulableHelper {
+public without sharing class UTIL_MasterSchedulableHelper {
 
     public interface UTIL_IRecurring {
         Boolean executeReturnStatus();
@@ -79,7 +80,7 @@ public with sharing class UTIL_MasterSchedulableHelper {
                Object instance = classType.newInstance(); 
                if(instance instanceof UTIL_IRecurring) {
                    try {
-                       System.debug(LoggingLevel.WARN, '****Running ' + instance);
+                       UTIL_Debug.debug(LoggingLevel.WARN, '****Running ' + instance);
                        Boolean wasRun = ((UTIL_IRecurring)instance).executeReturnStatus();
                        //Update last time run
                        if(wasRun) {
@@ -100,7 +101,7 @@ public with sharing class UTIL_MasterSchedulableHelper {
         //Abort the old NPSPv3 schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
         //Abort the scheduled jobs from the old NPSP packages.
         //Abort the "new" scheduled jobs so that they get rescheduled again from the settings page. We just changed the name
-        //slightly (added a space) to that they get rescheduled (with diffrent name when a user visits the settings page).
+        //slightly (added a space) so that they get rescheduled (with different name when a user visits the settings page).
         String[] jobNames = new String[]{'NPSP Global Scheduler', 'Nightly Opportunity Roll Up', 'Recurring Donation Updates', 
             'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};     
         List<CronTrigger> oldScheduledJobs = [select Id, CronJobDetail.Id from CronTrigger 

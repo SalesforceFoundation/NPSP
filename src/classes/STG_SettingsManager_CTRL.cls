@@ -29,6 +29,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @author Salesforce Foundation
 * @date 01/13/2014
+* @group Settings
 * @description controller for the Settings Manager page
 */
 
@@ -50,7 +51,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     public void setTriggerSchedConfig() {
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();
-        installScript.setTriggerConfig();
+        installScript.runNewOrgScript();
         //Set master schedulables config
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
         UTIL_MasterSchedulableHelper.setSchedulableTable();

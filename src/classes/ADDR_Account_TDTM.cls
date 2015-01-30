@@ -30,20 +30,29 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description support needed on Account for Address management 
+* @group Address Management
+* @description Trigger Handler on Account for Address management 
 */
 public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger Handler on Account that handles Address management.
+    * @param listNew the list of Accounts from trigger new. 
+    * @param listOld the list of Accounts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Accounts 
+    * @return dmlWrapper.  
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         DmlWrapper dmlWrapper = new DmlWrapper();  
         list<Account> listAccCreateAddr = new list<Account>();      
        
-        integer i = 0;        
+        integer i = -1;        
         for (SObject so : listNew) {
             Account acc = (Account)so;
+            i++;
 
             // BEFORE INSERT
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -55,7 +64,13 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-
+                // on insert, we only need to create addresses for Org accounts.
+                // Household accounts are handled during the after update, which will always occur
+                // as they are being hooked up with their primary contact. 
+                if (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+                    if (isAccountAddressSpecified(acc))
+                        listAccCreateAddr.add(acc);
+                }
             }
     
             // AFTER UPDATE
@@ -65,16 +80,16 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                 // in which case we don't want to create a new address.
                 if (ADDR_Addresses_TDTM.hasRunAddrTrigger)
                     continue;
-                // we only support address management with HH Accounts
-                if (acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE)
-                    continue;
-                // if the address changed, remember the account we want to add a new address for    
-                if (isAccountAddressChanged(acc, accOld)) 
-                    listAccCreateAddr.add(acc);
-            }    
-            
-            // moving to the next item
-            i++;
+                // we only support address management with HH Accounts and Organizational Accounts (if enabled)
+                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                		!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && 
+                    	UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
+	                // if the address changed, remember the account we want to add a new address for    
+	                if (isAccountAddressChanged(acc, accOld)) 
+	                    listAccCreateAddr.add(acc);
+                }
+            }                
         }
 
         // create any new Address objects
@@ -83,8 +98,30 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
                     
         return dmlWrapper;    
     }
+    
+    /*******************************************************************************************************
+    * @description utility to see if an address is specified
+    * @param acc1 an Account
+    * @return boolean.  true if an address is specified in any of the Account Billing fields
+    ********************************************************************************************************/
+    private boolean isAccountAddressSpecified(Account acc1) {
+        if (acc1 == null) 
+           return false;
+        
+        return (
+           acc1.BillingStreet != null ||
+           acc1.BillingCity != null ||
+           acc1.BillingState != null ||
+           acc1.BillingPostalCode != null ||
+           acc1.BillingCountry != null);
+    }
 
-    // utility to compare two Accounts' (billing) addresses
+    /*******************************************************************************************************
+    * @description utility to compare two Accounts' (billing) addresses
+    * @param acc1 an Account
+    * @param acc2 an Account
+    * @return boolean. true if there are any changes between the two accounts.
+    ********************************************************************************************************/
     private boolean isAccountAddressChanged(Account acc1, Account acc2) {
         if (acc1 == null || acc2 == null) 
            return false;
@@ -97,7 +134,13 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
            acc1.BillingCountry != acc2.BillingCountry);
     }
 
-    // for each Account, create a new default address and add it to dmlWrapper
+    // 
+    /*******************************************************************************************************
+    * @description for each Account, create a new default address and add it to dmlWrapper
+    * @param listAcc a list of Accounts
+    * @param dmlWrapper to hold the Addresses that need creating
+    * @return void
+    ********************************************************************************************************/
     private void createAddrFromAcc(list<Account> listAcc, DmlWrapper dmlWrapper) {
         list<Address__c> listAddr = new list<Address__c>();
         for (Account acc : listAcc) {
@@ -106,12 +149,7 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.Default_Address__c = true;
             addr.Latest_Start_Date__c = system.today();
             addr.Latest_End_Date__c = null;
-            addr.MailingStreet__c = acc.BillingStreet;
-            addr.MailingCity__c = acc.BillingCity;
-            addr.MailingState__c = acc.BillingState;
-            addr.MailingPostalCode__c = acc.BillingPostalCode;
-            addr.MailingCountry__c = acc.BillingCountry;
-            ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr);            
             listAddr.add(addr);         
         }
         ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper);

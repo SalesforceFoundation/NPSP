@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description test class that provides address validation/normalization services
 * through the Cicero API.
  */
@@ -37,10 +38,15 @@
 @isTest
 public with sharing class ADDR_Cicero_TEST {
 	
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
+    /*********************************************************************************************************
+    * @description a fake http response from Cicero for test code
+    */
     private static string strResponseTest = 
 		'{'+
 		'"response" : {'+
@@ -179,6 +185,11 @@ public with sharing class ADDR_Cicero_TEST {
 		'}'+
 		'}';
     
+    /*********************************************************************************************************
+    * @description returns the HTTP Response from the HTTP Request for Cicero.
+    * @param req the HTTP Request object
+    * *returns HTTPResponse
+    */
     public static HTTPResponse respond(HTTPRequest req) {        
         // Create a fake response
         HttpResponse res = new HttpResponse();
@@ -188,7 +199,10 @@ public with sharing class ADDR_Cicero_TEST {
         return res;
     }
 
-	static testmethod void singleValidAddr() {
+    /*********************************************************************************************************
+    * @description Tests validating a single address.
+    */
+	private static testmethod void singleValidAddr() {
         if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
 
         list<Address__c> listAddr = new list<Address__c>();

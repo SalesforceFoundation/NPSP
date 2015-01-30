@@ -79,7 +79,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                     }
 
                     q = q.subString(0, q.length() - 2);
-                    system.debug('Q IS: ' + q);
+                    UTIL_Debug.debug('Q IS: ' + q);
                     q += ' from ' + UTIL_Namespace.StrTokenNSPrefix('Batch__c') + ' where id = \'' + stdController.getId() + '\' limit 1';
                     batch = Database.query(q);        
                 }
@@ -91,7 +91,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         
         public void initializeBatchEntry(){
                
-            bdec = Batch_Data_Entry_Settings__c.getOrgDefaults();
+            bdec = UTIL_CustomSettingsFacade.getBDESettings();
             
             //no defaults yet loaded, create one
             if (bdec == null){
@@ -109,7 +109,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                     displayBatchSection = bde.getSaveBatch();                       
                     displayRecInfoSection = true;
                             
-                    String pluralName = BDE_DescribeHelper_UTIL.getObjectDescribe(objname).getLabelPlural();
+                    String pluralName = UTIL_Describe.getObjectDescribe(objname).getLabelPlural();
                     pageSubtitle = pluralName;
                                                     
                     entryFieldList = new list<EntryField>();
@@ -156,8 +156,9 @@ public with sharing class BDE_BatchEntry_CTRL {
                 } 
                 else{
                     objectSettingsList = new List<SelectOption>();
-                    for(String str : BDE_BatchDataEntry.listStrBDEObjects()) {
-                        objectSettingsList.add(new SelectOption(str, str));
+                    map<string, string> mapBDE = BDE_BatchDataEntry.mapDevNameToLabelBDEObjects();
+                    for(String strDevName : mapBDE.keySet()) {
+                        objectSettingsList.add(new SelectOption(strDevName, mapBDE.get(strDevName)));
                     }
                     
                     pageSubtitle = 'Batch Data Entry Home';
@@ -193,7 +194,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                         
                 public entryField(string obj, string fld) {
                     fieldName = fld;
-                    fieldLabel = BDE_DescribeHelper_UTIL.getFieldLabel(obj, fld);
+                    fieldLabel = UTIL_Describe.getFieldLabel(obj, fld);
                     if(fieldName.toUpperCase().endsWith('ID') && fieldLabel.toUpperCase().endsWith('ID'))     
                         fieldLabel=fieldLabel.substring(0, fieldLabel.length()-2);               
                 }
@@ -235,7 +236,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                                 
                 public BatchItem(BDE_BatchEntry_CTRL parentClass) {
                         mydad = parentClass;       
-                        sobj = BDE_DescribeHelper_UTIL.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
+                        sobj = UTIL_Describe.getPrototypeObject(mydad.objname); //this line needs to be outside the check for displayBatchSection or we get an error on page load for any object where !displayBatchSection          
                         renderNPSPContact = false;
                         if (mydad.displayBatchSection) {
                             sobj.put(mydad.batchLookupField, parentClass.batch.id);
@@ -323,7 +324,7 @@ public with sharing class BDE_BatchEntry_CTRL {
         	
         	} catch(Exception e) {
         		Database.rollback(sp);
-                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));  
         	}
             return null;
@@ -377,7 +378,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 return null; 
             } catch(Exception e) {
                 Database.rollback(sp);
-                ERR_Handler.processError(e, batch, ERR_Handler.Context.BDE);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             }
             return null;   
@@ -401,7 +402,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 saveBatch();
             } catch(Exception e) {
 			    Database.rollback(sp);
-			    ERR_Handler.processError(e, ERR_Handler.Context.BDE);
+			    ERR_Handler.processError(e, ERR_Handler_API.Context.BDE);
 			    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
 			}        
         }

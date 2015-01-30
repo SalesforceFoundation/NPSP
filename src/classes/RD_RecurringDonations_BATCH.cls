@@ -65,24 +65,25 @@ UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 	        RD_ProcessControl.batchButton = true;
 	        recCount += result.size();
 	        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
-	     } catch(Exception e) {
+	    } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, result, ERR_Handler.Context.RD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }    
     }
     public void finish(Database.BatchableContext bc) {
         //update our settings
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         AsyncApexJob a = [select CompletedDate from AsyncApexJob where Id = :BC.getJobId()];
                                     
         rds.npe03__Last_Batch_Run__c = a.CompletedDate;
         rds.npe03__Number_of_Successes__c = recCount - failuresCount;
         rds.npe03__Number_of_Failures__c = failuresCount;
-        update rds;                            
+        if(!Test.isRunningTest())
+            upsert rds;                            
         
         //if needed, send error notifications
-        ERR_Notifier.sendErrorNotifications(ERR_Handler.Context.RD);        
+        ERR_Notifier.sendErrorNotifications(ERR_Handler_API.Context.RD.name());        
     }
     
     

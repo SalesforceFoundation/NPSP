@@ -30,15 +30,18 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Accounts
 * @description Tests for ACCT_ViewOverride_CTRL
 */
 @isTest
 private class ACCT_ViewOverride_TEST {
 
-    //can't test very well because of the way the page redirect is built
+    /*******************************************************************************************************
+    * @description Invoke the Account View Override Controller on an Account
+    */ 
     public static testMethod void accountViewOverride() {
         
-        CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Test.setCurrentPageReference(new PageReference('Page.ACCT_ViewOverride'));
         
@@ -64,13 +67,15 @@ private class ACCT_ViewOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
         //pass the controller into the extension
         ACCT_ViewOverride_CTRL ext = new ACCT_ViewOverride_CTRL(sc); 
-        ext.getAccount();
+        system.assertNotEquals(null, ext.getAccount());
 
     }
     
     
+    /*******************************************************************************************************
+    * @description Invoke the Account View Override Controller without specifying an Account
+    */ 
     public static testMethod void noAccount() {
-
         
         Test.setCurrentPageReference(new PageReference('Page.ACCT_ViewOverride'));
         
@@ -82,6 +87,6 @@ private class ACCT_ViewOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(newAccount);
         //pass the controller into the extension
         ACCT_ViewOverride_CTRL ext = new ACCT_ViewOverride_CTRL(sc); 
-        ext.getAccount();
+        system.assertEquals(null, ext.getAccount());
     }
 }

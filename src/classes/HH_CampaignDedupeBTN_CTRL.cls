@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description The controller for the VF page invoked by using the campaign dedupe button from the campaign record 
 */
 public without sharing class HH_CampaignDedupeBTN_CTRL {
@@ -40,7 +41,15 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     private string CampaignMailingListReportId;
     private boolean haveReportID;  
     private npo02__Households_Settings__c hs;
+
+    /*******************************************************************************************************
+    * @description the URL of the Campaign's detail page
+    */ 
     public string returnURL { get; private set; }
+
+    /*******************************************************************************************************
+    * @description URL to the Campaign Deduplication Report
+    */ 
     public string reportURL { get; private set; }
     
     //we get settings in the constructor, but if we don't have a report ID and query for it,
@@ -48,9 +57,13 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     //so we inform our action method to perform the update
     private boolean updateSettingsWithID = false; 
   
+    /*******************************************************************************************************
+    * @description Constructor
+    * @param controller StandardController to a Campaign
+    ********************************************************************************************************/
     public HH_CampaignDedupeBTN_CTRL(ApexPages.StandardController controller){   
         
-        hs = HH_Households.getHouseholdsSettings();
+        hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         CampaignMailingListReportId = hs.npo02__Household_Mailing_List_ID__c;
         haveReportID = true; 
       
@@ -76,9 +89,11 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         
         campaign = [select id, name, NumberOfContacts from campaign where id = :campaign.id];             
     }  
-  
-  
-    //we'll run this from the pages action method
+    
+    /*******************************************************************************************************
+    * @description Action Method that is run by the page's action method to run the deduplication procedure
+    * @return PageReference url to the Report if successful, this page if an error.
+    ********************************************************************************************************/
     public PageReference RunReport(){
     	Savepoint sp = Database.setSavepoint();
     	try {
@@ -120,7 +135,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
 	        }
     	} catch(Exception e) {
     		Database.rollback(sp);
-    		ERR_Handler.processError(e, ERR_Handler.Context.HH);
+    		ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     		return null;
     	}
@@ -156,7 +171,12 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         return strSoql;
     }
     
-    // the real worker that takes the list of CampaignMembers, and marks any in the list that are duplicates in the household.
+    /*******************************************************************************************************
+    * @description the real worker that takes the list of CampaignMembers, and marks any in the list that are duplicates in the household.
+    * @param Id the campaign's Id
+    * @param listCM list of CampaignMember records to evaluate
+    * @return integer the number of duplicates identified
+    ********************************************************************************************************/
     public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
 
         final string DUPETEXT = Label.hhCmpDedupeStatus;
@@ -243,6 +263,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         }
         
         integer returnsize = 0;
+        Savepoint sp = Database.setSavepoint();
         try{
             if (!newStatuses.isEmpty()) insert newStatuses;
             if (!dupeMembers.isEmpty()){
@@ -251,8 +272,8 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
             }
         }            
         catch (Exception e){
-            ERR_Handler.processError(e, ERR_Handler.Context.HH);
-            showMsg(e.getMessage(), ApexPages.Severity.ERROR);  
+        	Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.HH);
         }
         
         return returnsize;

@@ -83,7 +83,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

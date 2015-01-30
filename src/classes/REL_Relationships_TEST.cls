@@ -47,16 +47,13 @@ private class REL_Relationships_TEST {
     private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs){
         
         //set running user to avoid dml issue            
-        System.runAs(new User(id = UserInfo.getUserId())){ 
-        
-            //remove any existing settings
-            delete [select id from npe4__Relationship_Settings__c];
+        System.runAs(new User(id = UserInfo.getUserId())){
+                     
             if (rs != null)
-                insert rs;
-            else{
-                rs = new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description');
-                insert rs;           
-            }
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(rs);
+            else
+                UTIL_CustomSettingsFacade.getRelationshipsSettingsForTests(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 
+                                                                                    'List Setting', npe4__Gender_Field__c = 'Description'));         
             
             //add autocreate settings for CMs 
             delete [select id from npe4__Relationship_Auto_Create__c];
@@ -192,20 +189,20 @@ private class REL_Relationships_TEST {
         
         crel_original = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
                                             from npe4__Relationship__c where Id=:crel_original.Id];
-        System.debug('****Original relationship: ' + crel_original);
+        UTIL_Debug.debug('****Original relationship: ' + crel_original);
 
         // check mirror rel got created
         npe4__Relationship__c crel_mirror = [select id, npe4__Description__c, npe4__reciprocalrelationship__c, npe4__Type__c 
                                             from npe4__Relationship__c where npe4__reciprocalrelationship__c=:crel_original.Id];
 
-        System.debug('****Mirror relationship: ' + crel_mirror);
+        UTIL_Debug.debug('****Mirror relationship: ' + crel_mirror);
                                         
         //mirror should reference the original
         System.assertEquals(crel_original.Id, crel_mirror.npe4__reciprocalrelationship__c);        
         
         //original should reference mirror
         System.assertEquals(crel_mirror.Id, crel_original.npe4__reciprocalrelationship__c);  
-        System.debug('***Original successfully references mirror');
+        UTIL_Debug.debug('***Original successfully references mirror');
         
         //reset the process controller to mimic a second user action
         //Relationships_ProcessControl.hasRun = false;
@@ -237,14 +234,14 @@ private class REL_Relationships_TEST {
         //Verify a relationship was automatically created when the campaign member was created 
         List<npe4__Relationship__c> relationships = [select id, npe4__Type__c from npe4__Relationship__c 
                                         where npe4__Contact__c = :c2.id];
-        System.debug('****Number of relationships after creating campaign member: ' + relationships.size());
+        UTIL_Debug.debug('****Number of relationships after creating campaign member: ' + relationships.size());
         system.assertEquals(2, relationships.size());
         system.assertEquals('TestType', relationships[0].npe4__Type__c);
         
         //Verify a reciprocal relationship was also automatically created when the campaign member was created 
         List<npe4__Relationship__c> reciprocalRelationships = [select id, npe4__Type__c from npe4__Relationship__c 
                                         where npe4__ReciprocalRelationship__c = :relationships[0].id];
-        System.debug('****Number of reciprocal relationships: ' + reciprocalRelationships);
+        UTIL_Debug.debug('****Number of reciprocal relationships: ' + reciprocalRelationships);
         system.assertEquals(1, reciprocalRelationships.size());
         system.assertEquals('TestType', reciprocalRelationships[0].npe4__Type__c);
         
@@ -561,10 +558,10 @@ private class REL_Relationships_TEST {
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
     }
     
-    static testMethod void testErrorRecordCreation(){
+    static testMethod void testErrorRecordCreation() {
     	if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
     	
-    	insert new Error_Settings__c(Store_Errors_On__c = true);
+    	UTIL_CustomSettingsFacade.getErrorSettings();
     	
         setupRelationshipTestData(null);
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
@@ -572,18 +569,21 @@ private class REL_Relationships_TEST {
         };
         Database.SaveResult[] insertResults = Database.insert(relationships, false);
         //assert an error - Required fields are missing: [npe4__Contact__c]
+        //npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
         system.assertEquals(1, [select count() from Error__c]);
         
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
-        Database.SaveResult[] updateResults = Database.update(relationships, false);
-        System.debug('****npe4__Contact__c field: ' + relationships[0].npe4__Contact__c);
+        Database.SaveResult[] updateResults = Database.update(relationships, false);   
+        system.assertNotEquals(null, relationships[0].npe4__Contact__c);
         
-        //process error
-        ERR_Handler errorHandler = new ERR_Handler();
-        errorHandler.processUpdateResults(updateResults, (List<SObject>)relationships, ERR_Handler.Context.REL);
-        System.debug(LoggingLevel.WARN, '****Relationships record: ' + relationships[0]);
-        //no additional error was created on update
+        //get errors
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(updateResults, (List<SObject>)relationships);
+        //we still get an error, because of the Related_Contact_Do_Not_Change validation rule on Relationship
+        system.assertEquals(true, errors.errorsExist);
+        system.assertEquals(1, errors.errorRecords.size());
+
+        //assert no additional error record was created on update
         system.assertEquals(1, [select count() from Error__c]);
     }
     
@@ -592,7 +592,7 @@ private class REL_Relationships_TEST {
     	
         setupRelationshipTestData(null);
         
-        ERR_Handler.processError(new MyException('TestException'), ERR_Handler.Context.REL);
+        ERR_Handler.processError(new MyException('TestException'), ERR_Handler_API.Context.REL);
         List<Error__c> errors = [select Full_Message__c from Error__c];
         System.assertEquals(1, errors.size());
         System.assertEquals('TestException', errors[0].Full_Message__c);       
@@ -627,9 +627,9 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testRelationshipUTILS') return;
     	
         //to test the Relationship_Utils class      
-        System.runAs(new User(id = UserInfo.getUserId())){ 
+        System.runAs(new User(id = UserInfo.getUserId())){
            delete [select id from npe4__Relationship_Settings__c];
-           npe4__Relationship_Settings__c rs = REL_Utils.getRelationshipSettings();
+           npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
            Boolean cAuto = REL_Utils.hasContactAutoCreate;
            Boolean cmAuto = REL_Utils.hasCMAutoCreate;
         }
@@ -810,7 +810,7 @@ private class REL_Relationships_TEST {
     	if (strTestOnly != '*' && strTestOnly != 'testSettingsObjectWithJustOrgDefaults') return;
     	
         npe4__Relationship_Settings__c newRS;
-        newRS = npe4__Relationship_Settings__c.getOrgDefaults();
+        newRS = UTIL_CustomSettingsFacade.getRelationshipSettings();
         system.assertNotEquals(null, newRS);
         system.assertEquals(null, newRS.Id);   
         system.assertEquals(null, newRS.npe4__Reciprocal_Method__c);  

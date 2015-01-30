@@ -30,8 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the address verification settings page.
- */
+*/
 public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     public override String idPanel() { return 'idPanelAddressVerification'; }
@@ -57,6 +58,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     public Map<String, String> servicesHelpTextMap { public get; set; }
     public Map<String, String> servicesURLMap  { public get; set; }
+    public string serviceName { public get; set; }
     
     public String validatorSelection;     
     public String getValidatorSelection() { return validatorSelection; }  
@@ -76,7 +78,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     }
     
     public PageReference initDynamicFields() {
-    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
     	String validator = addrVerifSettings.Class__c;
         clearDynamicFields();
         if(validator != null) {           
@@ -94,14 +96,13 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     private void clearDynamicFields() {
     	batchVerifEnabled = false;
-        settingsHelpText = '';
         validatorBatchHelpText = '';
     }
     
     private void setDynamicFields(ADDR_IValidator validator) {
-        settingsHelpText = validator.getHelpText();
         batchVerifEnabled = validator.supportsBatch();
         validatorBatchHelpText = validator.getBatchHelpText();	
+        serviceName = validator.getServiceName();
     }
     
     public List<SelectOption> validators { public get; set; }
@@ -113,17 +114,27 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
         validators = new List<SelectOption>();
         validators.add(new SelectOption('', ''));
-        ApexClass[] classes = [select Name from ApexClass where Name like 'ADDR_%' and (not Name like '%_TEST') 
-                  and (not Name like '%_CTRL') and (not Name like '%_TDTM') and (not Name like '%_Batch') 
-                  and (not Name like '%_SCHED') and (not Name IN :validatorExclussions)];
-        
+        //We have to use these strings because the underscode is treated like a special character in a LIKE 
+        //clause, and if we try to escape it with a backslash it gets double-escaped automatically.
+        String addrLikeClause = 'ADDR\\_%';
+        String testLikeClause = '%\\_TEST';
+        String ctrlLikeClause = '%\\_CTRL';
+        String tdtmLikeClause = '%\\_TDTM';
+        String batchLikeClause = '%\\_Batch';
+        String schedLikeClause = '%\\_SCHED'; 
+        ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like :addrLikeClause 
+                  and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
+                  and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
+                  and (not Name like :schedLikeClause) and (not Name IN :validatorExclussions)];
+        UTIL_Debug.debug('****Validators: ' + JSON.serializePretty(classes));
         for(ApexClass c : classes) {
-            Type classType = Type.forName(c.Name);
-            Object classInstance = classType.newInstance();
-            if(classInstance instanceof ADDR_IValidator) {
-                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
-                servicesHelpTextMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getHelpText());
-                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+            Type classType = Type.forName(c.NamespacePrefix, c.Name);
+            if(classType != null) {
+	            Object classInstance = classType.newInstance();
+	            if(classInstance instanceof ADDR_IValidator) {
+	                validators.add(new SelectOption(c.Name, ((ADDR_IValidator)classInstance).getServiceName()));
+	                servicesURLMap.put(((ADDR_IValidator)classInstance).getServiceName(), ((ADDR_IValidator)classInstance).getDefaultURL());
+	            }
             }
         }         
     }
@@ -191,7 +202,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     // verify the current address settings - used by Health Check.    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
-        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         if (avs.Using_SmartyStreets__c) {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
@@ -206,7 +217,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     // verify the current address settings - used both by the UI panel, as well as Health Check.	
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
-        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         if (avs.Using_SmartyStreets__c) {
 	        try {
 	        	encodeTokenIfNotEncoded(addrVerifSettings);

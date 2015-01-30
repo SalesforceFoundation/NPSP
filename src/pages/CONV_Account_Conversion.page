@@ -171,7 +171,7 @@
                             <p>Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility.</p>
                             <p>The following actions are taken by the batch job associated with this tool:</p>
                             <ul>
-                                <li>All triggers are disabled</li>
+                                <li>All NPSP triggers are disabled (Your custom triggers are not disabled by the utility. For safety's sake, you should disable those too)</li>
                                 <li>All existing Households are selected, along with their Contacts</li>
                                 <li>New Household Accounts are created for each existing Household</li>
                                 <li>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</li>
@@ -182,7 +182,7 @@
                                 <li>Master Household Address set or defined if none exists based on address frequency and Contact giving</li>
                                 <li>Address overrides are set for any Contact whose address is different from the Household Address</li>
                                 <li>Primary Contact values are set for all Households</li>
-                                <li>All triggers are re-enabled</li>
+                                <li>All NPSP triggers are re-enabled (You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables <b>all</b> NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable those again too)</li>
                             </ul>
                         </div>
                     </div>

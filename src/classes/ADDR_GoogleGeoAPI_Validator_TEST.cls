@@ -36,11 +36,10 @@
 public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
     public static Addr_Verification_Settings__c getDefaultSettings() {
         // use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-        new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Using_SmartyStreets__c = false;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
@@ -49,7 +48,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        insert settings;
+        
         return settings;
     }
 
@@ -168,7 +167,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         Addr_Verification_Settings__c settings = ADDR_GoogleGeoAPI_Validator_TEST.getDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockGoogleGeoAPIResponse_TEST());
 
-        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = 'bad-authentication-for-test');
+        Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino', MailingStreet__c = '401');
 
         Test.StartTest();
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
@@ -180,11 +179,11 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
     }
     static testMethod void testNullAuthToken() {
         // create settings w/o a token
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Address_Verification_Endpoint__c = 'maps.googleapis.com/maps/api/geocode/json?';
         settings.Class__c = 'ADDR_GoogleGeoAPI_Validator';
         settings.Enable_Automatic_Verification__c = true;
-        insert settings;
+        
 
         Address__c a = new Address__c(MailingState__c = 'CA',  MailingCity__c = 'Cupertino');
 
@@ -200,6 +199,5 @@ public with sharing class ADDR_GoogleGeoAPI_Validator_TEST {
         ADDR_GoogleGeoAPI_Validator testValidator = new ADDR_GoogleGeoAPI_Validator();
         system.assertEquals('The Google Geocoding API', testValidator.getServiceName());
         system.assertEquals('https://maps.googleapis.com/maps/api/geocode/json?', testValidator.getDefaultURL());
-        system.assertNotEquals(null, testValidator.getHelpText());
     }
 }

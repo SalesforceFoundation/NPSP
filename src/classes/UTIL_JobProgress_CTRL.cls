@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
+* @group Utilities
 * @description The controller for the VF progress indicator component  
 */
 public with sharing class UTIL_JobProgress_CTRL {
@@ -44,8 +45,28 @@ public with sharing class UTIL_JobProgress_CTRL {
     public Integer numberOfJobs {get; set;}
     public String batchComponentLabel {get; set;}
     public Boolean rerenderoncomplete {get; set;}
-    public Boolean hasExtendedStatus {get; set;}
-    public Boolean allCompleted{get; set;}
+    
+    public Boolean hasExtendedStatus {
+    	get {
+    		//ensure bj loaded!
+    		if (bj != null)
+    		  return hasExtendedStatus;
+    		else 
+    		  return false;
+    	}
+    	set;
+    }
+    	
+    public Boolean allCompleted { 
+    	get {
+    	   // ensure bj loaded!
+    	   if (bj != null)
+    	       return allCompleted;
+    	   else
+    	       return true;
+    	}
+    	set;
+    }
 
     public List<BatchJob> getBatchJobs() {
         //Create new list of BatchJobs, a wrapper class that includes the job and percent complete.

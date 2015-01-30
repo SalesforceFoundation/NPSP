@@ -30,33 +30,37 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Accounts
 * @description Tests for ACCT_IndividualAccounts_TDTM
 */
 @isTest
 private class ACCT_IndividualAccounts_TEST {    
-/* TESTING CONTACT AND ACCOUNT PLUMBING ------------------------------------------------*/
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
-    /// <name> ACCT_IndividualAccounts_TEST </name>
-    /// <summary> test default constructor </summary>
-    static testMethod void ACCT_IndividualAccounts_TEST() {
+    /*********************************************************************************************************
+    * @description tests default contructor
+    */
+    private static testMethod void ACCT_IndividualAccounts_TEST() {
     	if (strTestOnly != '*' && strTestOnly != 'ACCT_IndividualAccounts_TEST') return;
         ACCT_IndividualAccounts_TDTM testIndividualAccounts = new ACCT_IndividualAccounts_TDTM();
     }
 
-    /// <name> insertPrivate </name>
-    /// <summary> Test Method for inserting a Contact that should get no account </summary>
-    static testMethod void insertPrivate() {
+    /*********************************************************************************************************
+    * @description Test Method for inserting a Contact that should get no account 
+    */
+    private static testMethod void insertPrivate() {
     	if (strTestOnly != '*' && strTestOnly != 'insertPrivate') return;
         insertPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
         insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }   
-    static void insertPrivateProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void insertPrivateProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -78,7 +82,48 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(null,insertedContacts[0].AccountId);
     }
     
-    static testMethod void insertOneToOneChangeToPrivate() {
+    /*********************************************************************************************************
+    * @description Test changing the account model from one-to-one account to household account.  
+    */
+    private static testMethod void changeFromOneToOneToHouseholdAccount() {
+    	if (strTestOnly != '*' && strTestOnly != 'changeFromOneToOneToHouseholdAccount') return;
+    	
+    	UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+            
+    	//Set Individual (Bucket) settings
+    	npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	contactsSettings.npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR;
+        
+        
+    	//Create a contact
+    	Contact contact1 = new Contact(FirstName = 'Test', LastName = 'Testerson');
+        insert contact1;
+        
+    	//Verify it's using Individual
+    	contact1 = [select Account.Name from Contact Where ID = :contact1.ID];
+    	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contact1.Account.Name);
+    	
+    	//Verify we are still using Individual (Bucket) settings
+    	contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contactsSettings.npe01__Account_Processor__c);
+    	
+    	//Change to Household Account
+    	contactsSettings.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
+            
+    	//Create a Contact
+    	Contact contact2 = new Contact(FirstName = 'Test2', LastName = 'Testerson2');
+        insert contact2;
+        
+    	//Verify it's using Household Account - a new Account should have been created for it
+    	Integer numOfAccs = [select count() from Account];
+    	System.assertEquals(2, numOfAccs);
+    }
+    
+    /*********************************************************************************************************
+    * @description Create a contact, and change it to private, against all three account models.  
+    */
+    private static testMethod void insertOneToOneChangeToPrivate() {
     	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneChangeToPrivate') return;
     	
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
@@ -86,8 +131,8 @@ private class ACCT_IndividualAccounts_TEST {
         insertOneToOneChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     
-    static void insertOneToOneChangeToPrivateProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void insertOneToOneChangeToPrivateProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -117,14 +162,17 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(1, acts.size());
     }
     
-    static testMethod void insertOneToOneTriggerOff() {
+    /*********************************************************************************************************
+    * @description Create a Contact with TDTM triggers off, for both 1:1 and Household account models.  
+    */
+    private static testMethod void insertOneToOneTriggerOff() {
     	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneTriggerOff') return;
         insertOneToOneTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         insertOneToOneTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);    
     }
     
-    static void insertOneToOneTriggerOffProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void insertOneToOneTriggerOffProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor,npe01__Disable_Account_Model_Trigger__c=true));
         
         // turn off all TDTM triggers for this component
@@ -164,22 +212,24 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(null,insertedContacts[0].AccountId);
     }
 
-    /// <name> insertUpdateOneToOne </name>
-    /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
-    static testMethod void insertUpdateOneToOne() {
+    /*********************************************************************************************************
+    * @description Test Method for inserting and updating a Contact in the One-to-One model 
+    */
+    private static testMethod void insertUpdateOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOne') return;
     	insertUpdateOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    
-    /// <name> insertUpdateOneToOne </name>
-    /// <summary> Test Method for inserting and updating a Contact in the One-to-One model</summary>
-    static testMethod void insertUpdateOneToOneHouseholds() {
+
+    /*********************************************************************************************************
+    * @description Test Method for inserting and updating a Contact in the Household Account model 
+    */
+    private static testMethod void insertUpdateOneToOneHouseholds() {
         if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOneHouseholds') return;
         insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     
-    static void insertUpdateOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void insertUpdateOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         String newContactMailingStreet = '123 Elm St';
@@ -196,9 +246,9 @@ private class ACCT_IndividualAccounts_TEST {
         insert con;
         
         Contact[] insertedContacts = [Select FirstName, LastName, AccountId, Account.Name,Account.npe01__One2OneContact__c,MailingStreet,Account.BillingStreet,npe01__Organization_Type__c,Account.npe01__SYSTEMIsIndividual__c  from Contact where id=:con.id];
-        system.debug(insertedContacts);
-        system.debug(insertedcontacts[0].id);
-        system.debug(insertedContacts);
+        UTIL_Debug.debug('****' +insertedContacts);
+        UTIL_Debug.debug('****' +insertedcontacts[0].id);
+        UTIL_Debug.debug('****' +insertedContacts);
         //one contact should have been created
         system.assertEquals(1,insertedContacts.size());
         //the account should have the right type
@@ -244,14 +294,14 @@ private class ACCT_IndividualAccounts_TEST {
         }        
     }
     /*
-    static testMethod void testDefault()
+    private static testMethod void testDefault()
     {
        
         boolean aDefaultIsSelected = false;
         Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.Salutation;
             List<Schema.PicklistEntry> P = F.getPicklistValues();
             for(Schema.PicklistEntry pe : P){
-                system.debug(pe.getValue() + ' : ' + pe.isDefaultValue());
+                UTIL_Debug.debug('****' +pe.getValue() + ' : ' + pe.isDefaultValue());
                 if (pe.isDefaultValue()){
                         aDefaultIsSelected = true;
                 }
@@ -260,16 +310,17 @@ private class ACCT_IndividualAccounts_TEST {
     }
     */
     
-    /// <name> detachOneToOne </name>
-    /// <summary> Test Method for separating a Contact from it's One-to-One account</summary>
-    static testMethod void detachOneToOne() {
+    /*********************************************************************************************************
+    * @description Test Method for separating a Contact from it's One-to-One account, in 1:1 and Household Account models.
+    */
+    private static testMethod void detachOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'detachOneToOne') return;
         detachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         detachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void detachOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void detachOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Contact con = new Contact(
@@ -303,16 +354,17 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(originalAccountId,updatedContacts[0].AccountId);
     }
         
-    /// <name> editContactDuringDetachOneToOne </name>
-    /// <summary> Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)</summary>
-    static testMethod void editContactDuringDetachOneToOne() {
+    /*********************************************************************************************************
+    * @description Test Method for editing a contact while it is being detached from it's One-to-One Account. This was a bug (#37)
+    */
+    private static testMethod void editContactDuringDetachOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachOneToOne') return;
         editContactDuringDetachOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         editContactDuringDetachOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);	
     }
     
-    static void editContactDuringDetachOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void editContactDuringDetachOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
         String newContactMailingStreet = '123 Elm St';
@@ -364,16 +416,17 @@ private class ACCT_IndividualAccounts_TEST {
         } 
     }
 
-    /// <name> attachToIndividualAccount </name>
-    /// <summary> Test Method for a new Contact in the Bucket Individual model </summary>
-    static testMethod void attachToIndividualAccount() {
+    /*********************************************************************************************************
+    * @description Test Method for a new Contact in the Bucket Individual model 
+    */
+    private static testMethod void attachToIndividualAccount() {
     	if (strTestOnly != '*' && strTestOnly != 'attachToIndividualAccount') return;
         attachToIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
         attachToIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
     }
     
-    static void attachToIndividualAccountProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void attachToIndividualAccountProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -401,16 +454,17 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(con.LastName + ' Household',insertedcontacts[0].Account.Name);        
     }
     
-    /// <name> detachIndividualAccount </name>
-    /// <summary> Test Method for detaching a Contact from the bucket individual account </summary>
-    static testMethod void detachIndividualAccount() {
+    /*********************************************************************************************************
+    * @description Test Method for detaching a Contact from the bucket individual account  
+    */
+    private static testMethod void detachIndividualAccount() {
     	if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
     	detachIndividualAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
         detachIndividualAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void detachIndividualAccountProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void detachIndividualAccountProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -448,22 +502,24 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(AccountId,updatedContacts[0].AccountId);        
     }
 
-    /// <name> detachFromNormalAccountToBucket </name>
-    /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
-    static testMethod void detachFromNormalAccountToBucket() {
+    /*********************************************************************************************************
+    * @description Test Method for detaching a Contact from a normal account. It should land in the bucket account.
+    */
+    private static testMethod void detachFromNormalAccountToBucket() {
     	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucket') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     
-    /// <name> detachFromNormalAccountToBucket </name>
-    /// <summary> Test Method for detaching a Contact from a normal account. It should land in the bucket account. </summary>
-    static testMethod void detachFromNormalAccountToBucketAccountProcessor() {
+    /*********************************************************************************************************
+    * @description Test Method for detaching a Contact from a normal account. It should land in the bucket account.
+    */
+    private static testMethod void detachFromNormalAccountToBucketAccountProcessor() {
         if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucketAccountProcessor') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void detachFromNormalAccountToBucketProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void detachFromNormalAccountToBucketProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
                
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -505,14 +561,17 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertNotEquals(acct.id,updatedContacts[0].AccountId);         
     }
     
-    static testMethod void contactAddedToExistingOneToOne() {
+    /*********************************************************************************************************
+    * @description Add a contact to an existing 1:1 or Household Account
+    */
+    private static testMethod void contactAddedToExistingOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingOneToOne') return;
         contactAddedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         contactAddedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
     }
     
-    static void contactAddedToExistingOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void contactAddedToExistingOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -543,18 +602,21 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(accountId,insertedContact[0].AccountId);        
     }
     
-    static testMethod void contactUpdatedToExistingOneToOne() {
+    /*********************************************************************************************************
+    * @description Update a contact to an existing 1:1 or Household Account
+    */
+    private static testMethod void contactUpdatedToExistingOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOne') return;
         contactUpdatedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
-    static testMethod void contactUpdatedToExistingOneToOneHH() {
+    private static testMethod void contactUpdatedToExistingOneToOneHH() {
         if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOneHH') return;
         contactUpdatedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
     }
     
-    static void contactUpdatedToExistingOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void contactUpdatedToExistingOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -588,14 +650,17 @@ private class ACCT_IndividualAccounts_TEST {
             system.assertEquals(accountId,insertedContact[0].AccountId);        
     }
 
-    static testMethod void contactInNormalOrgNameChange() {
+    /*********************************************************************************************************
+    * @description Update a contact's Lastname in the 1:1 and Household Account models
+    */
+    private static testMethod void contactInNormalOrgNameChange() {
     	if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChange') return;
         contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
         contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void contactInNormalOrgNameChangeProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void contactInNormalOrgNameChangeProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
                 
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -632,22 +697,24 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(acctName,updatedContacts[0].Account.Name);         
     }
     
-    /// <name> detachFromNormalAccountToOneToOne </name>
-    /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
-    static testMethod void detachFromNormalAccountToOneToOne() {
+    /*********************************************************************************************************
+    * @description Test Method for detaching a Contact from an org account. It should land in a one-to-one account. 
+    */
+    private static testMethod void detachFromNormalAccountToOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOne') return;
     	detachFromNormalAccountToOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
-    /// <name> detachFromNormalAccountToOneToOne </name>
-    /// <summary> Test Method for detaching a Contact from a normal account. It should land in a one-to-one account. </summary>
-    static testMethod void detachFromNormalAccountToOneToOneHousehold() {
+    /*********************************************************************************************************
+    * @description Test Method for detaching a Contact from an org account. It should land in Household account. 
+    */
+    private static testMethod void detachFromNormalAccountToOneToOneHousehold() {
         if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOneHousehold') return;
         detachFromNormalAccountToOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void detachFromNormalAccountToOneToOneProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+    private static void detachFromNormalAccountToOneToOneProcessor(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -689,6 +756,9 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertNotEquals(acct.id,updatedContacts[0].AccountId);        
     }
     
+    /*********************************************************************************************************
+    * @description Delete a Contact and verify its One-to-One or Household Account is deleted.
+    */
      public static testMethod void deleteContactNoOpp() {
      	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOpp') return;
         deleteContactNoOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -697,7 +767,7 @@ private class ACCT_IndividualAccounts_TEST {
      
      public static void deleteContactNoOppProcessor(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         
@@ -730,6 +800,9 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(0,missingAccount.size());
     }
     
+    /*********************************************************************************************************
+    * @description Delete a Contact with Opps and verify its One-to-One or Household Account is not deleted.
+    */
     public static testMethod void deleteContactWithOpp() {
     	if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOpp') return;
         deleteContactWithOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -738,7 +811,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     public static void deleteContactWithOppProcessor(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));        
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -777,11 +850,17 @@ private class ACCT_IndividualAccounts_TEST {
         system.assertEquals(1,missingAccount.size());
     }
     
+    /*********************************************************************************************************
+    * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
+    */
     public static testMethod void deleteContactNormalAccountOneToOne() {
     	if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountOneToOne') return;
         deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
+    /*********************************************************************************************************
+    * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
+    */
     public static testMethod void deleteContactNormalAccountHouseholdAcc() {
         if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountHouseholdAcc') return;
         deleteContactNormalAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
@@ -789,7 +868,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     public static void deleteContactNormalAccountProcessor(string strProcessor) {
               
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));        
 
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -827,7 +906,7 @@ private class ACCT_IndividualAccounts_TEST {
  
     /// <name> createContactWithPhoneNoPref </name>
     /// <summary> Test Method for creating a contact with a phone number and no preferences set. </summary>
-    static testMethod void createContactWithPhoneNoPref()
+    private static testMethod void createContactWithPhoneNoPref()
     {
         //with no other prefs, phone should land in npe01__workphone__c and set npe01__PreferredPhone__c to 'work'.
         String newPhone = '206-777-7777';
@@ -846,7 +925,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     /// <name> createContactWithPhoneNoPrefAlsoHomePhone </name>
     /// <summary> Test Method for creating a contact with a phone number and a home number. </summary>
-    static testMethod void createContactWithPhoneNoPrefAlsoHomePhone()
+    private static testMethod void createContactWithPhoneNoPrefAlsoHomePhone()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
         //currently HomePhone data is lost.
@@ -867,7 +946,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     /// <name> createContactWithPhonePrefSet </name>
     /// <summary> Test Method for creating a contact with a phone number in Phone and the preferred phone set. </summary>
-    static testMethod void createContactWithPhonePrefSet()
+    private static testMethod void createContactWithPhonePrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
         //these are currently commented out because it's not supported. See #47.
@@ -923,7 +1002,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> createContactWithNumberAndPrefSet </name>
     /// <summary> Test Method for creating a contact with a phone number in the correct field
     /// and the preferred phone set. </summary>
-    static testMethod void createContactWithNumberAndPrefSet()
+    private static testMethod void createContactWithNumberAndPrefSet()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
         //these are currently commented out because it's not supported. See #47.
@@ -979,7 +1058,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> updateContactWithNumberAndPref </name>
     /// <summary> Test Method for updating a contact with a phone number in the correct field
     /// and the preferred phone set. </summary>
-    static testMethod void updateContactWithNumberAndPref()
+    private static testMethod void updateContactWithNumberAndPref()
     {
         //with pref set to Home, HomePhone should land in Phone and set npe01__PreferredPhone__c to 'home'.
         
@@ -1044,7 +1123,7 @@ private class ACCT_IndividualAccounts_TEST {
 /* TESTING EMAIL WORKFLOW --------------------------------------------------------------
     /// <name> createContactWithEmailNoPref </name>
     /// <summary> Test Method for creating a contact with an email and no preferences set. </summary>
-    static testMethod void createContactWithEmailNoPref()
+    private static testMethod void createContactWithEmailNoPref()
     {
         //with no other prefs, email should land in npe01__workemail__c and set npe01__Preferred_Email__c to 'work'.
         String newEmail = 'joe@testforemail.com';
@@ -1063,7 +1142,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     /// <name> createContactWithEmailPersonalPrefAlsoPersonalEmail </name>
     /// <summary> Test Method for creating a contact with a email and a personal email. </summary>
-    static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
+    private static testMethod void createContactWithEmailPersonalPrefAlsoPersonalEmail()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
         String newEmail = 'joe@testforemail.com';
@@ -1083,7 +1162,7 @@ private class ACCT_IndividualAccounts_TEST {
     
     /// <name> createContactWithEmailPrefSet </name>
     /// <summary> Test Method for creating a contact with an email in email and the preferred email set. </summary>
-    static testMethod void createContactWithEmailPrefSet()
+    private static testMethod void createContactWithEmailPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
         //commented out until #49 is fixed
@@ -1127,7 +1206,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> createContactWithEmailAndPrefSet </name>
     /// <summary> Test Method for creating a contact with a email in the correct field
     /// and the preferred email set. </summary>
-    static testMethod void createContactWithEmailAndPrefSet()
+    private static testMethod void createContactWithEmailAndPrefSet()
     {
         //with pref set to Home, Personal Email should land in email and set npe01__Preferred_Email__c to 'Personal'.
         
@@ -1172,7 +1251,7 @@ private class ACCT_IndividualAccounts_TEST {
     /// <name> updateContactWithEmailAndPref </name>
     /// <summary> Test Method for updating a contact with a email in the correct field
     /// and the preferred email set. </summary>
-    static testMethod void updateContactWithEmailAndPref()
+    private static testMethod void updateContactWithEmailAndPref()
     {
         //with pref set to Personal, Personal email should land in email and set npe01__Preferred_Email__c to 'Personal'.
         
@@ -1222,9 +1301,9 @@ private class ACCT_IndividualAccounts_TEST {
 
     /// <name> getContactDonationHistory </name>
     /// <summary> Test Method for getContactDonationHistory</summary>
-    static testMethod void getContactDonationHistory()
+    private static testMethod void getContactDonationHistory()
     {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -1250,9 +1329,9 @@ private class ACCT_IndividualAccounts_TEST {
 
     /// <name> getContactLastDonation </name>
     /// <summary> Test Method for getContactLastDonation</summary>
-    static testMethod void getContactLastDonation()
+    private static testMethod void getContactLastDonation()
     {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
@@ -1283,9 +1362,9 @@ private class ACCT_IndividualAccounts_TEST {
 
 /// <name> getContactDonationHistory </name>
     /// <summary> Test Method for getContactDonationHistory</summary>
-    static testMethod void getContactDonationHistoryAmount()
+    private static testMethod void getContactDonationHistoryAmount()
     {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
@@ -1315,9 +1394,9 @@ private class ACCT_IndividualAccounts_TEST {
 
     /// <name> getContactLastDonation </name>
     /// <summary> Test Method for getContactLastDonation</summary>
-    static testMethod void getContactLastDonationDate()
+    private static testMethod void getContactLastDonationDate()
     {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
         Integer year = 2005;
         Integer month = 10;
@@ -1355,20 +1434,26 @@ private class ACCT_IndividualAccounts_TEST {
     }   
 ************************* DEPRECATE IN CUMULUS ***********************************/    
      
-    static testMethod void ghIssue16a(){
+    /*********************************************************************************************************
+    * @description Rename a Contact's firstname to null and make sure the 1:1 Account's name gets updated
+    */
+    private static testMethod void ghIssue16a(){
     	if (strTestOnly != '*' && strTestOnly != 'ghIssue16a') return;
         ghIssue16Processor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
-    static testMethod void ghIssue16b(){
+    /*********************************************************************************************************
+    * @description Rename a Contact's firstname to null and make sure the Household Account's name gets updated
+    */
+    private static testMethod void ghIssue16b(){
     	if (strTestOnly != '*' && strTestOnly != 'ghIssue16b') return;
         ghIssue16Processor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
-    static void ghIssue16Processor(string strProcessor){
+    private static void ghIssue16Processor(string strProcessor){
         /* Set value of Account name to blank when first name is blank, not null */ 
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
         Contact con = new Contact(

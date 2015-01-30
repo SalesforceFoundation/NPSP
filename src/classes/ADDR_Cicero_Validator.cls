@@ -30,35 +30,61 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Address Management
 * @description Class that provides address validation/normalization services
 * through the Cicero API.
  */
 public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
+    /*******************************************************************************************************
+    * @description holds the Cicero authorization token from NPSP Settings
+    */     
     private String strAuthToken;
-    private String strEndPoint;
-    private Double dblTimeout;
 
+    /*******************************************************************************************************
+    * @description holds the Cicero endpoint from NPSPS Settings
+    */     
+    private String strEndPoint;
+
+    /*******************************************************************************************************
+    * @description holds the timeout value from NPSP Settings
+    */     
+    private Double dblTimeout;
+    
+    /*******************************************************************************************************
+    * @description returns the name of the Service (Cicero)
+    */     
     public String getServiceName() {
     	return 'Cicero';
     }
     
+    /*******************************************************************************************************
+    * @description returns the default URL to use with the Cicero address verification service
+    */     
     public String getDefaultURL() {
     	return 'https://cicero.azavea.com/v3.1/legislative_district';
     }
     
-    public String getHelpText() {
-    	return Label.stgHelpCiceroAddrVerification; 
-    }
-    
+    /*******************************************************************************************************
+    * @description returns false, since Cicero does not support a batch verification mode
+    */     
     public Boolean supportsBatch() {
     	return false;
     }
     
+    /*******************************************************************************************************
+    * @description returns a message saying batch is not supported with Cicero
+    */     
     public String getBatchHelpText() {
     	return Label.Addr_Verification_Batch_Not_Supported;
     }
     
+    /*******************************************************************************************************
+    * @description Verifies the list of Address objects using the Cicero service.
+    * @param listAddr the list of Address objects
+    * @param settings an address verification settings object
+    * @return List<Address__c> a list of verified and potentially updated addresses
+    */ 
     public List<Address__c> verifyRecords(List<Address__c> listAddr, Addr_Verification_Settings__c settings) {
 
         List<Address__c> listAddrChecked = new List<Address__c>();
@@ -77,6 +103,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         return listAddrChecked;
     }
 
+    /*******************************************************************************************************
+    * @description Verifies a single Address object using the Cicero service.
+    * @param addr the Address object
+    * @param settings an address verification settings object
+    * @return Address__c a verified and potentially updated address
+    */ 
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
     
         String strRequest = '?';
@@ -87,9 +119,9 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         if (addr.MailingState__c != null)
             strRequest += 'search_state=' + addr.MailingState__c.replace(' ', '+') + '&';
         if (addr.MailingPostalCode__c != null)
-            strRequest += 'search_postal=' + addr.MailingPostalCode__c + '&';
+            strRequest += 'search_postal=' + addr.MailingPostalCode__c.replace(' ', '+') + '&';
         if (addr.MailingCountry__c != null)
-            strRequest += 'search_country=' + addr.MailingCountry__c + '&';
+            strRequest += 'search_country=' + addr.MailingCountry__c.replace(' ', '+') + '&';
 
         try {
 	        if (strAuthToken != null && strEndPoint != null) {
@@ -108,7 +140,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                response = ADDR_Cicero_Test.respond(req);
 	            else
 	                response = h.send(req);
-	            //system.debug('****CICERO RESPONDS WITH: ' + response.getBody());
+	            UTIL_Debug.debug('****CICERO RESPONDS WITH Status: ' + response.getStatus() + ' StatusCode: ' + response.getStatusCode());
+	            UTIL_Debug.debug('****CICERO response.body: ' + response.getBody());
+	            if (response.getStatusCode() != 200) {
+	            	string strError = response.getStatusCode() + ': ' + response.getStatus() + '\r\n' + response.getBody();
+	            	throw(new CiceroException(strError));
+	            }
 	            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
 	            Object objResp = JSON.deserializeUntyped(response.getBody());
 	            addr.API_Response__c = JSON.serializePretty(objResp);
@@ -118,16 +155,16 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                list<Candidates> listCandidates = cresp.response.results.candidates;  
 	
 	                // more than one candidate means should mark as ambiguous
-	                if (listCandidates.size() > 1)
+	                if (listCandidates.size() > 1) {
 	                    addr.Ambiguous__c = true;
-	                              
+	                }             
 		            // find the congressional legislative district
-		            if (listCandidates.size() == 1 || !settings.Reject_Ambiguous_Addresses__c) {
+		            if (listCandidates.size() == 1 || (listCandidates.size() > 1 && !settings.Reject_Ambiguous_Addresses__c)) {
 	                    Candidates candidate = listCandidates[0];
 	                    for (Districts district : candidate.districts) {
 		                    if (district.district_type == 'NATIONAL_LOWER') {
 		                        addr.Congressional_District__c = district.district_id;
-		                        addr.MailingCountry__c = 'US';
+		                        addr.MailingCountry__c = district.country;
 		                        foundData = true;
 		                        break;
 		                    }
@@ -150,50 +187,91 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 		            }
 	            }	
 	            addr.Verified__c = foundData;
+	            addr.Verification_Status__c = 'Response Received';
 	            return addr;
 	        } else {
 	        	throw(new CiceroException(Label.addrCiceroMissingAPIKey));
 	        }
         } catch (Exception ex) {
 	        addr.Verified__c = false;
-	        addr.API_Response__c = 'Error: ' + ex.getMessage() + '\nSTACKTRACE:\n' + ex.getStackTraceString();
-            ERR_Handler.processError(ex, ERR_Handler.Context.ADDR);
+	        addr.API_Response__c = ex.getMessage();
+	        addr.Verification_Status__c = addr.API_Response__c; 
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
         }
         return addr;
     }
 
+    /*******************************************************************************************************
+    * @description an exception object wrapper for Cicero
+    */ 
     public class CiceroException extends Exception {}
         
     // The following classes represent the response object from Cicero
 
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero Response
+    */ 
 	public class CiceroResponse {
-		Response response;
+		public Response response;
 	}
 
+    /*******************************************************************************************************
+    * @description a class to contain a list of Response results
+    */ 
     public class Response {
-        Results results;               
+        public Results results;               
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a list of Cicero Candidates
+    */ 
     public class Results {
-    	list<Candidates> candidates;
+    	public list<Candidates> candidates;
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero Candidate
+    */ 
     public class Candidates {
-        string match_addr;
-        string wkid;
-        list<Districts> districts;
-        string x;
-        string y;
-        string geoservice;
+        /** @description the full normalized address that looks like street, city, state, zip */
+        public string match_addr;
+        
+        /** @description house # and street of the matched address */
+        public string match_streetaddr;
+        
+        /** @description postal/zip code of the matched address */ 
+        public string match_postal; 
+        
+        /** @description city of the matched address */
+        public string match_city; 
+        
+        /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */        
+        public string match_subregion; 
+
+        /** @description state of the matched address - doesn't seem to be part of the response, even though I was told it would be. */
+        public string match_region; 
+        
+        /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */        
+        public string match_country; 
+        
+        public string wkid;
+        public list<Districts> districts;
+        public string x;
+        public string y;
+        public string geoservice;
     }
     
+    /*******************************************************************************************************
+    * @description a class to contain a Cicero District
+    */ 
     public class Districts {
-        string district_type;
-        string district_id;
-        string label;
-        string subtype;
-        string state;
-        string id;
+        public string district_type;
+        public string district_id;
+        public string country;
+        public string label;
+        public string subtype;
+        public string state;
+        public string id;
     }   
     
 }

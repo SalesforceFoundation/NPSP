@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2010, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,41 +13,62 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Jason Venable & Evan Callahan
 * @date 2010 (2.x)
+* @group Lead Conversion
+* @group-content ../../ApexDocContent/LeadConversion.htm
 * @description Controller for lead conversion of all contacts
 */
 public with sharing class LD_LeadConvertOverride_CTRL {
 // Controller for lead conversion of all contacts
- 
-// Written by jason venable and evan callahan
-// at the NPSP Sprint 2010    
 
-    // properties for page
+// Written by jason venable and evan callahan
+// at the NPSP Sprint 2010
+
+    /*******************************************************************************************************
+    * @description Sets the Lead to be converted
+    */
     public lead l { get; set; }
+    /*******************************************************************************************************
+    * @description Provides a dummy Contact to write to - avoids ownership issues when setting owner
+    */
     public Contact dummyCon { get; set; }
+    /*******************************************************************************************************
+    * @description Sends email to the owner on conversion if selected
+    */
     public boolean sendEmailToOwner { get; set; }
-    //public string acct { get; set; }  
+    /*******************************************************************************************************
+    * @description Contains the value of the converted-into Contact
+    */
     public string con { get; set; }
+    /*******************************************************************************************************
+    * @description Constructs the value of the Opportunity name if created
+    */
     public string oppName { get; set; }
+    /*******************************************************************************************************
+    * @description Determines if an Opportunity is not created
+    */
     public boolean doNotCreateOpp { get; set; }
-    
-    public string leadConvStatus { 
+
+    /*******************************************************************************************************
+    * @description Shows the value of the lead status
+    */
+    public string leadConvStatus {
     	get {
     		if (leadConvStatus == null || leadConvStatus == '') {
                 if (lcStatuses != null && lcStatuses.size() > 0)
@@ -58,80 +79,101 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     	set;
     }
 
-    //public task leadTask { get; set; }
+    /*******************************************************************************************************
+    * @description List of possible matching Contacts
+    */
+    public list<selectOption> conList;
+    /*******************************************************************************************************
+    * @description Display the selection list for matching Contacts
+    */
+    map<id, contact> conMap = new map<id, contact>();
 
-    //public list<selectOption> acctList = new list<selectOption>(); 
-    public list<selectOption> conList; 
-    map<id, contact> conMap = new map<id, contact>(); 
-    
-    private npe01__Contacts_And_Orgs_Settings__c ContactsSettings; 
-    
+    /*******************************************************************************************************
+    * @description Settings for the main Contacts & Organizations pacakge (npe01)
+    */
+    private npe01__Contacts_And_Orgs_Settings__c ContactsSettings;
+
+    /*******************************************************************************************************
+    * @description Select options for the possible Lead Statuses
+    */
+    public list<selectOption> lcStatuses {
+      get {
+        if (lcStatuses == null) {
+          lcStatuses = new list<selectOption>();
+          for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
+            lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
+          }
+        }
+        return lcStatuses;
+      }
+      private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks the value of the 'Company' field for values associated with 1x1 or Individual Accounts
+    */
+    private boolean isSpecialAccount() {
+      if (l == null)
+      return false;
+      return (
+      l.company == null ||
+      l.company == '' ||
+      l.company.toLowerCase() == 'self' ||
+      l.company.toLowerCase() == 'individual' ||
+      l.company.toLowerCase() == l.name.toLowerCase()
+      );
+    }
+
+    /*******************************************************************************************************
+    * @description Provides the options for select list of possible matches
+    */
+    public list<selectOption> getConList() {
+      if (conList == null) {
+        conList = new list<selectOption>();
+
+        conList.add( new SelectOption('', '--None--') );
+        conList.add( new SelectOption('NEW_CONTACT', 'Create New: ' + l.name) );
+
+        // find contact matches
+        conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where
+        (lastname = : l.lastname and firstname = : l.firstname) or
+        (email = : l.email and email != null) limit 50]);
+
+        for (contact c : conMap.values()) {
+          conList.add( new SelectOption(c.id, 'Merge with Existing: ' + c.name) );
+        }
+      }
+      return conList;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Constructs the page and default values for the Lead, dummy Contact and Opportunity
+    * @param controller Standard page controller for the page
+    * @param result Results to be processed from the query
+    */
     public LD_LeadConvertOverride_CTRL(ApexPages.StandardController controller) {
-        ContactsSettings = CAO_Constants.getContactsSettings();
-                            
+        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+
         // get the lead
         l = [select id, name, firstname, lastname, company, email, ownerId from lead
             where id = : controller.getId()];
-        
+
         // dummy contact allows owner selection - use contact as always accessible if user has lead conversion rights
         dummyCon = new Contact(
             OwnerId = ((((string)(l.ownerid)).startsWith('005')) ? l.ownerid : userInfo.getUserId())
         );
-        
+
         // set a default opp name
         oppName = l.name;
         doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
-        sendEmailToOwner = false;        
-    }    
-    
-    public list<selectOption> getConList() {
-        if (conList == null) { 
-            conList = new list<selectOption>();
-            
-            conList.add( new SelectOption('', '--None--') );
-            conList.add( new SelectOption('NEW_CONTACT', 'Create New: ' + l.name) );            
-        
-            // find contact matches
-            conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where 
-                (lastname = : l.lastname and firstname = : l.firstname) or
-                (email = : l.email and email != null) limit 50]);
-                
-            for (contact c : conMap.values()) {
-                conList.add( new SelectOption(c.id, 'Merge with Existing: ' + c.name) );                            
-            }
-        }
-        return conList; 
-    } 
-    
-    public list<selectOption> lcStatuses {
-    	get {
-	        if (lcStatuses == null) {
-	            lcStatuses = new list<selectOption>();
-	            // query
-	            for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
-	                lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
-	            }
-	            //leadConvStatus = lcStatuses[0].getValue();
-	        }
-	        return lcStatuses;
-    	}
-    	private set;
-    } 
-    
-    // utility to handle all the lead.company scenarios that specify
-    // that our special account handling should be used.
-    private boolean isSpecialAccount() {
-    	if (l == null)
-    	   return false;
-    	return (
-    	   l.company == null ||
-    	   l.company == '' ||
-    	   l.company.toLowerCase() == 'self' ||
-    	   l.company.toLowerCase() == 'individual' ||
-    	   l.company.toLowerCase() == l.name.toLowerCase()
-        ); 
+        sendEmailToOwner = false;
     }
-    
+
+    /*******************************************************************************************************
+    * @description Converts the actual Lead.  All conversion logic is contained in this method
+    * @return PageReference
+    */
     public pageReference convertLeadNow() {
     	Savepoint sp = Database.setSavepoint();
     	try {
@@ -140,7 +182,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	                'You must select an option in the Contact box.'));
 	            return null;
 	        }
-	        
+
 	        // set up the conversion
 	        Database.LeadConvert lc = new database.LeadConvert();
 	        lc.setLeadId(l.Id);
@@ -149,95 +191,99 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        lc.setConvertedStatus(leadConvStatus);
 	        lc.setOwnerId(dummyCon.OwnerId);
 	        lc.setSendNotificationEmail(sendEmailToOwner);
-	        
+
 	        // is this a merge to existing?
-	        if (con != 'NEW_CONTACT') { 
+	        if (con != 'NEW_CONTACT') {
 	            // get this contact's account
 	            lc.setContactId(con);
-	            lc.setAccountId(conMap.get(con).accountId);          
+	            lc.setAccountId(conMap.get(con).accountId);
 	        } else if (CAO_Constants.isBucketModel() && isSpecialAccount()) {
 	               lc.setAccountID(CAO_Constants.getIndividualAccountID());
-	        }    
-	
+	        }
+
 	        // convert the lead
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
-            
+
             // fix the account that lead conversion created
-            if (con == 'NEW_CONTACT') {  
+            if (con == 'NEW_CONTACT') {
             	string strSoql = 'select id, firstname, lastname,';
             	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
             	   strSoql += ' recordtypeId,';
             	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email';
-                strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';             	
-            	Contact con = database.query(strSoql);   
+                strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
+            	Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
-                
-                // update the account if it is non-standard 
+
+                // update the account if it is non-standard
                 if (isSpecialAccount()) {
 	                if (CAO_Constants.isOneToOne()) {
 		                myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
 		                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-	                } else if (CAO_Constants.isHHAccountModel()) { 
-	                	myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
-	                	myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+	                } else if (CAO_Constants.isHHAccountModel()) {
+                        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+                        // if custom household naming is on, we need to leave the account name untouched,
+                        // so on update, it will get its correct name.
+                        if (!hs.npo02__Advanced_Household_Naming__c)
+                            myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
+                        myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
 	                }
-	                
+
 	                if (!CAO_Constants.isBucketModel()) {
-	                	// change its recordtype if specified in settings 
+	                	// change its recordtype if specified in settings
 	                    ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
-		                if (rtIdAcccount != null) {                
+		                if (rtIdAcccount != null) {
 		                    myAccount.put('RecordTypeID', rtIdAcccount);
-		                }                                    
+		                }
 		                myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
 	                    myAccount.npe01__One2OneContact__c = con.Id;
-		                update myAccount;                    
+		                update myAccount;
    	                }
                 }
-                                             
+
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
 	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
-	                npo02__Households_Settings__c hs = HH_Households.getHouseholdsSettings();                
+	                npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
-	                    update con;                         
+	                    update con;
 	                }
 	            }
-            }     
-                        
+            }
+
             //clean up the extra OCR Issue #214
             // if we create an opp, its a 1x1 (or HH?), and its merged into an existing contact
             if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && con != 'NEW_CONTACT'){
-                
+
                 //get the new OCRs
                 list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
-                
-                //if there are more than one, find the primary with the right role, and delete 
+
+                //if there are more than one, find the primary with the right role, and delete
                 //the extraneous ones
                 if (ocrList != null && ocrList.size() > 1){
                     list<OpportunityContactRole> dlist = new list<OpportunityContactRole>();
                     for (OpportunityContactRole ocr : ocrList){
                         if (!ocr.IsPrimary && dlist.size()+1 != ocrList.size()){
-                            dlist.add(ocr);     
+                            dlist.add(ocr);
                         }
                         else if (ocr.Role != ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c && dlist.size()+1 != ocrList.size()){
                             dlist.add(ocr);
                         }
                     }
                     delete dlist;
-                    
+
                     //on delete of one ocr, the other 'isPrimary' is set to false
-                    //so we need to issue an udpate to correct it. 
+                    //so we need to issue an udpate to correct it.
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
                     update ocr;
-                } 
-                        
+                }
+
 	        }
 	        // redirect
-            return new PageReference('/' + lcr.getContactId());                  
+            return new PageReference('/' + lcr.getContactId());
     	} catch (exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.LD);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.LD);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

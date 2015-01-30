@@ -30,36 +30,60 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description Class provides a batchable wrapper for Household naming functionality. Called on initial activation of
 * automatic household naming, or to refresh all household naming (when the user changes their custom format).
+* works on both Household Objects and Household Accounts.
 */
 public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
 // batch apex class to name households in existing orgs
     
+    /*******************************************************************************************************
+    * @description soql query for computing which Contacts to run the batch on.
+    */ 
     public String query {get; set;}
+
+    /*******************************************************************************************************
+    * @description specifies whether automatic Household Naming is being turned on for the first time.
+    */ 
     public boolean isActivation {get; set;} 
     
-    /** @description constructor for the class */
-    // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
+    /*******************************************************************************************************
+    * @description constructor for the class. the household batch expects a list of Contact's with just Id, 
+    * LastName, HHId__c available.
+    * @param q the soql query of Contacts
+    * @param isA whether automatic Household Naming is being turned on for the first time.
+    */
     public HH_HouseholdNaming_BATCH(string q, boolean isA) {          
         isActivation = isA;     
         query = q; 
     }
     
-    /** @description default old constructor to skip activation sequence */    
-    // the household batch expects a list of Contact's with just Id, LastName, HHId__c available.
+    /*******************************************************************************************************
+    * @description default old constructor to skip activation sequence. the household batch expects a list of Contact's with just Id, 
+    * LastName, HHId__c available.
+    * @param q the soql query of Contacts
+    */
     public HH_HouseholdNaming_BATCH(string q) {
         query = q;
         isActivation = false;       
     }
         
-    /** @description Start method of batch class */
+    /*******************************************************************************************************
+    * @description start Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return database.Querylocator  
+    ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(query);      
     }
     
-    /** @description The execution logic for the batch. Includes seperate paths for initial activations */
-    // result SObject array is a list of Contact's with just Id, LastName, HHId__c available.
+    /*******************************************************************************************************
+    * @description execute Method for the Database.Batchable interface. Includes seperate paths for initial activations.
+    * @param bc the BatchableContext
+    * @param result list of Contact's with just Id, LastName, HHId__c available.
+    * @return void  
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] result) {
         HH_ProcessControl.inFutureContext = true;     
         
@@ -146,6 +170,9 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
                 // all or nothing so errors not lost.
                 update updatelist;
         }
+        
+        //No error handling necessary, because the only place this is called from is the widget that displays the batch
+        //process status in the UI.
 
         //now run the regular process for completing the batch run                
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
@@ -160,7 +187,11 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         hn.UpdateNames(hhidlist);
     }
     
-    /** @description Finish method for the batchable class. */
+    /*******************************************************************************************************
+    * @description finish Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return void  
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {
     }
     

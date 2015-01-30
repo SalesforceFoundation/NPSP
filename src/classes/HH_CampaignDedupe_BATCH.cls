@@ -30,27 +30,55 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Households
 * @description Class provides a batchable wrapper for marking Household duplicates on a Campaign.
 */
 public with sharing class HH_CampaignDedupe_BATCH implements Database.Batchable<sObject> {
 
+    /*******************************************************************************************************
+    * @description soql query for computing which CampaignMembers to run the batch on.
+    */ 
     public String strSoql { get; set; } 
+
+    /*******************************************************************************************************
+    * @description the Campaign Id that the results should be stored in.
+    */ 
     public ID cmpId { get; set; } 
     
-    // constructor
+    /*******************************************************************************************************
+    * @description Constructor
+    * @param Id the campaign's Id
+    * @param strQuery the soql query for which CampaignMember records to evaluate
+    ********************************************************************************************************/
     public HH_CampaignDedupe_BATCH(ID campaignId, string strQuery) {
         cmpId = campaignId;
         strSoql = strQuery;
     }
     
+    /*******************************************************************************************************
+    * @description start Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return database.Querylocator  
+    ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(strSoql);      
     }
     
+    /*******************************************************************************************************
+    * @description execute Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @param result the list of CampaignMembers to process
+    * @return void  
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, Sobject[] result) {
     	HH_CampaignDedupeBTN_CTRL.MarkDuplicatesFromList(cmpId, (list<CampaignMember>) result);
     }
     
+    /*******************************************************************************************************
+    * @description finish Method for the Database.Batchable interface
+    * @param bc the BatchableContext
+    * @return void  
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {
     }
 }

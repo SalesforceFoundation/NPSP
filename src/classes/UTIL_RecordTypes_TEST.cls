@@ -1,7 +1,37 @@
+/*
+    Copyright (c) 2011, Salesforce.com Foundation
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this List of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this List of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 /**
 * @author Evan Callahan
 * @date 2010 
-* @description tests for recordtype wrapper for easy access in other codeblocks 
+* @group Utilities
+* @description Tests for recordtype wrapper for easy access to record type information.
 */
 
 @isTest
@@ -13,20 +43,19 @@ private class UTIL_RecordTypes_TEST {
         Id reallyBogus = UTIL_RecordTypes.GetRecordTypeId('Bogus', 'Bogus');
         Id bogus = UTIL_RecordTypes.GetRecordTypeId('Opportunity', 'Bogus');
         bogus = UTIL_RecordTypes.GetRecordTypeId('Contact', 'Bogus');
-        bogus = UTIL_RecordTypes.GetRecordTypeId('Campaign', 'Bogus');
+        bogus = UTIL_RecordTypes_API.GetRecordTypeId('Campaign', 'Bogus');
         
         // try all the functions
-        set<Id> oppRtSet = UTIL_RecordTypes.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
+        set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
         Map<String, Id> oppTypeMap = UTIL_RecordTypes.GetRecordTypeIdMap('Opportunity');
         List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
-        system.assertEquals('TestName',UTIL_RecordTypes.GetOppNamingSuffix('TestName'));
         
         // check against queried rectypes
         list<recordtype> ort = [select id, name from recordtype where isactive=true and sobjecttype='Opportunity' limit 1];
         if (!ort.isEmpty()) {
             Id rtId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', ort[0].name);
             system.assertEquals(ort[0].id, rtId); 
-            String rtName = UTIL_RecordTypes.GetRecordTypeName('Opportunity', ort[0].id);
+            String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', ort[0].id);
             system.assertEquals(ort[0].name, rtName); 
 
             // the sets above should contain something too
@@ -50,9 +79,7 @@ private class UTIL_RecordTypes_TEST {
             system.AssertEquals(idGift, mapRCId.get(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));       
             
             system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetRecordTypeName('Opportunity', idGift));        
-            
-            system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity'), UTIL_RecordTypes.GetOppNamingSuffix(UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity')));        
-    
+                
             List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList('Opportunity');
             system.Assert(listSO.IsEmpty() == false);       
         }

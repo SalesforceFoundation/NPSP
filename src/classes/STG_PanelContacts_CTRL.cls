@@ -30,8 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description Controller for the Contacts settings page.
- */
+*/
  public with sharing class STG_PanelContacts_CTRL extends STG_Panel {
     
     public override string idPanel() { return 'idPanelCon'; }

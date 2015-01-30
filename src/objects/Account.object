@@ -113,6 +113,16 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
+            <field>Membership_Span__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Membership_Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
             <field>NumberOfEmployees</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -754,6 +764,33 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Membership_Span__c</fullName>
+        <description>Formula: The number of years for which this Household has had a Member.</description>
+        <externalId>false</externalId>
+        <formula>year(npo02__MembershipEndDate__c ) - year(npo02__MembershipJoinDate__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Formula: The number of years for which this Household has had a Member.</inlineHelpText>
+        <label>Membership Span</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Membership_Status__c</fullName>
+        <description>Grace period defaults to 30 days. This can be adjusted in the Households Settings tab.</description>
+        <externalId>false</externalId>
+        <formula>if ( npo02__MembershipEndDate__c  &lt;today(), if (npo02__MembershipEndDate__c  &gt; ( TODAY() -
+IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c)), $Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c, 30)) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(npo02__MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Formula: Current, expired, or grace period.  Default grace period set in Household Settings.</inlineHelpText>
+        <label>Membership Status</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Number_of_Household_Members__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>for Household Accounts, the number of Contacts in the Household.</inlineHelpText>
@@ -765,16 +802,4 @@
         <type>Number</type>
         <unique>false</unique>
     </fields>
-    <listViews>
-        <fullName>AllAccounts</fullName>
-        <columns>ACCOUNT.NAME</columns>
-        <columns>ACCOUNT.ADDRESS1_STATE</columns>
-        <columns>ACCOUNT.PHONE1</columns>
-        <columns>ACCOUNT.TYPE</columns>
-        <columns>npo02__TotalOppAmount__c</columns>
-        <columns>npo02__OppAmountLastNDays__c</columns>
-        <columns>npo02__AverageAmount__c</columns>
-        <filterScope>Everything</filterScope>
-        <label>All Accounts</label>
-    </listViews>
 </CustomObject>

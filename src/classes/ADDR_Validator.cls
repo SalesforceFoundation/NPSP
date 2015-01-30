@@ -36,7 +36,7 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Addr_Verification_Settings__c settings = getAddressValidationSettings();
+    private static Addr_Verification_Settings__c settings = getAddressVerificationSettings();
 
     /* FUTURE METHOD FOR TRIGGERS */
     @future(callout=true)
@@ -45,7 +45,7 @@ public with sharing class ADDR_Validator {
     }
     
     public static void verifyRecords(set<id> recordIds) {
-    	System.debug(LoggingLevel.WARN, '****Retrieving data records');
+    	UTIL_Debug.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
         list<Address__c> avList = [ select Id, Name, CreatedDate, LastModifiedDate, 
             MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingCountry__c, MailingState__c, MailingPostalCode__c, 
@@ -55,36 +55,40 @@ public with sharing class ADDR_Validator {
         verifyAddressRecords(avList);
     }
     
+    private class ValidationException extends Exception {}
+    
     //we separate it from the query so that we can call it also from the batch process
     public static void verifyAddressRecords(List<Address__c> avList) {
     	if (!avList.isEmpty()) {
-            System.debug(LoggingLevel.WARN, '****Verifying records');
+            UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying records');
             if(settings != null) {
                 String classToRunName = String.valueOf(settings.get('Class__c'));
-                Type classType = Type.forName(classToRunName);
-                if(classType != null) {     
-                    Object classInstance = classType.newInstance();
-                    //the objects we create dynamically need to implement the ADDR_IValidator interface
-                    if(classInstance instanceof ADDR_IValidator) {
-                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
-                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
-                        ADDR_Validator_TDTM.alreadyRun = true;
-                        //updating the addresses with the verified version
-                        update validator.verifyRecords(avList, settings);
-                    } else {
-                        System.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
-                    }
-                } else {
-                    System.debug(LoggingLevel.WARN, '****ClassType was null.');
+                if(classToRunName != null) {
+	                Type classType = Type.forName(classToRunName);
+	                if(classType != null) {     
+	                    Object classInstance = classType.newInstance();
+	                    //the objects we create dynamically need to implement the ADDR_IValidator interface
+	                    if(classInstance instanceof ADDR_IValidator) {
+	                        ADDR_IValidator validator = (ADDR_IValidator)classInstance;
+	                        //setting the flag to avoid running ADDR_Validator_TDTM again after the verification
+	                        ADDR_Validator_TDTM.alreadyRun = true;
+	                        //updating the addresses with the verified version
+	                        update validator.verifyRecords(avList, settings);
+	                    } else {
+	                        ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
+	                    }
+	                } else {
+	                    ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Wrong_Class), ERR_Handler_API.Context.ADDR);
+	                }
                 }
             } else {
-                System.debug(LoggingLevel.WARN, '****ClassToCall was null');
+                ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Undefined_Class), ERR_Handler_API.Context.ADDR);
             }
         }
     }
     
-    public static Addr_Verification_Settings__c getAddressValidationSettings() {        
-        settings = UTIL_CustomSettingsFacade.getAddressValidationSettings();
+    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
+        settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         return settings;
     }
 }

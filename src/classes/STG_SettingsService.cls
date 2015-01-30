@@ -29,6 +29,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @author Salesforce Foundation
 * @date 01/13/2014
+* @group Settings
 * @description Settings Service class
 */
 
@@ -37,12 +38,12 @@ public with sharing class STG_SettingsService {
     public static STG_SettingsService stgService = new STG_SettingsService();
     
     public STG_SettingsService() {
-    	//system.debug('***** STG_SettingsService constructor');
+    	//UTIL_Debug.debug('***** STG_SettingsService constructor');
     }
     
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
-            if (stgCon == null) stgCon = CAO_Constants.getContactsSettings();
+            if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getOrgContactsSettings();
             return stgCon;
         }
         private set;
@@ -50,7 +51,7 @@ public with sharing class STG_SettingsService {
     
     public npo02__Households_Settings__c stgHH {
         get {
-            if (stgHH == null) stgHH = HH_Households.getHouseholdsSettings();
+            if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
             return stgHH;
         }
         private set;
@@ -58,7 +59,7 @@ public with sharing class STG_SettingsService {
     
     public Household_Naming_Settings__c stgHN {
         get {
-            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
             return stgHN;
         }
         private set;
@@ -66,7 +67,7 @@ public with sharing class STG_SettingsService {
 
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
-            if (stgRD == null) stgRD = RD_RecurringDonations.getRecurringDonationsSettings();
+            if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
             return stgRD;
         }
         private set;
@@ -74,7 +75,7 @@ public with sharing class STG_SettingsService {
     
     public npe4__Relationship_Settings__c stgRel {
         get {
-            if (stgRel == null) stgRel = REL_Utils.getRelationshipSettings();
+            if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
             return stgRel;
         }
         private set;
@@ -82,7 +83,7 @@ public with sharing class STG_SettingsService {
     
     public npe5__Affiliations_Settings__c stgAffl {
         get {
-            if (stgAffl == null) stgAffl = AFFL_Affiliations_UTIL.getAffiliationsSettings();
+            if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
             return stgAffl;
         }
         private set;
@@ -90,7 +91,7 @@ public with sharing class STG_SettingsService {
     
     public Error_Settings__c stgErr {
         get {
-            if (stgErr == null) stgErr = ERR_Notifier.getErrorSettings();
+            if (stgErr == null) stgErr = UTIL_CustomSettingsFacade.getOrgErrorSettings();
             return stgErr;
         }
         private set;
@@ -98,12 +99,20 @@ public with sharing class STG_SettingsService {
     
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
-            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getBDESettings();
+            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getOrgBDESettings();
             return stgBDE;
         }
         private set;
     }
     
+    public Allocations_Settings__c stgAllo {
+        get {
+            if (stgAllo == null) stgAllo = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+            return stgAllo;
+        }
+        private set;
+    }
+
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
     	get {
     		if (mapRDCustomField == null) {
@@ -157,5 +166,7 @@ public with sharing class STG_SettingsService {
         upsert stgAffl;
         upsert stgBDE;
         upsert stgErr;
+        system.debug('lookhere: stgallo: ' + stgAllo);
+        upsert stgAllo;
     }
 }

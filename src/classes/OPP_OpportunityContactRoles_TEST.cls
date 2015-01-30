@@ -39,7 +39,7 @@ private class OPP_OpportunityContactRoles_TEST {
     /// <summary> test creation or upate of contact role  </summary>
     static testMethod void createOrUpdateCR() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
@@ -98,7 +98,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppCRTriggerTurnedOff() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
                 npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
 
@@ -140,7 +140,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppRolesForOneToOneContact() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
                 
         String title = 'CEO';
         Contact con = new Contact(
@@ -178,7 +178,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppRolesForIndividualContact() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
               
         String title = 'CEO';
         Contact con = new Contact(
@@ -218,7 +218,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppRolesForOneToOneAccount() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
                 
         String title = 'CEO';
         Contact con = new Contact(
@@ -253,7 +253,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppRolesForIndividualAccount() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
               
         String title = 'CEO';
         Contact con = new Contact(
@@ -293,7 +293,7 @@ private class OPP_OpportunityContactRoles_TEST {
     
     static testMethod void oppRolesForBadId() {
         String donorRoleforTest = 'Donor';
-        npe01__Contacts_and_Orgs_Settings__c testSettings = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
         
         Account acc = new Account(Name='test77');
         insert acc;

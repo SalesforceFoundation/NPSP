@@ -30,12 +30,20 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Accounts
 * @description Controller for overriding account view VF page for 1x1 contacts 
 */
 public with sharing class  ACCT_ViewOverride_CTRL {
 
+    /*******************************************************************************************************
+    * @description The Account object being viewed.
+    */ 
     private final Account account;
 
+    /*******************************************************************************************************
+    * @description constructor for the class
+    * @param controller the standard Account controller
+    */ 
     public ACCT_ViewOverride_CTRL (ApexPages.StandardController controller)
     {
         //get the account with the npe01__one2oneContact__c field for use in the rederict if necessary
@@ -50,6 +58,9 @@ public with sharing class  ACCT_ViewOverride_CTRL {
         }
     }
 
+    /*******************************************************************************************************
+    * @description returns the Account object
+    */ 
     public Account getAccount()
     {
         return account;

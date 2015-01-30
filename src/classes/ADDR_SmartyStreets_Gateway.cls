@@ -75,6 +75,15 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
             sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
+        else if(res.getStatusCode() == 400)
+            throw new LiveAddressException('Bad input. Required fields missing from input or are malformed.');
+        else if(res.getStatusCode() == 401)
+            throw new LiveAddressException('Unauthorized. Authentication failure; invalid credentials.');
+        else if(res.getStatusCode() == 402)
+            throw new LiveAddressException('Payment required. No active subscription found.');
+        else if(res.getStatusCode() == 500)
+            throw new LiveAddressException('Internal server error. General service failure; retry request.');
+        
         
         if (sr == null || sr.isEmpty()) return null;
         else return sr; 
@@ -124,7 +133,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setEndpoint(baseURL + auth); 
 	        req.setBody(body);
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-	        System.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
+	        UTIL_Debug.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
 	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
 	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
@@ -148,7 +157,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        	// execute the request
 	        	response = h.send(req);
 	        }
-	        System.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
+	        UTIL_Debug.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
     	} else {
     		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
     	}

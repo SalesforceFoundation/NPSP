@@ -43,11 +43,10 @@ public with sharing class ADDR_Validation_Gateway_TEST {
     
     public static ADDR_SmartyStreets_Gateway createDefaultSettings() {
         // use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api authentication settings
-        settings = Addr_Verification_Settings__c.getOrgDefaults();
+        settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
@@ -56,7 +55,6 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        insert settings;
         
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         return new ADDR_SmartyStreets_Gateway(settings);
@@ -74,7 +72,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         system.assert(sr != null);
         system.assertEquals(sr.delivery_line_1, '1 Infinite Loop');
         system.assertEquals(37.33118, sr.metadata.latitude);
-        system.debug(logginglevel.warn, sr.getFullAddress());
+        UTIL_Debug.debug(logginglevel.warn, sr.getFullAddress());
     }
 
     public static testMethod void testMultiAddress() {
@@ -105,20 +103,75 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         system.assertEquals(47.957763, sz.zipcodes[0].latitude);
     }
 
-    public static testMethod void testBadAuth() {
-    	if (strTestOnly != '*' && strTestOnly != 'testBadAuth') return;
-    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-    	
-    	settings.Address_Verification_Endpoint__c = 'bad-authentication-for-test';
-        update settings;
+    public static testMethod void testBadInput() {
+        if (strTestOnly != '*' && strTestOnly != 'testBadInput') return;
+        ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+        
+        settings.Address_Verification_Endpoint__c = '400';
+        
         
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
             sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
         } catch (Exception e) {
-        	System.debug('****' + e.getStackTraceString());
-            system.assertEquals('Not authenticated.', e.getMessage());
+            System.debug('****' + e.getStackTraceString());
+            system.assertEquals('Bad input. Required fields missing from input or are malformed.', e.getMessage());
+        }
+        Test.stopTest();
+        system.assertEquals(null, sr);
+    }
+    
+    public static testMethod void testBadAuth() {
+    	if (strTestOnly != '*' && strTestOnly != 'testBadAuth') return;
+    	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+    	
+    	settings.Address_Verification_Endpoint__c = '401';
+        
+        
+        Test.startTest();
+        ADDR_SmartyStreets_Gateway.AddressResponse sr;
+        try {
+            sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+        } catch (Exception e) {
+        	UTIL_Debug.debug('****' + e.getStackTraceString());
+            system.assertEquals('Unauthorized. Authentication failure; invalid credentials.', e.getMessage());
+        }
+        Test.stopTest();
+        system.assertEquals(null, sr);
+    }
+    
+    public static testMethod void testNoSubscription() {
+        if (strTestOnly != '*' && strTestOnly != 'testNoSubscription') return;
+        ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+        
+        settings.Address_Verification_Endpoint__c = '402';
+        
+        Test.startTest();
+        ADDR_SmartyStreets_Gateway.AddressResponse sr;
+        try {
+            sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+        } catch (Exception e) {
+            System.debug('****' + e.getStackTraceString());
+            system.assertEquals('Payment required. No active subscription found.', e.getMessage());
+        }
+        Test.stopTest();
+        system.assertEquals(null, sr);
+    }
+    
+    public static testMethod void testServerError() {
+        if (strTestOnly != '*' && strTestOnly != 'testServerError') return;
+        ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
+        
+        settings.Address_Verification_Endpoint__c = '500';
+        
+        Test.startTest();
+        ADDR_SmartyStreets_Gateway.AddressResponse sr;
+        try {
+            sr = gateway.verifyAddress( 'One Infinite Loop Cupertino, CA' );
+        } catch (Exception e) {
+            System.debug('****' + e.getStackTraceString());
+            system.assertEquals('Internal server error. General service failure; retry request.', e.getMessage());
         }
         Test.stopTest();
         system.assertEquals(null, sr);

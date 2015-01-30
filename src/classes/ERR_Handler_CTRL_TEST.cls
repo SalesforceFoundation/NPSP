@@ -34,14 +34,14 @@ public with sharing class ERR_Handler_CTRL_TEST {
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
         insert contact1;
         
-        //I think npe4__Contact__c is missing from the reciprocal connection that gets automatically created.
+        //I think npe4__Contact__c is missing from the reciprocal relationship that gets automatically created.
         npe4__Relationship__c[] relationships = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = contact1.id, npe4__Type__c='TestLookupType') };    
         
         insert relationships;
         
         //No try-catch necessary. The error is found in the processDML method of TDTM_TriggerHandler.
-        //The transaction is manually rolled back in that same method.
+        //The transaction is rolled back in that same method.
         
         return null;
     }
@@ -62,9 +62,10 @@ public with sharing class ERR_Handler_CTRL_TEST {
             insert relationships;
         
         } catch(Exception e) {
-        	System.debug('****Exception caught: ' + e.getMessage());
+        	UTIL_Debug.debug('****Exception caught: ' + e.getMessage());
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.TDTM);
+            //Using the API class just to give it test coverage.
+            ERR_Handler_API.processError(e, ERR_Handler_API.Context.TDTM.name());
         }
         return null;
     }

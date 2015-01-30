@@ -52,16 +52,18 @@ public with sharing class RLLP_OppRollup_TEST2 {
     }
     static void testOpportunityUtilityErrorHandling(string strProcessor) {
     	
-    	insert new Error_Settings__c(Store_Errors_On__c = true, Error_Notifications_On__c = false);
+    	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+    	errorSettings.Error_Notifications_On__c = false;
+		upsert errorSettings;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = strProcessor,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
             npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
         ));
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
             npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
             npo02__Always_Rollup_to_Primary_Contact__c = false,

@@ -33,12 +33,6 @@
 * @description Enum for triggers and static utils for settings and collections
 */
 public with sharing class REL_Utils {
-    private static npe4__Relationship_Settings__c relationshipSettings;
-
-    public static npe4__Relationship_Settings__c getRelationshipSettings() {
-        relationshipSettings = UTIL_CustomSettingsFacade.getRelationshipSettings(relationshipSettings);
-        return relationshipSettings;
-    }
 
     private static Map<String, npe4__Relationship_Auto_Create__c> AutoCreateMap;
     public static Map<String, npe4__Relationship_Auto_Create__c> getAutoCreateMap() {
@@ -94,7 +88,7 @@ public with sharing class REL_Utils {
         try {
             lines = contents.split('\n');
         } catch (System.ListException e) {
-            System.debug('Limits exceeded?' + e.getMessage());
+            UTIL_Debug.debug('Limits exceeded?' + e.getMessage());
         }
         Integer num = 0;
         for(String line : lines) {

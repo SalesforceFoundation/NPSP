@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description The controller for the Autocreate Relationships panel 
 */
 public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
@@ -74,7 +75,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
             acNew = null;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
@@ -101,7 +102,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
             }
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
@@ -132,19 +133,14 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 	            }   
 	            for (String s : fieldTokenMap.keySet()) {
 	                if (s.equalsIgnoreCase('ReportsToId') || (s.endsWith('__c') && !s.startsWith('npe01__') && !s.startsWith('npo02__') && !s.startsWith('npe03__'))){
-	                    //if we've hit the limit, throw a warning and recommend manual entry
-	                    if (system.Limits.getFieldsDescribes() == system.Limits.getLimitFieldsDescribes()) {
-	                        ApexPages.addMessage(new ApexPages.message(ApexPages.severity.WARNING, system.Label.npe4.RelationshipsCustomFieldOverload));                 
-	                    } else {
-	                        Schema.DescribeFieldResult F = fieldTokenMap.get(s).getDescribe();             
-	                        List <Schema.sObjectType> sobjref = new List<Schema.sObjectType>(); 
-	                        sobjref = F.getReferenceTo();
-	                        for (Schema.sObjectType objT : sobjref) {
-	                            if (objT == Contact.sObjectType) {
-	                                listSOACfield.add(new SelectOption(F.getName(), F.getLabel()));
-	                            }                   
-	                        }               
-	                    }           
+	                    Schema.DescribeFieldResult F = fieldTokenMap.get(s).getDescribe();             
+	                    List <Schema.sObjectType> sobjref = new List<Schema.sObjectType>(); 
+	                    sobjref = F.getReferenceTo();
+	                    for (Schema.sObjectType objT : sobjref) {
+	                        if (objT == Contact.sObjectType) {
+	                            listSOACfield.add(new SelectOption(F.getName(), F.getLabel()));
+	                        }                   
+	                    }               
 	                }
 	            }
 	        }                                      

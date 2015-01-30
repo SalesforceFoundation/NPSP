@@ -19,11 +19,21 @@
  *
  * See the Apex Language Reference for more information about Testing and Code Coverage.
  */
+/**
+* @author Salesforce.com Foundation
+* @date 2009
+*
+* @group Affiliations
+*
+* @description  
+*/
 
 @isTest	
 public with sharing class AFFL_BulkTests_TEST {
 
     static testMethod void newContactOnOrgAccount() {
+    	UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
     	    	
         Account acc = new Account(Name='test77');
         insert acc;
@@ -79,6 +89,9 @@ public with sharing class AFFL_BulkTests_TEST {
     }
     
     static testMethod void newContactOnIndividualAccount() {
+    	UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
+    	
         Account acc = new Account(Name='Individual', npe01__SYSTEMIsIndividual__c=true);
         insert acc;
         
@@ -176,6 +189,8 @@ public with sharing class AFFL_BulkTests_TEST {
     
     //Modifying the test above to have only two DMLs, one before StartTest and one after
     static testMethod void contactWithMultipleAffiliations_v2() {
+        UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         Account acc = new Account(Name='test77');
         insert acc;

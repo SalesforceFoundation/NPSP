@@ -113,7 +113,7 @@ public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         List<npe4__Relationship__c> existingRelationships = new List<npe4__Relationship__c>();
         Map<Id, List<npe4__Relationship__c>> relationshipsByContact = new Map<Id, List<npe4__Relationship__c>>();
         
-        if (!REL_Utils.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c) {
+        if (!UTIL_CustomSettingsFacade.getRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c) {
             
             existingRelationships = [select Id, npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c 
             from npe4__Relationship__c where npe4__Contact__c IN :ContactIds limit 2000];
@@ -145,7 +145,7 @@ public with sharing class REL_Relationships_Con_TDTM extends TDTM_Runnable {
             }
             
             if (!doNotCreate){
-                System.debug('****Creating relationship in createNewRelationships method');
+                UTIL_Debug.debug('****Creating relationship in createNewRelationships method');
                 npe4__Relationship__c r = new npe4__Relationship__c(
                     npe4__Contact__c = conId, 
                     npe4__RelatedContact__c = RelatedContactIds[i],

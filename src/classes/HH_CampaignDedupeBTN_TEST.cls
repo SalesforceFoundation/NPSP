@@ -30,13 +30,14 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description test class for the campaign dedupe button from the campaign record 
 */
 @isTest
 private class HH_CampaignDedupeBTN_TEST {  
   
   public static testMethod void testCampaignHHReport(){
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -66,14 +67,14 @@ private class HH_CampaignDedupeBTN_TEST {
     insert con;
     id hhid = [select npo02__Household__r.id from Contact where id = :con.id].npo02__household__r.id;
     system.assert(hhid != null);
-    system.debug('HHID IS===================' + hhid);
+    UTIL_Debug.debug('HHID IS===================' + hhid);
     Contact con2 = new Contact (
       FirstName = 'Amy',
       LastName = 'Test',
       AccountId = acct.id,            
       npo02__household__c = hhid
     );
-    system.debug('HHID IS NOW===================' + hhid);
+    UTIL_Debug.debug('HHID IS NOW===================' + hhid);
     
     system.assert(con2.npo02__household__c != null);
     insert con2;

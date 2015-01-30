@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
 * @description The controller for the Recurring Donations panel 
 */
 public with sharing class STG_PanelRD_CTRL extends STG_Panel { 
@@ -57,12 +58,16 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
         	List<SObject> toUpdate = new List<SObject>();
-        	if(STG_Panel.stgService.stgRD != null)
+        	
+        	if(STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
+        	}
+        	
         	if(rdSched != null) {
                 rdSched.Active__c = !isRDScheduleDisabled;
                 toUpdate.add(rdSched);
         	}
+        	
             update toUpdate;
             
             strRDOppRecordTypeLabel = null;
@@ -80,7 +85,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             isEditMode = false;
         } catch (Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
     	return null;

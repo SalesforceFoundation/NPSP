@@ -47,7 +47,7 @@ public without sharing class PMT_PaymentCreator {
     //constructor gets opps from trigger??
     public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
         
-        ContactSettings = CAO_Constants.getContactsSettings();
+        ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                     
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
@@ -109,7 +109,7 @@ public without sharing class PMT_PaymentCreator {
                 }
                 soqlStatement += soqlSub;
                 soqlStatement += 'npe01__scheduled_date__c ';
-                soqlStatement += 'from Opportunity.npe01__OppPayment__r) from Opportunity WHERE id in :newOpps';
+                soqlStatement += 'from Opportunity.npe01__OppPayment__r WHERE npe01__Opportunity__c IN :newOpps) from Opportunity WHERE id in :newOpps';
                 updatedOpps = Database.query(soqlStatement);
             }
     
@@ -240,7 +240,7 @@ public without sharing class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && oldOpp.Amount == 0 && !thisOpp.isClosed){
+                    else if (thisOpp.Amount != 0 && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed){ // changed added "|| oldOpp.Amount==null" condition to fix BUG #1285
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,

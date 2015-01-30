@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Households
 * @description test class for Household naming functionality.
 */
 @isTest
@@ -43,7 +44,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Always_Rollup_to_Primary_Contact__c = true,
@@ -56,7 +57,7 @@ public class HH_HouseholdNaming_TEST {
                 npo02__Advanced_Household_Naming__c = true
             ));
             
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
            npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -77,7 +78,7 @@ public class HH_HouseholdNaming_TEST {
             
         //get the household to be updated
         id hhid = [select npo02__Household__r.id from Contact where id = :testcons[0].id].id;                        
-        system.debug('ID IS=================='+ hhid);    
+        UTIL_Debug.debug('ID IS=================='+ hhid);    
         
         HH_HouseholdNaming_BATCH batch = new HH_HouseholdNaming_BATCH(
         'select Id, LastName, ' + UTIL_Namespace.StrTokenNSPrefix('HHId__c') + ' from Contact where ' + 
@@ -92,9 +93,10 @@ public class HH_HouseholdNaming_TEST {
     static testMethod void HouseholdNamingTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                    npo02__Advanced_Household_Naming__c = true,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
                     npo02__Enable_Opp_Rollup_Triggers__c = true,
                     npo02__Excluded_Account_Opp_Rectypes__c = null,
@@ -103,7 +105,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Excluded_Contact_Opp_Types__c = null                    
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -147,7 +149,7 @@ public class HH_HouseholdNaming_TEST {
     static testMethod void HouseholdNamingUpdateTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -159,7 +161,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
@@ -263,7 +265,7 @@ public class HH_HouseholdNaming_TEST {
     public static testMethod void testNamingOrder() {
       if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
       //settings
-      npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+      npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                     npo02__Always_Rollup_to_Primary_Contact__c = false,
@@ -275,7 +277,7 @@ public class HH_HouseholdNaming_TEST {
                     npo02__Advanced_Household_Naming__c = true               
                 ));
                 
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'

@@ -90,7 +90,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     
     public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (PaymentsSettings == null)
-           PaymentsSettings = CAO_Constants.getContactsSettings();
+           PaymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         
         return PaymentsSettings;
     }
@@ -231,7 +231,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        return oldOppPage;
     	} catch(Exception e) {
     		Database.rollback(sp);
-    		ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+    		ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
     		ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
     		return null;
     	}
@@ -300,7 +300,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.PMT);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }

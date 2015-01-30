@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Cumulus</fullName>
   <types>
     <members>ACCT_Accounts_TDTM</members>
@@ -28,18 +27,29 @@
     <members>ADDR_Validator</members>
     <members>ADDR_Validator_Batch</members>
     <members>ADDR_Validator_Batch_TEST</members>
+    <members>ADDR_Validator_REST</members>
     <members>ADDR_Validator_TDTM</members>
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
     <members>AFFL_Affiliations_UTIL</members>
     <members>AFFL_BulkTests_TEST</members>
+    <members>ALLO_Allocations_TDTM</members>
+    <members>ALLO_Allocations_TEST</members>
+    <members>ALLO_MakeDefaultAllocations_BATCH</members>
+    <members>ALLO_ManageAllocations_CTRL</members>
+    <members>ALLO_ManageAllocations_TEST</members>
+    <members>ALLO_Multicurrency_TDTM</members>
+    <members>ALLO_RollupBTN_CTRL</members>
+    <members>ALLO_Rollup_SCHED</members>
+    <members>ALLO_Rollup_TEST</members>
     <members>BDE_BatchDataEntry</members>
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
     <members>BDE_BatchEntry_TEST</members>
-    <members>BDE_DescribeHelper_TEST</members>
-    <members>BDE_DescribeHelper_UTIL</members>
+    <members>BDI_DataImport_BATCH</members>
+    <members>BDI_DataImport_CTRL</members>
+    <members>BDI_DataImport_TEST</members>
     <members>CAO_Constants</members>
     <members>CONV_Account_Conversion_BATCH</members>
     <members>CONV_Account_Conversion_BATCH_TEST</members>
@@ -50,6 +60,7 @@
     <members>CON_ContactMerge_TEST</members>
     <members>ERR_AddError_TEST</members>
     <members>ERR_Handler</members>
+    <members>ERR_Handler_API</members>
     <members>ERR_Handler_CTRL_TEST</members>
     <members>ERR_Handler_TEST</members>
     <members>ERR_Notifier</members>
@@ -117,6 +128,8 @@
     <members>STG_Panel</members>
     <members>STG_PanelADDRVerification_CTRL</members>
     <members>STG_PanelAffiliations_CTRL</members>
+    <members>STG_PanelAlloBatch_CTRL</members>
+    <members>STG_PanelAllocations_CTRL</members>
     <members>STG_PanelBDE_CTRL</members>
     <members>STG_PanelContactRoles_CTRL</members>
     <members>STG_PanelContacts_CTRL</members>
@@ -144,6 +157,7 @@
     <members>STG_SettingsService</members>
     <members>STG_UninstallScript</members>
     <members>STG_UninstallScript_TEST</members>
+    <members>TDTM_Config_API</members>
     <members>TDTM_DefaultConfig</members>
     <members>TDTM_ObjectDataGateway</members>
     <members>TDTM_Runnable</members>
@@ -152,7 +166,10 @@
     <members>TDTM_TriggerHandler</members>
     <members>TDTM_TriggerScaffolds_TEST</members>
     <members>TDTM_iTableDataGateway</members>
+    <members>UTIL_AbstractRollup_BATCH</members>
     <members>UTIL_CustomSettingsFacade</members>
+    <members>UTIL_CustomSettings_API</members>
+    <members>UTIL_Debug</members>
     <members>UTIL_Describe</members>
     <members>UTIL_Describe_TEST</members>
     <members>UTIL_GlobalSchedulable</members>
@@ -168,6 +185,7 @@
     <members>UTIL_Namespace</members>
     <members>UTIL_Namespace_TEST</members>
     <members>UTIL_RecordTypes</members>
+    <members>UTIL_RecordTypes_API</members>
     <members>UTIL_RecordTypes_TEST</members>
     <members>UTIL_SoqlListView_CTRL</members>
     <members>UTIL_Typeahead</members>
@@ -187,7 +205,10 @@
   <types>
     <members>ACCT_ViewOverride</members>
     <members>ADDR_CopyAddrHHObjBTN</members>
+    <members>ALLO_ManageAllocations</members>
+    <members>ALLO_RollupBTN</members>
     <members>BDE_BatchEntry</members>
+    <members>BDI_DataImport</members>
     <members>CONV_Account_Conversion</members>
     <members>CON_ContactMerge</members>
     <members>HH_CampaignDedupeBTN</members>
@@ -201,6 +222,8 @@
     <members>REL_RelationshipsViewer</members>
     <members>STG_PanelAddrVerification</members>
     <members>STG_PanelAffiliations</members>
+    <members>STG_PanelAlloBatch</members>
+    <members>STG_PanelAllocations</members>
     <members>STG_PanelBDE</members>
     <members>STG_PanelContactRoles</members>
     <members>STG_PanelContacts</members>
@@ -231,6 +254,7 @@
     <members>TDTM_Account</members>
     <members>TDTM_Address</members>
     <members>TDTM_Affiliation</members>
+    <members>TDTM_Allocation</members>
     <members>TDTM_Campaign</members>
     <members>TDTM_CampaignMember</members>
     <members>TDTM_Contact</members>
@@ -261,6 +285,8 @@
   </types>
   <types>
     <members>Account.Batch__c</members>
+    <members>Account.Membership_Span__c</members>
+    <members>Account.Membership_Status__c</members>
     <members>Account.Number_of_Household_Members__c</members>
     <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
     <members>Addr_Verification_Settings__c.Auth_ID__c</members>
@@ -305,20 +331,125 @@
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>
     <members>Address__c.Seasonal_Start_Month__c</members>
+    <members>Address__c.Verification_Status__c</members>
     <members>Address__c.Verified__c</members>
+    <members>Allocation__c.Amount__c</members>
+    <members>Allocation__c.Campaign__c</members>
+    <members>Allocation__c.General_Accounting_Unit__c</members>
+    <members>Allocation__c.Opportunity__c</members>
+    <members>Allocation__c.Percent__c</members>
+    <members>Allocation__c.Recurring_Donation__c</members>
+    <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
+    <members>Allocations_Settings__c.Default__c</members>
+    <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
+    <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
+    <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
+    <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
     <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
     <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
     <members>Batch__c.Batch_Status__c</members>
     <members>Batch__c.Description__c</members>
     <members>Batch__c.Number_of_Items__c</members>
     <members>Batch__c.Object_Name__c</members>
+    <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
+    <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
+    <members>Contact.Exclude_from_Household_Name__c</members>
     <members>Contact.HHId__c</members>
     <members>Contact.Primary_Affiliation__c</members>
     <members>Contact.Primary_Contact__c</members>
     <members>Contact.Soft_Credit_Last_N_Days__c</members>
     <members>Contact.is_Address_Override__c</members>
+    <members>DataImport__c.Account1ImportStatus__c</members>
+    <members>DataImport__c.Account1Imported__c</members>
+    <members>DataImport__c.Account1_City__c</members>
+    <members>DataImport__c.Account1_Country__c</members>
+    <members>DataImport__c.Account1_Name__c</members>
+    <members>DataImport__c.Account1_Phone__c</members>
+    <members>DataImport__c.Account1_State_Province__c</members>
+    <members>DataImport__c.Account1_Street__c</members>
+    <members>DataImport__c.Account1_Website__c</members>
+    <members>DataImport__c.Account1_Zip_Postal_Code__c</members>
+    <members>DataImport__c.Account2ImportStatus__c</members>
+    <members>DataImport__c.Account2Imported__c</members>
+    <members>DataImport__c.Account2_City__c</members>
+    <members>DataImport__c.Account2_Country__c</members>
+    <members>DataImport__c.Account2_Name__c</members>
+    <members>DataImport__c.Account2_Phone__c</members>
+    <members>DataImport__c.Account2_State_Province__c</members>
+    <members>DataImport__c.Account2_Street__c</members>
+    <members>DataImport__c.Account2_Website__c</members>
+    <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
+    <members>DataImport__c.ApexJobId__c</members>
+    <members>DataImport__c.Contact1ImportStatus__c</members>
+    <members>DataImport__c.Contact1Imported__c</members>
+    <members>DataImport__c.Contact1_Alternate_Email__c</members>
+    <members>DataImport__c.Contact1_Birthdate__c</members>
+    <members>DataImport__c.Contact1_Firstname__c</members>
+    <members>DataImport__c.Contact1_Home_Phone__c</members>
+    <members>DataImport__c.Contact1_Lastname__c</members>
+    <members>DataImport__c.Contact1_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact1_Other_Phone__c</members>
+    <members>DataImport__c.Contact1_Personal_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Email__c</members>
+    <members>DataImport__c.Contact1_Preferred_Phone__c</members>
+    <members>DataImport__c.Contact1_Salutation__c</members>
+    <members>DataImport__c.Contact1_Title__c</members>
+    <members>DataImport__c.Contact1_Work_Email__c</members>
+    <members>DataImport__c.Contact1_Work_Phone__c</members>
+    <members>DataImport__c.Contact2ImportStatus__c</members>
+    <members>DataImport__c.Contact2Imported__c</members>
+    <members>DataImport__c.Contact2_Alternate_Email__c</members>
+    <members>DataImport__c.Contact2_Birthdate__c</members>
+    <members>DataImport__c.Contact2_Firstname__c</members>
+    <members>DataImport__c.Contact2_Home_Phone__c</members>
+    <members>DataImport__c.Contact2_Lastname__c</members>
+    <members>DataImport__c.Contact2_Mobile_Phone__c</members>
+    <members>DataImport__c.Contact2_Other_Phone__c</members>
+    <members>DataImport__c.Contact2_Personal_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Email__c</members>
+    <members>DataImport__c.Contact2_Preferred_Phone__c</members>
+    <members>DataImport__c.Contact2_Salutation__c</members>
+    <members>DataImport__c.Contact2_Title__c</members>
+    <members>DataImport__c.Contact2_Work_Email__c</members>
+    <members>DataImport__c.Contact2_Work_Phone__c</members>
+    <members>DataImport__c.DonationImportStatus__c</members>
+    <members>DataImport__c.DonationImported__c</members>
+    <members>DataImport__c.Donation_Amount__c</members>
+    <members>DataImport__c.Donation_Campaign_Name__c</members>
+    <members>DataImport__c.Donation_Date__c</members>
+    <members>DataImport__c.Donation_Description__c</members>
+    <members>DataImport__c.Donation_Donor__c</members>
+    <members>DataImport__c.Donation_Member_Level__c</members>
+    <members>DataImport__c.Donation_Membership_End_Date__c</members>
+    <members>DataImport__c.Donation_Membership_Origin__c</members>
+    <members>DataImport__c.Donation_Membership_Start_Date__c</members>
+    <members>DataImport__c.Donation_Name__c</members>
+    <members>DataImport__c.Donation_Record_Type_Name__c</members>
+    <members>DataImport__c.Donation_Stage__c</members>
+    <members>DataImport__c.Donation_Type__c</members>
+    <members>DataImport__c.FailureInformation__c</members>
+    <members>DataImport__c.HomeAddressImportStatus__c</members>
+    <members>DataImport__c.HomeAddressImported__c</members>
+    <members>DataImport__c.Home_City__c</members>
+    <members>DataImport__c.Home_Country__c</members>
+    <members>DataImport__c.Home_State_Province__c</members>
+    <members>DataImport__c.Home_Street__c</members>
+    <members>DataImport__c.Home_Zip_Postal_Code__c</members>
+    <members>DataImport__c.HouseholdAccountImported__c</members>
+    <members>DataImport__c.ImportedDate__c</members>
+    <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+    <members>DataImport__c.Payment_Method__c</members>
+    <members>DataImport__c.Status__c</members>
+    <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
+    <members>Data_Import_Settings__c.Batch_Size__c</members>
+    <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
+    <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+    <members>Error_Settings__c.Disable_Error_Handling__c</members>
+    <members>Error_Settings__c.Enable_Debug__c</members>
     <members>Error_Settings__c.Error_Notifications_On__c</members>
     <members>Error_Settings__c.Error_Notifications_To__c</members>
     <members>Error_Settings__c.Store_Errors_On__c</members>
@@ -331,6 +462,23 @@
     <members>Error__c.Posted_in_Chatter__c</members>
     <members>Error__c.Record_URL__c</members>
     <members>Error__c.Stack_Trace__c</members>
+    <members>General_Accounting_Unit__c.Active__c</members>
+    <members>General_Accounting_Unit__c.Average_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Description__c</members>
+    <members>General_Accounting_Unit__c.First_Allocation_Date__c</members>
+    <members>General_Accounting_Unit__c.Largest_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Last_Allocation_Date__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_This_Year__c</members>
+    <members>General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c</members>
+    <members>General_Accounting_Unit__c.Smallest_Allocation__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Last_Year__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_This_Year__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
+    <members>General_Accounting_Unit__c.Total_Allocations__c</members>
+    <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
     <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
     <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>
     <members>Household_Naming_Settings__c.Household_Name_Format__c</members>
@@ -351,13 +499,17 @@
     <members>Trigger_Handler__c.Object__c</members>
     <members>Trigger_Handler__c.Trigger_Action__c</members>
     <members>Trigger_Handler__c.User_Managed__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
     <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
+    <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
     <members>npo02__Household__c.Number_of_Household_Members__c</members>
     <name>CustomField</name>
   </types>
   <types>
     <members>Addr_Id_Error</members>
     <members>Addr_No_Batch</members>
+    <members>Addr_Pending_Verification</members>
     <members>Addr_Settings_API_Body</members>
     <members>Addr_Settings_API_Title</members>
     <members>Addr_Settings_Intro_Body</members>
@@ -373,15 +525,21 @@
     <members>Addr_Unauthorized_Endpoint</members>
     <members>Addr_Valid_Key_Pair</members>
     <members>Addr_Verification_Batch_Body</members>
-    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Not_Supported</members>
     <members>Addr_Verification_Batch_SmartyStreets_Message</members>
+    <members>Addr_Verification_Batch_Status</members>
     <members>Addr_Verification_Batch_Title</members>
+    <members>Addr_Verification_Required</members>
+    <members>Addr_Verification_Undefined_Class</members>
+    <members>Addr_Verification_Wrong_Class</members>
+    <members>Addr_Verification_Wrong_Interface</members>
+    <members>Addr_Verified</members>
     <members>Addr_Verify_Endpoint</members>
     <members>Addr_Verify_Google_Help</members>
     <members>Addr_Verify_Settings</members>
     <members>Addr_Verifying</members>
     <members>Address_Not_Found</members>
+    <members>Address_StateCountry_Invalid_Error</members>
     <members>Address_Verification_Limit</members>
     <members>HiddenForSecurity</members>
     <members>RecurringDonationAccountAndContactError</members>
@@ -392,10 +550,73 @@
     <members>Zipcode_Verification_Limit</members>
     <members>addrCiceroMissingAPIKey</members>
     <members>addrCopyConAddBtnHHObjOnly</members>
+    <members>addrGeneralSettings</members>
     <members>addrHHAccountOnly</members>
     <members>addrHHAddressAlwaysDefault</members>
     <members>addrSeasonalOverlap</members>
     <members>addrSeasonalPartial</members>
+    <members>alloAddRow</members>
+    <members>alloAddRowAtPosition</members>
+    <members>alloAmountOrPercent</members>
+    <members>alloBatchCreateDefault</members>
+    <members>alloBatchDefaultInfo</members>
+    <members>alloBtnCancel</members>
+    <members>alloBtnSaveAndClose</members>
+    <members>alloDefaultGAUMissing</members>
+    <members>alloDefaultNotPercent</members>
+    <members>alloDeleteRow</members>
+    <members>alloExceedsOppAmount</members>
+    <members>alloManageCampaignAllocations</members>
+    <members>alloManageOppAllocations</members>
+    <members>alloManageRecurringDonationAllocations</members>
+    <members>alloModifyCurrency</members>
+    <members>alloNegativeAmount</members>
+    <members>alloNegativePercent</members>
+    <members>alloPercentExceed100</members>
+    <members>alloRemainder</members>
+    <members>alloSingleParent</members>
+    <members>alloTotalExceedsOppAmt</members>
+    <members>alloTotals</members>
+    <members>bdiAccountCustomIdError</members>
+    <members>bdiBatchException</members>
+    <members>bdiBtnClose</members>
+    <members>bdiComplete</members>
+    <members>bdiCompleteWithErrors</members>
+    <members>bdiContactCustomIdError</members>
+    <members>bdiContactMatchEmail</members>
+    <members>bdiContactMatchFnameEmail</members>
+    <members>bdiContactMatchFnameLname</members>
+    <members>bdiContactMatchFnameLnameEmail</members>
+    <members>bdiContactMatchLnameEmail</members>
+    <members>bdiCreated</members>
+    <members>bdiDataImporterConfigTitle</members>
+    <members>bdiDataImporterDescription</members>
+    <members>bdiDataImporterInfoLine1</members>
+    <members>bdiDataImporterInfoLine2</members>
+    <members>bdiDataImporterInfoLine2b</members>
+    <members>bdiDataImporterInfoLine3</members>
+    <members>bdiDataImporterInfoLine4</members>
+    <members>bdiDataImporterInfoTitle</members>
+    <members>bdiDataImporterNumToProcess</members>
+    <members>bdiDataImporterTitle</members>
+    <members>bdiDonation</members>
+    <members>bdiErrorInvalidCampaignName</members>
+    <members>bdiErrorInvalidDonor</members>
+    <members>bdiErrorInvalidLastname</members>
+    <members>bdiErrorInvalidOppRTName</members>
+    <members>bdiFailed</members>
+    <members>bdiIgnored</members>
+    <members>bdiImported</members>
+    <members>bdiMatched</members>
+    <members>bdiRecordsFailed</members>
+    <members>bdiRecordsImported</members>
+    <members>bdiRecordsProcessed</members>
+    <members>bdiRunBtn</members>
+    <members>bdiStatus</members>
+    <members>bdiStatusProcessed</members>
+    <members>bdiStatusProcessing</members>
+    <members>bdiTime</members>
+    <members>conMergeErrNoPersonAccounts</members>
     <members>healthButtonRun</members>
     <members>healthDetailsAccOne2OneNoContacts</members>
     <members>healthDetailsAccountModel</members>
@@ -428,6 +649,8 @@
     <members>healthDetailsInvalidScheduledJob</members>
     <members>healthDetailsMailingListReportMissing</members>
     <members>healthDetailsNothingScheduled</members>
+    <members>healthDetailsOCRDupPrimary</members>
+    <members>healthDetailsOCRDupPrimaryValid</members>
     <members>healthDetailsPaymentMappingBadDataTypes</members>
     <members>healthDetailsRDFieldsBadDatatypes</members>
     <members>healthDetailsRelReciprocalInvalid</members>
@@ -437,6 +660,7 @@
     <members>healthLabelAccountData</members>
     <members>healthLabelAccountModelData</members>
     <members>healthLabelAccountRTIssueValid</members>
+    <members>healthLabelAllTestsPassed</members>
     <members>healthLabelAutoRelValid</members>
     <members>healthLabelContactData</members>
     <members>healthLabelErrorRecipientValid</members>
@@ -448,6 +672,7 @@
     <members>healthLabelIntro</members>
     <members>healthLabelLastRun</members>
     <members>healthLabelNone</members>
+    <members>healthLabelOCRCheck</members>
     <members>healthLabelPassed</members>
     <members>healthLabelPaymentMappingsValid</members>
     <members>healthLabelRDOppsValid</members>
@@ -478,6 +703,8 @@
     <members>healthSolutionInvalidUDFObjectField</members>
     <members>healthSolutionMailingListReportMissing</members>
     <members>healthSolutionNothingScheduled</members>
+    <members>healthSolutionOCRDupPrimary</members>
+    <members>healthSolutionOCRException</members>
     <members>healthSolutionPaymentMappingBadDataTypes</members>
     <members>healthSolutionRDBadOppField</members>
     <members>healthSolutionRDFieldsBadDatatypes</members>
@@ -498,6 +725,28 @@
     <members>labelListViewPrevious</members>
     <members>labelMessageLoading</members>
     <members>labelShowMore</members>
+    <members>lblNPSPSettings</members>
+    <members>pmtWizardBtnCalcPayments</members>
+    <members>pmtWizardBtnCreatePayments</members>
+    <members>pmtWizardBtnRemovePaidPayments</members>
+    <members>pmtWizardCreateSchedule</members>
+    <members>pmtWizardFirstPaymentDate</members>
+    <members>pmtWizardInterval</members>
+    <members>pmtWizardMsgNoOppFound</members>
+    <members>pmtWizardNoUnpaidAmount</members>
+    <members>pmtWizardNoWriteoffAmount</members>
+    <members>pmtWizardNumberOfPayments</members>
+    <members>pmtWizardPaymentNumber</members>
+    <members>pmtWizardPaymentsDisabled</members>
+    <members>pmtWizardPaymentsDisabledTitle</members>
+    <members>pmtWizardSectionTitle</members>
+    <members>pmtWizardSectionWriteoff</members>
+    <members>pmtWizardSectionWriteoffPayments</members>
+    <members>pmtWizardSubtitle</members>
+    <members>pmtWizardToBeCreated</members>
+    <members>pmtWizardWarning</members>
+    <members>pmtWizardWriteoffDate</members>
+    <members>pmtWizardWriteoffMessage</members>
     <members>stgBtnCancel</members>
     <members>stgBtnClearErrorLog</members>
     <members>stgBtnCreateAutoRel</members>
@@ -520,7 +769,11 @@
     <members>stgBtnSave</members>
     <members>stgErrorINaming</members>
     <members>stgErrorInvalidClass</members>
+    <members>stgErrorInvalidNameFormat</members>
+    <members>stgHHNameRefreshTitle</members>
     <members>stgHelpAccountModel</members>
+    <members>stgHelpAlloFiscalYearRollups</members>
+    <members>stgHelpAlloNDayValue</members>
     <members>stgHelpAutoAffil</members>
     <members>stgHelpAutoRelCampaignRT</members>
     <members>stgHelpAutoRelField</members>
@@ -528,11 +781,15 @@
     <members>stgHelpAutoRelType</members>
     <members>stgHelpBDEAllowBlankOppNames</members>
     <members>stgHelpBDEOppNaming</members>
+    <members>stgHelpBatchAlloRollup</members>
     <members>stgHelpBatchOppRollup</members>
     <members>stgHelpBtnHHNaming</members>
     <members>stgHelpChatterGroup</members>
     <members>stgHelpCiceroAddrVerification</members>
     <members>stgHelpContactRTExcluded</members>
+    <members>stgHelpDefaultAllocationsEnabled</members>
+    <members>stgHelpDefaultGAU</members>
+    <members>stgHelpDisableHHAccountAddr</members>
     <members>stgHelpEnableSoftCreditRollups</members>
     <members>stgHelpErrorNotifyOn</members>
     <members>stgHelpErrorNotifyTo</members>
@@ -560,6 +817,7 @@
     <members>stgHelpOCRDefaultRole</members>
     <members>stgHelpOCRRoleForHH</members>
     <members>stgHelpOneToOneRTID</members>
+    <members>stgHelpOrgAccountAddressMgmt</members>
     <members>stgHelpOverrunCount</members>
     <members>stgHelpPaymentMapOppField</members>
     <members>stgHelpPaymentMapPaymentField</members>
@@ -591,10 +849,13 @@
     <members>stgHelpRollupBatchSize</members>
     <members>stgHelpRollupExcludeAccountOppRT</members>
     <members>stgHelpRollupExcludeAccountOppType</members>
+    <members>stgHelpRollupExcludeAlloOppRecType</members>
+    <members>stgHelpRollupExcludeAlloOppType</members>
     <members>stgHelpRollupExcludeContactOppRT</members>
     <members>stgHelpRollupExcludeContactOppType</members>
     <members>stgHelpRollupNDayValue</members>
     <members>stgHelpRollupPrimaryContact</members>
+    <members>stgHelpSimpleAddrChangeIsUpdate</members>
     <members>stgHelpSoftCreditRoles</members>
     <members>stgHelpStoreErrorsOn</members>
     <members>stgHelpTHActive</members>
@@ -611,6 +872,9 @@
     <members>stgLabelActionColumn</members>
     <members>stgLabelAddressVerification</members>
     <members>stgLabelAfflSettings</members>
+    <members>stgLabelAlloBatchProgress</members>
+    <members>stgLabelAllocationsRollupSettings</members>
+    <members>stgLabelAllocationsSettings</members>
     <members>stgLabelAreYouSure</members>
     <members>stgLabelAutoContactRoles</members>
     <members>stgLabelBDESettings</members>
@@ -664,6 +928,7 @@
     <members>stgNavAccountModel</members>
     <members>stgNavAddressVerification</members>
     <members>stgNavAffiliations</members>
+    <members>stgNavAllocations</members>
     <members>stgNavBDE</members>
     <members>stgNavConnections</members>
     <members>stgNavContactRoles</members>
@@ -686,6 +951,7 @@
     <members>stgNavRelAutoCreate</members>
     <members>stgNavRelReciprocal</members>
     <members>stgNavRelationships</members>
+    <members>stgNavRollupAlloBatch</members>
     <members>stgNavRollupBatch</members>
     <members>stgNavSystem</members>
     <members>stgNavTriggerConfig</members>
@@ -701,11 +967,17 @@
     <members>Addr_Verification_Settings__c</members>
     <members>Address_Verification_Settings__c</members>
     <members>Address__c</members>
+    <members>Allocation__c</members>
+    <members>Allocations_Settings__c</members>
     <members>Batch_Data_Entry_Settings__c</members>
     <members>Batch__c</members>
     <members>Contact</members>
+    <members>DataImport__c</members>
+    <members>Data_Import_Settings__c</members>
     <members>Error_Settings__c</members>
     <members>Error__c</members>
+    <members>Fund__c</members>
+    <members>General_Accounting_Unit__c</members>
     <members>Household_Naming_Settings__c</members>
     <members>Lead</members>
     <members>Opportunity</members>
@@ -717,12 +989,19 @@
     <members>Address__c</members>
     <members>Batch_Data_Entry</members>
     <members>Contact_Merge</members>
+    <members>DataImport__c</members>
+    <members>General_Accounting_Unit__c</members>
     <members>NPSP_Resources</members>
     <members>NPSP_Settings</members>
     <members>npe01__OppPayment__c</members>
     <members>npe4__Relationship__c</members>
     <members>npe5__Affiliation__c</members>
     <name>CustomTab</name>
+  </types>
+  <types>
+    <members>NPSP_Documents</members>
+    <members>NPSP_Documents/NPSP_Data_Import_Template_csv.csv</members>
+    <name>Document</name>
   </types>
   <types>
     <members>Account.BDE_Entry_FS</members>
@@ -733,17 +1012,22 @@
     <members>Contact.BDE_List_FS</members>
     <members>Lead.BDE_Entry_FS</members>
     <members>Lead.BDE_List_FS</members>
-    <members>Opportunity.BDE_Entry_FS</members>
-    <members>Opportunity.BDE_List_FS</members>
+    <members>Opportunity.BDE_Entry_FS_v2</members>
+    <members>Opportunity.BDE_List_FS_v2</members>
     <name>FieldSet</name>
   </types>
   <types>
     <members>Account-Household Layout</members>
     <members>Account-Organization Layout</members>
     <members>Address__c-Address Layout</members>
+    <members>Allocation__c-Allocation Layout</members>
     <members>Batch__c-Batch Layout</members>
+    <members>Campaign-NPSP Campaign Layout</members>
     <members>Contact-Contact Layout</members>
+    <members>DataImport__c-Data Import Layout</members>
     <members>Error__c-Error Layout</members>
+    <members>Fund__c-Fund Layout</members>
+    <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
     <members>Opportunity-Donation Layout</members>
     <members>Opportunity-Membership Layout</members>
     <members>Schedulable__c-Schedulable Layout</members>
@@ -751,10 +1035,14 @@
     <name>Layout</name>
   </types>
   <types>
-    <members>Account.AllAccounts</members>
     <members>Batch__c.All</members>
     <members>Batch__c.Completed_Batches</members>
     <members>Batch__c.Open_Batches</members>
+    <members>DataImport__c.All</members>
+    <members>DataImport__c.Failed_Data_Imports</members>
+    <members>DataImport__c.Succesfully_Imported</members>
+    <members>DataImport__c.To_Be_Imported</members>
+    <members>General_Accounting_Unit__c.All</members>
     <members>Trigger_Handler__c.All</members>
     <name>ListView</name>
   </types>
@@ -795,8 +1083,14 @@
     <name>StaticResource</name>
   </types>
   <types>
+    <members>Address__c.Verify_Address</members>
+    <members>Allocation__c.Manage_Allocations</members>
     <members>Contact.Merge_Contacts</members>
+    <members>DataImport__c.Delete_All_Data_Import_Records</members>
+    <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
+    <members>DataImport__c.Process_Data_Import</members>
+    <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
     <name>WebLink</name>
   </types>
-  <version>29.0</version>
+  <version>32.0</version>
 </Package>

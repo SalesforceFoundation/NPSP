@@ -30,36 +30,58 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Settings
+* @group-content ../../ApexDocContent/Settings.htm
 * @description Controller for the base settings panel class.
 */
 public with sharing virtual class STG_Panel {
 	
+    /*******************************************************************************************************
+    * @description Class constructor
+    */ 
 	public STG_Panel() {
-		//system.debug('***** STG_Panel constructor');
+		//UTIL_Debug.debug('***** STG_Panel constructor');
 		isEditMode = false;
 	}
 	
+    /*******************************************************************************************************
+    * @description the id of the panel, which we assume all derived classes will override.
+    */ 
 	public virtual string idPanel() { return null; }
 	
+    /*******************************************************************************************************
+    * @description is the panel in Edit Mode
+    */ 
 	public boolean isEditMode { get; set; }
 	
+    /*******************************************************************************************************
+    * @description is the panel in Read Only Mode
+    */ 
 	public boolean isReadOnlyMode {
 		get {
 			return !isEditMode;
 		}
 	}
     
+    /*******************************************************************************************************
+    * @description the shared Settings Service object panels should use.
+    */ 
     static public STG_SettingsService stgService {
         get {
-            if (stgService == null)  { 
+            if (stgService == null) { 
             	stgService = STG_SettingsService.stgService;
-                //system.debug('***** getting STG_SettingsService.stgService: ' + stgService);
+                //UTIL_Debug.debug('***** getting STG_SettingsService.stgService: ' + stgService);
             }
             return stgService;
         }
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description Action Method to save all settings changes in the Settings Service.  Derived classes can override, if
+    * they need to do any custom saving first.
+    * @return void
+    */ 
     public virtual PageReference saveSettings() { 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
@@ -68,25 +90,36 @@ public with sharing virtual class STG_Panel {
 	        isEditMode = false;
         } catch(Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler.Context.STTG);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
         
     }
 
+    /*******************************************************************************************************
+    * @description Action Method to put the current page into Edit mode.
+    * @return null
+    */ 
     public virtual PageReference editSettings() { 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = true;
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description Action Method to cancel the current page's Edit mode.
+    * @return null
+    */ 
     public virtual PageReference cancelEdit() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = false;
         return null;
     }
        
+    /*******************************************************************************************************
+    * @description list of SelectOptions for the Account Model.
+    */ 
     static public list<SelectOption> listSOAccountModels {
         get {
             if (listSOAccountModels == null) {
@@ -100,6 +133,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Contact Roles
+    */ 
     static public list<SelectOption> listSOContactRoles {
         get {    
             if (listSOContactRoles == null) {
@@ -116,6 +152,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Household Object Creation Rules
+    */ 
     static public list<SelectOption> listSOHHRules {
         get {
             if (listSOHHRules == null) {
@@ -129,6 +168,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Contact Record Types
+    */ 
     static public list<SelectOption> listSOContactRecTypes {
         get {
             if (listSOContactRecTypes == null) {
@@ -141,6 +183,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }    
         
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Acount Record Type Ids
+    */ 
     static public list<SelectOption> listSOAccountRecTypeIds {
         get {
             if (listSOAccountRecTypeIds == null) {
@@ -153,6 +198,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }    
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Record Types
+    */ 
     static public list<SelectOption> listSOOppRecTypes {
         get {
             if (listSOOppRecTypes == null) {
@@ -165,6 +213,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }    
         
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Record Type Ids
+    */ 
     static public list<SelectOption> listSOOppRecTypesIds {
         get {
             if (listSOOppRecTypesIds == null) {
@@ -177,6 +228,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }    
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Contact Roles
+    */ 
     static public list<SelectOption> listSOOppContactRoles {
         get {
             if (listSOOppContactRoles == null) {
@@ -193,6 +247,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
     
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Types
+    */ 
     static public list<SelectOption> listSOOppTypes {
     	get {
 	        if (listSOOppTypes == null) {
@@ -210,6 +267,9 @@ public with sharing virtual class STG_Panel {
     	private set;
     }
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Relationships Types
+    */ 
      static public list<SelectOption> listSORelTypes {
         get {    
             if (listSORelTypes == null) {
@@ -226,6 +286,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Campaign Types
+    */ 
      static public list<SelectOption> listSOCampaignTypes {
         get {    
             if (listSOCampaignTypes == null) {
@@ -242,6 +305,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Mailing Report Ids (mail is in the report name)
+    */ 
     static public list<SelectOption> listSOMailingReportIds {
         get {
             if (listSOMailingReportIds == null) {
@@ -256,6 +322,9 @@ public with sharing virtual class STG_Panel {
         private set;
     }
        
+    /*******************************************************************************************************
+    * @description the Household Account Record Type Name
+    */ 
     static public string strHHAccountRecordTypeLabel {
     	get {
     		if (strHHAccountRecordTypeLabel == null) {
@@ -266,6 +335,9 @@ public with sharing virtual class STG_Panel {
     	private set;
     }
        
+    /*******************************************************************************************************
+    * @description the One-to-One Account Record Type Name
+    */ 
     static public string strOneToOneRecordTypeLabel {
         get {
             if (strOneToOneRecordTypeLabel == null) {
@@ -274,5 +346,5 @@ public with sharing virtual class STG_Panel {
             return strOneToOneRecordTypeLabel;
         }
         private set;
-    }       
+    }     
 }

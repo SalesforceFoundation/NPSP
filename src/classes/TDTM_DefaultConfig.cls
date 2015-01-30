@@ -27,42 +27,61 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
+               settings and the new ones. 
+*/
 public without sharing class TDTM_DefaultConfig {
 
+    /*******************************************************************************************************
+    * @description Returns the default TDTM configuration. 
+    * @return List<Trigger_Handler__c> a list of trigger handler records with the default values. The records
+    *         have not yet been inserted in the database. You can manipulate them, if necessary, and insert 
+    *         them. If no Trigger_Handler__c records exist, the application will insert the defaults when any 
+    *         of the NPSP triggers run. 
+    */
     public static List<Trigger_Handler__c> getDefaultRecords() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
-        
+
+        //Affiliations on Account
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 2, Object__c = 'Account', 
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
         //Affiliations on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
                     
-        //Affiliations on Affiliation
+        // Affiliations on Affiliation
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'AFFL_Affiliations_TDTM', Load_Order__c = 1, Object__c = 'npe5__Affiliation__c', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
                     
-        //Relationships on CampaignMember
+        // Relationships on CampaignMember
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_Cm_TDTM', Load_Order__c = 1, Object__c = 'CampaignMember', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
         
-        //Relationships on Contact
+        // Relationships on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_Con_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
         
-        //Relationships on npe4__Relationship__c
+        // Relationships on npe4__Relationship__c
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
                                          
-        //Account Management on Contact
+        // Account Management on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ACCT_IndividualAccounts_TDTM', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
 
-        //Account Management on Account
+        // Account Management on Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ACCT_Accounts_TDTM', Load_Order__c = 1, Object__c = 'Account', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterUpdate'));
@@ -70,7 +89,7 @@ public without sharing class TDTM_DefaultConfig {
         // OpportunityContactRole support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_OppContactRoles_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'AfterInsert'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
         // HH Object support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
@@ -80,7 +99,7 @@ public without sharing class TDTM_DefaultConfig {
         // HH Object contact trigger support
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'HH_Households_TDTM', Load_Order__c = 0, Object__c = 'Contact', 
-              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
                 
         // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
@@ -107,32 +126,54 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
               Trigger_Action__c = 'BeforeInsert;AfterInsert'));
           
-        //Addresses on Address object - copies address from Address__c to Contact and Account
+        // Addresses on Address object - copies address from Address__c to Contact and Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Addresses_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
                     
-        //Addresses on Contact object - creates Address__c record from Contact
+        // Addresses on Contact object - creates Address__c record from Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Contact_TDTM', Load_Order__c = 2, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
         
-        //Addresses on Account object - creates Address__c record from Account
+        // Addresses on Account object - creates Address__c record from Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Account_TDTM', Load_Order__c = 1, Object__c = 'Account', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
         
-        //Address Verification/Normalization on Address object
+        // Address Verification/Normalization on Address object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
+
+        // Payment Allocation on Allocation object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 1, Object__c = 'Allocation__c', 
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+
+        // Payment Allocation on Opportunity object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 2, Object__c = 'Opportunity', 
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        // Currency adjustment of allocations on Campaign object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Multicurrency_TDTM', Load_Order__c = 1, Object__c = 'Campaign', 
+              Trigger_Action__c = 'AfterUpdate'));
+
+        // Currency adjustment of allocations on Recurring Donation object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'ALLO_Multicurrency_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c', 
+              Trigger_Action__c = 'AfterUpdate'));
 
         return handlers;
     }
     
-    /**
-      * Returns a map that specifies how the old NPSP settings match to the new Cumulus TDTM classes
-      */
+    /*******************************************************************************************************
+    * @description Specifies how the old NPSP settings match to the new Cumulus TDTM classes.
+    * @return Map<String, String> Map of each of the old Custom Settings names to the new TDTM record that 
+    *                             replaces that functionality.
+    */
     public static Map<String, String> getNpspToCumulusMap() {
     	Map<String, String> npspToCumulusMap = new Map<String, String>();
     	
@@ -158,7 +199,7 @@ public without sharing class TDTM_DefaultConfig {
     	//No code refs in Cumulus or NPSP
     	npspToCumulusMap.put('npo02__DISABLE_OpportunityRollup_trigger__c', 'RLLP_OppRollup_TDTM');
     	
-    	////Flag removed from line 57 of RD_RecurringDonations_TDTM
+    	//Flag removed from line 57 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_Donations_trigger__c', 'RD_RecurringDonations_Opp_TDTM');
     	//Flag removed from line 107 of RD_RecurringDonations_TDTM
     	npspToCumulusMap.put('npe03__DISABLE_RecurringDonations_trigger__c', 'RD_RecurringDonations_TDTM');

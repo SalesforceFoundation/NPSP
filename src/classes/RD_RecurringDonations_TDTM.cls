@@ -40,10 +40,10 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         list<npe03__Recurring_Donation__c> listRDDeletes = new list<npe03__Recurring_Donation__c>();
-        map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>(); 
+        map<id, npe03__Recurring_Donation__c> mapIdRDInserts = new map<id, npe03__Recurring_Donation__c>();
         list<npe03__Recurring_Donation__c> listRDUpdates = new list<npe03__Recurring_Donation__c>();
 
-        npe03__Recurring_Donations_Settings__c rds = RD_RecurringDonations.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         if (RD_ProcessControl.hasRun) 
             return null;
             
@@ -74,7 +74,9 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 if (r.npe03__Organization__c != null && r.npe03__Contact__c != null) {
                     r.addError(system.label.RecurringDonationAccountAndContactError);
                 }
-                if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c) {
+                if (r.npe03__Installments__c > rds.npe03__Maximum_Donations__c && 
+                    (r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationOpenStatus && 
+                     r.npe03__Open_Ended_Status__c != system.label.npe03.RecurringDonationClosedStatus)) {
                     r.addError(system.label.npe03.RecurringDonationTooManyInstallmentsError);
                 }            
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {

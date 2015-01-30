@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,29 +13,39 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2014 (2.0)
-* @description Test for the controller for the VF page invoked by using the bulk Account model conversion utility
+* @date 2014
+* @group Account Model Converter
+* @description Tests the batch job for the Account Model converter
 */
 @isTest
 public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
+    /*******************************************************************************************************
+    * @description Sets the test methods in the class you want to run for development testing purposes
+    */
+    private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
+    */
     public testmethod static void testAccountConversion1to1(){
+    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
@@ -90,11 +100,16 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //assert the task was ported as well
         system.assertEquals([select WhatId from Task where Subject = 'TestTask' limit 1].WhatId, c2.AccountId);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        //Using the API class just to give it test coverage.
+        system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
-
+    /*******************************************************************************************************
+    * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
+    */
     public testmethod static void testAccountConversionBucket(){
+    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
+
         //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
@@ -108,7 +123,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 
         //add an oppty to the Contact as well
-        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), 
+        Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                                         AccountId = indID, CloseDate = system.today(), npe01__Contact_Id_For_Role__c = c.Id);
         insert o;
         system.assertEquals('Individual', [select Account.Name from Opportunity where Name = 'Test Oppty'].Account.Name);
@@ -139,20 +154,24 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
         system.assertEquals(1, [select count() from Opportunity where AccountId = :newHHAccount.Id]);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         for (Contact con : [select id, Account.Name from Contact]){
             system.assertNotEquals('Individual', con.Account.Name);
         }
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
-
+    /*******************************************************************************************************
+    * @description Tests the conversion process for Contacts with a single address
+    */
     public testMethod static void testSingleContactAddress(){
+    	if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
+
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
-        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test',
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
         Id indID = [select id from Account where Name = 'Individual'].id;
 
@@ -173,7 +192,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
 
-        //get the newly created Household 
+        //get the newly created Household
         Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(1, newHHAccount.Number_of_Household_Members__c);
@@ -184,17 +203,21 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(true, add.Default_Address__c);
         system.assertEquals(add.Id, [select Current_Address__c from Contact where id = :c.id].Current_Address__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
-
+    /*******************************************************************************************************
+    * @description Tests the conversion process for Contacts with two addresses
+    */
     public testMethod static void test2ContactAddresses(){
+    	if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
+
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
-        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test',
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
 
         c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
@@ -204,7 +227,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
                                 MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
-                                MailingPostalCode = '21230', MailingState = 'MD', npo02__TotalOppAmount__c = 100.00,
+                                MailingPostalCode = '21230', MailingState = 'Maryland', MailingCountry = 'United States', npo02__TotalOppAmount__c = 100.00,
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
 
@@ -216,6 +239,11 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         h.npo02__MailingCity__c = null;
         h.npo02__MailingState__c = null;
         update h;
+
+        h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        system.assertEquals(null, h.npo02__MailingStreet__c);
+        system.assertEquals(null, h.npo02__MailingCity__c);
+        system.assertEquals(null, h.npo02__MailingState__c);
 
         //set the HH Account model before entering the batch
         CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
@@ -246,17 +274,21 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(true, c.is_Address_Override__c);
         system.assert(CAO_Constants.isHHAccountModel());
-        system.assertEquals(HH_Households.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
-
+    /*******************************************************************************************************
+    * @description Tests the conversion process when setting primary affiliation
+    */
     public testMethod static void testSettingPrimaryAffiliation(){
+    	if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
+
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
-        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', 
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test',
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
-                                MailingPostalCode = '94105', MailingState = 'CA', MailingCountry = 'USA');
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
 
         Account a = new Account(Name = 'NonIndividualAccount');
@@ -291,18 +323,19 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals([select Primary_Affiliation__c from Contact where Id = :c.Id].Primary_Affiliation__c, aff.npe5__Organization__c);
     }
 
-    /* Utility methods for setting up and tearing down data and settings */
-
+    /*******************************************************************************************************
+    * @description Sets up pre-Household Account Model settings configurations
+    */
     public static void setPreHHAccountModel(boolean isOne2One){
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests;
 
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
 
         if (isOne2One)
-            contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         else
-            contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+            contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
 
         system.assert(!CAO_Constants.isHHAccountModel());
         if(isOne2One)
@@ -310,11 +343,14 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         else
             system.assert(CAO_Constants.isBucketModel());
     }
+    /*******************************************************************************************************
+    * @description Sets up Household Account Model settings configurations
+    */
     public static void setHHAccountModel(){
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
         //get the HH account rectype
         Id hhAccountid = [select Id from RecordType where DeveloperName = 'HH_Account'].Id;
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01__HH_Account_RecordTypeID__c = HHAccountId));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01__HH_Account_RecordTypeID__c = HHAccountId));
         system.assert(CAO_Constants.isHHAccountModel());
     }
 }

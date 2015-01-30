@@ -30,25 +30,30 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.3)
+* @group Address Management
 * @description test class for the Copy Address button controller
 */
 @isTest
 private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
+    /*******************************************************************************************************
+    * @description tests the Copy Address button controller
+    * @return void
+    */
     static testMethod void TEST_AddressUtility(){
        
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = CAO_Constants.getContactsSettingsForTests(
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
-        npo02__Households_Settings__c householdSettingsForTests = HH_Households.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
                 
         npo02__Household__c hh = new npo02__Household__c(
            npo02__MailingStreet__c = '123 Main St.',
-           npo02__MailingState__c = 'PA',
+           npo02__MailingState__c = 'Pennsylvania',
            npo02__MailingPostalCode__c = '18940',
            npo02__MailingCity__c = 'Newtown',
-           npo02__MailingCountry__c = 'USA'
+           npo02__MailingCountry__c = 'United States'
         );        
         insert hh;
         
@@ -56,10 +61,10 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
            npo02__Household__c = hh.id,
            LastName = 'TestLName',
            MailingStreet = '1 Oak Lane',
-           MailingState = 'WA',
+           MailingState = 'British Columbia',
            MailingPostalCode = '98122',
-           MailingCity = 'Seattle',
-           MailingCountry = 'CAN'
+           MailingCity = 'Vancouver',
+           MailingCountry = 'Canada'
         );        
         insert cc;
         

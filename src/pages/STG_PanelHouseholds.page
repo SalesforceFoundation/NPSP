@@ -122,23 +122,8 @@
         <apex:pageMessages id="pageMessages"/>
         <apex:pageBlock id="pbHH" mode="maindetail">
             <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                <apex:commandButton value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initEditMode();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
             </apex:outputPanel>
-	        <section>                    
-	            <h3 class="section-header">{!$Label.stgLabelHHGeneral}</h3>
-	            <div class="form-group">
-	                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="col-sm-4 control-label" />
-	                <div class="col-sm-8 form-control-column">
-		                <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
-		                <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="form-control" >
-		                    <apex:selectOptions value="{!listSOMailingReportIds}"/>
-		                </apex:selectList>
-		            </div>
-		            <div class="col-sm-offset-4 col-sm-8 help-block">
-	                    <apex:outputText value="{!$Label.stgHelpHHMailingListReport}" />
-		            </div>
-	            </div>                      
-	        </section>
 	        <section>
 	            <h3 class="section-header">{!$Label.stgLabelHHNaming}</h3>
 	            <div class="form-group">
@@ -274,18 +259,25 @@
     	                <apex:outputText value="{!$Label.stgHelpINamingClass}" />
                     </div>
                 </div>
-
-	            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="alert alert-danger">
-                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}"  />
-                    <div style="text-align:center;" class="form-control-column">
-                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
-                    </div>
-	            </apex:outputPanel>                    
+            
+                <div class="col-sm-offset-1 col-sm-10"> 
+		            <apex:outputPanel rendered="{!isEditMode}" layout="block" styleClass="panel panel-danger">
+		                <div class="panel-heading">
+		                    <h3 class="panel-title">{!$Label.stgHHNameRefreshTitle}</h3>
+		                </div>
+		                <div class="panel-body" style="padding:15px;">	               
+		                    <apex:outputText value="{!$Label.stgHelpBtnHHNaming}" escape="false" />
+		                    <div style="text-align:center;" class="form-control-column">
+		                        <apex:commandbutton value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!activateHouseholdNaming}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+		                    </div>
+	                    </div>
+		            </apex:outputPanel>                    
+	            </div>
 	        </section>
 			
 	        <apex:outputPanel rendered="{!isRunningBatch}">
 	            <br/><br/>
-	            <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelHHNamingProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+	            <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgHHNameRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
 	            <br/>
 	        </apex:outputPanel>
 
@@ -314,12 +306,28 @@
                     </div>
                 </div>
             </section>
-
+            
+            <section>                    
+                <h3 class="section-header">{!$Label.stgLabelHHGeneral}</h3>
+                <div class="form-group">
+                    <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-8 form-control-column">
+                        <apex:outputText value="{!strMailingReport}" rendered="{!isReadOnlyMode}" />
+                        <apex:selectList value="{!stgService.stgHH.npo02__Household_Mailing_List_ID__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slHMLI" styleClass="form-control" >
+                            <apex:selectOptions value="{!listSOMailingReportIds}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8 help-block">
+                        <apex:outputText value="{!$Label.stgHelpHHMailingListReport}" />
+                    </div>
+                </div>                      
+            </section>
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
             </apex:outputPanel>
 
         </apex:pageBlock>
+        <apex:pageMessages />
     </apex:form>
 </apex:page>

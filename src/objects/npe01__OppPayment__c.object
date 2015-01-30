@@ -7,4 +7,5 @@
         <fields>npe01__Scheduled_Date__c</fields>
         <label>NPSP Payment Compact Layout</label>
     </compactLayouts>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
 </CustomObject>

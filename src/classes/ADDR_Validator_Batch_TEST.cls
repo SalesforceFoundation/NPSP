@@ -41,11 +41,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static void createDefaultSettings() {
     	// use the household account model
-        CAO_Constants.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettings();
 
         // create the basic api settings - SmartyStreets off
-        Addr_Verification_Settings__c settings = Addr_Verification_Settings__c.getOrgDefaults();
+        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+        settings.Using_SmartyStreets__c = false;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';
@@ -53,7 +53,6 @@ public with sharing class ADDR_Validator_Batch_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = false;
         settings.Reject_Ambiguous_Addresses__c = true;
-        insert settings;
    
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
     }
@@ -66,8 +65,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Contact contact = new contact(firstname='Test', lastname='Person');
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
-        contact.MailingState = 'ca';
+        contact.MailingState = 'California';
         contact.MailingPostalCode = '95014'; 
+        contact.MailingCountry = 'United States';
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -81,7 +81,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
                              from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
         System.assertEquals('single-address', av[0].MailingStreet__c);
-        System.assertEquals('ca', av[0].MailingState__c);
+        System.assertEquals('California', av[0].MailingState__c);
         System.assertEquals('95014', av[0].MailingPostalCode__c);
         System.assertEquals(false, av[0].Verified__c);
         
@@ -128,8 +128,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
 	        Contact contact = new contact(firstname='Test', lastname='Person' + i);
 	        contact.MailingStreet = 'multiple-address';
 	        contact.MailingCity = 'Cupertino';
-	        contact.MailingState = 'ca';
+	        contact.MailingState = 'California';
 	        contact.MailingPostalCode = '95014';
+	        contact.MailingCountry = 'United States';
 	        contacts.add(contact);
         }
         insert contacts;
@@ -164,7 +165,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals(200, addresses.size());
         Integer i = 1;
         for(Address__c addr : addresses) {
-        	System.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
+        	UTIL_Debug.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
 	        System.assertEquals('1 Infinite Loop', addr.MailingStreet__c);
 	        System.assertEquals('CA', addr.MailingState__c);
 	        System.assertEquals('95014-2083', addr.MailingPostalCode__c);
@@ -223,8 +224,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Contact addressContact = new contact(firstname='Test', lastname='Person');
         addressContact.MailingStreet = 'single-address';
         addressContact.MailingCity = 'Cupertino';
-        addressContact.MailingState = 'ca';
+        addressContact.MailingState = 'California';
         addressContact.MailingPostalCode = '95014'; 
+        addressContact.MailingCountry = 'United States';
         
         Contact zipContact = new contact(firstname='Test', lastname='Person'); 
         zipContact.MailingPostalCode = 'single-zip';
@@ -247,7 +249,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
                              from Address__c where Household_Account__c = :addrAccountId];
         System.assertEquals(1, av1.size());
         System.assertEquals('single-address', av1[0].MailingStreet__c);
-        System.assertEquals('ca', av1[0].MailingState__c);
+        System.assertEquals('California', av1[0].MailingState__c);
         System.assertEquals('95014', av1[0].MailingPostalCode__c);
         System.assertEquals(false, av1[0].Verified__c);
 
