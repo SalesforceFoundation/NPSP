@@ -287,8 +287,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         
     }
     
-    
-        /*******************************************************************************************************
+    /*******************************************************************************************************
     * @description Combines the ids of a contact and an account as a unique identifier for affiliations.
     * @param contactId The id of a contact.
     * @param accountId The id of an account.
@@ -298,9 +297,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         return contactId + '|' + accountId;
     }
 
-    // looks at each affiliation and the possible operations to perform on them
-    // and figures out which to insert vs update, and adds them to the dmlWrapper.
-        /*******************************************************************************************************
+    /*******************************************************************************************************
     * @description Using a map of unique affiliation identifiers and our AfflOps class, this method queries
     * existing affiliations, then processes AfflOps to create new or update existing affiliations.
     * @param mapStrComboKeyAfflOps A map of combination contact id and account id keys from the 
