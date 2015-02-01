@@ -251,8 +251,9 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     }
 
 
-    // temporary class used to track which affiliations need
-    // what type of operation performed on them.
+    /*******************************************************************************************************
+    * @description Wrapper class to track affiliations and which operations need to be performed on them.
+    */ 
     private class AfflOps {
 
         // constructor
