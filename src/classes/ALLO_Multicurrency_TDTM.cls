@@ -73,7 +73,7 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
     * Donation,) queries for child allocations and updates currency to match parent.
     * @param listNew The list of opportunities, campaigns, or recurring donations from trigger new. 
     * @param listOld The list of opportunities, campaigns, or recurring donations from trigger old. 
-    * @return listAllocation Allocations with modified currency that need updating via DML.
+    * @return list<Allocation__c> Allocations with modified currency that need updating via DML.
     ********************************************************************************************************/
     public static list<Allocation__c> updateAllocationCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist) {
         list<Allocation__c> results = new list<Allocation__c>();

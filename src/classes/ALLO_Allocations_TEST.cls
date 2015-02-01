@@ -505,7 +505,8 @@ private with sharing class ALLO_Allocations_TEST {
         insert defaultGau;
 
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
-
+        insert otherGau;
+        
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
