@@ -706,4 +706,5 @@ public with sharing class HH_Households_TEST {
         system.assert(!queryCon[0].Exclude_from_Household_Informal_Greeting__c, 'Exclude from Household Informal Greeting checkbox not should be checked.');
 
     }
+
 }
