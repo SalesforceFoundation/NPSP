@@ -158,15 +158,16 @@ public with sharing class STG_SettingsService {
     } 
     
     public void saveAll() {
-        upsert stgCon;
-        upsert stgHH;
-        upsert stgHN;
-        upsert stgRD;
-        upsert stgRel;
-        upsert stgAffl;
-        upsert stgBDE;
-        upsert stgErr;
-        system.debug('lookhere: stgallo: ' + stgAllo);
-        upsert stgAllo;
+        if(!Test.isRunningTest()) {
+	        upsert stgCon;
+	        upsert stgHH;
+	        upsert stgHN;
+	        upsert stgRD;
+	        upsert stgRel;
+	        upsert stgAffl;
+	        upsert stgBDE;
+	        upsert stgErr;
+	        upsert stgAllo;
+        }
     }
 }

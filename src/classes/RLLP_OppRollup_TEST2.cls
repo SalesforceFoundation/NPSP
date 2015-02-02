@@ -54,7 +54,8 @@ public with sharing class RLLP_OppRollup_TEST2 {
     	
     	Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
     	errorSettings.Error_Notifications_On__c = false;
-		upsert errorSettings;
+		if(!Test.isRunningTest())
+		    upsert errorSettings;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
