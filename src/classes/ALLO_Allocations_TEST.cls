@@ -67,7 +67,7 @@ private with sharing class ALLO_Allocations_TEST {
     * Decreasing the amount so that the total allocation amount is below the opportunity amount will adjust 
     * the percentage allocations.
     * Decreasing the amount so that the total allocation amount is greater than the opportunity amount, an 
-    * error is thrown and the opportunity update is blocked
+    * error is thrown and the opportunity update is blocked.
     ********************************************************************************************************/
     static testMethod void oppAmountChange() {
         if (strTestOnly != '*' && strTestOnly != 'oppAmountChange') return;
