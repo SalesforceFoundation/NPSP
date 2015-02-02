@@ -58,6 +58,8 @@
     <members>CON_ContactMerge</members>
     <members>CON_ContactMerge_CTRL</members>
     <members>CON_ContactMerge_TEST</members>
+    <members>CON_DoNotContact_TDTM</members>
+    <members>CON_DoNotContact_TEST</members>
     <members>ERR_AddError_TEST</members>
     <members>ERR_Handler</members>
     <members>ERR_Handler_API</members>
@@ -354,6 +356,8 @@
     <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
+    <members>Contact.Deceased__c</members>
+    <members>Contact.Do_Not_Contact__c</members>
     <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
     <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
     <members>Contact.Exclude_from_Household_Name__c</members>
