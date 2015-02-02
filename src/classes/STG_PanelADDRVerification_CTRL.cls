@@ -172,7 +172,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {
             	   addrVerifSettings.Address_Verification_Endpoint__c = 'https://' + addrVerifSettings.Address_Verification_Endpoint__c;
             	}
-                upsert addrVerifSettings;
+            	
+            	if(!Test.isRunningTest())
+                    upsert addrVerifSettings;
+                
                 apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;
                 setValidatorSelection(addrVerifSettings.Class__c);

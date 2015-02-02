@@ -92,7 +92,8 @@ public without sharing class UTIL_CustomSettingsFacade {
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
             else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(recurringDonationsSettings);
-                upsert recurringDonationsSettings;
+                if(!Test.isRunningTest())
+                    upsert recurringDonationsSettings;
             }
         }
         return recurringDonationsSettings;
