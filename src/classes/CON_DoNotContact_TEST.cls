@@ -1,9 +1,10 @@
 @isTest
 private class CON_DoNotContact_TEST {
-	
 
     static testMethod void testDeceased() {
-
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+            
+        
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);
         insert con;
 
@@ -30,11 +31,11 @@ private class CON_DoNotContact_TEST {
         queryCon = [SELECT Id, HasOptedOutOfEmail, DoNotCall, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
         system.assertEquals(null, queryCon[0].npo02__Naming_Exclusions__c, 'Naming Exclusions field should be null.');
         system.assert(!queryCon[0].HasOptedOutOfEmail, 'Contact should not be opted out of email.');
-
     }
 
     static testMethod void testDoNotContact() {
-
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);
         insert con;
 
@@ -55,6 +56,5 @@ private class CON_DoNotContact_TEST {
         queryCon = [SELECT Id, HasOptedOutOfEmail, DoNotCall, npo02__Naming_Exclusions__c FROM Contact WHERE Id = :con.id];
         system.assert(!queryCon[0].DoNotCall, 'Contact should not be opted out of phone calls.');
         system.assert(!queryCon[0].HasOptedOutOfEmail, 'Contact should not be opted out of email.');
-
     }	
 }
