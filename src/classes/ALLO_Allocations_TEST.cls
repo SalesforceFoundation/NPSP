@@ -447,7 +447,7 @@ private with sharing class ALLO_Allocations_TEST {
     * thrown. Deactivates the opportunity allocation's GAU, updates the opportunity amount, verifies the 
     * allocation to the inactive GAU isn't modified.
     ********************************************************************************************************/
-    static void testInactiveGAU() {
+    static testMethod void testInactiveGAU() {
         if (strTestOnly != '*' && strTestOnly != 'testInactiveGAU') return;
 
         setupSettings(null);
@@ -507,7 +507,10 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
         insert otherGau;
         
-        setupSettings(null);
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        //setting flags to not create default allocations for the new opportunities
+        ALLO_Allocations_TDTM.resetFlags(true);
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -522,13 +525,11 @@ private with sharing class ALLO_Allocations_TEST {
         Allocation__c nonDefaultAllo = new Allocation__c(Opportunity__c=opp1.id, Amount__c = 4, General_Accounting_Unit__c = otherGau.id);
         insert nonDefaultAllo;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
-
         Test.startTest();
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         Test.stopTest();
 
-        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id];
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id AND General_Accounting_Unit__c = :defaultGau.id];
         system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The default allocation should be of the unallocated amount of the Opportunity.');
 
