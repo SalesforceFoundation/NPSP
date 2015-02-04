@@ -453,7 +453,7 @@ public without sharing class UTIL_CustomSettingsFacade {
      **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_And_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
-            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
         
         //create our own based on what's passed in from the test
         contactsSettings.npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c;
@@ -472,7 +472,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
         if(householdsSettings == null)
-            householdsSettings = npo02__Households_Settings__c.getInstance();
+            householdsSettings = new npo02__Households_Settings__c();
             
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
@@ -507,7 +507,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npe4__Relationship_Settings__c getRelationshipsSettingsForTests(npe4__Relationship_Settings__c mySettings) {
         if(relationshipsSettings == null)
-            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
+            relationshipsSettings = new npe4__Relationship_Settings__c();
         
         relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
         relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
@@ -517,7 +517,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
         if(affiliationsSettings == null)
-           affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+           affiliationsSettings = new npe5__Affiliations_Settings__c();
            
         affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
         orgAffiliationsSettings = affiliationsSettings;
@@ -526,7 +526,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static Error_Settings__c getErrorSettingsForTests(Error_Settings__c mySettings) {
         if(errorSettings == null)
-           errorSettings = Error_Settings__c.getInstance();
+           errorSettings = new Error_Settings__c();
            
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
@@ -537,7 +537,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
         if (allocationsSettings == null)
-            allocationsSettings = getOrgAllocationsSettings();
+            allocationsSettings = new Allocations_Settings__c();
 
         allocationsSettings.Default_Allocations_Enabled__c = mySettings.Default_Allocations_Enabled__c;
         allocationsSettings.Default__c = mySettings.Default__c;
@@ -552,7 +552,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c mySettings) {
         if (recurringDonationsSettings == null)
-            recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
             
         recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = mySettings.npe03__Opportunity_Forecast_Months__c;
         recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
