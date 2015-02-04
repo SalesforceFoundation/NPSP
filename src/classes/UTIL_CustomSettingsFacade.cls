@@ -68,7 +68,10 @@ public without sharing class UTIL_CustomSettingsFacade {
      * settings exist, we'll query the org-level settings.
      **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
-        if (contactsSettings == null) {
+        if(Test.isRunningTest()) {
+        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+        	configContactsSettings(contactsSettings);
+        } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
                 contactsSettings = getOrgContactsSettings();
@@ -77,7 +80,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npo02__Households_Settings__c getHouseholdsSettings() {
-        if (householdsSettings == null) {
+        if(Test.isRunningTest()) {
+            householdsSettings = new npo02__Households_Settings__c();
+            configHouseholdSettings(householdsSettings);
+        } else if (householdsSettings == null) {
             householdsSettings = npo02__Households_Settings__c.getInstance();
             if(householdsSettings.Id == null)
                 householdsSettings = getOrgHouseholdsSettings();
@@ -86,7 +92,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-        if (recurringDonationsSettings == null) {
+        if(Test.isRunningTest()) {
+        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+        	configRecurringDonationsSettings(recurringDonationsSettings);
+        } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
@@ -100,7 +109,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe4__Relationship_Settings__c getRelationshipSettings() {
-        if (relationshipsSettings == null) {
+        if(Test.isRunningTest()) {
+            relationshipsSettings = new npe4__Relationship_Settings__c();
+            configRelationshipsSettings(relationshipsSettings);
+        } else if (relationshipsSettings == null) {
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
             if(relationshipsSettings.Id == null)
                 relationshipsSettings = getOrgRelationshipSettings();
@@ -109,7 +121,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        if(affiliationsSettings == null) {      
+        if(Test.isRunningTest()) {
+            affiliationsSettings = new npe5__Affiliations_Settings__c();
+            configAffiliationsSettings(affiliationsSettings);
+        } else if(affiliationsSettings == null) {      
             affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
             if(affiliationsSettings.Id == null) 
                 affiliationsSettings = getOrgAffiliationsSettings();
@@ -118,7 +133,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings() {
-        if(errorSettings == null) {
+        if(Test.isRunningTest()) {
+            errorSettings = new Error_Settings__c();
+            configErrorSettings(errorSettings, null);
+        } else if(errorSettings == null) {
             errorSettings = Error_Settings__c.getInstance();
             if(errorSettings.Id == null)
                 errorSettings = getOrgErrorSettings();
@@ -127,7 +145,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Batch_Data_Entry_Settings__c getBDESettings() {
-        if(bdeSettings == null) {
+        if(Test.isRunningTest()) {
+            bdeSettings = new Batch_Data_Entry_Settings__c();
+            configBDESettings(bdeSettings);
+        } else if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
             if(bdeSettings.Id == null)
                 bdeSettings = getOrgBDESettings();
@@ -136,7 +157,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
-        if(addressVerificationSettings == null) {
+        if(Test.isRunningTest()) {
+            addressVerificationSettings = new Addr_Verification_Settings__c();
+            configAddressVerificationSettings(addressVerificationSettings);
+        } else if(addressVerificationSettings == null) {
             addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
             if(addressVerificationSettings.Id == null)
                 addressVerificationSettings = getOrgAddressVerificationSettings();
@@ -145,7 +169,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
-        if (householdNamingSettings == null) {
+        if(Test.isRunningTest()) {
+            householdNamingSettings = new Household_Naming_Settings__c();
+            configHouseholdNamingSettings(householdNamingSettings);
+        } else if (householdNamingSettings == null) {
             householdNamingSettings = Household_Naming_Settings__c.getInstance();
             if(householdNamingSettings.Id == null) 
                 householdNamingSettings = getOrgHouseholdNamingSettings();
@@ -154,7 +181,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Allocations_Settings__c getAllocationsSettings() {
-        if (allocationsSettings == null) {
+        if(Test.isRunningTest()) {
+            allocationsSettings = new Allocations_Settings__c();
+            configAllocationsSettings(allocationsSettings);
+        } else if (allocationsSettings == null) {
             allocationsSettings = Allocations_Settings__c.getInstance();
             if (allocationsSettings.Id == null) {
                 allocationsSettings = getOrgAllocationsSettings();
@@ -164,7 +194,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Data_Import_Settings__c getDataImportSettings() {        
-        if (dataImportSettings == null) {
+        if(Test.isRunningTest()) {
+            dataImportSettings = new Data_Import_Settings__c();
+            configDataImportSettings(dataImportSettings);
+        } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
             if (dataImportSettings.Id == null) 
                 dataImportSettings = getOrgDataImportSettings();
