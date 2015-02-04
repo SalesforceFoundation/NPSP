@@ -419,7 +419,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
-        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
     }
     
@@ -541,9 +541,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
-        if (householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
-            if (getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-                getContactsSettings().npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+        if (householdsSettings != null && householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
+            if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+                contactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
             }   
         }
         return householdsSettings;
