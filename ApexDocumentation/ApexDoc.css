@@ -6,6 +6,12 @@ body {
     padding: 0px;
 }
 
+@font-face {
+    font-family: "ProximaNovaSoft-Regular";
+    src: url('../assets/fonts/ProximaNovaSoft-Regular.woff') format('woff'),
+         url('../assets/fonts/proximanovasoft-regular.ttf') format('truetype');
+}
+
 /* the top page banner  */
 .topsection {
     background-color: #003672;
@@ -69,7 +75,7 @@ body {
 
 /* properties is used to display the table of class properties */
 .properties {
-    
+
 }
 
 .properties td {
@@ -283,11 +289,11 @@ li .caret {
 }
 
 div.navbar ul li a.scopeglobal {
-    
+
 }
 
 div.navbar ul li a.scopeprivate {
-    
+
 }
 
 /* END - SIDEBAR STYLES */
