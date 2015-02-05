@@ -141,8 +141,10 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     	}
     }
 
-    // mark duplicate households in campaign membership
-    // returns the number of duplicates found.  if -1, the process is being done in batch.
+    /*******************************************************************************************************
+    * @description marks duplicate households in campaign membership
+    * @return integer the number of duplicates found.  if -1, the process is being done in batch.
+    ********************************************************************************************************/
     private integer MarkDuplicates(){
         string strSoql = strSoqlDedupe();
         
@@ -155,13 +157,19 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         }   
     }
 
-    // routine to kick off the batch job of marking duplicates
+    /*******************************************************************************************************
+    * @description kick off the batch job of marking duplicates
+    * @return void
+    ********************************************************************************************************/
     private void MarkDuplicatesBatch(string strSoql) {
         HH_CampaignDedupe_BATCH batch = new HH_CampaignDedupe_BATCH(campaign.Id, strSoql);
         database.executeBatch(batch, 2000);                 
     }
 
-    // return the soql needed for getting all CampaignMembers
+    /*******************************************************************************************************
+    * @description return the soql needed for getting all CampaignMembers
+    * @return string
+    ********************************************************************************************************/
     private string strSoqlDedupe() {
         string strSoql;
         strSoql = 'Select Id, ContactId, Contact.Name, Contact.npo02__household__c, Contact.AccountId, Contact.HHId__c, Contact.Account.npe01__SYSTEM_AccountType__c, Status ';
@@ -279,6 +287,12 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         return returnsize;
     }
 
+    /*******************************************************************************************************
+    * @description Adds a Message to the visualforce page
+    * @param arg the message string
+    * @param severity
+    * @return void
+    ********************************************************************************************************/
     private static void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
