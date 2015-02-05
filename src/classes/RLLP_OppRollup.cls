@@ -416,14 +416,19 @@ public without sharing class RLLP_OppRollup {
                 //calculate best gift year
                 decimal yrAmt = (decimal)r.get('TotalOppAmount');
                 integer yr = (integer)r.get('CalendarYr');
+                
                 Contact c = contactsToUpdate.get(cid);
+
+                if(RLLP_OppRollup_UTIL.isMultiCurrency())
+                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)c.get('CurrencyIsoCode'),yrAmt);
+
                 if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
                     c.npo02__Best_Gift_Year_Total__c = yrAmt;
                     c.npo02__Best_Gift_Year__c = string.valueOf(yr);
-                }          
-            }                
-        }        
-        
+                }
+            }
+        }
+
         objectList.clear();
         objectList = database.query(oppRollupUtil.buildContactNDayQuery());
         
