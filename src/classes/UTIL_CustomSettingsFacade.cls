@@ -68,7 +68,10 @@ public without sharing class UTIL_CustomSettingsFacade {
      * settings exist, we'll query the org-level settings.
      **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
-        if (contactsSettings == null) {
+        if(Test.isRunningTest() && contactsSettings == null) {
+        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+        	configContactsSettings(contactsSettings);
+        } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
                 contactsSettings = getOrgContactsSettings();
@@ -77,7 +80,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npo02__Households_Settings__c getHouseholdsSettings() {
-        if (householdsSettings == null) {
+        if(Test.isRunningTest() && householdsSettings == null) {
+            householdsSettings = new npo02__Households_Settings__c();
+            configHouseholdSettings(householdsSettings);
+        } else if (householdsSettings == null) {
             householdsSettings = npo02__Households_Settings__c.getInstance();
             if(householdsSettings.Id == null)
                 householdsSettings = getOrgHouseholdsSettings();
@@ -86,7 +92,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-        if (recurringDonationsSettings == null) {
+        if(Test.isRunningTest() && recurringDonationsSettings == null) {
+        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+        	configRecurringDonationsSettings(recurringDonationsSettings);
+        } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
@@ -100,7 +109,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe4__Relationship_Settings__c getRelationshipSettings() {
-        if (relationshipsSettings == null) {
+        if(Test.isRunningTest() && relationshipsSettings == null) {
+            relationshipsSettings = new npe4__Relationship_Settings__c();
+            configRelationshipsSettings(relationshipsSettings);
+        } else if (relationshipsSettings == null) {
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
             if(relationshipsSettings.Id == null)
                 relationshipsSettings = getOrgRelationshipSettings();
@@ -109,7 +121,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        if(affiliationsSettings == null) {      
+        if(Test.isRunningTest() && affiliationsSettings == null) {
+            affiliationsSettings = new npe5__Affiliations_Settings__c();
+            configAffiliationsSettings(affiliationsSettings);
+        } else if(affiliationsSettings == null) {      
             affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
             if(affiliationsSettings.Id == null) 
                 affiliationsSettings = getOrgAffiliationsSettings();
@@ -118,7 +133,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Error_Settings__c getErrorSettings() {
-        if(errorSettings == null) {
+        if(Test.isRunningTest() && errorSettings == null) {
+            errorSettings = new Error_Settings__c();
+            configErrorSettings(errorSettings, null);
+        } else if(errorSettings == null) {
             errorSettings = Error_Settings__c.getInstance();
             if(errorSettings.Id == null)
                 errorSettings = getOrgErrorSettings();
@@ -127,7 +145,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Batch_Data_Entry_Settings__c getBDESettings() {
-        if(bdeSettings == null) {
+        if(Test.isRunningTest() && bdeSettings == null) {
+            bdeSettings = new Batch_Data_Entry_Settings__c();
+            configBDESettings(bdeSettings);
+        } else if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
             if(bdeSettings.Id == null)
                 bdeSettings = getOrgBDESettings();
@@ -136,7 +157,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
-        if(addressVerificationSettings == null) {
+        if(Test.isRunningTest() && addressVerificationSettings == null) {
+            addressVerificationSettings = new Addr_Verification_Settings__c();
+            configAddressVerificationSettings(addressVerificationSettings);
+        } else if(addressVerificationSettings == null) {
             addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
             if(addressVerificationSettings.Id == null)
                 addressVerificationSettings = getOrgAddressVerificationSettings();
@@ -145,7 +169,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
-        if (householdNamingSettings == null) {
+        if(Test.isRunningTest() && householdNamingSettings == null) {
+            householdNamingSettings = new Household_Naming_Settings__c();
+            configHouseholdNamingSettings(householdNamingSettings);
+        } else if (householdNamingSettings == null) {
             householdNamingSettings = Household_Naming_Settings__c.getInstance();
             if(householdNamingSettings.Id == null) 
                 householdNamingSettings = getOrgHouseholdNamingSettings();
@@ -154,7 +181,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Allocations_Settings__c getAllocationsSettings() {
-        if (allocationsSettings == null) {
+        if(Test.isRunningTest() && allocationsSettings == null) {
+            allocationsSettings = new Allocations_Settings__c();
+            configAllocationsSettings(allocationsSettings);
+        } else if (allocationsSettings == null) {
             allocationsSettings = Allocations_Settings__c.getInstance();
             if (allocationsSettings.Id == null) {
                 allocationsSettings = getOrgAllocationsSettings();
@@ -164,7 +194,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
     
     public static Data_Import_Settings__c getDataImportSettings() {        
-        if (dataImportSettings == null) {
+        if(Test.isRunningTest() && dataImportSettings == null) {
+            dataImportSettings = new Data_Import_Settings__c();
+            configDataImportSettings(dataImportSettings);
+        } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
             if (dataImportSettings.Id == null) 
                 dataImportSettings = getOrgDataImportSettings();
@@ -375,7 +408,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
-        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
     }
     
@@ -453,7 +486,7 @@ public without sharing class UTIL_CustomSettingsFacade {
      **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_And_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
-            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
         
         //create our own based on what's passed in from the test
         contactsSettings.npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c;
@@ -472,7 +505,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
         if(householdsSettings == null)
-            householdsSettings = npo02__Households_Settings__c.getInstance();
+            householdsSettings = new npo02__Households_Settings__c();
             
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
@@ -497,9 +530,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
-        if (householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
-            if (getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-                getContactsSettings().npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+        if (householdsSettings != null && householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
+            if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+                contactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
             }   
         }
         return householdsSettings;
@@ -507,7 +540,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npe4__Relationship_Settings__c getRelationshipsSettingsForTests(npe4__Relationship_Settings__c mySettings) {
         if(relationshipsSettings == null)
-            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
+            relationshipsSettings = new npe4__Relationship_Settings__c();
         
         relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
         relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
@@ -517,7 +550,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
         if(affiliationsSettings == null)
-           affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+           affiliationsSettings = new npe5__Affiliations_Settings__c();
            
         affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
         orgAffiliationsSettings = affiliationsSettings;
@@ -526,7 +559,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     
     public static Error_Settings__c getErrorSettingsForTests(Error_Settings__c mySettings) {
         if(errorSettings == null)
-           errorSettings = Error_Settings__c.getInstance();
+           errorSettings = new Error_Settings__c();
            
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
@@ -537,7 +570,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
         if (allocationsSettings == null)
-            allocationsSettings = getOrgAllocationsSettings();
+            allocationsSettings = new Allocations_Settings__c();
 
         allocationsSettings.Default_Allocations_Enabled__c = mySettings.Default_Allocations_Enabled__c;
         allocationsSettings.Default__c = mySettings.Default__c;
@@ -552,7 +585,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c mySettings) {
         if (recurringDonationsSettings == null)
-            recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
             
         recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = mySettings.npe03__Opportunity_Forecast_Months__c;
         recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
