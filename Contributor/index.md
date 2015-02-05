@@ -32,8 +32,8 @@ This document outlines everything you need to know to start contributing code to
 4. [Do the work!](Do-the-Work.html)
     - [ApexDoc](http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/)
     - Coding conventions
-    - TDTM
-    - Error Handling
+    - [TDTM](http://developer.salesforcefoundation.org/index.html#blog/post/2014/11/24/table-driven-trigger-management.html)
+    - [Error Handling](http://developer.salesforcefoundation.org/index.html#blog/post/2015/02/03/how-npsp-does-error-handling-on-salesforce.html)
     - Ant build targets
         - To update metadata added through the UI and in the Cumulus unmanaged package:
             - ```ant retrievePackagedToSrc```
