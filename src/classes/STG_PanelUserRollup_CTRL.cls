@@ -387,7 +387,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             }
             
             try{
-                upsert myUDR;                        
+            	upsert myUDR;                        
                 mydad.udrList = null;                
                 mydad.activeUDR = null;
                 mydad.isEditMode = false;

@@ -92,7 +92,7 @@ private class ACCT_IndividualAccounts_TEST {
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
             
     	//Set Individual (Bucket) settings
-    	npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
     	contactsSettings.npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR;
         
         
@@ -105,7 +105,7 @@ private class ACCT_IndividualAccounts_TEST {
     	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contact1.Account.Name);
     	
     	//Verify we are still using Individual (Bucket) settings
-    	contactsSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+    	contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
     	System.assertEquals(CAO_Constants.BUCKET_PROCESSOR, contactsSettings.npe01__Account_Processor__c);
     	
     	//Change to Household Account
