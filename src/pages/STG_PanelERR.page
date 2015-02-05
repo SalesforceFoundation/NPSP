@@ -81,6 +81,22 @@
                 errHandling.enabled();
             }
         });
+        
+        //detecting click on storing errors checkbox
+        jerr$(document).on('click', 'input[id$=cbxSEO]', function() {
+            //if store errors is unchecked, we also have to uncheck error notifications
+            if(!jerr$(this).is(':checked')) {
+                jerr$('[id$=cbxENO]').prop('checked', false);
+            }
+        });
+        
+        //detecting click on error notifications checkbox
+        jerr$(document).on('click', 'input[id$=cbxENO]', function() {
+            //if error notifications checkbox is checked, we also have to check storing errors
+            if(jerr$(this).is(':checked')) {
+                jerr$('[id$=cbxSEO]').prop('checked', true);
+            }
+        });
    </script>
     
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
