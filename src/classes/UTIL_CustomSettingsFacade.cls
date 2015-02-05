@@ -71,6 +71,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && contactsSettings == null) {
         	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
         	configContactsSettings(contactsSettings);
+        	orgContactsSettings = contactsSettings;
         } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
@@ -83,6 +84,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && householdsSettings == null) {
             householdsSettings = new npo02__Households_Settings__c();
             configHouseholdSettings(householdsSettings);
+            orgHouseholdsSettings = householdsSettings;
         } else if (householdsSettings == null) {
             householdsSettings = npo02__Households_Settings__c.getInstance();
             if(householdsSettings.Id == null)
@@ -95,6 +97,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && recurringDonationsSettings == null) {
         	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
         	configRecurringDonationsSettings(recurringDonationsSettings);
+        	orgRecurringDonationsSettings = recurringDonationsSettings;
         } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
@@ -112,6 +115,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && relationshipsSettings == null) {
             relationshipsSettings = new npe4__Relationship_Settings__c();
             configRelationshipsSettings(relationshipsSettings);
+            orgRelationshipsSettings = relationshipsSettings;
         } else if (relationshipsSettings == null) {
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
             if(relationshipsSettings.Id == null)
@@ -124,6 +128,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && affiliationsSettings == null) {
             affiliationsSettings = new npe5__Affiliations_Settings__c();
             configAffiliationsSettings(affiliationsSettings);
+            orgAffiliationsSettings = affiliationsSettings;
         } else if(affiliationsSettings == null) {      
             affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
             if(affiliationsSettings.Id == null) 
@@ -136,6 +141,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && errorSettings == null) {
             errorSettings = new Error_Settings__c();
             configErrorSettings(errorSettings, null);
+            orgErrorSettings = errorSettings;
         } else if(errorSettings == null) {
             errorSettings = Error_Settings__c.getInstance();
             if(errorSettings.Id == null)
@@ -148,6 +154,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && bdeSettings == null) {
             bdeSettings = new Batch_Data_Entry_Settings__c();
             configBDESettings(bdeSettings);
+            orgBdeSettings = bdeSettings;
         } else if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
             if(bdeSettings.Id == null)
@@ -160,6 +167,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && addressVerificationSettings == null) {
             addressVerificationSettings = new Addr_Verification_Settings__c();
             configAddressVerificationSettings(addressVerificationSettings);
+            orgAddressVerificationSettings = addressVerificationSettings;
         } else if(addressVerificationSettings == null) {
             addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
             if(addressVerificationSettings.Id == null)
@@ -172,6 +180,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && householdNamingSettings == null) {
             householdNamingSettings = new Household_Naming_Settings__c();
             configHouseholdNamingSettings(householdNamingSettings);
+            orgHouseholdNamingSettings = householdNamingSettings;
         } else if (householdNamingSettings == null) {
             householdNamingSettings = Household_Naming_Settings__c.getInstance();
             if(householdNamingSettings.Id == null) 
@@ -184,6 +193,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && allocationsSettings == null) {
             allocationsSettings = new Allocations_Settings__c();
             configAllocationsSettings(allocationsSettings);
+            orgAllocationsSettings = allocationsSettings;
         } else if (allocationsSettings == null) {
             allocationsSettings = Allocations_Settings__c.getInstance();
             if (allocationsSettings.Id == null) {
@@ -197,6 +207,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         if(Test.isRunningTest() && dataImportSettings == null) {
             dataImportSettings = new Data_Import_Settings__c();
             configDataImportSettings(dataImportSettings);
+            orgDataImportSettings = dataImportSettings;
         } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
             if (dataImportSettings.Id == null) 
