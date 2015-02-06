@@ -47,15 +47,15 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         // dispatch to the correct handler
-        if (objResult == Schema.Sobjecttype.Contact && !hasRunForContacts) {
+        if (objResult.getsObjectType() == Contact.sObjectType && !hasRunForContacts) {
             DmlWrapper wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForContacts = true;
             return wrapper;
-        } else if (objResult == Schema.Sobjecttype.npe5__Affiliation__c && !hasRunForAffiliations) {
+        } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !hasRunForAffiliations) {
             DmlWrapper wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAffiliations = true;
             return wrapper;
-        } else if (objResult == Schema.Sobjecttype.Account && !hasRunForAccounts) {
+        } else if (objResult.getsObjectType() == Account.sObjectType && !hasRunForAccounts) {
             DmlWrapper wrapper = runAccountTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAccounts = true;
             return wrapper;
