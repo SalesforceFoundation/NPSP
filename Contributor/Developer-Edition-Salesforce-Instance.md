@@ -15,9 +15,7 @@ Once you have cloned your fork of the NPSP git repository in your local machine,
 
 ```
 sf.serverurl=https://login.salesforce.com  
-
 sf.username=your_dev_environment@login.com  
-
 sf.password=your_dev_password_and_security_token  
 ```
 
