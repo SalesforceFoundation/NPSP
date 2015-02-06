@@ -302,14 +302,14 @@ public without sharing class RLLP_OppRollup_UTIL {
         if(currCorporate == ISO || currCorporate == null) // no need to convert
             return amt;
         else //return value to 2DP
-            return (amt * exchangeRates.get(ISO)).setScale(2) ;
+            return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP);
     }
 
     public static decimal convertCurrency(String fromISO, String toISO, Decimal amt){
         if(fromISO == toISO) // no need to convert
             return amt;
         else //return value to 2DP
-            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2) ;
+            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2,System.RoundingMode.UP);
     }
  
     //takes the Ids of opptys in the npo02__CombinedRollupFieldset__c field, and looks up the currency of that record
