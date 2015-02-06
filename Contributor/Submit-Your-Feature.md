@@ -2,7 +2,7 @@
 title: Submit Your Feature
 layout: default
 ---
-# Submit Your Feature
+# [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Submit Your Feature
 
 Now that our feature is complete, we need to commit our code to git. To pull the changes from your dev org to your local git repository, including any new metadata added to the Cumulus unmanaged package, type these commands in your root git repository:
 

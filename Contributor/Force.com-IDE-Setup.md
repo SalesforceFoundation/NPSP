@@ -2,7 +2,7 @@
 title: Setup the Project in the Force.com IDE
 layout: default
 ---
-# Setup the Project in the Force.com IDE
+# [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Setup the Project in the Force.com IDE
 
 If you haven’t done so already, install the Force.com IDE for Eclipse. [Here are instructions on setting up the Force.com IDE up from scratch.](https://developer.salesforce.com/page/Force.com_IDE_Installation)
 

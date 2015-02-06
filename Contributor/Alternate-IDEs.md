@@ -2,7 +2,7 @@
 title: Alternate IDEs
 layout: default
 ---
-# Alternate IDEs
+# [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Alternate IDEs
 
 If you use an alternate IDE such as MavensMate, or are an old school vi user, you can still use the command line and a combination of ant build targets to do all your NPSP related development.
 

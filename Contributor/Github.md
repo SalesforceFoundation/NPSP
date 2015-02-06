@@ -2,7 +2,7 @@
 title: Github
 layout: default
 ---
-# Github
+# [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Github
 The Nonprofit Starter Pack’s source code is hosted on Github, and you’ll need a github account to contribute to NPSP. If you don’t have an account, [create one first](https://github.com/join).
 
 Next, we need to fork the latest NPSP code and create our own repository.  Login to Github and head to the [Cumulus github repository](https://github.com/SalesforceFoundation/Cumulus) In the upper right hand corner, you’ll see the ‘Fork’ button.  Click it.   Create your fork.  It should look something like this:
