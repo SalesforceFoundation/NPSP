@@ -30,7 +30,7 @@
         <description>Flag that determines whether to send error notifications.</description>
         <externalId>false</externalId>
         <inlineHelpText>Check this if you&apos;d like the system to post notifications for certain type of errors.</inlineHelpText>
-        <label>Email Notifications</label>
+        <label>Error Notifications</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
