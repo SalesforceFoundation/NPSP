@@ -1,5 +1,5 @@
 ---
-title: Alternate IDEs
+title: NPSP Code Contributor's Guide: Alternate IDEs
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Alternate IDEs

@@ -1,5 +1,5 @@
 ---
-title: Github
+title: NPSP Code Contributor's Guide: Github
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Github

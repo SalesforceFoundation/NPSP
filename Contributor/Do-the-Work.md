@@ -1,5 +1,5 @@
 ---
-title: Do the Work
+title: NPSP Code Contributor's Guide: Do the Work
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Do the Work!

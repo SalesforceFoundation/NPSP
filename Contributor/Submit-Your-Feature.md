@@ -1,5 +1,5 @@
 ---
-title: Submit Your Feature
+title: NPSP Code Contributor's Guide: Submit Your Feature
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Submit Your Feature

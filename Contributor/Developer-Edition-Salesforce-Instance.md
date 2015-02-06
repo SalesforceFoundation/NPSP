@@ -1,5 +1,5 @@
 ---
-title: Developer Edition Salesforce
+title: NPSP Code Contributor's Guide: Developer Edition Salesforce
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Create a DE Org

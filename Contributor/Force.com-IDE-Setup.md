@@ -1,5 +1,5 @@
 ---
-title: Setup the Project in the Force.com IDE
+title: NPSP Code Contributor's Guide: Setup the Project in the Force.com IDE
 layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Setup the Project in the Force.com IDE
