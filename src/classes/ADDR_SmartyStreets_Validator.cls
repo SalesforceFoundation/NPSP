@@ -46,7 +46,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
     }
     
     public String getDefaultZipcodeURL() {
-        return 'https://api.smartystreets.com/street-address';  
+        return 'https://api.smartystreets.com/zipcode';  
     }
 
     public Boolean supportsBatch() {

@@ -109,8 +109,10 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else if (zreqs.size() > 100)
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
         
-        // send the request
-        HttpResponse res = sendRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
+        //Send the request. Sice SmartyStreets is the only service that provides a different endpoint
+        //only for zipcode requests, we have removed it from the UI, and are using it directly here.
+        ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator(); 
+        HttpResponse res = sendRequest(zreqs, validator.getDefaultZipcodeURL());
 
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
@@ -130,10 +132,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setMethod('POST');
 	        req.setHeader('Content-Type','application/json');
 	        req.setHeader('Accept','application/json');
-	        req.setEndpoint(baseURL + auth); 
+	        req.setEndpoint(baseURL + auth);
+	        UTIL_Debug.debug('****Request endpoint: \n' + req.getEndpoint());
 	        req.setBody(body);
+	        UTIL_Debug.debug('****Request body: \n' + req.getBody());
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-	        UTIL_Debug.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
 	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
 	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
