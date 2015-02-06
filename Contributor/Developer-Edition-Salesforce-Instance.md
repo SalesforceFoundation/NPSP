@@ -13,9 +13,11 @@ Be sure to write down your login and remember your password. Once you have logge
 Once you have cloned your fork of the NPSP git repository in your local machine, create a file in your git directory called build.properties with the following information from your developer instance:
 
 
-```sf.serverurl=https://login.salesforce.com<br/>
+```
+sf.serverurl=https://login.salesforce.com<br/>
 sf.username=your_dev_environment@login.com<br/>
-sf.password=your_dev_password_and_security_token```
+sf.password=your_dev_password_and_security_token
+```
 
 The next step will clean your developer instance and install the unmanaged code for NPSP to allow you to do your dev work.
 

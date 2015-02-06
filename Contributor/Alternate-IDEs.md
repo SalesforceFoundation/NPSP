@@ -12,7 +12,8 @@ Unlike with the Force.com IDE, when using other IDEs you will keep your git repo
 
 Once you have cloned your fork of the NPSP git repository in your local machine, create a file in your git directory called build.properties with the following information from your developer instance:
 
-```sf.serverurl=https://login.salesforce.com  
+```
+sf.serverurl=https://login.salesforce.com  
 sf.username=your_dev_environment@email.com  
 sf.password=your_dev_password_and_security_token  
 ```
