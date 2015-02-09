@@ -35,7 +35,7 @@
 * @description Batch class creates default allocations for all opportunities that aren't excluded 
 * in allocation settings by type or record type.
  */
- public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
+public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
 
     /** @description Allocations settings object.*/
     private Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();

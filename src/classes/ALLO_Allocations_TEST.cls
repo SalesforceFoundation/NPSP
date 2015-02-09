@@ -34,7 +34,6 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests specific to Allocations trigger based functionality. 
 */
-
 @isTest
 private with sharing class ALLO_Allocations_TEST {
     
