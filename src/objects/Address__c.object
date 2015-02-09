@@ -745,7 +745,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <url>{!requireScript(&quot;/soap/ajax/20.0/connection.js&quot;)} 
 {!requireScript(&quot;/soap/ajax/20.0/apex.js&quot;)}
 try {
-  sforce.apex.execute(&apos;npsp__ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
+  sforce.apex.execute(&apos;npsp.ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
 } catch(exception) {
   sforce.apex.execute(&apos;ADDR_Validator_REST&apos;, &apos;verifyRecord&apos;, {addressId : &apos;{!Address__c.Id}&apos;});
 }
