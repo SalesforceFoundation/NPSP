@@ -38,9 +38,12 @@
 public without sharing class UTIL_Namespace { 
     
     /******************************************************************************************************
-    * @description boolean property which tracks whether we are running in our managed packaged, or unmanaged code.
-    *******************************************************************************************************/    
+    * @description Boolean helper property for InManagedPackage getter.
+    *******************************************************************************************************/
     private static boolean fCheckedForManagedPackage = false;
+    /******************************************************************************************************
+    * @description Boolean property tracks whether we are running in a managed or unmanaged context.
+    *******************************************************************************************************/
     public static boolean InManagedPackage {
         get {
             if (!fCheckedForManagedPackage) {
@@ -75,20 +78,51 @@ public without sharing class UTIL_Namespace {
         set;
     }
     
-    
+    /******************************************************************************************************
+    * @description String helper property for getNamespace() method.
+    *******************************************************************************************************/
+    private static string plainNamespace;
     /*******************************************************************************************************
-    * @description Static method that takes a string
-    * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
-    * If you ever deploy this package as unmanaged, this routine will do nothing!
-    * @param str token name 
-    * @return token name, with namespace prefix, if required.
+    * @description Finds the namespace for the current context.
+    * @return string The current namespace as a string, or a blank string if we're not in a namespaced context.
+    ********************************************************************************************************/
+    public static string getNamespace() {       
+        if (plainNamespace == null) {
+            string withDotNotation = UTIL_Namespace.class.getName();  
+        
+            if (withDotNotation.contains('.')) {
+                plainNamespace = withDotNotation.substringBefore('.');
+            } else {
+                plainNamespace = '';
+            }
+        }
+        return plainNamespace;   
+    }
+
+    /*******************************************************************************************************
+    * @description Static method adds the current namespace to a string if we're in a managed context, 
+    * with double underscore notation. If we're not in a managed context, returns the string itself.
+    * @param str Token name.
+    * @return Token name, with namespace prefix and double underscore if in a managed package.
     ********************************************************************************************************/
     public static string StrTokenNSPrefix(string str) {
         if (!InManagedPackage) return str;
-        str = 'npsp__' + str;
+        str = getNamespace() + '__' + str;
         return str;
     }
     
+    /*******************************************************************************************************
+    * @description Static method adds the current namespace to a string if we're in a managed context, 
+    * with dot notation. If we're not in a managed context, returns the string itself.
+    * @param str Token name.
+    * @return Token name, with namespace prefix and dot notation if in a managed package.
+    ********************************************************************************************************/
+    public static string StrTokenNSPrefixDotNotation(string str) {
+        if (!InManagedPackage) return str;
+        str = getNamespace() + '.' + str;
+        return str;
+    }
+
     /*******************************************************************************************************
     * @description Static method that takes a string
     * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
@@ -98,17 +132,9 @@ public without sharing class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
-        return str.replace('npsp__', '');
+        return str.replace(getNamespace() + '__', '');
     }
-      
-    // If we ever need to only namespace strings ending in __c, the method below should work
-    /*
-    public static string StrTokenNSPrefixOnlyCustom(string str) {
-        if (str.endsWith('__c') || str.ends) {
-            return StrTokenNSPrefix(str);
-        }
-    }
-    */
+
     
     /*******************************************************************************************************
     * @description Static method that takes a string of a multiple potential field names or object names.  
@@ -122,7 +148,7 @@ public without sharing class UTIL_Namespace {
         if (!InManagedPackage) return str;
         Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
         Matcher match = pat.matcher(str);
-        return match.replaceAll('npsp__$0');
+        return match.replaceAll(getNamespace()+'__$0');
     }
     
     /*******************************************************************************************************
