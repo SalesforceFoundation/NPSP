@@ -77,19 +77,19 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getName() == UTIL_Namespace.StrTokenNSPrefix('Allocation__c') && !hasRunForAllocationsBefore && 
+        if (objResult.getsObjectType() == Allocation__c.sObjectType && !hasRunForAllocationsBefore && 
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForAllocationsBefore = true;
-        } else if (objResult.getName() == UTIL_Namespace.StrTokenNSPrefix('Allocation__c') && !hasRunForAllocationsAfter && 
+        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !hasRunForAllocationsAfter && 
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
             hasRunForAllocationsBefore = true;
             hasRunForAllocationsAfter = true;
-        } else if (objResult.getName() == 'Opportunity' && !hasRunForOpportunities) {
+        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !hasRunForOpportunities) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
             hasRunForOpportunities = true;
