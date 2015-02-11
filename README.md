@@ -13,8 +13,9 @@ rel:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/j
 
 #### For Developers
 
-The Cumulus project and Nonprofit Starter Pack are both released under the open source BSD license (see link below for additional license information).  Contributions (code and otherwise) are welcome and encouraged.  
-Please see the <a href="https://github.com/SalesforceFoundation/Cumulus/wiki" target="_blank">project wiki</a> for additional information. 
+The Nonprofit Starter Pack is released under the open source BSD license (see link below for additional license information).  Contributions (code and otherwise) are welcome and encouraged.  
+For information on contributing code, see our <a href="http://developer.salesforcefoundation.org/Cumulus/Contributor/" target="_blank">code contributor's guide</a> and our <a href="http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/" target="_blank">NPSP 3 codebase documentation</a>.
+Please see the <a href="https://github.com/SalesforceFoundation/Cumulus/wiki" target="_blank">project wiki</a> for additional information.
 
 #### Why "Cumulus"?
 
@@ -25,4 +26,3 @@ Project Cumulus was the codename for version 3 of the Nonprofit Starter Pack, th
 Released under the [BSD 3-Clause License](http://www.opensource.org/licenses/BSD-3-Clause).
 
 _ducking-octo-happiness, laughing-archer_
-
