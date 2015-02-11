@@ -77,7 +77,7 @@ public without sharing class UTIL_Namespace {
         }
         set;
     }
-    
+
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
     *******************************************************************************************************/
@@ -106,7 +106,7 @@ public without sharing class UTIL_Namespace {
     * @return Token name, with namespace prefix and double underscore if in a managed package.
     ********************************************************************************************************/
     public static string StrTokenNSPrefix(string str) {
-        if (!InManagedPackage) return str;
+        if (!InManagedPackage || getNamespace() == null) return str;
         str = getNamespace() + '__' + str;
         return str;
     }
@@ -118,7 +118,7 @@ public without sharing class UTIL_Namespace {
     * @return Token name, with namespace prefix and dot notation if in a managed package.
     ********************************************************************************************************/
     public static string StrTokenNSPrefixDotNotation(string str) {
-        if (!InManagedPackage) return str;
+        if (!InManagedPackage || getNamespace() == null) return str;
         str = getNamespace() + '.' + str;
         return str;
     }
@@ -132,6 +132,7 @@ public without sharing class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
+        if (getNamespace() == null) return str;
         return str.replace(getNamespace() + '__', '');
     }
 
@@ -145,7 +146,7 @@ public without sharing class UTIL_Namespace {
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
     public static string StrAllNSPrefix(string str) {
-        if (!InManagedPackage) return str;
+        if (!InManagedPackage || getNamespace() == null) return str;
         Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace()+'__$0');
