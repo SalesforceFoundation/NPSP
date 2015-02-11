@@ -4,28 +4,27 @@ layout: default
 ---
 # [Home](http://developer.salesforcefoundation.org/Cumulus/Contributor/) > Create a DE Org
 
-Now that you're done [setting up github](Github.html), each developer for NPSP needs their own development environment that all their coding takes place in. Developer edition salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend a new developer instance to avoid any potential conflicts.
+Now that you're done [setting up github](Github.html), each developer for NPSP needs their own development environment that all their coding takes place in. Developer edition salesforce instances (aka ‘DE orgs’) are free, you can [sign up for one here](https://developer.salesforce.com/en/signup). We strongly recommend starting with a new developer instance to avoid any potential conflicts.
 
 Be sure to write down your login and remember your password. Once you have logged in, [reset your security token](https://help.salesforce.com/apex/HTViewHelpDoc?id=user_security_token.htm) and copy that down too for later.
 
 # Build Setup
 
-Once you have cloned your fork of the NPSP git repository in your local machine, create a file in your git directory called build.properties with the following information from your developer instance:
+Once you have cloned your fork of the NPSP git repository in your local machine, create a file in your NPSP git directory called build.properties with the following information from your developer instance:
 
-
-```
+~~~
 sf.serverurl=https://login.salesforce.com  
 sf.username=your_dev_environment@login.com  
 sf.password=your_dev_password_and_security_token  
-```
+~~~
 
 The next step will clean your developer instance and install the unmanaged code for NPSP to allow you to do your dev work.
 
 From your git repository, run this command:
 
-```
+~~~
 ant deployCI
-```
+~~~
 
 What’s deployCI?  That’s an NPSP-specific command that runs a set of commands to deploy the Starter Pack most efficiently into your org.  For more info on the various ant targets, check out [this writeup from Jason Lantz](https://github.com/SalesforceFoundation/CumulusCI#build-targets).
 
