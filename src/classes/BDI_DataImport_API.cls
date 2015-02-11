@@ -45,6 +45,7 @@ global with sharing class BDI_DataImport_API {
     */
     global static ID importData() {
     	Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+    	Boolean batchRunning = false;
     	Id apexJobId;
     	try {
             // validate settings
@@ -85,6 +86,7 @@ global with sharing class BDI_DataImport_API {
                 insert diSettings;
             }
             
+            batchRunning = true;
             BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
             apexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
             return apexJobId;
@@ -92,7 +94,7 @@ global with sharing class BDI_DataImport_API {
         } catch (Exception ex) {
             // no reason to log the error if we haven't started the batch,
             // since it is just a validation error that we are displaying on the page.
-            if(apexJobId != null)
+            if(batchRunning)
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
             if(ApexPages.currentPage() != null)
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
