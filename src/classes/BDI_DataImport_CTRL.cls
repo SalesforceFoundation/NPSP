@@ -86,6 +86,8 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     public PageReference importData() {
+    	if(!Test.isRunningTest())
+    	   upsert diSettings;
     	dtStart = system.now();
         apexJobId = BDI_DataImport_API.importData();
         if(apexJobId != null)
