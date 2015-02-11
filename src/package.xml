@@ -48,6 +48,7 @@
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
     <members>BDE_BatchEntry_TEST</members>
+    <members>BDI_DataImport_API</members>
     <members>BDI_DataImport_BATCH</members>
     <members>BDI_DataImport_CTRL</members>
     <members>BDI_DataImport_TEST</members>

@@ -37,8 +37,7 @@ public with sharing class BDI_DataImport_CTRL {
 	
 	public BDI_DataImport_CTRL() {
 		batchRunning = false;
-		bdi = null;
-		ApexJobId = null;
+		apexJobId = null;
 		dtStart = null;
 	}
 
@@ -63,9 +62,8 @@ public with sharing class BDI_DataImport_CTRL {
         return (close());
     }
     
-    public BDI_DataImport_BATCH bdi { get; set; }
     public Boolean batchRunning { get; set; }
-    private ID ApexJobId;
+    private ID apexJobId;
     private DateTime dtStart;
     
     public Data_Import_Settings__c diSettings {
@@ -86,72 +84,23 @@ public with sharing class BDI_DataImport_CTRL {
         p.setRedirect(true);
         return p;
     }
-
-    private class BDICtrlException extends Exception {}
     
     public PageReference importData() {
-        try {
-        	// validate settings
-        	if (diSettings.Contact_Custom_Unique_ID__c != null) {
-                // make sure c1 and c2 have the appropriately named field
-        	    if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact1_' + diSettings.Contact_Custom_Unique_ID__c) ||
-        	       !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Contact2_' + diSettings.Contact_Custom_Unique_ID__c)) {
-                    throw(new BDICtrlException(string.format(Label.bdiContactCustomIdError, 
-                        new string[]{diSettings.Contact_Custom_Unique_ID__c, 
-                        	'Contact1_' + diSettings.Contact_Custom_Unique_ID__c,
-                        	'Contact2_' + diSettings.Contact_Custom_Unique_ID__c})));
-        	    }
-        	}
-        	
-            if (diSettings.Account_Custom_Unique_ID__c != null) {
-                // make sure a1 and a2 have the appropriately named field
-                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + diSettings.Contact_Custom_Unique_ID__c) ||
-                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + diSettings.Contact_Custom_Unique_ID__c)) {
-                    throw(new BDICtrlException(string.format(Label.bdiAccountCustomIdError, 
-                        new string[]{diSettings.Account_Custom_Unique_ID__c, 
-                            'Account1_' + diSettings.Account_Custom_Unique_ID__c,
-                            'Account2_' + diSettings.Account_Custom_Unique_ID__c})));
-                }
-            }
-            
-            // save any settings changes.
-            if(!Test.isRunningTest()) {
-	            try {
-	                upsert diSettings;
-	            } catch (Exception ex) {
-	                // this is a complete hack to work around the bug
-	                // https://github.com/SalesforceFoundation/Cumulus/issues/1094
-	                // for reasons I cannot fathom, we get an error trying to upsert the
-	                // settings object even though the UTIL_CustomSettingsFacade has already
-	                // done an upsert on it.  This failure only occurs if there is no org defined
-	                // custom setting instance.  The workaround is to catch the upsert failing, and
-	                // just clear the Id and do an insert.
-	                diSettings.Id = null;
-	                insert diSettings;
-	            }
-            }
-            
+    	if(!Test.isRunningTest())
+    	   upsert diSettings;
+    	dtStart = system.now();
+        apexJobId = BDI_DataImport_API.importData();
+        if(apexJobId != null)
             batchRunning = true;
-            bdi = new BDI_DataImport_BATCH();
-            ApexJobId = Database.executeBatch(bdi, integer.valueOf(diSettings.Batch_Size__c));
-            dtStart = system.now();
-
-        } catch (Exception ex) {
-            // no reason to log the error if we haven't started the batch,
-            // since it is just a validation error that we are displaying on the page.
-            if (batchRunning)
-                ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
-        }
         return null;
     }
 
     public AsyncApexJob aaj {
         get {
-            if (ApexJobId != null) {
+            if (apexJobId != null) {
                 aaj = [select TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id, 
                                     CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name, CreatedBy.Name
-                                    From AsyncApexJob where Id = :ApexJobId];
+                                    From AsyncApexJob where Id = :apexJobId];
             }
             return aaj;
         }
@@ -167,8 +116,8 @@ public with sharing class BDI_DataImport_CTRL {
     
     public integer crecProcessed { 
         get {
-            if (ApexJobId != null) {
-                crecProcessed = [select count() from DataImport__c where ApexJobId__c = :ApexJobId];
+            if (apexJobId != null) {
+                crecProcessed = [select count() from DataImport__c where ApexJobId__c = :apexJobId];
                 return crecProcessed;
             }
             return null;
@@ -178,8 +127,8 @@ public with sharing class BDI_DataImport_CTRL {
 
     public integer crecImported { 
         get {
-            if (ApexJobId != null) {
-                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :ApexJobId];
+            if (apexJobId != null) {
+                crecImported = [select count() from DataImport__c where Status__c = :label.bdiImported and ApexJobId__c = :apexJobId];
                 return crecImported;
             }
             return null;
@@ -189,8 +138,8 @@ public with sharing class BDI_DataImport_CTRL {
 
     public integer crecFailed { 
         get {
-            if (ApexJobId != null) {
-                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :ApexJobId];
+            if (apexJobId != null) {
+                crecFailed = [select count() from DataImport__c where Status__c = :label.bdiFailed and ApexJobId__c = :apexJobId];
                 return crecFailed;
             }
             return null;
