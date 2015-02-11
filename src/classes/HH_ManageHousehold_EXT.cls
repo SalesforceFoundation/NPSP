@@ -450,6 +450,7 @@ global with sharing class HH_ManageHousehold_EXT {
         Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Account.fields.getMap().clone();
         // Remove compount address fields available in API 30 and up
         fieldMap.remove('billingaddress');
+        fieldMap.remove('shippingaddress');
 
         list<String> fields = new list<String>();
         for (string strField : fieldMap.keySet()) {
