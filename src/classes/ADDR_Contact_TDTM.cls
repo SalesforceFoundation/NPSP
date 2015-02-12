@@ -250,12 +250,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             con1.MailingState == null &&
             con1.MailingPostalCode == null &&
             // note that we decided to ignore country so that a default value won't create unnecessary address objects
-            (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled);
-            
-        if (isEmpty && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            isEmpty = con1.get('MailingStateCode') == null;
-            // note that we decided to ignore country so that a default value won't create unnecessary address objects
-        }    
+            (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
+            // only test StateCode if picklists enabled.
+            (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
         return isEmpty;   
            
     }
