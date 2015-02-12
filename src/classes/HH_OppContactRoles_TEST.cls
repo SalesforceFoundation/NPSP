@@ -36,23 +36,30 @@
 @isTest
 private class HH_OppContactRoles_TEST {
     
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
 
-    static testMethod void opportunityWithHouseholdOne2One() {
+    private static testMethod void opportunityWithHouseholdOne2One() {
     	if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdOne2One') return;
         opportunityWithHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void opportunityWithHouseholdBucket() {
+    private static testMethod void opportunityWithHouseholdBucket() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdBucket') return;
         opportunityWithHousehold(CAO_Constants.BUCKET_PROCESSOR);
     }
-    static testMethod void opportunityWithHouseholdHHAccount() {
+    private static testMethod void opportunityWithHouseholdHHAccount() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdHHAccount') return;
         opportunityWithHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void opportunityWithHousehold(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Tests that household Opportunity Contact Roles are created under the different account models.
+    * @param strProcessor Which account model processor to test under.
+    * @return void
+    */
+    private static void opportunityWithHousehold(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
@@ -113,19 +120,25 @@ private class HH_OppContactRoles_TEST {
     }
 
 
-    static testMethod void opportunityWithHouseholdNoRolesOne2One() {
+    private static testMethod void opportunityWithHouseholdNoRolesOne2One() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesOne2One') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void opportunityWithHouseholdNoRolesBucket() {
+    private static testMethod void opportunityWithHouseholdNoRolesBucket() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesBucket') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.BUCKET_PROCESSOR);
     }
-    static testMethod void opportunityWithHouseholdNoRolesHHAccount() {
+    private static testMethod void opportunityWithHouseholdNoRolesHHAccount() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesHHAccount') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void opportunityWithHouseholdNoRoles(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Tests that household Opportunity Contact Roles are NOT created under the different account models
+    * when the setting for contact roles is off.
+    * @param strProcessor Which account model processor to test under.
+    * @return void
+    */
+    private static void opportunityWithHouseholdNoRoles(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -178,15 +191,21 @@ private class HH_OppContactRoles_TEST {
     }
     
     
-    static testMethod void opportunityWithNoHouseholdOne2One() {
+    private static testMethod void opportunityWithNoHouseholdOne2One() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdOne2One') return;
         opportunityWithNoHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void opportunityWithNoHouseholdHHAccount() {
+    private static testMethod void opportunityWithNoHouseholdHHAccount() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdHHAccount') return;
         opportunityWithNoHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void opportunityWithNoHousehold(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Tests that household Opportunity Contact Roles are created under the different account models
+    * when household objects is turned off.
+    * @param strProcessor Which account model processor to test under.
+    * @return void
+    */
+    private static void opportunityWithNoHousehold(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -236,15 +255,21 @@ private class HH_OppContactRoles_TEST {
     }
     
     
-    static testMethod void opportunityRegularAccountOne2One() {
+    private static testMethod void opportunityRegularAccountOne2One() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityRegularAccountOne2One') return;
         opportunityRegularAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void opportunityRegularAccountHHAccount() {
+    private static testMethod void opportunityRegularAccountHHAccount() {
         if (strTestOnly != '*' && strTestOnly != 'opportunityRegularAccountHHAccount') return;
         opportunityRegularAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-    static void opportunityRegularAccount(string strProcessor) {
+    /*********************************************************************************************************
+    * @description Tests that no Opportunity Contact Roles are created under the different account models for
+    * a normal organizational account.
+    * @param strProcessor Which account model processor to test under.
+    * @return void
+    */
+    private static void opportunityRegularAccount(string strProcessor) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -288,7 +313,7 @@ private class HH_OppContactRoles_TEST {
         system.AssertEquals(0,createdRoles.size());
     }
     
-    static testmethod void ghIssue25() {
+    private static testmethod void ghIssue25() {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -324,27 +349,30 @@ private class HH_OppContactRoles_TEST {
         system.assertequals(2,(integer)[select count() from OpportunityContactRole]);
     }  
     
+    private static testmethod void updateOppHHAccountRefreshNone() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshNone') return;
+        updateOppHHAccount('none');
+    }
+    private static testmethod void updateOppHHAccountRefreshOpen() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshOpen') return;
+        updateOppHHAccount('Open Opportunities');
+    }
+	private static testmethod void updateOppHHAccountRefreshOpenAndClosed() {
+        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccounRefreshOpenAndClosed') return;
+        updateOppHHAccount('Open and Closed Opportunities');
+	}
     /*********************************************************************************************************
+    @description
     operation:
         move a contact with Opportunities to a different Household Account
     verify:
         both open and closed opps where the contact is primary, are moved to the new HH Account
         soft credit OCR's from the old Household are deleted
         soft credit OCR's for the new Household are created
+    * @param strProcessor Which account model processor to test under.
+    * @return void
     **********************************************************************************************************/            
-    static testmethod void updateOppHHAccountRefreshNone() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshNone') return;
-        updateOppHHAccount('none');
-    }
-    static testmethod void updateOppHHAccountRefreshOpen() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshOpen') return;
-        updateOppHHAccount('Open Opportunities');
-    }
-	static testmethod void updateOppHHAccountRefreshOpenAndClosed() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccounRefreshOpenAndClosed') return;
-        updateOppHHAccount('Open and Closed Opportunities');
-	}
-    static void updateOppHHAccount(string strRefresh) {
+    private static void updateOppHHAccount(string strRefresh) {
         if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccount') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
