@@ -33,7 +33,7 @@
 * @group Households
 * @description Process control class to prevent trigger recursion in async process for household naming 
 */
-//process control class to prevent async trigger recursion
 public without sharing class HH_ProcessControl {
+	/** @description flag used to prevent recursive renaming of household names. */
     public static boolean inFutureContext = false;
 }

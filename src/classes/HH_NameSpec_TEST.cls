@@ -37,12 +37,15 @@
 @isTest
 private with sharing class HH_NameSpec_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
         
     /*********************************************************************************************************
+    @description
     operation:
         1 contact in household 
     verify:
@@ -78,6 +81,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         2 contact, same lastname in household 
     verify:
@@ -117,6 +121,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         2 contacts, different lastnames in household 
     verify:
@@ -159,6 +164,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         3 contacts, 2 different lastnames in household 
     verify:
@@ -206,6 +212,7 @@ private with sharing class HH_NameSpec_TEST {
     }
     
     /*********************************************************************************************************
+    @description
     operation:
         3 contacts, 2 different lastnames in household, custom fields in format specs 
     verify:
@@ -257,6 +264,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         6 contacts, 1 lastnames in household 
         Contact overrun set to 5
@@ -322,6 +330,7 @@ private with sharing class HH_NameSpec_TEST {
     }
     
     /*********************************************************************************************************
+    @description
     operation:
         several households with naming
         update name specs, and do a refreshAllHouseholdNaming 
@@ -388,6 +397,7 @@ private with sharing class HH_NameSpec_TEST {
     }
      
     /*********************************************************************************************************
+    @description
     operation:
         several households with custom naming
         update name specs, and do a refreshAllHouseholdNaming 
@@ -491,6 +501,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         many households with custom naming
         update name specs, and do a refreshAllHouseholdNaming 
@@ -550,6 +561,7 @@ private with sharing class HH_NameSpec_TEST {
     }
 
     /*********************************************************************************************************
+    @description
     operation:
         1 anonymous contact in household 
     verify:
