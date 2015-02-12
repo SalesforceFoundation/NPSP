@@ -26,7 +26,9 @@
 @isTest
 public with sharing class HH_ManageHousehold_TEST {
     
-    // TEST METHOD
+    /*********************************************************************************************************
+    * @description Tests that an existing Household account load up correctly in the ManageHouseholdUI
+    */
     public static testMethod void testExistingHH() { 
         
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -94,8 +96,10 @@ public with sharing class HH_ManageHousehold_TEST {
     }
     
     
+    /*********************************************************************************************************
+    * @description Tests writing the household address to the contact if the flag is ticked
+    */
     public static testMethod void testHHAddrToContact() {
-        //tests writing the household address to the contact if the flag is ticked
         
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -156,6 +160,9 @@ public with sharing class HH_ManageHousehold_TEST {
         system.assertEquals(con2.MailingCountry, ext.hhO.npo02__MailingCountry__c);   
     }
     
+    /*********************************************************************************************************
+    * @description Tests removing a contact from a Household
+    */
     public static testMethod void testRemoveContactActiveAddress() {
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
         
@@ -236,6 +243,9 @@ public with sharing class HH_ManageHousehold_TEST {
         Test.stopTest();
     }
     
+    /*********************************************************************************************************
+    * @description Tests adding two existing contacts to a Household
+    */
     public static testMethod void testNewHH() {
         
         npo02__Household__c hh = new npo02__Household__c(
@@ -305,6 +315,9 @@ public with sharing class HH_ManageHousehold_TEST {
         Test.stopTest();
     }
     
+    /*********************************************************************************************************
+    * @description Tests find Contact in the ManageHouseholdUI
+    */
     public static testMethod void testFindAndAddPart1() {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -460,6 +473,9 @@ public with sharing class HH_ManageHousehold_TEST {
     }
     
     
+    /*********************************************************************************************************
+    * @description Tests overriding Household Name in the ManageHouseholdUI
+    */
     public static testMethod void testFindAndAddPart2() {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -557,6 +573,9 @@ public with sharing class HH_ManageHousehold_TEST {
         Test.stopTest();        
     }
     
+    /*********************************************************************************************************
+    * @description Tests removing and then readding an existing contact to the Household
+    */
     public static testMethod void testRemoveReAdd() {
         
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(

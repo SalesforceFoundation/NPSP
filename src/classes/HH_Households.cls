@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
 * @group Households
-* @description Handles creation, deleting and moving of Households between Contacts 
+* @description Defines the setting values for Household object creation. 
 */
 public with sharing class HH_Households { 
     

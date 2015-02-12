@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2011 (2.0)
 * @group Households
-* @description Updates and managed opportunity contact roles for Household members, invoked via opp trigger 
+* @description Opportunity Trigger Handler for managing Opportunity Contact Roles for Household members 
 */
 public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 
 	
@@ -39,7 +39,14 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
 
     public static string strRefreshSetting = 'Open and Closed Opportunities';
 
-//  public HH_OppContactRoles_TDTM(Opportunity[] opportunities, Opportunity[] oldOpportunities, HH_Households.triggerAction ta) {
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunity that handles managing Opportunity Contact Roles
+    * @param listNew List of Opportunities from trigger new. 
+    * @param listOld List of Opportunities from trigger old. 
+    * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult DescribeSObjectResult for Opportunity 
+    * @return dmlWrapper The objects to insert/update/delete
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 

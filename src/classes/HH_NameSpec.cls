@@ -35,33 +35,58 @@
 */
 public with sharing class HH_NameSpec implements HH_INaming {
 
-    // get the Household Name for the passed in list of Contacts from a single Household.
+    /*******************************************************************************************************
+    * @description Get the Household name for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' name.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household name
+    */ 
     public string getHouseholdName(list<Contact> listCon) { 
         NameSpec ns = new NameSpec(hns, 'Household_Name_Format__c');
         return strNameFromNameSpec(ns, listCon);            	
     }
 
-    // get the Household Formal Greeting for the passed in list of Contacts from a single Household.
+    /*******************************************************************************************************
+    * @description Get the Household Formal Greeting for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household Formal Greeting
+    */ 
     public string getHouseholdFormalGreeting(list<Contact> listCon) { 
         NameSpec ns = new NameSpec(hns, 'Formal_Greeting_Format__c');
         return strNameFromNameSpec(ns, listCon);                
     }
 
-    // get the Household Informal Greeting for the passed in list of Contacts from a single Household.
+    /*******************************************************************************************************
+    * @description Get the Household Informal Greeting for the list of Contacts from a single Household.
+    * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * @param listCon the list of Contacts in the Household
+    * @return the Household Informal Greeting
+    */ 
     public string getHouseholdInformalGreeting(list<Contact> listCon) { 
         NameSpec ns = new NameSpec(hns, 'Informal_Greeting_Format__c');
         return strNameFromNameSpec(ns, listCon);                
     }
     
-    // for the Settings page, get the formatted name for the list of Contacts.
-    // hns holds an in-memory Household Naming Settings object, and strField is one of:
-    // Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
+    /*******************************************************************************************************
+    * @description For the Settings page, get the formatted name or greeting for the list of Contacts.
+    * @param hns an in-memory Household Naming Settings object
+    * @param strField is one of: Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
+    * @param listCon the list of Contacts in the Household
+    * @return the appropriate Household name or greeting
+    */ 
     public string getExampleName(Household_Naming_Settings__c hnsMem, string strField, list<Contact> listCon) {
         NameSpec ns = new NameSpec(hnsMem, strField);
         return strNameFromNameSpec(ns, listCon);        
     }
     
-    // to allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
+    /*******************************************************************************************************
+    * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
+    * @return set of strings of all fields referenced from Contact.
+    */
     public set<string> setHouseholdNameFieldsOnContact() {
         set<string> setStrField = new set<string>(); 
         NameSpec ns;
@@ -74,7 +99,9 @@ public with sharing class HH_NameSpec implements HH_INaming {
         return setStrField;
     }
     
-    // our cached copy of the Household Naming Settings
+    /*******************************************************************************************************
+    * @description our cached copy of the Household Naming Settings
+    */
     private Household_Naming_Settings__c hns {
     	get {
     		if (hns == null) hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
@@ -86,14 +113,16 @@ public with sharing class HH_NameSpec implements HH_INaming {
     private static string chLToken = '{!';
     private static string chRToken = '}';
         
-    // class that supports the parsing of a format string
-    // from the Household Naming Settings object.
-    //
-    // the NameSpec looks like:
-    //      prefix {lastname} {{firstnamespec}} suffix
-    // where firstname spec is a combo of fields and literals like:
-    //      {salutation} {firstname} ({mailingcity})
-    //
+    /*******************************************************************************************************
+    * @description 
+    * Class that supports the parsing of a format string from the Household Naming Settings object.
+    *
+    * The NameSpec looks like:
+    *      prefix {lastname} {{firstnamespec}} suffix
+    * Where firstname spec is a combo of fields and literals like:
+    *      {salutation} {firstname} ({mailingcity})
+    *
+    */
     private class NameSpec {
         private string strPrefix { get; set; }
         private string strSuffix { get; set; }
@@ -104,6 +133,11 @@ public with sharing class HH_NameSpec implements HH_INaming {
         private integer cMaxUseOverrun { get; set; }
         private string strHNSField { get; set; }
         
+	    /*******************************************************************************************************
+	    * @description NameSpec Constructor
+	    * @param hns An instance of Household Naming Settings to use.
+	    * @param strField The namespec field in Settings to use.
+	    */
         private NameSpec(Household_Naming_Settings__c hns, string strField) {
         	strHNSField = strField; 
         	string strNameSpec = string.valueOf(hns.get(strField));
@@ -113,6 +147,10 @@ public with sharing class HH_NameSpec implements HH_INaming {
         	parseNameSpec(strNameSpec);
         }
         
+        /*******************************************************************************************************
+        * @description Given the namespec string, parses out its constituent parts, and sets them in the class.
+        * @param strNameSpec The namespec
+        */
         private void parseNameSpec(string strNameSpec) {
             strPrefix = '';
             strSuffix = '';
@@ -152,7 +190,10 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
         }
         
-        // return a set of all field names in all parts of the namespec.
+        /*******************************************************************************************************
+        * @description Returns a set of all field names in all parts of the namespec
+        * @return string
+        */
         public set<string> setStrFieldsInNameSpec() {
             set<string> setStrField = new set<string>();
             if (strFirstNameSpec != null)
@@ -163,9 +204,14 @@ public with sharing class HH_NameSpec implements HH_INaming {
     }
     
     
-    // given a namespec and a list of Contacts (assumed from a single household),
-    // return the formated string for that household.  
-    // this can be used for any of the household strings (name, formal greeting, informal greeting)
+    /*******************************************************************************************************
+    * @description Given a namespec and a list of Contacts (assumed from a single household),
+    * return the formated string for that household.  
+    * this can be used for any of the household strings (name, formal greeting, informal greeting).
+    * @param ns The namespec class
+    * @param listCon the list of Contacts in the Household
+    * return string
+    */
     private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
         string strName = '';
         integer cCon = listCon.size();          
@@ -222,8 +268,13 @@ public with sharing class HH_NameSpec implements HH_INaming {
         return ns.strPrefix + strName + ns.strSuffix;
     }
     
-    // given a single contact and a namespec, returns the formatted string filling
-    // in fields in the namespec from the contact.
+    /*******************************************************************************************************
+    * @description Given a single contact and a namespec string, returns the formatted string filling
+    * in fields in the namespec from the contact.
+    * @param con The Contact
+    * @param strFspec The namespec string
+    * return string
+    */
     private static string strConFspec(Contact con, string strFspec) {
         string str = strFspec;
         
@@ -249,8 +300,12 @@ public with sharing class HH_NameSpec implements HH_INaming {
         return str;     
     }
 
-    // given a namespec string, returns a list of contact fieldnames
-    // specified in that string.
+    /*******************************************************************************************************
+    * @description Given a namespec string, returns a set of contact fieldnames
+    * specified in that string.
+    * @param strFspec The namespec string
+    * return set<string>
+    */
     private static set<string> setStrFieldFromStrFSpec(string strFSpec) {
         set<string> setStrField = new set<string>();
                 
