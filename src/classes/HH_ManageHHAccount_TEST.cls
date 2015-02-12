@@ -26,11 +26,15 @@
 @isTest
 public with sharing class HH_ManageHHAccount_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
 
-    // TEST METHOD
+    /*********************************************************************************************************
+    * @description Tests that an existing Household account load up correctly in the ManageHouseholdUI
+    */
     public static testMethod void testExistingHH() { 
         if (strTestOnly != '*' && strTestOnly != 'testExistingHH') return;
         
@@ -97,10 +101,12 @@ public with sharing class HH_ManageHHAccount_TEST {
     }
     
     
+    /*********************************************************************************************************
+    * @description Tests writing the household address to the contact if the flag is ticked
+    */
     public static testMethod void testHHAddrToContact() {
         if (strTestOnly != '*' && strTestOnly != 'testHHAddrToContact') return;
 
-        //tests writing the household address to the contact if the flag is ticked
         Account hh = new Account(
             Name = 'test_hh',
             npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE,
@@ -159,6 +165,9 @@ public with sharing class HH_ManageHHAccount_TEST {
         system.assertEquals(con2.MailingCountry, ext.hhA.BillingCountry);   
     }
     
+    /*********************************************************************************************************
+    * @description Tests removing a contact from a Household
+    */
     public static testMethod void testRemoveContactActiveAddress() {
         if (strTestOnly != '*' && strTestOnly != 'testRemoveContactActiveAddress') return;
 
@@ -241,6 +250,9 @@ public with sharing class HH_ManageHHAccount_TEST {
         Test.stopTest();
     }
     
+    /*********************************************************************************************************
+    * @description Tests adding two existing contacts to a Household
+    */
     public static testMethod void testNewHH() {
         if (strTestOnly != '*' && strTestOnly != 'testNewHH') return;
         
@@ -312,6 +324,9 @@ public with sharing class HH_ManageHHAccount_TEST {
         Test.stopTest();
     }
     
+    /*********************************************************************************************************
+    * @description Tests find Contact in the ManageHouseholdUI
+    */
     public static testMethod void testFindAndAddPart1() {
         if (strTestOnly != '*' && strTestOnly != 'testFindAndAddPart1') return;
         
@@ -463,6 +478,9 @@ public with sharing class HH_ManageHHAccount_TEST {
         Test.stopTest();
     }
 
+    /*********************************************************************************************************
+    * @description Tests overriding Household Name in the ManageHouseholdUI
+    */
     public static testMethod void testFindAndAddPart2() {
         if (strTestOnly != '*' && strTestOnly != 'testFindAndAddPart2') return;
         
@@ -562,6 +580,9 @@ public with sharing class HH_ManageHHAccount_TEST {
     }
     
         
+    /*********************************************************************************************************
+    * @description Tests removing and then readding an existing contact to the Household
+    */
     public static testMethod void testRemoveReAdd() {
         if (strTestOnly != '*' && strTestOnly != 'testRemoveReAdd') return;
         
