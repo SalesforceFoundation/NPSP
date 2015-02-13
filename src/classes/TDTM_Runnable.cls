@@ -67,7 +67,7 @@ global abstract class TDTM_Runnable {
     @future
     public static void runFuture(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
         
-        Schema.DescribeSObjectResult objResult = TDTM_TriggerActionHelper.getDescribeObjectByName(objectName);
+        Schema.DescribeSObjectResult objResult = UTIL_Describe.getObjectDescribe(objectName);
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
         
         //Get all fields for the object

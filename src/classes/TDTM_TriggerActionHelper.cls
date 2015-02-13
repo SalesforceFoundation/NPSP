@@ -29,6 +29,16 @@
 */
 public with sharing class TDTM_TriggerActionHelper {
     
+    /*******************************************************************************************************
+    * @description Determines which TDTM action applies, based on the trigger environment.
+    * @param isBefore Are we in a before trigger context.
+    * @param isAfter Are we in an after trigger context.
+    * @param isInsert Are we in an insert trigger context.
+    * @param isUpdate Are we in an update trigger context.
+    * @param isDelete Are we in a delete trigger context.
+    * @param isUndelete Are we in an undelete trigger context.
+    * @return TDTM_Runnable.Action The applicable action, based on the trigger environment.
+    */
     public static TDTM_Runnable.Action determineTriggerAction(Boolean isBefore, Boolean isAfter, Boolean isInsert,
     Boolean isUpdate, Boolean isDelete, Boolean isUnDelete) {
         if (isBefore) {
@@ -43,6 +53,11 @@ public with sharing class TDTM_TriggerActionHelper {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Get the TDTM Action from the action name.
+    * @param name Name of the action.
+    * @return TDTM_Runnable.Action The TDTM Action with that name.
+    */
     public static TDTM_Runnable.Action getTriggerActionFromName(String name) {
         TDTM_Runnable.Action ta;
     
@@ -61,17 +76,5 @@ public with sharing class TDTM_TriggerActionHelper {
         else if(name == TDTM_Runnable.Action.AfterUndelete.name())
            ta = TDTM_Runnable.Action.AfterUndelete;
         return ta;
-    }
-    
-    //@TODO: this method should be moved into a general utilities class
-    public static Schema.DescribeSObjectResult getDescribeObjectByName(String objectName) {
-    	Schema.DescribeSObjectResult objResult;
-        for(Schema.SObjectType t : Schema.getGlobalDescribe().values()){
-            if (t.getDescribe().getName() == objectName){
-                objResult = t.getDescribe();
-                break;
-            }
-        }
-        return objResult;
     }
 }
