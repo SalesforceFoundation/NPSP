@@ -217,22 +217,25 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (con1 == null || con2 == null) {
         	if (con1 == null) 
         	   con1 = con2;
-        	return (con1.MailingStreet != null ||
-	           con1.MailingCity != null ||
-	           con1.MailingState != null ||
-	           con1.MailingPostalCode != null ||
-	           con1.MailingCountry != null ||
+        	return (!isContactAddressEmpty(con1) ||
 	           con1.npe01__Primary_Address_Type__c != null);
         }
         
         // both provided, so look for at least one change between address fields
-        return (
+        boolean isChanged = 
            con1.MailingStreet != con2.MailingStreet ||
            con1.MailingCity != con2.MailingCity ||
            con1.MailingState != con2.MailingState ||
            con1.MailingPostalCode != con2.MailingPostalCode ||
            con1.MailingCountry != con2.MailingCountry ||
-           con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c);
+           con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c;
+           
+        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            isChanged = 
+                con1.get('MailingStateCode') != con2.get('MailingStateCode') || 
+                con1.get('MailingCountryCode') != con2.get('MailingCountryCode');
+        }    
+        return isChanged;   
     }
 
     /*******************************************************************************************************
@@ -241,11 +244,17 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @return boolean. true if the Mailing Address fields are all empty 
     ********************************************************************************************************/
     private boolean isContactAddressEmpty(Contact con1) {
-        return (con1.MailingStreet == null &&
-           con1.MailingCity == null &&
-           con1.MailingState == null &&
-           con1.MailingPostalCode == null &&
-           con1.MailingCountry == null );
+        boolean isEmpty = 
+            con1.MailingStreet == null &&
+            con1.MailingCity == null &&
+            con1.MailingState == null &&
+            con1.MailingPostalCode == null &&
+            // note that we decided to ignore country so that a default value won't create unnecessary address objects
+            (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
+            // only test StateCode if picklists enabled.
+            (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
+        return isEmpty;   
+           
     }
        
     /*******************************************************************************************************

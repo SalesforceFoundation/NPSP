@@ -457,11 +457,12 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description tility to compare two address objects address fields and support fuzzy matching; our definition of fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
+    * @description Compare two address objects address fields and support fuzzy matching; our definition of 
+    * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
     * @param addrNew the new version of the Address
     * @param addrOld the old version of the Address
     * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean true if more than one of the fields fields have changed on the Address, ignoring whitespace and case changes
+    * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */     
     private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
         if (addrNew == null || addrOld == null) 
@@ -473,6 +474,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
             cChange++;
