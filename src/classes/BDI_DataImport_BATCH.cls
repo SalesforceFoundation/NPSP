@@ -243,12 +243,14 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     //also removes tokens from actual detected namespace, if we happen to be
                     //in a non-npsp namespace
                     if (UTIL_Namespace.getNamespace() != 'npsp') {
+                        string strFieldOld = strField;
                         strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
-                    
-                        //if we have a detected namespace, add the namespace back in, allowing
-                        //this code to run in any namespace
-                        if (UTIL_Namespace.getNamespace() != '')
+                        
+                        //if we have a detected namespace, and removed a namespace from the current field
+                        //add the current namespace back in, allowing this code to run in any namespace
+                        if (strField != strFieldOld && UTIL_Namespace.getNamespace() != '') {
                             strField = UTIL_Namespace.StrAllNSPrefix(strField);
+                        }
                     }
                     
 	                mapDIFieldToObjField.put(strF, strField);
