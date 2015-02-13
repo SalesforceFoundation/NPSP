@@ -36,47 +36,6 @@
 */
 
 public without sharing class UTIL_Namespace { 
-    
-    /******************************************************************************************************
-    * @description Boolean helper property for InManagedPackage getter.
-    *******************************************************************************************************/
-    private static boolean fCheckedForManagedPackage = false;
-    /******************************************************************************************************
-    * @description Boolean property tracks whether we are running in a managed or unmanaged context.
-    *******************************************************************************************************/
-    public static boolean InManagedPackage {
-        get {
-            if (!fCheckedForManagedPackage) {
-                // first try to look up an object using pkg namespace - this should only work in an installed (i.e. client) instance
-                Schema.SObjectType token = Schema.getGlobalDescribe().get('npsp__Trigger_Handler__c');
-                if (token != null) {                
-                    InManagedPackage = true;
-                    fCheckedForManagedPackage = true;
-                } else {
-                    // if this doesn't work, we are either in the package instance itself, or in an unmanaged developer instance (git clone)
-                    // the former still needs to include the prefixes, while the latter needs to not include them
-                    // in order to tell the difference, try a dynamic query w/ the prefix and see if we get an err
-                    string soql = 'SELECT Id FROM npsp__Trigger_Handler__c LIMIT 1';
-                    try {
-                        SObject[] recs = database.query(soql); 
-                    } catch (exception e) {
-                        string msg = e.getMessage();
-                        if (msg.contains('sObject type') && msg.contains('is not supported')) {
-                            InManagedPackage = false;
-                            fCheckedForManagedPackage = true;
-                        }
-                    } finally {
-                        if (!fCheckedForManagedPackage) {
-                            InManagedPackage = true;
-                            fCheckedForManagedPackage = true;
-                        }
-                    }
-                }               
-            }
-            return InManagedPackage;            
-        }
-        set;
-    }
 
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
@@ -106,9 +65,8 @@ public without sharing class UTIL_Namespace {
     * @return Token name, with namespace prefix and double underscore if in a managed package.
     ********************************************************************************************************/
     public static string StrTokenNSPrefix(string str) {
-        if (!InManagedPackage || getNamespace() == '') return str;
-        str = getNamespace() + '__' + str;
-        return str;
+        if (getNamespace() == '') return str;
+        return getNamespace() + '__' + str;
     }
     
     /*******************************************************************************************************
@@ -118,16 +76,15 @@ public without sharing class UTIL_Namespace {
     * @return Token name, with namespace prefix and dot notation if in a managed package.
     ********************************************************************************************************/
     public static string StrTokenNSPrefixDotNotation(string str) {
-        if (!InManagedPackage || getNamespace() == '') return str;
-        str = getNamespace() + '.' + str;
-        return str;
+        if (getNamespace() == '') return str;
+        return getNamespace() + '.' + str;
     }
 
     /*******************************************************************************************************
-    * @description Static method that takes a string
-    * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
-    * BUT it turns out that Describe Field Tokens do NOT namespace prefix fields within the package.
-    * so this helper can be used in our describe code to remove an incorrect namespace prefix.
+    * @description If we are in a managed package, tokens in dynamic SOQL must include the package namespace
+    * prefix, bit field describes don't include namespace prefix fields within the package. This method can
+    * be used in our describe code to remove an incorrect namespace prefix.
+    * Removes NPSP__ prefix, then removes dynamic prefix if one is detected.
     * @param str token name 
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
@@ -137,7 +94,6 @@ public without sharing class UTIL_Namespace {
             str = str.replace(getNamespace() + '__', '');
         return str;
     }
-
     
     /*******************************************************************************************************
     * @description Static method that takes a string of a multiple potential field names or object names.  
@@ -148,7 +104,7 @@ public without sharing class UTIL_Namespace {
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
     public static string StrAllNSPrefix(string str) {
-        if (!InManagedPackage || getNamespace() == '') return str;
+        if (getNamespace() == '') return str;
         Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace()+'__$0');
