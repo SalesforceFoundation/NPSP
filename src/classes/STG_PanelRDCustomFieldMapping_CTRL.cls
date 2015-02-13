@@ -35,9 +35,14 @@
 */
 public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the RD Field Mapping panel. 
+    */
     public override string idPanel() { return 'idPanelRDFieldMap'; }
     
-    // temporary fm used by the page for creating a new fm.
+    /*********************************************************************************************************
+    * @description temporary fm used by the page for creating a new fm.
+    */
     public npe03__Custom_Field_Mapping__c fmNew {
         get {
             if (fmNew == null)
@@ -47,13 +52,19 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;
     }
     
-    // action method for going into edit mode (to create a new fm)
+    /*********************************************************************************************************
+    * @description Action Method for going into Edit mode (to create a new fm) 
+    * @return null
+    */
     public PageReference newCustomFieldMapping() {
         isEditMode = true;
         return null;
     }
 
-    // action method to save the new ci to the database.
+    /*********************************************************************************************************
+    * @description Action Method to save the new fm to the database 
+    * @return null
+    */
     public PageReference createCustomFieldMapping() {  
     	
     	// validate first
@@ -78,7 +89,12 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         return null;
     }
 
-    //checks the compatibility of a recurring donation and opp field
+    /*********************************************************************************************************
+    * @description Returns whether the recurring donation and opp fields are compatible
+    * @param RDField The Recurring Donation field
+    * @param OppField The Opportunity field
+    * @return boolean
+    */
     private boolean isValidMapping(string RDField, string OppField){
         boolean isValid = false;
         
@@ -96,15 +112,25 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         return isValid;
     }
 
-    // action method to cancel out of creating a new fm.
+    /*********************************************************************************************************
+    * @description Action Method to cancel out of creating a new fm.
+    * @return null
+    */
     public PageReference cancelCustomFieldMapping() {
         isEditMode = false;
         fmNew = null;
         return null;
     }
     
-    // action method and parameter for deleting an existing fm.
+    /*********************************************************************************************************
+    * @description Holds the Id to a field mapping to be deleted
+    */
     public string fmIdDelete { get; set; }
+
+    /*********************************************************************************************************
+    * @description Action Method for deleting an existing field mapping
+    * @return null
+    */
     public PageReference deleteFm() {
         Savepoint sp = Database.setSavepoint(); 
         try {
@@ -124,7 +150,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         return null;
     }
 
-    // we provide our own list so we can replace the dev names with labels
+    /*********************************************************************************************************
+    * @description List of RD Custom Field Mappings, with developer names replaced with labels
+    */
     public list<npe03__Custom_Field_Mapping__c> listRDCustomFieldMapping {
         get {
             if (listRDCustomFieldMapping == null) {
@@ -144,7 +172,12 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;     
     }
     
-    // cover over describe call to handle fields that no longer exist.
+    /*********************************************************************************************************
+    * @description Returns the fields label.  This is a cover over describe call to handle fields that no longer exist.
+    * @param strObj The Object
+    * @param strField The Field
+    * @return string
+    */
     private string getFieldLabel(string strObj, string strField) {
         try {
             return UTIL_Describe.getFieldLabel(strObj, strField);                   
@@ -153,7 +186,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         }       
     }
         
-    //invalid fields for opp mappings
+    /*********************************************************************************************************
+    * @description Set of invalid fields for opp mappings
+    */
     static set<string> setInvalidOppFields = new set<string>{'accountid', 'amount', 'campaignid', 'closedate', 'createdbyid', 
                                                    'createddate', 'fiscal', 'fiscalquarter', 'fiscalyear', 'forecastcategory', 
                                                    'stagename', 'npe03__recurring_donation__c', 'forecastcategoryname',
@@ -161,6 +196,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
                                                    'iswon', 'lastactivitydate', 'lastmodifiedbyid', 'lastmodifieddate', 'recordtypeid', 
                                                    'systemmodstamp', 'totalopportunityquantity'};        
 
+    /*********************************************************************************************************
+    * @description The SelectOption list of Opportunity Fields available for a new mapping
+    */
     static public list<SelectOption> listSOOppFields {
         get {
             if (listSOOppFields == null) {
@@ -187,6 +225,9 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description The SelectOption list of Recurring Donation fields available for a new mapping 
+    */
     static public list<SelectOption> listSORDFields {
         get {
             if (listSORDFields == null) {
@@ -205,7 +246,11 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
         private set;
     }
 
-    //utility to check that existing RD field mappings are valid - called by the Health Check
+    /*********************************************************************************************************
+    * @description Checks that existing RD field mappings are valid - called by the Health Check
+    * @param ctrl The Health Check panel controller
+    * @return void
+    */
     public static void verifyRDMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField = npe03__Custom_Field_Mapping__c.getAll();

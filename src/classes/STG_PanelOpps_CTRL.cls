@@ -35,6 +35,9 @@
 */
 public with sharing class STG_PanelOpps_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Donor Statistics panel. 
+    */
     public override string idPanel() { return 'idPanelOpp'; }
     
 }

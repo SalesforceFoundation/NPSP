@@ -35,9 +35,16 @@
 */
 public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the User Defined Rollups panel. 
+    */
     public override string idPanel() { return 'idPanelOppRollup'; }
     
-    // verify that if Use Fiscal Years is turned on, Custom Fiscal Years are not in place - called by HealthCheck
+    /*********************************************************************************************************
+    * @description Verifies that if Use Fiscal Years is turned on, Custom Fiscal Years are not in place - called by HealthCheck 
+    * @param ctrl The Health Check panel controller
+    * @return void
+    */
     public static void verifyFiscalYearRollups(STG_PanelHealthCheck_CTRL ctrl) {
         string strSetting = UTIL_Describe.getFieldLabel('npo02__Households_Settings__c', 'npo02__Use_Fiscal_Year_for_Rollups__c');    	
         if (STG_Panel.stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c == true) {

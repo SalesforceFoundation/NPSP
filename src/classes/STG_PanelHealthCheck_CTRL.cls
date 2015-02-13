@@ -35,20 +35,36 @@
 */
 public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
+    /*********************************************************************************************************
+    * @description The panel's constructor 
+    */
     public STG_PanelHealthCheck_CTRL() {
         isRunningDetector = false;
         listDR = new list<DetectResult>();
     }
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Health Check panel. 
+    */
     public override string idPanel() { return 'idPanelHealthCheck'; }
     
+    /*********************************************************************************************************
+    * @description Whether Health Check is currently running
+    */
     public boolean isRunningDetector { get; set; }
+
+    /*********************************************************************************************************
+    * @description Whether Health Check has results to report  
+    */
     public boolean hasResults { 
         get {
             return (listDR != null && listDR.size() > 0);
         }
     }
     
+    /*********************************************************************************************************
+    * @description Whether all tests passed Health Check  
+    */
     public boolean isAllTestsPassed { 
         get {
             if (!hasResults)
@@ -61,15 +77,24 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
     }
     
+    /*********************************************************************************************************
+    * @description How long did Health Check take to run
+    */
     public string strTime { get; set; }
     
+    /*********************************************************************************************************
+    * @description The current time  
+    */
     public string strNow {
     	get {
     		return datetime.now().format();  // this will put it in the time zone of the current user.
     	}
     }
     
-    // the main entry to run Health Check
+    /*********************************************************************************************************
+    * @description Action Method to run Health Check
+    * @return null  
+    */
     public PageReference runDetector() { 
         isRunningDetector = true;
         listDR.clear();
@@ -77,9 +102,14 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         return null;
     }
     
+    /*********************************************************************************************************
+    * @description The list of DetectResults from Health Check  
+    */
     public list<DetectResult> listDR { get; private set; }
     
-    // class we use to report back the results of each Health Check test
+    /*********************************************************************************************************
+    * @description Used to report back the results of each Health Check test
+    */
     public class DetectResult {
         public string strName { get; set; }
         public string strStatus { get; set; }
@@ -87,7 +117,14 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         public string strSolution { get; set; }
     }
     
-    // creates and stores a DetectResult
+    /*********************************************************************************************************
+    * @description Creates and Stores a DetectResult
+    * @param strName The test name
+    * @param strStatus The status ('Success', 'Error')
+    * @param strDetails The error details
+    * @param strSolution The suggested solution to the problem
+    * @return void  
+    */
     public void createDR(string strName, string strStatus, string strDetails, string strSolution) {
         DetectResult dr = new DetectResult();
         dr.strName = strName;
@@ -100,7 +137,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             listDR.add(dr);
     }    
 
-    // calls all of the specific detection routines
+    /*********************************************************************************************************
+    * @description calls all of the specific detection routines
+    */
     private void runAllDetections() {
         
         DateTime dtStart = system.now();
@@ -130,8 +169,10 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         double msec = dtEnd.getTime() - dtStart.getTime();
         strTime = string.valueOf(double.valueOf(msec / 1000));
     }
-    
-    // verify settings are consistent with the chosen Account Model
+     
+    /*********************************************************************************************************
+    * @description Verifies settings are consistent with the chosen Account Model 
+    */
     private void verifyAccountModel() {
         string strAccModel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__Account_Processor__c');
         
@@ -154,7 +195,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         createDR(strAccModel, 'Success', null, STG_Panel.stgService.stgCon.npe01__Account_Processor__c);
     }
     
-    // verify Account data is consistent with the chosen Account Model
+    /*********************************************************************************************************
+    * @description Verifies Account data is consistent with the chosen Account Model 
+    */
     private void verifyAccountData() { 
     	integer cBucket = 0;
     	integer cOne2One = 0;
@@ -186,8 +229,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     	}    
     }
 
-    // verify Account data is consistent with the chosen Account Model
-    // this one ensures that system fields match account record types
+    /*********************************************************************************************************
+    * @description Verifies Account system fields match account record types
+    */
     private void verifyAccountData2() { 
         integer cOne2One = 0;
         integer cHH = 0;
@@ -224,7 +268,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
     }
 
-    // verify that all Contacts have an account
+    /*********************************************************************************************************
+    * @description Verifies that all Contacts have an account  
+    */
     private void verifyContactData() {
     	try {
 	        integer cContact = [select Count() from Contact where AccountId = null limit 9999];   
@@ -238,7 +284,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
     }
     
-    // verify there are no Households Accounts and Objects with no Contacts
+    /*********************************************************************************************************
+    * @description Verifies there are no Households Accounts and Objects with no Contacts 
+    */
     private void verifyNoOrphanedHouseholds() {
     	try {
 	        integer cHHObj = [select Count() from npo02__Household__c 
@@ -266,7 +314,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
     }
 
-    // verify there are no 1:1 Accounts with no Contacts
+    /*********************************************************************************************************
+    * @description Verifies there are no 1:1 Accounts with no Contacts 
+    */
     private void verifyNoOrphanedOne2OneAccounts() {
     	try {
 	        integer cAcc = [select Count() from Account 
@@ -284,7 +334,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }    
     }
 
-    // verify all reports exist that settings use
+    /*********************************************************************************************************
+    * @description Verifies all reports exist that settings use 
+    */
     private void verifyReports() {
         string rptId = null;
         
@@ -311,7 +363,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     }
     
-    // check all fields that are used in settings
+    /*********************************************************************************************************
+    * @description Checks all fields that are used in settings 
+    */
     private void verifyFields() {
     
         // check Relationship Gender field on Contact
@@ -326,7 +380,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }        
     }
     
-    // check all settings that contain recordType ID's to make sure they are valid.
+    /*********************************************************************************************************
+    * @description Checks all settings that contain recordType ID's to make sure they are valid. 
+    */
     private void verifyRecordTypes() {
     
         checkRecordTypeId('Account', STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c, 
@@ -348,7 +404,17 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 
     }
 
-    // helper to deal with a setting that contains multiple recordType Id's in a semi-colon delimeted string
+    /*********************************************************************************************************
+    * @description Checks a setting that contains multiple recordType Id's in a semi-colon delimeted string
+    * @param strObject The Object to check recordtypes against
+    * @param strValues A semicolon separated string of values to check
+    * @param isIds Whether the values are Ids or Names
+    * @param strSettingObj The Settings object
+    * @param strSettingField The Settings field
+    * @param strTabLevel The parent tab the setting is on
+    * @param strTabname The tab the setting is on
+    * @return void
+    */
     private void checkRecordTypeMulti(string strObject, string strValues, boolean isIds, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         if (strValues != null) {
             list<string> listStr = strValues.split(';',0);
@@ -364,7 +430,16 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }
     }
 
-    // does the work to see if the recordType Id is valid, and logs an appropriate DetectResult    
+    /*********************************************************************************************************
+    * @description Checks whether the recordType Id is valid, and logs an appropriate DetectResult
+    * @param strObject The Object to check recordtypes against
+    * @param rtId A recordtype Id
+    * @param strSettingObj The Settings object
+    * @param strSettingField The Settings field
+    * @param strTabLevel The parent tab the setting is on
+    * @param strTabname The tab the setting is on
+    * @return void
+    */
     private void checkRecordTypeId(string strObject, string rtId, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
         string strRT = UTIL_RecordTypes.GetRecordTypeName(strObject, rtId);
@@ -378,7 +453,16 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }           
     }
     
-    // does the work to see if the recordType Name is valid, and logs an appropriate DetectResult    
+    /*********************************************************************************************************
+    * @description Checks whether the recordType Name is valid, and logs an appropriate DetectResult
+    * @param strObject The Object to check recordtypes against
+    * @param strRTName A recordtype name
+    * @param strSettingObj The Settings object
+    * @param strSettingField The Settings field
+    * @param strTabLevel The parent tab the setting is on
+    * @param strTabname The tab the setting is on
+    * @return void
+    */
     private void checkRecordTypeName(string strObject, string strRTName, string strSettingObj, string strSettingField, string strTabLevel, string strTabname) {
         string strField = UTIL_Describe.getFieldLabel(strSettingObj, strSettingField);
         if (strRTName != null && UTIL_RecordTypes.GetRecordTypeId(strObject, strRTName) == null) {
@@ -391,7 +475,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         }           
     }
 
-    // verify that our Master Scheduler jobs are actually scheduled, and that all of the entries are valid - called by HealthCheck
+    /*********************************************************************************************************
+    * @description Verifies that our Master Scheduler jobs are actually scheduled, and that all of the entries are valid
+    */
     private void verifyScheduledJobs() {
         try {        
 	        // make sure the Master Jobs are scheduduled
@@ -439,7 +525,9 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
 	        
     }
     
-    // verify that no Opportunities have multiple primary contact roles, which would throw off opp rollups.
+    /*********************************************************************************************************
+    * @description Verifies that no Opportunities have multiple primary contact roles, which would throw off opp rollups.
+    */
     private void verifyOppContactRoles() {
         try {
             // detect duplicate primary ocr's
