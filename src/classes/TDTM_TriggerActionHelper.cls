@@ -27,6 +27,12 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+
+/**
+* @author Salesforce.com Foundation
+* @date 2014
+* @description Class that contains helper methods for the TDTM Trigger Handler logic.
+*/
 public with sharing class TDTM_TriggerActionHelper {
     
     /*******************************************************************************************************
