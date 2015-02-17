@@ -35,5 +35,8 @@
 */
 public with sharing class STG_PanelMembership_CTRL extends STG_Panel {
         
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Membership panel. 
+    */
     public override string idPanel() { return 'idPanelMembership'; }
 }

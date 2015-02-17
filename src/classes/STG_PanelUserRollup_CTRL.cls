@@ -35,22 +35,43 @@
 */
 public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the User Rollup panel. 
+    */
     public override string idPanel() { return 'idPanelUserRollup'; }
-    /*** Properties and Fields ***/
     
-    //controls which types to display
+    /*********************************************************************************************************
+    * @description Map of Fields to Displaytype 
+    */
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
         
-    //pickers for setting values   
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the source object's fields 
+    */
     public list<SelectOption> sourcefields = new list<SelectOption>();
+
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of valid operators 
+    */
     public list<SelectOption> validoperators = new list<SelectOption>();
+
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the target object's fields 
+    */
     public list<SelectOption> targetfields = new list<SelectOption>();    
+
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of targe objects 
+    */
     public list<SelectOption> targetobjects = new list<SelectOption>{
         new SelectOption('Account', 'Account'),
         new SelectOption('Contact', 'Contact'),
         new SelectOption('npo02__Household__c', 'npo02__Household__c')    
     }; 
     
+    /*********************************************************************************************************
+    * @description The list of UDR's 
+    */
     public list<UDR> udrList {
     	get {
     		if (udrList == null) {
@@ -66,26 +87,40 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
     	private set;
     }
     
+    /*********************************************************************************************************
+    * @description The number of UDR's 
+    */
     public integer udrlistsize{get;set;}
+
+    /*********************************************************************************************************
+    * @description The current UDR being edited 
+    */
     public UDR activeUDR{get; set;}
+
+    /*********************************************************************************************************
+    * @description Whether the currently edited URD is valid 
+    */
     public boolean isValidRollup{get; set;}
-    private boolean hasRollupInsert = false;
     
-    /*** Constructor ***/
-    
+    /*********************************************************************************************************
+    * @description The panel's constructor 
+    */
     public STG_PanelUserRollup_CTRL(){        
         isValidRollup = false;
         isEditMode = false;        
     }    
     
-    /*** Page Operations ***/
-    
+    /*********************************************************************************************************
+    * @description Gets the panel ready for edit mode of a new UDR 
+    */
     public void startBuild(){    
         activeUDR = new UDR(this);
         isEditMode = true;
     }
         
-    //reset all instance variable and return to initial screen
+    /*********************************************************************************************************
+    * @description Cancels edit mode and reset all instance variables
+    */
     public void cancel(){       
         this.sourcefields.clear();
         this.mapFieldTypes.clear();
@@ -95,14 +130,16 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         this.activeUDR = null;
     }    
     
-    /*** Getters for Field Selectors ***/
-    
-    //retrieve target objects
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of target objects 
+    */
     public list<SelectOption> getTargetObjects(){
         return this.targetobjects;
     }
     
-    //retrieve valid operators
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of valid operators based on the current DisplayTypes 
+    */
     public list<SelectOption> getValidOperators(){
         validoperators.clear();        
         if (mapFieldTypes.containsKey(activeUDR.SourceField)){
@@ -117,7 +154,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         return validoperators; 
     }
     
-    //retrieve possible target fields for the selected object
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of fields from the Target object 
+    */
     public list<SelectOption> getTargetFields() { 
         
         if (targetfields.isEmpty()) {
@@ -192,8 +231,9 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         return targetfields;    
     }
     
-    
-    //retrieve valid source fields from opportunity object
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of valid source fields from the Opportunity object 
+    */
     public list<SelectOption> getSourceFields(){
         
         if (sourcefields.isEmpty()) {                       
@@ -227,9 +267,11 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         }         
         return sourceFields;
     }
-    
-    /*** Handle Clearing Potentially Invalid Data OnChange ***/
-    
+        
+    /*********************************************************************************************************
+    * @description Clears out the current UDR's related data after a change to the Source field
+    * @return void
+    */
     public void clearForSourceField(){
         activeUDR.Operation = null;     
         activeUDR.TargetObject = null;
@@ -237,18 +279,32 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         targetfields.clear();
              
     }    
+
+    /*********************************************************************************************************
+    * @description Clears out the current UDR's related data after a change to the Operator (nothing to do!)
+    * @return void
+    */
     public void clearForOperation(){
         // the targets are dependent on the source datatype, not the aggregating op.
         //activeUDR.TargetObject = null;
         //activeUDR.TargetField = null;
         
     }
+
+    /*********************************************************************************************************
+    * @description Clears out the current UDR's related data after a change to the Target object 
+    * @return void
+    */
     public void clearForTargetObject(){
         activeUDR.TargetField = null;       
         targetfields.clear();
     }    
     
-    //utility to check that existing user defined rollups are valid - called by Health Check
+    /*********************************************************************************************************
+    * @description Checks that existing user defined rollups are valid - called by Health Check
+    * @param ctrl The Health Check panel's controller
+    * @return void
+    */
     public static void verifyUserRollups(STG_PanelHealthCheck_CTRL ctrl) {
         boolean isValid = true;
         boolean isValidAll = true;
@@ -315,45 +371,85 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             ctrl.createDR(strSetting, 'Success', null, label.healthLabelUDFValid);                    	
         }
     }           
-    
-    
-    /*** Private Methods **/
         
-    //used to render error messages on the VF interface
+    /*********************************************************************************************************
+    * @description Adds a page message for an error to the visualforce page
+    * @return void
+    */
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
     }    
     
-    
-    /*** Class **/
-    
+    /*********************************************************************************************************
+    * @description Class the represents a User Defined Rollup
+    */
     public class UDR{
         
+	    /*********************************************************************************************************
+	    * @description The User Rollup Field Settings object this class holds
+	    */
         public npo02__User_Rollup_Field_Settings__c myUDR{get;set;}
+
+        /*********************************************************************************************************
+        * @description The source object field
+        */
         public String SourceField{get;set;}
+
+        /*********************************************************************************************************
+        * @description The target object field
+        */
         public String TargetField{get;set;}
+
+        /*********************************************************************************************************
+        * @description The target object
+        */
         public String TargetObject{get;set;}
+
+        /*********************************************************************************************************
+        * @description The operator
+        */
         public String Operation{get;set;}
+
+        /*********************************************************************************************************
+        * @description Whether this UDR is valid
+        */
         public Boolean isValid{set;}
+
+        /*********************************************************************************************************
+        * @description The page controller for this UDR
+        */
         STG_PanelUserRollup_CTRL mydad;
         
+        /*********************************************************************************************************
+        * @description The Source field's label
+        */
         public string SourceFieldLabel {
         	get {
         		return UTIL_Describe.getFieldLabelSafe('Opportunity', SourceField);
         	}
         }
         
+        /*********************************************************************************************************
+        * @description The Target field's label
+        */
         public string TargetFieldLabel {
             get {
                 return UTIL_Describe.getFieldLabelSafe(TargetObject, TargetField);
             }
         }
         
+        /*********************************************************************************************************
+        * @description constructor
+        */
         public UDR(STG_PanelUserRollup_CTRL parentclass){
             mydad = parentclass;  
             myUDR = new npo02__User_Rollup_Field_Settings__c();        
         }
+
+        /*********************************************************************************************************
+        * @description constructor
+        */
         public UDR(npo02__User_Rollup_Field_Settings__c thisUDR, STG_PanelUserRollup_CTRL parentclass){
             this.SourceField = thisUDR.npo02__Source_Field__c;
             this.TargetField = thisUDR.npo02__Target_Field__c;
@@ -362,6 +458,10 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             myUDR = thisUDR;        
             mydad = parentclass;    
         }       
+
+        /*********************************************************************************************************
+        * @description constructor
+        */
         public UDR(String SourceField, String TargetField, String TargetObject, String Operation, STG_PanelUserRollup_CTRL parentclass){
             this.SourceField = SourceField;
             this.TargetField = TargetField;
@@ -371,6 +471,11 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             mydad = parentclass;
         }
         
+        /*********************************************************************************************************
+        * @description Saves the UDR class's data into the npo02__User_Rollup_Field_Settings__c object and saves
+        * the setting in the database.  Any errors are reported as page messages.
+        * @return void
+        */
         public void save(){
             
             if (myUDR.id == null){
@@ -399,10 +504,20 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                 mydad.showMsg('Exception type' + e, ApexPages.Severity.INFO);          
             }           
         }       
+
+        /*********************************************************************************************************
+        * @description Initializes the page with this UDR for editing
+        * @return void
+        */
         public void loadMe(){
             mydad.activeUDR = this;
             mydad.isEditMode = true;
         }
+
+        /*********************************************************************************************************
+        * @description Deletes the UDR from the database, and ends Edit mode
+        * @return void
+        */
         public void deleteMe(){         
             if (myUDR.id != null)
               delete myUDR;
@@ -411,6 +526,10 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             mydad.isEditMode = false;
         }       
         
+        /*********************************************************************************************************
+        * @description Returns whether this UDR is valid
+        * @return boolean
+        */
         public boolean getisValid(){
             if (SourceField != null && TargetField != null && TargetObject != null && Operation != null && TargetField != '')
                 return true;

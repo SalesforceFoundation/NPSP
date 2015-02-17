@@ -35,6 +35,9 @@
 */
 public with sharing class STG_PanelBDE_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the BDE panel. 
+    */
     public override string idPanel() { return 'idPanelBDE'; }
     
 }

@@ -35,5 +35,8 @@
 */
 public with sharing class STG_PanelLeads_CTRL extends STG_Panel {
         
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Leads panel. 
+    */
     public override string idPanel() { return 'idPanelLeads'; }
 }
