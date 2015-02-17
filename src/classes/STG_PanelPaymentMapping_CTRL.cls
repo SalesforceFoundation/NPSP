@@ -35,16 +35,30 @@
 */
 public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Payment Mapping panel. 
+    */
     public override string idPanel() { return 'idPanelPaymentMapping'; }
     
-    //controls which types to display
+    /*********************************************************************************************************
+    * @description Map of Field names to DisplayTypes
+    */
     map<string, Schema.Displaytype> mapFieldTypes = new map<string, Schema.Displaytype>();
         
-    //pickers for setting values   
+    /*********************************************************************************************************
+    * @description List of SelectOptions of Source object Fields 
+    */
     public list<SelectOption> sourcefields = new list<SelectOption>();
+
+    /*********************************************************************************************************
+    * @description List of SelectOptions of Target object Fields 
+    */
     public list<SelectOption> targetfields = new list<SelectOption>();
            
-    //reset all instance variable and return to initial screen
+    /*********************************************************************************************************
+    * @description Action Method to cancel Edit mode without saving
+    * @return null
+    */
     public pageReference cancelPfmEdit() {       
         this.sourcefields.clear();
         this.mapFieldTypes.clear();
@@ -54,7 +68,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return null;
     }
     
-    //retrieve possible target fields for the selected object
+    /*********************************************************************************************************
+    * @description Initializes the targetfields SelectOption list for the selected object 
+    */
     public list<SelectOption> getTargetFields(){ 
         
         targetfields.clear();
@@ -108,9 +124,14 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return targetfields;    
     }
     
+    /*********************************************************************************************************
+    * @description A localized string to use if there is no valid field
+    */
     private static string strNoValidField = System.Label.stgLabelPaymentMapNoValidFields;
     
-    //retrieve valid source fields from opportunity object
+    /*********************************************************************************************************
+    * @description Initializes the sourcefields SelectOption list for Opportunities 
+    */
     public list<SelectOption> getSourceFields() {
         
         if (sourcefields.isEmpty()) {
@@ -136,7 +157,10 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return sourceFields;
     }
 
-    //utility to check that existing user defined rollups are valid - called by Health Check
+    /*********************************************************************************************************
+    * @description Checks that existing user defined rollups are valid - called by Health Check
+    * @return void
+    */
     public static void verifyPaymentMappings(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll();
@@ -190,13 +214,24 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         }                           
     }           
         
-    //used to render error messages on the VF interface
+    /*********************************************************************************************************
+    * @description Adds an error message to the visualforce page
+    * @return null 
+    */
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
     }     
     
+    /*********************************************************************************************************
+    * @description Holds the Id of a Payment Mapping record to delete 
+    */
     public string pfmIdDelete { get; set; }
+
+    /*********************************************************************************************************
+    * @description Action Method to delete a Payment Mapping record
+    * @return null 
+    */
     public PageReference deletePfm() {
     	STG_SettingsManager_CTRL.idPanelCurrent = idPanel();    	
     	if (pfmIdDelete != null) {
@@ -209,6 +244,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         return null;
     }
     
+    /*********************************************************************************************************
+    * @description The Payment Field Mapping Settings object
+    */
     public npe01__Payment_Field_Mapping_Settings__c pfmNew {
     	get {
     		if (pfmNew == null) pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
@@ -217,6 +255,9 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     	private set;
     }
     
+    /*********************************************************************************************************
+    * @description Whether all required fields are set in order to create a new Payment Mapping 
+    */
     public boolean isPfmNewValid {
     	get {
 	    	return pfmNew != null &&
@@ -226,11 +267,19 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     	}
     }
     
+    /*********************************************************************************************************
+    * @description Action Method to enter Edit mode in order to create a new Payment Mapping
+    * @return null 
+    */
     public PageReference newPfm() {
     	isEditMode = true;
     	return null;
     }
     
+    /*********************************************************************************************************
+    * @description Action Method to save a new Payment Mapping
+    * @return null 
+    */
     public PageReference savePfm() {
         if (!isPfmNewValid) {
             showMsg('No valid Payment field was found for the chosen Opportunity field.', ApexPages.Severity.FATAL);
@@ -261,13 +310,20 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     	return null;
     }
    
+    /*********************************************************************************************************
+    * @description Action Method to update target fields after the source field has been chosen
+    * @return null 
+    */
     public PageReference onSelectSourceField() {
         // refresh target fields
         targetfields.clear();    
         return null;    
     }
   
-    // we provide our own list so we can replace the dev names with labels
+    /*********************************************************************************************************
+    * @description The list of current Payment Field Mappings with labels substituted for developer names
+    * @return list<npe01__Payment_Field_Mapping_Settings__c> 
+    */
     public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {

@@ -35,14 +35,27 @@
 */
 public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
 	
+    /*********************************************************************************************************
+    * @description The panel's constructor 
+    */
 	public STG_PanelHouseholds_CTRL() {
 		isRunningBatch = false;
 	}
 	    
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Households panel. 
+    */
     public override string idPanel() { return 'idPanelHH'; }
 
+    /*********************************************************************************************************
+    * @description Whether we are running the Update Household Names batch process 
+    */
     public boolean isRunningBatch { get; set; }
 
+    /*********************************************************************************************************
+    * @description Action Method to save settings and invoke the Update Household Names batch process 
+    * @return null
+    */
     public PageReference activateHouseholdNaming() {
         boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
                 
@@ -60,11 +73,20 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to enter Edit mode
+    * @return null 
+    */
     public override PageReference editSettings() {
         isRunningBatch = false;
         return super.editSettings();
     }
     
+    /*********************************************************************************************************
+    * @description Returns wwhether the custom name formats are valid or not, and adds a Page Message for
+    * any errors.
+    * @return boolean 
+    */
     private boolean isValidNameFormats() {
         // make sure any custom name formats are valid.
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
@@ -86,6 +108,10 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return true;   	
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to save the current settings
+    * @return null 
+    */
     public override PageReference saveSettings() {
     	
     	// add some extra error detection
@@ -102,6 +128,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         return super.saveSettings();
     }
 
+    /*********************************************************************************************************
+    * @description The name of the Household Mailing List report 
+    */
     static public string strMailingReport {
         get {
             if (strMailingReport == null) {
@@ -117,6 +146,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         private set;
     }
         
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the Household Name Formats 
+    */
     static public list<SelectOption> listSOHouseholdNameFormats {
         get {    
             if (listSOHouseholdNameFormats == null) {
@@ -135,6 +167,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the Household Greeting Formats 
+    */
     static public list<SelectOption> listSOFormalGreetingFormats {
         get {    
             if (listSOFormalGreetingFormats == null) {
@@ -149,6 +184,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the Household Informal Greeting Formats 
+    */
     static public list<SelectOption> listSOInformalGreetingFormats {
         get {    
             if (listSOInformalGreetingFormats == null) {
@@ -163,6 +201,9 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description The list of Contacts to use when construction sample name examples 
+    */
     private static list<Contact> listConExamples {
     	get {
             if (listConExamples == null) {
@@ -205,9 +246,14 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     	private set;
     }
     
-    // Javascript remoting api to provide an Example formatted string given an instance of
-    // Household Name Settings, which type of string (Name, Formal Greeting, Informal Greeting),
-    // for the specified number of sample Contacts.
+    /*********************************************************************************************************
+    * @description Javascript remoting api to provide an Example formatted string given an instance of
+    * Household Name Settings, which type of string (Name, Formal Greeting, Informal Greeting),
+    * for the specified number of sample Contacts.
+    * @param hns The current Household Name Settings
+    * @param strField The custom name field to get examples for (Name, Formal Greeting, Informal Greeting)
+    * @param cContact How many Contacts to include in the example name
+    */
     @RemoteAction
     public static string strNameSpecExample(Household_Naming_Settings__c hns, string strField, integer cContact) {
     

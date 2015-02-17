@@ -35,14 +35,27 @@
 */
 public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description The panel's constructor 
+    */
     public STG_PanelOppBatch_CTRL() {
         isRunningBatch = false;
     }
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Batch Opp Rollups panel. 
+    */
     public override string idPanel() { return 'idPanelOppBatch'; }
     
+    /*********************************************************************************************************
+    * @description Whether we are currently running the batch process 
+    */
     public boolean isRunningBatch { get; set; }
     
+    /*********************************************************************************************************
+    * @description Action Method to run the Batch Opp Rollups  
+    * @return null
+    */
     public PageReference runBatch() {
         isRunningBatch = true;
 

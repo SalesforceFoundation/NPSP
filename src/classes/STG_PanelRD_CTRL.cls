@@ -35,15 +35,34 @@
 */
 public with sharing class STG_PanelRD_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Recurring Donations panel. 
+    */
     public override string idPanel() { return 'idPanelRD'; }
  
-    //holds value to evaluate change in forecast months
+    /*********************************************************************************************************
+    * @description holds value to evaluate change in forecast months
+    */
     private integer originalForecastMonths;
+
+    /*********************************************************************************************************
+    * @description The Schedulable object 
+    */
     public Schedulable__c rdSched { public get; public set; }
+
+    /*********************************************************************************************************
+    * @description Whether the Recurring Donations Scheduled Job is disabled
+    */
     public boolean isRDScheduleDisabled { get; set; }
     
+    /*********************************************************************************************************
+    * @description The panel's constructor
+    */
     public STG_PanelRD_CTRL() { }
     
+    /*********************************************************************************************************
+    * @description Initiliazes the classes data 
+    */
     public void init(){
         originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;        
         list<Schedulable__c> listSch = [select Id, Active__c from Schedulable__c where Class_Name__c = 'RD_RecurringDonations_SCHED' limit 1];
@@ -53,6 +72,11 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         }
     }
     
+    /*********************************************************************************************************
+    * @description Action Method to save RD settings, deal with a change in forecast months, 
+    * and schedule the nightly job if appropriate.
+    * @return null
+    */
     public override PageReference saveSettings() { 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
@@ -91,6 +115,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     	return null;
     }
     
+    /*********************************************************************************************************
+    * @description Deletes future Opportunities that are beyond the number of forecast months
+    * @return void 
+    */
     private void trimOpportunities(){
         date limitDate = system.today().addMonths((integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
         string openlabel = system.label.npe03.RecurringDonationOpenStatus;
@@ -103,6 +131,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(mapIdRD.keySet());               
     }
         
+    /*********************************************************************************************************
+    * @description The SelectOption list of RD Close Options 
+    */
     public list<SelectOption> listSORDCloseOptions {
         get {
         	if (listSORDCloseOptions == null) {
@@ -117,6 +148,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }    
 
+    /*********************************************************************************************************
+    * @description The RecordType Name to use for RD Opportunities
+    */
     static public string strRDOppRecordTypeLabel {
         get {
             if (strRDOppRecordTypeLabel == null) {

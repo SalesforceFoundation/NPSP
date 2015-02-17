@@ -35,6 +35,9 @@
 */
  public with sharing class STG_PanelContacts_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Contacts panel. 
+    */
     public override string idPanel() { return 'idPanelCon'; }
     
 }

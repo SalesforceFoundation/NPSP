@@ -35,6 +35,9 @@
 */
 public with sharing class STG_PanelAffiliations_CTRL  extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Affiliations panel. 
+    */
     public override string idPanel() { return 'idPanelAffl'; }
     
 }
