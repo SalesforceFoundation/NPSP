@@ -35,8 +35,14 @@
 */
 public with sharing class STG_PanelRel_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Relationships panel. 
+    */
     public override string idPanel() { return 'idPanelRel'; }
     
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for the Gender field 
+    */
     public list<SelectOption> listSOGenderFieldOptions {
     	get {
 	        if (listSOGenderFieldOptions == null) {
@@ -58,13 +64,21 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Gender field's label 
+    */
     public string strGenderFieldLabel {
     	get {
     		return getFieldLabel('Contact', STG_Panel.stgService.stgRel.npe4__Gender_Field__c);
     	}
     }  
     
-    // cover over describe call to handle fields that no longer exist.
+    /*********************************************************************************************************
+    * @description Returns a field's label.  cover over describe call to handle fields that no longer exist.
+    * @param strObj The object
+    * @param strField The field
+    * @return string
+    */
     private string getFieldLabel(string strObj, string strField) {
         try {
             return UTIL_Describe.getFieldLabel(strObj, strField);                   

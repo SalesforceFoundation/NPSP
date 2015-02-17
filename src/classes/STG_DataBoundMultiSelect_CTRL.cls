@@ -39,17 +39,42 @@
 */
 public with sharing class STG_DataBoundMultiSelect_CTRL {
 
+    /*********************************************************************************************************
+    * @description The list of SelectOptions 
+    */
     public list<SelectOption> listSelectOption { get; set; }
+
+    /*********************************************************************************************************
+    * @description Whether in Edit mode or Read-Only mode 
+    */
     public boolean isEditMode { get; set; }
+
+    /*********************************************************************************************************
+    * @description Whether disabled 
+    */
     public boolean isDisabled { get; set; }
+
+    /*********************************************************************************************************
+    * @description The Object the control is databinding to 
+    */
     public SObject sobjBinding { get; set; }
+
+    /*********************************************************************************************************
+    * @description The field on the object the control is databinding to 
+    */
     public string strField { get; set; }
     
+    /*********************************************************************************************************
+    * @description The control's constructor 
+    */
     public STG_DataBoundMultiSelect_CTRL() {
     	isDisabled = false;
     	isEditMode = false;
     }
     
+    /*********************************************************************************************************
+    * @description A semicolon separated string of values pulled from the object's field 
+    */
     public string strValues { 
     	get {
     		if (strValues == null) {
@@ -60,6 +85,10 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     	private set; 
     }
 
+    /*********************************************************************************************************
+    * @description The list of strings values databound to the object's field.  Setting this list will
+    * save those values into the object's field.
+    */
     public list<string> listStrValues {
         get {
             if (listStrValues == null && strValues != null) {

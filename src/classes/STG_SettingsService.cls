@@ -30,17 +30,27 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 * @author Salesforce Foundation
 * @date 01/13/2014
 * @group Settings
-* @description Settings Service class
+* @description Settings Service class that holds all custom settings objects
+* for use by the various panels in the Settings Manager.
 */
 
 public with sharing class STG_SettingsService {
     
+    /*********************************************************************************************************
+    * @description The shared instance of the Settings Service for all panels to use. 
+    */
     public static STG_SettingsService stgService = new STG_SettingsService();
     
+    /*********************************************************************************************************
+    * @description The class's constructor 
+    */
     public STG_SettingsService() {
     	//UTIL_Debug.debug('***** STG_SettingsService constructor');
     }
     
+    /*********************************************************************************************************
+    * @description The Contact and Orgs Settings object
+    */
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
             if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getOrgContactsSettings();
@@ -49,6 +59,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Households Settings object
+    */
     public npo02__Households_Settings__c stgHH {
         get {
             if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
@@ -57,6 +70,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Household Naming Settings object
+    */
     public Household_Naming_Settings__c stgHN {
         get {
             if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
@@ -65,6 +81,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description The Recurring Donations Settings object
+    */
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
             if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
@@ -73,6 +92,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Relationship Settings object
+    */
     public npe4__Relationship_Settings__c stgRel {
         get {
             if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
@@ -81,6 +103,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Affilations Settings object
+    */
     public npe5__Affiliations_Settings__c stgAffl {
         get {
             if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
@@ -89,6 +114,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Error Settings object
+    */
     public Error_Settings__c stgErr {
         get {
             if (stgErr == null) stgErr = UTIL_CustomSettingsFacade.getOrgErrorSettings();
@@ -97,6 +125,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Batch Data Entry Settings object
+    */
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
             if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getOrgBDESettings();
@@ -105,6 +136,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
     
+    /*********************************************************************************************************
+    * @description The Allocations Settings object
+    */
     public Allocations_Settings__c stgAllo {
         get {
             if (stgAllo == null) stgAllo = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
@@ -113,6 +147,9 @@ public with sharing class STG_SettingsService {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description The RD Custom Field Mapping settings object
+    */
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
     	get {
     		if (mapRDCustomField == null) {
@@ -124,6 +161,9 @@ public with sharing class STG_SettingsService {
     	public set;
     }
     
+    /*********************************************************************************************************
+    * @description The RD Custom Installment Settings object
+    */
     public list<npe03__Custom_Installment_Settings__c> listRDCustomInstallment {
         get {
             if (listRDCustomInstallment == null) {
@@ -135,6 +175,9 @@ public with sharing class STG_SettingsService {
         public set;     
     }
 
+    /*********************************************************************************************************
+    * @description The RD Custom Field Mapping settings object
+    */
     public list<npe03__Custom_Field_Mapping__c> listRDCustomFieldMapping {
         get {
             if (listRDCustomFieldMapping == null) {
@@ -146,6 +189,9 @@ public with sharing class STG_SettingsService {
         public set;     
     }
 
+    /*********************************************************************************************************
+    * @description The Payment Field Mapping Settings object
+    */
     public list<npe01__Payment_Field_Mapping_Settings__c> listPMTFieldMapping {
         get {
             if (listPMTFieldMapping == null) {
@@ -157,6 +203,10 @@ public with sharing class STG_SettingsService {
         public set;    	
     } 
     
+    /*********************************************************************************************************
+    * @description Saves all settings objects to the database
+    * @return void
+    */
     public void saveAll() {
         if(!Test.isRunningTest()) {
 	        upsert stgCon;

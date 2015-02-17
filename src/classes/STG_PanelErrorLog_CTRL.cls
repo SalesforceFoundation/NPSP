@@ -35,8 +35,16 @@
 */
 public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UTIL_iSoqlListViewConsumer  { 
 	
+    /*********************************************************************************************************
+    * @description Holds the SoqlListView control used in the panel  
+    */
     private UTIL_SoqlListView_CTRL ctrlSoqlListView;
 	
+    /*********************************************************************************************************
+    * @description Sets the SoqlListView controller for the containing class
+    * @param compController The SoqlListView controller
+    * @return void  
+    */
     public void setComponentController(UTIL_SoqlListView_CTRL compController){
     	if (ctrlSoqlListView == null) {
 	        ctrlSoqlListView = compController;
@@ -46,6 +54,10 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
     	}
     }
 
+    /*********************************************************************************************************
+    * @description Returns the Soql string the SoqlListView should use to query records.  
+    * @return string
+    */
     public string getStrSoql() {    
         string strSoql = 'select Id, Context_Type__c, Datetime__c, Error_Type__c, Full_Message__c, ' +
                     'Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c ';
@@ -56,46 +68,57 @@ public with sharing class STG_PanelErrorLog_CTRL extends STG_Panel implements UT
                                       
         return strSoql;         
     }
+
+
+    /*********************************************************************************************************
+    * @description Returns the Fields to display in the SoqlListView  
+    * @return list<string>
+    */
     public list<string> getstrFields()
         { 
     	   return new list<string> { 'Context_Type__c', 'Datetime__c', 'Error_Type__c', 'Full_Message__c', 
                     'Object_Type__c', 'Record_URL__c', 'Stack_Trace__c' };  // can't include  ', CreatedBy.Name'  unfortunately!
         } 
     
+    /*********************************************************************************************************
+    * @description Returns the primary field to initially sort by in the SoqlListView  
+    */
     public string getstrNameField(){ return 'Datetime__c';  }
     
+    /*********************************************************************************************************
+    * @description Returns the name of the object the SoqlListView is binding to  
+    */
     public string getstrObjectType() { return 'Error__c';  }
 
+    /*********************************************************************************************************
+    * @description Action Method for creating a new item (not used in this panel)
+    * @return null  
+    */
     public PageReference NewItem(){ return null;  }
     
+    /*********************************************************************************************************
+    * @description Action Method called when the Edit link for an item is chosen (not used in this panel)  
+    * @return URL to the item
+    */
     public PageReference EditItem(ID idItem) {
         return new PageReference('/' + idItem + '/e?retURL=' + ApexPages.currentPage().getURL());
     }   
 	
+    /*********************************************************************************************************
+    * @description Returns this class, who is the consumer of the SoqlListView
+    * @return UTIL_iSoqlListViewConsumer  
+    */
 	public UTIL_iSoqlListViewConsumer getslvConsumer() { return this; }
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Error Log panel. 
+    */
     public override string idPanel() { return 'idPanelErrorLog'; }
 
-/****************************************    
-    public list<Error__c> listError {
-        get {
-            if (listError == null) {
-                listError = new list<Error__c>();
-                listError = [select Id, Context_Type__c, Datetime__c, Error_Type__c, Full_Message__c, 
-                    Object_Type__c, Record_URL__c, Stack_Trace__c, CreatedBy.Name from Error__c order by Datetime__c desc limit 50];
-            } 
-            return listError;           
-        }
-        private set;     
-    }
-    
-    public boolean hasErrors {
-    	get {
-    		return listError.size() > 0;
-    	}
-    }
-**************************************/
-
+    /*********************************************************************************************************
+    * @description Action Method to delete all errors in the error log
+    * @return null 
+    */
     public PageReference clearErrorLog() {
     	delete [select Id from Error__c];
     	//listError = null;
