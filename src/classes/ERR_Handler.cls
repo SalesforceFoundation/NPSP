@@ -211,7 +211,7 @@ public with sharing class ERR_Handler {
 		String stackTrace = e.getStackTraceString();
 		UTIL_Debug.debug('****Stack trace: ' + stackTrace);
 		String message;
-		if(String.isBlank(stackTrace) || stackTrace == '(npsp)' || stackTrace == 'npsp') {
+		if(String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
 			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			message = 'Stacktrace available at the time of saving the record - ';
