@@ -205,7 +205,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
     // utility to copy the specific error into the provide di.
     private void LogBDIError(DataImport__c di, string strError, string strStatusField) {
-    	system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
+    	//system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
     	di.Status__c = label.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
@@ -239,8 +239,20 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 	        	list<string> strParts = strHelpText.split('\\.', 2);
 	        	if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
 	        		string strField = strParts[1];
-	        		if (!UTIL_Namespace.InManagedPackage)
-	        		     strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
+	        		//if we aren't in the npsp namespace, remove those tokens from help text
+                    //also removes tokens from actual detected namespace, if we happen to be
+                    //in a non-npsp namespace
+                    if (UTIL_Namespace.getNamespace() != 'npsp') {
+                        string strFieldOld = strField;
+                        strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
+                        
+                        //if we have a detected namespace, and removed a namespace from the current field
+                        //add the current namespace back in, allowing this code to run in any namespace
+                        if (strField != strFieldOld && UTIL_Namespace.getNamespace() != '') {
+                            strField = UTIL_Namespace.StrAllNSPrefix(strField);
+                        }
+                    }
+                    
 	                mapDIFieldToObjField.put(strF, strField);
 	        	}
         	} 
