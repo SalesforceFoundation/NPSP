@@ -200,7 +200,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
 	        if (targettokenMap.size() > 0) {        
 	            for (string s : targetTokenMap.keyset()) {            
 	                if (s.contains('__c') && 
-	                    !s.startswith('npsp__') && 
+	                    !s.startswith(UTIL_Namespace.getNamespace()+'__') && 
 	                    !s.startswith('npe01__') && 
 	                    !s.startswith('npo02__') && 
 	                    !s.startswith('npe03__') && 
