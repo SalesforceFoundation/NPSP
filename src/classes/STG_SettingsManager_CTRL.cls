@@ -35,19 +35,33 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description The controller's constructor 
+    */
     public STG_SettingsManager_CTRL() {
         idPanelCurrent = 'idPanelHome';
     }
 
-
+    /*********************************************************************************************************
+    * @description Returns the string Id of the current panel. 
+    */
     public static string idPanelCurrent { get; set; }
    
+    /*********************************************************************************************************
+    * @description Action Method called by javascript when idPanelCurrent has been changed.
+    * @return null 
+    */
     public PageReference setPanelCurrent() {
         // javascript caller auto-assigns to idPanelCurrent,
         // so nothing to do in this method. 
         return null;
     }
     
+    /*********************************************************************************************************
+    * @description Action Method that runs the install script to setup TDTM and initializes the 
+    * Schedulables configuration.  Called by the Settings page's action property when it first loads.
+    * @return void 
+    */
     public void setTriggerSchedConfig() {
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();

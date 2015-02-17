@@ -35,10 +35,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 @isTest
 public with sharing class STG_SettingsManager_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
+    /*********************************************************************************************************
+    * @description Tests the Settings Manager page
+    * @return void
+    */
     public static testMethod void testSettingsManager() {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsManager') return;
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
@@ -46,6 +52,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, ctrl.setPanelCurrent());
     }
     
+    /*********************************************************************************************************
+    * @description Tests setting up TDTM and the Schedulables
+    * @return void
+    */
     public static testMethod void testSetTriggerSchedConfig() {
         if (strTestOnly != '*' && strTestOnly != 'testSetTriggerSchedConfig') return;
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
@@ -62,6 +72,10 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(3, masterJobs.size());
     }
      
+    /*********************************************************************************************************
+    * @description Tests the DataBoundMultiSelect control used in Settings
+    * @return void
+    */
     public static testMethod void testDataBoundMultiSelect() {
         if (strTestOnly != '*' && strTestOnly != 'testDataBoundMultiSelect') return;
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
@@ -77,6 +91,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('x;y;z', ctrl.strValues);        
     }
 
+    /*********************************************************************************************************
+    * @description Tests the panel infrastructure and shared lists of SelectOptions
+    * @return void
+    */
     public static testMethod void testPanel() {
         if (strTestOnly != '*' && strTestOnly != 'testPanel') return;
         STG_Panel ctrl = new STG_Panel();
@@ -107,6 +125,10 @@ public with sharing class STG_SettingsManager_TEST {
         string str2 = STG_Panel.strOneToOneRecordTypeLabel;        
     }
     
+    /*********************************************************************************************************
+    * @description Tests that the Settings Service has each settins object loaded
+    * @return void
+    */
     public static testMethod void testSettingsService() {
         if (strTestOnly != '*' && strTestOnly != 'testSettingsService') return;
     	STG_SettingsService svc = STG_SettingsService.stgService;
@@ -124,6 +146,10 @@ public with sharing class STG_SettingsManager_TEST {
         svc.saveAll();
     }
     
+    /*********************************************************************************************************
+    * @description Tests the Affiliations panel
+    * @return void
+    */
     public static testMethod void testPanelAffl() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAffl') return;
     	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
@@ -136,6 +162,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAffiliationsSettings().npe5__Automatic_Affiliation_Creation_Turned_On__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Allocations panel
+    * @return void
+    */
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
@@ -153,6 +183,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Batch Data Entry panel
+    * @return void
+    */
     public static testMethod void testPanelBDE() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelBDE') return;
         STG_PanelBDE_CTRL panel = new STG_PanelBDE_CTRL();
@@ -165,6 +199,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgBDESettings().Opportunity_Naming__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Contact Roles panel
+    * @return void
+    */
     public static testMethod void testPanelContactRoles() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelContactRoles') return;
         STG_PanelContactRoles_CTRL panel = new STG_PanelContactRoles_CTRL();
@@ -177,6 +215,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Enable_Opportunity_Contact_Role_Trigger__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Contacts panel
+    * @return void
+    */
     public static testMethod void testPanelContacts() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelContacts') return;
         STG_PanelContacts_CTRL panel = new STG_PanelContacts_CTRL();
@@ -189,6 +231,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Households panel
+    * @return void
+    */
     public static testMethod void testPanelHouseholds() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelHouseholds') return;
         STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
@@ -201,6 +247,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Advanced_Household_Naming__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Leads panel
+    * @return void
+    */
     public static testMethod void testPanelLeads() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelLeads') return;
         STG_PanelLeads_CTRL panel = new STG_PanelLeads_CTRL();
@@ -213,6 +263,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Default_Opp_on_Convert__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Membership panel
+    * @return void
+    */
     public static testMethod void testPanelMembership() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelMembership') return;
         STG_PanelMembership_CTRL panel = new STG_PanelMembership_CTRL();
@@ -225,6 +279,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Run Opp Rollups Batch panel
+    * @return void
+    */
     public static testMethod void testPanelOppBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelOppBatch') return;
         STG_PanelOppBatch_CTRL panel = new STG_PanelOppBatch_CTRL();
@@ -234,6 +292,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, panel.isRunningBatch);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Donor Statistics panel
+    * @return void
+    */
     public static testMethod void testPanelOppRollups() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelOppRollups') return;
         STG_PanelOppRollups_CTRL panel = new STG_PanelOppRollups_CTRL();
@@ -246,6 +308,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Payments panel
+    * @return void
+    */
     public static testMethod void testPanelOpps() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelOpps') return;
         STG_PanelOpps_CTRL panel = new STG_PanelOpps_CTRL();
@@ -258,6 +324,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Payments_Enabled__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Payment Mappings panel
+    * @return void
+    */
     public static testMethod void testPanelPaymentMapping() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelPaymentMapping') return;
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
@@ -301,6 +371,10 @@ public with sharing class STG_SettingsManager_TEST {
              
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Recurring Donations panel
+    * @return void
+    */
     public static testMethod void testPanelRD() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRD') return;
     	insert new Schedulable__c(Name = 'Recurring Donation Updates', 
@@ -325,6 +399,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(15, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Run RD Batch panel
+    * @return void
+    */
     public static testMethod void testPanelRDBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRDBatch') return;
         STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
@@ -334,6 +412,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, panel.isRunningBatch);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the RD Custom Field Mapping panel
+    * @return void
+    */
     public static testMethod void testPanelRDCustomFieldMapping() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRDCustomFieldMapping') return;
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
@@ -367,6 +449,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(0, panel.listRDCustomFieldMapping.size());  
     }
 
+    /*********************************************************************************************************
+    * @description Tests the RD Custom Installments panel
+    * @return void
+    */
     public static testMethod void testPanelRDCustomInstallment() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRDCustomInstallment') return;
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
@@ -402,6 +488,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());  
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Relationships panel
+    * @return void
+    */
     public static testMethod void testPanelRel() { 
         if (strTestOnly != '*' && strTestOnly != 'testPanelRel') return;
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
@@ -415,6 +505,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, panel.listSOGenderFieldOptions);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Automatic Relationships panel
+    * @return void
+    */
     public static testMethod void testPanelRelAuto() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRelAuto') return;
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
@@ -454,6 +548,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, panel.listSOACfield);
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Reciprocal Relationships panel
+    * @return void
+    */
     public static testMethod void testPanelRelReciprocal() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelRelReciprocal') return;
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
@@ -489,6 +587,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(0, panel.listRelLookup.size());  
     }
 
+    /*********************************************************************************************************
+    * @description Tests the User Defined Rollups panel
+    * @return void
+    */
     public static testMethod void testPanelUserRollup() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelUserRollup') return;
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
@@ -544,7 +646,10 @@ public with sharing class STG_SettingsManager_TEST {
         
     }
 
-    // tests from the original user rollup settings page
+    /*********************************************************************************************************
+    * @description Tests the User Rollup Settings panel
+    * @return void
+    */
     public static testMethod void TEST_userRollupSettings() {
         if (strTestOnly != '*' && strTestOnly != 'TEST_userRollupSettings') return;
         
@@ -647,6 +752,10 @@ public with sharing class STG_SettingsManager_TEST {
         
     }
     
+    /*********************************************************************************************************
+    * @description Tests the Trigger Handler panel
+    * @return void
+    */
     public static testMethod void testPanelTDTM() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelTDTM') return;
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
@@ -684,6 +793,10 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, panel.listSOTriggerAction); 
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Error Log panel
+    * @return void
+    */
     public static testMethod void testPanelErrorLog() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelErrorLog') return;
         STG_PanelErrorLog_CTRL panel = new STG_PanelErrorLog_CTRL();
@@ -717,6 +830,10 @@ public with sharing class STG_SettingsManager_TEST {
         
     }
 
+    /*********************************************************************************************************
+    * @description Tests the Health Check panel
+    * @return void
+    */
     public static testMethod void testPanelHealthCheck() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelHealthCheck') return;
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();

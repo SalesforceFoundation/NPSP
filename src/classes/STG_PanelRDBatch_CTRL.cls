@@ -35,14 +35,27 @@
 */
 public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description The panel's constructor
+    */
     public STG_PanelRDBatch_CTRL() {
     	isRunningBatch = false;
     }
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the RD Batch panel. 
+    */
     public override string idPanel() { return 'idPanelRDBatch'; }
     
+    /*********************************************************************************************************
+    * @description Whether the batch process is currently running  
+    */
     public boolean isRunningBatch { get; set; }
     
+    /*********************************************************************************************************
+    * @description Action Method to execute the RD Batch process
+    * @return null 
+    */
     public PageReference runBatch() {
     	Savepoint sp = Database.setSavepoint();
         try {

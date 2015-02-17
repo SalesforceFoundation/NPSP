@@ -35,9 +35,14 @@
 */
 public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Autocreate Relationships panel. 
+    */
     public override string idPanel() { return 'idPanelRelAuto'; }
     
-    // temporary ac used by the page for creating a new ac.
+    /*********************************************************************************************************
+    * @description temporary ac used by the page for creating a new ac. 
+    */
     public npe4__Relationship_Auto_Create__c acNew {
         get {
             if (acNew == null)
@@ -47,13 +52,20 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         private set;
     }
     
-    // action method for going into edit mode (to create a new ac)
+    /*********************************************************************************************************
+    * @description Action Method for going into edit mode (to create a new ac)
+    * @return null
+    */
     public PageReference newRelAutoCreate() {
         isEditMode = true;
         return null;
     }
 
-    // action method to save the new ac to the database.
+    /*********************************************************************************************************
+    * @description Action Method to save the new ac to the database.  Any errors are added as page messages
+    * on the visualforce page. 
+    * @return null
+    */
     public PageReference createRelAutoCreate() {  
 
         // validate required fields
@@ -81,15 +93,25 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         return null;
     }
 
-    // action method to cancel out of creating a new ac.
+    /*********************************************************************************************************
+    * @description Action Method to cancel out of creating a new ac. 
+    * @return null
+    */
     public PageReference cancelRelAutoCreate() {
         isEditMode = false;
         acNew = null;
         return null;
     }
     
-    // action method and parameter for deleting an existing ac.
+    /*********************************************************************************************************
+    * @description String to hold the Id of an existing ac to be deleted
+    */
     public string acIdDelete { get; set; }
+
+    /*********************************************************************************************************
+    * @description Action Method for deleting an existing ac. 
+    * @return null
+    */
     public PageReference deleteAc() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -108,6 +130,9 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description The list of Relationship Auto Create records  
+    */
     public list<npe4__Relationship_Auto_Create__c> listRelAutoCreate {
         get {
             if (listRelAutoCreate == null) {
@@ -119,6 +144,9 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         private set;     
     }
 
+    /*********************************************************************************************************
+    * @description The list of SelectOptions of Fields appropriate for the current object  
+    */
     public List<SelectOption> listSOACfield {
     	get {
 	        listSOACfield = new List<SelectOption>();
@@ -149,7 +177,11 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
 	    private set;
 	}
  
-    //utility to check that existing auto create rels are valid - called by Health Check
+    /*********************************************************************************************************
+    * @description Checks that existing auto create rels are valid - called by Health Check 
+    * @param ctrl The Health Check panel's controller
+    * return void
+    */
     public static void verifyAutoCreateRels(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe4__Relationship_Auto_Create__c> mapAC = npe4__Relationship_Auto_Create__c.getAll();

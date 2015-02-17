@@ -35,6 +35,9 @@
 */
 public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Contact Roles panel. 
+    */
     public override string idPanel() { return 'idPanelConRoles'; }
     
 }

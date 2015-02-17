@@ -35,9 +35,14 @@
 */
 public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Reciprocal Relationships panel. 
+    */
     public override string idPanel() { return 'idPanelRelReciprocal'; }
     
-    // temporary rl used by the page for creating a new rl.
+    /*********************************************************************************************************
+    * @description temporary rl used by the page for creating a new rl.
+    */
     public npe4__Relationship_Lookup__c rlNew {
         get {
             if (rlNew == null)
@@ -47,13 +52,19 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         private set;
     }
     
-    // action method for going into edit mode (to create a new rl)
+    /*********************************************************************************************************
+    * @description Action Method for going into edit mode (to create a new rl)
+    * @return null
+    */
     public PageReference newRelLookup() {
         isEditMode = true;
         return null;
     }
 
-    // action method to save the new rl to the database.
+    /*********************************************************************************************************
+    * @description Action Method to save the new rl to the database.  Any errors are added as page messages.
+    * @return null
+    */
     public PageReference createRelLookup() {        
         Savepoint sp = Database.setSavepoint();
         try {
@@ -69,15 +80,25 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         return null;
     }
 
-    // action method to cancel out of creating a new rl.
+    /*********************************************************************************************************
+    * @description Action Method to cancel out of creating a new rl.
+    * @return null
+    */
     public PageReference cancelRelLookup() {
         isEditMode = false;
         rlNew = null;
         return null;
     }
     
-    // action method and parameter for deleting an existing rl.
+    /*********************************************************************************************************
+    * @description String to hold the Id of an existing rl to be deleted. 
+    */
     public string rlIdDelete { get; set; }
+
+    /*********************************************************************************************************
+    * @description Action Method for deleting an existing rl.
+    * @return null
+    */
     public PageReference deleteRl() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -96,6 +117,9 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description The list of Relationship Lookup records
+    */
     public list<npe4__Relationship_Lookup__c> listRelLookup {
         get {
             if (listRelLookup == null) {
@@ -117,7 +141,11 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         private set;     
     }
 
-    //utility to check that existing Reciprocal Relationships are valid - called by Health Check
+    /*********************************************************************************************************
+    * @description Checks that existing Reciprocal Relationships are valid - called by Health Check
+    * @param ctrl The Health Check panel's controller
+    * @return void
+    */
     public static void verifyRelLookups(STG_PanelHealthCheck_CTRL ctrl) {
         
         map<string, npe4__Relationship_Lookup__c> mapRL = npe4__Relationship_Lookup__c.getAll();
