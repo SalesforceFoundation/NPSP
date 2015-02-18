@@ -36,14 +36,23 @@
 public with sharing class ADDR_Validator {
 
     //get verification settings
-    private static Addr_Verification_Settings__c settings = getAddressVerificationSettings();
+    private static Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-    /* FUTURE METHOD FOR TRIGGERS */
+    /*******************************************************************************************************
+    * @description Verifies a set of address records in a future.
+    * @param recordIds A set containing the IDs of the address records to verify.
+    * @return void
+    */
     @future(callout=true)
     public static void verifyRecordsFuture(set<id> recordIds) {
         verifyRecords(recordIds);
     }
     
+    /*******************************************************************************************************
+    * @description Verifies a set of address records.
+    * @param recordIds A set containing the IDs of the address records to verify.
+    * @return void
+    */
     public static void verifyRecords(set<id> recordIds) {
     	UTIL_Debug.debug(LoggingLevel.WARN, '****Retrieving data records');
         //query for all the indicated verification records
@@ -57,7 +66,12 @@ public with sharing class ADDR_Validator {
     
     private class ValidationException extends Exception {}
     
-    //we separate it from the query so that we can call it also from the batch process
+    /*******************************************************************************************************
+    * @description Verifies a list of address records.
+    * We separate this in its own method from the query so that we can call it also from the batch process.
+    * @param avList The list of address records to verify.
+    * @return void
+    */
     public static void verifyAddressRecords(List<Address__c> avList) {
     	if (!avList.isEmpty()) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****Verifying records');
@@ -85,10 +99,5 @@ public with sharing class ADDR_Validator {
                 ERR_Handler.processError(new ValidationException(Label.Addr_Verification_Undefined_Class), ERR_Handler_API.Context.ADDR);
             }
         }
-    }
-    
-    public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
-        settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        return settings;
     }
 }
