@@ -230,7 +230,12 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String addressee;        // The recipient's name or FirmName. Can also be the company.
         public Integer candidates = 1;  // The maximum number of valid addresses returned when the  
                                         //   input address is ambiguous (max = 10, default = 1).
-
+        
+        /*******************************************************************************************************
+        * @description Empty constructor. 
+        */
+        public AddressRequest() { }
+        
         /*******************************************************************************************************
         * @description Constructor that initializes the address property. 
         */
@@ -324,6 +329,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String city;
         public String state;
         public String zipcode;
+        
+        /*******************************************************************************************************
+        * @description Empty constructor.
+        */
+        public ZipRequest() {}
         
         /*******************************************************************************************************
         * @description Constructor that initializes the class properties.

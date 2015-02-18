@@ -32,10 +32,15 @@
 * @date 2014
 * @group Address Management
 * @group-content ../../ApexDocContent/Addresses.htm
-* @description Called from a custom button, through Javascript, to verify a single address record.
+* @description Class called from a custom button, through Javascript, to verify a single address record.
 */
 global with sharing class ADDR_Validator_REST {
 
+    /*******************************************************************************************************
+    * @description Verifies an address record.
+    * @param addressId The id of the address to verify.
+    * @return void
+    */
     webService static void verifyRecord(String addressId) {
         Set<Id> addressIds = new Set<Id>();
         addressIds.add(Id.valueOf(addressId));
