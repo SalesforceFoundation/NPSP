@@ -447,13 +447,27 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (addrNew == null || addrOld == null) 
            return false;        
         return (
-           addrNew.MailingStreet__c != addrOld.MailingStreet__c ||
-           addrNew.MailingStreet2__c != addrOld.MailingStreet2__c ||
-           addrNew.MailingCity__c != addrOld.MailingCity__c ||
-           addrNew.MailingState__c != addrOld.MailingState__c ||
-           addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
-           addrNew.MailingCountry__c != addrOld.MailingCountry__c ||
-           (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
+           !equalsCaseSensitive(addrNew.MailingStreet__c, addrOld.MailingStreet__c) ||
+           !equalsCaseSensitive(addrNew.MailingStreet2__c, addrOld.MailingStreet2__c) ||
+           !equalsCaseSensitive(addrNew.MailingCity__c, addrOld.MailingCity__c) ||
+           !equalsCaseSensitive(addrNew.MailingState__c, addrOld.MailingState__c) ||
+           !equalsCaseSensitive(addrNew.MailingPostalCode__c, addrOld.MailingPostalCode__c) ||
+           !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
+           (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether two strings are equal, using a case sensitve comparison
+    * @param str1 The first string
+    * @param str2 The second string
+    * @return boolean 
+    ********************************************************************************************************/
+    public static boolean equalsCaseSensitive(string str1, string str2) {
+        if (str1 == null)
+            return str2 == null;
+        if (str2 == null)
+            return false;
+        return str1.equals(str2);
     }
 
     /*******************************************************************************************************
