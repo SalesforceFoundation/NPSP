@@ -754,6 +754,57 @@ private with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        update contacts' mailing address and mark it as override, to cause creation of new non-default Address object  
+    verify:
+        new Address created
+        HH sticks with default Address
+        contact gets new address
+    **********************************************************************************************************/            
+    static testMethod void updateConAddrMarkOverride() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify the contact addresses directly, and set override
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH*cCon; i++) {
+            Contact con = listConT[i];
+            con.MailingStreet = 'Direct Street Edit';
+            con.MailingCity = 'Direct City Edit';
+            con.is_Address_Override__c = true;
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts do not share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(false, isMatchAddressAccCon(acc, con));
+            system.assertEquals(true, con.MailingStreet.contains('Direct Street Edit'));
+            system.assertEquals(true, con.MailingCity.contains('Direct City Edit'));
+            system.assertEquals(false, acc.BillingStreet.contains('Direct Street Edit'));
+            system.assertEquals(false, acc.BillingCity.contains('Direct City Edit'));
+            system.assertEquals(true, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+         // verify the previous addresses got Default cleared.
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH * cCon + cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean isNewEdit = (addr.MailingStreet__c.contains('Direct Street Edit'));
+            system.assertNotEquals(isNewEdit, addr.Default_Address__c);
+        }                
+    }
+
+    /*********************************************************************************************************
+    @description
         update contacts' mailing address to cause an update to default Address object  
     verify:
         existing Default Address updated
@@ -817,6 +868,107 @@ private with sharing class ADDR_Addresses_TEST {
         for (Address__c addr : listAddr) {
             system.assertEquals('direct street  edit', addr.MailingStreet__c);
         }                
+    }
+
+    /*********************************************************************************************************
+    @description
+        update contacts' mailing address with just a case change, to cause an update to default Address object  
+    verify:
+        existing Default Address updated
+        HH and Contacts get updated Address
+    **********************************************************************************************************/            
+    static testMethod void updateConAddrExistingCaseOnly() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingCaseOnly') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+        ));
+                
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the contact addresses directly
+        // NOTE: we only modify 1 field, so it will be treated as an update to an existing address!
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = 'Direct Street Edit';
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingState = 'Washington';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = ' direct street  edit ';  // whitespace and casing should not count as a real edit.
+            con.MailingState = 'Oregon';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = ' DIRECT STREET  EDIT ';  // only change casing.
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.equals('DIRECT STREET  EDIT'));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify that no new address was created
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assert(addr.MailingStreet__c.equals('DIRECT STREET  EDIT'));
+        }
+        
+        // now test that changing the case from the account updates all addresses
+        for (integer i = 0; i < cHH; i++) {
+        	Account acc = listAccT[i];
+        	acc.BillingStreet = 'direct street  edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        
+        // verify that the HH and Contacts share the same address
+        mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.equals('direct street  edit'));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify that no new address was created
+        listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assert(addr.MailingStreet__c.equals('direct street  edit'));
+        }
+        
+                        
     }
 
     /*********************************************************************************************************
