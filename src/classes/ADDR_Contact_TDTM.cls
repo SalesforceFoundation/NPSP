@@ -248,21 +248,21 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // both provided, so look for at least one change between address fields
         boolean isChanged = 
-           con1.MailingStreet != con2.MailingStreet ||
-           con1.MailingCity != con2.MailingCity ||
-           con1.MailingState != con2.MailingState ||
-           con1.MailingPostalCode != con2.MailingPostalCode ||
-           con1.MailingCountry != con2.MailingCountry ||
-           con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c;
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
            
         if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             isChanged = 
-                con1.get('MailingStateCode') != con2.get('MailingStateCode') || 
-                con1.get('MailingCountryCode') != con2.get('MailingCountryCode');
+                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) || 
+                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
         }    
         return isChanged;   
     }
-
+    
     /*******************************************************************************************************
     * @description returns whether the contact's mailing address is empty
     * @param con1 a Contact
@@ -347,8 +347,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
                     con.npe01__Primary_Address_Type__c = addrDup.Address_Type__c; 
-            	} else {
-	                
+            	} else { 	                
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, false)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
