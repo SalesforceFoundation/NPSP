@@ -119,7 +119,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (isCustomIdInContactDatatypeString == null) {
                 isCustomIdInContactDatatypeString = false;
                 if (isCustomIdInContactMatchRules) {
-                    if (UTIL_Describe.getFieldType('Contact', diSettings.Contact_Custom_Unique_ID__c) == 'STRING')   
+                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Contact', diSettings.Contact_Custom_Unique_ID__c);
+                    if (dt == Schema.Displaytype.String || 
+                        dt == Schema.Displaytype.TextArea || 
+                        dt == Schema.Displaytype.Id ||
+                        dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Reference)
                         isCustomIdInContactDatatypeString = true;
                 }
             }
@@ -142,7 +147,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (isCustomIdInAccountDatatypeString == null) {
                 isCustomIdInAccountDatatypeString = false;
                 if (isCustomIdInAccountMatchRules) {
-                    if (UTIL_Describe.getFieldType('Account', diSettings.Account_Custom_Unique_ID__c) == 'STRING')   
+                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Account', diSettings.Account_Custom_Unique_ID__c);
+                    if (dt == Schema.Displaytype.String || 
+                        dt == Schema.Displaytype.TextArea || 
+                        dt == Schema.Displaytype.Id ||
+                        dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Reference)
                         isCustomIdInAccountDatatypeString = true;
                 }
             }
