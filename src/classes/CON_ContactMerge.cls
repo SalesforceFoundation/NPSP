@@ -32,7 +32,8 @@
 * @date 2011 (2.x)
 * @description Handles the heavy lifting of merging contacts. It can be called from the VisualForce page for 
 * contact merge, or elsewhere.
-* @group ContactMerge. 
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
 */
 public class CON_ContactMerge {
     

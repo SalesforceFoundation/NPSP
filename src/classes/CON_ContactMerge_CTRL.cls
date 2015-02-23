@@ -30,8 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.x)
-* @description Controller for contact merge page.
-* @group ContactMerge.
+* @description Controller for the NPSP contact merge page.
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
 */
 public with sharing class CON_ContactMerge_CTRL {
     
