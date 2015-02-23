@@ -114,6 +114,25 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
     }
 
+    private boolean isCustomIdInContactDatatypeString {
+        get {
+            if (isCustomIdInContactDatatypeString == null) {
+                isCustomIdInContactDatatypeString = false;
+                if (isCustomIdInContactMatchRules) {
+                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Contact', diSettings.Contact_Custom_Unique_ID__c);
+                    if (dt == Schema.Displaytype.String || 
+                        dt == Schema.Displaytype.TextArea || 
+                        dt == Schema.Displaytype.Id ||
+                        dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Reference)
+                        isCustomIdInContactDatatypeString = true;
+                }
+            }
+            return isCustomIdInContactDatatypeString;
+        }
+        set;
+    }
+
     private boolean isCustomIdInAccountMatchRules {
         get {
             string str = diSettings.Account_Custom_Unique_ID__c;
@@ -121,6 +140,25 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 return false;
             return true;
         }
+    }
+    
+    private boolean isCustomIdInAccountDatatypeString {
+        get {
+            if (isCustomIdInAccountDatatypeString == null) {
+                isCustomIdInAccountDatatypeString = false;
+                if (isCustomIdInAccountMatchRules) {
+                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Account', diSettings.Account_Custom_Unique_ID__c);
+                    if (dt == Schema.Displaytype.String || 
+                        dt == Schema.Displaytype.TextArea || 
+                        dt == Schema.Displaytype.Id ||
+                        dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Reference)
+                        isCustomIdInAccountDatatypeString = true;
+                }
+            }
+            return isCustomIdInAccountDatatypeString;
+        }
+        set;
     }
 
     private string strNull(Object obj) {
@@ -437,6 +475,17 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         return false;
     }
     
+    /*******************************************************************************************************
+    * @description returns the field name of the Contact CustomID field for contact1 or contact2 in the
+    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on 
+    * Contact and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+    * @param strCx  which contact to reference (contact1 or contact2)
+    * @return string
+    */ 
+    private string strDIContactCustomIDField(string strCx) {
+        return strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    }
+    
     // looks for existing contacts that match C1 or C2, and if found,
     // updates their Id's in the Di's.  if not found, creates a new
     // contact object for that di.
@@ -445,11 +494,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<string> setFname = new set<string>();
         set<string> setLname = new set<string>();
         set<string> setEmail = new set<string>();
-        set<string> setCustomID = new set<string>();
+        set<string> setCustomIDString = new set<string>();
+        set<double> setCustomIDNumber = new set<double>();
         set<Id> setHHId = new set<Id>();
                 
-        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
         	if (di.Status__c == label.bdiFailed)
@@ -465,8 +513,15 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setEmail.add(di.Contact1_Work_Email__c);            
             if (di.Contact1_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
-            if (isCustomIDInContactMatchRules && di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix) != null)
-                setCustomID.add(string.valueOf(di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix)));
+            if (isCustomIDInContactMatchRules) { 
+                object val = di.get(strDIContactCustomIDField('Contact1'));
+                if (val != null) {
+                    if (isCustomIdInContactDatatypeString)
+                        setCustomIDString.add(string.valueOf(val));
+                    else
+                        setCustomIDNumber.add(double.valueOf(val));
+                }
+            }
                 
             // c2
             if (di.Contact2_Firstname__c != null)
@@ -479,8 +534,15 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 setEmail.add(di.Contact1_Work_Email__c);            
             if (di.Contact2_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
-            if (isCustomIDInContactMatchRules && di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix) != null)
-                setCustomID.add(string.valueOf(di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix)));
+            if (isCustomIDInContactMatchRules) { 
+                object val = di.get(strDIContactCustomIDField('Contact2'));
+                if (val != null) {
+                    if (isCustomIdInContactDatatypeString)
+                        setCustomIDString.add(string.valueOf(val));
+                    else
+                        setCustomIDNumber.add(double.valueOf(val));
+                }
+            }
         }
         
         string strSoql = 'Select Id, Firstname, Lastname, AccountId, ';
@@ -501,8 +563,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             strSoql += strAnd + '(Email in :setEmail or npe01__AlternateEmail__c in :setEmail or npe01__HomeEmail__c in :setEmail or npe01__WorkEmail__c in :setEmail)';
             strAnd = ' and ';
         }
-        if (isCustomIDInContactMatchRules) {
-            strSoql += ') or (' + diSettings.Contact_Custom_Unique_ID__c + ' in :setCustomID'; 
+        if (isCustomIDInContactMatchRules && isCustomIdInContactDatatypeString) {
+            strSoql += ') or (' + diSettings.Contact_Custom_Unique_ID__c + ' in :setCustomIDString'; 
+        } else if (isCustomIDInContactMatchRules && !isCustomIdInContactDatatypeString) {
+            strSoql += ') or (' + diSettings.Contact_Custom_Unique_ID__c + ' in :setCustomIDNumber'; 
         }
         strSoql += ')';
         
@@ -731,8 +795,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // we need the Contact CustomId key to always be checked first when matching
         string strUnique; 
-        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix))) != null) {
+        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strDIContactCustomIDField(strCx)))) != null) {
             listDiKey.add(strUnique);
         }
                 
@@ -942,6 +1005,17 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         update mapConIdToConUpdate.values();
     }
 
+    /*******************************************************************************************************
+    * @description returns the field name of the Account CustomID field for account1 or account2 in the
+    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on 
+    * Account and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+    * @param strAx  which account to reference (account1 or account2)
+    * @return string
+    */ 
+    private string strDIAccountCustomIDField(string strAx) {
+        return strAx + '_' + diSettings.Account_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    }
+    
     // utility to return the dikeys for a given account.
     private list<string> listDiKeyAccount(Account acc) {
         if (acc == null)
@@ -969,8 +1043,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // we nee the Account CustomId key to always be checked first when matching
         string strUnique; 
-        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        if (isCustomIDInAccountMatchRules && (strUnique = string.valueOf(di.get(strAx + '_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix))) != null) {
+        if (isCustomIDInAccountMatchRules && (strUnique = string.valueOf(di.get(strDIAccountCustomIDField(strAx)))) != null) {
             listDiKey.add(strUnique);
         }
 
@@ -997,9 +1070,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private void matchExistingAccounts() {
     
         set<string> setName = new set<string>();
-        set<string> setCustomID = new set<string>();
-        
-        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
+        set<string> setCustomIDString = new set<string>();
+        set<double> setCustomIDNumber = new set<double>();
         
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
@@ -1009,23 +1081,39 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             // a1
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
-            if (isCustomIDInAccountMatchRules && di.get('Account1_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix) != null)
-                setCustomID.add(string.valueOf(di.get('Account1_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix)));
-
+            if (isCustomIDInAccountMatchRules) { 
+                object val = di.get(strDIAccountCustomIDField('Account1'));
+                if (val != null) {
+	                if (isCustomIdInAccountDatatypeString)
+	                    setCustomIDString.add(string.valueOf(val));
+	                else
+	                    setCustomIDNumber.add(double.valueOf(val));
+                }
+            }
             // a2
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
-            if (isCustomIDInAccountMatchRules && di.get('Account2_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix) != null)
-                setCustomID.add(string.valueOf(di.get('Account2_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix)));
+            if (isCustomIDInAccountMatchRules) { 
+                object val = di.get(strDIAccountCustomIDField('Account2'));
+                if (val != null) {
+                    if (isCustomIdInAccountDatatypeString)
+                        setCustomIDString.add(string.valueOf(val));
+                    else
+                        setCustomIDNumber.add(double.valueOf(val));
+                }
+            }
         }
+        
         
         string strSoql = 'Select Id, ';
         if (isCustomIDInAccountMatchRules)
             strSoql += diSettings.Account_Custom_Unique_ID__c + ', ';                
         strSoql += 'Name from Account where ';
         strSoql += 'Name in :setName';
-        if (isCustomIDInAccountMatchRules) 
-            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomID';     
+        if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString) 
+            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDString';     
+        else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString) 
+            strSoql += ' or ' + diSettings.Account_Custom_Unique_ID__c + ' in :setCustomIDNumber';     
         list<Account> listAcc = database.query(strSoql);
         
         // put all Accounts into our map
