@@ -62,8 +62,8 @@ global with sharing class BDI_DataImport_API {
             
             if (diSettings.Account_Custom_Unique_ID__c != null) {
                 // make sure a1 and a2 have the appropriately named field
-                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + diSettings.Contact_Custom_Unique_ID__c) ||
-                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + diSettings.Contact_Custom_Unique_ID__c)) {
+                if (!UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account1_' + diSettings.Account_Custom_Unique_ID__c) ||
+                   !UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), 'Account2_' + diSettings.Account_Custom_Unique_ID__c)) {
                     throw(new BDIException(string.format(Label.bdiAccountCustomIdError, 
                         new string[]{diSettings.Account_Custom_Unique_ID__c, 
                             'Account1_' + diSettings.Account_Custom_Unique_ID__c,
