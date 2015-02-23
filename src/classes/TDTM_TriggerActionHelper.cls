@@ -31,6 +31,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group TDTM
+* @group-content ../../ApexDocContent/TDTM.htm
 * @description Class that contains helper methods for the TDTM Trigger Handler logic.
 */
 public with sharing class TDTM_TriggerActionHelper {

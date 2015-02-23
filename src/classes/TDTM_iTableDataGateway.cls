@@ -31,6 +31,8 @@
 /**
  * @author Salesforce.com Foundation
  * @date 2014
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
  * @description Interface that data gateways used in the TDTM design need to implement.
  */
 public interface TDTM_iTableDataGateway {

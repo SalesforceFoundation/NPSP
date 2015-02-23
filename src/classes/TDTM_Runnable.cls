@@ -31,6 +31,8 @@
 /**
  * @author Salesforce.com Foundation
  * @date 2014
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
  * @description Abstract class that classes to be run from a trigger, according to the TDTM design,
  * need to extend.
  *
