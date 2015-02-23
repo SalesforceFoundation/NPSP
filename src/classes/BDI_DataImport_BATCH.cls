@@ -475,6 +475,17 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         return false;
     }
     
+    /*******************************************************************************************************
+    * @description returns the field name of the Contact CustomID field for contact1 or contact2 in the
+    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on 
+    * Contact and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+    * @param strCx  which contact to reference (contact1 or contact2)
+    * @return string
+    */ 
+    private string strDIContactCustomIDField(string strCx) {
+        return strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    }
+    
     // looks for existing contacts that match C1 or C2, and if found,
     // updates their Id's in the Di's.  if not found, creates a new
     // contact object for that di.
@@ -487,8 +498,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<double> setCustomIDNumber = new set<double>();
         set<Id> setHHId = new set<Id>();
                 
-        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
         	if (di.Status__c == label.bdiFailed)
@@ -505,7 +514,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Contact1_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
             if (isCustomIDInContactMatchRules) { 
-                object val = di.get('Contact1_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix);
+                object val = di.get(strDIContactCustomIDField('Contact1'));
                 if (val != null) {
                     if (isCustomIdInContactDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -526,7 +535,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Contact2_Alternate_Email__c != null)
                 setEmail.add(di.Contact1_Alternate_Email__c);            
             if (isCustomIDInContactMatchRules) { 
-                object val = di.get('Contact2_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix);
+                object val = di.get(strDIContactCustomIDField('Contact2'));
                 if (val != null) {
                     if (isCustomIdInContactDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
@@ -786,8 +795,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // we need the Contact CustomId key to always be checked first when matching
         string strUnique; 
-        string strTestContactUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strCx + '_' + diSettings.Contact_Custom_Unique_ID__c + strTestContactUniqueIdSuffix))) != null) {
+        if (isCustomIDInContactMatchRules && (strUnique = string.valueOf(di.get(strDIContactCustomIDField(strCx)))) != null) {
             listDiKey.add(strUnique);
         }
                 
@@ -997,6 +1005,17 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         update mapConIdToConUpdate.values();
     }
 
+    /*******************************************************************************************************
+    * @description returns the field name of the Account CustomID field for account1 or account2 in the
+    * Data Import object.  Note that if tests are running, it assumes the field is a standard field on 
+    * Account and thus has no trailing __c, but needs to have the __c for accessing in the Data Import object.
+    * @param strAx  which account to reference (account1 or account2)
+    * @return string
+    */ 
+    private string strDIAccountCustomIDField(string strAx) {
+        return strAx + '_' + diSettings.Account_Custom_Unique_ID__c + (test.isRunningTest() ? '__c' : '');
+    }
+    
     // utility to return the dikeys for a given account.
     private list<string> listDiKeyAccount(Account acc) {
         if (acc == null)
@@ -1024,8 +1043,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // we nee the Account CustomId key to always be checked first when matching
         string strUnique; 
-        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        if (isCustomIDInAccountMatchRules && (strUnique = string.valueOf(di.get(strAx + '_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix))) != null) {
+        if (isCustomIDInAccountMatchRules && (strUnique = string.valueOf(di.get(strDIAccountCustomIDField(strAx)))) != null) {
             listDiKey.add(strUnique);
         }
 
@@ -1055,8 +1073,6 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set<string> setCustomIDString = new set<string>();
         set<double> setCustomIDNumber = new set<double>();
         
-        string strTestAccountUniqueIdSuffix = test.isRunningTest() ? '__c' : '';
-        
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -1066,7 +1082,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Account1_Name__c != null)
                 setName.add(di.Account1_Name__c);
             if (isCustomIDInAccountMatchRules) { 
-                object val = di.get('Account1_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix);
+                object val = di.get(strDIAccountCustomIDField('Account1'));
                 if (val != null) {
 	                if (isCustomIdInAccountDatatypeString)
 	                    setCustomIDString.add(string.valueOf(val));
@@ -1078,7 +1094,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             if (di.Account2_Name__c != null)
                 setName.add(di.Account2_Name__c);
             if (isCustomIDInAccountMatchRules) { 
-                object val = di.get('Account2_' + diSettings.Account_Custom_Unique_ID__c + strTestAccountUniqueIdSuffix);
+                object val = di.get(strDIAccountCustomIDField('Account2'));
                 if (val != null) {
                     if (isCustomIdInAccountDatatypeString)
                         setCustomIDString.add(string.valueOf(val));
