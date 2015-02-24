@@ -153,14 +153,12 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
                     a.Verified__c = true;
-                    //Truncating body response to avoid STRING_TOO_LONG error.
-                    a.API_Response__c = response.getBody().substring(0, 32768);
+                    a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = Label.Addr_Verified;
                 } else if (googresp.status == 'OK' && googresp.results.size() > 1){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
-                    //Truncating body response to avoid STRING_TOO_LONG error.
-                    a.API_Response__c = response.getBody().substring(0, 32768);
+                    a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = 'Ambiguous';
                 } else if (googresp.status == 'OVER_QUERY_LIMIT'){
                     a.Verified__c = false;
@@ -186,7 +184,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 else{
                     a.Verified__c = false;
                     //Truncating body response to avoid STRING_TOO_LONG error.
-                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody().substring(0, 32768);
+                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ trimResponse(response);
                     a.Verification_Status__c = a.API_Response__c;
                 }
             }
@@ -201,6 +199,15 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             a.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
         }
         return a;
+    }
+    
+    private static String trimResponse(HttpResponse response) {
+    	//Truncating body response to avoid STRING_TOO_LONG error.
+	    String responseBody = response.getBody();
+	    if(responseBody.length() > 32768) {
+	        responseBody = responseBody.substring(0, 32768);
+	    }
+	    return responseBody;
     }
 
 /* Apex JSON model of Google response */
