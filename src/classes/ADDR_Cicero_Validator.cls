@@ -90,11 +90,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         List<Address__c> listAddrChecked = new List<Address__c>();
         this.strAuthToken = settings.Auth_Token__c;
         this.dblTimeout = settings.Timeout__c;
-
-        if (settings.Address_Verification_Endpoint__c != null)
-            this.strEndPoint = settings.Address_Verification_Endpoint__c;
-        else
-            this.strEndPoint = 'https://cicero.azavea.com/v3.1/legislative_district';
+        this.strEndPoint = 'https://cicero.azavea.com/v3.1/legislative_district';
 
         for (Address__c addr : listAddr)	{
             listAddrChecked.add(verifyAddress(addr, settings));

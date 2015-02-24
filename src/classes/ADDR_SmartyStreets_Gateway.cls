@@ -70,7 +70,8 @@ public with sharing class ADDR_SmartyStreets_Gateway {
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
         // send the request
-        HttpResponse res = sendRequest(addresses, settings.Address_Verification_Endpoint__c);
+        ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+        HttpResponse res = sendRequest(addresses, validator.getDefaultURL());
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)

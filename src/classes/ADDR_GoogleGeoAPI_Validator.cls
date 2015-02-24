@@ -49,11 +49,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         this.checked_addresses = new List<Address__c>();
         this.AUTH_ID = settings.Auth_ID__c;
         this.TIMEOUT = settings.Timeout__c;
-
-        if (settings.Address_Verification_Endpoint__c != null)
-            this.END_POINT = settings.Address_Verification_Endpoint__c;
-        else
-            this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
+        this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
         if (!addresses.isEmpty()){
             for (Address__c a : addresses){
