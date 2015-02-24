@@ -1,7 +1,7 @@
 dev:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/jenkins/prod/Cumulus_dev/status)](http://ci.salesforcefoundation.org/job/Cumulus_dev/)
 rel:  [![Build Status](http://mrbelvedere.salesforcefoundation.org/mrbelvedere/jenkins/prod/Cumulus_rel/status)](http://ci.salesforcefoundation.org/job/Cumulus_rel)
 
-![Salesforce Nonprofit Starter Pack](https://cloud.githubusercontent.com/assets/926530/4521582/84eb7a22-4d15-11e4-97c6-451f2351ce33.png "Salesforce Nonprofit Starter Pack")
+![Salesforce Nonprofit Starter Pack](https://cloud.githubusercontent.com/assets/926530/6358168/b55fec9c-bc37-11e4-88c8-40691541bad2.png "Salesforce Nonprofit Starter Pack")
 
 #### For Users
 
