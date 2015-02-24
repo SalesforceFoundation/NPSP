@@ -35,21 +35,42 @@
 */
 public without sharing class UTIL_MasterSchedulableHelper {
 
+    /*******************************************************************************************************
+    * @description The interface classes to be run by the master schedulable (the only one that runs scheduled 
+    * classes in the package) should implement.
+    */
     public interface UTIL_IRecurring {
         Boolean executeReturnStatus();
     }
 
+    /*******************************************************************************************************
+    * @description The frequency options.
+    */
     public enum SchedFrequency { HOURLY, DAILY, WEEKLY, MONTHLY, QUARTERLY }
     
+    /*******************************************************************************************************
+    * @description The classes to be run by the master schedulable.
+    */
     public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 
     	'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED'};
     
+    /*******************************************************************************************************
+    * @description The names to give to the instances of the master schedulable that are to be scheduled.
+    */
     public static String[] scheduledJobs = new String[] {'NPSP Scheduler 1', 'NPSP Scheduler 2', 'NPSP Scheduler 3'};
     
+    /*******************************************************************************************************
+    * @description Constructor that calls the method that runs the classes.
+    */
     public UTIL_MasterSchedulableHelper() {
         runRecurringJobs();
     }
     
+    /*******************************************************************************************************
+    * @description Runs the class, as scheduled.
+    * @param context The system context. Provided by the platform.
+    * @return void
+    */
     public void runRecurringJobs() {
         List<Schedulable__c> jobs = [select Name, Class_Name__c, Last_Time_Run__c, Frequency__c 
                                        from Schedulable__c where Active__c = true];
@@ -97,6 +118,10 @@ public without sharing class UTIL_MasterSchedulableHelper {
         update jobsToUpdate;
     }
     
+    /*******************************************************************************************************
+    * @description Aborst deprecated scheduled jobs. They are all replaced by the master schedulable.
+    * @return void
+    */
     public static void abortOldScheduledJobs() {
         //Abort the old NPSPv3 schedulable, since we have changed the name and are using a new class now (as of July 24 2014).
         //Abort the scheduled jobs from the old NPSP packages.
@@ -113,6 +138,10 @@ public without sharing class UTIL_MasterSchedulableHelper {
         }   
     }
     
+    /*******************************************************************************************************
+    * @description Populates the table that contains the data on the classes to be run by the master schedulable with the defaults.
+    * @return void
+    */
     public static void setSchedulableTable() {
     	
     	Integer numOfExistingSchedClasses = [select count() from Schedulable__c where Class_Name__c IN :scheduledClasses];
@@ -139,6 +168,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
     	}    
     }
     
+    /*******************************************************************************************************
+    * @description Schedules the necessary instances of the master schedulable, to make sure all classes that need
+    * to run periodically have the chance to run in the specified time interval.
+    * @return void
+    */
     public static void scheduleMasterJobs() {
         // schedule master cron jobs.
         // NOTE: if more jobs are added to this list, they must also be added to the code in

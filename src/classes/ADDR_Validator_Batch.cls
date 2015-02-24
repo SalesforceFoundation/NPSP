@@ -30,16 +30,16 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Batch class for address verification.
-*
-* Batch process looks for all populated addresses and then updates them if the setting is turned on to do that.
-*
-* If skipPreviouslyVerified is true, the batch skips over objects that already have any verification records.
+* @description Batch class for SmartyStreets address verification. It looks for all populated addresses and updates them if the setting is turned on.
 */
 public with sharing class ADDR_Validator_Batch implements Database.Batchable<sObject>, Database.AllowsCallouts {
 
     private String query;
     
+    /*******************************************************************************************************
+    * @description Constructor that initializes the class.
+    * @param skipPreviouslyVerified If true, the batch skips over objects that already have any verification records.
+    */
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
     	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
     	Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
@@ -59,10 +59,21 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             query += ' and Verified__c != true';
     }
     
+    /*******************************************************************************************************
+    * @description Collects the records to be passed to the execute method in batches.
+    * @param bc The context for the batch. Provided by the platform.
+    * @return Database.QueryLocator The record set processed in chunks for each iteration of the batch.
+    */
     public Database.QueryLocator start(Database.BatchableContext bc) {
         return Database.getQueryLocator(query);
     }
 
+    /*******************************************************************************************************
+    * @description Processes the batch of records in the scope.
+    * @param bc The context for the batch. Provided by the platform.
+    * @param scope The batch records to be process.
+    * @return void
+    */
     public void execute(Database.BatchableContext bc, List<Address__c> scope) {
         list<Address__c> addressesToVerify = new list<Address__c>();
         for (Address__c a : scope)
@@ -73,10 +84,21 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
             ADDR_Validator.verifyAddressRecords(addressesToVerify);
     }
     
+    /*******************************************************************************************************
+    * @description Method to be called after all batches are processed. Required by the interface.
+    * @return void
+    */
     public void finish(Database.BatchableContext bc) { }
     
-    //Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
-    //class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
+    /*******************************************************************************************************
+    * @description Determines if an address is US-based. 
+    *
+    *  Also called from ADDR_SmartyStreets_Validator. Since it's an auxiliary method we could move it to a separate 
+    * class, but we'll keep it here for now because it's the only auxiliary one we have for address validation.
+    *
+    * @param c The address to inspect.
+    * @return Boolean True if the address is US-based. False otherwise.
+    */
     public static Boolean isUS(Address__c c) {
         return ((c.MailingStreet__c != null || c.MailingPostalCode__c != null || (c.MailingCity__c != null && c.MailingState__c != null))
             && (c.MailingCountry__c == null || c.MailingCountry__c == 'US' || c.MailingCountry__c == 'USA' || 
