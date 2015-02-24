@@ -110,6 +110,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }
 
                 String verified_street = '';
+                String verified_premise = '';
                 if (googresp.status == 'OK' && googresp.results.size() == 1){
 
                     for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
@@ -117,7 +118,14 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                         type_set.addAll(add.types);
 
                         if(type_set.contains('postal_code')){
-                            a.MailingPostalCode__c = add.long_name;
+                        	String verified5digs = add.long_name;
+                        	String originalFull = a.MailingPostalCode__c;
+                        	String original5digs = originalFull.substring(0, 5);
+                        	//Google only returns 5-digit zipcodes. We don't want to override the original, if the
+                        	//first 5 match, and the original has the additional 4.
+                        	if(!(verified5digs == original5digs)) {
+                                a.MailingPostalCode__c = add.long_name;
+                        	}
                         } else if (type_set.contains('country')){
                             a.MailingCountry__c = add.short_name;
                         } else if (type_set.contains('administratrive_area_level_1')){
@@ -132,21 +140,27 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                             verified_street += add.long_name;
                         } else if (type_set.contains('intersection')){
                             verified_street += add.long_name;
+                        } else if (type_set.contains('premise')){
+                            verified_premise += add.long_name;
+                        } else if (type_set.contains('subpremise')){
+                            verified_premise += add.long_name;
                         } else if (type_set.contains('locality')){
                             a.MailingCity__c = add.long_name;
                         }
                     }
-                    a.MailingStreet__c = verified_street;
+                    a.MailingStreet__c = verified_street + ' ' + verified_premise;
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
                     a.Verified__c = true;
-                    a.API_Response__c = response.getBody();
+                    //Truncating body response to avoid STRING_TOO_LONG error.
+                    a.API_Response__c = response.getBody().substring(0, 32768);
                     a.Verification_Status__c = Label.Addr_Verified;
                 } else if (googresp.status == 'OK' && googresp.results.size() > 1){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
-                    a.API_Response__c = response.getBody();
+                    //Truncating body response to avoid STRING_TOO_LONG error.
+                    a.API_Response__c = response.getBody().substring(0, 32768);
                     a.Verification_Status__c = 'Ambiguous';
                 } else if (googresp.status == 'OVER_QUERY_LIMIT'){
                     a.Verified__c = false;
@@ -171,7 +185,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }
                 else{
                     a.Verified__c = false;
-                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+                    //Truncating body response to avoid STRING_TOO_LONG error.
+                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody().substring(0, 32768);
                     a.Verification_Status__c = a.API_Response__c;
                 }
             }

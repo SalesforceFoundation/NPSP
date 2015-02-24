@@ -147,7 +147,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        av.Ambiguous__c = true;
 	                        responseGroup.add(sr);
 	                    }
-	                    av.API_Response__c = JSON.serializePretty(responseGroup);
+	                    av.API_Response__c = JSON.serializePretty(responseGroup).substring(0, 32768);
 	                    av.Verification_Status__c = Label.Addr_Verified;
 	                }
 	            }
@@ -208,7 +208,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        // if there is any response, serialize it and fill in location with first location value
 	                        } else if (sr.zipcodes != null) {
 	                            UTIL_Debug.debug('****No error. Populating raw response field.');
-	                            av.API_Response__c = JSON.serializePretty(sr);
+	                            av.API_Response__c = JSON.serializePretty(sr).substring(0, 32768);
 	                            av.Verification_Status__c = Label.Addr_Verified;
 	                            
 	                            // if there is at least one city/state, fill in city state

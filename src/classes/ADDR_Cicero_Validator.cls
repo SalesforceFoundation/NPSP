@@ -148,7 +148,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	            }
 	            CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
 	            Object objResp = JSON.deserializeUntyped(response.getBody());
-	            addr.API_Response__c = JSON.serializePretty(objResp);
+	            addr.API_Response__c = JSON.serializePretty(objResp).substring(0, 32768);
 	            
 	            boolean foundData = false;
 	            if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
