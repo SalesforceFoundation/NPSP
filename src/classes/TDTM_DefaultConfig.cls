@@ -31,7 +31,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
+* @group TDTM
+* @group-content ../../ApexDocContent/TDTM.htm
+* @description Stores the default TDTM configuration, and the mapping between the old NPSP
                settings and the new ones. 
 */
 public without sharing class TDTM_DefaultConfig {

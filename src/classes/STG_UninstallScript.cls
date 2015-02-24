@@ -34,7 +34,12 @@
 * @description Uninstall Script for the NPSP package. 
 */
 global class STG_UninstallScript implements UninstallHandler {
-
+    
+    /*******************************************************************************************************
+    * @description Runs on package uninstall.
+    * @param context The install context.
+    * @return void
+    */
     global void onUninstall(UninstallContext context) {
         
         String[] schedulers = new String[] {'NPSP Global Scheduler', 'NPSP Scheduler1', 'NPSP Scheduler2', 'NPSP Scheduler3'};

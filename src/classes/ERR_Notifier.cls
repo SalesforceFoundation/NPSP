@@ -30,7 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Class that notifies specific users on error through email and/or Chatter 
+* @description Notifies specific users or groups by email or Chatter when error occur.
+* @group ErrorHandling
+* @group-content ../../ApexDocContent/ErrorHandling.htm
 */
 public with sharing class ERR_Notifier {
 
