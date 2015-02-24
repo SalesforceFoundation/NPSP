@@ -31,8 +31,10 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Helps to determine if errors occurred during the DML operations, and with the necessary
-               storing and notification of these errors. 
+* @description Helps determine if errors occurred during the DML operations performed during the transaction, and with 
+* the necessary storing and notification of these errors.
+* @group ErrorHandling
+* @group-content ../../ApexDocContent/ErrorHandling.htm
 */
 public with sharing class ERR_Handler {
     

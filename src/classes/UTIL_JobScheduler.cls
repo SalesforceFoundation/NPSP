@@ -35,6 +35,13 @@
 */
 public without sharing class UTIL_JobScheduler {
     
+    /*******************************************************************************************************
+    * @description Schedules a class that implements the Schedulable interface, if it's not already scheduled.
+    * @param JobName The name to give the scheduled job.
+    * @param frequency The frequency to schedule the job at.
+    * @param className The class to schedule. Should implement the Schedulable interface.
+    * @return The ID of the scheduled job.
+    */
     public static String scheduleJobIfNotScheduled(String JobName, String frequency, String className) {
         
         //Check if the job is already scheduled - CronJobDetail is the parent and CronTrigger is the child
@@ -54,6 +61,9 @@ public without sharing class UTIL_JobScheduler {
         return null;
     }
     
+    /*******************************************************************************************************
+    * @description Whether the system can run another batch job at the time, without hitting a limit.
+    */
     public static Boolean canRunBatch() {
         Integer jobs = [Select count() From AsyncApexJob Where JobType = 'BatchApex' and (Status = 'Queued' or Status = 'Processing' 
                        or Status = 'Preparing')];

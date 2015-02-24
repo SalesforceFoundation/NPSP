@@ -29,13 +29,22 @@
 */
 
 /**
- * Class that queries Custom Object to retrieve classes to call on a specific trigger. 
+ * @author Salesforce.com Foundation
+ * @date 2014
+ * @group TDTM
+ * @group-content ../../ApexDocContent/TDTM.htm
+ * @description Class that queries custom object to retrieve classes to call for creation or modification
+ * of a record of a specific object type.
  */
 public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGateway {
     
     private static List<ToRunOnObjectAction> classesQueried = new List<ToRunOnObjectAction>();
     private static Integer rowCount;
     
+    /*******************************************************************************************************
+     * @description Checks is any TDTM records exist.
+     * @return Boolean True is there are no TDTM records. False otherwise.
+     */
     public Boolean isEmpty() {
     	if(rowCount == null) {
 	    	List<AggregateResult> result = [select count(Id) rowCount from Trigger_Handler__c];
@@ -46,6 +55,13 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
         return false;
     }
     
+    /*******************************************************************************************************
+     * @description Returns the classes that will be called for the specified ojbect and action. Returned list 
+     *              is sorted by load order.
+     * @param objectName The name of the object.
+     * @param action The action (before insert, after insert,...). 
+     * @return List<SObject> List of classes to call, sorted by load order.
+     **/
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
         ToRunOnObjectAction toRun = objectActionQueried(objectName, action);
         if(toRun != null) {

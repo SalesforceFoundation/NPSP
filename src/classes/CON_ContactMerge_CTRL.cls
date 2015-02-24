@@ -30,98 +30,116 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.x)
-* @description Controller for contact merge page 
+* @description Controller for the NPSP contact merge page.
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
 */
 public with sharing class CON_ContactMerge_CTRL {
     
-    //constructor for StandardSetController to allow invocation from list views
-    public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
-        searchText='';
-        searchResults = new List<contactWrapper>();
-        selectedRecords = new Map<String, Contact>();
-        step = 1;
-        fieldRows = new List<FieldRow>();
-        
-        set<Id> mergeIds = new set<Id>();
-        
-    	//if any selected records were passed the standard set controller show the merge page with those records
-    	for(Contact c : (list<Contact>)controller.getSelected()) {
-    		mergeIds.add(c.Id);
-    	}
-    	
-    	if(!mergeIds.isEmpty()) {
-    		loadMergeCandidates(mergeIds);
-    	}
-    	
-    	//otherwise, check for a search parameter for the SOSL query and use that
-    	else if(ApexPages.CurrentPage().getParameters().containsKey('srch')) {
-    		searchText = ApexPages.CurrentPage().getParameters().get('srch');
-    		search();
-    	}
-    	//otherwise, check for a mergeIds parameter, which should contain a comma separated list of Ids to merge
-    	else if(ApexPages.CurrentPage().getParameters().containsKey('mergeIds') && ApexPages.CurrentPage().getParameters().get('mergeIds') != '') {
-    		try {
-    			//attempt to deserialise the comma separated Ids into a list and then a set
-    			mergeIds = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters().get('mergeIds').split(','));
-    			//if we got any ids, use to try and enter the merge selected records page
-				if (mergeIds != null) {
-					loadMergeCandidates(mergeIds);
-				}
-    		}
-    		catch(StringException e){
-    			ApexPages.addMessages(e);
-    		}
-    	}
-    }
-    
     private static final String MASTER_KEY = '$MASTER$';
          
-    //string of search text entered by user
+    /*******************************************************************************************************
+    * @description Search text entered by user.
+    */
     public String searchText { get { return searchText; } set { searchText = value; } }
     
-    //list of contactWrapper objects for display in search results pane
+    /*******************************************************************************************************
+    * @description List of contactWrapper objects for display in search results pane.
+    */
     public List<ContactWrapper> searchResults {get; private set;}
     
-    //list of contactWrapper objects for display in search results pane
+    /*******************************************************************************************************
+    * @description List of contactWrapper objects for display in search results pane.
+    */
     private Map<String, Contact> selectedRecords;
     
+    /*******************************************************************************************************
+    * @description Number of selected records.
+    */
     public Integer selectedRecordsCount {get; private set;} {this.selectedRecordsCount = 0;}
     
-    //max number of Contacts returned by a query
+    /*******************************************************************************************************
+    * @description Max number of Contacts returned by a query.
+    */
     private final Integer SOSL_LIMIT = 20;
     
+    /*******************************************************************************************************
+    * @description The contact merge step user is in. (The process has multiple steps.)
+    */
     public Integer step {get; private set;}
     
-    //class to hold a contact and checkbox so we can select each contact
+    /*******************************************************************************************************
+    * @description Wraps a contact together with a checkbox, to allow contact selection.
+    */
     public class contactWrapper {
-        //the contact
+        /*******************************************************************************************************
+        * @description The contact.
+        */
         public Contact con {get; set;}
-        //the checkbox variable
+        /*******************************************************************************************************
+        * @description The checkbox.
+        */
         public Boolean selected {get; set;}
         
-        //constructor for contactWrapper class
+        /*******************************************************************************************************
+        * @description Constructor that initializes instance properties.
+        * @c The contact to wrap.
+        */ 
         public contactWrapper(Contact c) {
             con = c;
             selected = false;
         }
     }
     
+    /*******************************************************************************************************
+    * @description The rows to merge.
+    */
     public List<FieldRow> fieldRows {get; private set;}
     
-    /**
-    * The struct to save all the information belonging to each contact field, including values for all the contacts to merge.
+    /*******************************************************************************************************
+    * @description The struct to save all the information belonging to each contact field, including values for 
+    * all the contacts to merge.
     */
     public class FieldRow {
-        public String fieldLabel {get; private set;} //Stores the field Label
-        public String fieldName {get; private set;} // Stores the field api name
-        public boolean showRadio {get; private set;} // Property to tell whether UI must should a radio to select the field value
-        public List<Cell> values {get; private set;} // List of values for each contact record
-        public String selectedValue {get; set;} // Selected record
+    	/*******************************************************************************************************
+        * @description Stores the field Label.
+        */
+        public String fieldLabel {get; private set;}
+        /*******************************************************************************************************
+        * @description Stores the field api name.
+        */
+        public String fieldName {get; private set;} 
+        /*******************************************************************************************************
+        * @description Property to tell whether UI must should a radio to select the field value.
+        */
+        public boolean showRadio {get; private set;}
+        /*******************************************************************************************************
+        * @description  List of values for each contact record.
+        */
+        public List<Cell> values {get; private set;}
+        /*******************************************************************************************************
+        * @description Selected record.
+        */
+        public String selectedValue {get; set;}
+        /*******************************************************************************************************
+        * @description The class style.
+        */
         public String styleClass {get; private set;}
         
+        /*******************************************************************************************************
+        * @description Constructor that initializes the values property.
+        */
         public FieldRow() {
             this.values = new List<Cell>();
         }
+        
+        /*******************************************************************************************************
+        * @description Constructor that initializes the values property.
+        * @param fieldName The name of the field.
+        * @param fieldLabel The field label.
+        * @param showRadio Wether a radio button should be displayed for the row.
+        * @param styleClass The style class.
+        */
         public FieldRow(String fieldName, String fieldLabel, boolean showRadio, String styleClass) {
             this();
             this.fieldName = fieldName;
@@ -131,20 +149,77 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
     
-    /**
-    * The struct to save value of each cell for a corresponding field row in the UI table.
+    /*******************************************************************************************************
+    * @description The cell for a corresponding field row in the UI table.
     */
     public class Cell {
-        public String objId {get; private set;} // Id of the record to which this value belongs.
-        public String value {get; private set;} // Actual value
+    	/*******************************************************************************************************
+        * @description Id of the record to which this value belongs.
+        */
+        public String objId {get; private set;} 
+        /*******************************************************************************************************
+        * @description The actual value.
+        */
+        public String value {get; private set;}
         
-        public Cell (String objectId, String value) {
+        /*******************************************************************************************************
+        * @description Constructor that sets instance properties.
+        * @param objectId The ID of the object whose field represented by the cell.
+        * @param value The value of the field represented by the cell.
+        */
+        public Cell(String objectId, String value) {
             this.objId = objectId;
             this.value = value;
         }
     }
     
-    // This is an action method for the "Select All" command link on the page to select all the values of a certain record.
+    /*******************************************************************************************************
+    * @description Constructor for StandardSetController to allow invocation from list views.
+    * @param controller The default list controller for contact. It allows us to do pagination on the page.
+    */
+    public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
+        searchText='';
+        searchResults = new List<contactWrapper>();
+        selectedRecords = new Map<String, Contact>();
+        step = 1;
+        fieldRows = new List<FieldRow>();
+        
+        set<Id> mergeIds = new set<Id>();
+        
+        //if any selected records were passed the standard set controller show the merge page with those records
+        for(Contact c : (list<Contact>)controller.getSelected()) {
+            mergeIds.add(c.Id);
+        }
+        
+        if(!mergeIds.isEmpty()) {
+            loadMergeCandidates(mergeIds);
+        }
+        
+        //otherwise, check for a search parameter for the SOSL query and use that
+        else if(ApexPages.CurrentPage().getParameters().containsKey('srch')) {
+            searchText = ApexPages.CurrentPage().getParameters().get('srch');
+            search();
+        }
+        //otherwise, check for a mergeIds parameter, which should contain a comma separated list of Ids to merge
+        else if(ApexPages.CurrentPage().getParameters().containsKey('mergeIds') && ApexPages.CurrentPage().getParameters().get('mergeIds') != '') {
+            try {
+                //attempt to deserialise the comma separated Ids into a list and then a set
+                mergeIds = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters().get('mergeIds').split(','));
+                //if we got any ids, use to try and enter the merge selected records page
+                if (mergeIds != null) {
+                    loadMergeCandidates(mergeIds);
+                }
+            }
+            catch(StringException e){
+                ApexPages.addMessages(e);
+            }
+        }
+    }
+    
+    /*******************************************************************************************************
+    * @description Selects all the values of a certain record. Used by the "Select All" command link on the page.
+    * @return void
+    */
     public void selectDefaultRecord() {
         String recordId = Apexpages.currentPage().getParameters().get('recordId');
         //UTIL_Debug.debug('Selected Record: ' + recordId);
@@ -157,7 +232,9 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
     
-    // Action method to show the next step of the wizard where user can see the diff of the records before merge
+    /*******************************************************************************************************
+    * @description Shows the next step of the wizard where user can see the diff of the records before merge.
+    */
     public void nextStep() {
         
         set<Id> mergeIds = new set<Id>(); 
@@ -169,7 +246,9 @@ public with sharing class CON_ContactMerge_CTRL {
         loadMergeCandidates(mergeIds);
     }
     
-    // Action method to show the next step of the wizard where user can see the diff of the records before merge
+    /*******************************************************************************************************
+    * @description Shows the next step of the wizard where user can see the diff of the records before merge.
+    */
 	private void loadMergeCandidates(set<Id> mergeCandidates) {
         
         // Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error. 
@@ -306,8 +385,8 @@ public with sharing class CON_ContactMerge_CTRL {
         
     }
     
-    /**
-    * Method to add field information and field values to the list of fieldRow
+    /*******************************************************************************************************
+    * @description Adds field information and field values to the list of field rows.
     */
     private void addFieldComparisonRows(String fieldName, Schema.DescribeFieldResult fieldDesc, List<SObject> objs) {
         // Create a new FieldRow item
@@ -386,7 +465,10 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
     
-    //search for contacts
+    /*******************************************************************************************************
+    * @description Searches for contacts.
+    * @return PageReference The page that it redirects to. Same page user is in.
+    */
     public PageReference search() {
     	Try {	        
 	        if(searchText != null && searchText.length()>0){
@@ -398,9 +480,11 @@ public with sharing class CON_ContactMerge_CTRL {
         return null;
     }
     
-    //run the SOSL
-    public List<List<SObject>> mySOSL()
-    {
+    /*******************************************************************************************************
+    * @description Runs SOSL query to find contacts according to the search text entered by the user.
+    * @return PageReference The page that it redirects to. Same page user is in.
+    */
+    public List<List<SObject>> mySOSL() {
         searchResults.clear();    
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
@@ -411,7 +495,12 @@ public with sharing class CON_ContactMerge_CTRL {
         //List<List<SObject>> searchList = new List<List<SObject>>();
     }
     
-    //wrap the SOSL results
+    /*******************************************************************************************************
+    * @description Wraps the SOSL results.
+    * @param mySearchList The list of SObjects to wrap. It contains a list per Sobject type.
+    * @return List<ContactWrapper> Those records from the passed parameter that are of type Contact are returned
+    * in this list, inside wrappers.
+    */
     public List<ContactWrapper> wrapSOSLResults(List<List<SObject>> mySearchList){
         
         List<ContactWrapper> res = new List<ContactWrapper>();
@@ -434,7 +523,10 @@ public with sharing class CON_ContactMerge_CTRL {
         return res;       
     }
     
-    //method to merge the winner and losers
+    /*******************************************************************************************************
+    * @description Merges the winner and losers.
+    * @return PageReference The page that it redirects to. Same page user is in.
+    */
     public PageReference mergeContacts() {
         SObject master;
         // Find the master record based the selected value of the Master FieldRow

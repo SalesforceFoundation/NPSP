@@ -35,9 +35,20 @@
 */
 public with sharing class UTIL_Typeahead {
 
+    /*******************************************************************************************************
+    * @description Searches the database (using SOSL) for the records that meet the criteria.
+    * @param queryString (SearchQuery) The word of phrase to search for.
+    * @param objectName (FieldSpec - ObjectTypeName) The SObjects for search. If not specified, Contact will be used.
+    * @param fieldNames (FieldSpec - FieldList) The information (fields) that is returned in the text search result. 
+    * @param fieldsToSearch (SearchGroup) The types of fields to search.
+    * @param filterClause (DivisionFilter) Results filder.
+    * @param orderBy Sorting order.
+    * @param recordLimit Maximum number of rows returned in the text query. 
+    * @return List<SObject> The records that meet the criteria.
+    */
     @RemoteAction
-    public static list<sObject> searchRecords( String queryString, String objectName, 
-	    list<String> fieldNames, String fieldsToSearch, String filterClause, String orderBy, Integer recordLimit ) {
+    public static list<sObject> searchRecords(String queryString, String objectName, 
+	    list<String> fieldNames, String fieldsToSearch, String filterClause, String orderBy, Integer recordLimit) {
 	
 	    if (queryString == null) return null;
 	
