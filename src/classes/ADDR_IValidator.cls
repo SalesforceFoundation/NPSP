@@ -35,36 +35,35 @@
 */
 public Interface ADDR_IValidator {
 
-    /** 
-    * @description returns the service name to be displayed in the drop-down list. 
-    * @return string
+    /*******************************************************************************************************
+    * @description Provides the called with the service name.
+    * @return String The name of the address validation service.
     */
     String getServiceName();
     
-    /** 
-    * @description returns the default endpoint URL. 
-    * @return string
+    /*******************************************************************************************************
+    * @description Provides the caller with the default endpoint URL.
+    * @return String The URL to send requests to.
     */
     String getDefaultURL();
         
-    /** 
-    * @description returns true if batch address validation is supported. If not, the batch address validation button
-    * will be disabled.
-    * @return boolean 
+    /*******************************************************************************************************
+    * @description Tells the caller if the class supports batch address validation.
+    * @return Boolean True is the class supports batch address validation. False otherwise.
     */
     Boolean supportsBatch();
     
-    /** 
-    * @description explanatory text, if any, regarding batch address verification.
-    * @return string     
+    /*******************************************************************************************************
+    * @description Provides the caller with help text regarding batch support.
+    * @return String The help text.
     */
     String getBatchHelpText();
     
-    /**
-    * @description Verify the a list of Addresses
-    * @param addresses list of Address objects to verify.
-    * @param settings the Address Verification Settings to use. 
-    * @return verified Address__c records. 
+    /*******************************************************************************************************
+    * @description Verifies a list of Addresses records.
+    * @param addresses List of Address records to verify.
+    * @param settings The Address Verification Settings to use. 
+    * @return List<Address__c> List of verified address records. 
     */
     List<Address__c> verifyRecords(list<Address__c> addresses, Addr_Verification_Settings__c settings);
 }

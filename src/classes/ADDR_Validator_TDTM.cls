@@ -35,10 +35,24 @@
 */
 public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
+	/*******************************************************************************************************
+    * @description Exception raised during the address validation process.
+    */
 	public class ADDR_Validator_Exception extends Exception { }
 	
+	/*******************************************************************************************************
+    * @description Indicates whether the class has been run in the current context.
+    */
 	public static Boolean alreadyRun = false;
 	
+	/*******************************************************************************************************
+    * @description Verifies new or modified address records, if verification enabled in the settings.
+    * @param listNew The list of Addresses from trigger new. 
+    * @param listOld The list of Addresses from trigger old. 
+    * @param triggerAction The trigger event (BeforeInsert, AfterInsert, etc.) that caused the class to run. 
+    * @param objResult The describe for Addresses.
+    * @return dmlWrapper The wrapper with the records to perform DML on. 
+    */
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) { 
         

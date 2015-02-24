@@ -31,20 +31,39 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Stores the default TDTM cofiguration, and the mapping between the old NPSP
-               settings and the new ones. 
+* @group TDTM
+* @group-content ../../ApexDocContent/TDTM.htm
+* @description Class called from each of the triggers (only one per object) that follow the TDTM design. It's in 
+* charge of figuring out which of the classes that do the actual work need to be called, and calling them.
 */
 public with sharing class TDTM_TriggerHandler {
 
-    // a public flag to allow code to specify that they want errors propogated from the trigger
-    // to Salesforce, rather than just logged.  This allows DML to produce errors that get
-    // displayed in the standard ui, rather than just logged.
+    /**
+    * A public flag to allow code to specify that they want errors propogated from the trigger to Salesforce, 
+    * rather than just logged.  This allows DML to produce errors that get displayed in the standard ui, rather 
+    * than just logged.
+    */
     public static boolean isPropogateErrorsFromTrigger = false;
     
     private static Boolean defaultRecordsInserted = false;
     
     public static boolean suppressDebugAssertAfterErrorLogging = false;
     
+    /*******************************************************************************************************
+    * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
+    * design. Figures out which classes need to be called, and calls them.
+    * @param isBefore Are we in a before trigger context.
+    * @param isAfter Are we in an after trigger context.
+    * @param isInsert Did the trigger run in response to an insert operation.
+    * @param isUpdate Did the trigger run in response to an update operation.
+    * @param isDelete Did the trigger run in response to a delete operation.
+    * @param isUnDelete Did the trigger run in response to an undelete operation.
+    * @param newList The records that were passed to the trigger as trigger.new.
+    * @param oldList The records that were passed to the trigger as trigger.old.
+    * @param describeObj The type of SObject the class runs for.
+    * @param dao The class that is going to retrieve all the TDTM records.
+    * @return void
+    */
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
@@ -181,7 +200,12 @@ public with sharing class TDTM_TriggerHandler {
        classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), describeObj.getName(), classToRunName);
     }
     
-    //We want this method to be static so that it can be called from the future method in TDTM_Runnable
+    /*******************************************************************************************************
+    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @return void
+    */
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
         //Create transaction
         Savepoint sp = Database.setSavepoint();
@@ -190,24 +214,15 @@ public with sharing class TDTM_TriggerHandler {
         
         /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client 
         process of all the errors that occurred in the context **/
-        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to insert: ' + JSON.serializePretty(dmlWrapper.objectsToInsert));
-        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);
-        
-        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to update: ' + JSON.serializePretty(dmlWrapper.objectsToUpdate));
-        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate, false);
-        
-        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to delete: ' + JSON.serializePretty(dmlWrapper.objectsToDelete));
+        List<Database.SaveResult> insertResults = Database.insert(dmlWrapper.objectsToInsert, false);        
+        List<Database.SaveResult> updateResults = Database.update(dmlWrapper.objectsToUpdate, false);        
         List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, false);        
-        
-        //Not yet using this one, as far as I know, but no reason not to support it.
-        //UTIL_Debug.debug(LoggingLevel.WARN, '****Final objects to undelete: ' + JSON.serializePretty(dmlWrapper.objectsToUndelete));
-        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false);
+        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, false); //Not yet using this one, afaik, but no reason not to support it.
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
         //Also, should we support Database.merge?
         
-        //Process the results
-        // if isPropogateErrorsFromTrigger == true, getErrors will throw an exception instead of returning the errors.
+        //Process the results. If isPropogateErrorsFromTrigger == true, getErrors will throw an exception instead of returning the errors.
         ERR_Handler.Errors errors = ERR_Handler.getErrors(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
             dmlWrapper.objectsToUndelete);

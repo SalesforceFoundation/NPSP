@@ -38,13 +38,46 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private String END_POINT;
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
+    
+    /*******************************************************************************************************
+    * @description Provides the called with the service name.
+    * @return String The name of the address validation service.
+    */
+    public String getServiceName() {
+    	return 'The Google Geocoding API';
+    }
+    
+    /*******************************************************************************************************
+    * @description Provides the caller with the default endpoint URL.
+    * @return String The URL to send requests to.
+    */
+    public String getDefaultURL() {
+    	return 'https://maps.googleapis.com/maps/api/geocode/json?';
+    }
+    
+    /*******************************************************************************************************
+    * @description Tells the caller if the class supports batch address validation.
+    * @return Boolean True is the class supports batch address validation. False otherwise.
+    */
+    public Boolean supportsBatch() {
+        return false; 
+    }
+    
+    /*******************************************************************************************************
+    * @description Provides the caller with help text regarding batch support.
+    * @return String The help text.
+    */
+    public String getBatchHelpText() { 
+    	return Label.Addr_Verification_Batch_Not_Supported; 
+    }
 
-    public Boolean supportsBatch(){return false;}
-    public String getServiceName(){return 'The Google Geocoding API';}
-    public String getDefaultURL(){return 'https://maps.googleapis.com/maps/api/geocode/json?';}
-    public String getBatchHelpText() { return Label.Addr_Verification_Batch_Not_Supported;}
-
-    public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings){
+    /*******************************************************************************************************
+    * @description Verifies a list of Addresses records.
+    * @param addresses List of Address records to verify.
+    * @param settings The Address Verification Settings to use. 
+    * @return List<Address__c> List of verified address records. 
+    */
+    public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings) {
 
         this.checked_addresses = new List<Address__c>();
         this.AUTH_TOKEN = settings.Auth_Token__c;
@@ -188,35 +221,63 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         return a;
     }
 
-/* Apex JSON model of Google response */
+    /*******************************************************************************************************
+    * @description Apex model of the Google JSON response.
+    */
     public class GoogleGeoResponse {
         public List<ADDR_GoogleGeoAPI_Validator.Results> results;
         public String status;
     }
-    public class Address_components {
-        public String long_name;
-        public String short_name;
-        public List<String> types;
-    }
-    public class Location {
-        public Double lat;
-        public Double lng;
-    }
-    public class Geometry {
-        public Location location;
-        public String location_type;
-        public Viewport viewport;
-    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the results element of the Google JSON response.
+    */
     public class Results {
         public List<ADDR_GoogleGeoAPI_Validator.Address_components> address_components;
         public String formatted_address;
         public Geometry geometry;
         public List<String> types;
     }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the address_components element of the Google JSON response.
+    */
+    public class Address_components {
+        public String long_name;
+        public String short_name;
+        public List<String> types;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the geometry element of the Google JSON response.
+    */
+    public class Geometry {
+        public Location location;
+        public String location_type;
+        public Viewport viewport;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the location element of the Google JSON response.
+    */
+    public class Location {
+        public Double lat;
+        public Double lng;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the viewport element of the Google JSON response.
+    */
     public class Viewport {
         public Location northeast;
         public Location southwest;
     }
+    
+    /*******************************************************************************************************
+    * @description Parses a JSON strings and returns a GoogleGeoResponse Apex object.
+    * @param String The JSON string.
+    * @return GoogleGeoResponse The Apex object the JSON string has been transformed into.
+    */
     public static GoogleGeoResponse parse(String json) {
         return (GoogleGeoResponse) System.JSON.deserialize(json, GoogleGeoResponse.class);
     }
