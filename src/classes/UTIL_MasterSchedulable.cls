@@ -33,9 +33,15 @@
 * @description Master Schedulable for the NPSP package. This should be the only
 * class that implements schedulable that exists in the package. UTIL_GlobalSchedulable
 * is deprecated and should not be used.
+* @group Utilities
 */
 public with sharing class UTIL_MasterSchedulable implements Schedulable {
 
+    /*******************************************************************************************************
+    * @description Runs the class, as scheduled.
+    * @param context The system context. Provided by the platform.
+    * @return void
+    */
     public static void execute(SchedulableContext context) {
     	Type classType = Type.forName('UTIL_MasterSchedulableHelper');
     	//The work in UTIL_MasterSchedulableHelper is being done in a method that is being called

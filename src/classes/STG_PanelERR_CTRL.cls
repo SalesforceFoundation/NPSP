@@ -35,17 +35,35 @@
 */
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     
+    /*******************************************************************************************************
+    * @description The panel ID.
+    */
     public override String idPanel() { return 'idPanelErrors'; }
     
+    /*******************************************************************************************************
+    * @description The the error notification recipient.
+    */
     public String notificationToDropDown { public get; public set; }
+    /*******************************************************************************************************
+    * @description The id of the chatter group to send error notifications to, if chatter group has been selected
+    * as recipient.
+    */
     public String groupId { public get; public set; }
+    /*******************************************************************************************************
+    * @description The error message the user receives if the settings cannot be saved. 
+    */
     public String saveErrorMessage { public get; set; }
- 
+    
+    /*******************************************************************************************************
+    * @description Class constructor that set error notifications recipient to the one stored in the settings.
+    */
     public STG_PanelERR_CTRL() {
     	notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
     }
     
-    //Displays the values of the drop-down (Edit Mode only)
+    /*******************************************************************************************************
+    * @description Error notification recipient options to display in the drown-down (in Edit mode only)
+    */
     public List<SelectOption> listSOERRNotifOptions {
         get {
             if (listSOERRNotifOptions == null) {
@@ -63,6 +81,9 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
         private set;
     }  
     
+    /*******************************************************************************************************
+    * @description Error notifications recipient display name.
+    */
     //Displays the Error Notification Recipients (View Mode only)
     public String strErrorNotifDisplayName {
         get {
@@ -90,6 +111,10 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
         private set;
     }  
     
+    /*******************************************************************************************************
+    * @description Saves the selected error notification settings.
+    * @return PageReference The page to redirect to, if any.
+    */
     public override PageReference saveSettings() {
         UTIL_Debug.debug('****notification to drop down: ' + notificationToDropDown);
         UTIL_Debug.debug('****group ID: ' + groupId);
@@ -106,11 +131,19 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
         return super.saveSettings();
     }
     
+    /*******************************************************************************************************
+    * @description Cancels the edit. Returns page to View mode.
+    * @return PageReference The page to redirect to, if any.
+    */
     public override PageReference cancelEdit() {
     	saveErrorMessage = null;
     	return super.cancelEdit();
     }
     
+    /*******************************************************************************************************
+    * @description Changes the page from View to Edit mode.
+    * @return PageReference The page to redirect to, if any.
+    */
     public override PageReference editSettings() {
     	if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
     		notificationToDropDown = ERR_Notifier.NotificationOptions.chatterGroup;

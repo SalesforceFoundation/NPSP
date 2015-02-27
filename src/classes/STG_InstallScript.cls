@@ -35,6 +35,11 @@
 */
 global without sharing class STG_InstallScript implements InstallHandler {
     
+    /*******************************************************************************************************
+    * @description Runs on package install.
+    * @param context The install context.
+    * @return void
+    */
     global void onInstall(InstallContext context) {
         try { 
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
@@ -60,7 +65,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
        }
     }
 
-    /** Provides a global callable method for running the default install script to setup TDTM in new orgs **/
+    /*******************************************************************************************************
+    * @description Sets up TDTM in new orgs.
+    * @return void
+    */
     global void runNewOrgScript() {      
         //Get the mapping from old settings to the new TDTM default setup
         Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
@@ -143,7 +151,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
     
-    //Public just for testing purposes. Otherwise should be private
+    /*******************************************************************************************************
+    * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
+    * upgradade. Public just for testing purposes (it should otherwise be private).
+    * @param defaultHandlers The default TDTM records.
+    * @return void
+    */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
         List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
                                                        from Trigger_Handler__c];

@@ -35,9 +35,14 @@
 */
 public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
     
+    /*******************************************************************************************************
+    * @description The panel ID.
+    */
     public override string idPanel() { return 'idPanelTDTM'; }
     
-    // temporary th used by the page for creating a new th.
+    /*******************************************************************************************************
+    * @description Temporary trigger handler used by the page for creating a new handler.
+    */
     public Trigger_Handler__c thNew {
         get {
             if (thNew == null)
@@ -47,13 +52,58 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
         private set;
     }
     
-    // action method for going into edit mode (to create a new th)
+    /*******************************************************************************************************
+    * @description The ID of the trigger handler to delete.
+    */
+    public string thIdDelete { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Existing trigger handlers.
+    */
+    public list<Trigger_Handler__c> listTH {
+        get {
+            if (listTH == null) {
+                listTH = new list<Trigger_Handler__c>();
+                listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, Object__c, Trigger_Action__c, 
+                            User_Managed__c from Trigger_Handler__c order by Object__c, Load_Order__c];
+            } 
+            return listTH;           
+        }
+        private set;     
+    }
+
+    /*******************************************************************************************************
+    * @description The trigger actions available for the trigger handlers.
+    */
+    public list<SelectOption> listSOTriggerAction {
+        get {    
+            if (listSOTriggerAction == null) {
+                listSOTriggerAction = new list<SelectOption>();
+                listSOTriggerAction.add(new SelectOption('','- none -'));
+                Schema.DescribeFieldResult F = Schema.sObjectType.Trigger_Handler__c.fields.Trigger_Action__c; 
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                for (Schema.PicklistEntry pe : P) {
+                    listSOTriggerAction.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                }
+            }
+            return listSOTriggerAction;
+        }
+        private set;
+    } 
+    
+    /*******************************************************************************************************
+    * @description Changes the page from view to edit mode (to create a new trigger handler).
+    * @return PageReference The page that it redirects to. Same page user was in, in this case.
+    */
     public PageReference newTh() {
         isEditMode = true;
         return null;
     }
 
-    // action method to save the new th to the database.
+    /*******************************************************************************************************
+    * @description Saves the new trigger handler to the database.
+    * @return PageReference The page that it redirects to. Same page user was in, in this case.
+    */
     public PageReference createTh() {  
 
         // validate required fields
@@ -77,15 +127,20 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
         return null;
     }
 
-    // action method to cancel out of creating a new ac.
+    /*******************************************************************************************************
+    * @description Cancels the creation of a new trigger handler.
+    * @return PageReference The page that it redirects to. Same page user was in, in this case.
+    */
     public PageReference cancelTh() {
         isEditMode = false;
         thNew = null;
         return null;
     }
     
-    // action method and parameter for deleting an existing ac.
-    public string thIdDelete { get; set; }
+    /*******************************************************************************************************
+    * @description Deletes the trigger handler whose ID is stored in the thIdDelete property.
+    * @return PageReference The page that it redirects to. Same page user was in, in this case.
+    */
     public PageReference deleteTh() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -102,33 +157,5 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
-    }
-
-    public list<Trigger_Handler__c> listTH {
-        get {
-            if (listTH == null) {
-                listTH = new list<Trigger_Handler__c>();
-                listTH = [select Id, Active__c, Asynchronous__c, Class__c, Load_Order__c, Object__c, Trigger_Action__c, 
-                            User_Managed__c from Trigger_Handler__c order by Object__c, Load_Order__c];
-            } 
-            return listTH;           
-        }
-        private set;     
-    }
-
-    public list<SelectOption> listSOTriggerAction {
-        get {    
-            if (listSOTriggerAction == null) {
-                listSOTriggerAction = new list<SelectOption>();
-                listSOTriggerAction.add(new SelectOption('','- none -'));
-                Schema.DescribeFieldResult F = Schema.sObjectType.Trigger_Handler__c.fields.Trigger_Action__c; 
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                for (Schema.PicklistEntry pe : P) {
-                    listSOTriggerAction.add(new SelectOption(pe.getLabel(), pe.getLabel()));
-                }
-            }
-            return listSOTriggerAction;
-        }
-        private set;
-    }  
+    } 
 }
