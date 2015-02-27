@@ -116,7 +116,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                         if(type_set.contains('postal_code')){
                         	String verified5digs = add.long_name;
                         	String originalFull = a.MailingPostalCode__c;
-                        	String original5digs = originalFull.substring(0, 5);
+                        	String original5digs = '';
+                        	if(originalFull != null && originalFull.length() > 5) {
+                        		 original5digs = originalFull.substring(0, 5);
+                        	}
                         	//Google only returns 5-digit zipcodes. We don't want to override the original, if the
                         	//first 5 match, and the original has the additional 4.
                         	if(!(verified5digs == original5digs)) {
