@@ -34,7 +34,7 @@
  */
 public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator{
 
-    private String AUTH_ID;
+    private String AUTH_TOKEN;
     private String END_POINT;
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
@@ -80,7 +80,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings) {
 
         this.checked_addresses = new List<Address__c>();
-        this.AUTH_ID = settings.Auth_ID__c;
+        this.AUTH_TOKEN = settings.AUTH_TOKEN__c;
         this.TIMEOUT = settings.Timeout__c;
         this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
@@ -110,12 +110,12 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
         HttpResponse response = new HttpResponse();
 
-        if(AUTH_ID != null && END_POINT != null) {
+        if(AUTH_TOKEN != null && END_POINT != null) {
             Http h = new Http();
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
             req.setHeader('Accept','application/json');
-            req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_ID);
+            req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN);
             try{
             	UTIL_Debug.debug('****Request body: \n' + req);
                 response = h.send(req);
