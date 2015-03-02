@@ -48,8 +48,6 @@ public with sharing class ADDR_Validator_TEST {
         settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
-        settings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
-        settings.Zipcode_Verification_Endpoint__c = 'https://api.smartystreets.com/zipcode';
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
@@ -133,11 +131,10 @@ public with sharing class ADDR_Validator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'test400') return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
-        settings.Address_Verification_Endpoint__c = '400';
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = 'main st 123';
+        contact.MailingStreet = '400 error';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
@@ -163,11 +160,10 @@ public with sharing class ADDR_Validator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'test401') return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
-        settings.Address_Verification_Endpoint__c = '401';
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = 'main st 123';
+        contact.MailingStreet = '401 error';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
@@ -193,11 +189,10 @@ public with sharing class ADDR_Validator_TEST {
         if (strTestOnly != '*' && strTestOnly != 'test402') return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
-        settings.Address_Verification_Endpoint__c = '402';
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = 'main st 123';
+        contact.MailingStreet = '402 error';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';
@@ -220,14 +215,13 @@ public with sharing class ADDR_Validator_TEST {
     }
     
     static testMethod void test500() {
-        if (strTestOnly != '*' && strTestOnly != 'test400') return;
+        if (strTestOnly != '*' && strTestOnly != 'test500') return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
-        settings.Address_Verification_Endpoint__c = '500';
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = 'main st 123';
+        contact.MailingStreet = '500 error';
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
         contact.MailingPostalCode = '60606';

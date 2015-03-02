@@ -108,7 +108,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            sr = gateway.verifyAddress( '400' );
+            sr = gateway.verifyAddress('400');
         } catch (Exception e) {
             System.debug('****' + e.getStackTraceString());
             system.assertEquals('Bad input. Required fields missing from input or are malformed.', e.getMessage());
@@ -140,7 +140,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            sr = gateway.verifyAddress( '402' );
+            sr = gateway.verifyAddress('402');
         } catch (Exception e) {
             System.debug('****' + e.getStackTraceString());
             system.assertEquals('Payment required. No active subscription found.', e.getMessage());
@@ -156,7 +156,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
-            sr = gateway.verifyAddress( '500' );
+            sr = gateway.verifyAddress('500');
         } catch (Exception e) {
             System.debug('****' + e.getStackTraceString());
             system.assertEquals('Internal server error. General service failure; retry request.', e.getMessage());
