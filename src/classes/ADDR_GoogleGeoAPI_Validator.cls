@@ -180,7 +180,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                             a.MailingCity__c = add.long_name;
                         }
                     }
-                    a.MailingStreet__c = verified_street + ' ' + verified_premise;
+                    a.MailingStreet__c = verified_street;
+                    if(!String.isBlank(verified_premise)) {
+                    	 a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
+                    }
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
