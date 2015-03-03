@@ -30,18 +30,42 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Allocations
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests for allocation multicurrency functionality. Will only run in active multicurrency orgs with multiple currencies active.
 */
 @isTest
 public class ALLO_Multicurrency_TEST {
     
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
+    /*******************************************************************************************************
+    * @description Setup of allocations settings.
+    * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
+    * parameter uses default settings.
+    * @return void Modifies settings, returns nothing.
+    ********************************************************************************************************/    
+    private static void setupSettings (Allocations_Settings__c alloset) {
+        //set running user to avoid dml issue            
+        System.runAs(new User(id = UserInfo.getUserId())){
+            if (alloset!=null)
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
+            else 
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
+
+        }
+    }
+
+    /** @description Non default currency type sObject for this org.*/
     public static sObject nonDefaultCurrencyType;
+    /** @description Default currency type sObject for this org.*/
     public static sObject defaultCurrencyType;
 
+    /** @description Queries currency types and fills class variables.*/
     public static void setupISOCodes() {
         if (nonDefaultCurrencyType!=null || defaultCurrencyType!=null)
             return;
@@ -55,22 +79,16 @@ public class ALLO_Multicurrency_TEST {
         }
     }
 
-    private static void setupSettings (Allocations_Settings__c alloset) {
-        //set running user to avoid dml issue            
-        System.runAs(new User(id = UserInfo.getUserId())){
-            if (alloset!=null)
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
-            else 
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
 
-        }
-    }
 
-    //allocations inherit the currency of their parent
-    //updating a parent updates the allocation currency
-    //creating an opportunity with a different currency from the parent campaign converts the allocation amount to the opportunity's currency
-    //user cannot manually update the currency of an allocation and must do so through the parent
-    @isTest static void alloMultiCurrency() {
+    /*********************************************************************************************************
+    * @description This multicurrency test only runs on multicurrency organizations, and does nothing 
+    * otherwise. Verifies allocations inherit the currency of their parent. Updating a parent updates the
+    * child allocation currencies. Creating an opportunity with a different currency from the parent campaign
+    * converts the allocation amount to the opportunity's currency. Verifies user is prevented from manually
+    * modifying an allocation's currency.
+    */
+    static testMethod void alloMultiCurrency() {
         if (strTestOnly != '*' && strTestOnly != 'alloMultiCurrency') return;
 
         //only run test in multicurrency orgs
@@ -130,8 +148,11 @@ public class ALLO_Multicurrency_TEST {
         system.assertNotEquals(null,ex,'An exception should be caught.');
     }
 
-    //rollups correcly convert amounts of different currencies in multicurrency orgs
-    @isTest static void rollupMultiCurrency() {
+    /*********************************************************************************************************
+    * @description This multicurrency test only runs on multicurrency organizations, and does nothing 
+    * otherwise. Verifies that rollups correctly convert amounts of different currencies.
+    */
+    static testMethod void rollupMultiCurrency() {
         if (strTestOnly != '*' && strTestOnly != 'rollupMultiCurrency') return;
 
         //only run test in multicurrency orgs
@@ -193,7 +214,12 @@ public class ALLO_Multicurrency_TEST {
         system.assertEquals(8, queryGAU[0].Total_Allocations_Last_N_Days__c, 'Total allocations last 365 days should equal 8.');
     }
 
-    static void testMakeDefaultAllocations() {
+
+    /*********************************************************************************************************
+    * @description This multicurrency test only runs on multicurrency organizations, and does nothing 
+    * otherwise. Verifies that Make Default Allocations respects multicurrency configuration.
+    */
+    static testMethod void testMakeDefaultAllocations() {
         if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
         
         //only run test in multicurrency orgs
@@ -209,7 +235,10 @@ public class ALLO_Multicurrency_TEST {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 
-        setupSettings(null);
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+
+        //setting flags to not create default allocations for the new opportunities
+        ALLO_Allocations_TDTM.resetFlags(true);
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -219,8 +248,6 @@ public class ALLO_Multicurrency_TEST {
 
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c];
         system.assertEquals(0,queryAllo.size(), 'No default allocation should be created.');
-
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Test.startTest();
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
