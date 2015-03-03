@@ -30,13 +30,26 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.2)
+* @group Recurring Donations
 * @description The controller for the VF page invoked by using the Refresh Opportunities button
 */
 public with sharing class RD_AddDonationsBTN_CTRL {
 
+    /*******************************************************************************************************
+    * @description Holds the URL of the page that called this button controller
+    */ 
     public string returnURL{get; set;}
+
+
+    /*******************************************************************************************************
+    * @description Holds the RD class which does the real work to support recurring donations
+    */ 
     public npe03__Recurring_Donation__c RecurringDonation{get; set;}    
     
+    /*******************************************************************************************************
+    * @description Class constructor
+    * @param controller The StandardController to the Recurring Donation 
+    */ 
     public RD_AddDonationsBTN_CTRL(ApexPages.StandardController controller){
         //set the return URL
         RecurringDonation = (npe03__Recurring_Donation__c)Controller.getRecord();
@@ -45,35 +58,16 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         
     }
     
+    /*******************************************************************************************************
+    * @description Action method to refresh the Recurring Donation with appropriate Opportunities
+    * @return PageReference to the calling page
+    */ 
     public PageReference buttonClick(){
         Savepoint sp = Database.setSavepoint();
         try {
-            system.assert(RecurringDonation != null);
-        
-            // these must be lowercase so set.contains() will work
-	        set<string> existingFields = new set<string>{  'npe03__open_ended_status__c', 'npe03__next_payment_date__c', 'name', 'npe03__paid_amount__c',
-	                                                       'npe03__organization__c', 'npe03__contact__c', 'npe03__installment_amount__c',
-	                                                       'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
-	                                                       'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c', 
-	                                                       'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid'};                                                                       
-            String qString = 'select id';
-            for (string s : existingFields){
-                qString += ', ' + s;               
-            }
-       
-            //add any custom mapping to make sure we have the required fields
-            map<string, npe03__Custom_Field_Mapping__c> cfmMap = new map<string, npe03__Custom_Field_Mapping__c>();
-            cfmMap = npe03__Custom_Field_Mapping__c.getAll();
-            for (string s : cfmMap.keySet()){
-                string RDFieldName = cfmMap.get(s).npe03__Recurring_Donation_Field__c;             
-                if (!existingFields.contains(RDFieldName.toLowerCase()) && s != 'id'){
-                   qString = qString + ',' + cfmMap.get(s).npe03__Recurring_Donation_Field__c;
-                   existingFields.add(RDFieldName.toLowerCase());   
-                }
-            }                                                  
-                            
-	        qString += ' from npe03__Recurring_Donation__c ';
-	        qString += ' where id = \'' + RecurringDonation.id + '\'';
+            system.assert(RecurringDonation != null);        
+	        string qString = RD_RecurringDonations.strQueryRDNoWhere();
+            qString += ' where id = \'' + RecurringDonation.id + '\'';
 	        RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
 	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
 	        
