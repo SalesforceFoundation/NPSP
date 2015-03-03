@@ -45,7 +45,6 @@ public with sharing class ADDR_Validator_TEST {
 
         // create the basic api settings
         Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        settings.Using_SmartyStreets__c = true;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
@@ -349,7 +348,6 @@ public with sharing class ADDR_Validator_TEST {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
         
-        sc.addrVerifSettings.Using_SmartyStreets__c = true;
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
         sc.addrVerifSettings.Address_Verification_Endpoint__c = 'https://api.smartystreets.com/street-address';
@@ -377,7 +375,6 @@ public with sharing class ADDR_Validator_TEST {
         sc.initDynamicFields(); //this will also set the settings property
         
         sc.addrVerifSettings.Class__c = 'ADDR_SmartyStreets_Validator';
-        sc.addrVerifSettings.Using_SmartyStreets__c = true;
         
         Test.startTest();
         sc.saveSettings();

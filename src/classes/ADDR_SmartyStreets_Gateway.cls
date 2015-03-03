@@ -180,7 +180,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     
     private HTTPResponse sendRequest(List<Object> payload, String baseURL) {
     	HttpResponse response = new HttpResponse();
-    	if(auth != null && settings.Using_SmartyStreets__c) {
+    	if(auth != null && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {
 	    	// prepare the request
 	        Http h = new Http();
 	    	String body = JSON.serialize(payload);
