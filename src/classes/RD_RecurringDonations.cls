@@ -30,31 +30,104 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
-* @description The main class for controlling the behavior of Recurring Donations, both open ended and standard 
+* @description The main class for controlling the behavior of Recurring Donations, both open ended and standard.
+*
+* The logic of this class is quite complicated, so here is a summary of the call chain for various scenarios.
+*
+* Insert a new RD (open or non open):
+*   RD_RecurringDonations_TDTM(AfterInsert)
+*       insertOppsOnRecurringDonationInsert
+*           Database.insert(opps)
+*           updateRecurringDonationOnOppChange
+*
+* Update a non open-ended RD:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           delete non-closed Opps
+*           insertOppsOnRecurringDonationInsert
+*
+* Update a open-ended RD to closed:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           runRecurringDonationClosedActions
+*
+* Update an open-ended RD with changes that require opp updating:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           updateExistingOpps
+*               updateRecurringDonationOnOppChange
+*
+* Update an open-ended RD to different schedule or contact (need to recreate opps):
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           delete non-closed Opps
+*           insertOppsOnRecurringDonationInsert
+*
+* Refresh Opportunities button or Nightly Batch on non open-ended:
+*   evaluateRecurringDonationsForNewOppInsert 
+*       delete non-closed Opps
+*       insertOppsOnRecurringDonationInsert
+*
+* Refresh Opportunities button or Nightly Batch on open-ended:
+*   evaluateRecurringDonationsForNewOppInsert
+*       database.insert(opps) (for additional opps) 
+*       insertOppsOnRecurringDonationInsert (if no opps exist)
+*       updateRecurringDonationOnOppChange
+*
+* Update an Opportunity that belongs to a RD:
+*   RD_RecurringDonations_Opp_TDTM(AfterUpdate)
+*       updateRecurringDonationOnOppChange
+*
 */
 public with sharing class RD_RecurringDonations {
     
-    /*** Public Vars ***/ 
-    
+    /*******************************************************************************************************
+    * @description Enum to specify behavior of what happens to open opportunities when their RD is closed.
+    */ 
     public enum RecurringDonationCloseOptions {Delete_Open_Opportunities, Mark_Opportunities_Closed_Lost, No_Action}
+
+    /*******************************************************************************************************
+    * @description holds the current custom field mappings used when creating opps for the RD.
+    */ 
     public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = new map<string, npe03__Custom_Field_Mapping__c>();
     
-    /*** Multicurrency Support Fields ***/
-    
+    /*******************************************************************************************************
+    * @description holds the RD's CurrencyIsoCode field that is enabled in multicurrency organizations.
+    */ 
     private static SObjectField RDCurrField;
+
+    /*******************************************************************************************************
+    * @description holds the RD's CurrencyIsoCode field that is enabled in multicurrency organizations.
+    */ 
     public static SObjectfield RDCurrencyField{get{
         if (RDCurrField == null){
             RDCurrField = Schema.sObjectType.npe03__Recurring_Donation__c.fields.getMap().get('CurrencyIsoCode');
         }   
         return RDCurrField;
     }set;}    
+
+    /*******************************************************************************************************
+    * @description holds the Opp's CurrencyIsoCode field that is enabled in multicurrency organizations.
+    */ 
     private static Sobjectfield OppCurrField;
+
+    /*******************************************************************************************************
+    * @description holds the Opp's CurrencyIsoCode field that is enabled in multicurrency organizations.
+    */ 
     public static SObjectField OppCurrencyField{get{
         if (OppCurrField == null)
             OppCurrField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
         return OppCurrField;
     }set;}       
+
+    /*******************************************************************************************************
+    * @description is MultiCurrency enabled in this org
+    */ 
     private static boolean isMc;
+
+    /*******************************************************************************************************
+    * @description is MultiCurrency enabled in this org
+    */ 
     public static boolean isMultiCurrency{get{
         if (isMc == null){          
             if (Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null)
@@ -65,9 +138,12 @@ public with sharing class RD_RecurringDonations {
         return isMc;                
     }set;}
     
-    
-    /*** BEGIN STATIC METHODS ***/    
-    
+    /*******************************************************************************************************
+    * @description Future method that updates the specified RD's by querying their Opps so it can update the RD's 
+    * Next Payment Date, Last Payment Date, Paid Amount, Number of Paid Installments.
+    * @param RDids The set of rd Id's to update
+    * @return void
+    */ 
     @future
     public static void updateRecurringDonationOnOppChangeFuture(set<id> RDids){
         Savepoint sp = Database.setSavepoint();
@@ -79,6 +155,13 @@ public with sharing class RD_RecurringDonations {
         }
     } 
     
+    /*******************************************************************************************************
+    * @description Updates the specified RD's by querying their Opps so it can update the RD's 
+    * Next Payment Date, Last Payment Date, Paid Amount, Number of Paid Installments.
+    * @param RDids The set of rd Id's to update
+    * @param dmlWrapper Object to hold the rd's to be updated
+    * @return void
+    */ 
     public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){   
         //set of RDs to be updated         
         map<id, npe03__Recurring_Donation__c> updateMap = new map<id, npe03__Recurring_Donation__c>();
@@ -169,7 +252,11 @@ public with sharing class RD_RecurringDonations {
         }
     } 
    
-    // requery for all the fields we need on the list of new RD's (including currency info) 
+    /*******************************************************************************************************
+    * @description Returns a list of RD's for the specified Id's, with all their fields queried.
+    * @param setRDids The set of rd Id's to quer
+    * @return list<npe03__Recurring_Donation__c>
+    */ 
     public static list<npe03__Recurring_Donation__c> requeryListRD(set<Id> setRDId) {    
         string queryRCD = strQueryRDNoWhere();
         queryRCD += ' where Id in :setRDId';
@@ -178,9 +265,12 @@ public with sharing class RD_RecurringDonations {
         return Database.query(queryRCD);
     }
     
-    // shared helper routine to create the soql string against Recurring Donations.
-    // includes fields from the custom field map, and currencyiso fields.
-    // does not include the where clause (since different callers had different filtering needs)
+    /*******************************************************************************************************
+    * @description Returns the soql string for RD's.  Includes fields from the custom field map and
+    * currency iso fields.  Does not include the where clause since different callers have different
+    * filtering needs.
+    * @return string
+    */ 
     public static string strQueryRDNoWhere() {
     	
     	// these must be lowercase so set.contains() will work
@@ -215,7 +305,11 @@ public with sharing class RD_RecurringDonations {
         return (queryRCD);
     }   
      
-    //future wrapper for rds with no opptys closed
+    /*******************************************************************************************************
+    * @description Future method that creates new Opportunities for the specified Recurring Donations.
+    * @param recurringDonations The list of RD's being created
+    * @return void
+    */ 
     @future
     public static void insertOppsOnRecurringDonationInsertFuture(set<id> recids) {
         Savepoint sp = Database.setSavepoint();
@@ -230,7 +324,12 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
-    //Creates new Opportunities when a RecurringDonation is inserted
+    /*******************************************************************************************************
+    * @description Creates new Opportunities for the specified Recurring Donations. Called by the AfterInsert
+    * Trigger Handler on RD's, and also when RD's are updated and we delete and recreate their Opps.
+    * @param recurringDonations The list of RD's being created
+    * @return void
+    */ 
     public static void insertOppsOnRecurringDonationInsert(list<npe03__Recurring_Donation__c> recurringDonations) {
         //Lists used for final Insert
         list<Opportunity> opportunityInserts = new list<Opportunity>();
@@ -287,7 +386,7 @@ public with sharing class RD_RecurringDonations {
                 if (r.npe03__Total_Paid_Installments__c != null) {
                 	paidInstallments = integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
-                    if (r.npe03__Schedule_Type__c == Label.npe03.RecurringDonationDivideValue) {                    
+                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue) {                    
                         installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
                     }
                 }
@@ -320,9 +419,12 @@ public with sharing class RD_RecurringDonations {
                     }
                 
                     //add the remainder to the last installment, otherwise use the amount
-                    if (j + 1 == installments && installments * r.npe03__Installment_Amount__c != r.npe03__Total__c)
-                    {                    	
-                        opp.Amount = r.npe03__Total__c - paidAmount - ((j - paidInstallments) * installmentAmount);
+                    decimal totalAmount = r.npe03__Total__c;
+                    // current formula field doesn't handle a missing schedule type, but let's treat it as divide by.
+                    if (r.npe03__Schedule_Type__c == null)
+                        totalAmount = r.npe03__Amount__c;
+                    if (j + 1 == installments && installments * r.npe03__Installment_Amount__c != totalAmount) {                    	
+                        opp.Amount = totalAmount - paidAmount - ((j - paidInstallments) * installmentAmount);
                     } else {
                         opp.Amount = installmentAmount;
                     }
@@ -510,8 +612,8 @@ public with sharing class RD_RecurringDonations {
                 i++;
             }
                     
-            if (ConIDForRole == null /* || Test.isRunningTest() */){ 
-                if (!system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+            if (ConIDForRole == null){ 
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else
                     oppContactRoles(createdOppIds);                    
@@ -522,14 +624,19 @@ public with sharing class RD_RecurringDonations {
                 ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
             }            
             
-            if (!system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
+            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_ProcessControl.batchButton)
                 updateRecurringDonationOnOppChangeFuture(updateRecurringDonationSet); 
             else
                 updateRecurringDonationOnOppChange(updateRecurringDonationSet, null);
         }
     }
     
-    //async wrapper for oppcontact role creation
+    /*******************************************************************************************************
+    * @description Future method that creates household OpportunityContactRoles for the specified Opps.
+    * Since NPSP3, the RD code always leverages opp.npe01__Contact_Id_for_Role__c and this code isn't used.
+    * @param oppIds The list of Opportunity Id's to create OCRS for
+    * @return void
+    */ 
     @future 
     public static void oppContactRolesFuture(set<id> oppIds){
     	Savepoint sp = Database.setSavepoint();
@@ -541,6 +648,12 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Creates household OpportunityContactRoles for the specified Opps.
+    * Since NPSP3, the RD code always leverages opp.npe01__Contact_Id_for_Role__c and this code isn't used.
+    * @param oppIds The list of Opportunity Id's to create OCRS for
+    * @return void
+    */ 
     public static void oppContactRoles( Set<Id> oppIds ){
         List<OpportunityContactRole> contactRoleInserts = new List<OpportunityContactRole>();
         map <String,Id> contactOppToContactRole = new Map <String,Id> ();
@@ -586,7 +699,12 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
-    //updates opps that are part of a recurring donation that was updated
+    /*******************************************************************************************************
+    * @description Future method that updates all the existing Opportunities for the specified Recurring Donations.
+    * @param recIDs The set of RD id's to process
+    * @param dmlWrapper Object to store the Opps that need updating
+    * @return void
+    */ 
     @future
     public static void updateExistingOppsFuture(set<id>recIDs){
     	Savepoint sp = Database.setSavepoint();
@@ -598,6 +716,12 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Updates all the existing Opportunities for the specified Recurring Donations.
+    * @param recIDs The set of RD id's to process
+    * @param dmlWrapper Object to store the Opps that need updating
+    * @return void
+    */ 
     public static void updateExistingOpps(set<id> recIDs, TDTM_Runnable.DmlWrapper dmlWrapper){
         
         
@@ -692,7 +816,16 @@ public with sharing class RD_RecurringDonations {
         }
     }
          
-    //handles updates to the recurring donations object
+    /*******************************************************************************************************
+    * @description Trigger AfterUpdate Handler for updates on existing Recurring Donations.  Key scenarios include:
+    * - closing an open ended rd, which should close all remaining opps on the rd.
+    * - opening a closed rd, which should create new opps on the rd.
+    * - any other modification to the rd, which should update the rd's opps.
+    * @param recurringDonations The list of updated RD's to process
+    * @param oldRecurringDonations A map from an RD's Id to its RD before the update 
+    * @param dmlWrapper Object to store the Opps that need updating
+    * @return void
+    */ 
     public static void handleRecurringDonationUpdate(list<npe03__Recurring_Donation__c> recurringDonations, map<id, npe03__Recurring_Donation__c> oldRecurringDonations, TDTM_Runnable.DmlWrapper dmlWrapper){
         
         //opening a closed recurring donation
@@ -756,9 +889,13 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
-    /** Returns the number of records that failed to be processed. **/
-    // called from the Refresh Opportunities button on both Open and Non-Open RD's, 
-    // as well as the Batch process for extending Open Ended RD's (no Non-Open)
+    /*******************************************************************************************************
+    * @description Handles changes to the specified RD's to update/recreate their Opportunities.  
+    * Called from the Refresh Opportunities button on both Open and Non-Open RD's, 
+    * as well as the Batch process for extending Open Ended RD's (no Non-Open).
+    * @param recurringDonationsToEvaluate The list of updated RD's to process
+    * @return integer The number of records that failed to be processed.
+    */ 
     public static Integer evaluateRecurringDonationsForNewOppInsert(list<npe03__Recurring_Donation__c> recurringDonationsToEvaluate){
     
         string openlabel = system.label.npe03.RecurringDonationOpenStatus;
@@ -920,7 +1057,7 @@ public with sharing class RD_RecurringDonations {
             }
                     
             if (ConIDForRole == null /* || Test.isRunningTest() */){
-                if (!system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
+                if (createdOppIds.size() > 1 && !system.isFuture() && !system.isBatch() && !RD_ProcessControl.batchButton)
                     oppContactRolesFuture(createdOppIds); 
                 else 
                     oppContactRoles(createdOppIds);                    
@@ -941,9 +1078,12 @@ public with sharing class RD_RecurringDonations {
         return badSRs.size();
     }
   
-    /// <name> approveDeleteRecDonations </name>
-    /// <summary> Validates that a Recurring Donation can be deleted </summary>
-    /// <param name="listRD"> RecurringDonation objects that are being triggered </param>
+    /*******************************************************************************************************
+    * @description Validates that the Recurring Donations can be deleted, and marks the RD record
+    * with an error if there are any Opportunities referring to the RD. 
+    * @param listRD The list of RD's to process
+    * @return void
+    */ 
     public static void approveDeleteRecDonations(list<npe03__Recurring_Donation__c> listRD) {
         Map<Id,Id> mapRDIdOppId = new Map<Id,Id>();
 
@@ -959,8 +1099,12 @@ public with sharing class RD_RecurringDonations {
         }
     }
     
-    /*** UTILITY METHODS ***/
-    //handles action for opps on recurring donations
+    /*******************************************************************************************************
+    * @description When closing an RD, either deletes or closes all of its currently open Opps. 
+    * @param closedRDs The list of RD's to process
+    * @param dmlWrapper Object to hold the Opps that need deleting or updating
+    * @return void
+    */ 
     private static void runRecurringDonationClosedActions(list<npe03__Recurring_Donation__c> closedRDs, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // determine the update type - 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
@@ -993,14 +1137,27 @@ public with sharing class RD_RecurringDonations {
         }
     }
 
-    // hack to avoid having the last day of month get pushed to the 30th, and then the 28th.
+    /*******************************************************************************************************
+    * @description Returns the last day of month for the provided date, assuming is set for
+    * the 28th or later.  This is a way to avoid the last day of month getting pushed to the
+    * 30th, and then the 28th.
+    * @param dt The date to analyze
+    * @return date Either the passed in date, or the last day of the month if the provided date
+    * was >= the 28th.
+    */ 
     private static date dtEndOfMonthFixup(Date dt) {
         if (dt.day() >= 28) {
             dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
         } 
         return dt;   	
     }
-    //helper for calculating the next date in the sequence based on the RD schedule type 
+
+    /*******************************************************************************************************
+    * @description Returns the next date in the sequence based on the RD schedule type 
+    * @param CalcDate The date to start from
+    * @param InstallmentType The RD's Installment period.
+    * @return date 
+    */ 
     private static date getNextDate(date CalcDate, string InstallmentType){
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
