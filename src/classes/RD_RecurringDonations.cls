@@ -259,38 +259,6 @@ public with sharing class RD_RecurringDonations {
     }   
      
     /*******************************************************************************************************
-    * @description Returns the Installment Amount for the Recurring Donation.  Use this method rather than
-    * the formula field, npe03__Installment_Amount__c, since during RD Insert, the formula will not be valid.
-    * @param rd The Recurring Donation
-    * @return Decimal
-    */
-    private static decimal installmentAmount(npe03__Recurring_Donation__c rd) {
-        if (rd.npe03__Schedule_Type__c == system.label.npe03.RecurringDonationMultiplyValue ||
-            rd.npe03__Open_Ended_Status__c == system.Label.npe03.RecurringDonationOpenStatus ||
-            rd.npe03__Installments__c == null ||
-            rd.npe03__Installments__c == 1)
-            return rd.npe03__Amount__c;
-        else
-            return (rd.npe03__Amount__c / rd.npe03__Installments__c).setScale(2);
-    } 
-    
-    /*******************************************************************************************************
-    * @description Returns the Total Amount for the non-open ended Recurring Donation.  Use this method rather than
-    * the formula field, npe03__Total__c, since during RD Insert, the formula will not be valid.
-    * @param rd The Recurring Donation
-    * @return Decimal
-    */
-    private static decimal totalAmount(npe03__Recurring_Donation__c rd) {
-        if (rd.npe03__Schedule_Type__c != system.label.npe03.RecurringDonationMultiplyValue ||
-            rd.npe03__Open_Ended_Status__c == system.Label.npe03.RecurringDonationOpenStatus ||
-            rd.npe03__Installments__c == null ||
-            rd.npe03__Installments__c == 1)
-            return rd.npe03__Amount__c;
-        else
-            return rd.npe03__Amount__c * rd.npe03__Installments__c;
-    } 
-     
-    /*******************************************************************************************************
     * @description Future method that creates new Opportunities for the specified Recurring Donations.
     * @param recurringDonations The list of RD's being created
     * @return void
@@ -310,7 +278,8 @@ public with sharing class RD_RecurringDonations {
     }
     
     /*******************************************************************************************************
-    * @description Creates new Opportunities for the specified Recurring Donations.
+    * @description Creates new Opportunities for the specified Recurring Donations. Called by the AfterInsert
+    * Trigger Handler on RD's, and also when RD's are updated and we delete and recreate their Opps.
     * @param recurringDonations The list of RD's being created
     * @return void
     */ 
@@ -359,8 +328,7 @@ public with sharing class RD_RecurringDonations {
                 }                                             
                 
                 Integer j=0;
-                // don't use npe03__Installment_Amount__c, since it is a formula and won't be valid during an insert!
-                decimal installmentAmount = installmentAmount(r);
+                decimal installmentAmount = r.npe03__Installment_Amount__c;
 
                 decimal paidAmount = 0;
                 if (r.npe03__Paid_Amount__c != null)
@@ -404,9 +372,12 @@ public with sharing class RD_RecurringDonations {
                     }
                 
                     //add the remainder to the last installment, otherwise use the amount
-                    //don't use npe03__Total__c because it isn't valid during the insert.
-                    if (j + 1 == installments && installments * installmentAmount(r) != totalAmount(r)) {                    	
-                        opp.Amount = totalAmount(r) - paidAmount - ((j - paidInstallments) * installmentAmount);
+                    decimal totalAmount = r.npe03__Total__c;
+                    // current formula field doesn't handle a missing schedule type, but let's treat it as divide by.
+                    if (r.npe03__Schedule_Type__c == null)
+                        totalAmount = r.npe03__Amount__c;
+                    if (j + 1 == installments && installments * r.npe03__Installment_Amount__c != totalAmount) {                    	
+                        opp.Amount = totalAmount - paidAmount - ((j - paidInstallments) * installmentAmount);
                     } else {
                         opp.Amount = installmentAmount;
                     }
@@ -799,10 +770,10 @@ public with sharing class RD_RecurringDonations {
     }
          
     /*******************************************************************************************************
-    * @description Handler for updates on existing Recurring Donations.  Key scenarios include:
-    * closing an open ended rd, which should close all remaining opps on the rd.
-    * opening a closed rd, which should create new opps on the rd.
-    * any other modification to the rd, which should update the rd's opps.
+    * @description Trigger AfterUpdate Handler for updates on existing Recurring Donations.  Key scenarios include:
+    * - closing an open ended rd, which should close all remaining opps on the rd.
+    * - opening a closed rd, which should create new opps on the rd.
+    * - any other modification to the rd, which should update the rd's opps.
     * @param recurringDonations The list of updated RD's to process
     * @param oldRecurringDonations A map from an RD's Id to its RD before the update 
     * @param dmlWrapper Object to store the Opps that need updating
