@@ -30,7 +30,54 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
-* @description The main class for controlling the behavior of Recurring Donations, both open ended and standard 
+* @description The main class for controlling the behavior of Recurring Donations, both open ended and standard.
+*
+* The logic of this class is quite complicated, so here is a summary of the call chain for various scenarios.
+*
+* Insert a new RD (open or non open):
+*   RD_RecurringDonations_TDTM(AfterInsert)
+*       insertOppsOnRecurringDonationInsert
+*           Database.insert(opps)
+*           updateRecurringDonationOnOppChange
+*
+* Update a non open-ended RD:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           delete non-closed Opps
+*           insertOppsOnRecurringDonationInsert
+*
+* Update a open-ended RD to closed:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           runRecurringDonationClosedActions
+*
+* Update an open-ended RD with changes that require opp updating:
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           updateExistingOpps
+*               updateRecurringDonationOnOppChange
+*
+* Update an open-ended RD to different schedule or contact (need to recreate opps):
+*   RD_RecurringDonations_TDTM(AfterUpdate)
+*       handleRecurringDonationUpdate
+*           delete non-closed Opps
+*           insertOppsOnRecurringDonationInsert
+*
+* Refresh Opportunities button or Nightly Batch on non open-ended:
+*   evaluateRecurringDonationsForNewOppInsert 
+*       delete non-closed Opps
+*       insertOppsOnRecurringDonationInsert
+*
+* Refresh Opportunities button or Nightly Batch on open-ended:
+*   evaluateRecurringDonationsForNewOppInsert
+*       database.insert(opps) (for additional opps) 
+*       insertOppsOnRecurringDonationInsert (if no opps exist)
+*       updateRecurringDonationOnOppChange
+*
+* Update an Opportunity that belongs to a RD:
+*   RD_RecurringDonations_Opp_TDTM(AfterUpdate)
+*       updateRecurringDonationOnOppChange
+*
 */
 public with sharing class RD_RecurringDonations {
     
