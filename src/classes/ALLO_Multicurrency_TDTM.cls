@@ -30,22 +30,34 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Class for multicurrency triggers and allocations rollup multicurrency related code.
 */
 public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
+    /** @description Boolean holds whether this org has multicurrency enabled. */
     public static boolean multiCurrency;
-    //exchangerate store
+
+    /** @description Map holds exchange rates to avoid multiple queries. */
     public static map<string, decimal> exchangeRates = new map<string,decimal>();
-    //corporate currency
+    
+    /** @description This organization's default corporate currency. */
     public static string currCorporate;
 
+    /** @description DmlWrapper to hold object changes. */
     public DmlWrapper wrapper = new DmlWrapper();
 
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger handler on Campaign and Recurring Donation for updating child allocation currency
+    * when the parent currency is changed.
+    * @param listNew The list of campaigns or recurring donations from trigger new. 
+    * @param listOld The list of campaigns or recurring donations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for the current trigger context. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -56,8 +68,13 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         return wrapper;
     }
 
-    // for any list of allocation parent objects (Opportunity, Campaign, Recurring Donation),
-    // gets a list of their child allocations, updates their CurrencyIsoCode
+    /*******************************************************************************************************
+    * @description For any given list of allocation parent objects, (Opportunity, Campaign, or Recurring 
+    * Donation,) queries for child allocations and updates currency to match parent.
+    * @param listNew The list of opportunities, campaigns, or recurring donations from trigger new. 
+    * @param listOld The list of opportunities, campaigns, or recurring donations from trigger old. 
+    * @return list<Allocation__c> Allocations with modified currency that need updating via DML.
+    ********************************************************************************************************/
     public static list<Allocation__c> updateAllocationCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist) {
         list<Allocation__c> results = new list<Allocation__c>();
         //map holds object id to currency iso code
@@ -80,7 +97,7 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         for (Allocation__c allo : database.query(alloQuery)) {
             string parentCurrency = mapIdToISO.get(ALLO_Allocations_TDTM.getParentId(allo));
             
-            /*Not updating allocagion amounts, as Salesforce only updates the currency and does not convert the amount
+            /*Not updating allocation amounts, as Salesforce only updates the currency and does not convert the amount
             if (allo.Amount__c!=null)
                 allo.Amount__c = convertCurrency(parentCurrency, (string)allo.get('CurrencyIsoCode'), allo.Amount__c);
             */
@@ -91,7 +108,11 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         return results;
     }
 
-    //for a list of allocations, set the currency ISO code from the parent object
+    /*******************************************************************************************************
+    * @description For a list of allocations, set the currency based on the parent object.
+    * @param listAllo The list of allocations. 
+    * @return void This method modifies the list of allocations directly and returns nothing.
+    ********************************************************************************************************/
     public static void updateAllocationCurrency(list<Allocation__c> listAllo) {
         map<id,string> mapIdToISO = new map<id,string>();
 
@@ -109,7 +130,11 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         }
     }
 
-    //for any set of Ids, gets the sObject's currency ISO code
+    /*******************************************************************************************************
+    * @description For any set of ids of any sObject, gets the sObject's currency code.
+    * @param setId A set of ids of any sObjects.
+    * @return map<id,string> A map from the id of the object to the object's currency code string.
+    ********************************************************************************************************/
     public static map<id,string> getISOFromIdSet (set<id> setId) {
         map<id,string> results = new map<id,string>();
         set<string> parentTypes = new set<string>();
@@ -128,8 +153,11 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         return results;
     }
 
-    //returns a boolean if we are in a multi-currency org or not.
-    //on first execution sets up static variables etc
+    /*******************************************************************************************************
+    * @description Detects if this organization has multicurrency enabled, and populates class variables if 
+    * so.
+    * @return boolean Whether this org has multicurrency enabled.
+    ********************************************************************************************************/
     public static boolean isMultiCurrency() {
         if (multiCurrency==null) {
 
@@ -154,7 +182,13 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         return multiCurrency;
     }
 
-    //do a conversion from amount in corporate currency to the currency specified by the ISO code
+    /*******************************************************************************************************
+    * @description Converts an amount from the corporate currency to a given currency.
+    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+        //do a conversion from amount in corporate currency to the currency specified by the ISO code
     public static decimal convertFromCorporate(String ISO,Decimal amt) {
         if(currCorporate == ISO || currCorporate == null) // no need to convert
             return amt;
@@ -162,7 +196,15 @@ public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
             return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP) ;
     }
 
-    public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
+
+    /*******************************************************************************************************
+    * @description Converts an amount from any given currency to any other currency.
+    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
+    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
+    * @param amt A decimal of the amount to convert.
+    * @return decimal The converted amount.
+    ********************************************************************************************************/
+   public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
         if(fromISO == toISO) // no need to convert
             return amt;
         else //return value to 2DP

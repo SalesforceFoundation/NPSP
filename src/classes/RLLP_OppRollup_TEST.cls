@@ -30,31 +30,42 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011
-* @description test class for Opportunity Rollup functionality
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
+* @description Test class for Opportunity Rollup functionality
 */
 @isTest
 public with sharing class RLLP_OppRollup_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
-    //-----------------------------------------------------------------------------------------------------------------------
-    // TEST DATA HELPER
-    //  use the following static variables and initialization routine to help setup test data for opportunities. 
-    //-----------------------------------------------------------------------------------------------------------------------
-    
-    // helper static variables provided by setupTestData
+    /** @description Today's date. */
     static Date datToday = System.Today();
+    /** @description The date of January 1st, last year. */
     static Date dat1YearAgo = Date.newInstance( datToday.year()-1,1,1);
+    /** @description The date of January 1st, two years ago. */
     static Date dat2YearAgo = Date.newInstance( datToday.year()-2,1,1);
+    /** @description The date of January 1st, four years ago */
     static Date dat4YearAgo = Date.newInstance( datToday.year()-4,1,1);
+    /** @description Default gift record type for tests. */
     static String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests('Opportunity');
+    /** @description Default membership record type for tests. */
     static String membershipRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForMembershipTests('Opportunity');
+    /** @description List of test contacts. */
     static list<Contact> listConTest;
+    /** @description List of test opportunities. */
     static list<Opportunity> listOppTest;
 
-    // helper utility to create test contacts and test opps
+    /*******************************************************************************************************
+    * @description Helper utility to create test contacts and test opportunities
+    * @param numContacts The number of test contacts to create.
+    * @param strProcessor The account processor type for this test.
+    * @return boolean Returns false if there is no a membership record type name for tests.
+    ********************************************************************************************************/    
     static boolean setupTestData(integer numContacts, string strProcessor) {      
         
         if (membershipRecordTypeNameForTests == null)
@@ -113,14 +124,25 @@ public with sharing class RLLP_OppRollup_TEST {
         return true;
     }
 
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupProcessor test method for the One to One account processor.
+    */
     static testMethod void testGivingRollupOne2One(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupOne2One') return;
         testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupProcessor test method for the household account processor.
+    */
     static testMethod void testGivingRollupHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupHHAccount') return;
         testGivingRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates a contact, inserts an opportunity, and verifies rollup fields from opportunity 
+    * trigger for a given account processor.
+    * @param strProcessor The account processor type.
+    */
     static void testGivingRollupProcessor(string strProcessor){
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -197,14 +219,25 @@ public with sharing class RLLP_OppRollup_TEST {
         system.AssertEquals(string.valueof(datClose.year()), UpdatedCon.npo02__household__r.npo02__Best_Gift_Year__c);
     }
     
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupIndividualProcessor test method for the bucket account processor.
+    */
     static testMethod void testGivingRollupIndividualBucket(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupIndividualBucket') return;
         testGivingRollupIndividualProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupIndividualProcessor test method for the household account processor.
+    */
     static testMethod void testGivingRollupIndividualHHAccount(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupIndividualHHAccount') return;
         testGivingRollupIndividualProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates a contact, inserts an opportunity, and verifies rollup fields from opportunity 
+    * trigger for a given account processor, then runs rollups manually and verifies nothing has changed.
+    * @param strProcessor The account processor type.
+    */
     static void testGivingRollupIndividualProcessor(string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -282,14 +315,25 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals (0 , UpdatedCon.npo02__OppAmountLastYear__c);
     }
 
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupExcludedRTProcessor test method for the one to one account processor.
+    */
     static testMethod void testGivingRollupExcludedRTOne2One(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupExcludedRTOne2One') return;
         testGivingRollupExcludedRTProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupExcludedRTProcessor test method for the household account processor.
+    */
     static testMethod void testGivingRollupExcludedRTHHAccount(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupExcludedRTHHAccount') return;
         testGivingRollupExcludedRTProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Creates a contact, inserts an opportunity with an excluded record type, and verifies rollup
+    * fields from opportunity trigger are blank, then runs rollups manually and verifies nothing has changed.
+    * @param strProcessor The account processor type.
+    */
     static void testGivingRollupExcludedRTProcessor (string strProcessor) {
 
         if(giftRecordTypeNameForTests!=''){
@@ -367,14 +411,25 @@ public with sharing class RLLP_OppRollup_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupAlwaysPrimaryProcessor test method for the one to one account processor.
+    */
     static testMethod void testGivingRollupAlwaysPrimaryOne2One(){
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupAlwaysPrimaryOne2One') return;
         testGivingRollupAlwaysPrimaryProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Runs testGivingRollupAlwaysPrimaryProcessor test method for the household account processor.
+    */
     static testMethod void testGivingRollupAlwaysPrimaryHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupAlwaysPrimaryHHAccount') return;
         testGivingRollupAlwaysPrimaryProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description Sets Always Rollup to Primary Contact setting, creates a contact, inserts an opportunity 
+    * attributed to a organizatio account, and verifies rollups go to the primary contact instead of the account.
+    * @param strProcessor The account processor type.
+    */
    static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
@@ -454,14 +509,23 @@ public with sharing class RLLP_OppRollup_TEST {
         
     }
     
+    /*********************************************************************************************************
+    * @description
+    */
     static testMethod void testMemberRollupOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testMemberRollupOne2One') return;
         testMemberRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description
+    */
     static testMethod void testMemberRollupHHAccount(){
     	if (strTestOnly != '*' && strTestOnly != 'testMemberRollupHHAccount') return;
         testMemberRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
+    /*********************************************************************************************************
+    * @description
+    */
     static void testMemberRollupProcessor (string strProcessor) {
 
         if(membershipRecordTypeNameForTests!=''){
@@ -526,14 +590,23 @@ public with sharing class RLLP_OppRollup_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description
+    */
     static testMethod void testGivingRollupAcctOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupAcctOne2One') return;
         testGivingRollupAcct(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description
+    */
     static testMethod void testGivingRollupAcctHHAccount(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupAcctHHAccount') return;
         testGivingRollupAcct(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+    /*********************************************************************************************************
+    * @description
+    */
     static void testGivingRollupAcct (string strProcessor) {
  
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (

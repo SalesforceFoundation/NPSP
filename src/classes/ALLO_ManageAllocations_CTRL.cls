@@ -30,16 +30,18 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Controller for the Manage Allocations page.
 */
 public with sharing class ALLO_ManageAllocations_CTRL {
 
+    /** @description The current list of allocations we're managing, as displayed on the page.*/
 	public list<Allocation__c> listAllo {get;set;}
+    /** @description If defaults are enabled, the default allocation is here, and not in listAllo. */
     public Allocation__c defaultAllo {get;set;}
 
+    /** @description The number of allocations in listAllo. */
     public integer listAlloSize {
         get{
             return listAllo.size();
@@ -47,19 +49,26 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         set;
     }
 
+    /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
 
+    /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
     public id parentId {get;set;}
+    /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
     public Opportunity opp {get;set;}
+    /** @description The parent campaign, if we're dealing with campaign allocations.*/
     public Campaign cam {get;set;}
+    /** @description The parent recurring donation, if we're dealing with recurring donation allocations.*/
     public npe03__Recurring_Donation__c rd {get;set;}
+    /** @description The amount of the parent opportunity, if these are opportunity allocations.*/
     public decimal parentAmount {get;set;}
+    /** @description The allocations settings object. */
     public static Allocations_Settings__c settings {get;set;}
 
-    //row number sent back by page for add and delete row methods
+    /** @description Row number sent back by page for add and delete row methods.*/
     public integer rowNumber {get;set;}
 
-    //constructor finds parent object, queries it, and sets parentId and parentAmount if possible
+    /** Constructor queries for the parent object and the allocations, and fills out attributes.*/
     public ALLO_ManageAllocations_CTRL() {
 
         settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
@@ -98,6 +107,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             addRow();
     }
 
+    /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
 
@@ -116,6 +126,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return null;
     }
 
+    /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
     public pageReference delRow() {
         //add to deletion list if the allocation has an id
         if (listAllo[rowNumber].id!=null)
@@ -125,6 +136,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         return null;
     }
 
+    /** @description Saves changes and returns user to parent object detail page.*/
     public pageReference saveClose() {
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
@@ -161,6 +173,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
     }
 
+    /** @description Discards all changes and returns user to parent object detail page.*/
     public pageReference cancel() {
         pageReference source = new pageReference('/'+parentId);
         return source;
