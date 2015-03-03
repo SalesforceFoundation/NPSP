@@ -271,7 +271,7 @@ public with sharing class RD_RecurringDonations {
             rd.npe03__Installments__c == 1)
             return rd.npe03__Amount__c;
         else
-            return rd.npe03__Amount__c / rd.npe03__Installments__c;
+            return (rd.npe03__Amount__c / rd.npe03__Installments__c).setScale(2);
     } 
     
     /*******************************************************************************************************
