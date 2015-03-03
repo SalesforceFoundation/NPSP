@@ -80,9 +80,13 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings) {
 
         this.checked_addresses = new List<Address__c>();
-        this.AUTH_TOKEN = settings.AUTH_TOKEN__c;
+        this.AUTH_TOKEN = settings.Auth_Token__c;
         this.TIMEOUT = settings.Timeout__c;
-        this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
+        
+        if (settings.Address_Verification_Endpoint__c != null)      
+            this.END_POINT = settings.Address_Verification_Endpoint__c;        
+        else       
+            this.END_POINT = getDefaultURL();
 
         if (!addresses.isEmpty()){
             for (Address__c a : addresses){

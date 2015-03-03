@@ -96,9 +96,16 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else if (addresses.size() > 100) //This is a smartyStreets limit
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
+        String endpoint;
+        if (settings.Address_Verification_Endpoint__c != null) {
+            endpoint = settings.Address_Verification_Endpoint__c;      
+        } else {
+        	ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+        	endpoint = validator.getDefaultURL();
+        }
+            
         // send the request
-        ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-        HttpResponse res = sendRequest(addresses, validator.getDefaultURL());
+        HttpResponse res = sendRequest(addresses, endpoint);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
