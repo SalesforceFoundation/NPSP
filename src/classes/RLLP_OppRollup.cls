@@ -30,11 +30,13 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2011 (2.0) 
-* @description Resposible for rollups of all opportunities to the requisite Account/Household/Contact 
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
+* @description Main logic class for rollups of opportunities to the Accounts, Contacts, and Households.
 */
 public without sharing class RLLP_OppRollup {
     
-    /*** Constructor ***/
+    /** @description Constructor gets settings and sets up variables. */
     public RLLP_OppRollup(){
         // setup households settings
         RLLP_OppRollup_UTIL.setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
@@ -42,7 +44,13 @@ public without sharing class RLLP_OppRollup {
         RLLP_OppRollup_UTIL.setupUserRollupVars();
     }
     
-    /*** Fired from trigger on Opp - determine which opps changed and pass the Con/Acc/HH IDs to the regular rollup methods ***/
+    /*******************************************************************************************************
+    * @description Opportunity rollups from triggers: determines which opportunities have changed and pass
+    * the contact, account, and household IDs to rollup methods.
+    * @param newOpps The map of Id to Opportunity from trigger new.
+    * @param listOld The map of Id to Opportunity from trigger old. 
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupForOppTrigger( map<id, Opportunity> newOpps, map<id, Opportunity> oldOpps ) {
         //opp ids for contact/hh querying
         set<id> contactRequerySet = new set<id>();        
@@ -103,7 +111,11 @@ public without sharing class RLLP_OppRollup {
         }            
     }       
     
-    /*** Future Wrapper Methods for Handling Bulk Processing & Trigger Opps ***/
+    /*******************************************************************************************************
+    * @description Future wrapper method for updating contacts and households from a set of opportunity IDs.
+    * @param OppIds A set of opportunity ids.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     @future 
     public static void rollupContactsandHouseholdsForTriggerFuture(set<id> OppIds) {
     	Savepoint sp = Database.setSavepoint();
@@ -115,6 +127,11 @@ public without sharing class RLLP_OppRollup {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Updating contacts and households rollups from a set of opportunity IDs.
+    * @param OppIds A set of opportunity ids.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public static void rollupContactsandHouseholdsForTrigger(set<id> OppIds){
         //we need this to make sure there's a proper OCR when Contact Opps are inserted
         
@@ -142,6 +159,11 @@ public without sharing class RLLP_OppRollup {
         }           
     }
     
+    /*******************************************************************************************************
+    * @description Future wrapper method for updating account rollups from a set of account IDs.
+    * @param acctIds A set of account ids.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     @future 
     public static void rollupAccountsFuture( set<id> acctIds ) {
         Savepoint sp = Database.setSavepoint();
@@ -160,6 +182,11 @@ public without sharing class RLLP_OppRollup {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Future wrapper method for updating contact rollups from a set of contact IDs.
+    * @param acctIds A set of contact ids.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     @future
     public static void rollupContactsFuture (set<id> conIDs){
         Savepoint sp = Database.setSavepoint();
@@ -176,6 +203,12 @@ public without sharing class RLLP_OppRollup {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }     
     }
+
+    /*******************************************************************************************************
+    * @description Future wrapper method for updating household rollups from a set of household IDs.
+    * @param acctIds A set of household ids.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     @future
     public static void rollupHouseholdsFuture (set<id> hhIDs){
     	Savepoint sp = Database.setSavepoint();
@@ -192,11 +225,12 @@ public without sharing class RLLP_OppRollup {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }       
     } 
-    /*************************************************************/
 
-    /*** Aggregate Query Rollup Methods ***/
-   
-    // roll up opps for a map of accounts
+    /*******************************************************************************************************
+    * @description Runs opportunity rollups for accounts.
+    * @param amap A map of account IDs to accounts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAccounts(map<id, Account> amap) {
 
         //arg used by multi currency for rollup field currencies
@@ -344,7 +378,11 @@ public without sharing class RLLP_OppRollup {
         update accountsToUpdate.values();     
     }    
     
-    //rollup Opps for a map of Contacts
+    /*******************************************************************************************************
+    * @description Runs opportunity rollups for contacts.
+    * @param cmap A map of contact IDs to contacts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupContacts(map<id, Contact> cmap){
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;
@@ -490,6 +528,11 @@ public without sharing class RLLP_OppRollup {
         update contactsToUpdate.values();
     }    
     
+    /*******************************************************************************************************
+    * @description Runs opportunity rollups for households.
+    * @param hhmap A map of contact IDs to households.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupHouseholds(map<id, npo02__Household__c> hhmap){        
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;        
@@ -631,6 +674,11 @@ public without sharing class RLLP_OppRollup {
         update householdsToUpdate.values();
     }  
     
+    /*******************************************************************************************************
+    * @description Runs opportunity soft credit rollups for contacts.
+    * @param cmap A map of contact IDs to contacts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupSoftCredits(map<id, Contact> cmap){      
         //arg used by multi currency for rollup field currencies
         map<Id,Opportunity> opptyCurrencies;
@@ -690,9 +738,10 @@ public without sharing class RLLP_OppRollup {
         update contactsToUpdate.values();  
     }
        
-    /*************************************************************/
-    
-    /*** Wrappers for Managing the batch process ***/
+    /*******************************************************************************************************
+    * @description Runs all batch opportunity rollups for all records on all objects.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAll(){
     	
     	//clear the error queue from any previous runs
@@ -706,25 +755,46 @@ public without sharing class RLLP_OppRollup {
             rollupAllSoftCredits();
         }            
     }
+    /*******************************************************************************************************
+    * @description Runs batch opportunity rollups for all accounts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAllAccounts() {
         RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
     }
+    /*******************************************************************************************************
+    * @description Runs batch opportunity rollups for all contacts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAllContacts() { 
         RLLP_OppContactRollup_BATCH batch = new RLLP_OppContactRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
     }
+    /*******************************************************************************************************
+    * @description Runs batch opportunity rollups for all households.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAllHouseholds(){
         RLLP_OppHouseholdRollup_BATCH batch = new RLLP_OppHouseholdRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     }
+    /*******************************************************************************************************
+    * @description Runs batch opportunity soft credit rollups for all contacts.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public void rollupAllSoftCredits(){
         RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
         id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
     }
-    /*************************************************************/
     
-    /*** Methods for writing from aggregate results to objects ***/    
+    /*******************************************************************************************************
+    * @description Method writes rollup fields from AggregateResults to an object needing rollups.
+    * @param obj The object to roll up to.
+    * @param r The aggregate result object.
+    * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public static void updateRollupFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies) {
        // get the fiscal year, total amount, and opp count for this result row     
         integer fy = (integer)(r.get('CalendarYr'));
@@ -800,6 +870,12 @@ public without sharing class RLLP_OppRollup {
         } 
     }
 
+    /*******************************************************************************************************
+    * @description Method writes Last N Days rollup fields from AggregateResults to an object needing rollups.
+    * @param obj The object to roll up to.
+    * @param r The aggregate result object.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public static void updateRollupFromResultLastNDays(sobject obj, sobject r){
            
         // get the fiscal year, total amount, and opp count for this result row     
@@ -814,6 +890,13 @@ public without sharing class RLLP_OppRollup {
         obj.put('npo02__OppsClosedLastNDays__c', cnt);
     }
 
+    /*******************************************************************************************************
+    * @description Method writes membership rollup fields from AggregateResults to an object needing rollups.
+    * @param obj The object to roll up to.
+    * @param r The aggregate result object.
+    * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public static void updateRollupFromResultMembership(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies){
     // used for single and batch rollups, this maps query results to the right fields
         
@@ -844,6 +927,13 @@ public without sharing class RLLP_OppRollup {
         obj.put('npo02__MembershipEndDate__c', (date)(r.get('LastEndDate')));
     }   
     
+    /*******************************************************************************************************
+    * @description Method writes soft credit rollup fields from AggregateResults to an object needing rollups.
+    * @param obj The object to roll up to.
+    * @param r The aggregate result object.
+    * @param opptyCurrencies Holds opportunity currency codes for multicurrency orgs.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
     public static void updateSoftCreditFromResult(sobject obj, sobject r, map<id, Opportunity> opptyCurrencies){
          // get the fiscal year, total amount, and opp count for this result row     
         integer fy = (integer)(r.get('CalendarYr'));
@@ -878,7 +968,14 @@ public without sharing class RLLP_OppRollup {
         }
     }
 
-    public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
+     /*******************************************************************************************************
+    * @description Method writes soft credit last N days rollup fields from AggregateResults to an object 
+    * needing rollups.
+    * @param obj The object to roll up to.
+    * @param r The aggregate result object.
+    * @return void This method does updates directly and returns nothing.
+    ********************************************************************************************************/
+   public static void updateSoftCreditRollupFromResultLastNDays(sobject obj, sobject r){
            
         // get the total amount for this result row     
         decimal amt = (decimal)(r.get('TotalOppAmount'));
@@ -889,7 +986,4 @@ public without sharing class RLLP_OppRollup {
         
         obj.put('Soft_Credit_Last_N_Days__c', amt);               
     }
-
-    
-    /*************************************************************/ 
 }

@@ -30,16 +30,19 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
-* @description Batch class creates default allocations for all opportunities.
+* @group-content ../../ApexDocContent/Allocations.htm
+* @description Batch class creates default allocations for all opportunities that aren't excluded 
+* in allocation settings by type or record type.
  */
- public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
+public class ALLO_MakeDefaultAllocations_BATCH implements Database.Batchable<sObject> {
 
+    /** @description Allocations settings object.*/
     private Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    /** @description The query for the batch process to run on.*/
     private String query;
     
+    /** @description The batch process constructor; creates the query based on type and record type exclusion settings.*/
     public ALLO_MakeDefaultAllocations_BATCH() {
         
         string strExcludeOppRecTypesQuery = '';
@@ -68,10 +71,16 @@
         query += strExcludeOppRecTypesQuery + strExcludeOppTypesQuery;
     }
     
+    /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
 
+    /*********************************************************************************************************
+    * @description Batch process execute method. Queries for allocations for the current opportunity. Creates
+    * a default allocation for the full amount if none are present, or for the unallocated remainder if the
+    *  opportunity isn't completely allocated.
+    */
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
 
         list<Opportunity> listOpps = (list<Opportunity>) scope;
@@ -133,6 +142,7 @@
         }
     }
     
+    /** @description Batch process finish method, does nothing.*/
     public void finish(Database.BatchableContext BC) {}
     
 }
