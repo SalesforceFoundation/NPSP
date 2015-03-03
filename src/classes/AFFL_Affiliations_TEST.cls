@@ -1,31 +1,38 @@
-/**
- * This class contains unit tests for validating the behavior of Apex classes
- * and triggers.
- *
- * Unit tests are class methods that verify whether a particular piece
- * of code is working properly. Unit test methods take no arguments,
- * commit no data to the database, and are flagged with the testMethod
- * keyword in the method definition.
- *
- * All test methods in an organization are executed whenever Apex code is deployed
- * to a production organization to confirm correctness, ensure code
- * coverage, and prevent regressions. All Apex classes are
- * required to have at least 75% code coverage in order to be deployed
- * to a production organization. In addition, all triggers must have some code coverage.
- * 
- * The @isTest class annotation indicates this class only contains test
- * methods. Classes defined with the @isTest annotation do not count against
- * the organization size limit for all Apex scripts.
- *
- * See the Apex Language Reference for more information about Testing and Code Coverage.
- */
+/*
+    Copyright (c) 2014, Salesforce.com Foundation
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the Salesforce.com Foundation nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 /**
 * @author Salesforce.com Foundation
 * @date 2009
-*
 * @group Affiliations
-*
-* @description  
+* @group-content ../../ApexDocContent/Affiliations.htm
+* @description Test class for affiliations.
 */
 @isTest
 public class AFFL_Affiliations_TEST {
@@ -34,8 +41,9 @@ public class AFFL_Affiliations_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
             
-    /// <name> newContactOnOrgAccount </name>
-    /// <summary> test creation of affiliation for contact on an Org account </summary>
+    /*******************************************************************************************************
+    * @description Creates a new contact with an organizational account. Verifies an affiliation was created.
+    */
     static testMethod void newContactOnOrgAccount() {
         if (strTestOnly != '*' && strTestOnly != 'newContactOnOrgAccount') return;
         
@@ -85,7 +93,11 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__EndDate__c);
     }
     
-    
+    /*******************************************************************************************************
+    * @description Creates a new account with automatic affiliation creation turned off. Verifies no 
+    * affiliation was created.
+    */
+
     static testMethod void newContactOnOrgAccountAutoOff() {
         if (strTestOnly != '*' && strTestOnly != 'newContactOnOrgAccountAutoOff') return;
         
@@ -107,8 +119,9 @@ public class AFFL_Affiliations_TEST {
     }
 
 
-    /// <name> createAffiliation_Test </name>
-    /// <summary> test method for createAffiliation_Test function </summary>
+    /*******************************************************************************************************
+    * @description Creates a new contact with an individual account. Verifies an affiliation was created.
+    */
     static testMethod void newContactOnIndividualAccount() {
         if (strTestOnly != '*' && strTestOnly != 'newContactOnIndividualAccount') return;
         
@@ -127,7 +140,10 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(0, createdAffiliations.size());    
     }
     
-    //Modifying the test above to have only two DMLs, one before StartTest and one after
+    /*******************************************************************************************************
+    * @description Creates a contact with a primary affiliation. Updates primary affiliation to new account.
+    * Verifies old affiliation marked as former, and new affiliation marked as current.
+    */
     static testMethod void contactWithMultipleAffiliations_v2() {
         if (strTestOnly != '*' && strTestOnly != 'contactWithMultipleAffiliations_v2') return;
         
@@ -168,12 +184,9 @@ public class AFFL_Affiliations_TEST {
     }
    
    
-    /*********************************************************************************************************
-    operation:
-        create N new contacts, with different account types, and set a primary affiliation
-    verify:
-        N affiliations created and marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Creates contacts with a primary affiliation. Verifies primary affiliations are created.
+    */
     static testMethod void newContactsWithPrimaryAffiliation() {
         if (strTestOnly != '*' && strTestOnly != 'newContactsWithPrimaryAffiliation') return;
         
@@ -221,12 +234,9 @@ public class AFFL_Affiliations_TEST {
         }
    }
 
-    /*********************************************************************************************************
-    operation:
-        create N new contacts, with different account types, and set a primary affiliation
-    verify:
-        N affiliations created and marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Creates a new contact with a one-to-one account. Verifies an affiliation was created.
+    */
     static testMethod void newContactsWithPrimaryAffiliationOnetoOne() {
         if (strTestOnly != '*' && strTestOnly != 'newContactsWithPrimaryAffiliationOnetoOne') return;
         
@@ -273,13 +283,10 @@ public class AFFL_Affiliations_TEST {
                 system.assertEquals(true, affl.npe5__Primary__c);
         }
     }
-
-    /*********************************************************************************************************
-    operation:
-        update N contacts, with different account types, with a primary affiliation
-    verify:
-        N affiliations created and marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
+    * old affiliations are not marked primary.
+    */
     static testMethod void updateContactsWithPrimaryAffiliation() {
         if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliation') return;
         
@@ -337,12 +344,10 @@ public class AFFL_Affiliations_TEST {
         }
    }
      
-    /*********************************************************************************************************
-    operation:
-        update N contacts, with different account types, with a primary affiliation and account
-    verify:
-        N affiliations created and marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Updates contacts' primary affiliation and account, verifies new primary affiliations are created and
+    * old affiliations are not marked primary.
+    */
     static testMethod void updateContactsWithPrimaryAffiliationAndAccount() {
         if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationAndAccount') return;
         
@@ -405,12 +410,10 @@ public class AFFL_Affiliations_TEST {
         }
     }
     
-    /*********************************************************************************************************
-    operation:
-        update N contacts, with different account types with Primary Affiliation, to a different account.
-    verify:
-        N affiliations created and marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
+    * old affiliations are not marked primary.
+    */
     static testMethod void updateContactsWithPrimaryAffiliationToDiffAccount() {
         if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationToDiffAccount') return;
         
@@ -482,12 +485,10 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(8, cOrg2);
     }
 
-    /*********************************************************************************************************
-    operation:
-        update N contacts, with different account types with Primary Affiliation, clear primary.
-    verify:
-        N affiliations created and not marked Primary
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Creates contacts with primary affiliations. Verifies primary affiliations are created. 
+    * Removes primary affiliation lookup from contacts. Verifies affiliations no longer marked primary.
+    */
     static testMethod void updateContactsWithPrimaryAffiliationClearPrimary() {
         if (strTestOnly != '*' && strTestOnly != 'updateContactsWithPrimaryAffiliationClearPrimary') return;
         
@@ -546,12 +547,11 @@ public class AFFL_Affiliations_TEST {
         }
    }
 
-    /*********************************************************************************************************
-    operation:
-        create N primary Affiliations on contacts with different accounts
-    verify:
-        Primary Affiliation on contacts filled in to matching account
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Creates new primary affiliations for contacts with existing primary affiliations. 
+    * Verifies that the contacts' Primary Affiliation field is updated. Unchecks primary for these
+    * affiliations, then verifies that the Primary Affiliation field has been nulled out on the contacts.
+    */
     static testMethod void newPrimaryAffiliations() {
         if (strTestOnly != '*' && strTestOnly != 'newPrimaryAffiliations') return;
         
@@ -624,12 +624,11 @@ public class AFFL_Affiliations_TEST {
         
    }
 
-    /*********************************************************************************************************
-    operation:
-        change primary Affiliations from the Affiliations object for N contacts with different account models.
-    verify:
-        Primary Affiliation on contacts changed to the new primary account
-    **********************************************************************************************************/            
+    /*******************************************************************************************************
+    * @description Creates new primary affiliations for contacts with existing primary affiliations. 
+    * Verifies that the contacts' Primary Affiliation field is updated, and the formerly primary 
+    * affiliations are no longer marked as primary.
+    */
     static testMethod void newPrimaryAffiliationsFromAffl() {
         if (strTestOnly != '*' && strTestOnly != 'newPrimaryAffiliationsFromAffl') return;
         
@@ -722,12 +721,11 @@ public class AFFL_Affiliations_TEST {
         system.assertEquals(8, cPrimary);
    }
 
-    /*********************************************************************************************************
-    operation:
-        Add a new account with primary affiliation to existing contact. Then, update the account's primary contact.
-    verify:
-        Affiliation created between new account and existing contact. Verify secondary affiliation created between new primary contact.
-    **********************************************************************************************************/    
+    /*******************************************************************************************************
+    * @description Adds a new account with primary affiliation to existing contact, then updates the 
+    * account's primary contact. Verifies that an affiliation was created between new account and existing
+    * contact, and a primary affiliation created with the account's new primary contact.
+    */
     static testMethod void newAccountNewAffl() {
         if (strTestOnly != '*' && strTestOnly != 'newAccountNewAffl') return;
         

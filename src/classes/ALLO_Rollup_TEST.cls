@@ -30,22 +30,26 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests specific to Opportunity Allocations rollup to General Accounting Units. 
 */
+
 @isTest
 private with sharing class ALLO_Rollup_TEST {
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
-    private static Allocations_Settings__c settings;
 
-    //test allocations rollup button to General Accounting Unit
-
-    //test rollup record type and type exclusions
-
+    /*******************************************************************************************************
+    * @description Setup of allocations settings.
+    * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
+    * parameter uses default settings.
+    * @return void Modifies settings, returns nothing.
+    ********************************************************************************************************/
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
@@ -57,8 +61,8 @@ private with sharing class ALLO_Rollup_TEST {
         }
     }
 
-    @isTest
-    static void rollupBTN() {
+    /** @description Tests rollup button on general accounting units. */
+    static testMethod void rollupBTN() {
         if (strTestOnly != '*' && strTestOnly != 'rollupBTN') return;
         setupSettings(null);
 
@@ -89,7 +93,6 @@ private with sharing class ALLO_Rollup_TEST {
     	list<General_Accounting_Unit__c> queryGAU = [SELECT Id, First_Allocation_Date__c, Largest_Allocation__c, Last_Allocation_Date__c, Number_of_Allocations_Last_N_Days__c, Number_of_Allocations_Last_Year__c, Number_of_Allocations_This_Year__c, 
     												Number_of_Allocations_Two_Years_Ago__c, Smallest_Allocation__c, Total_Allocations__c, Total_Allocations_Last_N_Days__c, Total_Allocations_Last_Year__c, Total_Allocations_This_Year__c, 
     												Total_Allocations_Two_Years_Ago__c, Total_Number_of_Allocations__c FROM General_Accounting_Unit__c WHERE Id = :gau.id];
-    	system.debug('LookHere: queryGAU ' + queryGAU);
     	system.assertEquals(16, queryGAU[0].Total_Allocations__c, 'Total allocations should equal 16.');
     	system.assertEquals(system.today(), queryGAU[0].Last_Allocation_Date__c, 'Last allocation should be today.');
     	system.assertEquals(system.today().addYears(-2), queryGAU[0].First_Allocation_Date__c, 'First allocation should be two years ago.');

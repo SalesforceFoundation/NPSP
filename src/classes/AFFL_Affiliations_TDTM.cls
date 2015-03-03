@@ -30,10 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2009
-*
 * @group Affiliations
-*
-* @description  
+* @group-content ../../ApexDocContent/Affiliations.htm
+* @description  Trigger handler for Affiliations related operations on Contacts, Accounts, or Affiliations.
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
@@ -41,8 +40,17 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     public static boolean hasRunForContacts = false;
     public static boolean hasRunForAffiliations = false;
     public static boolean hasRunForAccounts = false;
-    
-    // the main entry point for TDTM to invoke our trigger handlers.
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contact, Account, or Affiliation, dispatches to the correct method
+    * based on object type.
+    * @param listNew the list of contacts, accounts, or affiliations from trigger new. 
+    * @param listOld the list of contacts, accounts, or affiliations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for the current trigger context. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/    
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
@@ -64,7 +72,16 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         }
     }
                 
-    // the trigger handler on Contact for managing Affiliations        
+    /*******************************************************************************************************
+    * @description Affiliation trigger handler on Contact. Creates affiliations and/or updates existing 
+    * affiliation primary checkbox and status field.
+    * @param listNew The list of contacts from trigger new. 
+    * @param listOld The list of contacts from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for Contact.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private DmlWrapper runContactTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
@@ -160,7 +177,16 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
 
-    // the trigger handler on Account for managing Affiliations        
+    /*******************************************************************************************************
+    * @description Affiliation trigger handler on Account. Creates affiliations and/or updates existing 
+    * affiliation primary checkbox and status field.
+    * @param listNew The list of Accounts from trigger new. 
+    * @param listOld The list of Accounts from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for Account. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private DmlWrapper runAccountTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         DmlWrapper dmlWrapper = new DmlWrapper();
@@ -225,8 +251,9 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     }
 
 
-    // temporary class used to track which affiliations need
-    // what type of operation performed on them.
+    /*******************************************************************************************************
+    * @description Wrapper class to track affiliations and which operations need to be performed on them.
+    */ 
     private class AfflOps {
 
         // constructor
@@ -261,14 +288,24 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         
     }
     
-    
-    // utility to create a string based Combo Key for an affiliation's contactId and accountId
+    /*******************************************************************************************************
+    * @description Combines the ids of a contact and an account as a unique identifier for affiliations.
+    * @param contactId The id of a contact.
+    * @param accountId The id of an account.
+    * @return string A string with the contact id, a pipe character |, and the account id.
+    ********************************************************************************************************/
     private static string strComboKeyFromContactIdAccountId(Id contactId, Id accountId) {
         return contactId + '|' + accountId;
     }
 
-    // looks at each affiliation and the possible operations to perform on them
-    // and figures out which to insert vs update, and adds them to the dmlWrapper.
+    /*******************************************************************************************************
+    * @description Using a map of unique affiliation identifiers and our AfflOps class, this method queries
+    * existing affiliations, then processes AfflOps to create new or update existing affiliations.
+    * @param mapStrComboKeyAfflOps A map of combination contact id and account id keys from the 
+    * strComboKeyFromContactIdAccountId method to AfflOps objects.
+    * @param dmlWrapper The dmlWrapper class for this transaction.
+    * @return void This class updates the dmlWrapper parameter and returns nothing.
+    ********************************************************************************************************/  
     private static void processAfflOps(map<string, AfflOps> mapStrComboKeyAfflOps, DmlWrapper dmlWrapper) {
 
         // the collections we want to insert/update in the db
@@ -359,7 +396,16 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
        }
     }
     
-    // the trigger handler on Affiliation for managing Affiliations        
+    /*******************************************************************************************************
+    * @description Affiliation trigger handler on Affiliations. Updates a contact's primary affiliation
+    * field for a new primary affiliation.
+    * @param listNew The list of affiliations from trigger new. 
+    * @param listOld The list of affiliations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for Contact.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
