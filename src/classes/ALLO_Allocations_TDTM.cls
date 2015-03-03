@@ -30,31 +30,35 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-*
 * @description Trigger handler on Allocation object, forces allocations for a single parent to not exceed the parent amount,
 *              and calculates amount for percentage based allocations.
 */
 public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
-    //flags to prevent recursion
+    /** @description Static flag to prevent recursion for allocations before triggers. */
     public static boolean hasRunForAllocationsBefore = false;
+    /** @description Static flag to prevent recursion for allocations after triggers. */
     public static boolean hasRunForAllocationsAfter = false;
+    /** @description Static flag to prevent recursion for opportunity triggers. */
     public static boolean hasRunForOpportunities = false;
 
-    //holds all relevant allocations data for this transaction
+    /** @description A map of allocation parent id to alloWrapper class; holds all relevant allocations data for this transaction. */
     public map<id,alloWrapper> mapWrapper = new map<id,alloWrapper>();
+    /** @description Allocations settings. */
     public DmlWrapper dmlWrapper = new dmlWrapper();
 
-    //allocations settings
+    /** @description Allocations settings. */
     public static Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
-    //holds the default General Accounting Unit if creating default allocations is enabled
+    /** @description The id of the default General Accounting Unit if default allocations are enabled */
     public static id idDefaultGAU = settings.Default__c;
 
-    //wrapper class to hold all allocation and payment information for a single parent (opp, campaign, or recurring donation)
+    /*******************************************************************************************************
+    * @description wrapper class to hold all allocation and opportunity information for a single parent: 
+    * Opportunity, Campaign, or Recurring Donation.
+    */ 
     private class alloWrapper {
         boolean isPercentOnly = true;                                        //tracks whether all allocations are percentage based
         decimal parentAmount = null;                                         //amount of this allocation's parent
@@ -66,7 +70,16 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         boolean defaultInTrigger = false;                                    //is the default allocation in the current trigger set?
     }
 
-    // the main entry point for TDTM to invoke our trigger handlers.
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunity and Allocation, dispatches to the correct method based on 
+    * object type.
+    * @param listNew the list of contacts, accounts, or affiliations from trigger new. 
+    * @param listOld the list of contacts, accounts, or affiliations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for the current trigger context. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -98,7 +111,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
         return dmlWrapper;
     }
-        
+
+    /*******************************************************************************************************
+    * @description Allocations trigger handler on Opportunity. Creates allocations as needed, by copying
+    * from Campaign or Recurring Donation, and creating a default if enabled. Also updates existing
+    * allocations if the opportunity amount or currency is changed.
+    * @param listNew The list of opportunities from trigger new. 
+    * @param listOld The list of opportunities from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for Opportunity.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private void runOpportunityTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -157,6 +181,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Allocations before trigger handler on GAU Allocation. Validates allocation data per 
+    * object and per parent object to avoid badly created allocations, exceeding opportunity amount, 
+    * exceeding 100%, negative amounts or percents, etc. 
+    * In multicurrency orgs, also verifies currency matches the parent object's currency.
+    * @param listNew The list of allocations from trigger new. 
+    * @param listOld The list of allocations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for GAU Allocation.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private void runAllocationBeforeTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
@@ -182,7 +218,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 allo.addError(Label.alloModifyCurrency);
 
         }
-
 
         fillMapWrapper(triggerList);
         
@@ -214,7 +249,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
     }
 
-    //when a recurring donation allocation is modified, create or modify all allocations for open opportunities under that recurring donations' schedule to match the RD allocations
+    /*******************************************************************************************************
+    * @description Allocations after trigger handler on GAU Allocation. When a recurring donation allocation
+    * is modified, creates or modifies all allocations for open opportunities under that recurring
+    * donations' schedule to match the recurring donation's allocations.
+    * @param listNew The list of allocations from trigger new.
+    * @param listOld The list of allocations from trigger old.
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for GAU Allocation.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     private void runAllocationAfterTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
@@ -297,8 +342,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
-    //for a list of opportunities, makes campaign and recurring donation allocatoins and adds them for insert
-    //handles default allocations
+    /*******************************************************************************************************
+    * @description Creates allocations by copying from campaign or recurring donation allocations, if 
+    * available. Adjusts default allocation if enabled.
+    * @param listOpps A list of opportunities.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     private void copyRecurringDonationCampaignAllocations(list<Opportunity> listOpps) {
         
         for (Opportunity opp : listOpps) {
@@ -381,6 +430,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     //opportunity amount has changed or currency has changed. retrieve this opps allocations, adjust amounts and currencies
     //adjust percentage based allocations, adjust default allocations if enabled, 
     //enforce that total allocations don't exceed the opportunity amount
+    /*******************************************************************************************************
+    * @description Updates an opportunity's allocations when amount or currency changes.
+    * @param listOpps A list of opportunities whose amount or currency has changed.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     private void opportunityAmountCurrencyChange(list<Opportunity> listOpps){
         
         for (Opportunity opp : listOpps) {
@@ -444,7 +498,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
-    //fills the wrapper based on a list of allocations, updates current trigger set amounts to match percentage defined
+    /*******************************************************************************************************
+    * @description Fills the mapWrapper variable based on a list of allocations from the trigger set. 
+    * Updates current trigger set amounts to match percentages.
+    * @param listOpps A list of GAU Allocations.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     public void fillMapWrapper (list<Allocation__c> alloList) {
 
         set<id> setParentId = new set<id>();
@@ -555,6 +614,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     //fills wrapper based on Opportunities with or without parent objects (Campaigns or Recurring donations)
+    /*******************************************************************************************************
+    * @description Fills the mapWrapper variable based on a list of opportunities.
+    * @param listOpps A list of GAU Allocations.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     public void fillMapWrapper (list<Opportunity> oppList) {
         set<id> setParentId = new set<id>();
         //create set of Campaign IDs, Recurring Donation Ids, and Opp Ids for query
@@ -609,7 +673,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
-    //method returns the ID of this allocation's parent object (Opportunity, Recurring Donation, or Campaign)
+    /*******************************************************************************************************
+    * @description Returns the id of a given allocation's parent object; Opportunity, Recurring Donation, or
+    * Campaign.
+    * @param allo A GAU Allocation.
+    * @return id The id of this allocation's parent object.
+    ********************************************************************************************************/
     public static id getParentId (Allocation__c allo) {
         if (allo.Opportunity__c!=null) 
             return allo.Opportunity__c;
@@ -620,7 +689,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         return null;
     }
 
-    //method returns true this allocation doesn't have exactly one parent object
+    /*******************************************************************************************************
+    * @description Returns true if this allocation doesn't have exactly one parent object.
+    * @param allo A GAU Allocation.
+    * @return boolean Whether this allocation has a parent error.
+    ********************************************************************************************************/
     public boolean parentError (Allocation__c allo) {
         integer cParts=0;
         if (allo.Opportunity__c!=null) 
@@ -635,7 +708,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             return true;
     }
 
-    //method returns a default allocation for a specifid opportunity
+    /*******************************************************************************************************
+    * @description Creates a default allocation for the specified opportunity.
+    * @param opp An opportunity.
+    * @return Allocation__c A default allocation for the amount of the opportunity.
+    ********************************************************************************************************/
     public static Allocation__c makeDefaultAllocation(Opportunity opp) {
         Allocation__c defaultAllo = new Allocation__c(
             Opportunity__c = opp.id,
@@ -647,7 +724,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         return defaultAllo;
     }
 
-    //method resets static flags to specified state
+    /*******************************************************************************************************
+    * @description Resets flags that prevent recursion to a specified state.
+    * @param b A boolean of which state the flags should be set to.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     public static void resetFlags(boolean b) {
         hasRunForOpportunities = b;
         hasRunForAllocationsAfter = b;

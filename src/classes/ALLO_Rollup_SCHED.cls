@@ -30,13 +30,17 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Allocations Rollups to General Accounting Units
 */
 public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH implements UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 
+    /*******************************************************************************************************
+    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
+    * scheduling. Attempts to start allocations rollup batch job.
+    * @return Boolean Whether the batch job started successfully. 
+    ********************************************************************************************************/
     public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
         	Savepoint sp = Database.setSavepoint();
@@ -52,30 +56,54 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         return false;
     }
 
+    /*******************************************************************************************************
+    * @description Blank constructor, runs allocations rollup on all records in a batch of 200.
+    ********************************************************************************************************/
     public ALLO_Rollup_SCHED () {
         super (200);
     }
 
-    public ALLO_Rollup_SCHED (id parentRecId) {
-        super (parentRecId);
-    }
-    
-    public ALLO_Rollup_SCHED (string SOQL) {
-        super (SOQL);
-    }
-
+    /*******************************************************************************************************
+    * @description Constructor that allows specifiying a batch size with which to rollup all GAU Allocations.
+    * @param batchSz The batch size.
+    ********************************************************************************************************/
     public ALLO_Rollup_SCHED (integer batchSz) {
         super (batchSz);
     }
     
+    /*******************************************************************************************************
+    * @description Constructor takes an id of a general accounting unit and rolls up GAU Allocations to it.
+    * This method is used for in the rollup button on General Accounting Unit.
+    * @param parentRecId The id of the general accounting unit to roll up to.
+    ********************************************************************************************************/
+    public ALLO_Rollup_SCHED (id parentRecId) {
+        super (parentRecId);
+    }
+
+    /*******************************************************************************************************
+    * @description Constructor takes a set of ids of general accounting units and rolls up GAU Allocations 
+    * to them. With this method, we could easily implement trigger based rollups on GAU Allocations, 
+    * although they weren't implemented in this case due to high opportunity DML overhead.
+    * @param parentRecId The set of ids of the general accounting units to roll up to.
+    ********************************************************************************************************/
     public ALLO_Rollup_SCHED (set<id> parentRecIds) {
         super (parentRecIds);
     }
     
+    /*******************************************************************************************************
+    * @description This method tells the super class, UTIL_AbstractRollup_BATCH, which object this class is
+    * rolling up to. In this case, we are rolling up to General Accounting Unit.
+    * @return string The name of the object to roll up to.
+    ********************************************************************************************************/
     public override string setParentObjName() {
         return UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
     }
 
+    /*******************************************************************************************************
+    * @description This method defines rollup specs for the super class. These specs contain information
+    * necessary for the rollup code.
+    * @return list<RollupSpec> The RollupSpecs for this class.
+    ********************************************************************************************************/
     public virtual override list<RollupSpec> setRollupSpecs() {
 
         //get allocations settings
@@ -148,7 +176,12 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         return mySpecs;
     }
 
-    //converts a semicolon delimited string, e.g. str1;str2;str3, into a SOQL friendly list format, e.g. ('str1','str2','str3')
+    /*******************************************************************************************************
+    * @description Converts a semicolon delimited string, e.g. "str1;str2;str3", into a SOQL friendly list 
+    * format, e.g. "('str1','str2','str3')".
+    * @param str The semicolon delimited string to convert.
+    * @return string The converted string in SOQL friendly list format.
+    ********************************************************************************************************/
     public static string convertToQueryListFormat(string str) {
         string results = '(\'';
 
@@ -162,7 +195,13 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         return results;
     }
 
-    //if multi currency is enabled, recalculate the currency values for each GAU
+    /*******************************************************************************************************
+    * @description This method allows processing results after rollup calculations are complete. In this 
+    * case, for multicurrency enabled organizations, we're converting the rolled up currency fields from the 
+    * organization's default currency to the currency of the general accounting unit.
+    * @param objMap A map of general accounting unit ids to general accounting units.
+    * @return void This method modifies the objMap parameter if needed, and returns nothing.
+    ********************************************************************************************************/
     public override void customFinalProcessing (map<id, sobject> objMap) {
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             for (sObject obj : objMap.values()) {
