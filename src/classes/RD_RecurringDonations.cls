@@ -30,6 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
+* @group Recurring Donations
+* @group-content ../../ApexDocContent/RecurringDonations.htm
+*
 * @description The main class for controlling the behavior of Recurring Donations, both open ended and standard.
 *
 * The logic of this class is quite complicated, so here is a summary of the call chain for various scenarios.

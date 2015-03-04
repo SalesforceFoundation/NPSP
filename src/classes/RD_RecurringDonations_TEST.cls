@@ -30,19 +30,21 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
+* @group Recurring Donations
 * @description Test class for the RecurringDonations class
 */
 @isTest
 public class RD_RecurringDonations_TEST {
 
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';    
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
-    
-
-    /// <name> insertOpportunities_Test </name>
-    /// <summary> test method for insertOpportunities function </summary>
+    /*******************************************************************************************************
+    * @description test method for insertOpportunities function 
+    */ 
     static testMethod void insertOpportunities()
     {
         if (strTestOnly != '*' && strTestOnly != 'insertOpportunities') return;
@@ -1453,8 +1455,6 @@ public class RD_RecurringDonations_TEST {
         system.assert(originalOpps.size() > [select count() from Opportunity where isClosed = false and (npe03__Recurring_Donation__c = :r1.id or npe03__Recurring_Donation__c = :r2.id)]);        
     }
     
-    /*** Test Methods from RD_ErrorHandling ***/
-    
     static testMethod void testErrorHandlingAllSysAdmins(){
         if (strTestOnly != '*' && strTestOnly != 'testErrorHandlingAllSysAdmins') return;
 
@@ -1741,8 +1741,7 @@ public class RD_RecurringDonations_TEST {
         controller.saveCISettings();
     }
 *************************************************************************/
-   
-   // from RD_RecurringDonations_SCHED  
+
    static testmethod void test(){ 
         if (strTestOnly != '*' && strTestOnly != 'test') return;
              
