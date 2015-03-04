@@ -30,14 +30,22 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2013
-* @description The main class for controlling the behavior of Recurring Donations, both open ended and standard 
+* @group Recurring Donations
+* @description Trigger Handler on Opportunity for managing Recurring Donations 
 */
 public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     
-    // trigger handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
-    // needs to see if the Opp is changing to closed, and if it has open RD's, update them.
+    /*******************************************************************************************************
+    * @description Trigger Handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
+    * Needs to see if the Opp is changing to closed, and if it has open RD's, update them.
+    * @param newlist the list of Opportunities from trigger new. 
+    * @param oldlist the list of Opportunities from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Opportunity 
+    * @return dmlWrapper. 
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-    TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
             
         RD_ProcessControl.hasRun = true;
         DmlWrapper dmlWrapper = new DmlWrapper();
