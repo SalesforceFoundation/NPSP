@@ -30,7 +30,6 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
-*
 * @group Recurring Donations
 * @group-content ../../ApexDocContent/RecurringDonations.htm
 *

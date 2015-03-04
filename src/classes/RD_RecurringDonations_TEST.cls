@@ -1742,9 +1742,6 @@ public class RD_RecurringDonations_TEST {
     }
 *************************************************************************/
 
-   /**
-   * @description from RD_RecurringDonations_SCHED
-   */  
    static testmethod void test(){ 
         if (strTestOnly != '*' && strTestOnly != 'test') return;
              
