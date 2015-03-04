@@ -30,10 +30,17 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for opportunity account rollups. 
 */
 public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
 		
+    /*******************************************************************************************************
+    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
+    * scheduling. Attempts to start allocations rollup batch job.
+    * @return Boolean Whether the batch job started successfully. 
+    ********************************************************************************************************/
 	public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
         	Savepoint sp = Database.setSavepoint();
@@ -48,12 +55,19 @@ public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<
         return false;
     }
     
+    /*******************************************************************************************************
+    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for account rollups.
+    ********************************************************************************************************/
 	public database.Querylocator start(Database.BatchableContext bc) {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         String acctQuery = oppRollupUtil.buildAccountQuery();        
         return Database.getQueryLocator(acctQuery);
     }
     
+    /*******************************************************************************************************
+    * @description Batch execute method, instantiates RLLP_OppRollup_UTIL and runs rollups for current 
+    * batch of accounts.
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, List<Account> result) {       
         // NOTE: we don't capture exception and log errors here, because if we don't let the 
         // exception percolate up the call stack, then the batch will think it all succeeded.
@@ -63,5 +77,8 @@ public with sharing class RLLP_OppAccRollup_BATCH implements Database.Batchable<
         oppRoller.RollupAccounts(new Map<id, Account>((List<Account>)result));    
     }
 
+    /*******************************************************************************************************
+    * @description Batch finish method, does nothing.
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {}
 }

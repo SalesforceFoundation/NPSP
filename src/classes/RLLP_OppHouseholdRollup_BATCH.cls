@@ -30,10 +30,17 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch class for opportunity household rollups. 
 */
 public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     
+    /*******************************************************************************************************
+    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
+    * scheduling. Attempts to start allocations rollup batch job.
+    * @return Boolean Whether the batch job started successfully. 
+    ********************************************************************************************************/
     public Boolean executeReturnStatus() {
         if(UTIL_JobScheduler.canRunBatch()) {
         	Savepoint sp = Database.setSavepoint();
@@ -48,11 +55,18 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
         return false;
     }
     
+    /*******************************************************************************************************
+    * @description Batch start method, instantiates RLLP_OppRollup_UTIL and builds query for household rollups.
+    ********************************************************************************************************/
     public database.Querylocator start(Database.BatchableContext bc) {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();     
         return Database.getQueryLocator(oppRollupUtil.buildHouseholdQuery()); 
     }
     
+    /*******************************************************************************************************
+    * @description Batch execute method, instantiates RLLP_OppRollup_UTIL and runs rollups for current 
+    * batch of households.
+    ********************************************************************************************************/
     public void execute(Database.BatchableContext bc, List<npo02__Household__c> result) { 
         // NOTE: we don't capture exception and log errors here, because if we don't let the 
         // exception percolate up the call stack, then the batch will think it all succeeded.
@@ -62,5 +76,8 @@ public with sharing class RLLP_OppHouseholdRollup_BATCH implements Database.Batc
         oppRoller.RollupHouseholds(new Map<id, npo02__Household__c>((List<npo02__Household__c>)result));    
     }
 
+    /*******************************************************************************************************
+    * @description Batch finish method, does nothing.
+    ********************************************************************************************************/
     public void finish(Database.BatchableContext bc) {}
 }
