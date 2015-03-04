@@ -27,9 +27,18 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
     POSSIBILITY OF SUCH DAMAGE.
 */
+/**
+* @author Salesforce.com Foundation
+* @date 2012 (2.2)
+* @group Recurring Donations
+* @description Test code for larger data volumes.
+*/
 @isTest
 public class RD_BulkTests_TEST {
 
+    /*******************************************************************************************************
+    * @description Tests inserting multiple non open-ended Recurring Donations at once.
+    */ 
     static testMethod void bulkInsertOpportunities()
     {
         Integer contactCount = 20;
@@ -66,5 +75,8 @@ public class RD_BulkTests_TEST {
         test.startTest();
         insert recurringDonations;
         test.stopTest();
+        
+        list<Opportunity> listOpp = [select Id, Name from Opportunity];
+        system.assertEquals(opportunityCount * recurringDonationCount, listOpp.size());
     }
 }
