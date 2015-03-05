@@ -172,13 +172,14 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        av.Ambiguous__c = true;
 	                        responseGroup.add(sr);
 	                    }
-	                    av.API_Response__c = JSON.serializePretty(responseGroup);
+	                    String response = JSON.serializePretty(responseGroup);
+	                    av.API_Response__c = trimResponse(response);
 	                    av.Verification_Status__c = Label.Addr_Verified;
 	                }
 	            }
 	            for (Address__c av : avList) {             
 	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
-	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
+	                !String.isBlank(settings.Auth_Token__c) && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
 	                    av.Verification_Status__c = Label.Address_Not_Found;
 	                }
@@ -233,7 +234,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        // if there is any response, serialize it and fill in location with first location value
 	                        } else if (sr.zipcodes != null) {
 	                            UTIL_Debug.debug('****No error. Populating raw response field.');
-	                            av.API_Response__c = JSON.serializePretty(sr);
+	                            String response = JSON.serializePretty(sr);
+	                            av.API_Response__c = trimResponse(response);
 	                            av.Verification_Status__c = Label.Addr_Verified;
 	                            
 	                            // if there is at least one city/state, fill in city state
@@ -277,5 +279,13 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	        }
         }
         return avList;
+    }
+    
+    private static String trimResponse(String response) {
+        //Truncating body response to avoid STRING_TOO_LONG error.
+        if(response.length() > 32768) {
+            response = response.substring(0, 32768);
+        }
+        return response;
     }
 }
