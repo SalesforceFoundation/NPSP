@@ -45,7 +45,6 @@ public with sharing class ADDR_Validator_Batch_TEST {
 
         // create the basic api settings - SmartyStreets off
         Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        settings.Using_SmartyStreets__c = false;
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
         settings.Address_Verification_Endpoint__c = 'api.smartystreets.com/street-address';

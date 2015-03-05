@@ -214,20 +214,18 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     public override PageReference saveSettings() {
         try {
         	apiTestResult = null;
-        	
-        	addrVerifSettings.Using_SmartyStreets__c = (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator');
-        	
+        	        	
         	encodeTokenIfNotEncoded(addrVerifSettings);
                         
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
-            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_ID__c)) {
+            if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_ID__c)) {
                 apiSettingsErrorMessage = Label.Addr_Id_Error;
                 apiSettingsSaveMessage = null;
                 validationError = true;
             }
             
-            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_Token__c)) {
+            if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_Token__c)) {
                 String validationMessage = Label.Addr_Token_Error;
                 apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
                 apiSettingsSaveMessage = null;
@@ -235,10 +233,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
-            	if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Zipcode_Verification_Endpoint__c == null) {
-            		ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-            		addrVerifSettings.Zipcode_Verification_Endpoint__c = validator.getDefaultZipcodeURL();
-            	}
+            	ADDR_IValidator validator = (ADDR_IValidator)Type.forName(addrVerifSettings.Class__c).newInstance();
+            	addrVerifSettings.Address_Verification_Endpoint__c = validator.getDefaultURL();
+            	
             	if(addrVerifSettings.Address_Verification_Endpoint__c.contains('http:')) {
             	   addrVerifSettings.Address_Verification_Endpoint__c = addrVerifSettings.Address_Verification_Endpoint__c.replaceFirst('http:', 'https:');
             	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {
@@ -276,9 +273,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return The page to redirect to. None, in this case.
     */
     public PageReference testApi() {
-    	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
-            addrVerifSettings.Using_SmartyStreets__c = true;
-        }
         apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
@@ -290,7 +284,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     */    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
         Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if (avs.Using_SmartyStreets__c) {
+        if (avs.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
 	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
@@ -305,14 +299,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
         Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if (avs.Using_SmartyStreets__c) {
+        if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        try {
 	        	encodeTokenIfNotEncoded(addrVerifSettings);
 	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
 	            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
 	            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
 	        } catch (Exception e) {
-	        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+	        	if(!(avs.Class__c == 'ADDR_SmartyStreets_Validator') || String.isBlank(addrVerifSettings.Auth_ID__c) 
 	        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
 	        		strResult = Label.Addr_Verify_Settings;
 	        	} else if(e.getMessage().startsWith('no protocol')) {
@@ -329,7 +323,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     private static void encodeTokenIfNotEncoded(Addr_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
-        if(addrVerifSettings.Using_SmartyStreets__c && !String.isBlank(addrVerifSettings.Auth_Token__c) 
+        if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && !String.isBlank(addrVerifSettings.Auth_Token__c) 
         && addrVerifSettings.Auth_Token__c.length() == 88)
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }

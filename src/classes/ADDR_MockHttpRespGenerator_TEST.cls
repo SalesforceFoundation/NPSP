@@ -140,16 +140,16 @@ public with sharing class ADDR_MockHttpRespGenerator_TEST implements HttpCallout
         
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');
-        if (req.getEndpoint().contains('400')) {
+        if (req.getBody().contains('400')) {
             res.setStatusCode(400);
             res.setStatus('Bad input. Required fields missing from input or are malformed.');
-        } else if (req.getEndpoint().contains('401')) {
+        } else if (req.getBody().contains('401')) {
             res.setStatusCode(401);
             res.setStatus('Unauthorized. Authentication failure; invalid credentials.');
-        } else if (req.getEndpoint().contains('402')) {
+        } else if (req.getBody().contains('402')) {
             res.setStatusCode(402);
             res.setStatus('Payment required. No active subscription found.');
-        } else if (req.getEndpoint().contains('500')) {
+        } else if (req.getBody().contains('500')) {
             res.setStatusCode(500);
             res.setStatus('Internal server error. General service failure; retry request.');
         } else {

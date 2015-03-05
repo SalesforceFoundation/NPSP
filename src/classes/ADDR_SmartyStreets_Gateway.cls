@@ -96,8 +96,16 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else if (addresses.size() > 100) //This is a smartyStreets limit
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
+        String endpoint;
+        if (settings.Address_Verification_Endpoint__c != null) {
+            endpoint = settings.Address_Verification_Endpoint__c;      
+        } else {
+        	ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+        	endpoint = validator.getDefaultURL();
+        }
+            
         // send the request
-        HttpResponse res = sendRequest(addresses, settings.Address_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(addresses, endpoint);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
@@ -172,7 +180,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     
     private HTTPResponse sendRequest(List<Object> payload, String baseURL) {
     	HttpResponse response = new HttpResponse();
-    	if(auth != null && settings.Using_SmartyStreets__c) {
+    	if(auth != null && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {
 	    	// prepare the request
 	        Http h = new Http();
 	    	String body = JSON.serialize(payload);

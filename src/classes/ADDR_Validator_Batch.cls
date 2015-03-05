@@ -43,11 +43,6 @@ public with sharing class ADDR_Validator_Batch implements Database.Batchable<sOb
     public ADDR_Validator_Batch(Boolean skipPreviouslyVerified) {
     	//turn smartystreets verification on, so the batch verification works even if the checkbox wasn't checked by the user
     	Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if(avs.Class__c == 'ADDR_SmartyStreets_Validator') {
-    	   avs.Using_SmartyStreets__c = true;
-           if(!Test.isRunningTest())
-               upsert avs;
-        }
         
         //query for all US addresses
         query = 'select id, name, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, API_Response__c ' + 
