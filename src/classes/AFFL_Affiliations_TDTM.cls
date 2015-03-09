@@ -338,14 +338,21 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                 //check to see if this account isn't an individual.
                 Account acc =  mapAccountIdAccount.get(accountId);
                 if (acc != null && acc.npe01__SYSTEMIsIndividual__c != true) {
-                    npe5__Affiliation__c a = new npe5__Affiliation__c();
-                    a.npe5__Contact__c = contactId;
-                    a.npe5__Organization__c = accountId;
-                    a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-                    a.npe5__StartDate__c = System.Today();
-                    a.npe5__Role__c = ao.strRole;
-                    a.npe5__Primary__c = ao.fPrimary;
-                    listAfflInsert.add(a);
+                    npe5__Affiliation__c existingAffl = mapStrComboKeyAffl.get(ao.strComboKey);
+                    if (existingAffl != null) {
+                        existingAffl.npe5__EndDate__c = null;
+                        if (ao.fPrimary) existingAffl.npe5__Primary__c = ao.fPrimary;
+                        listAfflIdAfflUpdate.add(existingAffl);
+                    } else {
+                        npe5__Affiliation__c a = new npe5__Affiliation__c();
+                        a.npe5__Contact__c = contactId;
+                        a.npe5__Organization__c = accountId;
+                        a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                        a.npe5__StartDate__c = System.Today();
+                        a.npe5__Role__c = ao.strRole;
+                        a.npe5__Primary__c = ao.fPrimary;
+                        listAfflInsert.add(a);
+                    }
                 }           
             }
             
