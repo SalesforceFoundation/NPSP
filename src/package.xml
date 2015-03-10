@@ -1040,7 +1040,6 @@
         <name>Layout</name>
     </types>
     <types>
-        <members>Account.AllAccounts</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
