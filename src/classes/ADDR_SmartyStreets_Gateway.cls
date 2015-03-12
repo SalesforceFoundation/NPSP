@@ -37,31 +37,58 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     private Addr_Verification_Settings__c settings;
     private String auth;
     
+    /*******************************************************************************************************
+    * @description Exception raised during the SmartyStreets address verification process.
+    */
     public class LiveAddressException extends Exception {}
 
+    /*******************************************************************************************************
+    * @description Constructor that initializes the instance properties.
+    * @param settings The address verification settings.
+    */
     public ADDR_SmartyStreets_Gateway(Addr_Verification_Settings__c settings) {
         this.settings = settings;
         
         if (!String.isBlank(settings.auth_id__c) && !String.isBlank(settings.auth_token__c))
             auth = '?auth-id=' + settings.auth_id__c + '&auth-token=' + settings.auth_token__c;
     }
-
-    /* SINGLE RECORD VERIFY ADDRESS METHODS */
+    
+    /*******************************************************************************************************
+    * @description Verifies a single address from a string representation.
+    * @param String A string containing the address to verify.
+    * @return AddressResponse An Apex representation of the verified address.
+    */
     public AddressResponse verifyAddress(String address) {
         return verifyAddress(new AddressRequest(address));
     }
+    
+    /*******************************************************************************************************
+    * @description Verifies a single address from an AddressRequest object.
+    * @param AddressRequest The address to verify in an Apex representation.
+    * @return AddressResponse An Apex representation of the verified address.
+    */
     public AddressResponse verifyAddress(AddressRequest address) {
         List<AddressResponse> sr = verifyAddresses(new List<AddressRequest>{address});
         return ((sr == null) ? null : sr[0]);
     }
 
-    /* MULTI-RECORD VERIFY ADDRESS METHODS */
+    /*******************************************************************************************************
+    * @description Verifies multiple addresses from a list of strings.
+    * @param addresses A list containing the addresses to verify, one per element in the list.
+    * @return List<AddressResponse> A list containing the verified addresses, as AddressResponse objects.
+    */
     public List<AddressResponse> verifyAddresses(List<String> addresses) {
         List<AddressRequest> requests = new List<AddressRequest>();
         for (String addr : addresses)
             requests.add(new AddressRequest(addr));
         return verifyAddresses(requests);
     }
+    
+    /*******************************************************************************************************
+    * @description Verifies multiple addresses from a list of AddressRequest objects.
+    * @param addresses A list containing the addresses to verify, one per element in the list.
+    * @return List<AddressResponse> A list containing the verified addresses, as AddressResponse objects.
+    */
     public List<AddressResponse> verifyAddresses(List<AddressRequest> addresses) {
 
         if (addresses == null || addresses.isEmpty()) 
@@ -69,8 +96,16 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else if (addresses.size() > 100) //This is a smartyStreets limit
             throw new LiveAddressException(Label.Address_Verification_Limit);
         
+        String endpoint;
+        if (settings.Address_Verification_Endpoint__c != null) {
+            endpoint = settings.Address_Verification_Endpoint__c;      
+        } else {
+        	ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
+        	endpoint = validator.getDefaultURL();
+        }
+            
         // send the request
-        HttpResponse res = sendRequest(addresses, settings.Address_Verification_Endpoint__c);
+        HttpResponse res = sendRequest(addresses, endpoint);
 
         List<AddressResponse> sr;
         if (res.getStatusCode() == 200)
@@ -89,19 +124,40 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else return sr; 
     }
     
-    /* SINGLE RECORD VERIFY ZIP METHODS */
+    /*******************************************************************************************************
+    * @description Verifies a single zipcode from a string representation.
+    * @param String A string containing the zipcode to verify.
+    * @return ZipResponse An Apex representation of the verified zipcode.
+    */
     public ZipResponse verifyZip(String zip) { 
         return verifyZip(null, null, zip); 
     }
+    /*******************************************************************************************************
+    * @description Verifies a city and state combination.
+    * @param city The city to verify.
+    * @param state The state to verify.
+    * @return ZipResponse An Apex representation of the verified city and state combination.
+    */
     public ZipResponse verifyZip(String city, String state) { 
         return verifyZip(city, state, null);   
-    }   
+    } 
+    /*******************************************************************************************************
+    * @description Verifies a zipcode, city and state combination.
+    * @param String The zipcode to verify.
+    * @param city The city to verify.
+    * @param state The state to verify.
+    * @return ZipResponse An Apex representation of the verified zipcode, city and state combination.
+    */  
     public ZipResponse verifyZip(String city, String state, String zip) {
         list<ZipResponse> sz = verifyZips(new list<ZipRequest>{ new ZipRequest(city, state, zip) });
         return ((sz == null) ? null : sz[0]);
     }
 
-    /* MULTI-RECORD VERIFY ZIP METHOD */
+    /*******************************************************************************************************
+    * @description Verifies multiple zipcode-city-state combinations from a list of ZipRequest objects.
+    * @param addresses A list containing the zipcode-city-state combinations to verify.
+    * @return List<ZipResponse> A list containing the verified addresses, as ZipResponse objects.
+    */
     public list<ZipResponse> verifyZips(list<ZipRequest> zreqs) {
 
         if (zreqs == null || zreqs.isEmpty()) 
@@ -109,8 +165,10 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         else if (zreqs.size() > 100)
             throw new LiveAddressException(Label.Zipcode_Verification_Limit);
         
-        // send the request
-        HttpResponse res = sendRequest(zreqs, settings.Zipcode_Verification_Endpoint__c);
+        //Send the request. Sice SmartyStreets is the only service that provides a different endpoint
+        //only for zipcode requests, we have removed it from the UI, and are using it directly here.
+        ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator(); 
+        HttpResponse res = sendRequest(zreqs, validator.getDefaultZipcodeURL());
 
         list<ZipResponse> sz;
         if (res.getStatusCode() == 200)
@@ -122,7 +180,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     
     private HTTPResponse sendRequest(List<Object> payload, String baseURL) {
     	HttpResponse response = new HttpResponse();
-    	if(auth != null && settings.Using_SmartyStreets__c) {
+    	if(auth != null && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {
 	    	// prepare the request
 	        Http h = new Http();
 	    	String body = JSON.serialize(payload);
@@ -130,10 +188,11 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setMethod('POST');
 	        req.setHeader('Content-Type','application/json');
 	        req.setHeader('Accept','application/json');
-	        req.setEndpoint(baseURL + auth); 
+	        req.setEndpoint(baseURL + auth);
+	        UTIL_Debug.debug('****Request endpoint: \n' + req.getEndpoint());
 	        req.setBody(body);
+	        UTIL_Debug.debug('****Request body: \n' + req.getBody());
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
-	        UTIL_Debug.debug(LoggingLevel.WARN, '****Request body: \n' + req.getBody());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
 	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
 	        //in the same transaction (because everything before "stopTest" is one transaction, and everything
@@ -164,7 +223,9 @@ public with sharing class ADDR_SmartyStreets_Gateway {
     	return response;
     }
     
-    /* ADDRESS REQUEST DATA */
+    /*******************************************************************************************************
+    * @description Apex representation of the address to send in the verification request.
+    */
     public class AddressRequest {
         
         public String street;           // REQUIRED - Can be full address, or just first line
@@ -178,14 +239,22 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public Integer candidates = 1;  // The maximum number of valid addresses returned when the  
                                         //   input address is ambiguous (max = 10, default = 1).
         
-        public AddressRequest() {}
+        /*******************************************************************************************************
+        * @description Empty constructor. 
+        */
+        public AddressRequest() { }
         
+        /*******************************************************************************************************
+        * @description Constructor that initializes the address property. 
+        */
         public AddressRequest(String address) {
             street = address;
         }
     }
     
-    /* ADDRESS RESPONSE DATA */
+    /*******************************************************************************************************
+    * @description Apex representation of the address returned from verification.
+    */
     public class AddressResponse {
 
         public Integer input_index;      // The order in which this address was submitted
@@ -199,12 +268,19 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public Metadata metadata;
         public Analysis analysis;
     
+        /*******************************************************************************************************
+        * @description Returns the address in a string format.
+        * @return String The address as a string. 
+        */
         public String getFullAddress() {
             return (((addressee != null) ? (addressee + '\n') : '') + ((delivery_line_1 != null) ? (delivery_line_1 + '\n') : '') + 
                 ((delivery_line_2 != null) ? (delivery_line_2 + '\n') : '') + ((last_line != null) ? (last_line) : '')).trim();
         }
     }
     
+    /*******************************************************************************************************
+    * @description Apex representation of the components element returned in the verification response.
+    */
     public class Components {
         public String primary_number;   // The house, PO box, or building number
         public String street_name;
@@ -223,6 +299,9 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String delivery_point_check_digit;
     }
     
+    /*******************************************************************************************************
+    * @description Apex representation of the metadata element returned in the verification response.
+    */
     public class Metadata {
         public String record_type;
         public String county_fips;
@@ -236,6 +315,9 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String precision;
     }
     
+    /*******************************************************************************************************
+    * @description Apex representation of the metadata analysis returned in the verification response.
+    */
     public class Analysis {
         public String dpv_match_code;
         public String dpv_footnotes;
@@ -248,14 +330,22 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public String lacslink_indicator;
     }
     
-    /* ZIP REQUEST DATA */
+    /*******************************************************************************************************
+    * @description Apex representation of the zipcode-city-state combination to send in the verification request.
+    */
     public class ZipRequest {
         public String city;
         public String state;
         public String zipcode;
-
+        
+        /*******************************************************************************************************
+        * @description Empty constructor.
+        */
         public ZipRequest() {}
         
+        /*******************************************************************************************************
+        * @description Constructor that initializes the class properties.
+        */
         public ZipRequest(String c, String s, String z) {
             city = c;
             state = s;
@@ -263,7 +353,9 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         }
     }
     
-    /* ZIP RESPONSE DATA */
+    /*******************************************************************************************************
+    * @description Apex representation of the zipcode-city-state combination returned from verification.
+    */
     public class ZipResponse {
         public String status;
         public String reason;
@@ -271,12 +363,18 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         public list<ZipLoc> zipcodes;
     } 
 
+    /*******************************************************************************************************
+    * @description Apex representation of the city_states element returned in the verification response.
+    */
     public class CityState {
         public String city;
         public String state_abbreviation;
         public String state;
     }
 
+    /*******************************************************************************************************
+    * @description Apex representation of the zipcodes element returned in the verification response.
+    */
     public class ZipLoc {
         public String zipcode;
         public Double latitude;

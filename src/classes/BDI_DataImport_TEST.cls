@@ -1160,8 +1160,10 @@ private with sharing class BDI_DataImport_TEST {
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing contact field that exists on both Contact and the DI.
         diSettings.Contact_Custom_Unique_ID__c = 'Title';
-        upsert diSettings;
+        if(!Test.isRunningTest())
+            upsert diSettings;
           
         //run batch data import
         Test.StartTest();
@@ -1202,8 +1204,10 @@ private with sharing class BDI_DataImport_TEST {
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        // for testing, we need to use an existing account field that exists on both Account and the DI.
         diSettings.Account_Custom_Unique_ID__c = 'Website';
-        upsert diSettings;
+        if(!Test.isRunningTest())
+            upsert diSettings;
           
         //run batch data import
         Test.StartTest();
@@ -1361,7 +1365,8 @@ private with sharing class BDI_DataImport_TEST {
           
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Contact_Matching_Rule__c = strRule;
-        upsert diSettings;
+        if(!Test.isRunningTest())
+            upsert diSettings;
  
         //run batch data import
         Test.StartTest();

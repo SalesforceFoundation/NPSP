@@ -36,11 +36,15 @@
 @isTest
 public class HH_HouseholdNaming_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
-    /** @description Test method for batch */
+    /*********************************************************************************************************
+    * @description Test method for batch
+    */
     public static testMethod void testBatch() {
         if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         
@@ -90,7 +94,10 @@ public class HH_HouseholdNaming_TEST {
         Test.StopTest();
     }
     
-    static testMethod void HouseholdNamingTest(){
+    /*********************************************************************************************************
+    * @description tests FutureUpdateNames
+    */
+    public static testMethod void HouseholdNamingTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -146,7 +153,10 @@ public class HH_HouseholdNaming_TEST {
         
     }
     
-    static testMethod void HouseholdNamingUpdateTest(){
+    /*********************************************************************************************************
+    * @description tests updating and Household object's contact names
+    */
+    public static testMethod void HouseholdNamingUpdateTest(){
       if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
@@ -262,6 +272,9 @@ public class HH_HouseholdNaming_TEST {
     test.stopTest();        
     }
     
+    /*********************************************************************************************************
+    * @description tests setting the naming order on Contacts
+    */
     public static testMethod void testNamingOrder() {
       if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
       //settings

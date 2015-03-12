@@ -900,14 +900,13 @@
         <label>Current Address</label>
         <lookupFilter>
             <active>true</active>
-            <errorMessage>Only Address objects related to the Contact&apos;s Household Account can be used</errorMessage>
             <filterItems>
                 <field>Address__c.Household_Account__c</field>
                 <operation>equals</operation>
                 <valueField>$Source.AccountId</valueField>
             </filterItems>
             <infoMessage>To see all addresses for the Contact&apos;s household, enter A-* in the search window</infoMessage>
-            <isOptional>false</isOptional>
+            <isOptional>true</isOptional>
         </lookupFilter>
         <referenceTo>Address__c</referenceTo>
         <relationshipLabel>Contacts (Current Address)</relationshipLabel>
@@ -915,6 +914,26 @@
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Deceased__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.</inlineHelpText>
+        <label>Deceased</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Do_Not_Contact__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When selected, this option excludes the contact from emails and phone calls.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When selected, this option excludes the contact from emails and phone calls.</inlineHelpText>
+        <label>Do Not Contact</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Exclude_from_Household_Formal_Greeting__c</fullName>

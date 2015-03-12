@@ -108,24 +108,49 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             
             // BEFORE UPDATE
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            	// there can be three different types of changes we need to consider
+            	// A. changes to isAddressOverride
+            	// B. changes to CurrentAddress
+            	// C. changes to MailingAddress fields
+            	//
+            	// that leads to 8 permutations! 
+            	// (it's actually more permutations, since we need to take into account what
+            	// the change in isAddressOverride or CurrentAddress is).
+            	//
+            	// A,B,C       if (CurrentAddress) refill to it, else update/new address object     
+            	// A,!B,!C     if !isAddrOverride, refill contact from Default Address
+            	// A,!B,C      if isAddrOverride, update/new addr object and refresh CurrentAddress, else update/new address object
+            	// A,B,!C      if (CurrentAddress) refill to it, else refill from Default Address
+            	// !A,B,C      if (CurrentAddress) refill to it, else update/new address object
+            	// !A,!B,C     update/new address object
+            	// !A,B,!C     if (CurrentAddress) refill to it, else refill from Default Address
+            	// !A,!B,!C    nothing!
+            	//
+            	// simplifying this to some precedence rules:
+            	//     - if CurrentAddress changes to a new non-null value, refill to it.
+                //     - if isAddressOverride changes to false, refill from Default Address
+            	//     - if MailingAddress field changes, update/new address object
+            	
             	Contact conOld = (Contact)listOld[i];
-                if (con.is_Address_Override__c != conOld.is_Address_Override__c || con.Current_Address__c != conOld.Current_Address__c) {
-                	if (con.Current_Address__c != null) {
-                        // remember which contacts will need their address set
-                        listConAddrSet.add(con);
-                        if (con.is_Address_Override__c)
-                            // track which address's need their dates updated
-                            mapAddrIdIsOverride.put(con.Current_Address__c, true);
-                	}
-                	if (conOld.is_Address_Override__c) {
-                		if (conOld.Current_Address__c != null)
-                            // track which address's need their dates updated
-                            mapAddrIdIsOverride.put(conOld.Current_Address__c, false);
-                        if (!con.is_Address_Override__c)
-                            // no longer an override, so pick up the hh default
-                            listConAddrReset.add(con);
-                	}                        
-                }
+            	
+                // highest priority. if they are changing to a new Current Address, refill from it.
+            	if (con.Current_Address__c != conOld.Current_Address__c && con.Current_Address__c != null) {
+                    listConAddrSet.add(con);
+                    if (con.is_Address_Override__c)
+                        // track which address's need their dates updated
+                        mapAddrIdIsOverride.put(con.Current_Address__c, true);                    
+            	}
+            	
+            	// second priority.  if they are clearing isAddressOverride, refill from the Default Address
+            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c) {
+                    listConAddrReset.add(con);
+                    if (conOld.Current_Address__c != null)
+                        // track which address's need their dates updated
+                        mapAddrIdIsOverride.put(conOld.Current_Address__c, false);
+            	}
+            	
+                // third priority.  if MailingAddress fields changed, update the existing address object or create a new one.
+                // this is handled in the next block, since we do it for both new contacts and updated contacts.            	            	
             }
     
             // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
@@ -217,35 +242,44 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         if (con1 == null || con2 == null) {
         	if (con1 == null) 
         	   con1 = con2;
-        	return (con1.MailingStreet != null ||
-	           con1.MailingCity != null ||
-	           con1.MailingState != null ||
-	           con1.MailingPostalCode != null ||
-	           con1.MailingCountry != null ||
+        	return (!isContactAddressEmpty(con1) ||
 	           con1.npe01__Primary_Address_Type__c != null);
         }
         
         // both provided, so look for at least one change between address fields
-        return (
-           con1.MailingStreet != con2.MailingStreet ||
-           con1.MailingCity != con2.MailingCity ||
-           con1.MailingState != con2.MailingState ||
-           con1.MailingPostalCode != con2.MailingPostalCode ||
-           con1.MailingCountry != con2.MailingCountry ||
-           con1.npe01__Primary_Address_Type__c != con2.npe01__Primary_Address_Type__c);
+        boolean isChanged = 
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCity, con2.MailingCity) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingState, con2.MailingState) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingPostalCode, con2.MailingPostalCode) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.MailingCountry, con2.MailingCountry) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(con1.npe01__Primary_Address_Type__c, con2.npe01__Primary_Address_Type__c);
+           
+        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            isChanged = 
+                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingStateCode')), string.valueOf(con2.get('MailingStateCode'))) || 
+                !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(con1.get('MailingCountryCode')), string.valueOf(con2.get('MailingCountryCode')));
+        }    
+        return isChanged;   
     }
-
+    
     /*******************************************************************************************************
     * @description returns whether the contact's mailing address is empty
     * @param con1 a Contact
     * @return boolean. true if the Mailing Address fields are all empty 
     ********************************************************************************************************/
     private boolean isContactAddressEmpty(Contact con1) {
-        return (con1.MailingStreet == null &&
-           con1.MailingCity == null &&
-           con1.MailingState == null &&
-           con1.MailingPostalCode == null &&
-           con1.MailingCountry == null );
+        boolean isEmpty = 
+            con1.MailingStreet == null &&
+            con1.MailingCity == null &&
+            con1.MailingState == null &&
+            con1.MailingPostalCode == null &&
+            // note that we decided to ignore country so that a default value won't create unnecessary address objects
+            (con1.MailingCountry == null || ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) &&
+            // only test StateCode if picklists enabled.
+            (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled || con1.get('MailingStateCode') == null);
+        return isEmpty;   
+           
     }
        
     /*******************************************************************************************************
@@ -313,8 +347,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
                     con.npe01__Primary_Address_Type__c = addrDup.Address_Type__c; 
-            	} else {
-	                
+            	} else { 	                
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
 	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, false)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);

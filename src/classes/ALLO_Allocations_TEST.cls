@@ -30,19 +30,25 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests specific to Allocations trigger based functionality. 
 */
-
 @isTest
 private with sharing class ALLO_Allocations_TEST {
     
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description If you only want to run a single test in this class, fill in its name here.
+    * If you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
     
+    /*******************************************************************************************************
+    * @description Setup of allocations settings.
+    * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
+    * parameter uses default settings.
+    * @return void Modifies settings, returns nothing.
+    ********************************************************************************************************/
     private static void setupSettings (Allocations_Settings__c alloset) {
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
@@ -54,12 +60,15 @@ private with sharing class ALLO_Allocations_TEST {
         }
     }
 
-    //when changing the amount of an Opportunity with Allocations: 
-    //increasing the amount will adjust the percentage allocations
-    //decreasing the amount so that the total allocation amount is below the opportunity amount will adjust the percentage allocations
-    //decreasing the amount so that the total allocation amount is greater than the opportunity amount, an error is thrown and the opportunity update is blocked
-    @isTest
-    static void oppAmountChange() {
+    /*******************************************************************************************************
+    * @description When changing the amount of an Opportunity with Allocations: 
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the opportunity amount will adjust 
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the opportunity amount, an 
+    * error is thrown and the opportunity update is blocked.
+    ********************************************************************************************************/
+    static testMethod void oppAmountChange() {
         if (strTestOnly != '*' && strTestOnly != 'oppAmountChange') return;
         setupSettings(null);
 
@@ -118,11 +127,13 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(8, queryOpps[0].Amount, 'The opportunity amount should remain unchanged after the exception is caught.');
     }
 
-    //with default General Accounting Units enabled, creating an Opportunity automatically creates a default allocation for the full amount of the opportunity
-    //creating a new allocation for that opportunity decreases the default fund allocation
-    //creating an allocation for the total amount deletes the default allocation
-    @isTest
-    static void defaultAllocations() {
+    /*******************************************************************************************************
+    * @description With default General Accounting Units enabled, creating an Opportunity automatically 
+    * creates a default allocation for the full amount of the opportunity.
+    * Creating a new allocation for that opportunity decreases the default fund allocation.
+    * Creating an allocation for the total amount deletes the default allocation.
+    ********************************************************************************************************/
+    static testMethod void defaultAllocations() {
         if (strTestOnly != '*' && strTestOnly != 'defaultAllocations') return;
         
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
@@ -159,11 +170,14 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(1,queryAllo.size(), 'The default fund allocation should be deleted.');
     }
 
-    //Campaign Allocations:
-    //test opp created with campaign allocation: allocations are created, default allocation covers the remainder
-    //test opp where allocations exceed opp amount: exception thrown, only default allocation created
-    @isTest
-    static void campaignAllocations() {
+    /*******************************************************************************************************
+    * @description Campaign Allocations test:
+    * Opportunity created with campaign allocation: allocations are created, default allocation covers the
+    * remainder.
+    * Opportunity created where campaign allocations exceed opp amount: exception thrown, only default 
+    * allocation created
+    ********************************************************************************************************/
+    static testMethod void campaignAllocations() {
         if (strTestOnly != '*' && strTestOnly != 'campaignAllocations') return;
         
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
@@ -211,16 +225,20 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
 
-    //Recurring Payment allocations:
-    //Create recurring donation. Pledged opportunity is generated automatically with a default allocation.
-    //Create allocations for the recurring donation, verify opp allocations are created, default opp allocation is deleted.
-    //Set opp to closed/won, modify recurring donation allocations: closed opportunity's allocations are unchanged
-    //Create new opportunity for the recurring donation schedule: RD allocations are created
-    //Create a recurring donation allocation to exceed the opportunity amount: open opportunity only gets percent based allocations
-    //remove allocation that exceed's opportunity amount: all RD allocations are created
-    //delete a recurring donation allocation: corresponding opportunity allocation is also deleted
-    @isTest
-    static void recurringDonationsValidation() {
+    /*******************************************************************************************************
+    * @description Recurring Donation Allocations test:
+    * Create recurring donation. Pledged opportunity is generated automatically with a default allocation.
+    * Create allocations for the recurring donation, verify opp allocations are created, default opp 
+    * allocation is deleted.
+    * Set opp to closed/won, modify recurring donation allocations: closed opportunity's allocations are 
+    * unchanged.
+    * Create new opportunity for the recurring donation schedule: RD allocations are created.
+    * Create a recurring donation allocation to exceed the opportunity amount: open opportunity only gets 
+    * percent based allocations.
+    * Remove allocation that exceed's opportunity amount: all RD allocations are created.
+    * Delete a recurring donation allocation: corresponding opportunity allocation is also deleted.
+    ********************************************************************************************************/
+    static testMethod void recurringDonationsValidation() {
         if (strTestOnly != '*' && strTestOnly != 'recurringDonationsValidation') return;
 
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
@@ -309,10 +327,13 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
     
-    //insert bulk opportunities. verify that default allocations and campaign allocations are created.
-    //bulk update opportunities, verify that default allocations were deleted
-    @isTest
-    static void bulkOppInsert() {
+    /*******************************************************************************************************
+    * @description Create a campaign with an allocation, and 100 opportunities, half of which are attributed
+    * to the campaign. Verifies that default allocations and campaign allocations are created.
+    * Updates all opportunity amounts to be equal to the campaign allocation amount, verifies that default
+    * allocations were deleted when no longer needed.
+    ********************************************************************************************************/
+    static testMethod void bulkOppInsert() {
         if (strTestOnly != '*' && strTestOnly != 'bulkOppInsert') return;
 
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
@@ -354,10 +375,11 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
 
-    //insert opps with excluded type and recordtype
-    //verify no default allocations are created
-    @isTest
-    static void testExcludedOpps() {
+    /*******************************************************************************************************
+    * @description Inserts opportunities which excluded types and record types. Verifies no default 
+    * allocations are created.
+    ********************************************************************************************************/
+    static testMethod void testExcludedOpps() {
         if (strTestOnly != '*' && strTestOnly != 'testExcludedOpps') return;
 
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
@@ -382,11 +404,12 @@ private with sharing class ALLO_Allocations_TEST {
 
     }
 
-    //insert opp with null amount, verify no default allocation is created
-    //add an amount, verify default created
-    //remove the amount, verify default removed
-    @isTest
-    static void testOppNullAmount() {
+    /*******************************************************************************************************
+    * @description Inserts an opportunity with a null amount, verifies no default allocation is created.
+    * Updates the amount, verifies default allocation was created. Nulls out the amount, verifies the 
+    * default allocation was deleted.
+    ********************************************************************************************************/
+    static testMethod void testOppNullAmount() {
         if (strTestOnly != '*' && strTestOnly != 'testOppNullAmount') return;
 
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
@@ -417,11 +440,13 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(0,queryAllo.size(),'A default allocation should be created for the opporunity that now has an amount.');
     }
 
-    //create a campaign allocation, mark that allocation's GAU as inactive
-    //insert an opportunity assigned to the campaign, verify only default allocation is created and no error is thrown
-    //mark opportunity allocation's gau as inactive, update opp amount, verify
-    @isTest
-    static void testInactiveGAU() {
+    /*******************************************************************************************************
+    * @description Creates a campaign allocation, marks that allocation's GAU as inactive. Insert an
+    * opportunity assigned to the campaign, verify only default allocation is created and no error is
+    * thrown. Deactivates the opportunity allocation's GAU, updates the opportunity amount, verifies the 
+    * allocation to the inactive GAU isn't modified.
+    ********************************************************************************************************/
+    static testMethod void testInactiveGAU() {
         if (strTestOnly != '*' && strTestOnly != 'testInactiveGAU') return;
 
         setupSettings(null);
@@ -467,15 +492,24 @@ private with sharing class ALLO_Allocations_TEST {
         
     }
 
-    static void testMakeDefaultAllocations() {
+    /*******************************************************************************************************
+    * @description Tests the ALLO_MakeDefaultAllocations_BATCH class. Creates two opportunities, one without
+    * allocations and one with an allocation. Runs batch class. Verifies two default allocations are created;
+    * one for the total amount, and one for the unallocated remainder.
+    ********************************************************************************************************/
+    static testMethod void testMakeDefaultAllocations() {
         if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
         
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
+        insert otherGau;
+        
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
-        setupSettings(null);
+        //setting flags to not create default allocations for the new opportunities
+        ALLO_Allocations_TDTM.resetFlags(true);
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -490,13 +524,11 @@ private with sharing class ALLO_Allocations_TEST {
         Allocation__c nonDefaultAllo = new Allocation__c(Opportunity__c=opp1.id, Amount__c = 4, General_Accounting_Unit__c = otherGau.id);
         insert nonDefaultAllo;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
-
         Test.startTest();
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         Test.stopTest();
 
-        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id];
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id AND General_Accounting_Unit__c = :defaultGau.id];
         system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The default allocation should be of the unallocated amount of the Opportunity.');
 
@@ -504,5 +536,4 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
         system.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
     }
-
 }

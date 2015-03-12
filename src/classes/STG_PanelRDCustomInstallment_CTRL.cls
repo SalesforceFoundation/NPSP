@@ -35,9 +35,14 @@
 */
 public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     
+    /*********************************************************************************************************
+    * @description Returns the string Id of the RD Custom Installments panel. 
+    */
     public override string idPanel() { return 'idPanelRDInstPd'; }
     
-    // temporary ci used by the page for creating a new ci.
+    /*********************************************************************************************************
+    * @description temporary ci used by the page for creating a new ci.
+    */
     public npe03__Custom_Installment_Settings__c ciNew {
     	get {
     		if (ciNew == null)
@@ -47,13 +52,19 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     	private set;
     }
     
-    // action method for going into edit mode (to create a new ci)
+    /*********************************************************************************************************
+    * @description Action Method for going into edit mode (to create a new ci)
+    * @return null
+    */
     public PageReference newCustomInstallment() {
         isEditMode = true;
         return null;
     }
 
-    // action method to save the new ci to the database.
+    /*********************************************************************************************************
+    * @description Action Method to save the new ci to the database.
+    * @return null
+    */
     public PageReference createCustomInstallment() {    	
         Savepoint sp = Database.setSavepoint();
         try {
@@ -71,15 +82,25 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         return null;
     }
 
-    // action method to cancel out of creating a new ci.
+    /*********************************************************************************************************
+    * @description Action Method to cancel out of creating a new ci.
+    * @return null
+    */
     public PageReference cancelCustomInstallment() {
         isEditMode = false;
         ciNew = null;
         return null;
     }
     
-    // action method and parameter for deleting an existing ci.
+    /*********************************************************************************************************
+    * @description string to hold the Id of an existing ci to delete 
+    */
     public string ciIdDelete { get; set; }
+
+    /*********************************************************************************************************
+    * @description Action Method for deleting an existing ci.
+    * @return null
+    */
     public PageReference deleteCi() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -100,7 +121,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         return null;
     }
 
-    // the periods we support for a ci        
+    /*********************************************************************************************************
+    * @description List of SelectOptions for the periods we support for a ci 
+    */
     static public list<SelectOption> listSORDCustomPeriod {
         get {
             if (listSORDCustomPeriod == null) {
@@ -115,8 +138,11 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         private set;
     }
      
-    
-    // test an opp insert with a recurring donation to find problems - called by Health Check
+    /*********************************************************************************************************
+    * @description Tests an opp insert with a recurring donation to find problems - called by Health Check
+    * @param ctrl The Health Check panel's controller
+    * @return null
+    */
     public static void verifyRDSaving(STG_PanelHealthCheck_CTRL ctrl) {
         
         //verify that custom installment periods are specified on the picklist field

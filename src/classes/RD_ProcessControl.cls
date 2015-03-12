@@ -30,6 +30,19 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2012 (2.0)
-* @description Semaphore for recursion prevention 
+* @group Recurring Donations
+* @description Semaphore for recursion prevention in Recurring Donations 
 */
-public with sharing class RD_ProcessControl {public static boolean hasRun = false;public static boolean batchButton = false;}
+public with sharing class RD_ProcessControl {
+
+    /*******************************************************************************************************
+    * @description flag to prevent recursion into the RD trigger handler/logic
+    */ 
+    public static boolean hasRun = false;
+
+    /*******************************************************************************************************
+    * @description flag to specify when running the Refresh Opportunities button on a RD.
+    */ 
+    public static boolean batchButton = false;
+
+}

@@ -31,8 +31,10 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-* @description Helps to determine if errors occurred during the DML operations, and with the necessary
-               storing and notification of these errors. 
+* @description Helps determine if errors occurred during the DML operations performed during the transaction, and with 
+* the necessary storing and notification of these errors.
+* @group ErrorHandling
+* @group-content ../../ApexDocContent/ErrorHandling.htm
 */
 public with sharing class ERR_Handler {
     
@@ -211,7 +213,7 @@ public with sharing class ERR_Handler {
 		String stackTrace = e.getStackTraceString();
 		UTIL_Debug.debug('****Stack trace: ' + stackTrace);
 		String message;
-		if(String.isBlank(stackTrace) || stackTrace == '(npsp)' || stackTrace == 'npsp') {
+		if(String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
 			message = 'No stacktrace available at the time of saving the record. ';
 		} else {
 			message = 'Stacktrace available at the time of saving the record - ';

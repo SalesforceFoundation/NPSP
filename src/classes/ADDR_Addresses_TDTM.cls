@@ -447,21 +447,36 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (addrNew == null || addrOld == null) 
            return false;        
         return (
-           addrNew.MailingStreet__c != addrOld.MailingStreet__c ||
-           addrNew.MailingStreet2__c != addrOld.MailingStreet2__c ||
-           addrNew.MailingCity__c != addrOld.MailingCity__c ||
-           addrNew.MailingState__c != addrOld.MailingState__c ||
-           addrNew.MailingPostalCode__c != addrOld.MailingPostalCode__c ||
-           addrNew.MailingCountry__c != addrOld.MailingCountry__c ||
-           (includeAddressType && (addrNew.Address_Type__c != addrOld.Address_Type__c)));
+           !equalsCaseSensitive(addrNew.MailingStreet__c, addrOld.MailingStreet__c) ||
+           !equalsCaseSensitive(addrNew.MailingStreet2__c, addrOld.MailingStreet2__c) ||
+           !equalsCaseSensitive(addrNew.MailingCity__c, addrOld.MailingCity__c) ||
+           !equalsCaseSensitive(addrNew.MailingState__c, addrOld.MailingState__c) ||
+           !equalsCaseSensitive(addrNew.MailingPostalCode__c, addrOld.MailingPostalCode__c) ||
+           !equalsCaseSensitive(addrNew.MailingCountry__c, addrOld.MailingCountry__c) ||
+           (includeAddressType && (!equalsCaseSensitive(addrNew.Address_Type__c, addrOld.Address_Type__c))));
     }
 
     /*******************************************************************************************************
-    * @description tility to compare two address objects address fields and support fuzzy matching; our definition of fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
+    * @description Returns whether two strings are equal, using a case sensitve comparison
+    * @param str1 The first string
+    * @param str2 The second string
+    * @return boolean 
+    ********************************************************************************************************/
+    public static boolean equalsCaseSensitive(string str1, string str2) {
+        if (str1 == null)
+            return str2 == null;
+        if (str2 == null)
+            return false;
+        return str1.equals(str2);
+    }
+
+    /*******************************************************************************************************
+    * @description Compare two address objects address fields and support fuzzy matching; our definition of 
+    * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
     * @param addrNew the new version of the Address
     * @param addrOld the old version of the Address
     * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean true if more than one of the fields fields have changed on the Address, ignoring whitespace and case changes
+    * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */     
     private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
         if (addrNew == null || addrOld == null) 
@@ -473,6 +488,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (strCleanup(addrNew.MailingStreet2__c) != strCleanup(addrOld.MailingStreet2__c) && addrOld.MailingStreet2__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingCity__c) != strCleanup(addrOld.MailingCity__c) && addrOld.MailingCity__c != null)
+            cChange++;
+        if (strCleanup(addrNew.MailingState__c) != strCleanup(addrOld.MailingState__c) && addrOld.MailingState__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
             cChange++;

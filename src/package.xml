@@ -32,14 +32,13 @@
     <members>ADDR_Validator_TEST</members>
     <members>AFFL_Affiliations_TDTM</members>
     <members>AFFL_Affiliations_TEST</members>
-    <members>AFFL_Affiliations_UTIL</members>
-    <members>AFFL_BulkTests_TEST</members>
     <members>ALLO_Allocations_TDTM</members>
     <members>ALLO_Allocations_TEST</members>
     <members>ALLO_MakeDefaultAllocations_BATCH</members>
     <members>ALLO_ManageAllocations_CTRL</members>
     <members>ALLO_ManageAllocations_TEST</members>
     <members>ALLO_Multicurrency_TDTM</members>
+    <members>ALLO_Multicurrency_TEST</members>
     <members>ALLO_RollupBTN_CTRL</members>
     <members>ALLO_Rollup_SCHED</members>
     <members>ALLO_Rollup_TEST</members>
@@ -47,6 +46,7 @@
     <members>BDE_BatchDataEntry_TEST</members>
     <members>BDE_BatchEntry_CTRL</members>
     <members>BDE_BatchEntry_TEST</members>
+    <members>BDI_DataImport_API</members>
     <members>BDI_DataImport_BATCH</members>
     <members>BDI_DataImport_CTRL</members>
     <members>BDI_DataImport_TEST</members>
@@ -58,6 +58,8 @@
     <members>CON_ContactMerge</members>
     <members>CON_ContactMerge_CTRL</members>
     <members>CON_ContactMerge_TEST</members>
+    <members>CON_DoNotContact_TDTM</members>
+    <members>CON_DoNotContact_TEST</members>
     <members>ERR_AddError_TEST</members>
     <members>ERR_Handler</members>
     <members>ERR_Handler_API</members>
@@ -354,6 +356,8 @@
     <members>Contact.Address_Verification_Status__c</members>
     <members>Contact.Batch__c</members>
     <members>Contact.Current_Address__c</members>
+    <members>Contact.Deceased__c</members>
+    <members>Contact.Do_Not_Contact__c</members>
     <members>Contact.Exclude_from_Household_Formal_Greeting__c</members>
     <members>Contact.Exclude_from_Household_Informal_Greeting__c</members>
     <members>Contact.Exclude_from_Household_Name__c</members>

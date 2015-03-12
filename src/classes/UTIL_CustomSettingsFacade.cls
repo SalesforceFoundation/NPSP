@@ -63,12 +63,17 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
     
-    /**
-     * Methods that will try retrieving the user-level custom settings. If no user-level custom
-     * settings exist, we'll query the org-level settings.
-     **/
+    /*******************************************************************************************************
+    * @description Returns the default Contacts and Orgs settings. 
+    * @return npe01__Contacts_And_Orgs_Settings__c Custom settings record for Contacts and Orgs configuration. 
+    * At the org level, if no user level settings are defined. The ID field should be checked to determine if 
+    * the returned record already exists or doesn't exist in the database.      
+    */
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
-        if (contactsSettings == null) {
+        if(Test.isRunningTest() && contactsSettings == null) {
+        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+        	configContactsSettings(contactsSettings);
+        } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
                 contactsSettings = getOrgContactsSettings();
@@ -76,8 +81,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return contactsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Households settings. 
+    * @return npo02__Households_Settings__c Custom settings record for Households configuration. At the org level, 
+    * if no user level settings are defined. The ID field should be checked to determine if the returned record 
+    * already exists or doesn't exist in the database.
+    */
     public static npo02__Households_Settings__c getHouseholdsSettings() {
-        if (householdsSettings == null) {
+        if(Test.isRunningTest() && householdsSettings == null) {
+            householdsSettings = new npo02__Households_Settings__c();
+            configHouseholdSettings(householdsSettings);
+        } else if (householdsSettings == null) {
             householdsSettings = npo02__Households_Settings__c.getInstance();
             if(householdsSettings.Id == null)
                 householdsSettings = getOrgHouseholdsSettings();
@@ -85,21 +99,40 @@ public without sharing class UTIL_CustomSettingsFacade {
         return householdsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Recurring Donations settings. 
+    * @return npe03__Recurring_Donations_Settings__c Custom settings record for Recurring Donations configuration. 
+    * At the org level, if no user level settings are defined. The ID field should be checked to determine if the 
+    * returned record already exists or doesn't exist in the database.
+    */
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-        if (recurringDonationsSettings == null) {
+        if(Test.isRunningTest() && recurringDonationsSettings == null) {
+        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+        	configRecurringDonationsSettings(recurringDonationsSettings);
+        } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
             if(recurringDonationsSettings.Id == null)
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
             else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(recurringDonationsSettings);
-                upsert recurringDonationsSettings;
+                if(!Test.isRunningTest())
+                    upsert recurringDonationsSettings;
             }
         }
         return recurringDonationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Relationships settings. 
+    * @return npe4__Relationship_Settings__c Custom settings record for Relationships configuration. At the org level, 
+    * if no user level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static npe4__Relationship_Settings__c getRelationshipSettings() {
-        if (relationshipsSettings == null) {
+        if(Test.isRunningTest() && relationshipsSettings == null) {
+            relationshipsSettings = new npe4__Relationship_Settings__c();
+            configRelationshipsSettings(relationshipsSettings);
+        } else if (relationshipsSettings == null) {
             relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
             if(relationshipsSettings.Id == null)
                 relationshipsSettings = getOrgRelationshipSettings();
@@ -107,8 +140,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return relationshipsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Affiliations settings. 
+    * @return npe5__Affiliations_Settings__c Custom settings record for Affiliations configuration. At the org level, 
+    * if no user level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static npe5__Affiliations_Settings__c getAffiliationsSettings() {
-        if(affiliationsSettings == null) {      
+        if(Test.isRunningTest() && affiliationsSettings == null) {
+            affiliationsSettings = new npe5__Affiliations_Settings__c();
+            configAffiliationsSettings(affiliationsSettings);
+        } else if(affiliationsSettings == null) {      
             affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
             if(affiliationsSettings.Id == null) 
                 affiliationsSettings = getOrgAffiliationsSettings();
@@ -116,8 +158,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return affiliationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Error Handling settings. 
+    * @return Error_Settings__c Custom settings record for Error Handling configuration. At the org level, if no user 
+    * level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static Error_Settings__c getErrorSettings() {
-        if(errorSettings == null) {
+        if(Test.isRunningTest() && errorSettings == null) {
+            errorSettings = new Error_Settings__c();
+            configErrorSettings(errorSettings, null);
+        } else if(errorSettings == null) {
             errorSettings = Error_Settings__c.getInstance();
             if(errorSettings.Id == null)
                 errorSettings = getOrgErrorSettings();
@@ -125,8 +176,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return errorSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Batch Data Entry settings. 
+    * @return Batch_Data_Entry_Settings__c Custom settings record for Batch Data Entry configuration. At the org level, 
+    * if no user level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static Batch_Data_Entry_Settings__c getBDESettings() {
-        if(bdeSettings == null) {
+        if(Test.isRunningTest() && bdeSettings == null) {
+            bdeSettings = new Batch_Data_Entry_Settings__c();
+            configBDESettings(bdeSettings);
+        } else if(bdeSettings == null) {
             bdeSettings = Batch_Data_Entry_Settings__c.getInstance();
             if(bdeSettings.Id == null)
                 bdeSettings = getOrgBDESettings();
@@ -134,8 +194,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return bdeSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Address Verification settings. 
+    * @return Addr_Verification_Settings__c Custom settings record for Address Verification configuration. At the org level, 
+    * if no user level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static Addr_Verification_Settings__c getAddressVerificationSettings() {        
-        if(addressVerificationSettings == null) {
+        if(Test.isRunningTest() && addressVerificationSettings == null) {
+            addressVerificationSettings = new Addr_Verification_Settings__c();
+            configAddressVerificationSettings(addressVerificationSettings);
+        } else if(addressVerificationSettings == null) {
             addressVerificationSettings = Addr_Verification_Settings__c.getInstance();
             if(addressVerificationSettings.Id == null)
                 addressVerificationSettings = getOrgAddressVerificationSettings();
@@ -143,8 +212,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return addressVerificationSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Household Naming settings. 
+    * @return Household_Naming_Settings__c Custom settings record for Household Naming configuration. At the org level, if 
+    * no user level settings are defined. The ID field should be checked to determine if the returned record already
+    * exists or doesn't exist in the database.
+    */
     public static Household_Naming_Settings__c getHouseholdNamingSettings() {        
-        if (householdNamingSettings == null) {
+        if(Test.isRunningTest() && householdNamingSettings == null) {
+            householdNamingSettings = new Household_Naming_Settings__c();
+            configHouseholdNamingSettings(householdNamingSettings);
+        } else if (householdNamingSettings == null) {
             householdNamingSettings = Household_Naming_Settings__c.getInstance();
             if(householdNamingSettings.Id == null) 
                 householdNamingSettings = getOrgHouseholdNamingSettings();
@@ -152,8 +230,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return householdNamingSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Allocations settings. 
+    * @return Allocations_Settings__c Custom settings record for Allocations configuration. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist 
+    * in the database.
+    */
     public static Allocations_Settings__c getAllocationsSettings() {
-        if (allocationsSettings == null) {
+        if(Test.isRunningTest() && allocationsSettings == null) {
+            allocationsSettings = new Allocations_Settings__c();
+            configAllocationsSettings(allocationsSettings);
+        } else if (allocationsSettings == null) {
             allocationsSettings = Allocations_Settings__c.getInstance();
             if (allocationsSettings.Id == null) {
                 allocationsSettings = getOrgAllocationsSettings();
@@ -162,8 +249,17 @@ public without sharing class UTIL_CustomSettingsFacade {
         return allocationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the default Data Import settings. 
+    * @return Data_Import_Settings__c Custom settings record for Data Import configuration. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist 
+    * in the database.
+    */
     public static Data_Import_Settings__c getDataImportSettings() {        
-        if (dataImportSettings == null) {
+        if(Test.isRunningTest() && dataImportSettings == null) {
+            dataImportSettings = new Data_Import_Settings__c();
+            configDataImportSettings(dataImportSettings);
+        } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
             if (dataImportSettings.Id == null) 
                 dataImportSettings = getOrgDataImportSettings();
@@ -171,10 +267,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return dataImportSettings;
     }
 
-    /**
-     * Methods that try retrieving the org-level custom settings. Default org-level settings will be created if none exist.
-     * Meant to be called only from settings page and install script.
-     **/
+    /*******************************************************************************************************
+    * @description Returns the org-level Contacts and Orgs settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return npe01__Contacts_And_Orgs_Settings__c Org-level settings for Contacts and Orgs.
+    */
     public static npe01__Contacts_And_Orgs_Settings__c getOrgContactsSettings() {
         if(orgContactsSettings == null) {
             orgContactsSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
@@ -188,6 +285,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgContactsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Households settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return npo02__Households_Settings__c Org-level settings for Households.
+    */
     public static npo02__Households_Settings__c getOrgHouseholdsSettings() {
         if(orgHouseholdsSettings == null) {
             orgHouseholdsSettings = npo02__Households_Settings__c.getOrgDefaults();
@@ -201,6 +303,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgHouseholdsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Recurring Donation settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return npe03__Recurring_Donations_Settings__c Org-level settings for Recurring Donations.
+    */
     public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
         if(orgRecurringDonationsSettings == null) {
             orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
@@ -213,6 +320,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgRecurringDonationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Relationship settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return npe4__Relationship_Settings__c Org-level settings for Relationships.
+    */
     public static npe4__Relationship_Settings__c getOrgRelationshipSettings() {
         if(orgRelationshipsSettings == null) { 
             orgRelationshipsSettings = npe4__Relationship_Settings__c.getOrgDefaults();
@@ -225,6 +337,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgRelationshipsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Affiliation settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return npe5__Affiliations_Settings__c Org-level settings for Affiliations.
+    */
     public static npe5__Affiliations_Settings__c getOrgAffiliationsSettings() {
         if(orgAffiliationsSettings == null) {
             orgAffiliationsSettings = npe5__Affiliations_Settings__c.getOrgDefaults();
@@ -237,6 +354,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgAffiliationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Error settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Error_Settings__c Org-level settings for Errors.
+    */
     public static Error_Settings__c getOrgErrorSettings() {
         if(orgErrorSettings == null) {
             orgErrorSettings = Error_Settings__c.getOrgDefaults();
@@ -249,6 +371,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgErrorSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Batch Data Entry settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Batch_Data_Entry_Settings__c Org-level settings for Batch Data Entry.
+    */
     public static Batch_Data_Entry_Settings__c getOrgBDESettings() {
         if(orgBDESettings == null) {
             orgBDESettings = Batch_Data_Entry_Settings__c.getOrgDefaults();
@@ -261,6 +388,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgBDESettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Address Verification settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Addr_Verification_Settings__c Org-level settings for Address Verification.
+    */
     public static Addr_Verification_Settings__c getOrgAddressVerificationSettings() {
         if(orgAddressVerificationSettings == null) {
             orgAddressVerificationSettings = Addr_Verification_Settings__c.getOrgDefaults();
@@ -273,6 +405,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgAddressVerificationSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Household Naming settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Household_Naming_Settings__c Org-level settings for Household Naming.
+    */
     public static Household_Naming_Settings__c getOrgHouseholdNamingSettings() {
         if(orgHouseholdNamingSettings == null) {
             orgHouseholdNamingSettings = Household_Naming_Settings__c.getOrgDefaults();
@@ -285,6 +422,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgHouseholdNamingSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Returns the org-level Allocation settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Allocations_Settings__c Org-level settings for Allocations.
+    */
     public static Allocations_Settings__c getOrgAllocationsSettings() {
         if (orgAllocationsSettings==null) {
             orgAllocationsSettings = Allocations_Settings__c.getOrgDefaults();
@@ -297,7 +439,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgAllocationsSettings;
     }
     
-    //method that will set custom setting defaults at the org level. Meant to be called only from settings page and install script
+    /*******************************************************************************************************
+    * @description Returns the org-level Data Import settings. Default org-level settings will be created 
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Data_Import_Settings__c Org-level settings for Data Import.
+    */
     public static Data_Import_Settings__c getOrgDataImportSettings() {
         if (orgDataImportSettings == null) {
             orgDataImportSettings = Data_Import_Settings__c.getOrgDefaults();
@@ -310,7 +456,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgDataImportSettings;
     }
 
-    /**
+    /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
      **/
     private static void configContactsSettings(npe01__Contacts_And_Orgs_Settings__c cs) {
@@ -374,7 +520,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Household_Contact_Roles_On__c = true;
                 
         // new HH Account model overrides having HH objects
-        if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
     }
     
@@ -417,7 +563,6 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     private static void configAddressVerificationSettings(Addr_Verification_Settings__c avs) {
-        avs.Using_SmartyStreets__c = false;
         avs.Enable_Automatic_Verification__c = false;
         avs.Reject_Ambiguous_Addresses__c = false;
     }
@@ -447,12 +592,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
     }
 
-    /**
-     * Methods that will create custom settings for tests.
-     **/
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return npe01__Contacts_And_Orgs_Settings__c The configured settings.
+    **/
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettingsForTests(npe01__Contacts_And_Orgs_Settings__c mySettings) {
         if(contactsSettings == null)
-            contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
         
         //create our own based on what's passed in from the test
         contactsSettings.npe01__One_to_One_RecordTypeID__c = mySettings.npe01__One_to_One_RecordTypeID__c;
@@ -469,9 +617,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         return contactsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return npo02__Households_Settings__c The configured settings.
+    **/
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
         if(householdsSettings == null)
-            householdsSettings = npo02__Households_Settings__c.getInstance();
+            householdsSettings = new npo02__Households_Settings__c();
             
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
@@ -496,17 +650,23 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
-        if (householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
-            if (getContactsSettings().npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-                getContactsSettings().npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+        if (householdsSettings != null && householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
+            if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+                contactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
             }   
         }
         return householdsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return npe4__Relationship_Settings__c The configured settings.
+    **/
     public static npe4__Relationship_Settings__c getRelationshipsSettingsForTests(npe4__Relationship_Settings__c mySettings) {
         if(relationshipsSettings == null)
-            relationshipsSettings = npe4__Relationship_Settings__c.getInstance();
+            relationshipsSettings = new npe4__Relationship_Settings__c();
         
         relationshipsSettings.npe4__Reciprocal_Method__c = mySettings.npe4__Reciprocal_Method__c;
         relationshipsSettings.npe4__Gender_Field__c = mySettings.npe4__Gender_Field__c;
@@ -514,18 +674,30 @@ public without sharing class UTIL_CustomSettingsFacade {
         return relationshipsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return npe5__Affiliations_Settings__c The configured settings.
+    **/
     public static npe5__Affiliations_Settings__c getAffiliationsSettingsForTests(npe5__Affiliations_Settings__c mySettings) {
         if(affiliationsSettings == null)
-           affiliationsSettings = npe5__Affiliations_Settings__c.getInstance();
+           affiliationsSettings = new npe5__Affiliations_Settings__c();
            
         affiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c = mySettings.npe5__Automatic_Affiliation_Creation_Turned_On__c;   
         orgAffiliationsSettings = affiliationsSettings;
         return affiliationsSettings;
     }
     
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Error_Settings__c The configured settings.
+    **/
     public static Error_Settings__c getErrorSettingsForTests(Error_Settings__c mySettings) {
         if(errorSettings == null)
-           errorSettings = Error_Settings__c.getInstance();
+           errorSettings = new Error_Settings__c();
            
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;   
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
@@ -534,9 +706,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         return errorSettings;  
     }
 
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Allocations_Settings__c The configured settings.
+    **/
     public static Allocations_Settings__c getAllocationsSettingsForTests(Allocations_Settings__c mySettings) {
         if (allocationsSettings == null)
-            allocationsSettings = getOrgAllocationsSettings();
+            allocationsSettings = new Allocations_Settings__c();
 
         allocationsSettings.Default_Allocations_Enabled__c = mySettings.Default_Allocations_Enabled__c;
         allocationsSettings.Default__c = mySettings.Default__c;
@@ -548,10 +726,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         return allocationsSettings;
     }
     
-            
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
+    * as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return npe03__Recurring_Donations_Settings__c The configured settings.
+    **/        
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c mySettings) {
         if (recurringDonationsSettings == null)
-            recurringDonationsSettings = getOrgRecurringDonationsSettings();
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
             
         recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = mySettings.npe03__Opportunity_Forecast_Months__c;
         recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;

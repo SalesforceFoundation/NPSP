@@ -35,33 +35,91 @@
 */
 public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
+    /*******************************************************************************************************
+    * @description The panel ID.
+    */
     public override String idPanel() { return 'idPanelAddressVerification'; }
     
+    /*******************************************************************************************************
+    * @description The address verification settings.
+    */
     public Addr_Verification_Settings__c addrVerifSettings { public get; public set; }
     
+    /*******************************************************************************************************
+    * @description The error message if the address verification settings cannot be saved.
+    */
     public String apiSettingsErrorMessage { get; private set; }
+    /*******************************************************************************************************
+    * @description The success message if the address verification settings can be saved.
+    */
     public String apiSettingsSaveMessage { get; private set; }
 
+    /*******************************************************************************************************
+    * @description The address (as a string) used to test if the address verification settings are valid.
+    */
     public String apiTestEntry { get; set; }
+    /*******************************************************************************************************
+    * @description The result from testing the address verification settings.
+    */
     public String apiTestResult { get; set; }
 
+    /*******************************************************************************************************
+    * @description Flag that determines if previously verified objects will be verified again.
+    */
     public Boolean skipPreviouslyVerifiedObjects { get; set; } { skipPreviouslyVerifiedObjects = true; } 
+    /*******************************************************************************************************
+    * @description Flag that shows if batch address verification is running.
+    */
     public boolean isRunningBatch { get; set; }
+    /*******************************************************************************************************
+    * @description Message that provides information about the batch address verification process.
+    */
     public String batchVerifyMessage { get; set; }
 
     String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
     
+    /*******************************************************************************************************
+    * @description The help text for the settings.
+    */
     public String settingsHelpText { public get; public set; }    
+    /*******************************************************************************************************
+    * @description The help text for the batch.
+    */
     public String validatorBatchHelpText { public get; public set; }
     
+    /*******************************************************************************************************
+    * @description Flag that provides information on whether batch address verification is enabled.
+    */
     public Boolean batchVerifEnabled { public get; set; }
     
+    /*******************************************************************************************************
+    * @description Map that contains help text for each address verification service.
+    */
     public Map<String, String> servicesHelpTextMap { public get; set; }
+    /*******************************************************************************************************
+    * @description Map that contains the URL endpoint for each address verification service.
+    */
     public Map<String, String> servicesURLMap  { public get; set; }
+    /*******************************************************************************************************
+    * @description The name of the selected address verification service.
+    */
     public string serviceName { public get; set; }
     
+    /*******************************************************************************************************
+    * @description The class that implements the selected address verification service.
+    */
     public String validatorSelection;     
-    public String getValidatorSelection() { return validatorSelection; }  
+    /*******************************************************************************************************
+    * @description Provides the name of the selected address verification class.
+    * @return String The name of the class that implements the selected address verification service.
+    */
+    public String getValidatorSelection() { return validatorSelection; } 
+    
+    /*******************************************************************************************************
+    * @description Sets the appropriate properties according to the selected address verification. 
+    * @param validatorSelection The name of the selected address verification service. 
+    * @return void
+    */ 
     public void setValidatorSelection(String validatorSelection) {
 		addrVerifSettings.Class__c = validatorSelection;
 		clearDynamicFields();
@@ -77,6 +135,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 		}
     }
     
+    /*******************************************************************************************************
+    * @description Sets the value of those fields that change according to the selected address verification service. 
+    * @return PageReference The page to redirect to. None, in this case.
+    */
     public PageReference initDynamicFields() {
     	addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
     	String validator = addrVerifSettings.Class__c;
@@ -105,8 +167,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         serviceName = validator.getServiceName();
     }
     
+    /*******************************************************************************************************
+    * @description The address validator service options to provide on the drop-down list. 
+    */
     public List<SelectOption> validators { public get; set; }
     
+    /*******************************************************************************************************
+    * @description Controller that initializes the class properties.
+    */
     public STG_PanelADDRVerification_CTRL() {
     	isRunningBatch = false;    
     	servicesHelpTextMap = new Map<String, String>();
@@ -139,23 +207,25 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         }         
     }
     
+    /*******************************************************************************************************
+    * @description Saves the address verification settings.
+    * @return PageReference The page to redirect to. None, in this case.
+    */
     public override PageReference saveSettings() {
         try {
         	apiTestResult = null;
-        	
-        	addrVerifSettings.Using_SmartyStreets__c = (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator');
-        	
+        	        	
         	encodeTokenIfNotEncoded(addrVerifSettings);
                         
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
-            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_ID__c)) {
+            if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_ID__c)) {
                 apiSettingsErrorMessage = Label.Addr_Id_Error;
                 apiSettingsSaveMessage = null;
                 validationError = true;
             }
             
-            if(addrVerifSettings.Using_SmartyStreets__c && String.isBlank(addrVerifSettings.Auth_Token__c)) {
+            if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_Token__c)) {
                 String validationMessage = Label.Addr_Token_Error;
                 apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
                 apiSettingsSaveMessage = null;
@@ -163,16 +233,18 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
             
             if(!validationError) {
-            	if(addrVerifSettings.Using_SmartyStreets__c && addrVerifSettings.Zipcode_Verification_Endpoint__c == null) {
-            		ADDR_SmartyStreets_Validator validator = new ADDR_SmartyStreets_Validator();
-            		addrVerifSettings.Zipcode_Verification_Endpoint__c = validator.getDefaultZipcodeURL();
-            	}
+            	ADDR_IValidator validator = (ADDR_IValidator)Type.forName(addrVerifSettings.Class__c).newInstance();
+            	addrVerifSettings.Address_Verification_Endpoint__c = validator.getDefaultURL();
+            	
             	if(addrVerifSettings.Address_Verification_Endpoint__c.contains('http:')) {
             	   addrVerifSettings.Address_Verification_Endpoint__c = addrVerifSettings.Address_Verification_Endpoint__c.replaceFirst('http:', 'https:');
             	} else if(!addrVerifSettings.Address_Verification_Endpoint__c.contains('http')) {
             	   addrVerifSettings.Address_Verification_Endpoint__c = 'https://' + addrVerifSettings.Address_Verification_Endpoint__c;
             	}
-                upsert addrVerifSettings;
+            	
+            	if(!Test.isRunningTest())
+                    upsert addrVerifSettings;
+                
                 apiSettingsSaveMessage = Label.Saved + '\n';
                 apiSettingsErrorMessage = null;
                 setValidatorSelection(addrVerifSettings.Class__c);
@@ -184,6 +256,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         return null;
     }
     
+    /*******************************************************************************************************
+    * @description Cancels the current modification of class properties.
+    * @return PageReference The page to redirect to.
+    */
     public override PageReference cancelEdit() {
     	apiSettingsErrorMessage = null;
 	    apiSettingsSaveMessage = null;
@@ -192,18 +268,23 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     	return super.cancelEdit();
     }
 
+    /*******************************************************************************************************
+    * @description Tests the selected address verification service with the settings provided.
+    * @return The page to redirect to. None, in this case.
+    */
     public PageReference testApi() {
-    	if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
-            addrVerifSettings.Using_SmartyStreets__c = true;
-        }
         apiTestResult = strVerifyAddressVerificationService(addrVerifSettings, apiTestEntry);
         return null;
     }
     
-    // verify the current address settings - used by Health Check.    
+    /*******************************************************************************************************
+    * @description Inspects the current address settings. Used by Health Check.
+    * @param ctrl The health check controller.
+    * @return void
+    */    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
         Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if (avs.Using_SmartyStreets__c) {
+        if (avs.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
 	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
@@ -218,14 +299,14 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     private static string strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, string strZip) {
         string strResult;
         Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        if (avs.Using_SmartyStreets__c) {
+        if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        try {
 	        	encodeTokenIfNotEncoded(addrVerifSettings);
 	            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
 	            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
 	            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
 	        } catch (Exception e) {
-	        	if(!addrVerifSettings.Using_SmartyStreets__c || String.isBlank(addrVerifSettings.Auth_ID__c) 
+	        	if(!(avs.Class__c == 'ADDR_SmartyStreets_Validator') || String.isBlank(addrVerifSettings.Auth_ID__c) 
 	        	|| String.isBlank(addrVerifSettings.Auth_Token__c)) {
 	        		strResult = Label.Addr_Verify_Settings;
 	        	} else if(e.getMessage().startsWith('no protocol')) {
@@ -242,11 +323,15 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     
     private static void encodeTokenIfNotEncoded(Addr_Verification_Settings__c addrVerifSettings) {
     	//SmartyStreets' unencoded token is always 88 chars long
-        if(addrVerifSettings.Using_SmartyStreets__c && !String.isBlank(addrVerifSettings.Auth_Token__c) 
+        if(addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && !String.isBlank(addrVerifSettings.Auth_Token__c) 
         && addrVerifSettings.Auth_Token__c.length() == 88)
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
     }
 
+    /*******************************************************************************************************
+    * @description Verify all non-verified address records, if the selected services supports it.
+    * @return PageReference The page to redirect to. None, in this case.  
+    */
     public PageReference batchVerify() {
     	String classToRunName = String.valueOf(addrVerifSettings.get('Class__c'));
         if(!String.isBlank(classToRunName)) {

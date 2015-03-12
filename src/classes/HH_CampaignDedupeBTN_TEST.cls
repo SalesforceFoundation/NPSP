@@ -36,7 +36,12 @@
 @isTest
 private class HH_CampaignDedupeBTN_TEST {  
   
-  public static testMethod void testCampaignHHReport(){
+ 
+    /*******************************************************************************************************
+    * @description test the Campaign Dedupe controller 
+    * @return void
+    ********************************************************************************************************/
+    private static testMethod void testCampaignHHReport(){
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
                     npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, 

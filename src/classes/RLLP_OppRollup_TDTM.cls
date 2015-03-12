@@ -30,10 +30,22 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2014 
-* @description trigger handler on Opps for supporting Rollups 
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups.htm
+* @description Trigger handler on Opportunity for supporting trigger based rollups.
 */
 public with sharing class RLLP_OppRollup_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunity, runs rollups for current trigger set of opportunities.
+    * @param listNew The list of opportunities from trigger new. 
+    * @param listOld The list of opportunities from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for the current trigger context. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    * This method returns null as rollups handle updating directly.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 

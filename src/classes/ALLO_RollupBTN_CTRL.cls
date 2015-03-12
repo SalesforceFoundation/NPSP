@@ -30,15 +30,17 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
-*
 * @group Allocations
-*
+* @group-content ../../ApexDocContent/Allocations.htm
 * @description Controller for button that recalculates Allocations rollups for a single General Accounting Unit.
 */
 public with sharing class ALLO_RollupBTN_CTRL {
-	public ALLO_RollupBTN_CTRL() {}
+	
+    /** @description Empty constructor, does nothing.*/
+    public ALLO_RollupBTN_CTRL() {}
 
-	public PageReference buttonClick() {
+    /** @description Button click method runs allocation rollups for the current General Accounting Unit.*/
+    public PageReference buttonClick() {
 		String parentId = ApexPages.currentPage().getParameters().get('id');
         if (parentId != null && parentId != '') {
         	//run rollups for this General Accouting Unit

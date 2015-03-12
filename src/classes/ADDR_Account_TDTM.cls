@@ -108,12 +108,17 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
         if (acc1 == null) 
            return false;
         
-        return (
+        boolean isSpecified = 
            acc1.BillingStreet != null ||
            acc1.BillingCity != null ||
            acc1.BillingState != null ||
            acc1.BillingPostalCode != null ||
-           acc1.BillingCountry != null);
+            // note that we decided to ignore country so that a default value won't create unnecessary address objects
+           (acc1.BillingCountry != null && !ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) ||
+           // only test StateCode if picklists enabled.
+           (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled && acc1.get('BillingStateCode') != null);
+
+        return isSpecified;   
     }
 
     /*******************************************************************************************************
@@ -126,12 +131,20 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
         if (acc1 == null || acc2 == null) 
            return false;
         
-        return (
-           acc1.BillingStreet != acc2.BillingStreet ||
-           acc1.BillingCity != acc2.BillingCity ||
-           acc1.BillingState != acc2.BillingState ||
-           acc1.BillingPostalCode != acc2.BillingPostalCode ||
-           acc1.BillingCountry != acc2.BillingCountry);
+        boolean isChanged = 
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingStreet, acc2.BillingStreet) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCity, acc2.BillingCity) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingState, acc2.BillingState) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingPostalCode, acc2.BillingPostalCode) ||
+           !ADDR_Addresses_TDTM.equalsCaseSensitive(acc1.BillingCountry, acc2.BillingCountry);
+
+        if (!isChanged && ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
+            isChanged = 
+	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingStateCode')), string.valueOf(acc2.get('BillingStateCode'))) || 
+	            !ADDR_Addresses_TDTM.equalsCaseSensitive(string.valueOf(acc1.get('BillingCountryCode')), string.valueOf(acc2.get('BillingCountryCode')));
+        }    
+        return isChanged;   
+
     }
 
     // 

@@ -30,7 +30,9 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.x)
-* @description Tests for CON_ContactMerge_CTRL 
+* @description Tests for CON_ContactMerge_CTRL
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
 */
 @isTest
 private class CON_ContactMerge_TEST {

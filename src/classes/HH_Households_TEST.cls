@@ -36,14 +36,16 @@
 @isTest
 public with sharing class HH_Households_TEST {
 	
-    /// <name> Households_Test </name>
-    /// <summary> test default constructor </summary>
+    /*********************************************************************************************************
+    * @description Tests default constructor
+    */
     static testMethod void Households_Test() {
         HH_Households testHouseholds = new HH_Households();
     }
 
-    /// <name> newIndContactAllContactsProcessor </name>
-    /// <summary> test insert individual with all contacts processor </summary>
+    /*********************************************************************************************************
+    * @description Tests insert individual with all contacts processor
+    */
     static testMethod void newIndContactAllContactsProcessor() {
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
@@ -103,6 +105,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__household__r.Number_of_Household_Members__c);
     }
     
+    /*********************************************************************************************************
+    * @description Tests insert private individual with all contacts processor
+    */
     static testMethod void newPrivateContactAllContactsProcessor() {
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
@@ -155,8 +160,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
 
-    /// <name> newIndContactIndividualsProcessor </name>
-    /// <summary> test insert individual with individuals processor </summary>
+    /*********************************************************************************************************
+    * @description Tests insert individual with individuals processor 
+    */
     static testMethod void newIndContactIndividualsProcessor() {
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
@@ -207,6 +213,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' Household',createdContacts[0].npo02__household__r.Name);
     }
     
+    /*********************************************************************************************************
+    * @description Tests insert individual with no household processor 
+    */
     static testMethod void newNoHouseholdProcessor() {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -238,8 +247,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(null,createdContacts[0].npo02__household__c);
     }
     
-    /// <name> newOrgContactAllContactsProcessor </name>
-    /// <summary> test insert org contact with all contacts processor </summary>
+    /*********************************************************************************************************
+    * @description Tests insert org contact with all contacts processor 
+    */
     static testMethod void newOrgContactAllContactsProcessor() {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -304,8 +314,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(1, createdContacts[0].npo02__Household__r.Number_of_Household_Members__c);
     }
 
-    /// <name> newOrgContactIndividualsProcessor </name>
-    /// <summary> test insert org contact with Individuals processor </summary>
+    /*********************************************************************************************************
+    * @description Tests insert org contact with Individuals processor 
+    */
     static testMethod void newOrgContactIndividualsProcessor() {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -350,8 +361,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(null,createdContacts[0].npo02__household__c);
     }
 
-    /// <name> contactDeleteWithOwnHousehold </name>
-    /// <summary> test delete a contact that has it's own household </summary>
+    /*********************************************************************************************************
+    * @description Tests delete a contact that has it's own household
+    */
     static testMethod void contactDeleteWithOwnHousehold() {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -378,8 +390,9 @@ public with sharing class HH_Households_TEST {
         system.assert(deletedHousehold.size()==0);
     }
     
-    /// <name> contactDeleteWithSharedHousehold </name>
-    /// <summary> test delete a contact that has shared household </summary>
+    /*********************************************************************************************************
+    * @description Tests delete a contact that has a shared household
+    */
     static testMethod void contactDeleteWithSharedHousehold() {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -528,6 +541,9 @@ public with sharing class HH_Households_TEST {
     }
 ****/
     
+    /*********************************************************************************************************
+    * @description Tests moving a contact from one household to another, leaving the old household empty.
+    */
     static testMethod void deleteEmptyHouseholds_test(){
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true));
@@ -575,6 +591,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(0, [select count() from npo02__Household__c where id = :c2thhid]);     
     }
     
+    /*********************************************************************************************************
+    * @description Tests merging a contact into a Household updates rollups on the Household
+    */
     static testMethod void testMergeRollupSupport(){
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, npe01__Enable_Opportunity_Contact_Role_Trigger__c = true));
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
@@ -612,7 +631,9 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(100, c1.npo02__Household__r.npo02__TotalOppAmount__c);
     }
 
-    /// <name> testBulk </name>
+    /*********************************************************************************************************
+    * @description Tests creating many contacts get a Household object.
+    */
     static testMethod void testBulk() {
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
@@ -685,8 +706,10 @@ public with sharing class HH_Households_TEST {
         system.assertEquals(lastname + ' Household',createdContacts[0].npo02__household__r.Name);
     }
 
-    /// <name> testHouseholdExclusion </name>
-    /// <summary> insert a contact with naming exclusion checkboxes checked. verify multiselect picklist filled. Update MSP. verify checkboxes changed.  </summary>
+    /*********************************************************************************************************
+    * @description Insert a contact with naming exclusion checkboxes checked. verify multiselect picklist 
+    * filled. Update MSP. verify checkboxes changed.  
+    */
     static testMethod void testHouseholdExclusion() {
 
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS, Exclude_from_Household_Name__c=true, Exclude_from_Household_Formal_Greeting__c=true);
@@ -706,4 +729,5 @@ public with sharing class HH_Households_TEST {
         system.assert(!queryCon[0].Exclude_from_Household_Informal_Greeting__c, 'Exclude from Household Informal Greeting checkbox not should be checked.');
 
     }
+
 }

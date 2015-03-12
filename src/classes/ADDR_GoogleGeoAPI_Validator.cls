@@ -38,22 +38,55 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private String END_POINT;
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
+    
+    /*******************************************************************************************************
+    * @description Provides the called with the service name.
+    * @return String The name of the address validation service.
+    */
+    public String getServiceName() {
+    	return 'The Google Geocoding API';
+    }
+    
+    /*******************************************************************************************************
+    * @description Provides the caller with the default endpoint URL.
+    * @return String The URL to send requests to.
+    */
+    public String getDefaultURL() {
+    	return 'https://maps.googleapis.com/maps/api/geocode/json?';
+    }
+    
+    /*******************************************************************************************************
+    * @description Tells the caller if the class supports batch address validation.
+    * @return Boolean True is the class supports batch address validation. False otherwise.
+    */
+    public Boolean supportsBatch() {
+        return false; 
+    }
+    
+    /*******************************************************************************************************
+    * @description Provides the caller with help text regarding batch support.
+    * @return String The help text.
+    */
+    public String getBatchHelpText() { 
+    	return Label.Addr_Verification_Batch_Not_Supported; 
+    }
 
-    public Boolean supportsBatch(){return false;}
-    public String getServiceName(){return 'The Google Geocoding API';}
-    public String getDefaultURL(){return 'https://maps.googleapis.com/maps/api/geocode/json?';}
-    public String getBatchHelpText() { return Label.Addr_Verification_Batch_Not_Supported;}
-
-    public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings){
+    /*******************************************************************************************************
+    * @description Verifies a list of Addresses records.
+    * @param addresses List of Address records to verify.
+    * @param settings The Address Verification Settings to use. 
+    * @return List<Address__c> List of verified address records. 
+    */
+    public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings) {
 
         this.checked_addresses = new List<Address__c>();
         this.AUTH_TOKEN = settings.Auth_Token__c;
         this.TIMEOUT = settings.Timeout__c;
-
-        if (settings.Address_Verification_Endpoint__c != null)
-            this.END_POINT = settings.Address_Verification_Endpoint__c;
-        else
-            this.END_POINT = 'https://maps.googleapis.com/maps/api/geocode/json?';
+        
+        if (settings.Address_Verification_Endpoint__c != null)      
+            this.END_POINT = settings.Address_Verification_Endpoint__c;        
+        else       
+            this.END_POINT = getDefaultURL();
 
         if (!addresses.isEmpty()){
             for (Address__c a : addresses){
@@ -110,6 +143,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }
 
                 String verified_street = '';
+                String verified_premise = '';
                 if (googresp.status == 'OK' && googresp.results.size() == 1){
 
                     for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
@@ -117,7 +151,17 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                         type_set.addAll(add.types);
 
                         if(type_set.contains('postal_code')){
-                            a.MailingPostalCode__c = add.long_name;
+                        	String verified5digs = add.long_name;
+                        	String originalFull = a.MailingPostalCode__c;
+                        	String original5digs = '';
+                        	if(originalFull != null && originalFull.length() > 5) {
+                        		 original5digs = originalFull.substring(0, 5);
+                        	}
+                        	//Google only returns 5-digit zipcodes. We don't want to override the original, if the
+                        	//first 5 match, and the original has the additional 4.
+                        	if(!(verified5digs == original5digs)) {
+                                a.MailingPostalCode__c = add.long_name;
+                        	}
                         } else if (type_set.contains('country')){
                             a.MailingCountry__c = add.short_name;
                         } else if (type_set.contains('administratrive_area_level_1')){
@@ -132,21 +176,28 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                             verified_street += add.long_name;
                         } else if (type_set.contains('intersection')){
                             verified_street += add.long_name;
+                        } else if (type_set.contains('premise')){
+                            verified_premise += add.long_name;
+                        } else if (type_set.contains('subpremise')){
+                            verified_premise += add.long_name;
                         } else if (type_set.contains('locality')){
                             a.MailingCity__c = add.long_name;
                         }
                     }
                     a.MailingStreet__c = verified_street;
+                    if(!String.isBlank(verified_premise)) {
+                    	 a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
+                    }
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
                     a.Verified__c = true;
-                    a.API_Response__c = response.getBody();
+                    a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = Label.Addr_Verified;
                 } else if (googresp.status == 'OK' && googresp.results.size() > 1){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
-                    a.API_Response__c = response.getBody();
+                    a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = 'Ambiguous';
                 } else if (googresp.status == 'OVER_QUERY_LIMIT'){
                     a.Verified__c = false;
@@ -171,7 +222,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 }
                 else{
                     a.Verified__c = false;
-                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ response.getBody();
+                    //Truncating body response to avoid STRING_TOO_LONG error.
+                    a.API_Response__c = 'STATUS: ' + googresp.status + ' BODY: '+ trimResponse(response);
                     a.Verification_Status__c = a.API_Response__c;
                 }
             }
@@ -187,36 +239,73 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         }
         return a;
     }
+    
+    private static String trimResponse(HttpResponse response) {
+    	//Truncating body response to avoid STRING_TOO_LONG error.
+	    String responseBody = response.getBody();
+	    if(responseBody.length() > 32768) {
+	        responseBody = responseBody.substring(0, 32768);
+	    }
+	    return responseBody;
+    }
 
-/* Apex JSON model of Google response */
+    /*******************************************************************************************************
+    * @description Apex model of the Google JSON response.
+    */
     public class GoogleGeoResponse {
         public List<ADDR_GoogleGeoAPI_Validator.Results> results;
         public String status;
     }
-    public class Address_components {
-        public String long_name;
-        public String short_name;
-        public List<String> types;
-    }
-    public class Location {
-        public Double lat;
-        public Double lng;
-    }
-    public class Geometry {
-        public Location location;
-        public String location_type;
-        public Viewport viewport;
-    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the results element of the Google JSON response.
+    */
     public class Results {
         public List<ADDR_GoogleGeoAPI_Validator.Address_components> address_components;
         public String formatted_address;
         public Geometry geometry;
         public List<String> types;
     }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the address_components element of the Google JSON response.
+    */
+    public class Address_components {
+        public String long_name;
+        public String short_name;
+        public List<String> types;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the geometry element of the Google JSON response.
+    */
+    public class Geometry {
+        public Location location;
+        public String location_type;
+        public Viewport viewport;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the location element of the Google JSON response.
+    */
+    public class Location {
+        public Double lat;
+        public Double lng;
+    }
+    
+    /*******************************************************************************************************
+    * @description Apex model of the viewport element of the Google JSON response.
+    */
     public class Viewport {
         public Location northeast;
         public Location southwest;
     }
+    
+    /*******************************************************************************************************
+    * @description Parses a JSON strings and returns a GoogleGeoResponse Apex object.
+    * @param String The JSON string.
+    * @return GoogleGeoResponse The Apex object the JSON string has been transformed into.
+    */
     public static GoogleGeoResponse parse(String json) {
         return (GoogleGeoResponse) System.JSON.deserialize(json, GoogleGeoResponse.class);
     }

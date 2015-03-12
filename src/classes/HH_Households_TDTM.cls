@@ -32,16 +32,18 @@
 * @date 2011 (2.0)
 * @group Households
 * @group-content ../../ApexDocContent/Households.htm
-* @description Handles creation, deleting and moving of Households between Contacts 
+* @description Trigger Handler on Contact to deal with managing Households (Accounts and Objects)
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
-        
-    /// <name> HH_Households_TDTM </name>
-    /// <summary> Overloads the HH_Households_TDTM object constructor to handle Household processing </summary>
-    /// <param name="households"> Household objects that are being triggered </param>
-    /// <param name="oldHouseholds"> Household object values before trigger event </param>
-    /// <param name="ta"> Trigger action that is occuring </param>
-  	
+          	
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contacts that handles managing Households
+    * @param listNew List of Contacts from trigger new. 
+    * @param listOld List of Contacts from trigger old. 
+    * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult DescribeSObjectResult for Contacts 
+    * @return dmlWrapper The objects to insert/update/delete
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
@@ -63,6 +65,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                     
                     if (con.Exclude_from_Household_Name__c || con.Exclude_from_Household_Informal_Greeting__c || con.Exclude_from_Household_Formal_Greeting__c)
                         copyNamingExclusionsFromCheckboxes(con);
+
                 //before update case:
                 //first, copy values from checkboxes to the multiselect picklist if checkboxes have changed
                 //then, copy from multiselect to checkboxes if multiselect has changed
@@ -251,13 +254,24 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    public void copyNamingExclusionsFromMSP(Contact con) {
+    /*******************************************************************************************************
+    * @description Copies the values from the naming exclusions multiselect picklist to the individual
+    * checkbox fields.
+    * @param con The Contact 
+    * @return void
+    ********************************************************************************************************/
+    public static void copyNamingExclusionsFromMSP(Contact con) {
         con.Exclude_from_Household_Name__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Name');
         con.Exclude_from_Household_Formal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Formal_Greeting__c');
         con.Exclude_from_Household_Informal_Greeting__c = con.npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c');
     }
 
-    public void copyNamingExclusionsFromCheckboxes(Contact con) {
+    /*******************************************************************************************************
+    * @description Copies the values from the naming exclusions checkboxes to the multiselect picklist.
+    * @param con The Contact 
+    * @return void
+    ********************************************************************************************************/
+    public static void copyNamingExclusionsFromCheckboxes(Contact con) {
         string mspValue = '';
         
         if (con.Exclude_from_Household_Name__c)
@@ -273,6 +287,11 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         con.npo02__Naming_Exclusions__c = mspValue;
     }
 
+    /*******************************************************************************************************
+    * @description kicks off Opportunity Rollups after contacts have been merged.
+    * @param winningContacts Set of Contact Id's 
+    * @return void
+    ********************************************************************************************************/
     public static void contactMergeUpdate(Set<Id> winningContacts){     
         Set<Id> oppIDs = new Set<Id>();
         List<OpportunityContactRole> ocrlist = new List<OpportunityContactRole>();
@@ -289,9 +308,13 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }            
     }
     
-    /// <name> insertHousehold </name>
-    /// <summary> Creates a new Household record when a Contact does not have one </summary>
-    /// <param name="Contact"> List of contacts meeting trigger criteria </param>
+    /*******************************************************************************************************
+    * @description Creates a new Household Object for each contact, unless excluded by recordType
+    * @param contacts List of Contacts 
+    * @param isInsertTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
+    * @param dmlWrapper Not used. Commits to the database so Id's can be updated in the Contact.    
+    * @return void
+    ********************************************************************************************************/
     public static void insertHousehold(Contact[] contacts, boolean isInsertTrigger, DmlWrapper dmlWrapper)
     {
         List<npo02__household__c> householdInserts = new List<npo02__household__c>();
@@ -384,9 +407,13 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }
     }
     
-    /// <name> evaluateContacts </name>
-    /// <summary> Determines if a Contact Should have a household created </summary>
-    /// <param name="Contact"> List of contacts meeting trigger criteria </param>
+    /*******************************************************************************************************
+    * @description Determines if a Contact Should have a household object created 
+    * @param contacts List of Contacts 
+    * @param isAfterTrigger Whether called from the afterInsert trigger (vs. afterUpdate trigger) on Contacts
+    * @param dmlWrapper Not used. Commits are immediate.    
+    * @return void
+    ********************************************************************************************************/
     public static void evaluateContacts(Contact[] contacts, boolean isAfterInsert, DmlWrapper dmlWrapper) 
     {
         List<Contact> householdInserts = new List<Contact>();
@@ -421,10 +448,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         }
     }
 
-
-    /// <name> deleteHousehold </name>
-    /// <summary> Deletes a Household record when no Contacts are related to it </summary>
-    /// <param name="Contact"> List of contacts meeting trigger criteria </param>
+    /*******************************************************************************************************
+    * @description Deletes a Household object when no Contacts are related to it. Called by the AfterDelete
+    * trigger handler on Contact.  Also detects if other Contacts remain in the Household, and thus the 
+    * Household needs its names updated.
+    * @param contacts List of Contacts being deleted
+    * @param dmlWrapper On return, holds the Households to delete.    
+    * @return void
+    ********************************************************************************************************/
         public static void deleteHousehold(Contact[] contacts, DmlWrapper dmlWrapper){
             
         list<SObject> householdDeletes = new list<SObject>();
