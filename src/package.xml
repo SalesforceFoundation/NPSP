@@ -492,6 +492,8 @@
         <members>Household_Naming_Settings__c.Name_Connector__c</members>
         <members>Household_Naming_Settings__c.Name_Overrun__c</members>
         <members>Lead.Batch__c</members>
+        <members>Opportunity.Acknowledgment_Date__c</members>
+        <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
@@ -508,6 +510,8 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
+        <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <name>CustomField</name>
     </types>
