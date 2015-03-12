@@ -966,6 +966,28 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Gender__c</fullName>
+        <externalId>false</externalId>
+        <label>Gender</label>
+        <picklist>
+            <picklistValues>
+                <fullName>M</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>F</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>U</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>HHId__c</fullName>
         <externalId>false</externalId>
         <formula>if(Account.npe01__SYSTEM_AccountType__c==&apos;Household Account&apos;,CASESAFEID(AccountId),CASESAFEID(npo02__Household__c))</formula>
