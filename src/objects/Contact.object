@@ -1019,6 +1019,22 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
+    <validationRules>
+        <fullName>Require_Home_Phone_if_Preferred_Home</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISPICKVAL( npe01__PreferredPhone__c, &quot;Home&quot;)
+&amp;&amp; ISBLANK( HomePhone )</errorConditionFormula>
+        <errorDisplayField>HomePhone</errorDisplayField>
+        <errorMessage>A Home Phone number must be specified if the Preferred Phone is set to Home.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Require_Mobile_Phone_if_Preferred_Mobile</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISPICKVAL( npe01__PreferredPhone__c, &quot;Mobile&quot;)
+&amp;&amp; ISBLANK( MobilePhone )</errorConditionFormula>
+        <errorDisplayField>MobilePhone</errorDisplayField>
+        <errorMessage>A Mobile Phone number must be specified if the Preferred Phone is set to Mobile.</errorMessage>
+    </validationRules>
     <webLinks>
         <fullName>Merge_Contacts</fullName>
         <availability>online</availability>
