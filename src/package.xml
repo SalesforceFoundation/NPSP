@@ -1085,6 +1085,11 @@
         <name>StaticResource</name>
     </types>
     <types>
+        <members>Contact.Require_Home_Phone_if_Preferred_Home</members>
+        <members>Contact.Require_Mobile_Phone_if_Preferred_Mobile</members>
+        <name>ValidationRule</name>
+    </types>
+    <types>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
