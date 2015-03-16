@@ -153,7 +153,10 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                    if (sr.candidate_index == 0) {
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        UTIL_Debug.debug('****Flagging address as verified. Address ID: ' + av.Id);
-	                        av.Verified__c = true;
+	                        
+                            av.Pre_Verification_Address__c = av.Formula_MailingStreetAddress__c;
+
+                            av.Verified__c = true;
 	                        av.MailingStreet__c = sr.delivery_line_1;
 	                        av.MailingStreet2__c = sr.delivery_line_2;
 	                        av.MailingCity__c = sr.components.city_name;
