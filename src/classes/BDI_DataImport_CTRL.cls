@@ -48,7 +48,16 @@ public with sharing class BDI_DataImport_CTRL {
         } else if (strAction == 'deleteAll') {
             return deleteAllDIRecords();	
         }
-        // else we load up the DataImport page.       
+        // else we load up the DataImport page.  
+        
+        // force loading data import settings.
+        // for some reason, just leaving the references to diSettings in the page
+        // wasn't enough to get the settings initially saved (the upsert in the CustomSettingsFacade failed),
+        // and our explicit upsert when running the batch would hit a runtime error.
+        // by referring to diSettings in our initial action method, the upsert from the Facade succeeds,
+        // and our later upsert succeeds!
+        diSettings = diSettings;     
+        
         return null;
     }
     

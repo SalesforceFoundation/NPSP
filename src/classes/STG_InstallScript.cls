@@ -91,6 +91,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
         UTIL_CustomSettingsFacade.getOrgBDESettings(); 
         UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+        UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
         
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
