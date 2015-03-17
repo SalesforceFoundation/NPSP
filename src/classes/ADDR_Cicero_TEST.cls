@@ -207,7 +207,7 @@ public with sharing class ADDR_Cicero_TEST {
 
         list<Address__c> listAddr = new list<Address__c>();
         Address__c addr = new Address__c();
-        addr.MailingStreet__c = '2623 134 ave ne';
+        addr.MailingStreet__c = '2623 134 ave ne, #2';
         addr.MailingCity__c = 'bellevue';
         addr.MailingState__c = 'wa';
         addr.MailingPostalCode__c = '98005';
@@ -216,10 +216,12 @@ public with sharing class ADDR_Cicero_TEST {
         ADDR_Cicero_Validator cicero = new ADDR_Cicero_Validator();
         Addr_Verification_Settings__c settings = new Addr_Verification_Settings__c();
         settings.Auth_Token__c = 'foo';  // we need a fake token or we won't validate
+        settings.Address_Verification_Endpoint__c = 'bar';
         List<Address__c> listAddrVerified = cicero.verifyRecords(listAddr, settings);
         system.assertEquals(1, listAddrVerified.size());
+        //system.assertNotEquals(null, listAddrVerified[0].Pre_Verification_Address__c);
         system.assertEquals(true, listAddrVerified[0].Verified__c);
-        system.assertEquals('2623 134th Ave NE', listAddrVerified[0].MailingStreet__c);
+        system.assertEquals('2623 134th Ave NE, #2', listAddrVerified[0].MailingStreet__c);
         system.assertEquals('Bellevue', listAddrVerified[0].MailingCity__c);
         system.assertEquals('Washington', listAddrVerified[0].MailingState__c);
 	}

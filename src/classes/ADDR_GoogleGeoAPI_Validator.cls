@@ -99,10 +99,23 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private Address__c verifyAddress(Address__c a){
 
         String address_request_string = '';
-        if (a.MailingStreet__c != null)
-            address_request_string += a.MailingStreet__c.replace(' ', '+') + '+';
-        if (a.MailingStreet2__c != null)
-            address_request_string += a.MailingStreet2__c.replace(' ', '+') + '+';
+        String mailingStreet = '';
+        String subpremise = '';
+        
+        if (!String.isBlank(a.MailingStreet__c))
+            mailingStreet += a.MailingStreet__c.trim();
+        if (!String.isBlank(a.MailingStreet2__c))
+            mailingStreet += ' ' + a.MailingStreet2__c.trim();
+
+        //if our address has a comma, split it off and append it after verification
+        if (mailingStreet.contains(',')) {
+            list<string> split = mailingStreet.split(',',2);
+            address_request_string += 'search_address=' + split[0].replace(' ', '+') + '&';
+            subpremise = split[1];
+        } else {
+            address_request_string += 'search_address=' + mailingStreet.replace(' ', '+') + '&';
+        }
+
         if (a.MailingCity__c != null)
             address_request_string += a.MailingCity__c.replace(' ', '+') + '+';
         if (a.MailingState__c != null)
@@ -116,7 +129,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
         if(AUTH_TOKEN != null && END_POINT != null) {
             //copy address before verification takes place, in case any information is lost
-            a.Pre_Verification_Address__c = a.Formula_MailingStreetAddress__c;
+            a.Pre_Verification_Address__c = a.Formula_MailingAddress__c;
 
             Http h = new Http();
             HttpRequest req = new HttpRequest();
@@ -191,6 +204,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     if(!String.isBlank(verified_premise)) {
                     	 a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
                     }
+                    a.MailingStreet__c += subpremise;
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;

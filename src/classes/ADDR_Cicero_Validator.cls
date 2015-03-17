@@ -112,8 +112,25 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
     
         String strRequest = '?';
-        if (addr.Formula_MailingStreetAddress__c != null)
-            strRequest += 'search_address=' + addr.Formula_MailingStreetAddress__c.replace(' ', '+') + '&';
+        String subpremise = '';
+
+        //replacing formula with actual fields, as formula was null for tests
+        String mailingAddress = '';
+        if (addr.MailingStreet__c!=null)
+            mailingAddress += addr.MailingStreet__c.trim();
+        if (addr.MailingStreet2__c!=null)
+            mailingAddress += ' ' + addr.MailingStreet2__c.trim();
+
+        if (mailingAddress!='') {
+            //if our address has a comma, split it off and append it after verification
+            if (mailingAddress.contains(',')) {
+                list<string> split = mailingAddress.split(',',2);
+                strRequest += 'search_address=' + split[0].replace(' ', '+') + '&';
+                subpremise = split[1];
+            } else {
+                strRequest += 'search_address=' + mailingAddress.replace(' ', '+') + '&';
+            }
+        }
         if (addr.MailingCity__c != null)
             strRequest += 'search_city=' + addr.MailingCity__c.replace(' ', '+') + '&';
         if (addr.MailingState__c != null)
@@ -126,7 +143,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         try {
 	        if (strAuthToken != null && strEndPoint != null) {
 	            //copy address before verification takes place, in case any information is lost
-                addr.Pre_Verification_Address__c = addr.Formula_MailingStreetAddress__c;
+                addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c;
 
                 // prepare the request
 	            Http h = new Http();
@@ -182,6 +199,8 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 	                list<string> listParts = candidate.match_addr.split(',');
 	                if (listParts.size() == 4) {
 	                    addr.MailingStreet__c = listParts[0].trim();
+                        if (subpremise!='')
+                            addr.MailingStreet__c+=',' + subpremise;
 	                    ADDR_Addresses_TDTM.handleMultilineStreet(addr);
 	                    addr.MailingCity__c = listParts[1].trim();
 	                    addr.MailingState__c = listParts[2].trim();
