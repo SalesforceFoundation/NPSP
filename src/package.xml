@@ -329,6 +329,7 @@
     <members>Address__c.MailingState__c</members>
     <members>Address__c.MailingStreet2__c</members>
     <members>Address__c.MailingStreet__c</members>
+    <members>Address__c.Pre_Verification_Address__c</members>
     <members>Address__c.Seasonal_End_Day__c</members>
     <members>Address__c.Seasonal_End_Month__c</members>
     <members>Address__c.Seasonal_Start_Day__c</members>

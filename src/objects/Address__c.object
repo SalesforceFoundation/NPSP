@@ -297,6 +297,17 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Pre_Verification_Address__c</fullName>
+        <description>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</inlineHelpText>
+        <label>Pre-Verification Address</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Seasonal_End_Day__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The day of the month when this address no longer replaces the default address.</inlineHelpText>
