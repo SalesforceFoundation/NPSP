@@ -30,28 +30,44 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (2.x)
-* @description Handles the heavy lifting of merging contacts. Called from VF merge page 
+* @description Handles the heavy lifting of merging contacts. It can be called from the VisualForce page for 
+* contact merge, or elsewhere.
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
 */
 public class CON_ContactMerge {
-
-    //This class handles the heavy lifting of merging contacts. It can be called
-    //from the VisualForce page for contact merge, or elsewhere.
     
-    //min number of contacts that can be merged
+    /*******************************************************************************************************
+    * @description Min number of contacts that can be merged.
+    */
     public final Integer MERGE_MINIMUM = 2;
     
-    //max number of contacts that can be merged
+    /*******************************************************************************************************
+    * @description Max number of contacts that can be merged.
+    */
     public final Integer MERGE_LIMIT = 3;
     
-    //contact for the winning record
+    /*******************************************************************************************************
+    * @description Contact for the winning record.
+    */
     public Contact winner {get; set;}
     
-    //List for the losing records
+    /*******************************************************************************************************
+    * @description List for the losing records.
+    */
     public List<Contact> losers {get; set;}
-       
+    
+    /*******************************************************************************************************
+    * @description Exception raised by the contact merge process.
+    */
     public class ConMergeException extends Exception {} 
         
-    //method to merge the winner and losers
+    /*******************************************************************************************************
+    * @description Merges the winner and losers.
+    * @param winner The winner record.
+    * @param losers The loser records.
+    * @return Boolean Whether the merge was successful.
+    */
     public static Boolean mergeContacts(Contact winner, List<Contact> losers) {
         boolean successfulMerge = false;
         

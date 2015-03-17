@@ -37,28 +37,52 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 
     private Addr_Verification_Settings__c settings;
     
+    /*******************************************************************************************************
+    * @description Provides the called with the service name.
+    * @return String The name of the address validation service.
+    */
     public String getServiceName() {
     	return 'SmartyStreets';
     }
     
+    /*******************************************************************************************************
+    * @description Provides the caller with the default endpoint URL.
+    * @return String The URL to send requests to.
+    */
     public String getDefaultURL() {
         return 'https://api.smartystreets.com/street-address';	
     }
     
+    /*******************************************************************************************************
+    * @description Provides the caller with a zipcode validation endpoint URL.
+    * @return String The URL to send requests to for zicode validation.
+    */
     public String getDefaultZipcodeURL() {
         return 'https://api.smartystreets.com/zipcode';  
     }
 
+    /*******************************************************************************************************
+    * @description Tells the caller if the class supports batch address validation.
+    * @return Boolean True is the class supports batch address validation. False otherwise.
+    */
     public Boolean supportsBatch() {
         return true;	
     }
     
+    /*******************************************************************************************************
+    * @description Provides the caller with help text regarding batch support.
+    * @return String The help text.
+    */
     public String getBatchHelpText() {
     	return Label.Addr_Verification_Batch_SmartyStreets_Message;
     }
     
-    // verify a List of custom object records - split them up into those we are
-    // sending for address and those for zip only - max of 100 at a time for each
+    /*******************************************************************************************************
+    * @description Verifies a list of Addresses records.
+    * @param addresses List of Address records to verify.
+    * @param settings The Address Verification Settings to use. 
+    * @return List<Address__c> List of verified address records. 
+    */
     public List<Address__c> verifyRecords(List<Address__c> avList, Addr_Verification_Settings__c settings) {
     	this.settings = settings;
         
@@ -66,6 +90,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
         List<Address__c> shortListZipOnly = new List<Address__c>();
         List<Address__c> addressesToUpdate = new List<Address__c>();
         
+        //It splits the records up into those we are sending for address and those for zip only - max of 100 at a time for each.
         for (Address__c av : avList) {
             //has address   
             if (av.MailingStreet__c != null) {
@@ -147,13 +172,14 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        av.Ambiguous__c = true;
 	                        responseGroup.add(sr);
 	                    }
-	                    av.API_Response__c = JSON.serializePretty(responseGroup);
+	                    String response = JSON.serializePretty(responseGroup);
+	                    av.API_Response__c = trimResponse(response);
 	                    av.Verification_Status__c = Label.Addr_Verified;
 	                }
 	            }
 	            for (Address__c av : avList) {             
 	                if (av.API_Response__c == null && !String.isBlank(settings.Auth_ID__c) && 
-	                !String.isBlank(settings.Auth_Token__c) && settings.Using_SmartyStreets__c) {   
+	                !String.isBlank(settings.Auth_Token__c) && (settings.Class__c == 'ADDR_SmartyStreets_Validator')) {   
 	                    av.API_Response__c = Label.Address_Not_Found;
 	                    av.Verification_Status__c = Label.Address_Not_Found;
 	                }
@@ -208,7 +234,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        // if there is any response, serialize it and fill in location with first location value
 	                        } else if (sr.zipcodes != null) {
 	                            UTIL_Debug.debug('****No error. Populating raw response field.');
-	                            av.API_Response__c = JSON.serializePretty(sr);
+	                            String response = JSON.serializePretty(sr);
+	                            av.API_Response__c = trimResponse(response);
 	                            av.Verification_Status__c = Label.Addr_Verified;
 	                            
 	                            // if there is at least one city/state, fill in city state
@@ -252,5 +279,13 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	        }
         }
         return avList;
+    }
+    
+    private static String trimResponse(String response) {
+        //Truncating body response to avoid STRING_TOO_LONG error.
+        if(response.length() > 32768) {
+            response = response.substring(0, 32768);
+        }
+        return response;
     }
 }
