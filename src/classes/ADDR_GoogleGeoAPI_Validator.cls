@@ -110,10 +110,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         //if our address has a comma, split it off and append it after verification
         if (mailingStreet.contains(',')) {
             list<string> split = mailingStreet.split(',',2);
-            address_request_string += 'search_address=' + split[0].replace(' ', '+') + '&';
+            address_request_string += 'search_address=' + split[0].replace(' ', '+') + '+';
             subpremise = split[1];
         } else {
-            address_request_string += 'search_address=' + mailingStreet.replace(' ', '+') + '&';
+            address_request_string += 'search_address=' + mailingStreet.replace(' ', '+') + '+';
         }
 
         if (a.MailingCity__c != null)
