@@ -204,7 +204,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     if(!String.isBlank(verified_premise)) {
                     	 a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
                     }
-                    a.MailingStreet__c += subpremise;
+                    if (!String.isBlank(subpremise))
+                        a.MailingStreet__c += ','+subpremise;
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
                     a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
