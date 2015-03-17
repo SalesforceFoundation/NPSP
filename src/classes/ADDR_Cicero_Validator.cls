@@ -143,7 +143,8 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         try {
 	        if (strAuthToken != null && strEndPoint != null) {
 	            //copy address before verification takes place, in case any information is lost
-                addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c.replace('<br>','\r\n');
+                if (!String.isBlank(addr.Formula_MailingAddress__c))
+                    addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c.replace('<br>','\r\n');
 
                 // prepare the request
 	            Http h = new Http();

@@ -154,7 +154,8 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
 	                        responseGroup = new List<ADDR_SmartyStreets_Gateway.AddressResponse>{ sr };
 	                        UTIL_Debug.debug('****Flagging address as verified. Address ID: ' + av.Id);
 	                        
-                            av.Pre_Verification_Address__c = av.Formula_MailingAddress__c.replace('<br>','\r\n');
+                            if (!String.isBlank(av.Formula_MailingAddress__c))
+                                av.Pre_Verification_Address__c = av.Formula_MailingAddress__c.replace('<br>','\r\n');
 
                             av.Verified__c = true;
 	                        av.MailingStreet__c = sr.delivery_line_1;

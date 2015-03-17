@@ -129,7 +129,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
         if(AUTH_TOKEN != null && END_POINT != null) {
             //copy address before verification takes place, in case any information is lost
-            a.Pre_Verification_Address__c = a.Formula_MailingAddress__c.replace('<br>','\r\n');
+            if (!String.isBlank(a.Formula_MailingAddress__c))
+                a.Pre_Verification_Address__c = a.Formula_MailingAddress__c.replace('<br>','\r\n');
 
             Http h = new Http();
             HttpRequest req = new HttpRequest();
