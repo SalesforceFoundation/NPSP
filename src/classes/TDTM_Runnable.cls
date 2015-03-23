@@ -143,65 +143,26 @@ global abstract class TDTM_Runnable {
         * @return List<SObject> A list with the records passed as parameters ordered by type. Duplicates removed.
         */
         private List<SObject> groupSObjects(List<SObject> sobjects) {
-        	//First remove duplicates to avoid the "Duplicate id in list" error
-        	sobjects = new List<SObject>(new Set<SObject>(sobjects));
-        	        	
-        	List<SObject> sorted = new List<SObject>();
-        	
-        	List<SObject> accounts = new List<SObject>();
-            List<SObject> contacts = new List<SObject>();
-            List<SObject> opps = new List<SObject>();
-            List<SObject> addresses = new List<SObject>();
-            List<SObject> affiliations = new List<SObject>();
-            List<SObject> errors = new List<SObject>();
-            List<SObject> households = new List<SObject>();
-            List<SObject> payments = new List<SObject>();
-            List<SObject> recDonations = new List<SObject>();
-            List<SObject> relationships = new List<SObject>();
-            list<SObject> allocations = new list<SObject>();
-            List<SObject> unknown = new List<SObject>();
-            
-            for(SObject o : sobjects) {
-                if(o instanceof Account) {
-                	accounts.add(o);
-                } else if(o instanceof Contact) {
-                	contacts.add(o);
-                } else if(o instanceof Opportunity) {
-                	opps.add(o);
-                } else if(o instanceof Address__c) {
-                    addresses.add(o);
-                } else if(o instanceof npe5__Affiliation__c) {
-                    affiliations.add(o);
-                } else if(o instanceof Error__c) {
-                    errors.add(o);
-                } else if(o instanceof npo02__Household__c) {
-                    households.add(o);
-                } else if(o instanceof npe01__OppPayment__c) {
-                    payments.add(o);
-                } else if(o instanceof npe03__Recurring_Donation__c) {
-                    recDonations.add(o);
-                } else if(o instanceof npe4__Relationship__c) {
-                    relationships.add(o);
-                } else if(o instanceof Allocation__c) {
-                    allocations.add(o);
+                        
+            map<string,list<SObject>> mapNameToListSObject = new map<string,list<SObject>>();
+            list<SObject> sorted = new list<SObject>();
+
+            //First remove duplicates to avoid the "Duplicate id in list" error
+            sobjects = new list<SObject>(new set<SObject>(sobjects));
+
+            for (SObject SObj : sobjects) {
+                string objName = SObj.getSObjectType().getDescribe().getName();
+                if (mapNameToListSObject.containsKey(objName)) {
+                    mapNameToListSObject.get(objName).add(SObj);
                 } else {
-                	UTIL_Debug.debug(LoggingLevel.WARN, '****Not one of our basic object types');
-                	unknown.add(o);
+                    mapNameToListSObject.put(objName, new list<SObject>{SObj});
                 }
             }
-            sorted.addAll(accounts);
-            sorted.addAll(contacts);
-            sorted.addAll(opps);
-            sorted.addAll(addresses);
-            sorted.addAll(affiliations);
-            sorted.addAll(errors);
-            sorted.addAll(households);
-            sorted.addAll(payments);
-            sorted.addAll(recDonations);
-            sorted.addAll(relationships);
-            sorted.addAll(allocations);
-            sorted.addAll(unknown);
-            
+
+
+            for (list<SObject> groupedObjects : mapNameToListSObject.values())
+                sorted.addAll(groupedObjects);
+
             return sorted;
         }
     }
