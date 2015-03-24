@@ -374,8 +374,8 @@ public with sharing class CON_ContactMerge_CTRL {
         for (Sobject c: contacts) {
             SObject createdBy = c.getSObject('createdby');
             SObject modifiedBy = c.getSObject('lastModifiedBy');
-            createdByRow.values.add(new Cell(c.id, createdBy.get('name') + ' ' + c.get('createdDate')));
-            lastModifiedByRow.values.add(new Cell(c.id, modifiedBy.get('name') + ' ' + c.get('LastModifiedDate'))); 
+            createdByRow.values.add(new Cell(c.id, (createdBy != null ? createdBy.get('name') : '') + ' ' + c.get('createdDate')));
+            lastModifiedByRow.values.add(new Cell(c.id, (modifiedBy != null ? modifiedBy.get('name') : '') + ' ' + c.get('LastModifiedDate'))); 
         }
         fieldRows.add(createdByRow);
         fieldRows.add(lastModifiedByRow);
