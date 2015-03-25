@@ -88,27 +88,35 @@ public without sharing class RLLP_OppRollup_UTIL {
                                                         'npo02__OppAmount2YearsAgo__c', 'npo02__OppAmountThisYear__c', 'npo02__OppAmountLastNDays__c', 
                                                         'npo02__FirstCloseDate__c', 'npo02__LastCloseDate__c', 'npo02__TotalMembershipOppAmount__c', 
                                                         'npo02__LastMembershipLevel__c', 'npo02__LastMembershipDate__c', 'npo02__MembershipJoinDate__c', 
-                                                        'npo02__MembershipEndDate__c', 'npo02__Best_Gift_Year__c', 'npo02__Best_Gift_Year_Total__c', 
-                                                        'npo02__AverageAmount__c', 'npo02__LargestAmount__c', 'npo02__SmallestAmount__c'
+                                                        'npo02__MembershipEndDate__c', 'npo02__Best_Gift_Year__c', 'npo02__Best_Gift_Year_Total__c', 'npo02__LastMembershipOrigin__c',
+                                                        'npo02__AverageAmount__c', 'npo02__LargestAmount__c', 'npo02__SmallestAmount__c', 'npo02__LastMembershipAmount__c'
                                                         };
 
 
-    private static set<string> OpportunityContactRoleFields = new set<string>{'ContactId', 'Contact.npo02__household__c',
-                                                        'Contact.npo02__TotalOppAmount__c', 'Contact.npo02__OppAmountThisYear__c',
-                                                        'Contact.npo02__OppAmountLastNDays__c', 'Contact.npo02__LastCloseDate__c', 
-                                                        'Contact.npo02__NumberOfClosedOpps__c', 'Contact.npo02__TotalMembershipOppAmount__c',
-                                                        'Contact.npo02__OppAmountLastYear__c', 'Contact.npo02__OppAmount2YearsAgo__c', 
-                                                        'Contact.npo02__LastOppAmount__c', 'Contact.npo02__household__r.npo02__TotalOppAmount__c',
-                                                        'Contact.npo02__LastMembershipLevel__c', 'Contact.npo02__Best_Gift_Year__c', 'Contact.npo02__Best_Gift_Year_Total__c',    
-                                                        'Contact.npo02__household__r.npo02__OppAmountThisYear__c', 'Contact.npo02__household__r.npo02__OppAmountLastNDays__c', 
-                                                        'Contact.npo02__household__r.npo02__TotalMembershipOppAmount__c', 'Contact.npo02__household__r.npo02__LastCloseDate__c',   
-                                                        'Contact.npo02__household__r.npo02__NumberOfClosedOpps__c', 'Contact.npo02__household__r.npo02__OppsClosedThisYear__c', 
-                                                        'Contact.npo02__household__r.npo02__OppsClosedLastYear__c', 'Contact.npo02__household__r.npo02__OppsClosedLastNDays__c', 
-                                                        'Contact.npo02__household__r.npo02__OppsClosed2YearsAgo__c','Contact.npo02__household__r.npo02__OppAmountLastYear__c', 
-                                                        'Contact.npo02__household__r.npo02__OppAmount2YearsAgo__c', 'Contact.npo02__MembershipEndDate__c', 
-                                                        'Contact.npo02__household__r.npo02__MembershipEndDate__c', 'Contact.npo02__MembershipJoinDate__c', 
-                                                        'Contact.npo02__household__r.npo02__MembershipJoinDate__c', 'Contact.npo02__Household__r.npo02__LastMembershipLevel__c',
-                                                        'Contact.npo02__household__r.npo02__Best_Gift_Year__c', 'Contact.npo02__household__r.npo02__Best_Gift_Year_Total__c'
+    private static set<string> OpportunityContactRoleFields = new set<string>{'ContactId', 'Contact.npo02__household__c', 
+                                                        'Contact.npo02__AverageAmount__c', 'Contact.npo02__household__r.npo02__AverageAmount__c', 
+                                                        'Contact.npo02__Best_Gift_Year__c', 'Contact.npo02__household__r.npo02__Best_Gift_Year__c', 
+                                                        'Contact.npo02__Best_Gift_Year_Total__c', 'Contact.npo02__household__r.npo02__Best_Gift_Year_Total__c', 
+                                                        'Contact.npo02__FirstCloseDate__c', 'Contact.npo02__household__r.npo02__FirstCloseDate__c', 
+                                                        'Contact.npo02__LargestAmount__c', 'Contact.npo02__household__r.npo02__LargestAmount__c', 
+                                                        'Contact.npo02__LastCloseDate__c', 'Contact.npo02__household__r.npo02__LastCloseDate__c', 
+                                                        'Contact.npo02__LastMembershipDate__c', 'Contact.npo02__household__r.npo02__LastMembershipDate__c', 
+                                                        'Contact.npo02__LastMembershipLevel__c', 'Contact.npo02__Household__r.npo02__LastMembershipLevel__c', 
+                                                        'Contact.npo02__LastOppAmount__c', 'Contact.npo02__Household__r.npo02__LastOppAmount__c', 
+                                                        'Contact.npo02__MembershipEndDate__c', 'Contact.npo02__household__r.npo02__MembershipEndDate__c', 
+                                                        'Contact.npo02__MembershipJoinDate__c', 'Contact.npo02__household__r.npo02__MembershipJoinDate__c', 
+                                                        'Contact.npo02__NumberOfClosedOpps__c', 'Contact.npo02__household__r.npo02__NumberOfClosedOpps__c', 
+                                                        'Contact.npo02__OppAmount2YearsAgo__c', 'Contact.npo02__household__r.npo02__OppAmount2YearsAgo__c', 
+                                                        'Contact.npo02__OppAmountLastNDays__c', 'Contact.npo02__household__r.npo02__OppAmountLastNDays__c', 
+                                                        'Contact.npo02__OppAmountLastYear__c', 'Contact.npo02__household__r.npo02__OppAmountLastYear__c', 
+                                                        'Contact.npo02__OppAmountThisYear__c', 'Contact.npo02__household__r.npo02__OppAmountThisYear__c', 
+                                                        'Contact.npo02__OppsClosedThisYear__c', 'Contact.npo02__household__r.npo02__OppsClosedThisYear__c', 
+                                                        'Contact.npo02__OppsClosed2YearsAgo__c', 'Contact.npo02__household__r.npo02__OppsClosed2YearsAgo__c', 
+                                                        'Contact.npo02__OppsClosedLastNDays__c', 'Contact.npo02__household__r.npo02__OppsClosedLastNDays__c', 
+                                                        'Contact.npo02__OppsClosedLastYear__c', 'Contact.npo02__household__r.npo02__OppsClosedLastYear__c', 
+                                                        'Contact.npo02__SmallestAmount__c', 'Contact.npo02__household__r.npo02__SmallestAmount__c', 
+                                                        'Contact.npo02__TotalMembershipOppAmount__c', 'Contact.npo02__household__r.npo02__TotalMembershipOppAmount__c', 
+                                                        'Contact.npo02__TotalOppAmount__c', 'Contact.npo02__household__r.npo02__TotalOppAmount__c'
                                                         }; 
         
     private static set<string> ContactFields = new set<string>{'npo02__TotalOppAmount__c', 'npo02__OppsClosedThisYear__c', 'npo02__OppsClosedLastYear__c', 
