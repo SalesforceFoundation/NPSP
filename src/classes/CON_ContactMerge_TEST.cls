@@ -846,21 +846,37 @@ private class CON_ContactMerge_TEST {
     }    
     static void merge3OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        
+        // note that we include addresses so the household pass will deal with merging household accounts with address objects.
+        system.assertEquals(false, contactSettingsForTests.Household_Account_Addresses_Disabled__c);
+        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.MailingStreet = '123 45th St';
+        con.MailingCity = 'Seattle';
         
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
+        con2.MailingStreet = '678 90th St';
+        con2.MailingCity = 'Bellevue';
         
         Contact con3 = UTIL_UnitTestData_TEST.getContact();
         con3.LastName = '3Contact_forTests_Merge';
+        con3.MailingStreet = '999 88th St';
+        con3.MailingCity = 'Redmond';
         
         insert new Contact[]{con, con2, con3};
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-        con3 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con3.id];
+        // make sure addresses created
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(3, [select count() from Address__c]);
+        }
+
+        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con2.id];
+        con3 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con3.id];
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
@@ -887,6 +903,7 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con3.id);
         
         //merge them
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
         controller.mergeContacts();
         
         //first and second contact should be deleted
@@ -899,6 +916,19 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
         //Third contact's account id should not have changed
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
+        
+        // make sure we are down to just one account
+        system.assertEquals(1, [select count() from Account]);
+        
+        // make sure winning contact's address is correct
+        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact];
+        system.assertEquals(con3.MailingStreet, con.MailingStreet);
+        system.assertEquals(con3.MailingCity, con.MailingCity);
+        
+        // make sure all address objects still exists
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+        	system.assertEquals(3, [select count() from Address__c]);
+        }
     }
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){
