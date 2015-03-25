@@ -293,13 +293,8 @@ public with sharing class RLLP_OppRollup_TEST {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
 
-            id hhid = UpdatedCon.npo02__household__r.id;
-            npo02__Household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
-            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, npo02__LastMembershipLevel__c, ' +
-            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, '+
-            'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' +
-            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
-            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            npo02__household__c[] hhs = Database.query(oppRollupUtil.buildHouseholdQuery() + ' where id =\''+UpdatedCon.npo02__household__r.id+'\' LIMIT 1');
 
             rg = new RLLP_OppRollup();
             rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
@@ -377,9 +372,11 @@ public with sharing class RLLP_OppRollup_TEST {
             insert newOpps;
             Test.StopTest();
 
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+
             //now test that a contact has received the proper member stats from the trigger
             id FirstConId = TestCons[0].id;
-            Contact UpdatedCon = [SELECT id, account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__household__c, npo02__household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
+            Contact UpdatedCon = [SELECT id, Account.npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c, npo02__Household__c, npo02__Household__r.npo02__TotalOppAmount__c, npo02__TotalOppAmount__c FROM Contact WHERE Id = :FirstConId];
 
             System.AssertEquals ( 0 , UpdatedCon.npo02__TotalOppAmount__c );
             System.AssertEquals ( 0 , UpdatedCon.npo02__household__r.npo02__TotalOppAmount__c );        
@@ -389,14 +386,7 @@ public with sharing class RLLP_OppRollup_TEST {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
 
-            id hhid = UpdatedCon.npo02__household__r.id;
-            npo02__Household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
-            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
-            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c, '+
-            'npo02__LastMembershipLevel__c, ' +
-            'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' +
-            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
-            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            npo02__household__c[] hhs = Database.query(oppRollupUtil.buildHouseholdQuery() + ' where id =\''+UpdatedCon.npo02__household__r.id+'\' LIMIT 1');
 
             rg = new RLLP_OppRollup();
             rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
@@ -488,13 +478,8 @@ public with sharing class RLLP_OppRollup_TEST {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupContacts(new map<id, Contact>(new list<Contact>{TestCons[0]}));
 
-            id hhid = UpdatedCon.npo02__household__r.id;
-            npo02__household__c[] hhs = database.query('SELECT id, npo02__TotalOppAmount__c, npo02__LastCloseDate__c, '+
-            'npo02__TotalMembershipOppAmount__c, npo02__OppAmountLastNDays__c, npo02__OppAmountThisYear__c, '+
-            'npo02__OppAmountLastYear__c, npo02__OppAmount2YearsAgo__c, npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c, npo02__LastMembershipLevel__c, '+
-            'npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c ' + 
-            (RLLP_OppRollup_UTIL.isMultiCurrency() ? ', CurrencyIsoCode ' : '')+      
-            'FROM npo02__household__c WHERE id = :hhid LIMIT 1');
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            npo02__household__c[] hhs = Database.query(oppRollupUtil.buildHouseholdQuery() + ' where id =\''+UpdatedCon.npo02__household__r.id+'\' LIMIT 1');
 
             rg = new RLLP_OppRollup();
             rg.rollupHouseholds(new map<id, npo02__Household__c>(hhs));
@@ -648,15 +633,8 @@ public with sharing class RLLP_OppRollup_TEST {
             Test.StopTest();
             
             // test whether the trigger worked
-            Account updatedAcct = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,
-                                    npo02__OppAmountLastYear__c, npo02__OppAmountLastNDays__c,
-                                    npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
-                                    npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, 
-                                    npo02__TotalMembershipOppAmount__c, npo02__OppsClosedLastYear__c,
-                                    npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
-                                    npo02__LastMembershipLevel__c, npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, 
-                                    npo02__MembershipEndDate__c, npo02__MembershipJoinDate__c
-                                    from Account where id =: testacct.id];
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            Account updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
                                     
             System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );
 
@@ -713,17 +691,8 @@ public with sharing class RLLP_OppRollup_TEST {
             Test.StopTest();
 
             // test whether the trigger worked      
-            account updatedAcct = [select id, npo02__TotalOppAmount__c, npo02__OppAmountThisYear__c,
-                                    npo02__OppAmountLastYear__c, npo02__OppAmountLastNDays__c,
-                                    npo02__OppAmount2YearsAgo__c, npo02__OppsClosedThisYear__c,
-                                    npo02__LastCloseDate__c, npo02__NumberOfClosedOpps__c, 
-                                    npo02__TotalMembershipOppAmount__c, npo02__OppsClosedLastYear__c,
-                                    npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c,
-                                    npo02__LastMembershipLevel__c, npo02__LastMembershipDate__c,
-                                    npo02__LastMembershipAmount__c, npo02__LastMembershipOrigin__c,
-                                    npo02__Best_Gift_Year__c, npo02__Best_Gift_Year_Total__c, npo02__MembershipEndDate__c,
-                                    npo02__MembershipJoinDate__c
-                                    from Account where id =: testacct.id];
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            Account updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
 
             System.AssertEquals ( 33333 , updatedAcct.npo02__TotalMembershipOppAmount__c );
             System.AssertEquals ( system.today() , updatedAcct.npo02__LastMembershipDate__c );

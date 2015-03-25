@@ -346,16 +346,21 @@ public without sharing class RLLP_OppRollup {
                     a1.npo02__OppsClosedLastNDays__c == a2.npo02__OppsClosedLastNDays__c &&
                     a1.npo02__OppsClosed2YearsAgo__c == a2.npo02__OppsClosed2YearsAgo__c &&
                     a1.npo02__OppAmountLastYear__c == a2.npo02__OppAmountLastYear__c &&
-                    a1.npo02__OppAmount2YearsAgo__c == a2.npo02__OppAmount2YearsAgo__c &&                      
+                    a1.npo02__OppAmount2YearsAgo__c == a2.npo02__OppAmount2YearsAgo__c &&
                     a1.npo02__OppAmountThisYear__c == a2.npo02__OppAmountThisYear__c &&
                     a1.npo02__OppAmountLastNDays__c == a2.npo02__OppAmountLastNDays__c &&
-                    a1.npo02__TotalMembershipOppAmount__c == a2.npo02__TotalMembershipOppAmount__c &&
+                    a1.npo02__FirstCloseDate__c == a2.npo02__FirstCloseDate__c &&
                     a1.npo02__LastCloseDate__c == a2.npo02__LastCloseDate__c && 
+                    a1.npo02__TotalMembershipOppAmount__c == a2.npo02__TotalMembershipOppAmount__c &&
                     a1.npo02__LastMembershipLevel__c == a2.npo02__LastMembershipLevel__c &&
+                    a1.npo02__LastMembershipDate__c == a2.npo02__LastMembershipDate__c &&
+                    a1.npo02__MembershipJoinDate__c == a2.npo02__MembershipJoinDate__c &&
+                    a1.npo02__MembershipEndDate__c == a2.npo02__MembershipEndDate__c &&
                     a1.npo02__Best_Gift_Year__c == a2.npo02__Best_Gift_Year__c &&
                     a1.npo02__Best_Gift_Year_Total__c == a2.npo02__Best_Gift_Year_Total__c &&
-                    a1.npo02__MembershipEndDate__c == a2.npo02__MembershipEndDate__c &&
-                    a1.npo02__MembershipJoinDate__c == a2.npo02__MembershipJoinDate__c
+                    a1.npo02__AverageAmount__c == a2.npo02__AverageAmount__c &&
+                    a1.npo02__LargestAmount__c == a2.npo02__LargestAmount__c &&
+                    a1.npo02__SmallestAmount__c == a2.npo02__SmallestAmount__c
                     ){ 
                          
                 if (UDRFieldMap.size() > 0){
@@ -495,17 +500,26 @@ public without sharing class RLLP_OppRollup {
             contact c2 = contactsToUpdate.get(cid);
             
             if (c1.npo02__TotalOppAmount__c == c2.npo02__TotalOppAmount__c &&
-                    c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c && 
+                    c1.npo02__OppsClosedThisYear__c == c2.npo02__OppsClosedThisYear__c &&
+                    c1.npo02__OppsClosedLastYear__c == c2.npo02__OppsClosedLastYear__c &&
+                    c1.npo02__OppsClosedLastNDays__c == c2.npo02__OppsClosedLastNDays__c &&
+                    c1.npo02__OppsClosed2YearsAgo__c == c2.npo02__OppsClosed2YearsAgo__c &&
+                    c1.npo02__OppAmountLastYear__c == c2.npo02__OppAmountLastYear__c &&
                     c1.npo02__OppAmount2YearsAgo__c == c2.npo02__OppAmount2YearsAgo__c &&
-                    c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
                     c1.npo02__OppAmountThisYear__c == c2.npo02__OppAmountThisYear__c &&
+                    c1.npo02__OppAmountLastNDays__c == c2.npo02__OppAmountLastNDays__c &&
+                    c1.npo02__FirstCloseDate__c == c2.npo02__FirstCloseDate__c &&
+                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c && 
                     c1.npo02__TotalMembershipOppAmount__c == c2.npo02__TotalMembershipOppAmount__c &&
-                    c1.npo02__LastCloseDate__c == c2.npo02__LastCloseDate__c &&
-                    c1.npo02__MembershipEndDate__c == c2.npo02__MembershipEndDate__c &&
-                    c1.npo02__MembershipJoinDate__c == c2.npo02__MembershipJoinDate__c &&
                     c1.npo02__LastMembershipLevel__c == c2.npo02__LastMembershipLevel__c &&
+                    c1.npo02__LastMembershipDate__c == c2.npo02__LastMembershipDate__c &&
+                    c1.npo02__MembershipJoinDate__c == c2.npo02__MembershipJoinDate__c &&
+                    c1.npo02__MembershipEndDate__c == c2.npo02__MembershipEndDate__c &&
                     c1.npo02__Best_Gift_Year__c == c2.npo02__Best_Gift_Year__c &&
-                    c1.npo02__Best_Gift_Year_Total__c == c2.npo02__Best_Gift_Year_Total__c
+                    c1.npo02__Best_Gift_Year_Total__c == c2.npo02__Best_Gift_Year_Total__c &&
+                    c1.npo02__AverageAmount__c == c2.npo02__AverageAmount__c &&
+                    c1.npo02__LargestAmount__c == c2.npo02__LargestAmount__c &&
+                    c1.npo02__SmallestAmount__c == c2.npo02__SmallestAmount__c
                     ){
                     
                 if (UDRFieldMap.size() > 0){
@@ -641,17 +655,26 @@ public without sharing class RLLP_OppRollup {
             npo02__Household__c h2 = householdsToUpdate.get(hhid);
             
             if (h1.npo02__TotalOppAmount__c == h2.npo02__TotalOppAmount__c &&
-                    h1.npo02__OppAmountLastYear__c == h2.npo02__OppAmountLastYear__c && 
+                    h1.npo02__OppsClosedThisYear__c == h2.npo02__OppsClosedThisYear__c &&
+                    h1.npo02__OppsClosedLastYear__c == h2.npo02__OppsClosedLastYear__c &&
+                    h1.npo02__OppsClosedLastNDays__c == h2.npo02__OppsClosedLastNDays__c &&
+                    h1.npo02__OppsClosed2YearsAgo__c == h2.npo02__OppsClosed2YearsAgo__c &&
+                    h1.npo02__OppAmountLastYear__c == h2.npo02__OppAmountLastYear__c &&
                     h1.npo02__OppAmount2YearsAgo__c == h2.npo02__OppAmount2YearsAgo__c &&
-                    h1.npo02__OppAmountLastNDays__c == h2.npo02__OppAmountLastNDays__c &&
                     h1.npo02__OppAmountThisYear__c == h2.npo02__OppAmountThisYear__c &&
+                    h1.npo02__OppAmountLastNDays__c == h2.npo02__OppAmountLastNDays__c &&
+                    h1.npo02__FirstCloseDate__c == h2.npo02__FirstCloseDate__c &&
+                    h1.npo02__LastCloseDate__c == h2.npo02__LastCloseDate__c && 
                     h1.npo02__TotalMembershipOppAmount__c == h2.npo02__TotalMembershipOppAmount__c &&
-                    h1.npo02__LastCloseDate__c == h2.npo02__LastCloseDate__c &&
-                    h1.npo02__MembershipEndDate__c == h2.npo02__MembershipEndDate__c &&
-                    h1.npo02__MembershipJoinDate__c == h2.npo02__MembershipJoinDate__c &&
                     h1.npo02__LastMembershipLevel__c == h2.npo02__LastMembershipLevel__c &&
+                    h1.npo02__LastMembershipDate__c == h2.npo02__LastMembershipDate__c &&
+                    h1.npo02__MembershipJoinDate__c == h2.npo02__MembershipJoinDate__c &&
+                    h1.npo02__MembershipEndDate__c == h2.npo02__MembershipEndDate__c &&
                     h1.npo02__Best_Gift_Year__c == h2.npo02__Best_Gift_Year__c &&
-                    h1.npo02__Best_Gift_Year_Total__c == h2.npo02__Best_Gift_Year_Total__c                    
+                    h1.npo02__Best_Gift_Year_Total__c == h2.npo02__Best_Gift_Year_Total__c &&
+                    h1.npo02__AverageAmount__c == h2.npo02__AverageAmount__c &&
+                    h1.npo02__LargestAmount__c == h2.npo02__LargestAmount__c &&
+                    h1.npo02__SmallestAmount__c == h2.npo02__SmallestAmount__c
                     ){
                                                 
             if (UDRFieldMap.size() > 0){
