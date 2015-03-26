@@ -447,6 +447,42 @@
         <label>New BDE List v2</label>
     </fieldSets>
     <fields>
+        <fullName>Acknowledgment_Date__c</fullName>
+        <description>Used to track date opportunity was acknowledged</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of acknowledgment</inlineHelpText>
+        <label>Acknowledgment Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Acknowledgment_Status__c</fullName>
+        <description>Status of Acknowledgment of this gift.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Status of Acknowledgment of this gift.</inlineHelpText>
+        <label>Acknowledgment Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
