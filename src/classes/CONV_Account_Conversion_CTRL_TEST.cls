@@ -139,7 +139,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             Test.stopTest();
 
             //assert the warning exists
-            system.assertEquals(true, controller.runCheckErrorState);
+            system.assertEquals(true, controller.runCheckErrorState);        
         }
     }
 }
