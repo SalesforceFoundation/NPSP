@@ -231,24 +231,25 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
         }
 
+
         List<User> inactiveUsers = new List<User>();
         inactiveUsers = [select id from User where isActive = false order by LastModifiedDate desc limit 9999];
-        Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
+  //      Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
         Integer contactCount = [select count() from Contact where OwnerId IN :inactiveUsers limit 200];
-        Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
+  //      Integer opptyCount = [select count() from Opportunity where OwnerId IN :inactiveUsers limit 200];
         Integer taskCount = [select count() from Task where OwnerId IN :inactiveUsers limit 200];
 
         String inactiveUserWarning = 'You have records owned by inactive Users.  You will need to transfer these records to an active user prior to running the conversion process.  The conversion process will not be available until these records have been reassigned.';
-        if (accountCount > 0)
-            inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
+//        if (accountCount > 0)
+  //          inactiveUserWarning += '\n ' + accountCount + ' Accounts are currently owned by an inactive user. ';
         if (contactCount > 0)
             inactiveUserWarning += '\n ' + contactCount + ' Contacts are currently owned by an inactive user. ';
-        if (opptyCount > 0)
-            inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
+      //  if (opptyCount > 0)
+    //        inactiveUserWarning += '\n ' + opptyCount + ' Opportunities are currently owned by an inactive user. ';
         if (taskCount > 0)
             inactiveUserWarning += '\n ' + taskCount + ' Tasks are currently owned by an inactive user. ';
 
-        if ((accountCount + contactCount + opptyCount + taskCount) > 0){
+        if ((contactCount + taskCount /* accountCount + opptyCount */) > 0){
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
             runCheckErrorState = true;
         }
