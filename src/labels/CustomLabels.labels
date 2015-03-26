@@ -968,6 +968,14 @@
         <value>There are {0} Contacts who have no Account.  These Contacts will be private to the user who created them.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsDuplicateAcctRT</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsDuplicateAcctRT</shortDescription>
+        <value>You cannot specify the same Account Record Type for the Household Account Record Type and One-to-One Record Type.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsGenderField</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
