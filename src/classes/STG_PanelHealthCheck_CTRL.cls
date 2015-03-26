@@ -400,8 +400,16 @@ public with sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c, false,
             'npo02__Households_Settings__c', 'npo02__Excluded_Contact_Opp_Rectypes__c', Label.stgNavDonations, Label.stgNavDonorStatistics);
         checkRecordTypeMulti('Opportunity', STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c, false,
-            'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavDonations, Label.stgNavMembership);            
-
+            'npo02__Households_Settings__c', 'npo02__Membership_Record_Types__c', Label.stgNavDonations, Label.stgNavMembership);   
+            
+        // avoid reusing the same recordtype in Account models
+        string idHH = STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c;
+        string idOne = STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c;
+        if (idHH != null && idOne != null && idHH == idOne) {
+            string strField = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'npe01__One_to_One_RecordTypeID__c');            
+            createDR(strField, 'Error', label.healthDetailsDuplicateAcctRT, 
+                string.format(label.healthSolutionEditSetting, new string[]{strField, Label.stgNavPeople, Label.stgNavAccountModel}));
+        }         
     }
 
     /*********************************************************************************************************
