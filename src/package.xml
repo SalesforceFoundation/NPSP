@@ -372,7 +372,6 @@
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
         <members>DataImport__c.Account1_Country__c</members>
-        <members>DataImport__c.Account1_MyExternalID__c</members>
         <members>DataImport__c.Account1_Name__c</members>
         <members>DataImport__c.Account1_Phone__c</members>
         <members>DataImport__c.Account1_State_Province__c</members>
@@ -383,7 +382,6 @@
         <members>DataImport__c.Account2Imported__c</members>
         <members>DataImport__c.Account2_City__c</members>
         <members>DataImport__c.Account2_Country__c</members>
-        <members>DataImport__c.Account2_MyExternalID__c</members>
         <members>DataImport__c.Account2_Name__c</members>
         <members>DataImport__c.Account2_Phone__c</members>
         <members>DataImport__c.Account2_State_Province__c</members>
@@ -399,7 +397,6 @@
         <members>DataImport__c.Contact1_Home_Phone__c</members>
         <members>DataImport__c.Contact1_Lastname__c</members>
         <members>DataImport__c.Contact1_Mobile_Phone__c</members>
-        <members>DataImport__c.Contact1_MyExternalID__c</members>
         <members>DataImport__c.Contact1_Other_Phone__c</members>
         <members>DataImport__c.Contact1_Personal_Email__c</members>
         <members>DataImport__c.Contact1_Preferred_Email__c</members>
@@ -416,7 +413,6 @@
         <members>DataImport__c.Contact2_Home_Phone__c</members>
         <members>DataImport__c.Contact2_Lastname__c</members>
         <members>DataImport__c.Contact2_Mobile_Phone__c</members>
-        <members>DataImport__c.Contact2_MyExternalID__c</members>
         <members>DataImport__c.Contact2_Other_Phone__c</members>
         <members>DataImport__c.Contact2_Personal_Email__c</members>
         <members>DataImport__c.Contact2_Preferred_Email__c</members>
