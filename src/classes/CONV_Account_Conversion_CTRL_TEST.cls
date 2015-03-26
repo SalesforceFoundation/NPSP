@@ -139,9 +139,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
             Test.stopTest();
 
             //assert the warning exists
-        //    system.assertEquals(true, controller.runCheckErrorState);
-            //assert inactive users no longer cause an error state for the controller
-            system.assertEquals(false, controller.runCheckErrorState);
+            system.assertEquals(true, controller.runCheckErrorState);        
         }
     }
 }
