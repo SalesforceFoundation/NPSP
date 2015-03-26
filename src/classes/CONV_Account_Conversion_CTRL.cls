@@ -231,6 +231,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, errorString));
         }
 
+        /* Spring 15 removed the requirement that users must be active
         List<User> inactiveUsers = new List<User>();
         inactiveUsers = [select id from User where isActive = false order by LastModifiedDate desc limit 9999];
         Integer accountCount = [select count() from Account where OwnerId IN :inactiveUsers limit 200];
@@ -252,6 +253,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, inactiveUserWarning));
             runCheckErrorState = true;
         }
+        */
 
         //set the recordtype if its not already set
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Household Account');
