@@ -1176,6 +1176,14 @@
         <value>Reciprocal Relationship {0} should have a value in at least one of the fields for Male, Female, or Neutral.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsSaveOppsFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsSaveOppsFailed</shortDescription>
+        <value>Unable to create new Opportunities.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsScheduleJobs</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1349,7 +1357,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelRDOppsValid</shortDescription>
-        <value>Recurring Donation Opportunities can be saved.</value>
+        <value>New opportunities can be saved.</value>
     </labels>
     <labels>
         <fullName>healthLabelRDValid</fullName>
@@ -1612,6 +1620,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionRelReciprocalInvalid</shortDescription>
         <value>On the NPSP Settings tab, click {0} | {1}, and delete the Reciprocal Relationship record, and create a new one with the required information.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionSaveOppsFailed</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionSaveOppsFailed</shortDescription>
+        <value>Make sure you have no Validation Rules, Required Fields, or Workflow Rules that would prevent an Opportunity from being saved.</value>
     </labels>
     <labels>
         <fullName>healthSolutionScheduleJobs</fullName>
