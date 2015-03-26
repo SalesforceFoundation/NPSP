@@ -459,13 +459,13 @@
     </fields>
     <fields>
         <fullName>Acknowledgment_Status__c</fullName>
-        <description>Used to track stewardship of opportunity</description>
+        <description>Status of Acknowledgment of this gift.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Status of Acknowledgment of this gift</inlineHelpText>
+        <inlineHelpText>Status of Acknowledgment of this gift.</inlineHelpText>
         <label>Acknowledgment Status</label>
         <picklist>
             <picklistValues>
-                <fullName>To be Acknowledged</fullName>
+                <fullName>To Be Acknowledged</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>

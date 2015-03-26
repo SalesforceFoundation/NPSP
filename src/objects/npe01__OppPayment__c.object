@@ -20,13 +20,13 @@
     </fields>
     <fields>
         <fullName>Payment_Acknowledgment_Status__c</fullName>
-        <description>Used to track stewardship of payment</description>
+        <description>Status of Acknowledgment of this payment.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Status of Acknowledgment of this payment</inlineHelpText>
+        <inlineHelpText>Status of Acknowledgment of this payment.</inlineHelpText>
         <label>Payment Acknowledgment Status</label>
         <picklist>
             <picklistValues>
-                <fullName>To be Acknowledged</fullName>
+                <fullName>To Be Acknowledged</fullName>
                 <default>false</default>
             </picklistValues>
             <picklistValues>
