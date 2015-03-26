@@ -638,6 +638,7 @@
         <members>healthDetailsBadRDField</members>
         <members>healthDetailsBadReportId</members>
         <members>healthDetailsContactData</members>
+        <members>healthDetailsDuplicateAcctRT</members>
         <members>healthDetailsGenderField</members>
         <members>healthDetailsHHAccountModel</members>
         <members>healthDetailsHHActNoContacts</members>
