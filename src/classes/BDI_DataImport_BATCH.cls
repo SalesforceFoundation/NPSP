@@ -1442,7 +1442,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             Campaign cmp;
             if (strName != null && setStrCampaign.add(strName)) {
 	            if (mapStrNameToCampaignId.get(strName) == null) {
-	            	cmp = new Campaign(Name=strName);
+	            	cmp = new Campaign(Name=strName, IsActive=true);
 	            	listCmpNew.add(cmp);
 	            	listDINew.add(di);
 	            }

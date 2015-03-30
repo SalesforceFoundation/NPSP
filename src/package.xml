@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
         <members>ACCT_Accounts_TDTM</members>
@@ -637,6 +638,7 @@
         <members>healthDetailsBadRDField</members>
         <members>healthDetailsBadReportId</members>
         <members>healthDetailsContactData</members>
+        <members>healthDetailsDuplicateAcctRT</members>
         <members>healthDetailsGenderField</members>
         <members>healthDetailsHHAccountModel</members>
         <members>healthDetailsHHActNoContacts</members>
@@ -663,6 +665,7 @@
         <members>healthDetailsPaymentMappingBadDataTypes</members>
         <members>healthDetailsRDFieldsBadDatatypes</members>
         <members>healthDetailsRelReciprocalInvalid</members>
+        <members>healthDetailsSaveOppsFailed</members>
         <members>healthDetailsScheduleJobs</members>
         <members>healthDetailsUDFBadDatatypes</members>
         <members>healthDetailsValidRDCustomPeriod</members>
@@ -718,6 +721,7 @@
         <members>healthSolutionRDBadOppField</members>
         <members>healthSolutionRDFieldsBadDatatypes</members>
         <members>healthSolutionRelReciprocalInvalid</members>
+        <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>

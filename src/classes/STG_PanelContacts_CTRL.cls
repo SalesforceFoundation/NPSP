@@ -39,5 +39,23 @@
     * @description Returns the string Id of the Contacts panel. 
     */
     public override string idPanel() { return 'idPanelCon'; }
+
+    /*********************************************************************************************************
+    * @description Action Method to save the current settings
+    * @return null 
+    */
+    public override PageReference saveSettings() {
+        
+        // avoid reusing the same recordtype in Account models
+        string idHH = STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c;
+        string idOne = STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c;
+        if (idHH != null && idOne != null && idHH == idOne) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, label.healthDetailsDuplicateAcctRT));
+            return null;
+        }
+
+        return super.saveSettings();
+    }
+
     
 }

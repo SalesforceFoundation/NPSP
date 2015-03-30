@@ -238,9 +238,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 }                                   
             }
 
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', strError, null);                            
+            ctrl.createDR(label.stgNavDonations, 'Error', label.healthDetailsSaveOppsFailed + ' ' + strError, label.healthSolutionSaveOppsFailed);                            
         } else {   
-            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthLabelRDOppsValid);
+            ctrl.createDR(label.stgNavDonations, 'Success', null, label.healthLabelRDOppsValid);
         }                            
     }
 }
