@@ -973,10 +973,10 @@
         <name>CustomLabel</name>
     </types>
     <types>
-        <name>CustomLabel</name>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
     </types>
     <types>
-        <members>Account</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -984,7 +984,6 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Error_Settings__c</members>
@@ -992,8 +991,6 @@
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Household_Naming_Settings__c</members>
-        <members>Lead</members>
-        <members>Opportunity</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
@@ -1060,13 +1057,6 @@
         <name>ListView</name>
     </types>
     <types>
-        <members>Contact.NPSP_Contact_Personal_Email_Match</members>
-        <name>MatchingRule</name>
-    </types>
-    <types>
-        <name>MatchingRule</name>
-    </types>
-    <types>
         <members>Account.New_Address</members>
         <members>Account.New_Affiliation</members>
         <members>Account.Quick_Household_Update</members>
@@ -1112,5 +1102,5 @@
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
         <name>WebLink</name>
     </types>
-    <version>33.0</version>
+    <version>30.0</version>
 </Package>
