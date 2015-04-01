@@ -35,7 +35,7 @@
 */
 
 @isTest
-private with sharing class ADDR_Addresses_TEST {
+public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
@@ -56,12 +56,12 @@ private with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description The list of created test Contacts.
     */
-    private static list<Contact> listConT;
+    public static list<Contact> listConT;
 
     /*********************************************************************************************************
     * @description The list of created test Accounts.
     */
-    private static list<Account> listAccT;            
+    public static list<Account> listAccT;            
 
     /*********************************************************************************************************
     * @description
@@ -73,7 +73,7 @@ private with sharing class ADDR_Addresses_TEST {
     * @param cConT the number of Contacts to create per Household
     * @return  void
     **********************************************************************************************************/
-    private static void createHHTestData(integer cHHT, integer cConT) {
+    public static void createHHTestData(integer cHHT, integer cConT) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
@@ -106,14 +106,14 @@ private with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description The list of created test Addresses.
     */
-    private static list<Address__c> listAddrT;
+    public static list<Address__c> listAddrT;
 
     /*********************************************************************************************************
     * @description Initializes (but not inserts) N new Address objects.
     * @param cAddr the number of Address objects to create
     * @return  void
     **********************************************************************************************************/
-    private static void initTestAddr(integer cAddr) {
+    public static void initTestAddr(integer cAddr) {
     	listAddrT = new list<Address__c>();
     	for (integer i = 0; i < cAddr; i++) {
     		Address__c addr = new Address__c();
@@ -131,7 +131,7 @@ private with sharing class ADDR_Addresses_TEST {
     * @description Returns whether an Account Billing address matches a Contact Mailing address
     * @return  boolean 
     **********************************************************************************************************/
-    private static boolean isMatchAddressAccCon(Account acc, Contact con) {
+    public static boolean isMatchAddressAccCon(Account acc, Contact con) {
         return (acc.BillingStreet == con.MailingStreet &&          
             acc.BillingCity == con.MailingCity &&          
             acc.BillingState == con.MailingState &&         
