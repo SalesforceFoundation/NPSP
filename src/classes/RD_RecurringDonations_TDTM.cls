@@ -34,7 +34,7 @@
 * @description Trigger Handler on Recurring Donations 
 */
 public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
-	
+    
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps
     * related to the Recurring Donations.
@@ -56,16 +56,16 @@ public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
             return null;
             
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-        	set<Id> setRDId = new set<Id>();
-        	for (SObject s : newlist) 
-        	   setRDId.add(s.Id);
-        	newlist = RD_RecurringDonations.requeryListRD(setRDId);
-        	// since we recreate newlist, we can't assume it is same order as oldlist.
-        	// luckily we don't need oldlist for the AfterInsert scenario.
-        	oldlist = null; 
+            set<Id> setRDId = new set<Id>();
+            for (SObject s : newlist) 
+               setRDId.add(s.Id);
+            newlist = RD_RecurringDonations.requeryListRD(setRDId);
+            // since we recreate newlist, we can't assume it is same order as oldlist.
+            // luckily we don't need oldlist for the AfterInsert scenario.
+            oldlist = null; 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-        	// newlist will be null.  copy over oldlist, so we can use common loop below.
-        	newlist = oldlist;
+            // newlist will be null.  copy over oldlist, so we can use common loop below.
+            newlist = oldlist;
         }
 
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert && triggerAction != TDTM_Runnable.Action.BeforeUpdate)
