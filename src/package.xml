@@ -499,6 +499,9 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
+        <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
+        <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -997,6 +1000,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Lead</members>
         <members>Opportunity</members>
+        <members>Opportunity_Naming_Settings__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
