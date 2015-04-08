@@ -93,6 +93,9 @@
         <members>OPP_MatchingDonationsBTN_TEST</members>
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
+        <members>OPP_OpportunityNaming</members>
+        <members>OPP_OpportunityNaming_TDTM</members>
+        <members>OPP_OpportunityNaming_TEST</members>
         <members>PMT_PaymentCreator</members>
         <members>PMT_PaymentCreator_TEST</members>
         <members>PMT_PaymentWizard_CTRL</members>
@@ -142,6 +145,7 @@
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
+        <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
