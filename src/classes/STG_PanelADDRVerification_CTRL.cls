@@ -262,7 +262,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             }
         } catch (Exception e) {
             apiSettingsErrorMessage = Label.Settings_not_Saved + ': ' + e.getMessage();
-            system.debug('lookhere!: ' + e.getStackTraceString());
         }
         return null;
     }
