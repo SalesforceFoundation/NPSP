@@ -38,13 +38,15 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     private String END_POINT;
     private Double TIMEOUT;
     private List<Address__c> checked_addresses;
+
+    private Addr_Verification_Settings__c settings;
     
     /*******************************************************************************************************
     * @description Provides the called with the service name.
     * @return String The name of the address validation service.
     */
     public String getServiceName() {
-    	return 'The Google Geocoding API';
+        return 'The Google Geocoding API';
     }
     
     /*******************************************************************************************************
@@ -52,7 +54,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     * @return String The URL to send requests to.
     */
     public String getDefaultURL() {
-    	return 'https://maps.googleapis.com/maps/api/geocode/json?';
+        return 'https://maps.googleapis.com/maps/api/geocode/json?';
     }
     
     /*******************************************************************************************************
@@ -68,7 +70,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     * @return String The help text.
     */
     public String getBatchHelpText() { 
-    	return Label.Addr_Verification_Batch_Not_Supported; 
+        return Label.Addr_Verification_Batch_Not_Supported; 
     }
 
     /*******************************************************************************************************
@@ -82,6 +84,8 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         this.checked_addresses = new List<Address__c>();
         this.AUTH_TOKEN = settings.Auth_Token__c;
         this.TIMEOUT = settings.Timeout__c;
+
+        this.settings = settings;
         
         if (settings.Address_Verification_Endpoint__c != null)      
             this.END_POINT = settings.Address_Verification_Endpoint__c;        
@@ -138,7 +142,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             req.setHeader('Accept','application/json');
             req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN);
             try{
-            	UTIL_Debug.debug('****Request body: \n' + req);
+                UTIL_Debug.debug('****Request body: \n' + req);
                 response = h.send(req);
                 UTIL_Debug.debug('****Response body: \n' + response.getBody());
             } catch (Exception e){
@@ -161,24 +165,24 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
                 String verified_street = '';
                 String verified_premise = '';
-                if (googresp.status == 'OK' && googresp.results.size() == 1){
+                if (googresp.status == 'OK' && googresp.results.size() == 1 && !(settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match)){
 
                     for (ADDR_GoogleGeoAPI_Validator.Address_components add : googresp.results[0].address_components){
                         Set<String> type_set = new Set<String>();
                         type_set.addAll(add.types);
 
                         if(type_set.contains('postal_code')){
-                        	String verified5digs = add.long_name;
-                        	String originalFull = a.MailingPostalCode__c;
-                        	String original5digs = '';
-                        	if(originalFull != null && originalFull.length() > 5) {
-                        		 original5digs = originalFull.substring(0, 5);
-                        	}
-                        	//Google only returns 5-digit zipcodes. We don't want to override the original, if the
-                        	//first 5 match, and the original has the additional 4.
-                        	if(!(verified5digs == original5digs)) {
+                            String verified5digs = add.long_name;
+                            String originalFull = a.MailingPostalCode__c;
+                            String original5digs = '';
+                            if(originalFull != null && originalFull.length() > 5) {
+                                 original5digs = originalFull.substring(0, 5);
+                            }
+                            //Google only returns 5-digit zipcodes. We don't want to override the original, if the
+                            //first 5 match, and the original has the additional 4.
+                            if(!(verified5digs == original5digs)) {
                                 a.MailingPostalCode__c = add.long_name;
-                        	}
+                            }
                         } else if (type_set.contains('country')){
                             a.MailingCountry__c = add.short_name;
                         } else if (type_set.contains('administratrive_area_level_1')){
@@ -203,7 +207,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     }
                     a.MailingStreet__c = verified_street;
                     if(!String.isBlank(verified_premise)) {
-                    	 a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
+                         a.MailingStreet__c = a.MailingStreet__c + ' ' + verified_premise;
                     }
                     if (!String.isBlank(subpremise))
                         a.MailingStreet__c += ','+subpremise;
@@ -213,7 +217,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                     a.Verified__c = true;
                     a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = Label.Addr_Verified;
-                } else if (googresp.status == 'OK' && googresp.results.size() > 1){
+                } else if ((googresp.status == 'OK' && googresp.results.size() > 1) || (googresp.results.size() == 1 && settings.Reject_Ambiguous_Addresses__c && googresp.results[0].partial_match)){
                     a.Ambiguous__c = true;
                     a.Verified__c = false;
                     a.API_Response__c = trimResponse(response);
@@ -260,12 +264,12 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     }
     
     private static String trimResponse(HttpResponse response) {
-    	//Truncating body response to avoid STRING_TOO_LONG error.
-	    String responseBody = response.getBody();
-	    if(responseBody.length() > 32768) {
-	        responseBody = responseBody.substring(0, 32768);
-	    }
-	    return responseBody;
+        //Truncating body response to avoid STRING_TOO_LONG error.
+        String responseBody = response.getBody();
+        if(responseBody.length() > 32768) {
+            responseBody = responseBody.substring(0, 32768);
+        }
+        return responseBody;
     }
 
     /*******************************************************************************************************
@@ -283,6 +287,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         public List<ADDR_GoogleGeoAPI_Validator.Address_components> address_components;
         public String formatted_address;
         public Geometry geometry;
+        public boolean partial_match;
         public List<String> types;
     }
     
