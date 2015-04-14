@@ -125,20 +125,20 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
             //if our address has a comma, split it off and append it after verification
             if (mailingAddress.contains(',')) {
                 list<string> split = mailingAddress.split(',',2);
-                strRequest += 'search_address=' + split[0].replace(' ', '+') + '&';
+                strRequest += 'search_address=' + EncodingUtil.urlEncode(split[0],'UTF-8') + '&';
                 subpremise = split[1];
             } else {
-                strRequest += 'search_address=' + mailingAddress.replace(' ', '+') + '&';
+                strRequest += 'search_address=' + EncodingUtil.urlEncode(mailingAddress,'UTF-8') + '&';
             }
         }
         if (addr.MailingCity__c != null)
-            strRequest += 'search_city=' + addr.MailingCity__c.replace(' ', '+') + '&';
+            strRequest += 'search_city=' + EncodingUtil.urlEncode(addr.MailingCity__c,'UTF-8') + '&';
         if (addr.MailingState__c != null)
-            strRequest += 'search_state=' + addr.MailingState__c.replace(' ', '+') + '&';
+            strRequest += 'search_state=' + EncodingUtil.urlEncode(addr.MailingState__c,'UTF-8') + '&';
         if (addr.MailingPostalCode__c != null)
-            strRequest += 'search_postal=' + addr.MailingPostalCode__c.replace(' ', '+') + '&';
+            strRequest += 'search_postal=' + EncodingUtil.urlEncode(addr.MailingPostalCode__c,'UTF-8') + '&';
         if (addr.MailingCountry__c != null)
-            strRequest += 'search_country=' + addr.MailingCountry__c.replace(' ', '+') + '&';
+            strRequest += 'search_country=' + EncodingUtil.urlEncode(addr.MailingCountry__c,'UTF-8') + '&';
 
         try {
             if (strAuthToken != null && strEndPoint != null) {
