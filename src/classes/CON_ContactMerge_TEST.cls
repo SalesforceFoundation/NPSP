@@ -920,6 +920,11 @@ private class CON_ContactMerge_TEST {
         // make sure we are down to just one account
         system.assertEquals(1, [select count() from Account]);
         
+        // make sure only 1 default address
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        }
+        
         // make sure winning contact's address is correct
         con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact];
         system.assertEquals(con3.MailingStreet, con.MailingStreet);

@@ -286,4 +286,33 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
     
     return dmlWrapper;
     }
+    
+    /*******************************************************************************************************
+    * @description recreates Soft Credit OCR's for all Opportunities for the specified Household Accounts.
+    * Used when Account Merge occurs.
+    * @param listHHId the list of Household Accounts 
+    * @return null
+    ********************************************************************************************************/
+    public static void recreateHouseholdSoftCredits(list<ID> listHHId) {
+    
+        // find all Opps for the Accounts
+        list<Opportunity> listOpp = [select Id, AccountId from Opportunity where AccountId in :listHHId];
+        
+        if (listOpp.size() > 0) {
+
+            // delete the old household soft credits.
+            npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+            if (hs.npo02__Household_Member_Contact_Role__c != null) {
+                delete [select Id from OpportunityContactRole where OpportunityId in :listOpp and 
+                    Role = :hs.npo02__Household_Member_Contact_Role__c];
+    
+                // fake an Insert trigger on the Opps to get the Soft Credits created
+                HH_OppContactRoles_TDTM hhocr = new HH_OppContactRoles_TDTM();
+                DmlWrapper dmlWrapper = hhocr.run(listOpp, null, TDTM_Runnable.Action.AfterInsert, Schema.Sobjecttype.Opportunity);
+        
+                TDTM_TriggerHandler.processDML(dmlWrapper);
+            }
+        }
+    }
+    
 }

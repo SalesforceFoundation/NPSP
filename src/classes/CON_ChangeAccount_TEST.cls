@@ -35,7 +35,7 @@
 */
 
 @isTest
-private with sharing class CON_ChangeAccount_TEST {
+public with sharing class CON_ChangeAccount_TEST {
 
     /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
@@ -56,7 +56,7 @@ private with sharing class CON_ChangeAccount_TEST {
     /*********************************************************************************************************
     * @description Creates test opportunities for our test contacts and accounts.
     */
-    private static void createTestOpps(integer cHHT, integer cConT) {
+    public static void createTestOpps(integer cHHT, integer cConT) {
         list<Opportunity> listOpp = new list<Opportunity>();
         
         // create an Opp for each contact

@@ -194,10 +194,14 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
                             (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
                             
-                            // Avoid creating a new contact with the 1:1 account of another contact  
+                            // Avoid updating a contact with the 1:1 account of another contact  
                             if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&
-                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != null)
+                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != null &&
+                                // only do this fix if this update is currently happening.
+                                // this avoids an account merge from being undone by a later update to the contact
+                                c.AccountId != oldContacts[i].AccountId) {  
                                 c.AccountId = null;
+                            }
                             
                             if (c.AccountId == null)
                                 listContactNeedAccount.add(c);
@@ -331,7 +335,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private void updateHHAccount(list<Id> listAccountId, DmlWrapper dmlWrapper) {
         resetPrimaryContactForAccount(listAccountId, dmlWrapper);        
         renameHHAccounts(listAccountId); 
-        rollupHHAccounts(listAccountId);                  
+        rollupAccounts(listAccountId);                  
     }
     
     /*******************************************************************************************************
@@ -384,11 +388,11 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description for the list of HH AccountId's, recalc their rollups 
+    * @description for the list of AccountId's, recalc their rollups 
     * @param listAccountId the list of Account (Id's) that need updating.
     * @return void
     */ 
-    private void rollupHHAccounts(list<Id> listAccountId) {
+    public static void rollupAccounts(list<Id> listAccountId) {
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
             map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
@@ -405,7 +409,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @param listAccountId the list of Account (Id's) that need updating.
     * @return void
     */ 
-    private void renameHHAccounts(list<Id> listAccountId) {
+    public static void renameHHAccounts(list<Id> listAccountId) {
         if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(listAccountId);

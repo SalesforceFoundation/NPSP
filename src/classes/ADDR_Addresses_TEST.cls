@@ -83,7 +83,7 @@ public with sharing class ADDR_Addresses_TEST {
         
         for (integer i = 0; i < cHHT; i++) {
         	for (integer j = 0; j < cConT; j++) {
-        		listConT[ (i * cHHT) + j].AccountId = listAccT[i].Id;
+        		listConT[ (i * cConT) + j].AccountId = listAccT[i].Id;
         	}
         }        
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
