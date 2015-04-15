@@ -178,6 +178,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'CON_DoNotContact_TDTM', Load_Order__c = 2, Object__c = 'Contact', 
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
+        // Contact Merge on Contact object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
+              Class__c = 'CON_ContactMerge_TDTM', Load_Order__c = 2, Object__c = 'Contact', 
+              Trigger_Action__c = 'BeforeDelete;AfterDelete'));
+
         return handlers;
     }
     

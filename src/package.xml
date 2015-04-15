@@ -60,7 +60,9 @@
         <members>CONV_Account_Conversion_CTRL_TEST</members>
         <members>CON_ChangeAccount_TEST</members>
         <members>CON_ContactMerge</members>
+        <members>CON_ContactMergeTDTM_TEST</members>
         <members>CON_ContactMerge_CTRL</members>
+        <members>CON_ContactMerge_TDTM</members>
         <members>CON_ContactMerge_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>

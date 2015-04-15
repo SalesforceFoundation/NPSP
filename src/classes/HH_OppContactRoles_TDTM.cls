@@ -125,6 +125,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         map<Id, Opportunity> oppsForContactRoles = new map<Id,Opportunity>([select Id, npe01__Contact_Id_for_Role__c, AccountId, account.npe01__One2OneContact__c,
             account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c from Opportunity 
             where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true]);
+        //UTIL_Debug.debug('DJH***** oppsForContactRoles: ' + oppsForContactRoles);
         
         if (oppsForContactRoles.size() > 0) {
             
@@ -145,9 +146,13 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             Map<id,List<Contact>> householdIdToContact = new Map<id, List<Contact>>();           
             
             // query for OppConRoles where primary=true and OppID in arg set
+            // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
             map<String,Id> contactOppToContactRole = new map<String,Id>();
-            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole WHERE IsPrimary = true AND Opportunity.Id IN :oppsForContactRoles.values() ];
-            //UTIL_Debug.debug('DJH***** conRoles: ' + conRoles);
+            OpportunityContactRole[] conRoles = [select Id,OpportunityId, ContactId From OpportunityContactRole 
+                WHERE (IsPrimary = true OR Role = :ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c) 
+                AND Opportunity.Id IN :oppsForContactRoles.values() ];
+            //UTIL_Debug.debug('DJH***** existing conRoles: ' + conRoles);
+            
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
@@ -209,7 +214,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where npo02__Household__c IN :c2HId or AccountId in :c2HId');
             else
                 householdContacts = database.query('select id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where npo02__Household__c IN :c2HId or AccountId in :c2HId');
-                                
+            //UTIL_Debug.debug('DJH***** householdContacts: ' + householdContacts);
+                                 
             // create a map of Household Id to list of member contacts
             for (Contact myContact : householdContacts) {
                 ID hhId;
@@ -244,6 +250,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                 if (contactOppToContactRole.get(uniqueConRole) != null) {
                                     OpportunityContactRole thisRole = new OpportunityContactRole(id=contactOppToContactRole.get(uniqueConRole));
                                     thisRole.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
+                                    thisRole.isPrimary = true;
                                     contactRolesForUpdate.add(thisRole);                                    
                                 } else {
                                     OpportunityContactRole thisRole = new OpportunityContactRole();

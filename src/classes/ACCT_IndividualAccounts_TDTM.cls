@@ -289,7 +289,7 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 updateAccountPrimaryContact(mapAccountIdContactId, dmlWrapper);
             }
             if (mapContactIdAccountIdNewMoveOpps.size() > 0) {
-            	moveOppsToContactHHAccount(mapContactIdAccountIdNewMoveOpps, mapContactIdAccountIdOldMoveOpps, dmlWrapper);
+            	moveOppsToContactAccount(mapContactIdAccountIdNewMoveOpps, mapContactIdAccountIdOldMoveOpps, null);
             }
             if (listAccountIdHHToUpdate.size() > 0) {
                 updateHHAccount(listAccountIdHHToUpdate, dmlWrapper);
@@ -694,31 +694,42 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
     
     /*******************************************************************************************************
-    * @description Moves all opps for the Primary OCR provided contacts to their new hh account
+    * @description Moves all opps for the Primary OCR provided contacts to their new account
     * @param mapContactIdAccountIdNew a map of Contact Id to Account Id, for the Accounts to move opps to
     * @param mapContactIdAccountIdOld a map of Contact Id to Account Id, for the Accounts to move opps from
-    * @param dmlWrapper to hold the Opps that need updating.
+    * @param dmlWrapper to hold the Opps that need updating.  If null, will commit immediately.
     * @return void
     */ 
-    private void moveOppsToContactHHAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
+    public static void moveOppsToContactAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
         set<Id> setConId = mapContactIdAccountIdNew.keySet();
         list<Id> listAccIdOld = mapContactIdAccountIdOld.values();
         list<Opportunity> listOpp = new list<Opportunity>();
+        set<Id> setOppId = new set<Id>();
+        
+        //system.debug('****DJH: moveOpps setConIdNew: ' + setConId);
+        //system.debug('****DJH: moveOpps listAccIdOld: ' + listAccIdOld);
     
-        list<OpportunityContactRole> listOCR = [select ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId from OpportunityContactRole
-            where IsPrimary = true and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
+        // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
+        npe01__Contacts_and_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
+        
+        list<OpportunityContactRole> listOCR = [select ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId, IsPrimary, Role 
+            from OpportunityContactRole where IsPrimary = true and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
+        //system.debug('****DJH: moveOpps listOCR: ' + listOCR);
             
         for (OpportunityContactRole ocr : listOCR) {
             if (mapContactIdAccountIdOld.get(ocr.ContactId) == ocr.Opportunity.AccountId) {
-            	listOpp.add(new Opportunity(Id = ocr.OpportunityId, AccountId = mapContactIdAccountIdNew.get(ocr.ContactId)));
+                if (setOppId.add(ocr.OpportunityId))
+                    listOpp.add(new Opportunity(Id = ocr.OpportunityId, AccountId = mapContactIdAccountIdNew.get(ocr.ContactId)));
             }
         }
+        //system.debug('****DJH: moveOpps listOpp: ' + listOpp);
         
         if (listOpp.size() > 0) {
-            // since our rollup code isn't using dmlWrapper,
-            // we must commit now.
-            //dmlWrapper.objectsToUpdate.addAll(listOpp);
-            update listOpp;
+            // since our rollup code isn't using dmlWrapper, some callers want us to commit now
+            if (dmlWrapper == null)
+                update listOpp;
+            else
+                dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
         }
     }
 

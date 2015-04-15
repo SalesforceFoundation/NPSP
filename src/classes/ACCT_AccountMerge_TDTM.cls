@@ -75,7 +75,6 @@ public with sharing class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
     *   - recalculate Household Soft Credit OCRs (for Household Accounts)
     *   - recalculate Opportunity rollups (for Household and One2One Accounts)
     *   - fixup Addresses (for Household and Org Accounts)
-    *   - fixup Affiliations (for Org Accounts)
     *
     * @param listAccountId the list of Accounts that were the winner in Account Merge 
     * @return null
@@ -100,6 +99,8 @@ public with sharing class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         
         if (listHHId.size() > 0) {
             ACCT_IndividualAccounts_TDTM.renameHHAccounts(listHHId);
+            
+            //UNDONE: also do for One2One accounts???
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listHHId);
         }
 
