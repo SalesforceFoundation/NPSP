@@ -127,119 +127,127 @@ public with sharing class ADDR_Validator_TEST {
     }
     
     static testMethod void test400() {
-        if (strTestOnly != '*' && strTestOnly != 'test400') return;
-        
-        Addr_Verification_Settings__c settings = createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
-        Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = '400 error';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'Illinois';
-        contact.MailingPostalCode = '60606';
-        contact.MailingCountry = 'United States';
-        
-        Test.StartTest();
-        insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-        
-        //check household got created for contact
-        contact = [select Account.Id from Contact where Id = :contact.Id];
-        Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-
-        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
-        System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
-        System.assertEquals('Bad input. Required fields missing from input or are malformed.', av[0].Verification_Status__c);
+    	if (!Test.isRunningTest()) {
+	        if (strTestOnly != '*' && strTestOnly != 'test400') return;
+	        
+	        Addr_Verification_Settings__c settings = createDefaultSettings();
+	        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+	              
+	        Contact contact = new contact(firstname='Test', lastname='Person'); 
+	        contact.MailingStreet = '400 error';
+	        contact.MailingCity = 'chicago';
+	        contact.MailingState = 'Illinois';
+	        contact.MailingPostalCode = '60606';
+	        contact.MailingCountry = 'United States';
+	        
+	        Test.StartTest();
+	        insert contact;
+	        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+	        Test.StopTest();
+	        
+	        //check household got created for contact
+	        contact = [select Account.Id from Contact where Id = :contact.Id];
+	        Id accountId = contact.Account.Id;
+	        System.assertNotEquals(null, accountId);
+	
+	        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+	        System.assertEquals(1, av.size());
+	        System.assertEquals(false, av[0].Verified__c);
+	        System.assertEquals('Bad input. Required fields missing from input or are malformed.', av[0].Verification_Status__c);
+    	}
     }
     
     static testMethod void test401() {
-        if (strTestOnly != '*' && strTestOnly != 'test401') return;
-        
-        Addr_Verification_Settings__c settings = createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
-        Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = '401 error';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'Illinois';
-        contact.MailingPostalCode = '60606';
-        contact.MailingCountry = 'United States';
-        
-        Test.StartTest();
-        insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-        
-        //check household got created for contact
-        contact = [select Account.Id from Contact where Id = :contact.Id];
-        Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-
-        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
-        System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
-        System.assertEquals('Unauthorized. Authentication failure; invalid credentials.', av[0].Verification_Status__c);
+    	if (!Test.isRunningTest()) {
+	        if (strTestOnly != '*' && strTestOnly != 'test401') return;
+	        
+	        Addr_Verification_Settings__c settings = createDefaultSettings();
+	        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+	              
+	        Contact contact = new contact(firstname='Test', lastname='Person'); 
+	        contact.MailingStreet = '401 error';
+	        contact.MailingCity = 'chicago';
+	        contact.MailingState = 'Illinois';
+	        contact.MailingPostalCode = '60606';
+	        contact.MailingCountry = 'United States';
+	        
+	        Test.StartTest();
+	        insert contact;
+	        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+	        Test.StopTest();
+	        
+	        //check household got created for contact
+	        contact = [select Account.Id from Contact where Id = :contact.Id];
+	        Id accountId = contact.Account.Id;
+	        System.assertNotEquals(null, accountId);
+	
+	        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+	        System.assertEquals(1, av.size());
+	        System.assertEquals(false, av[0].Verified__c);
+	        System.assertEquals('Unauthorized. Authentication failure; invalid credentials.', av[0].Verification_Status__c);
+    	}
     }
     
     static testMethod void test402() {
-        if (strTestOnly != '*' && strTestOnly != 'test402') return;
-        
-        Addr_Verification_Settings__c settings = createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
-        Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = '402 error';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'Illinois';
-        contact.MailingPostalCode = '60606';
-        contact.MailingCountry = 'United States';
-        
-        Test.StartTest();
-        insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-        
-        //check household got created for contact
-        contact = [select Account.Id from Contact where Id = :contact.Id];
-        Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-
-        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
-        System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
-        System.assertEquals('Payment required. No active subscription found.', av[0].Verification_Status__c);
+    	if (!Test.isRunningTest()) {
+	        if (strTestOnly != '*' && strTestOnly != 'test402') return;
+	        
+	        Addr_Verification_Settings__c settings = createDefaultSettings();
+	        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+	              
+	        Contact contact = new contact(firstname='Test', lastname='Person'); 
+	        contact.MailingStreet = '402 error';
+	        contact.MailingCity = 'chicago';
+	        contact.MailingState = 'Illinois';
+	        contact.MailingPostalCode = '60606';
+	        contact.MailingCountry = 'United States';
+	        
+	        Test.StartTest();
+	        insert contact;
+	        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+	        Test.StopTest();
+	        
+	        //check household got created for contact
+	        contact = [select Account.Id from Contact where Id = :contact.Id];
+	        Id accountId = contact.Account.Id;
+	        System.assertNotEquals(null, accountId);
+	
+	        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+	        System.assertEquals(1, av.size());
+	        System.assertEquals(false, av[0].Verified__c);
+	        System.assertEquals('Payment required. No active subscription found.', av[0].Verification_Status__c);
+    	}
     }
     
     static testMethod void test500() {
-        if (strTestOnly != '*' && strTestOnly != 'test500') return;
-        
-        Addr_Verification_Settings__c settings = createDefaultSettings();
-        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
-              
-        Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingStreet = '500 error';
-        contact.MailingCity = 'chicago';
-        contact.MailingState = 'Illinois';
-        contact.MailingPostalCode = '60606';
-        contact.MailingCountry = 'United States';
-        
-        Test.StartTest();
-        insert contact;
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
-        Test.StopTest();
-        
-        //check household got created for contact
-        contact = [select Account.Id from Contact where Id = :contact.Id];
-        Id accountId = contact.Account.Id;
-        System.assertNotEquals(null, accountId);
-
-        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
-        System.assertEquals(1, av.size());
-        System.assertEquals(false, av[0].Verified__c);
-        System.assertEquals('Internal server error. General service failure; retry request.', av[0].Verification_Status__c);
+    	if (!Test.isRunningTest()) {
+	        if (strTestOnly != '*' && strTestOnly != 'test500') return;
+	        
+	        Addr_Verification_Settings__c settings = createDefaultSettings();
+	        Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
+	              
+	        Contact contact = new contact(firstname='Test', lastname='Person'); 
+	        contact.MailingStreet = '500 error';
+	        contact.MailingCity = 'chicago';
+	        contact.MailingState = 'Illinois';
+	        contact.MailingPostalCode = '60606';
+	        contact.MailingCountry = 'United States';
+	        
+	        Test.StartTest();
+	        insert contact;
+	        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+	        Test.StopTest();
+	        
+	        //check household got created for contact
+	        contact = [select Account.Id from Contact where Id = :contact.Id];
+	        Id accountId = contact.Account.Id;
+	        System.assertNotEquals(null, accountId);
+	
+	        Address__c[] av = [select Verified__c, Verification_Status__c from Address__c where Household_Account__c = :contact.AccountId];       
+	        System.assertEquals(1, av.size());
+	        System.assertEquals(false, av[0].Verified__c);
+	        System.assertEquals('Internal server error. General service failure; retry request.', av[0].Verification_Status__c);
+    	}
     }
     
     static testMethod void testContactAmbiguousAddress() {
