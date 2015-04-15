@@ -242,7 +242,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             /******************************************************************************/
 
             List<Task> tasksForUpdate = new List<Task>();
-            tasksForUpdate = [select WhatId from Task where WhatId IN :hhscope];
+            tasksForUpdate = database.query('select WhatId from Task where WhatId IN :hhscope');
 
             for (Task t : tasksForUpdate)
                 t.WhatId = hh2Account.get(t.WhatId).Id;
