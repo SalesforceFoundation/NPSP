@@ -137,7 +137,7 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
         string strSoql = oppRollupUtil.buildContactQuery();
         strSoql = strSoql.replace('from Contact', '');
-        strSoql += ', AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where id IN :listContactIdWinner';
+        strSoql += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c from Contact where id IN :listContactIdWinner';
         list<Contact> listContactWinner = Database.query(strSoql);
 
         // create maps of contactId's to AccountId's that some of our routines need.
@@ -177,6 +177,9 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         // recalc Contact Rollups
         RLLP_OppRollup opprollup = new RLLP_OppRollup();
         opprollup.rollupContacts(new map<Id, Contact>(listContactWinner));
+        
+        // fixup duplicate Affiliations & Primary Affiliation
+        AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
                 
     }
     
