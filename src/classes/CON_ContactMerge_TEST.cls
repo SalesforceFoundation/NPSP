@@ -874,9 +874,10 @@ private class CON_ContactMerge_TEST {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con2.id];
-        con3 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con3.id];
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by MailingStreet];
+        con = listCon[0];
+        con2 = listCon[1];
+        con3 = listCon[2];
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
@@ -903,8 +904,11 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con3.id);
         
         //merge them
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        Test.startTest();               
         controller.mergeContacts();
+        // to flush our future calls that fix related data up!        
+        Test.stopTest();
         
         //first and second contact should be deleted
         system.assertEquals(1,[select count() from Contact where id=:con3.id]);
@@ -920,8 +924,10 @@ private class CON_ContactMerge_TEST {
         // make sure we are down to just one account
         system.assertEquals(1, [select count() from Account]);
         
-        // make sure only 1 default address
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            // make sure all address objects still exists
+            system.assertEquals(3, [select count() from Address__c]);
+            // make sure only 1 default address
             system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
         }
         
@@ -930,10 +936,6 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con3.MailingStreet, con.MailingStreet);
         system.assertEquals(con3.MailingCity, con.MailingCity);
         
-        // make sure all address objects still exists
-        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-        	system.assertEquals(3, [select count() from Address__c]);
-        }
     }
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){
