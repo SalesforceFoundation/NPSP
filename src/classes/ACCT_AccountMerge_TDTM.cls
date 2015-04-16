@@ -97,17 +97,15 @@ public with sharing class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
                 listOrgId.add(acc.Id);            
         }
         
-        if (listHHId.size() > 0) {
+        if (listHHId.size() > 0) 
             ACCT_IndividualAccounts_TDTM.renameHHAccounts(listHHId);
-            
-            //UNDONE: also do for One2One accounts???
-            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listHHId);
-        }
 
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);
-        if (listTemp.size() > 0) 
+        if (listTemp.size() > 0) { 
+            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listTemp);
             ACCT_IndividualAccounts_TDTM.rollupAccounts(listTemp);
+        }
         
         listTemp.clear();
         listTemp.addAll(listHHId);
