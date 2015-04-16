@@ -99,6 +99,7 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
         '               }'+
         '            }'+
         '         },'+
+        '         \"partial_match\" : false,'+
         '         \"types\" : [ \"street_address\" ]'+
         '      }'+
         '   ],'+
@@ -241,6 +242,7 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
         '               }'+
         '            }'+
         '         },'+
+        '         \"partial_match\" : true,'+
         '         \"types\" : [ \"street_address\" ]'+
         '      }'+
         '   ],'+
