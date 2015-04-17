@@ -146,7 +146,7 @@ public with sharing class ERR_Notifier {
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('Nonprofit Starter Pack');
         mail.setSubject('NPSP Error');
-        string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')';
+        string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
         bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')';
         if (context == ERR_Handler_API.Context.RD.name())
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
