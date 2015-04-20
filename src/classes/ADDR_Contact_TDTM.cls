@@ -148,6 +148,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	
 	                // highest priority. if they are changing to a new Current Address, refill from it.
 	            	if (con.Current_Address__c != conOld.Current_Address__c && con.Current_Address__c != null) {
+                        //UTIL_Debug.debug('****DJH: current address changed');            		
 	                    listConAddrSet.add(con);
 	                    if (con.is_Address_Override__c)
 	                        // track which address's need their dates updated
@@ -194,9 +195,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         
         // set the mailing address for contacts who specify an address lookup or override
         if (listConAddrSet.size() > 0) {
-            setConAddrFromLookup(listConAddrSet);
             // to avoid pushing these address changes to the HH.
             ADDR_Addresses_TDTM.hasRunAddrTrigger = true;
+            setConAddrFromLookup(listConAddrSet, dmlWrapper, triggerAction);
         }
         
         // reset the mailing address for contacts who no longer have an address override
@@ -222,23 +223,39 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @param listCon the list of Contacts to update
     * @return void  
     ********************************************************************************************************/
-    private void setConAddrFromLookup(list<Contact> listCon) {
+    private void setConAddrFromLookup(list<Contact> listCon, DmlWrapper dmlWrapper, TDTM_Runnable.Action triggerAction) {
+    	
+    	list<Contact> listConCreateAddr = new list<Contact>();
     	set<Id> setAddrId = new set<Id>();
     	for (Contact con : listCon) {
     		if (con.Current_Address__c != null)
     		  setAddrId.add(con.Current_Address__c);
     	}
     
-        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, 
+        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, Household_Account__c, 
+            MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, 
             MailingPostalCode__c, MailingCountry__c from Address__c where Id in :setAddrId]);
+            
+        //UTIL_Debug.debug('****DJH: setConAddrFromLookup mapAddrIdAddr: ' + mapAddrIdAddr);
             
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (addr != null) {
-            	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+                con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing');
+
+            	// deal with any address coming from a different account,
+            	// which we need to treat as a creation instead.
+            	if (addr.Household_Account__c != con.AccountId) {
+            	   //UTIL_Debug.debug('****DJH address not on same account, so add to create list: con' + con);
+            	   listConCreateAddr.add(con);
+            	}
             }
-        }     	
+        }
+        
+        if (listConCreateAddr.size() > 0)
+            createAddrFromCon(listConCreateAddr, dmlWrapper, triggerAction);
+             	
     }
 
     /*******************************************************************************************************
@@ -307,6 +324,8 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     * @return void  
     ********************************************************************************************************/
     private static void createAddrFromCon(list<Contact> listConAll, DmlWrapper dmlWrapper,  TDTM_Runnable.Action triggerAction) {
+    	
+    	//UTIL_Debug.debug('****DJH: createAddrFromCon listConAll: ' + listConAll);
     	
     	// Strategy:
     	// create a new (unsaved) address for each contact.

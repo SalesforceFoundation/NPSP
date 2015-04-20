@@ -1896,6 +1896,83 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        update contact's address override to an address in another account
+    verify:
+        new non-default Address created
+        contact override updated to new address
+        only the contact gets the new Address
+    **********************************************************************************************************/            
+    static testMethod void updateConAddrWithExternalOverride() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // create additional addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'override' + i;
+            listAddrT[i].MailingCity__c = 'override' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // set the contacts' address overrides to an address in a different household
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH];  // first contact in the household
+            con.Current_Address__c = listAddrT[i == cHH-1 ? 0 : i + 1].Id;  // address in the next household
+            con.is_Address_Override__c = true;
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+ 
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c from Address__c];
+        system.debug('****DJH: mapAccIdAcc: ' + mapAccIdAcc);
+        system.debug('****DJH: listCon: ' + listCon);
+        system.debug('****DJH: listAddr: ' + listAddr);
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            if (con.is_Address_Override__c == false) {
+                system.assertNotEquals(null, con.Current_Address__c);
+                system.assertEquals(true, isMatchAddressAccCon(acc, con));
+                system.assert(!con.MailingStreet.contains('override'));
+                system.assert(!con.MailingCity.contains('override'));
+            } else {
+                //system.assertEquals(false, isMatchAddressAccCon(acc, con));
+                system.assert(con.MailingStreet.contains('override'));
+                system.assert(con.MailingCity.contains('override'));
+                system.assertEquals(true, con.is_Address_Override__c);
+                system.assertNotEquals(null, con.Current_Address__c);
+            }
+        }
+ 
+         // verify the overrides were copied to their new households
+        system.assertEquals(cHH * 3, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean fOverride = (addr.MailingStreet__c.contains('override'));
+            if (fOverride) {
+                system.assertEquals(false, addr.Default_Address__c);
+                boolean isSetOnContact = false;
+                for (Contact con : listCon) {
+                    if (con.is_Address_Override__c && con.Current_Address__c == addr.Id)
+                        system.assertEquals(con.AccountId, addr.Household_Account__c);
+                }
+            }
+        }                
+    }
+
+    /*********************************************************************************************************
+    @description
         insert new contacts with no addresses to existing households that have default addresses
     verify:
         new contacts get the default hh address
