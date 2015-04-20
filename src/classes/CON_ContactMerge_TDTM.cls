@@ -180,6 +180,9 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         
         // fixup duplicate Affiliations & Primary Affiliation
         AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
+        
+        // remove duplicate Relationships
+        REL_Relationships_TDTM.cleanupContactRelationships(listContactWinner);
                 
     }
     

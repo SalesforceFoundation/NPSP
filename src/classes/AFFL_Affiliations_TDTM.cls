@@ -501,7 +501,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         // and pick the one to be marked Primary  
         for (Contact con : listCon) {
         
-	        // skip this contact if they have affiliations to deal with 
+	        // skip this contact if they have no affiliations to deal with 
 	        if (mapConIdListAffl.get(con.Id) == null)
 	           continue;
 
