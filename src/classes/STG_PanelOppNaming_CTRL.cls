@@ -36,6 +36,39 @@
 public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     
     /*********************************************************************************************************
+    * @description The active Opportunity Name Settings instance in new or edit mode.
+    */
+    public Opportunity_Naming_Settings__c currentONS {get;set;}
+
+    /*********************************************************************************************************
+    * @description The name of the Opportunity Naming Settings instance, passed from the page to know which
+    * instance we're dealing with.
+    */
+    public string currentONSName {get;set;}
+
+    /*********************************************************************************************************
+    * @description A map of all Opportunity Naming Settings by Name.
+    */
+    public map<string,Opportunity_Naming_Settings__c> mapOppNameSettings {
+        get {
+            if (mapOppNameSettings==null)
+                mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+            return mapOppNameSettings;
+        }
+        set;
+    }
+
+    /*********************************************************************************************************
+    * @description A list of all Opportunity Naming Settings.
+    */
+    public list<Opportunity_Naming_Settings__c> listOppNameSettings {
+        get {
+            return mapOppNameSettings.values();
+        }
+        set;
+    }
+
+    /*********************************************************************************************************
     * @description The panel's constructor 
     */
     public STG_PanelOppNaming_CTRL() {
@@ -48,7 +81,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelOppNaming'; }
 
     /*********************************************************************************************************
-    * @description Whether we are running the Update Household Names batch process 
+    * @description Whether we are running the batch opportunity naming process 
     */
     public boolean isRunningBatch { get; set; }
 
@@ -56,20 +89,44 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @description Action Method to save settings and invoke the Update Household Names batch process 
     * @return null
     */
-    public PageReference activateHouseholdNaming() {
-        boolean isActivation = (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false);
+    public PageReference activateOppNaming() {
                 
-        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
-
         // make sure any custom name formats are valid.
         if (!isValidNameFormats()) {
-            return null;                    
+            return null;
         }
 
         saveSettings();
         
-        isRunningBatch = true; 
-        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);        
+        isRunningBatch = true;
+
+        return null;
+    }
+
+    public PageReference delONS() {
+        delete mapOppNameSettings.get(currentONSName);
+        mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+        return null;
+    }
+
+    public PageReference editONS() {
+        currentONS = mapOppNameSettings.get(currentONSName);
+        super.editSettings();
+        return null;
+    }
+
+    public PageReference newONS() {
+        currentONS = new Opportunity_Naming_Settings__c(
+            Name = System.now().format()
+        );
+        super.editSettings();
+        return null;
+    }
+
+    public PageReference saveONS() {
+        upsert currentONS;
+        mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+        super.cancelEdit();
         return null;
     }
 
@@ -80,6 +137,17 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public override PageReference editSettings() {
         isRunningBatch = false;
         return super.editSettings();
+    }
+
+    /*********************************************************************************************************
+    * @description Action Method to enter Edit mode
+    * @return null 
+    */
+    public PageReference runBatch() {
+        isRunningBatch = true;
+        OPP_OpportunityNaming_BATCH batch = new OPP_OpportunityNaming_BATCH();
+        id batchProcessId = database.executeBatch(batch, 200);
+        return null;
     }
     
     /*********************************************************************************************************
@@ -92,12 +160,6 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
             string strSetting;        
             try {
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Household_Name_Format__c');     
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Household_Name_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Formal_Greeting_Format__c');     
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Formal_Greeting_Format__c', 2); 
-                strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Household_Naming_Settings__c'), 'Informal_Greeting_Format__c');     
-                strNameSpecExample(STG_Panel.stgService.stgHN, 'Informal_Greeting_Format__c', 2);
                 return true; 
             } catch (Exception ex) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
@@ -107,122 +169,40 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         } 
         return true;    
     }
-
-    /*********************************************************************************************************
-    * @description Action Method to save the current settings
-    * @return null 
-    */
-    public override PageReference saveSettings() {
-        
-        // add some extra error detection
-        if (STG_Panel.stgService.stgHH.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR &&
-           STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, system.Label.stgValidationHHAccountHHRules));
-            return null;
-        }
-
-        // make sure any custom name formats are valid.
-        if (!isValidNameFormats())
-            return null;        
-                
-        return super.saveSettings();
-    }
         
     /*********************************************************************************************************
-    * @description The list of SelectOptions for the Household Name Formats 
+    * @description The list of SelectOptions for the Date Format
     */
-    static public list<SelectOption> listSOHouseholdNameFormats {
+    static public list<SelectOption> listSODateFormats {
         get {    
-            if (listSOHouseholdNameFormats == null) {
-                listSOHouseholdNameFormats = new list<SelectOption>();
-                listSOHouseholdNameFormats.add(new SelectOption('', Label.stgLabelNone));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ' + label.npo02.DefaultHouseholdName, '{!LastName} ' + label.npo02.DefaultHouseholdName));
-                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName, '{!{!FirstName}} {!LastName} ' + label.npo02.DefaultHouseholdName));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName, '{!LastName} ({!{!FirstName}}) ' + label.npo02.DefaultHouseholdName));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} Family', '{!LastName} Family'));
-                listSOHouseholdNameFormats.add(new SelectOption('{!{!FirstName}} {!LastName} Family', '{!{!FirstName}} {!LastName} Family'));
-                listSOHouseholdNameFormats.add(new SelectOption('{!LastName} ({!{!FirstName}}) Family', '{!LastName} ({!{!FirstName}}) Family'));
-                listSOHouseholdNameFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
+            if (listSODateFormats == null) {
+                listSODateFormats = new list<SelectOption>();
+                listSODateFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSODateFormats.add(new SelectOption('yyyy-MM-dd', 'yyyy-MM-dd'));
+                listSODateFormats.add(new SelectOption('MM/dd/yyyy', 'MM/dd/yyyy'));
+                listSODateFormats.add(new SelectOption('MMMM dd, yyyy', 'MMMM dd, yyyy'));
+                listSODateFormats.add(new SelectOption('yyyy', 'yyyy'));
+                listSODateFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
-            return listSOHouseholdNameFormats;
+            return listSODateFormats;
         }
         private set;
     }
 
     /*********************************************************************************************************
-    * @description The list of Contacts to use when construction sample name examples 
+    * @description The list of SelectOptions for the Opportunity Naming Formats 
     */
-    private static list<Contact> listConExamples {
-        get {
-            if (listConExamples == null) {
-                    listConExamples = new list<Contact>();
-                    Contact con = new Contact();
-                    con.FirstName = 'Sam';
-                    con.LastName = 'Smith';
-                    con.Salutation = 'Dr.';
-                    con.MailingCity = 'Seattle';
-                    listConExamples.add(con);
-                    
-                    con = new Contact();
-                    con.FirstName = 'Sally';
-                    con.LastName = 'Smith';
-                    con.Salutation = 'Mrs.';
-                    con.MailingCity = 'Seattle';
-                    listConExamples.add(con);
-                    
-                    con = new Contact();
-                    con.FirstName = 'Suzie';
-                    con.LastName = 'Smith';
-                    listConExamples.add(con);
-
-                    con = new Contact();
-                    con.FirstName = 'Daphne';
-                    con.LastName = 'Doe';
-                    con.Salutation = 'Ms.';
-                    con.MailingCity = 'Portland';
-                    listConExamples.add(con);
-
-                    con = new Contact();
-                    con.FirstName = 'Donald';
-                    con.LastName = 'Doe';
-                    con.Salutation = 'Mr.';
-                    con.MailingCity = 'Portland';
-                    listConExamples.add(con);
-                }
-            return listConExamples;
+    static public list<SelectOption> listSOOpportunityNamingFormats {
+        get {    
+            if (listSOOpportunityNamingFormats == null) {
+                listSOOpportunityNamingFormats = new list<SelectOption>();
+                listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelNone));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!RecordType.Name} {!CloseDate}'));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}', '{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}'));
+                listSOOpportunityNamingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
+            }
+            return listSOOpportunityNamingFormats;
         }
         private set;
     }
-    
-    /*********************************************************************************************************
-    * @description Javascript remoting api to provide an Example formatted string given an instance of
-    * Household Name Settings, which type of string (Name, Formal Greeting, Informal Greeting),
-    * for the specified number of sample Contacts.
-    * @param hns The current Household Name Settings
-    * @param strField The custom name field to get examples for (Name, Formal Greeting, Informal Greeting)
-    * @param cContact How many Contacts to include in the example name
-    */
-    @RemoteAction
-    public static string strNameSpecExample(Household_Naming_Settings__c hns, string strField, integer cContact) {
-    
-        list<Contact> listCon = new list<Contact>();
-        for (integer i = 0; i < cContact && i < listConExamples.size(); i++)
-            listCon.add(listConExamples[i]);
-            
-        // call INaming interface dynamically  
-        string strClass = hns.Implementing_Class__c;  
-        if (strClass == null || strClass == '') strClass = 'HH_NameSpec';   
-        Type classType = Type.forName(strClass);
-        if (classType != null) {     
-            Object classInstance = classType.newInstance();
-            if (classInstance instanceof HH_INaming) {
-                HH_INaming n = (HH_INaming)classInstance;
-                return n.getExampleName(hns, strField, listCon);
-            } else {
-                return label.stgErrorINaming;
-            }
-        } else {
-            return label.stgErrorInvalidClass;
-        }
-    }    
 }

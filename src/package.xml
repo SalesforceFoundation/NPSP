@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
         <members>ACCT_Accounts_TDTM</members>
@@ -95,6 +96,7 @@
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
         <members>OPP_OpportunityNaming</members>
+        <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_TDTM</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -242,6 +244,7 @@
         <members>STG_PanelLeads</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
+        <members>STG_PanelOppNaming</members>
         <members>STG_PanelOppRollups</members>
         <members>STG_PanelOpps</members>
         <members>STG_PanelPaymentMapping</members>
@@ -500,6 +503,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity_Naming_Settings__c.Applies_to_Individual_or_Organizational__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
@@ -778,6 +782,7 @@
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
         <members>stgBtnNewAutoRel</members>
+        <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>
         <members>stgBtnNewRDFieldMap</members>
         <members>stgBtnNewRDPeriod</members>
@@ -785,6 +790,7 @@
         <members>stgBtnNewTH</members>
         <members>stgBtnNewUDR</members>
         <members>stgBtnRDCreateNewMap</members>
+        <members>stgBtnRefreshOpportunityNames</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
         <members>stgErrorINaming</members>
@@ -804,6 +810,7 @@
         <members>stgHelpBatchAlloRollup</members>
         <members>stgHelpBatchOppRollup</members>
         <members>stgHelpBtnHHNaming</members>
+        <members>stgHelpBtnOppNaming</members>
         <members>stgHelpChatterGroup</members>
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
@@ -837,6 +844,9 @@
         <members>stgHelpOCRDefaultRole</members>
         <members>stgHelpOCRRoleForHH</members>
         <members>stgHelpOneToOneRTID</members>
+        <members>stgHelpOppNamingDateFormat</members>
+        <members>stgHelpOppNamingFormat</members>
+        <members>stgHelpOppNamingRecTypes</members>
         <members>stgHelpOrgAccountAddressMgmt</members>
         <members>stgHelpOverrunCount</members>
         <members>stgHelpPaymentMapOppField</members>
@@ -920,12 +930,16 @@
         <members>stgLabelNewUDR</members>
         <members>stgLabelNone</members>
         <members>stgLabelOppBatchProgress</members>
+        <members>stgLabelOppNamingRefreshTitle</members>
+        <members>stgLabelOppNamingSettings</members>
         <members>stgLabelOppRollupRT</members>
         <members>stgLabelOppRollups</members>
         <members>stgLabelOther</members>
+        <members>stgLabelOtherDateFormat</members>
         <members>stgLabelOtherFormalGreetingFormat</members>
         <members>stgLabelOtherHHNameFormat</members>
         <members>stgLabelOtherInformalGreetingFormat</members>
+        <members>stgLabelOtherOpportunigyNamingFormat</members>
         <members>stgLabelPaymentMapNoValidFields</members>
         <members>stgLabelPaymentSettings</members>
         <members>stgLabelRDFieldMap</members>

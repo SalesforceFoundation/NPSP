@@ -309,6 +309,7 @@
                         
                         <li class="header" id="idPanelDonationsNav"><a class="nav-item nav-section-title">{!$Label.stgNavDonations}<span class="caret"></span></a></li>
                         <ul>
+                            <li class="subitem" id="idPanelOppNamingNav"><a href="." onclick="ShowPanel('idPanelOppNaming');return false;" class="nav-item sub-nav-item">{!$Label.stgLabelOppNamingSettings}</a></li>
                             <li class="subitem" id="idPanelMembershipNav"><a href="." onclick="ShowPanel('idPanelMembership');return false;" class="nav-item sub-nav-item">{!$Label.stgNavMembership}</a></li>
                             <li class="subitem" id="idPanelOppNav"><a href="." onclick="ShowPanel('idPanelOpp');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPayments}</a></li>
                             <li class="subitem" id="idPanelPaymentMappingNav"><a href="." onclick="ShowPanel('idPanelPaymentMapping');return false;" class="nav-item sub-nav-item">{!$Label.stgNavPaymentMappings}</a></li>
@@ -383,14 +384,18 @@
                 <apex:include pageName="STG_PanelMembership" />
             </div>
             
-            <div class="panel" id="idPanelAllocations" style="display:none" >
+            <div class="panel noborder" id="idPanelAllocations" style="display:none" >
                 <apex:include pageName="STG_PanelAllocations" />
             </div>
 
-            <div class="panel" id="idPanelAlloBatch" style="display:none" >
+            <div class="panel noborder" id="idPanelAlloBatch" style="display:none" >
                 <apex:include pageName="STG_PanelAlloBatch" />
             </div>
-
+            
+            <div class="panel noborder" id="idPanelOppNaming" style="display:none" >
+                <apex:include pageName="STG_PanelOppNaming" />
+            </div>
+            
             <div class="panel noborder" id="idPanelOpp" style="display:none" >
                 <apex:include pageName="STG_PanelOpps" />
             </div>

@@ -6,7 +6,7 @@ private class OPP_OpportunityNaming_TEST
     {
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Record_Types__c = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity')),
+            Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),
             Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}'
         );
         insert ons;

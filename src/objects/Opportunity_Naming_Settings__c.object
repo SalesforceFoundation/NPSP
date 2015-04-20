@@ -5,6 +5,19 @@
     <description>Settings for controlling how Opportunities are named.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Applies_to_Individual_or_Organizational__c</fullName>
+        <defaultValue>&apos;Both&apos;</defaultValue>
+        <description>Whether this setting applies to individual or organizational donations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Whether this setting applies to individual or organizational donations.</inlineHelpText>
+        <label>Applies to Individual or Organizational</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Date_Format__c</fullName>
         <description>The format for dates included in this opportunity name.</description>
         <externalId>false</externalId>
