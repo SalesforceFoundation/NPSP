@@ -79,7 +79,7 @@ private class OPP_OpportunityNaming_TEST
         insert opp;
 
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('accname conname 2000.01.01 Donation', queryOpp[0].Name, 'The name should be calculated based on the setting.');
+        system.assertEquals('accname conname 2000.01.01 ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the setting.');
 
         acc.Name = 'newname';
         update acc;
@@ -94,7 +94,7 @@ private class OPP_OpportunityNaming_TEST
         ctrl.buttonClick();
 
         queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('newname conname 2000.01.01 Donation', queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
+        system.assertEquals('newname conname 2000.01.01 ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
 
     }
 
@@ -133,7 +133,7 @@ private class OPP_OpportunityNaming_TEST
         insert opp;
 
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('accname Donation', queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+        system.assertEquals('accname ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
 
     }
 
@@ -197,7 +197,7 @@ private class OPP_OpportunityNaming_TEST
 
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :queryCon[0].accountId];
 
-        system.assertEquals('conname true Donation', queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
+        system.assertEquals('conname true ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
 
         queryOpp = [SELECT Name FROM Opportunity WHERE AccountId != :queryCon[0].accountId];
 
