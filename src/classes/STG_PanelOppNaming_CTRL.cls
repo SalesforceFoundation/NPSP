@@ -149,10 +149,10 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
     
     /*********************************************************************************************************
-    * @description Returns wwhether the custom name formats are valid or not, and adds a Page Message for
+    * @description TODO: Returns whether the custom name formats are valid or not, and adds a Page Message for
     * any errors.
     * @return boolean 
-    */
+    
     public boolean isValidNameFormats() {
         // make sure any custom name formats are valid.
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
@@ -166,7 +166,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             }        
         } 
         return true;    
-    }
+    }*/
         
     /*********************************************************************************************************
     * @description The list of SelectOptions for the Date Format
