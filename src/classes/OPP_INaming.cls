@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.com Foundation
+    Copyright (c) 2015, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,9 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2014
-* @group Households
+* @date 2015
+* @group Opportunity
+* @group-content ../../ApexDocContent/Opportunity.htm
 * @description Interface for classes that will provide Opportunity Naming functionality.
 */
 public interface OPP_INaming {
@@ -43,7 +44,8 @@ public interface OPP_INaming {
     list<Opportunity> refreshOppNames(list<Opportunity> oppList);
     /*******************************************************************************************************
     * @description Get the opportunity names for the current list of opportunities. For Contact fields, the
-    * Opportunities should use the primary Contact Role.
+    * Opportunities should use the Opportunity's Contact ID for Role field (npe01__Contact_Id_for_Role__c), 
+    * as contact roles don't exist before insert.
     * @param oppList the list of Opportunities to name
     * @return The list of opportunities with an updated name.
     */ 

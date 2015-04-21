@@ -79,9 +79,6 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         list<Opportunity> oppsForUpdate = database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList');
         list<sObject> oppConRoleQuery = database.query(getConRoleQuery(allFields) + ' WHERE OpportunityId IN :oppList AND IsPrimary = TRUE');
         
-        system.debug('foo oppsForUpdate: ' + oppsForUpdate);
-        system.debug('foo oppConRoleQuery: ' + oppConRoleQuery);
-
         //fill opportunity id to contact map
         map<id,Contact> mapOppIdToCon = new map<id,Contact>();
         for (sObject obj : oppConRoleQuery)
