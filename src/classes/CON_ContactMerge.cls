@@ -81,15 +81,11 @@ public class CON_ContactMerge {
         Boolean winnerAccountIsOneToOne = false;
         winner = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id=:winner.Id];
 
-
-        // NOTE: we currently handle HH Accounts the same way as 1:1 Accounts
-
         // detect PersonAccounts
         boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
         
         //get winner contact Account
         if (winner.AccountId!=null){
-            //winnerAccount = [Select Id,npe01__SYSTEM_AccountType__c,Name from Account where Id=:winner.accountid];
             ID winnerAccId = winner.AccountId;
 	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name';
 	        if (isPAEnabled)
@@ -102,16 +98,14 @@ public class CON_ContactMerge {
             
             winningAccountId = winnerAccount[0].Id;
             
-            if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
-                winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.HH_ACCOUNT_TYPE){
+            if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
                 winnerAccountIsOneToOne = true;
             }
             
             if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
-            
-        }   
-        //losers = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :losers];
+        }
+           
         string strSoql = 'Select Account.Id,Account.npe01__SYSTEM_AccountType__c ';
         if (isPAEnabled)
             strSoql += ', isPersonAccount ';
@@ -132,9 +126,8 @@ public class CON_ContactMerge {
         //get loser contact Accounts that should be merged out--only one-to-one accounts
         loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account 
             where Id IN :loserAccountIds and 
-            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or npe01__SYSTEM_AccountType__c=:CAO_Constants.HH_ACCOUNT_TYPE) and
-            Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];
-        
+            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) and
+            Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];        
         
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
         //we merge the Accounts first, if there are any one-to-one Accounts in the mix
