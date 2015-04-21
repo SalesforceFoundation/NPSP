@@ -11,7 +11,7 @@ Blank naming setting (not renamed)
     * @description If you only want to run a single test in this class, fill in its name here.
     * If you want to run all tests, then use '*'
     */
-    private static string strTestOnly = 'testBulk';
+    private static string strTestOnly = '*';
 
     /*******************************************************************************************************
     * @description Creates an opportunity name setting and an opportunity, verifies name is calculated and 

@@ -69,28 +69,6 @@
                    <apex:column value="{!ons.Date_Format__c}" />
                 </apex:pageBlockTable>
             </div>
-            <!-- Batch Opportunity Naming -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
-                <apex:outputPanel rendered="{!isReadOnlyMode}" layout="block" styleClass="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
-                    </div>
-                    <div class="panel-body" style="padding:15px;">                 
-                        <apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" />
-                        <div style="text-align:center;" class="form-control-column">
-                            <apex:commandbutton value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
-                        </div>
-                    </div>
-                </apex:outputPanel>
-            </div>
-            <!-- Batch Progress Bar -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
-                <apex:outputPanel rendered="{!isRunningBatch}">
-                    <br/><br/>
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                    <br/>
-                </apex:outputPanel>
-            </div>
             <!-- Edit View -->
             <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewONS" styleClass="inline-form-block">
                 <section>
@@ -161,6 +139,28 @@
                     <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
                 </apex:outputPanel>
             </apex:outputPanel>
+            <!-- Batch Opportunity Naming -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
+                <apex:outputPanel rendered="{!isReadOnlyMode}" layout="block" styleClass="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
+                    </div>
+                    <div class="panel-body" style="padding:15px;">                 
+                        <apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" />
+                        <div style="text-align:center;" class="form-control-column">
+                            <apex:commandbutton value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </div>
+            <!-- Batch Progress Bar -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
+                <apex:outputPanel rendered="{!isRunningBatch}">
+                    <br/><br/>
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    <br/>
+                </apex:outputPanel>
+            </div>
         </apex:pageBlock>
     </apex:form>    
 </apex:page>

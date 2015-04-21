@@ -59,14 +59,18 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description A list of all Opportunity Naming Settings. Replaces blank Name Formats with "- do not rename-"
+    * @description A list of all Opportunity Naming Settings for display on the page. Replaces blank Name 
+    * Formats with  "- do not rename-" and blank Record Types with '- all record types -'
     */
     public list<Opportunity_Naming_Settings__c> listOppNameSettings {
         get {
             listOppNameSettings = mapOppNameSettings.values().deepClone();
-            for (Opportunity_Naming_Settings__c ons : listOppNameSettings)
+            for (Opportunity_Naming_Settings__c ons : listOppNameSettings) {
                 if (string.isBlank(ons.Opportunity_Name_Format__c))
                     ons.Opportunity_Name_Format__c = Label.stgLabelDoNotRename;
+                if (string.isBlank(ons.Opportunity_Record_Types__c))
+                    ons.Opportunity_Record_Types__c = Label.stgLabelAllRecordTypes;
+            }
             return listOppNameSettings;
         }
         set;

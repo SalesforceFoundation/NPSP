@@ -908,6 +908,7 @@
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>
         <members>stgLabelAfflSettings</members>
+        <members>stgLabelAllRecordTypes</members>
         <members>stgLabelAlloBatchProgress</members>
         <members>stgLabelAllocationsRollupSettings</members>
         <members>stgLabelAllocationsSettings</members>
@@ -1139,6 +1140,7 @@
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
+        <members>Opportunity.Refresh_Name</members>
         <name>WebLink</name>
     </types>
     <version>33.0</version>
