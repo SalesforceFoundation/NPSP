@@ -36,14 +36,25 @@
 */
 public class OPP_OpportunityNaming_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunity after insert, runs through naming.
+    * @param listNew the list of contacts, accounts, or affiliations from trigger new. 
+    * @param listOld the list of contacts, accounts, or affiliations from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.) After Insert is expected in this case.
+    * @param objResult The field describe object for the current trigger context. 
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         DmlWrapper dmlWrapper = new DmlWrapper();
 
-        list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist);
-        dmlWrapper.objectsToUpdate.addAll((list<sObject>)oppsForUpdate);
-
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist);
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>)oppsForUpdate);
+        }
+        
         return dmlWrapper;
     }
 
