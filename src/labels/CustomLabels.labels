@@ -1774,6 +1774,30 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>oppNamingBoth</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingBoth</shortDescription>
+        <value>Both</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingIndividual</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingIndividual</shortDescription>
+        <value>Individual</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingOrganizational</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingOrganizational</shortDescription>
+        <value>Organizational</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -2030,6 +2054,14 @@
         <value>New Automatic Relationship</value>
     </labels>
     <labels>
+        <fullName>stgBtnNewONS</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnNewONS</shortDescription>
+        <value>New Opportunity Naming Setting</value>
+    </labels>
+    <labels>
         <fullName>stgBtnNewPaymentMap</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2084,6 +2116,14 @@
         <protected>false</protected>
         <shortDescription>stgBtnRDCreateNewMap</shortDescription>
         <value>Create Custom Field Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnRefreshOpportunityNames</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRefreshOpportunityNames</shortDescription>
+        <value>Refresh All Opportunity Names</value>
     </labels>
     <labels>
         <fullName>stgBtnRunBatch</fullName>
@@ -2241,6 +2281,19 @@ You can close this page at any time and the process will still run in the backgr
 &lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
+
+Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBtnOppNaming</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpBtnOppNaming</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all opportunity names, according to the formats you&apos;ve chosen. Every single Opportunity in your Salesforce organization will be renamed except those Opportunities that have a blank Opportunity Name Format selected.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; &lt;br/&gt;
+&lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON OPPORTUNITY BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
 
 Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
@@ -2511,6 +2564,40 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <protected>false</protected>
         <shortDescription>stgHelpOneToOneRTID</shortDescription>
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingAttribution</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingAttribution</shortDescription>
+        <value>Denotes whether this naming setting apply to Opportunities attributed to individuals, organizations, or both.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingDateFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingDateFormat</shortDescription>
+        <value>The date format used for any Date or DateTime fields referenced in the Opportunity Name Format. Choose a format, or choose &quot;other&quot; to create your own custom format following the Java SimpleDateFormat specification.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingFormat</shortDescription>
+        <value>The opportunity naming format. Choose a format, or choose &quot;other&quot; to create your own. Choosing a blank format will not rename those opportunities.
+
+Custom formats can reference any Opportunity field using {!API_Name__c} notation, any of the Primary Contact&apos;s fields using {!Contact.Field_Name__c}, and any field from an object related to this opportunity, such as {!Account.Name} or {!Custom_Relationship__r.Custom_Field__c}.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOppNamingRecTypes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
+        <value>Which opportunity record types this donation naming should apply to. You can choose one or more record types; choosing &quot;- None -&quot; applies to all record types.</value>
     </labels>
     <labels>
         <fullName>stgHelpOrgAccountAddressMgmt</fullName>
@@ -2954,6 +3041,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Affiliations Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelAllRecordTypes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelAllRecordTypes</shortDescription>
+        <value>- all record types -</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAlloBatchProgress</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
@@ -3016,6 +3111,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelCurrentUDR</shortDescription>
         <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelDoNotRename</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelDoNotRename</shortDescription>
+        <value>- do not rename -</value>
     </labels>
     <labels>
         <fullName>stgLabelErrorNotify</fullName>
@@ -3178,6 +3281,22 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Rollup Donations Batch Progress</value>
     </labels>
     <labels>
+        <fullName>stgLabelOppNamingRefreshTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppNamingRefreshTitle</shortDescription>
+        <value>Refresh Opportunity Names</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppNamingSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppNamingSettings</shortDescription>
+        <value>Opportunity Naming</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppRollupRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3202,6 +3321,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>other</value>
     </labels>
     <labels>
+        <fullName>stgLabelOtherDateFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherDateFormat</shortDescription>
+        <value>Other Date Format</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOtherFormalGreetingFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3224,6 +3351,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOtherInformalGreetingFormat</shortDescription>
         <value>Other Informal Greeting Format</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOtherOpportunigyNamingFormat</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOtherOpportunigyNamingFormat</shortDescription>
+        <value>Other Opportunigy Naming Format</value>
     </labels>
     <labels>
         <fullName>stgLabelPaymentMapNoValidFields</fullName>

@@ -90,10 +90,16 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
+        <members>OPP_OpportunityNaming</members>
+        <members>OPP_OpportunityNamingBTN_CTRL</members>
+        <members>OPP_OpportunityNaming_BATCH</members>
+        <members>OPP_OpportunityNaming_TDTM</members>
+        <members>OPP_OpportunityNaming_TEST</members>
         <members>PMT_PaymentCreator</members>
         <members>PMT_PaymentCreator_TEST</members>
         <members>PMT_PaymentWizard_CTRL</members>
@@ -143,6 +149,7 @@
         <members>STG_PanelLeads_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelOppBatch_CTRL</members>
+        <members>STG_PanelOppNaming_CTRL</members>
         <members>STG_PanelOppRollups_CTRL</members>
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
@@ -220,6 +227,7 @@
         <members>LD_LeadConvertOverride</members>
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
+        <members>OPP_OpportunityNamingBTN</members>
         <members>PMT_PaymentWizard</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
@@ -238,6 +246,7 @@
         <members>STG_PanelLeads</members>
         <members>STG_PanelMembership</members>
         <members>STG_PanelOppBatch</members>
+        <members>STG_PanelOppNaming</members>
         <members>STG_PanelOppRollups</members>
         <members>STG_PanelOpps</members>
         <members>STG_PanelPaymentMapping</members>
@@ -496,6 +505,10 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity_Naming_Settings__c.Attribution__c</members>
+        <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
+        <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
+        <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -739,6 +752,9 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblNPSPSettings</members>
+        <members>oppNamingBoth</members>
+        <members>oppNamingIndividual</members>
+        <members>oppNamingOrganizational</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -771,6 +787,7 @@
         <members>stgBtnEdit</members>
         <members>stgBtnHHAutoName</members>
         <members>stgBtnNewAutoRel</members>
+        <members>stgBtnNewONS</members>
         <members>stgBtnNewPaymentMap</members>
         <members>stgBtnNewRDFieldMap</members>
         <members>stgBtnNewRDPeriod</members>
@@ -778,6 +795,7 @@
         <members>stgBtnNewTH</members>
         <members>stgBtnNewUDR</members>
         <members>stgBtnRDCreateNewMap</members>
+        <members>stgBtnRefreshOpportunityNames</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
         <members>stgErrorINaming</members>
@@ -797,6 +815,7 @@
         <members>stgHelpBatchAlloRollup</members>
         <members>stgHelpBatchOppRollup</members>
         <members>stgHelpBtnHHNaming</members>
+        <members>stgHelpBtnOppNaming</members>
         <members>stgHelpChatterGroup</members>
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
@@ -830,6 +849,10 @@
         <members>stgHelpOCRDefaultRole</members>
         <members>stgHelpOCRRoleForHH</members>
         <members>stgHelpOneToOneRTID</members>
+        <members>stgHelpOppNamingAttribution</members>
+        <members>stgHelpOppNamingDateFormat</members>
+        <members>stgHelpOppNamingFormat</members>
+        <members>stgHelpOppNamingRecTypes</members>
         <members>stgHelpOrgAccountAddressMgmt</members>
         <members>stgHelpOverrunCount</members>
         <members>stgHelpPaymentMapOppField</members>
@@ -885,6 +908,7 @@
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>
         <members>stgLabelAfflSettings</members>
+        <members>stgLabelAllRecordTypes</members>
         <members>stgLabelAlloBatchProgress</members>
         <members>stgLabelAllocationsRollupSettings</members>
         <members>stgLabelAllocationsSettings</members>
@@ -893,6 +917,7 @@
         <members>stgLabelBDESettings</members>
         <members>stgLabelBatchStatus</members>
         <members>stgLabelCurrentUDR</members>
+        <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
@@ -913,12 +938,16 @@
         <members>stgLabelNewUDR</members>
         <members>stgLabelNone</members>
         <members>stgLabelOppBatchProgress</members>
+        <members>stgLabelOppNamingRefreshTitle</members>
+        <members>stgLabelOppNamingSettings</members>
         <members>stgLabelOppRollupRT</members>
         <members>stgLabelOppRollups</members>
         <members>stgLabelOther</members>
+        <members>stgLabelOtherDateFormat</members>
         <members>stgLabelOtherFormalGreetingFormat</members>
         <members>stgLabelOtherHHNameFormat</members>
         <members>stgLabelOtherInformalGreetingFormat</members>
+        <members>stgLabelOtherOpportunigyNamingFormat</members>
         <members>stgLabelPaymentMapNoValidFields</members>
         <members>stgLabelPaymentSettings</members>
         <members>stgLabelRDFieldMap</members>
@@ -994,6 +1023,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Lead</members>
         <members>Opportunity</members>
+        <members>Opportunity_Naming_Settings__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
         <name>CustomObject</name>
@@ -1110,6 +1140,7 @@
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
+        <members>Opportunity.Refresh_Name</members>
         <name>WebLink</name>
     </types>
     <version>33.0</version>

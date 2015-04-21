@@ -1,0 +1,166 @@
+<apex:page controller="STG_PanelOppNaming_CTRL" docType="html-5.0">
+    <script type="text/javascript">
+    (function($) {
+        // called when the user changes an option in the selectlist (or it gets the focus)
+        // sets the format to the current picklist value
+        function setOppNameSpec(sl, idTxt) {
+            var strVal = sl.value;
+            if (strVal == '{!$Label.stgLabelOther}') {
+                $("[id$='" + idTxt + "']").show();
+                strVal = $("[id$='" + idTxt + "']").val();    
+            } else if (idTxt != null) {
+                $("[id$='" + idTxt + "']").hide();    
+                $("[id$='" + idTxt + "']").val(strVal);
+            }
+        }
+        
+        // initialize the format selectlists in case they need to display other,
+        // and set our examples, when the user goes into edit mode.
+        function initOppEditMode() {
+            initOppSelectListsForOther('slstrFormatDate', 'txtFormatDate');
+            initOppSelectListsForOther('slstrFormatOppName', 'txtFormatOppName');
+        }
+        
+        // if the given format isn't shown in the select list, then set it to 'other' and show the other textbox.    
+        function initOppSelectListsForOther(idSl, idTxt) {
+            var sl = $("[id$='" + idSl + "']");
+            var txt = $("[id$='" + idTxt + "']");
+            
+            if (sl.val() == '' && txt.val() != '') {
+                sl.val('{!$Label.stgLabelOther}');
+                txt.show();
+            } 
+        }
+
+        $(document).ready(function() {
+            initOppEditMode();
+        });
+
+        //bind functions to window that are needed in the page
+        window.initOppEditMode = initOppEditMode;
+        window.setOppNameSpec = setOppNameSpec;
+    })(jQuery);
+    </script>
+    <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppNamingSettings}" />
+    <apex:form id="form" styleClass="form-horizontal">   
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock id="pbOppNaming" mode="maindetail">
+            <!-- Settings List View -->
+            <div class="col-sm-12">
+                <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
+                    <apex:commandButton value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                </apex:outputPanel>
+                <apex:pageBlockTable value="{!listOppNameSettings}" var="ons" rendered="{!isReadOnlyMode}" styleClass=".table-bordered">
+                   <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
+                       <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();"
+                           styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
+                           <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.Name}" /> 
+                       </apex:commandLink> 
+                       <apex:outputText value=" | "/>
+                       <apex:commandLink action="{!delONS}" title="{!$Label.stgLinkDelete}"
+                           styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" 
+                           onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                           <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.Name}" /> 
+                       </apex:commandLink>
+                   </apex:column>
+                   <apex:column value="{!ons.Attribution__c}" />
+                   <apex:column value="{!ons.Opportunity_Record_Types__c}" />
+                   <apex:column value="{!ons.Opportunity_Name_Format__c}" />
+                   <apex:column value="{!ons.Date_Format__c}" />
+                </apex:pageBlockTable>
+            </div>
+            <!-- Edit View -->
+            <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewONS" styleClass="inline-form-block">
+                <section>
+                    <h3 class="section-header" >{!$Label.stgBtnNewONS}</h3>
+                    <div class="form-group">
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="col-sm-4 control-label" />
+                        <div class="col-sm-8 form-control-column">
+                            <apex:selectList value="{!currentONS.Attribution__c}" styleClass="form-control" multiselect="false" size="1" id="slOppAttr">
+                                <apex:selectOptions value="{!listSOOpportunityAttribution}"/>
+                            </apex:selectList>
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8 help-block">
+                            <apex:outputText value="{!$Label.stgHelpOppNamingAttribution}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="mslOppRecTypes" styleClass="col-sm-4 control-label" />
+                        <div class="col-sm-8 form-control-column">
+                            <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" id="mslOppRecTypes"/>
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8 help-block">
+                            <apex:outputText value="{!$Label.stgHelpOppNamingRecTypes}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Name_Format__c.Label}" for="slstrFormatOppName" styleClass="col-sm-4 control-label" />
+                        <div class="col-sm-8 form-control-column">
+                            <apex:outputText value="{!currentONS.Opportunity_Name_Format__c}" rendered="{!isReadOnlyMode}" />
+                            <apex:outputPanel rendered="{!isEditMode}" >
+                                <apex:selectList value="{!currentONS.Opportunity_Name_Format__c}" styleClass="form-control"
+                                    onchange="window.setOppNameSpec(this, 'txtFormatOppName');"
+                                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatOppName" >
+                                        <apex:selectOptions value="{!listSOOpportunityNamingFormats}"/>
+                                </apex:selectList>
+                                <apex:outputLabel value="{!$Label.stgLabelOtherOpportunigyNamingFormat}" styleClass="sr-only" for="txtFormatOppName" />
+                                <apex:inputText value="{!currentONS.Opportunity_Name_Format__c}" styleClass="form-control txtOther" 
+                                    onchange="window.setOppNameSpec(this, null);" 
+                                    rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;"/>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8 help-block">
+                            <apex:outputText value="{!$Label.stgHelpOppNamingFormat}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Date_Format__c.Label}" for="slstrFormatDate" styleClass="col-sm-4 control-label" />
+                        <div class="col-sm-8 form-control-column">
+                            <apex:outputText value="{!currentONS.Date_Format__c}" rendered="{!isReadOnlyMode}" />
+                            <apex:outputPanel rendered="{!isEditMode}" >
+                                <apex:selectList value="{!currentONS.Date_Format__c}" styleClass="form-control"
+                                    onchange="window.setOppNameSpec(this, 'txtFormatDate');"
+                                    multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatDate" >
+                                        <apex:selectOptions value="{!listSODateFormats}"/>
+                                </apex:selectList>
+                                <apex:outputLabel value="{!$Label.stgLabelOtherDateFormat}" styleClass="sr-only" for="txtFormatDate" />
+                                <apex:inputText value="{!currentONS.Date_Format__c}" styleClass="form-control txtOther" 
+                                    onchange="window.setOppNameSpec(this, null);" 
+                                    rendered="{!isEditMode}" id="txtFormatDate" style="display:none;"/>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8 help-block">
+                            <apex:outputText value="{!$Label.stgHelpOppNamingDateFormat}" />
+                        </div>
+                    </div> 
+                </section>
+                <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
+                    <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <!-- Batch Opportunity Naming -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
+                <apex:outputPanel rendered="{!isReadOnlyMode}" layout="block" styleClass="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
+                    </div>
+                    <div class="panel-body" style="padding:15px;">                 
+                        <apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" />
+                        <div style="text-align:center;" class="form-control-column">
+                            <apex:commandbutton value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </div>
+            <!-- Batch Progress Bar -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
+                <apex:outputPanel rendered="{!isRunningBatch}">
+                    <br/><br/>
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    <br/>
+                </apex:outputPanel>
+            </div>
+        </apex:pageBlock>
+    </apex:form>    
+</apex:page>
