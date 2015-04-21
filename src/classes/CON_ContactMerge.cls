@@ -150,9 +150,12 @@ public class CON_ContactMerge {
         }
         List<Contact> losersMakePrivate = new List<Contact>();
         
-        for(Contact contactForUpdate : losers){         
-            Contact loserMakePrivate = new Contact(id=contactForUpdate.id,accountId=null,npe01__Private__c=true);
-            losersMakePrivate.add(loserMakePrivate);
+        for(Contact contactForUpdate : losers){
+        	// only do this for One2One losers
+        	if (contactForUpdate.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {       
+                Contact loserMakePrivate = new Contact(id=contactForUpdate.id,accountId=null,npe01__Private__c=true);
+                losersMakePrivate.add(loserMakePrivate);
+        	}
         }
             
         //set the account to null and mark private so that trigger won't reset the Account
@@ -164,7 +167,7 @@ public class CON_ContactMerge {
             update losersMakePrivate;
         }
 
-        merge winnerMakePrivate losersMakePrivate;
+        merge winnerMakePrivate losers;
         
         //set the contact Account Id back to the winning Account Id
         if (winnerAccountIsOneToOne){

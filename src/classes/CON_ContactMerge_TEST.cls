@@ -411,10 +411,7 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first contact's account should be deleted
         system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)
-            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-        else
-            system.assertEquals(1,[select count() from Account where id=:con.accountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
         //Second contact's account id should not have changed
         system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
     }
@@ -485,8 +482,8 @@ private class CON_ContactMerge_TEST {
 	        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
         } else {
             system.assertEquals(1,[select count() from Account where id=:con.accountId]);
-            system.assertEquals(0,[select count() from Opportunity where accountId=:con2.AccountId]);
-            system.assertEquals(1,[select count() from Opportunity where accountId=:con.AccountId]);
+            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+            system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
         }
         
         //Second contact's account id should not have changed
@@ -837,12 +834,9 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
         
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-	        //second contact's account should be deleted
-	        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
-        } else {
-            system.assertEquals(1,[select count() from Account where id=:con2.accountId]);        	
-        }
+	    //second contact's account should be deleted
+	    system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+
         system.assertEquals(1,[select count() from Account where id=:con.accountId]);
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
@@ -927,24 +921,18 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first and second contact's account should be deleted
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(1, [select count() from Account]);
-            system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
-            system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
-        } else {
-            system.assertEquals(3, [select count() from Account]);
-            system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-            system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
-        }        
+        system.assertEquals(1, [select count() from Account]);
+        system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
+        system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
         //Third contact's account id should not have changed
         system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
                 
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-            // make sure all address objects still exists
-            system.assertEquals(3, [select count() from Address__c]);
-            // still 3 default addresses, since 3 accounts
-            system.assertEquals(3, [select count() from Address__c where Default_Address__c = true]);
+            // since we didn't do an account merge, the other household addresses don't get moved.
+            system.assertEquals(1, [select count() from Address__c]);
+            // only one should be default
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
         }
         
         // make sure winning contact's address is correct
