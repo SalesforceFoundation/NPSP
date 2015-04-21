@@ -1774,6 +1774,30 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>oppNamingBoth</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingBoth</shortDescription>
+        <value>Both</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingIndividual</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingIndividual</shortDescription>
+        <value>Individual</value>
+    </labels>
+    <labels>
+        <fullName>oppNamingOrganizational</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppNamingOrganizational</shortDescription>
+        <value>Organizational</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -2542,6 +2566,14 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <value>The Account Record Type to be used for One-to-One Accounts. If none is selected, the Account will default to the user&apos;s default Account Record Type.</value>
     </labels>
     <labels>
+        <fullName>stgHelpOppNamingAttribution</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpOppNamingAttribution</shortDescription>
+        <value>Denotes whether this naming setting apply to Opportunities attributed to individuals, organizations, or both.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpOppNamingDateFormat</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3071,6 +3103,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelCurrentUDR</shortDescription>
         <value>Current User Defined Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelDoNotRename</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelDoNotRename</shortDescription>
+        <value>- do not rename -</value>
     </labels>
     <labels>
         <fullName>stgLabelErrorNotify</fullName>

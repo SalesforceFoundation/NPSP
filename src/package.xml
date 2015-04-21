@@ -96,6 +96,7 @@
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
         <members>OPP_OpportunityNaming</members>
+        <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_TDTM</members>
         <members>OPP_OpportunityNaming_TEST</members>
@@ -226,6 +227,7 @@
         <members>LD_LeadConvertOverride</members>
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
+        <members>OPP_OpportunityNamingBTN</members>
         <members>PMT_PaymentWizard</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
@@ -503,7 +505,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
-        <members>Opportunity_Naming_Settings__c.Applies_to_Individual_or_Organizational__c</members>
+        <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
@@ -750,6 +752,9 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblNPSPSettings</members>
+        <members>oppNamingBoth</members>
+        <members>oppNamingIndividual</members>
+        <members>oppNamingOrganizational</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -844,6 +849,7 @@
         <members>stgHelpOCRDefaultRole</members>
         <members>stgHelpOCRRoleForHH</members>
         <members>stgHelpOneToOneRTID</members>
+        <members>stgHelpOppNamingAttribution</members>
         <members>stgHelpOppNamingDateFormat</members>
         <members>stgHelpOppNamingFormat</members>
         <members>stgHelpOppNamingRecTypes</members>
@@ -910,6 +916,7 @@
         <members>stgLabelBDESettings</members>
         <members>stgLabelBatchStatus</members>
         <members>stgLabelCurrentUDR</members>
+        <members>stgLabelDoNotRename</members>
         <members>stgLabelErrorNotify</members>
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>

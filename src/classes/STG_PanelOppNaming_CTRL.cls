@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @date 2015
 * @group Settings
-* @description Controller for the Opportunity Naming panel.
+* @description Controller for the Opportunity Naming settings panel.
 */
 public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     
@@ -59,11 +59,15 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description A list of all Opportunity Naming Settings.
+    * @description A list of all Opportunity Naming Settings. Replaces blank Name Formats with "- do not rename-"
     */
     public list<Opportunity_Naming_Settings__c> listOppNameSettings {
         get {
-            return mapOppNameSettings.values();
+            listOppNameSettings = mapOppNameSettings.values().deepClone();
+            for (Opportunity_Naming_Settings__c ons : listOppNameSettings)
+                if (string.isBlank(ons.Opportunity_Name_Format__c))
+                    ons.Opportunity_Name_Format__c = Label.stgLabelDoNotRename;
+            return listOppNameSettings;
         }
         set;
     }
@@ -86,35 +90,29 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public boolean isRunningBatch { get; set; }
 
     /*********************************************************************************************************
-    * @description Action Method to save settings and invoke the Update Household Names batch process 
-    * @return null
+    * @description Action Method to delete a specific settings instance.
+    * @return null 
     */
-    public PageReference activateOppNaming() {
-                
-        // make sure any custom name formats are valid.
-        if (!isValidNameFormats()) {
-            return null;
-        }
-
-        saveSettings();
-        
-        isRunningBatch = true;
-
-        return null;
-    }
-
     public PageReference delONS() {
         delete mapOppNameSettings.get(currentONSName);
         mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to enter Edit mode for a specific setting instance.
+    * @return null 
+    */
     public PageReference editONS() {
         currentONS = mapOppNameSettings.get(currentONSName);
         super.editSettings();
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to create a new settings object in memory, then enter Edit mode.
+    * @return null 
+    */
     public PageReference newONS() {
         currentONS = new Opportunity_Naming_Settings__c(
             Name = System.now().format()
@@ -123,6 +121,11 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to save the current edited setting, refresh the list of settings, and return
+    * to the main page.
+    * @return null 
+    */
     public PageReference saveONS() {
         upsert currentONS;
         mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
@@ -131,16 +134,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Action Method to enter Edit mode
-    * @return null 
-    */
-    public override PageReference editSettings() {
-        isRunningBatch = false;
-        return super.editSettings();
-    }
-
-    /*********************************************************************************************************
-    * @description Action Method to enter Edit mode
+    * @description Action Method to run batch opportunity renaming.
     * @return null 
     */
     public PageReference runBatch() {
@@ -196,12 +190,28 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         get {    
             if (listSOOpportunityNamingFormats == null) {
                 listSOOpportunityNamingFormats = new list<SelectOption>();
-                listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelNone));
-                listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!RecordType.Name} {!CloseDate}'));
+                listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelDoNotRename));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}', '{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}'));
                 listSOOpportunityNamingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
             }
             return listSOOpportunityNamingFormats;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
+    * @description The list of SelectOptions for Opportunity Attribution 
+    */
+    static public list<SelectOption> listSOOpportunityAttribution {
+        get {    
+            if (listSOOpportunityAttribution == null) {
+                listSOOpportunityAttribution = new list<SelectOption>();
+                listSOOpportunityAttribution.add(new SelectOption(Label.oppNamingBoth, Label.oppNamingBoth));
+                listSOOpportunityAttribution.add(new SelectOption(Label.oppNamingIndividual, Label.oppNamingIndividual));
+                listSOOpportunityAttribution.add(new SelectOption(Label.oppNamingOrganizational, Label.oppNamingOrganizational));
+            }
+            return listSOOpportunityAttribution;
         }
         private set;
     }

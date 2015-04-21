@@ -34,25 +34,43 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Main logic class for opportunity naming
 */
-
-//look at recurring donation naming
-//what to do if we have no settings?
-//set up default naming convention in install script
+//TODO: look at recurring donation naming
+//TODO: test new formats and run them through naming, send any errors to settings page
+//TODO: finish implementation of interface so other code can use it once it's made global
 public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
+    /*********************************************************************************************************
+    * @description Left token for field names in Opportunity Naming Settings spec.
+    */
     private static string chLToken = '{!';
+    /*********************************************************************************************************
+    * @description Rigjt token for field names in Opportunity Naming Settings spec.
+    */
     private static string chRToken = '}';
-    private static list<Opportunity_Naming_Settings__c> listOppNamingSettings = Opportunity_Naming_Settings__c.getAll().clone().values();
+    /*********************************************************************************************************
+    * @description A list of all Opportunity Naming Settings.
+    */
+    private static list<Opportunity_Naming_Settings__c> listOppNamingSettings;
+    /*********************************************************************************************************
+    * @description A map to match opportunity record type and attribution info to the appropriate setting.
+    */
     private static map<string,Opportunity_Naming_Settings__c> mapOppNameSettings;
 
 
-    //returns a list of opportunities with new names for the case where the contact roles exists
+    /*******************************************************************************************************
+    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary Contact
+    * Role for contact fields.
+    * @param oppList The list of Opportunities to rename.
+    * @return list<Opportunity> A new list of renamed opportunities.
+    ********************************************************************************************************/
     public static list<Opportunity> refreshOppNames(list<Opportunity> oppList) {
         
         set<string> allFields = new set<string>();
 
-        if (mapOppNameSettings == null)
-            fillOppNameSettings();
+        fillOppNameSettings();
+
+        if (listOppNamingSettings.isEmpty())
+            return new list<Opportunity>();
 
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings)
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
@@ -61,7 +79,8 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         list<Opportunity> oppsForUpdate = database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList');
         list<sObject> oppConRoleQuery = database.query(getConRoleQuery(allFields) + ' WHERE OpportunityId IN :oppList AND IsPrimary = TRUE');
         
-        system.debug('lookhere! opps:' + oppsForUpdate + ' conroles: ' + oppConRoleQuery);
+        system.debug('foo oppsForUpdate: ' + oppsForUpdate);
+        system.debug('foo oppConRoleQuery: ' + oppConRoleQuery);
 
         //fill opportunity id to contact map
         map<id,Contact> mapOppIdToCon = new map<id,Contact>();
@@ -73,10 +92,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             
             //use the naming setting for this opportunity if it exists, otherwise use the default
             Opportunity_Naming_Settings__c ons;
-            if (mapOppNameSettings.containsKey(opp.RecordType.Name)) {
-                ons = mapOppNameSettings.get(opp.RecordType.Name);
-            } else if (mapOppNameSettings.containsKey('')) {
-                ons = mapOppNameSettings.get('');
+            
+
+            if (mapOppNameSettings.containsKey(getOppAttribution(opp) + opp.RecordType.Name)) {
+                ons = mapOppNameSettings.get(getOppAttribution(opp) + opp.RecordType.Name);
+            } else if (mapOppNameSettings.containsKey(getOppAttribution(opp))) {
+                ons = mapOppNameSettings.get(getOppAttribution(opp));
             }
                 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c))
@@ -89,13 +110,21 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return oppsForUpdate;
     }
     
-    //returns a list of opportunities with new names for the case where the contact roles do not exist. Uses Contact Id for Role field.
+    /*******************************************************************************************************
+    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary 
+    * Contact Id for Role field for contact fields.
+    * @param oppList The list of Opportunities to rename.
+    * @return list<Opportunity> A new list of renamed opportunities. The new list comes from an Opportunity
+    * query and can be updated in an after opportunity insert trigger context.
+    ********************************************************************************************************/
     public static list<Opportunity> getOppNamesAfterInsert(list<Opportunity> oppList) {
         
         set<string> allFields = new set<string>();
- 
-        if (mapOppNameSettings == null)
-            fillOppNameSettings();
+
+        fillOppNameSettings();
+
+        if (listOppNamingSettings.isEmpty())
+            return new list<Opportunity>();
 
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings)
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
@@ -118,10 +147,10 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
             //use the naming setting for this opportunity if it exists, otherwise use the default
             Opportunity_Naming_Settings__c ons;
-            if (mapOppNameSettings.containsKey(opp.RecordType.Name)) {
-                ons = mapOppNameSettings.get(opp.RecordType.Name);
-            } else if (mapOppNameSettings.containsKey('')) {
-                ons = mapOppNameSettings.get('');
+            if (mapOppNameSettings.containsKey(getOppAttribution(opp) + opp.RecordType.Name)) {
+                ons = mapOppNameSettings.get(getOppAttribution(opp) + opp.RecordType.Name);
+            } else if (mapOppNameSettings.containsKey(getOppAttribution(opp))) {
+                ons = mapOppNameSettings.get(getOppAttribution(opp));
             }
 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c))
@@ -135,17 +164,45 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return oppsForUpdate;
     }
 
+    /*******************************************************************************************************
+    * @description Fills the mapOppNameSettings map with record type and attribution info and all settings.
+    ********************************************************************************************************/
     public static void fillOppNameSettings() {
+        listOppNamingSettings = Opportunity_Naming_Settings__c.getAll().clone().values();
         mapOppNameSettings = new map<string,Opportunity_Naming_Settings__c>();
-        for (Opportunity_Naming_Settings__c ons : Opportunity_Naming_Settings__c.getAll().clone().values()) {
-            if (string.isBlank(ons.Opportunity_Record_Types__c)) {
-                mapOppNameSettings.put('',ons);
-            } else for (string recTypeName : ons.Opportunity_Record_Types__c.split(';',0)) {
+        for (Opportunity_Naming_Settings__c ons : listOppNamingSettings) {
+
+            list<string> oppRecTypes = string.isBlank(ons.Opportunity_Record_Types__c) ? new list<string>{''} : ons.Opportunity_Record_Types__c.split(';',0);
+
+            for (string recTypeName : oppRecTypes) {
                 mapOppNameSettings.put(recTypeName,ons);
+                if (ons.Attribution__c == Label.oppNamingBoth) {
+                    mapOppNameSettings.put(Label.oppNamingIndividual+recTypeName,ons);
+                    mapOppNameSettings.put(Label.oppNamingOrganizational+recTypeName,ons);
+                } else {
+                    mapOppNameSettings.put(ons.Attribution__c+recTypeName, ons);
+                }
             }
         }
     }
 
+    /*******************************************************************************************************
+    * @description Finds an opportunity's attribution based on Account.npe01__SYSTEMIsIndividual__c
+    * @param opp The opportunity.
+    * @return string Individual or Organizational, based on the opportunity's attribution.
+    ********************************************************************************************************/
+    public static string getOppAttribution(Opportunity opp) {
+        if (opp.Account.npe01__SYSTEMIsIndividual__c)
+            return Label.oppNamingIndividual;
+        else
+            return Label.oppNamingOrganizational;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns all non-contact fields from a set of field names.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return set<string> Only those fields not attributed to a contact.
+    ********************************************************************************************************/
     public static set<string> getOppFields(set<string> fields) {
         set<string> result = new set<string>();
         for (string field : fields) {
@@ -155,6 +212,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
+    /*******************************************************************************************************
+    * @description Returns all contact fields from a set of field names.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return set<string> Only those fields attributed to a contact.
+    ********************************************************************************************************/
     public static set<string> getConFields(set<string> fields) {
         set<string> result = new set<string>();
         for (string field : fields) {
@@ -164,8 +226,14 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
+    /*******************************************************************************************************
+    * @description Constructs a query for Opportunities with all fields from all naming specs. Also includes
+    * various fields needed for later calculations.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return string An opportunity query string.
+    ********************************************************************************************************/
     public static string getOppQuery(set<string> fields) {
-        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name','npe01__contact_id_for_role__c'});
+        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name','npe01__contact_id_for_role__c', 'account.npe01__systemisindividual__c'});
         string result = 'SELECT ';
         for (string field : getOppFields(fields)) {
             result += field + ', ';
@@ -174,6 +242,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
+    /*******************************************************************************************************
+    * @description Constructs a query for Contacts with all contact fields from all naming specs. Also 
+    * includes various fields needed for later calculations.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return string A contact query string.
+    ********************************************************************************************************/
     public static string getConQuery(set<string> fields) {
         fields.add('contact.id');
         string result = 'SELECT ';
@@ -185,6 +259,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
+    /*******************************************************************************************************
+    * @description Constructs a query for OpportunityContactRole with all contact fields from all naming specs. Also includes
+    * various fields needed for later calculations.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return string An opportunity contact role query string.
+    ********************************************************************************************************/
     public static string getConRoleQuery(set<string> fields) {
         fields.add('contact.id');
         string result = 'SELECT opportunityid, ';
@@ -195,6 +275,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
+    /*******************************************************************************************************
+    * @description Parses out field names from an opportunity naming spec and returns them as a set of 
+    * strings.
+    * @param fields An opportunity naming spec.
+    * @return set<string> The field names from the spec.
+    ********************************************************************************************************/
     public static set<string> getFieldNamesFromSpec(string spec) {
         set<string> setStrField = new set<string>();
         
@@ -212,6 +298,13 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return setStrField;
     }
 
+    /*******************************************************************************************************
+    * @description Finds an opportunity's attribution based on Account.npe01__SYSTEMIsIndividual__c
+    * @param opp The queried opportunity and all associated fields in the spec.
+    * @param con The queried contact and all associated fields in the spec.
+    * @param ons The opportunity naming setting that applies to this opportunity.
+    * @return string The opportunity name for this opportunity.
+    ********************************************************************************************************/
     public static string replaceFieldNamesWithValues(Opportunity opp, Contact con, Opportunity_Naming_Settings__c ons) {
         string result = ons.Opportunity_Name_Format__c;
         
@@ -264,8 +357,14 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         return result;
     }
 
-    //Returns the value of a field as a string, while respecting the date format specified in settings
-    public static string getFieldValue(sObject obj, string fieldName, Opportunity_Naming_Settings__c ons) {
+     /*******************************************************************************************************
+    * @description Gets the field value from an object, and formats it properly if needed.
+    * @param obj The sObject to get the field value from.
+    * @param fieldName The name of the field to get.
+    * @param ons The opportunity naming setting that applies to this field.
+    * @return string The formatted value of the field.
+    ********************************************************************************************************/
+   public static string getFieldValue(sObject obj, string fieldName, Opportunity_Naming_Settings__c ons) {
         if (obj==null) return null;
         Schema.DisplayType dt = UTIL_Describe.getFieldDisplaytype(obj.getSObjectType().getDescribe().getName(),fieldName);
         string result = '';
@@ -281,8 +380,10 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             } else {
                 result = d.format(dateFormat);
             }
+        } else if (dt == Schema.DisplayType.Currency) {
+            result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
         } else {
-            result = (String) obj.get(fieldName.trim());
+            result = String.valueOf(obj.get(fieldName.trim()));
         }
 
         return result;

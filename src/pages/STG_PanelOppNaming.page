@@ -63,14 +63,14 @@
                            <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.Name}" /> 
                        </apex:commandLink>
                    </apex:column>
+                   <apex:column value="{!ons.Attribution__c}" />
                    <apex:column value="{!ons.Opportunity_Record_Types__c}" />
                    <apex:column value="{!ons.Opportunity_Name_Format__c}" />
                    <apex:column value="{!ons.Date_Format__c}" />
                 </apex:pageBlockTable>
             </div>
-            <div class="col-sm-12"/>
             <!-- Batch Opportunity Naming -->
-            <div class="col-sm-offset-1 col-sm-10">
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
                 <apex:outputPanel rendered="{!isReadOnlyMode}" layout="block" styleClass="panel panel-danger">
                     <div class="panel-heading">
                         <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
@@ -84,19 +84,32 @@
                 </apex:outputPanel>
             </div>
             <!-- Batch Progress Bar -->
-            <apex:outputPanel rendered="{!isRunningBatch}">
-                <br/><br/>
-                <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
-                <br/>
-            </apex:outputPanel>
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
+                <apex:outputPanel rendered="{!isRunningBatch}">
+                    <br/><br/>
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    <br/>
+                </apex:outputPanel>
+            </div>
             <!-- Edit View -->
             <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewONS" styleClass="inline-form-block">
                 <section>
                     <h3 class="section-header" >{!$Label.stgBtnNewONS}</h3>
                     <div class="form-group">
-                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="tbxO" styleClass="col-sm-4 control-label" />
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="col-sm-4 control-label" />
                         <div class="col-sm-8 form-control-column">
-                            <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" />
+                            <apex:selectList value="{!currentONS.Attribution__c}" styleClass="form-control" multiselect="false" size="1" id="slOppAttr">
+                                <apex:selectOptions value="{!listSOOpportunityAttribution}"/>
+                            </apex:selectList>
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8 help-block">
+                            <apex:outputText value="{!$Label.stgHelpOppNamingAttribution}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="mslOppRecTypes" styleClass="col-sm-4 control-label" />
+                        <div class="col-sm-8 form-control-column">
+                            <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypes}" inEditMode="{!isEditMode}" id="mslOppRecTypes"/>
                         </div>
                         <div class="col-sm-offset-4 col-sm-8 help-block">
                             <apex:outputText value="{!$Label.stgHelpOppNamingRecTypes}" />

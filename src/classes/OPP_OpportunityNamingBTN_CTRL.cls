@@ -32,37 +32,30 @@
 * @date 2015
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Batch class creates names all Opportunities per the naming spec.
- */
-public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> {
+* @description Controller for button that calculates Opportunity name for a single Opportunity.
+*/
+public with sharing class OPP_OpportunityNamingBTN_CTRL {
     
-    /** @description The query for the batch process to run on.*/
-    String query;
-    
-    /** @description The batch process constructor; creates opportunity query for all opportunities.*/
-    public OPP_OpportunityNaming_BATCH() {
-        query = 'SELECT Id FROM Opportunity';
-    }
-    
-    /** @description The batch process constructor; creates opportunity query for all opportunities with custom WHERE clause .*/
-    public OPP_OpportunityNaming_BATCH(string customWhere) {
-        query = 'SELECT Id FROM Opportunity ' + customWhere;
+    private ApexPages.StandardController ctrl;
+
+    /** @description Standard opportunity controller constructor.*/
+    public OPP_OpportunityNamingBTN_CTRL(ApexPages.StandardController oppCtrl) {
+        ctrl = oppCtrl;
     }
 
-    /** @description Batch process start method.*/
-    public Database.QueryLocator start(Database.BatchableContext BC) {
-        return Database.getQueryLocator(query);
-    }
+    /** @description Button click method runs opportunity naming for the current opportunity.*/
+    public PageReference buttonClick() {
+        list<Opportunity> thisOpp = new list<Opportunity>{(Opportunity)ctrl.getRecord()};
 
-    /*********************************************************************************************************
-    * @description Batch process execute method. Names and updates all opportunities in the current batch.
-    */
-    public void execute(Database.BatchableContext BC, List<sObject> scope) {
-        list<Opportunity> results =  OPP_OpportunityNaming.refreshOppNames((list<Opportunity>)scope);
-        update results;
+        if (!thisOpp.isEmpty()) {
+            
+            list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.refreshOppNames(thisOpp);
+            update oppsForUpdate;
+            
+            PageReference pageRef = new PageReference('/' + thisOpp[0].id);
+            pageRef.setRedirect(true);
+            return pageRef;
+        
+        } else return null;
     }
-    
-    /** @description Batch process finish method, does nothing.*/
-    public void finish(Database.BatchableContext BC) {}
-    
 }
