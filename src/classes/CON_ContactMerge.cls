@@ -112,25 +112,28 @@ public class CON_ContactMerge {
         strSoql += ' from Contact where Id IN :losers ORDER BY Id ASC';
         losers = database.query(strSoql);
         
-        for(Contact thisloserContact : losers){
+        for (Contact thisloserContact : losers) {
             if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
-            if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId){
+            if (thisloserContact.id!=null && thisloserContact.AccountId!=winner.AccountId) {
                 loserAccountIds.add(thisloserContact.AccountId);
             }
         }
         //UTIL_Debug.debug('losers: ' + loserAccountIds);
         //UTIL_Debug.debug('winneraccountid: ' + winner.AccountId);
-        //get loser contact Accounts that should be merged out--only one-to-one accounts
-        loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account 
+        
+        //get loser contact Accounts that should be merged out.  This includes
+        // One2One accounts and Solo Household Accounts
+        loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account a
             where Id IN :loserAccountIds and 
-            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) and
-            Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];        
+            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or
+                (npe01__SYSTEM_AccountType__c=:CAO_Constants.HH_ACCOUNT_TYPE and Number_of_Household_Members__c = 1))
+            and Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];        
         
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
-        //we merge the Accounts first, if there are any one-to-one Accounts in the mix
+        //we merge the Accounts first, if there are any one-to-one Accounts or Solo Household Accounts in the mix
         if(loserAccountsToBeMerged.size()>0){                      
             merge winnerAccount[0] loserAccountsToBeMerged;
         }
@@ -175,8 +178,9 @@ public class CON_ContactMerge {
             winnerMakePrivate.npe01__Private__c = false;
             update winnerMakePrivate;
         }       
-        UTIL_Debug.debug('loserAccounts: ' + loserAccountsToBeDeleted);
-        if(loserAccountsToBeDeleted.size()>0){
+        
+        UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);
+        if (loserAccountsToBeDeleted.size() > 0) {
             delete loserAccountsToBeDeleted;
         }
         successfulMerge = true;

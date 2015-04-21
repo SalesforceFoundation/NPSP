@@ -481,7 +481,7 @@ private class CON_ContactMerge_TEST {
             system.assertEquals(0,[select count() from Account where id=:con.accountId]);
 	        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
         } else {
-            system.assertEquals(1,[select count() from Account where id=:con.accountId]);
+            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
             system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
             system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
         }
@@ -929,8 +929,8 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
                 
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-            // since we didn't do an account merge, the other household addresses don't get moved.
-            system.assertEquals(1, [select count() from Address__c]);
+            // since the solo household account were merged, all addresses should still exist
+            system.assertEquals(3, [select count() from Address__c]);
             // only one should be default
             system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
         }
