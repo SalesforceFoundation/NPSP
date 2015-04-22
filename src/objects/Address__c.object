@@ -177,7 +177,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Formula_MailingStreetAddress__c</fullName>
         <externalId>false</externalId>
-        <formula>MailingStreet__c + IF(ISNULL(MailingStreet2__c), &apos;&apos;, &apos;, &apos; + TRIM(MailingStreet2__c))</formula>
+        <formula>MailingStreet__c + IF(ISBLANK(MailingStreet2__c), &apos;&apos;, &apos;, &apos; + TRIM(MailingStreet2__c))</formula>
         <label>Mailing Street Address</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
