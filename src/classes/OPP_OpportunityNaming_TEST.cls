@@ -43,6 +43,20 @@ private class OPP_OpportunityNaming_TEST
     */
     private static string strTestOnly = '*';
 
+
+    /*********************************************************************************************************
+    * @description Returns an active record type id for the current profile.
+    */
+    private static boolean hasActiveRecType() {
+        string giftRecTypeName = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+
+        if (UTIL_RecordTypes.isRecordTypeActive('Opportunity',giftRecTypeName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /*******************************************************************************************************
     * @description Creates an opportunity name setting and an opportunity, verifies name is calculated and 
     * dates with a blank naming scheme use a default international format.
@@ -55,10 +69,11 @@ private class OPP_OpportunityNaming_TEST
         
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),
             Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}',
             Attribution__c = Label.oppNamingBoth
         );
+        if (hasActiveRecType())
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -70,16 +85,20 @@ private class OPP_OpportunityNaming_TEST
         Opportunity opp = new Opportunity(
             AccountId = acc.id,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity')),
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
             npe01__Contact_Id_for_Role__c = con.id
         );
+        if (hasActiveRecType())
+            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
         insert opp;
 
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('accname conname 2000.01.01 ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the setting.');
+        string oppName = 'accname conname 2000.01.01';
+        if (hasActiveRecType())
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting.');
 
         acc.Name = 'newname';
         update acc;
@@ -94,7 +113,10 @@ private class OPP_OpportunityNaming_TEST
         ctrl.buttonClick();
 
         queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('newname conname 2000.01.01 ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
+        oppname = 'newname conname 2000.01.01';
+        if (hasActiveRecType()) 
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        system.assertEquals(oppName, queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
 
     }
 
@@ -109,10 +131,11 @@ private class OPP_OpportunityNaming_TEST
         
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
-            Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),
             Opportunity_Name_Format__c = '{!Account.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
             Attribution__c = Label.oppNamingBoth
         );
+        if (hasActiveRecType())
+            ons.Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
         insert ons;
 
         Account acc = new Account(Name='accname');
@@ -124,16 +147,21 @@ private class OPP_OpportunityNaming_TEST
         Opportunity opp = new Opportunity(
             AccountId = acc.id,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity')),
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
             npe01__Contact_Id_for_Role__c = con.id
         );
+        if (hasActiveRecType())
+            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
         insert opp;
 
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals('accname ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+
+        string oppname = 'accname';
+        if (hasActiveRecType()) 
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+        system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
 
     }
 
@@ -152,14 +180,16 @@ private class OPP_OpportunityNaming_TEST
             Name = 'foo',
             Opportunity_Record_Types__c = '',
             Opportunity_Name_Format__c = '{!Account.Name} {!Amount} {!Type} {!RecordType.Name}',
-            Attribution__c = Label.oppNamingBoth
+            Attribution__c = Label.oppNamingOrganizational
         ));
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo2',
-            Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'),
             Opportunity_Name_Format__c = '{!Contact.Name} {!Contact.HasOptedOutOfFax} {!Type} {!RecordType.Name}',
             Attribution__c = Label.oppNamingIndividual
         ));
+
+        if (hasActiveRecType())
+            onsList[1].Opportunity_Record_Types__c = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
 
         Contact con = new Contact(LastName='conname', HasOptedOutOfFax=true);
         insert con;
@@ -169,17 +199,19 @@ private class OPP_OpportunityNaming_TEST
         list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(10, null);
         insert listAcc;
 
-        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountList(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), Date.newInstance(2000, 1, 1), 8, UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity') ,null);
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForAccountList(listAcc, null, UTIL_UnitTestData_TEST.getClosedWonStage(), Date.newInstance(2000, 1, 1), 8, null,null);
 
-        listOpp.add(new Opportunity(
+        opportunity opp = new Opportunity(
             AccountId = queryCon[0].accountId,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity')),
             Name='Test',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
             npe01__Contact_Id_for_Role__c = con.id
-        ));
+        );
+        if (hasActiveRecType())
+            opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
+        listOpp.add(opp);
         insert listOpp;
 
         //inserting settings after the fact so opps aren't named prematurely
@@ -187,8 +219,8 @@ private class OPP_OpportunityNaming_TEST
 
         //verify opps haven't been renamed yet
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id IN :listOpp];
-        for (Opportunity opp : queryOpp)
-            system.assert(opp.name.contains('Test'));
+        for (Opportunity thisopp : queryOpp)
+            system.assert(thisopp.name.contains('Test'));
 
         test.startTest();
         STG_PanelOppNaming_CTRL ctrl = new STG_PanelOppNaming_CTRL();
@@ -197,12 +229,16 @@ private class OPP_OpportunityNaming_TEST
 
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :queryCon[0].accountId];
 
-        system.assertEquals('conname true ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'), queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
+        string oppname = 'conname true';
+        if (hasActiveRecType()) 
+            oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
+
+        system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
 
         queryOpp = [SELECT Name FROM Opportunity WHERE AccountId != :queryCon[0].accountId];
 
-        for (Opportunity opp : queryOpp)
-            system.assert(opp.name.contains('8.00'), 'Opportunities have been renamed by batch process.');
+        for (Opportunity thisopp : queryOpp)
+            system.assert(thisopp.name.contains('8.00'), 'Opportunities have been renamed by batch process.');
 
     }
 }

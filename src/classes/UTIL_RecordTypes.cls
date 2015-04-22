@@ -70,7 +70,26 @@ public class UTIL_RecordTypes {
             return null;
         }
     }
-    
+
+    /*******************************************************************************************************
+    * @description Determines whether a record type is active for the current profile.
+    * @param objectName The name of the Object.
+    * @param  recordTypeName The name of the Record Type.
+    * @return Boolean Whether this record type is active for the current profile.
+    */
+    public static boolean isRecordTypeActive(string objectName, String recordTypeName) {
+        if (!recordTypesByName.containsKey(objectName)) 
+            fillMapsForObject(objectName);
+
+        Map<String, Schema.RecordTypeInfo> rtMap = recordTypesByName.get(objectName);
+        if (rtMap != null && rtMap.containsKey(recordTypeName)) {
+            return rtMap.get(recordTypeName).isAvailable();
+        } else {
+            return false;
+        }
+        
+    }
+
     /*******************************************************************************************************
     * @description Provides the Id of the first Record Type found in an specific Object, or a blank string if the
     *              Object does not have any Record Types.
