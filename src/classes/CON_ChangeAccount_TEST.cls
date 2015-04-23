@@ -42,17 +42,7 @@ public with sharing class CON_ChangeAccount_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-    
-    /*********************************************************************************************************
-    * @description Holds the number of Households to create in tests.
-    */
-    static integer cHH = 2;
-
-    /*********************************************************************************************************
-    * @description Holds the number of Contacts per Household to create in tests.
-    */
-    static integer cCon = 2;    
-
+        
     /*********************************************************************************************************
     * @description Creates test opportunities for our test contacts and accounts.
     */
@@ -75,6 +65,61 @@ public with sharing class CON_ChangeAccount_TEST {
         insert listOpp;
     }
     
+    
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedHHToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedHHToHH') return;
+        testNamesAndOppsUpdated(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedOne2OneToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOne2OneToOne2One') return;
+        testNamesAndOppsUpdated(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedOrgToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOrgToHH') return;
+        testNamesAndOppsUpdated(null, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedHHToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedHHToOrg') return;
+        testNamesAndOppsUpdated(CAO_Constants.HH_ACCOUNT_TYPE, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedOrgToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOrgToOne2One') return;
+        testNamesAndOppsUpdated(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsUpdatedOne2OneToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdatedOne2OneToOrg') return;
+        testNamesAndOppsUpdated(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
+    }
+    
     /*******************************************************************************************************
     * @description Move a Contact to a different Account, and verify: 
     *   the account's names and greetings are updated.
@@ -83,18 +128,31 @@ public with sharing class CON_ChangeAccount_TEST {
     *   Soft Credits the contact previously had are still there.
     *   Opp Rollups are recalculated for both accounts.
     */
-    static testMethod void testNamesAndOppsUpdated() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsUpdated') return;
+    static void testNamesAndOppsUpdated(string accTypeSrc, string accTypeDst) {
+    
+        // create our source account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeSrc, 1, 2, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;        
         
-        // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        // create our destination account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeDst, 1, 2, 3);
+        Account accDst = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConDst = UTIL_UnitTestData_TEST.listConT;        
         
-        // this creates some test opps
-        createTestOpps(cHH, cCon);
-
+        // create an opp for each contact
+        list<Contact> listConAll = new list<Contact>();
+        listConAll.addAll(listConSrc);
+        listConAll.addAll(listConDst);
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(listConAll, null, 
+            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+        insert listOpp;
+        
         // move the first contact in the first account to the other account.
-        ADDR_Addresses_TEST.listConT[0].AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
-        update ADDR_Addresses_TEST.listConT[0];
+        Contact conSrc = listConSrc[0];
+        conSrc.AccountId = accDst.Id;
+        Test.startTest();
+        update conSrc;
         Test.stopTest();
 
         // reload our contacts and accounts
@@ -107,45 +165,159 @@ public with sharing class CON_ChangeAccount_TEST {
             from Contact order by Firstname];
             
         // verify the contacts belong to correct account.
-        system.assertEquals(ADDR_Addresses_TEST.listConT[0].Id, listCon[0].Id);
-        system.assertEquals(ADDR_Addresses_TEST.listAccT[0].Id, listAcc[0].Id);
+        system.assertEquals(conSrc.Id, listCon[0].Id);
+        system.assertEquals(accSrc.Id, listAcc[0].Id);
+        system.assertEquals(accDst.Id, listAcc[1].Id);
         system.assertEquals(listCon[0].AccountId, listAcc[1].Id);
         system.assertEquals(listCon[1].AccountId, listAcc[0].Id);
         system.assertEquals(listCon[2].AccountId, listAcc[1].Id);
         system.assertEquals(listCon[3].AccountId, listAcc[1].Id);
             
         // verify the account's names and greetings are updated
-        system.assertEquals(false, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));        
-        system.assertEquals(true, listAcc[1].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));    
+        if (accTypeSrc == CAO_Constants.HH_ACCOUNT_TYPE)
+            system.assertEquals(false, listAcc[0].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));        
+        if (accTypeDst == CAO_Constants.HH_ACCOUNT_TYPE)
+            system.assertEquals(true, listAcc[1].npo02__Formal_Greeting__c.contains(listCon[0].Firstname));    
         
-        // verify opps owned by the contact are moved over
-        system.assertEquals(1, [select count() from Opportunity where AccountId = :listAcc[0].Id]);  
-        system.assertEquals(3, [select count() from Opportunity where AccountId = :listAcc[1].Id]);  
-            
-        // verify Account rollups are updated
-        system.assertEquals(1, listAcc[0].npo02__NumberOfClosedOpps__c);            
-        system.assertEquals(3, listAcc[1].npo02__NumberOfClosedOpps__c);            
-
-        // verify Soft Credits recalculated
-        system.assertEquals(2, [select count() from OpportunityContactRole where ContactId = :listCon[0].Id]);        
-        system.assertEquals(1, [select count() from OpportunityContactRole where ContactId = :listCon[1].Id]);        
-        system.assertEquals(3, [select count() from OpportunityContactRole where ContactId = :listCon[2].Id]);        
-        system.assertEquals(3, [select count() from OpportunityContactRole where ContactId = :listCon[3].Id]);        
+        integer cAccSrcOpps = [select count() from Opportunity where AccountId = :listAcc[0].Id];
+        integer cAccDstOpps = [select count() from Opportunity where AccountId = :listAcc[1].Id];
+        integer cOCRSrcCon = [select count() from OpportunityContactRole where ContactId = :listCon[0].Id];
+        integer cOCRSrcCon2 = [select count() from OpportunityContactRole where ContactId = :listCon[1].Id];
+        integer cOCRDstCon = [select count() from OpportunityContactRole where ContactId = :listCon[2].Id];
+        
+        // verify Opps, OCR's, and Rollups are what we expect!
+        if (accTypeSrc == CAO_Constants.HH_ACCOUNT_TYPE && accTypeDst == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(1, cAccSrcOpps);
+            system.assertEquals(3, cAccDstOpps);
+            system.assertEquals(2, cOCRSrcCon);
+            system.assertEquals(1, cOCRSrcCon2);
+            system.assertEquals(3, cOCRDstCon);
+	        system.assertEquals(1, listAcc[0].npo02__NumberOfClosedOpps__c);            
+	        system.assertEquals(3, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeSrc == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeDst == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(2, cAccSrcOpps);
+            system.assertEquals(2, cAccDstOpps);
+            system.assertEquals(1, cOCRSrcCon);
+            system.assertEquals(1, cOCRSrcCon2);
+            system.assertEquals(1, cOCRDstCon);
+            system.assertEquals(2, listAcc[0].npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeSrc == null && accTypeDst == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(0, cAccSrcOpps);
+            system.assertEquals(2, cAccDstOpps);
+            system.assertEquals(1, cOCRSrcCon);
+            system.assertEquals(1, cOCRSrcCon2);
+            system.assertEquals(2, cOCRDstCon);
+            system.assertEquals(0, listAcc[0].npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeSrc == CAO_Constants.HH_ACCOUNT_TYPE && accTypeDst == null) {
+            system.assertEquals(2, cAccSrcOpps);
+            system.assertEquals(0, cAccDstOpps);
+            system.assertEquals(2, cOCRSrcCon);
+            system.assertEquals(2, cOCRSrcCon2);
+            system.assertEquals(1, cOCRDstCon);
+            system.assertEquals(2, listAcc[0].npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(0, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeSrc == null && accTypeDst == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(0, cAccSrcOpps);
+            system.assertEquals(2, cAccDstOpps);
+            system.assertEquals(1, cOCRSrcCon);
+            system.assertEquals(1, cOCRSrcCon2);
+            system.assertEquals(1, cOCRDstCon);
+            system.assertEquals(0, listAcc[0].npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeSrc == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeDst == null) {
+            system.assertEquals(2, cAccSrcOpps);
+            system.assertEquals(0, cAccDstOpps);
+            system.assertEquals(1, cOCRSrcCon);
+            system.assertEquals(1, cOCRSrcCon2);
+            system.assertEquals(1, cOCRDstCon);
+            system.assertEquals(2, listAcc[0].npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(0, listAcc[1].npo02__NumberOfClosedOpps__c);            
+        }
+        
     }
 
     /*******************************************************************************************************
     * @description Move a Contact to a different Account, and verify: 
-    *   the contact is updated with the new household's default address
+    *   the contact is updated with the new account's default address if appropriate
     */
-    static testMethod void testGetsDefaultAddress() {
-        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddress') return;
+    static testmethod void testGetsDefaultAddressHHToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressHHToHH') return;
+        testGetsDefaultAddress(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static testmethod void testGetsDefaultAddressOne2OneToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOne2OneToOne2One') return;
+        testGetsDefaultAddress(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static testmethod void testGetsDefaultAddressOrgToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOrgToHH') return;
+        testGetsDefaultAddress(null, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static testmethod void testGetsDefaultAddressHHToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressHHToOrg') return;
+        testGetsDefaultAddress(CAO_Constants.HH_ACCOUNT_TYPE, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static testmethod void testGetsDefaultAddressOrgToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOrgToOne2One') return;
+        testGetsDefaultAddress(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static testmethod void testGetsDefaultAddressOne2OneToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testGetsDefaultAddressOne2OneToOrg') return;
+        testGetsDefaultAddress(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
+    }
+    
+    /*******************************************************************************************************
+    * @description Move a Contact to a different Account, and verify: 
+    *   the contact is updated with the new account's default address if appropriate
+    */
+    static void testGetsDefaultAddress(string accTypeSrc, string accTypeDst) {
         
-        // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        // create our source account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeSrc, 1, 2, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;        
+        
+        // create our destination account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeDst, 1, 2, 3);
+        Account accDst = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConDst = UTIL_UnitTestData_TEST.listConT;        
         
         // move the first contact in the first account to the other account.
-        ADDR_Addresses_TEST.listConT[0].AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
-        update ADDR_Addresses_TEST.listConT[0];
+        Contact conSrc = listConSrc[0];
+        conSrc.AccountId = accDst.Id;
+        Test.startTest();
+        update conSrc;
         Test.stopTest();
 
         // reload our contacts and accounts
@@ -157,16 +329,50 @@ public with sharing class CON_ChangeAccount_TEST {
             from Contact order by Firstname];
             
         // verify the contacts belong to correct account.
-        system.assertEquals(ADDR_Addresses_TEST.listConT[0].Id, listCon[0].Id);
-        system.assertEquals(ADDR_Addresses_TEST.listAccT[0].Id, listAcc[0].Id);
+        system.assertEquals(conSrc.Id, listCon[0].Id);
+        system.assertEquals(accSrc.Id, listAcc[0].Id);
+        system.assertEquals(accDst.Id, listAcc[1].Id);
         system.assertEquals(listCon[0].AccountId, listAcc[1].Id);
         system.assertEquals(listCon[1].AccountId, listAcc[0].Id);
         system.assertEquals(listCon[2].AccountId, listAcc[1].Id);
         system.assertEquals(listCon[3].AccountId, listAcc[1].Id);
+                    
+        // load any addresses
+        list<Address__c> listAddr = [select Id, Household_Account__c, Default_Address__c, 
+            MailingStreet__c, MailingCity__c, MailingState__c from Address__c];
             
-        // verify the contact's address is updated to the household's default address
-        system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
-        system.assertEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        // verify the addresses and that the contact's address is updated as appropriate
+        if (accTypeSrc == CAO_Constants.HH_ACCOUNT_TYPE && accTypeDst == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(4, listAddr.size());
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        else if (accTypeSrc == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeDst == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(0, listAddr.size());
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        else if (accTypeSrc == null && accTypeDst == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(2, listAddr.size());
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        else if (accTypeSrc == CAO_Constants.HH_ACCOUNT_TYPE && accTypeDst == null) {
+            system.assertEquals(2, listAddr.size());
+            system.assertEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        else if (accTypeSrc == null && accTypeDst == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(0, listAddr.size());
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        else if (accTypeSrc == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeDst == null) {
+            system.assertEquals(0, listAddr.size());
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[0].BillingStreet);
+            system.assertNotEquals(listCon[0].MailingStreet, listAcc[1].BillingStreet);
+        }
+        
     }
 
     /*******************************************************************************************************
@@ -178,6 +384,9 @@ public with sharing class CON_ChangeAccount_TEST {
     static testMethod void testAddressOverride() {
         if (strTestOnly != '*' && strTestOnly != 'testAddressOverride') return;
         
+        integer cHH = 2;
+        integer cCon = 2;
+            
         // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
         

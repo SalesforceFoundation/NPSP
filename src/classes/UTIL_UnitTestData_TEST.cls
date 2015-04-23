@@ -242,6 +242,46 @@ public class UTIL_UnitTestData_TEST {
         return u;
     }
     
+ 
+ 
+ 
+    public static list<Account> listAccT;
+    public static list<Contact> listConT;
+    
+    /*********************************************************************************************************
+    * @description Creates x accounts of the given type, each with y Contacts.
+    * @param accType The Account Type to create (CAO_Constants.HH_ACCOUNT_TYPE, etc.)
+    * @param cAcc the number of Accounts to create
+    * @param cCon the number of Contacts to create per Account
+    * @param iUnique the number to start with when naming the contacts and addresses
+    * @return  void
+    **********************************************************************************************************/
+    public static void createAccountContactTestData(string accType, integer cAcc, integer cCon, integer iUnique) {
+        
+        //npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
+            
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cAcc * cCon);
+        listAccT = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cAcc, accType);
+        insert listAccT;
+        
+        // set each contact's account, and give them a unique name and mailing address
+        for (integer i = 0; i < cAcc; i++) {
+            for (integer j = 0; j < cCon; j++) {
+            	integer iCon = (i * cCon) + j;
+            	Contact con = listConT[iCon]; 
+            	con.Firstname = 'TestFirstname' + iUnique + iCon;
+                con.Firstname = 'TestLastname' + iUnique + iCon;
+                con.AccountId = listAccT[i].Id;
+                con.MailingStreet = 'Street' + iUnique + iCon;
+                con.MailingCity = 'City' + iUnique + iCon;
+            }
+        }        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listConT;        
+        // clear our triggers recursion prevention since we are starting a new test
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+    }
+
     
 /*
         public static List<Opportunity> OppsForAccountList (List<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
