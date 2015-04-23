@@ -42,30 +42,7 @@ public with sharing class CON_ChangeAccount_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-        
-    /*********************************************************************************************************
-    * @description Creates test opportunities for our test contacts and accounts.
-    */
-    public static void createTestOpps(integer cHHT, integer cConT) {
-        list<Opportunity> listOpp = new list<Opportunity>();
-        
-        // create an Opp for each contact
-        for (integer i = 0; i < cHHT; i++) {
-            for (integer j = 0; j < cConT; j++) {
-                Opportunity opp = new Opportunity();
-                opp.AccountId = ADDR_Addresses_TEST.listAccT[i].Id;
-                opp.npe01__Contact_Id_for_Role__c = ADDR_Addresses_TEST.listConT[(i * cHHT) + j].Id;
-                opp.Amount = 10 + (i * 1000) + (j * 100); 
-                opp.CloseDate = system.today();
-                opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-                opp.Name = 'TestOpp' + i + j;
-                listOpp.add(opp);
-            }
-        }
-        insert listOpp;
-    }
-    
-    
+            
     /*******************************************************************************************************
     * @description Move a Contact to a different Account and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.

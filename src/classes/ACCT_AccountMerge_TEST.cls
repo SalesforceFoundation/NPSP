@@ -30,7 +30,14 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2015
-* @description Tests for Account Merge scenarios
+* @description Tests for Account Merge scenarios including:
+*   HH - HH
+*   One2One - One2One
+*   Org - Org
+*   Org - HH
+*   HH - Org
+*   Org - One2One
+*   One2One - Org
 * @group Accounts
 */
 
@@ -54,7 +61,7 @@ private with sharing class ACCT_AccountMerge_TEST {
                 Organizational_Account_Addresses_Enabled__c = true
                 ));
     }
-
+    
     /*******************************************************************************************************
     * @description Merge two Household Accounts and verify: 
     *   the account's names and greetings are updated.
@@ -70,19 +77,21 @@ private with sharing class ACCT_AccountMerge_TEST {
         
         setAccountModelForTest(CAO_Constants.HH_ACCOUNT_PROCESSOR);
         
-        // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH = 2, cCon = 2);
+        // create our source account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 2, 2, 1);        
 
         // this creates some test opps
-        CON_ChangeAccount_TEST.createTestOpps(cHH, cCon);
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(UTIL_UnitTestData_TEST.listConT, null, 
+            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+        insert listOpp;        
 
         // decide who wins (and remember who was primary contact)
-        Account accWinner = [select Id, Name, npe01__One2OneContact__c from Account where Id = :ADDR_Addresses_TEST.listAccT[1].Id];
-        Account accLoser = ADDR_Addresses_TEST.listAccT[0];
+        Account accWinner = [select Id, Name, npe01__One2OneContact__c from Account where Id = :UTIL_UnitTestData_TEST.listAccT[1].Id];
+        Account accLoser = UTIL_UnitTestData_TEST.listAccT[0];
         
         // merge the Accounts
+        Test.startTest();
         merge accWinner accLoser;
-
         // to flush our future calls that fix related data up!        
         Test.stopTest();
 
@@ -129,7 +138,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         system.assertEquals(4, [select count() from OpportunityContactRole where ContactId = :listCon[3].Id]);    
         
         // verify Addresses are merged
-        system.assertEquals(2, [select count() from Address__c]);
+        system.assertEquals(4, [select count() from Address__c]);
         system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);    
     }
 
@@ -336,4 +345,169 @@ private with sharing class ACCT_AccountMerge_TEST {
         
     }
 
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
+        testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
+        testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
+    }
+    
+    /*******************************************************************************************************
+    * @description Merge two different Accounts and verifies Opps, OCRs, Rollups, and Names
+    *   the account's names and greetings are updated.
+    *   Opps moved to winning account
+    *   Soft Credits for all Opps are recalculated.
+    *   Opp Rollups are recalculated for the winning account
+    */
+    static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
+    
+        // create our source account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeLoser, 1, 2, 1);
+        Account accLoser = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConAll = UTIL_UnitTestData_TEST.listConT; 
+        
+        // create our destination account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeWinner, 1, 2, 3);
+        Account accWinner = UTIL_UnitTestData_TEST.listAccT[0];
+        listConAll.addAll(UTIL_UnitTestData_TEST.listConT);        
+        
+        // create an opp for each contact
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactList(listConAll, null, 
+            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+        insert listOpp;
+        
+        // merge the accounts
+        Test.startTest();
+        merge accWinner accLoser;
+        Test.stopTest();
+
+        // reload our contacts and accounts
+        list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
+            npo02__NumberOfClosedOpps__c, 
+            BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
+            from Account order by Id]);
+        system.assertEquals(1, listAcc.size());
+        accWinner = listAcc[0];
+        list<Contact> listCon = [select Id, Firstname, AccountId, 
+            is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
+            from Contact order by Firstname];
+            
+        // verify the contacts belong to correct account.
+        system.assertEquals(listCon[0].AccountId, accWinner.Id);
+        system.assertEquals(listCon[1].AccountId, accWinner.Id);
+        system.assertEquals(listCon[2].AccountId, accWinner.Id);
+        system.assertEquals(listCon[3].AccountId, accWinner.Id);
+            
+        // verify the account's names and greetings are updated
+        if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[0].Firstname));    
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[1].Firstname));    
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[2].Firstname));    
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[3].Firstname));    
+        }
+                
+        integer cAccOpps = [select count() from Opportunity];
+        integer cOCRCon0 = [select count() from OpportunityContactRole where ContactId = :listCon[0].Id];
+        integer cOCRCon1 = [select count() from OpportunityContactRole where ContactId = :listCon[1].Id];
+        integer cOCRCon2 = [select count() from OpportunityContactRole where ContactId = :listCon[2].Id];
+        integer cOCRCon3 = [select count() from OpportunityContactRole where ContactId = :listCon[3].Id];
+        
+        // verify Opps, OCR's, and Rollups are what we expect!
+        if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(4, cOCRCon0);
+            system.assertEquals(4, cOCRCon1);
+            system.assertEquals(4, cOCRCon2);
+            system.assertEquals(4, cOCRCon3);
+            system.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(1, cOCRCon0);
+            system.assertEquals(1, cOCRCon1);
+            system.assertEquals(1, cOCRCon2);
+            system.assertEquals(1, cOCRCon3);
+            system.assertEquals(4, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(3, cOCRCon0);
+            system.assertEquals(3, cOCRCon1);
+            system.assertEquals(2, cOCRCon2);
+            system.assertEquals(2, cOCRCon3);
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == null) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(2, cOCRCon0);
+            system.assertEquals(2, cOCRCon1);
+            system.assertEquals(1, cOCRCon2);
+            system.assertEquals(1, cOCRCon3);
+            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(1, cOCRCon0);
+            system.assertEquals(1, cOCRCon1);
+            system.assertEquals(1, cOCRCon2);
+            system.assertEquals(1, cOCRCon3);
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null) {
+            system.assertEquals(4, cAccOpps);
+            system.assertEquals(1, cOCRCon0);
+            system.assertEquals(1, cOCRCon1);
+            system.assertEquals(1, cOCRCon2);
+            system.assertEquals(1, cOCRCon3);
+            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        
+    }
 }
