@@ -495,4 +495,16 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
+    <webLinks>
+        <fullName>Refresh_Name</fullName>
+        <availability>online</availability>
+        <description>Updates this opportunity&apos;s name based on the naming scheme in NPSP settings.</description>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Refresh Name</masterLabel>
+        <openType>sidebar</openType>
+        <page>OPP_OpportunityNamingBTN</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>

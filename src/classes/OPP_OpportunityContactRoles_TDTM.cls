@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2011 (1.x)
+* @group Opportunity
+* @group-content ../../ApexDocContent/Opportunity.htm
 * @description Provides opportunity and contact role support for all models  
 */
 public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runnable {
