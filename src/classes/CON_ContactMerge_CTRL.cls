@@ -61,7 +61,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /*******************************************************************************************************
     * @description Max number of Contacts returned by a query.
     */
-    private final Integer SOSL_LIMIT = 20;
+    private final Integer SOSL_LIMIT = 100;
     
     /*******************************************************************************************************
     * @description The contact merge step user is in. (The process has multiple steps.)
