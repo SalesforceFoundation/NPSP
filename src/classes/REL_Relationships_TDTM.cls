@@ -373,4 +373,88 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             }   
         }
     }
+    
+    /*******************************************************************************************************
+    * @description Remove all duplicate Relationsihps, for the list of Contacts.  
+    * Called by handleContactMergeFixupsFuture() after a Contact Merge has occurred.
+    * @param listCon The list of Contacts 
+    * @return null
+    ********************************************************************************************************/
+    public static void cleanupContactRelationships(list<Contact> listCon) {
+
+        // use dmlWrapper to handle all of our database operations
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
+        
+        // for each Contact, get its list of Relationships in oldest to newest order (of LastModifiedDate)
+        map<Id, list<npe4__Relationship__c>> mapConIdListRel = new map<Id, list<npe4__Relationship__c>>();
+        
+        // first we get all Relationships involved
+        list<npe4__Relationship__c> listRel = [select Id, npe4__Contact__c, npe4__RelatedContact__c,
+            npe4__Status__c, npe4__Type__c, npe4__Description__c
+            from npe4__Relationship__c 
+            where npe4__Contact__c in :listCon
+            order by npe4__Contact__c, LastModifiedDate asc];
+
+        // now put each contact's relationships on their own list            
+        for (npe4__Relationship__c rel : listRel) {
+            list<npe4__Relationship__c> listConRel = mapConIdListRel.get(rel.npe4__Contact__c);
+            if (listConRel == null) {
+                listConRel = new list<npe4__Relationship__c>();
+                mapConIdListRel.put(rel.npe4__Contact__c, listConRel);
+            }
+            listConRel.add(rel);
+        }
+        
+        // now we go through each contact's list of affiliations to find duplicates
+        // and pick the one to be marked Primary  
+        for (Contact con : listCon) {
+        
+            // skip this contact if they have relationships to deal with 
+            if (mapConIdListRel.get(con.Id) == null)
+               continue;
+
+            // create a map of relKeys to relationship's to find our duplicates
+            map<string, list<npe4__Relationship__c>> mapRelKeyRel = new map<string, list<npe4__Relationship__c>>(); 
+            for (npe4__Relationship__c rel : mapConIdListRel.get(con.Id)) {
+                string relKey = getRelKey(rel);
+                listRel = mapRelKeyRel.get(relKey);
+                if (listRel == null) {
+                    listRel = new list<npe4__Relationship__c>();
+                    mapRelKeyRel.put(relKey, listRel);
+                }
+                listRel.add(rel);                
+            }
+            
+            // now we have the lists of duplicate relationships, remove the duplicates.            
+            for (string relKey : mapRelKeyRel.keySet()) {
+                listRel = mapRelKeyRel.get(relKey);
+                
+                // keep the oldest and delete the others
+                for (integer i = 1; i < listRel.size(); i++) {
+                    dmlWrapper.objectsToDelete.add(listRel[i]);
+                }
+            }
+        }
+        
+        // perform our updates & deletes for dealing with the duplicate relationships
+        TDTM_TriggerHandler.processDml(dmlWrapper); 
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a unique string key that represents the data of a Relationship, which can be used
+    * to detect duplicate Relationships. 
+    * @param rel The Relationship 
+    * @return String The relKey
+    ********************************************************************************************************/
+    private static string getRelKey(npe4__Relationship__c rel) {
+        if (rel == null)
+            return null;
+        string relKey = 
+            rel.npe4__Contact__c + ':' + 
+            rel.npe4__RelatedContact__c + ':' +
+            rel.npe4__Type__c + ':' +
+            rel.npe4__Status__c + ':' +
+            rel.npe4__Description__c;
+        return relKey;
+    }
 }

@@ -462,7 +462,7 @@ private class CON_ContactMerge_TEST {
         Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
         insert o;
         
-        //select the first as winner
+        //select the second as winner
         controller.nextStep();
         
         selectMasterRecord(controller, con2.id);
@@ -477,10 +477,14 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first contact's account should be deleted
         system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-        
-        // check opps
-        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+	        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+        } else {
+            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+            system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
+        }
         
         //Second contact's account id should not have changed
         system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
@@ -829,8 +833,10 @@ private class CON_ContactMerge_TEST {
         //second contact should be deleted
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account should be deleted
-        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        
+	    //second contact's account should be deleted
+	    system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+
         system.assertEquals(1,[select count() from Account where id=:con.accountId]);
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
@@ -874,9 +880,10 @@ private class CON_ContactMerge_TEST {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con2.id];
-        con3 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con3.id];
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by MailingStreet];
+        con = listCon[0];
+        con2 = listCon[1];
+        con3 = listCon[2];
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
@@ -903,32 +910,36 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con3.id);
         
         //merge them
-        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        Test.startTest();               
         controller.mergeContacts();
+        // to flush our future calls that fix related data up!        
+        Test.stopTest();
         
         //first and second contact should be deleted
         system.assertEquals(1,[select count() from Contact where id=:con3.id]);
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first and second contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
+        system.assertEquals(1, [select count() from Account]);
         system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
         system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
         //Third contact's account id should not have changed
+        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
-        
-        // make sure we are down to just one account
-        system.assertEquals(1, [select count() from Account]);
+                
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            // since the solo household account were merged, all addresses should still exist
+            system.assertEquals(3, [select count() from Address__c]);
+            // only one should be default
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        }
         
         // make sure winning contact's address is correct
         con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact];
         system.assertEquals(con3.MailingStreet, con.MailingStreet);
         system.assertEquals(con3.MailingCity, con.MailingCity);
         
-        // make sure all address objects still exists
-        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
-        	system.assertEquals(3, [select count() from Address__c]);
-        }
     }
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){

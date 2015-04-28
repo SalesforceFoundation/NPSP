@@ -35,7 +35,7 @@
 */
 
 @isTest
-private with sharing class ADDR_Addresses_TEST {
+public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     * @description if you only want to run one test in this class, fill in its name here.
@@ -56,12 +56,12 @@ private with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description The list of created test Contacts.
     */
-    private static list<Contact> listConT;
+    public static list<Contact> listConT;
 
     /*********************************************************************************************************
     * @description The list of created test Accounts.
     */
-    private static list<Account> listAccT;            
+    public static list<Account> listAccT;            
 
     /*********************************************************************************************************
     * @description
@@ -73,7 +73,7 @@ private with sharing class ADDR_Addresses_TEST {
     * @param cConT the number of Contacts to create per Household
     * @return  void
     **********************************************************************************************************/
-    private static void createHHTestData(integer cHHT, integer cConT) {
+    public static void createHHTestData(integer cHHT, integer cConT) {
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
@@ -83,7 +83,7 @@ private with sharing class ADDR_Addresses_TEST {
         
         for (integer i = 0; i < cHHT; i++) {
         	for (integer j = 0; j < cConT; j++) {
-        		listConT[ (i * cHHT) + j].AccountId = listAccT[i].Id;
+        		listConT[ (i * cConT) + j].AccountId = listAccT[i].Id;
         	}
         }        
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -106,14 +106,14 @@ private with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description The list of created test Addresses.
     */
-    private static list<Address__c> listAddrT;
+    public static list<Address__c> listAddrT;
 
     /*********************************************************************************************************
     * @description Initializes (but not inserts) N new Address objects.
     * @param cAddr the number of Address objects to create
     * @return  void
     **********************************************************************************************************/
-    private static void initTestAddr(integer cAddr) {
+    public static void initTestAddr(integer cAddr) {
     	listAddrT = new list<Address__c>();
     	for (integer i = 0; i < cAddr; i++) {
     		Address__c addr = new Address__c();
@@ -131,7 +131,7 @@ private with sharing class ADDR_Addresses_TEST {
     * @description Returns whether an Account Billing address matches a Contact Mailing address
     * @return  boolean 
     **********************************************************************************************************/
-    private static boolean isMatchAddressAccCon(Account acc, Contact con) {
+    public static boolean isMatchAddressAccCon(Account acc, Contact con) {
         return (acc.BillingStreet == con.MailingStreet &&          
             acc.BillingCity == con.MailingCity &&          
             acc.BillingState == con.MailingState &&         
@@ -1890,6 +1890,83 @@ private with sharing class ADDR_Addresses_TEST {
                         isSetOnContact = true;
                 }
                 system.assertEquals(true, isSetOnContact);
+            }
+        }                
+    }
+
+    /*********************************************************************************************************
+    @description
+        update contact's address override to an address in another account
+    verify:
+        new non-default Address created
+        contact override updated to new address
+        only the contact gets the new Address
+    **********************************************************************************************************/            
+    static testMethod void updateConAddrWithExternalOverride() {
+        if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // create additional addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'override' + i;
+            listAddrT[i].MailingCity__c = 'override' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // set the contacts' address overrides to an address in a different household
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH];  // first contact in the household
+            con.Current_Address__c = listAddrT[i == cHH-1 ? 0 : i + 1].Id;  // address in the next household
+            con.is_Address_Override__c = true;
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+ 
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry from Contact];
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c from Address__c];
+        system.debug('****DJH: mapAccIdAcc: ' + mapAccIdAcc);
+        system.debug('****DJH: listCon: ' + listCon);
+        system.debug('****DJH: listAddr: ' + listAddr);
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            if (con.is_Address_Override__c == false) {
+                system.assertNotEquals(null, con.Current_Address__c);
+                system.assertEquals(true, isMatchAddressAccCon(acc, con));
+                system.assert(!con.MailingStreet.contains('override'));
+                system.assert(!con.MailingCity.contains('override'));
+            } else {
+                //system.assertEquals(false, isMatchAddressAccCon(acc, con));
+                system.assert(con.MailingStreet.contains('override'));
+                system.assert(con.MailingCity.contains('override'));
+                system.assertEquals(true, con.is_Address_Override__c);
+                system.assertNotEquals(null, con.Current_Address__c);
+            }
+        }
+ 
+         // verify the overrides were copied to their new households
+        system.assertEquals(cHH * 3, listAddr.size());
+        for (Address__c addr : listAddr) {
+            boolean fOverride = (addr.MailingStreet__c.contains('override'));
+            if (fOverride) {
+                system.assertEquals(false, addr.Default_Address__c);
+                boolean isSetOnContact = false;
+                for (Contact con : listCon) {
+                    if (con.is_Address_Override__c && con.Current_Address__c == addr.Id)
+                        system.assertEquals(con.AccountId, addr.Household_Account__c);
+                }
             }
         }                
     }
