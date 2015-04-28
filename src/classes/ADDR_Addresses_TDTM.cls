@@ -409,7 +409,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
             from Address__c 
             where Household_Account__c in :listAccId
-            order by LastModifiedDate asc]; // ordering needed by cleanupAccountAddresses().
+            order by Default_Address__c desc, LastModifiedDate asc]; // ordering needed by cleanupAccountAddresses().
         for (Address__c addr : listAddrOther) {
             list<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
             if (listAddrHH == null) {
