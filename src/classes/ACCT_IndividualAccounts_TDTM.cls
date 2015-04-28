@@ -694,7 +694,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
     
     /*******************************************************************************************************
-    * @description Moves all opps for the Primary OCR provided contacts to their new account
+    * @description Moves all opps for the Primary OCR provided contacts to their new account.  Note that it
+    * is the caller's responsibility to decide whether moving opps is appropriate for the involved accounts.
     * @param mapContactIdAccountIdNew a map of Contact Id to Account Id, for the Accounts to move opps to
     * @param mapContactIdAccountIdOld a map of Contact Id to Account Id, for the Accounts to move opps from
     * @param dmlWrapper to hold the Opps that need updating.  If null, will commit immediately.
