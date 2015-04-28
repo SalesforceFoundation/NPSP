@@ -149,9 +149,18 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 mapContactIdAccountIdWinner.put(con.Id, con.AccountId);        
             }
         }
+        
+        // we only want to move opps from non-org accounts, so we need to query for their type.
+        map<Id, Account> mapAccountIdAccountLoser = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c 
+            from Account where Id in :listAccountIdLoser]);
         for (integer i = 0; i < listContactIdLoser.size(); i++) {
-        	if (listAccountIdLoser[i] != null)
-                mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
+        	if (listAccountIdLoser[i] != null) {
+                Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
+                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
+                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                    mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
+                }
+        	}
         }
     
         // create a list of both Winning and Losing Accounts

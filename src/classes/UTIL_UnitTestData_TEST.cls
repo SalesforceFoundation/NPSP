@@ -175,6 +175,37 @@ public class UTIL_UnitTestData_TEST {
         return oppsToAdd;
     }
     
+    /*******************************************************************************************************
+    * @description Create an Opportunity for each Contact, using their Account as the Opportunity's Account.
+    */
+    public static List<Opportunity> OppsForContactWithAccountList (List<Contact> Cons, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
+     
+        // given a List of Contacts,
+        // add one Opp per contact w/ the specified data
+    
+        List<Opportunity> OppsToAdd = new List<Opportunity> ();
+        id rtid = UTIL_RecordTypes.GetRecordTypeId ('Opportunity',rectype);
+        UTIL_Debug.debug('recordtypeintest: ' + rtid);
+
+        for ( Contact thisCon : Cons ) {
+            Opportunity newOpp = New Opportunity (
+                Name = 'Test Opp ' + thisCon.FirstName + thisCon.LastName,
+                Amount = Amt,
+                CloseDate = Close,
+                StageName = Stage,
+                CampaignId = CampId,
+                AccountId = thisCon.AccountId,
+                npe01__Contact_Id_for_Role__c = thisCon.Id,
+                type = oppType
+            );
+            if(rtid != null){
+                newOpp.put('RecordTypeId',rtid);
+            }
+            oppsToAdd.add (newOpp);
+        }
+        return oppsToAdd;
+    }
+
     public static List<Opportunity> OppsForAccountList (List<Account> listAcc, id CampId, string Stage, date Close, double Amt, string rectype, string oppType) {
      
         // given a List of Accounts,
