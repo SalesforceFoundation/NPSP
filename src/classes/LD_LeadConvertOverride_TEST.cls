@@ -374,4 +374,91 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1, listHH.size());
         system.assertEquals(convertedContacts[0].npo02__Household__c, listHH[0].Id);
     }
+
+
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the 1x1 account model
+    */
+    static testMethod void newNativeLeadConversion_TestOne2One(){
+        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestOne2One') return;
+        newNativeLeadConversion_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the Household account model
+    */
+    static testMethod void newNativeLeadConversion_TestHHAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestHHAccount') return;
+        newNativeLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the Individual account model
+    */
+    static testMethod void newNativeLeadConversion_TestBucketAccount(){
+        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestBucketAccount') return;
+        newNativeLeadConversion_Test(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs Native Lead Conversion with a new Contact selection for the conversion
+    */
+    public static void newNativeLeadConversion_Test(string strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        //CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Contact con = new Contact();
+        con.Firstname = 'Test';
+        con.Lastname = 'TestContact';
+        //con.MailingStreet = '123';
+        insert con;
+        system.assertEquals(1, [select count() from Contact]);
+        system.assertEquals(1, [select count() from Account]);
+        con = [select Id, AccountId, Firstname, Lastname, MailingStreet, MailingCity, MailingPostalCode, Current_Address__c from Contact];
+        system.assertEquals(null, con.Current_Address__c);
+
+        Lead l = new Lead();
+        l.FirstName = 'Test';
+        l.LastName = 'TestContact';
+        l.Company = 'TestContact Household';
+        l.Street = '123 ABC';
+        l.City = 'Bellevue';
+        l.PostalCode = '98005';
+        insert l;
+		
+		Database.LeadConvert lc = new Database.LeadConvert();
+		lc.setLeadId(l.id);
+		lc.setContactId(con.Id);
+		lc.setAccountId(con.AccountId);
+		
+		LeadStatus convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true LIMIT 1];
+		lc.setConvertedStatus(convertStatus.MasterLabel);
+		
+		Test.startTest();
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        system.debug('****ACTION: calling convertLead!');
+		Database.LeadConvertResult lcr = Database.convertLead(lc);
+		Test.stopTest();
+		System.assert(lcr.isSuccess());
+        
+        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, 
+            Account.Name, MailingStreet, MailingCity, MailingPostalCode from Contact];
+        //one contact should have been created
+        system.assertEquals(1,convertedContacts.size());
+        system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
+        system.assertEquals(l.Street, convertedContacts[0].MailingStreet);
+        system.assertEquals(l.City, convertedContacts[0].MailingCity);
+        system.assertEquals(l.PostalCode, convertedContacts[0].MailingPostalCode);
+
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        if (CAO_Constants.isOneToOne()) {
+            system.assertEquals(accountName, convertedContacts[0].Account.Name);
+            List<Account> createdAccount2 = [select id from Account where name = :accountName];
+            system.assertEquals(1,createdAccount2.size());
+        } else if (CAO_Constants.isHHAccountModel()) {
+            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(1, [select count() from Address__c]);
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        } else if (CAO_Constants.isBucketModel()) {
+            system.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, convertedContacts[0].Account.Name);
+        }
+    }
 }
