@@ -398,7 +398,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         }
             
        if (listAfflIdAfflUpdate.size() > 0) {
-            //UTIL_Debug.debug('**** listAfflIdAfflUpdate: ' + JSON.serializePretty(listAfflIdAfflUpdate.values()));
+            //UTIL_Debug.debug('**** listAfflIdAfflUpdate: ' + JSON.serializePretty(listAfflIdAfflUpdate));
             dmlWrapper.objectsToUpdate.addAll((list<SObject>) listAfflIdAfflUpdate);
        }
     }
@@ -463,6 +463,133 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listCon);
         }
         return dmlWrapper;
+    }
+    
+    /*******************************************************************************************************
+    * @description Remove all duplicate affiliations and make sure only one is primary, for the list of
+    * Contacts.  Called by handleContactMergeFixupsFuture() after a Contact Merge has occurred.
+    * @param listCon The list of Contacts 
+    * @return null
+    ********************************************************************************************************/
+    public static void cleanupContactAffiliations(list<Contact> listCon) {
+    
+        // use dmlWrapper to handle all of our database operations
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
+        
+        // for each Contact, get its list of Affiliations in oldest to newest order (of LastModifiedDate)
+        map<Id, list<npe5__Affiliation__c>> mapConIdListAffl = new map<Id, list<npe5__Affiliation__c>>();
+        
+        // first we get all affiliations involved
+        list<npe5__Affiliation__c> listAffl = [select Id, npe5__Contact__c, npe5__EndDate__c, npe5__Organization__c, 
+            npe5__Primary__c, npe5__Role__c, npe5__StartDate__c, npe5__Status__c, npe5__Description__c
+            from npe5__Affiliation__c 
+            where npe5__Contact__c in :listCon
+            order by npe5__Contact__c, npe5__Primary__c desc, LastModifiedDate asc];
+        //UTIL_Debug.debug('****DJH listAffl: ' + listAffl);
+
+        // now put each contact's affilations on their own list            
+        for (npe5__Affiliation__c affl : listAffl) {
+            list<npe5__Affiliation__c> listConAffl = mapConIdListAffl.get(affl.npe5__Contact__c);
+            if (listConAffl == null) {
+                listConAffl = new list<npe5__Affiliation__c>();
+                mapConIdListAffl.put(affl.npe5__Contact__c, listConAffl);
+            }
+            listConAffl.add(affl);
+        }
+        
+        // now we go through each contact's list of affiliations to find duplicates
+        // and pick the one to be marked Primary  
+        for (Contact con : listCon) {
+        
+	        // skip this contact if they have no affiliations to deal with 
+	        if (mapConIdListAffl.get(con.Id) == null)
+	           continue;
+
+            // to track the best Affilition to be Primary
+            npe5__Affiliation__c afflPrimary;
+            npe5__Affiliation__c afflPrimaryBackup;
+
+            // create a map of afflKeys to affl's to find our duplicates
+            map<string, list<npe5__Affiliation__c>> mapAfflKeyAffl = new map<string, list<npe5__Affiliation__c>>(); 
+            for (npe5__Affiliation__c affl : mapConIdListAffl.get(con.Id)) {
+                string afflKey = getAfflKey(affl);
+                listAffl = mapAfflKeyAffl.get(afflKey);
+                if (listAffl == null) {
+                    listAffl = new list<npe5__Affiliation__c>();
+                    mapAfflKeyAffl.put(afflKey, listAffl);
+                }
+                listAffl.add(affl);
+                
+                // primary checking
+                if (affl.npe5__Organization__c == con.Primary_Affiliation__c && afflPrimary == null) {
+                    if (affl.npe5__Primary__c)
+                        afflPrimary = affl;
+                    else
+                        afflPrimaryBackup = affl;
+                }
+            }
+            
+            // if no Affiliation was correctly marked primary, take our backup
+            if (afflPrimary == null)
+                afflPrimary = afflPrimaryBackup;
+            
+            //UTIL_Debug.debug('****DJH mapAfflKeyAffl: ' + mapAfflKeyAffl);
+            
+            // now we have the lists of duplicate affiliations, remove the duplicates.            
+            for (string afflKey : mapAfflKeyAffl.keySet()) {
+                listAffl = mapAfflKeyAffl.get(afflKey);
+                
+                // first find the Affl to keep (Primary, and then oldest)
+                npe5__Affiliation__c afflKeep;                     
+                for (integer i = 0; i < listAffl.size(); i++) {
+                    npe5__Affiliation__c affl = listAffl[i];
+                    if (affl == afflPrimary) {                                                
+                        affl.npe5__Primary__c = true;
+                        afflKeep = affl;
+                    } else {
+                        affl.npe5__Primary__c = false;
+	                    if (i == 0 & afflKeep == null) {
+	                        afflKeep = affl;
+	                    }
+                    }
+                }
+                    
+                // update the primary/oldest and delete the others
+                for (integer i = 0; i < listAffl.size(); i++) {
+                    npe5__Affiliation__c affl = listAffl[i];
+                    if (affl == afflKeep) {
+                        //UTIL_Debug.debug('****DJH update affl: ' + affl);
+                        dmlWrapper.objectsToUpdate.add(affl);                        
+                    } else {
+                        //UTIL_Debug.debug('****DJH delete affl: ' + affl);
+                        dmlWrapper.objectsToDelete.add(affl);
+                    }
+                }
+            }
+        }
+        // perform our updates & deletes for dealing with the duplicate affiliations
+        TDTM_TriggerHandler.processDml(dmlWrapper); 
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a unique string key that represents the data of an Affiliation, which can be used
+    * to detect duplicate Affiliations.  Note that Primary is intentionally not included, since we will use
+    * the Affliation specified in the Contact's Primary Affiliation field.
+    * @param affl The Affiliation 
+    * @return String The afflKey
+    ********************************************************************************************************/
+    private static string getAfflKey(npe5__Affiliation__c affl) {
+        if (affl == null)
+            return null;
+        // do not include Primary (or Description)
+        string afflKey = 
+            affl.npe5__Contact__c + ':' + 
+            affl.npe5__Organization__c + ':' +
+            affl.npe5__Role__c + ':' +
+            affl.npe5__Status__c + ':' +
+            string.valueOf(affl.npe5__StartDate__c) + ':' + 
+            string.valueOf(affl.npe5__EndDate__c);
+        return afflKey;
     }
 
 }
