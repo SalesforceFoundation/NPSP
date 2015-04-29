@@ -92,7 +92,7 @@ public with sharing class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
     */ 
-    public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = new map<string, npe03__Custom_Field_Mapping__c>();
+    public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();
     
     /*******************************************************************************************************
     * @description holds the RD's CurrencyIsoCode field that is enabled in multicurrency organizations.
@@ -289,12 +289,10 @@ public with sharing class RD_RecurringDonations {
         }
    
         //add any custom mapping to make sure we have the required fields
-        map<string, npe03__Custom_Field_Mapping__c> cfmMap = new map<string, npe03__Custom_Field_Mapping__c>();
-        cfmMap = npe03__Custom_Field_Mapping__c.getAll();
-        for (string s : cfmMap.keySet()){
-            string RDFieldName = cfmMap.get(s).npe03__Recurring_Donation_Field__c;             
+        for (string s : customFieldMappingSettings.keySet()){
+            string RDFieldName = customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;             
             if (!existingFields.contains(RDFieldName.toLowerCase()) && s != 'id'){
-               queryRCD = queryRCD + ',' + cfmMap.get(s).npe03__Recurring_Donation_Field__c;
+               queryRCD = queryRCD + ',' + customFieldMappingSettings.get(s).npe03__Recurring_Donation_Field__c;
                existingFields.add(RDFieldName.toLowerCase());   
             }
         }       
@@ -338,7 +336,6 @@ public with sharing class RD_RecurringDonations {
         list<Opportunity> opportunityInserts = new list<Opportunity>();
         
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();        
         
         //grab the contact id for role to take advantage of NPSP C&O if it exists
         Sobjectfield ConIDForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
@@ -731,7 +728,6 @@ public with sharing class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
 
-        customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();
         string rdQueryCustomFields=''; 
         for (string s : customFieldMappingSettings.keySet()){
               npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
@@ -861,7 +857,6 @@ public with sharing class RD_RecurringDonations {
             npe03__Recurring_Donation__c oldRD = oldRecurringDonations.get(r.id);
 
             //Check for custom field changes and set flag for update 
-            customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();
             boolean cfmFieldChanged=false;
             for (string s : customFieldMappingSettings.keySet()){
                 npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
@@ -991,7 +986,6 @@ public with sharing class RD_RecurringDonations {
             oppCountMap.put(rdid, (integer)obj.get('oppCount'));                 
         }
         
-        customFieldMappingSettings = npe03__Custom_Field_Mapping__c.getAll();
         //if the RD has no opps, we'll need to bail back to the insert methods
         list<npe03__Recurring_Donation__c> reRollRDs = new list<npe03__Recurring_Donation__c>();
         for (npe03__Recurring_Donation__c rd : recurringDonationsToEvaluate){
