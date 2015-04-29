@@ -50,6 +50,8 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+        
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
 
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             // need to remove the contact from all Opportunities' npe01__Contact_Id_For_Role__c text field.
@@ -62,7 +64,8 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 
             for (Opportunity opp : listOpp)
                 opp.npe01__Contact_Id_For_Role__c = null;
-            update listOpp; 
+            
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
         }
         
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -78,7 +81,7 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 handleContactMergeFixupsFuture(listMergeKey);
         }        
         
-        return null; 
+        return dmlWrapper; 
     }
     
     /*******************************************************************************************************
