@@ -1366,6 +1366,24 @@ private class CON_ContactMerge_TEST {
 
     /*******************************************************************************************************
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     *   the account's names and greetings are updated.
     *   Opps owned by the contact are moved over.
     *   Soft Credits for the moved Opps are recalculated.
@@ -1458,7 +1476,7 @@ private class CON_ContactMerge_TEST {
         iConWinnerSibling--;
         if (isLoserAccountDeleted) {
             system.assertEquals(1, listAcc.size());
-            accLoser = new Account();
+            accLoser = new Account(npo02__Formal_Greeting__c='');
             system.assertEquals(accWinner.Id, listAcc[0].Id);
             accWinner = listAcc[0];
             system.assertEquals(2, listCon.size());
@@ -1478,9 +1496,9 @@ private class CON_ContactMerge_TEST {
             
         // verify the account's names and greetings are updated
         if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE)
-            system.assertEquals(false, listAcc[0].npo02__Formal_Greeting__c.contains(conLoser.Firstname));        
+            system.assertEquals(false, accLoser.npo02__Formal_Greeting__c.contains(conLoser.Firstname));        
         if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE)
-            system.assertEquals(false, listAcc[1].npo02__Formal_Greeting__c.contains(conLoser.Firstname));    
+            system.assertEquals(false, accWinner.npo02__Formal_Greeting__c.contains(conLoser.Firstname));    
         
         integer cAccLoserOpps = [select count() from Opportunity where AccountId = :accLoser.Id];
         integer cAccWinnerOpps = [select count() from Opportunity where AccountId = :accWinner.Id];
@@ -1552,6 +1570,24 @@ private class CON_ContactMerge_TEST {
             system.assertEquals(1, cOCRWinnerSibling);
             system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
             system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(3, cOCRConWinner);
+            system.assertEquals(3, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser ==  CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         
     }
