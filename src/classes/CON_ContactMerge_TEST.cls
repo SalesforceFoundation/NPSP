@@ -1402,6 +1402,24 @@ private class CON_ContactMerge_TEST {
 
     /*******************************************************************************************************
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeBucketToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
+        testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToBucket() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     *   the account's names and greetings are updated.
     *   Opps owned by the contact are moved over.
     *   Soft Credits for the moved Opps are recalculated.
@@ -1623,6 +1641,24 @@ private class CON_ContactMerge_TEST {
             system.assertEquals(2, cOCRConWinner);
             system.assertEquals(1, cOCRWinnerSibling);
             system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.BUCKET_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(0, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
             system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         
