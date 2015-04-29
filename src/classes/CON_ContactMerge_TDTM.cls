@@ -148,7 +148,8 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         map<Id,Id> mapContactIdAccountIdLoser = new map<Id,Id>();
         for (Contact con : listContactWinner) {
             if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
+                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
                 mapContactIdAccountIdWinner.put(con.Id, con.AccountId);        
             }
         }
@@ -160,7 +161,8 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         	if (listAccountIdLoser[i] != null) {
                 Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
+                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
                     mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
                 }
         	}
