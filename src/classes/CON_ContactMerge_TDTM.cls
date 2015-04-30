@@ -146,7 +146,10 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         // create maps of contactId's to AccountId's that some of our routines need.
         map<Id,Id> mapContactIdAccountIdWinner = new map<Id,Id>();
         map<Id,Id> mapContactIdAccountIdLoser = new map<Id,Id>();
+        list<Id> listAccIdHH= new list<Id>();
         for (Contact con : listContactWinner) {
+        	if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+        	   listAccIdHH.add(con.AccountId);
             if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
                 con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
                 con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
@@ -160,6 +163,8 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         for (integer i = 0; i < listContactIdLoser.size(); i++) {
         	if (listAccountIdLoser[i] != null) {
                 Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
+                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                    listAccIdHH.add(accLoser.Id); 
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
                     accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
                     accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
@@ -176,7 +181,7 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         // if we have any winning Contacts in Household or 1:1 Accounts...
         if (listAccId.size() > 0) {    
             // refresh account naming
-            ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccId);
+            ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccIdHH);
             
             // move any Contact Opps to winning Accounts
             ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser, null);
