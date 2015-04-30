@@ -451,6 +451,8 @@ private with sharing class ACCT_AccountMerge_TEST {
             system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[1].Firstname));    
             system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[2].Firstname));    
             system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(listCon[3].Firstname));    
+        } else if (accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(false, accWinner.Name.contains('Anonymous'));    
         }
                 
         integer cAccOpps = [select count() from Opportunity];
