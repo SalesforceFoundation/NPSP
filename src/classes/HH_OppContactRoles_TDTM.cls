@@ -307,16 +307,16 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         
         if (listOpp.size() > 0) {
 
-            // delete the old household soft credits.
             npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
             if (hs.npo02__Household_Member_Contact_Role__c != null) {
+    
+                // delete the old household soft credits.
                 delete [select Id from OpportunityContactRole where OpportunityId in :listOpp and 
                     Role = :hs.npo02__Household_Member_Contact_Role__c];
     
                 // fake an Insert trigger on the Opps to get the Soft Credits created
                 HH_OppContactRoles_TDTM hhocr = new HH_OppContactRoles_TDTM();
-                DmlWrapper dmlWrapper = hhocr.run(listOpp, null, TDTM_Runnable.Action.AfterInsert, Schema.Sobjecttype.Opportunity);
-        
+                DmlWrapper dmlWrapper = hhocr.run(listOpp, null, TDTM_Runnable.Action.AfterInsert, Schema.Sobjecttype.Opportunity);        
                 TDTM_TriggerHandler.processDML(dmlWrapper);
             }
         }
