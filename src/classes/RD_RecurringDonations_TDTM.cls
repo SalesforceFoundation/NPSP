@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Trigger Handler on Recurring Donations 
 */
-public with sharing class RD_RecurringDonations_TDTM extends TDTM_Runnable {
+public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler on Recurring Donations.  Deals with creating/updating/deleting the opps

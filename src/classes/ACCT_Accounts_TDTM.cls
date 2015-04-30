@@ -38,7 +38,7 @@
 * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
 * name updating.
 */
-public with sharing class ACCT_Accounts_TDTM extends TDTM_Runnable {
+public class ACCT_Accounts_TDTM extends TDTM_Runnable {
         
     
     /*******************************************************************************************************

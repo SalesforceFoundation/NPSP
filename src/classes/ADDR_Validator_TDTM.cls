@@ -33,7 +33,7 @@
 * @description Class that gets called when Address__c records change and
 * begins the address verification/normalization.
 */
-public with sharing class ADDR_Validator_TDTM extends TDTM_Runnable {
+public class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
 	/*******************************************************************************************************
     * @description Exception raised during the address validation process.
