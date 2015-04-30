@@ -482,6 +482,15 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     
     /*******************************************************************************************************
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOrg') return;
+        testNamesAndOppsMerge(null, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     *   the account's names and greetings are updated.
     *   Opps owned by the contact are moved over.
     *   Soft Credits for the moved Opps are recalculated.
@@ -593,6 +602,15 @@ public with sharing class CON_ContactMergeTDTM_TEST {
             system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null) {
+            system.assertEquals(2, cAccLoserOpps);
+            system.assertEquals(2, cAccWinnerOpps);
+            system.assertEquals(1, cOCRCon0);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRCon2);
+            system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == null) {
             system.assertEquals(2, cAccLoserOpps);
             system.assertEquals(2, cAccWinnerOpps);
             system.assertEquals(1, cOCRCon0);
