@@ -873,7 +873,14 @@ private class CON_ContactMerge_TEST {
         con3.MailingStreet = '999 88th St';
         con3.MailingCity = 'Redmond';
         
-        insert new Contact[]{con, con2, con3};
+        //insert new Contact[]{con, con2, con3};
+        // insert our contacts seperately, to ensure they get different Lastmodified times.
+        insert con;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        insert con2;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        insert con3;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
         
         // make sure addresses created
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
