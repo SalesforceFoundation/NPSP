@@ -406,7 +406,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         map<Id, list<Address__c>> mapAccIdListAddrHH = new map<Id, list<Address__c>>();  
         list<Address__c> listAddrOther = [select Id, Default_Address__c, Household_Account__c, Address_Type__c,
             MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c, 
-            Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c 
+            Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c, Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s 
             from Address__c 
             where Household_Account__c in :listAccId
             order by Default_Address__c desc, LastModifiedDate asc]; // ordering needed by cleanupAccountAddresses().
@@ -968,6 +968,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
         
+        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
+        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
+
         if (!isStateCountryPicklistsEnabled) {
             sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
             sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);

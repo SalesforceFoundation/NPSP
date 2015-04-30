@@ -123,6 +123,8 @@ public with sharing class ADDR_Addresses_TEST {
             addr.MailingState__c = 'Washington';
             addr.MailingPostalCode__c = 'Zip' + i;
             addr.MailingCountry__c = 'United States';
+            addr.Geolocation__Latitude__s = 47.6097 + i;
+            addr.Geolocation__Longitude__s = -122.3331 + i;
             listAddrT.add(addr);    		
     	}
     }
@@ -136,7 +138,10 @@ public with sharing class ADDR_Addresses_TEST {
             acc.BillingCity == con.MailingCity &&          
             acc.BillingState == con.MailingState &&         
             acc.BillingPostalCode == con.MailingPostalCode &&          
-            acc.BillingCountry == con.MailingCountry);                
+            acc.BillingCountry == con.MailingCountry && 
+            acc.BillingLatitude == con.MailingLatitude &&
+            acc.BillingLongitude == con.MailingLongitude
+        );                
     }
         
     /*********************************************************************************************************
