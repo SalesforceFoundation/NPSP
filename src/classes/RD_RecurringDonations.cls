@@ -812,7 +812,7 @@ public with sharing class RD_RecurringDonations {
                 for (string s : customFieldMappingSettings.keySet()){
                     npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
                     o.put(cfm.npe03__Opportunity_Field__c, rdMap.get(RDid).get(cfm.npe03__Recurring_Donation_Field__c));
-                }                      
+                }
                 updateOppsList.add(o);
             }
         }
