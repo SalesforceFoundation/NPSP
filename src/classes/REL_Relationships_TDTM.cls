@@ -375,7 +375,7 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     }
     
     /*******************************************************************************************************
-    * @description Remove all duplicate Relationsihps, for the list of Contacts.  
+    * @description Remove all duplicate Relationships, for the list of Contacts.  
     * Called by handleContactMergeFixupsFuture() after a Contact Merge has occurred.
     * @param listCon The list of Contacts 
     * @return null
@@ -405,12 +405,11 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             listConRel.add(rel);
         }
         
-        // now we go through each contact's list of affiliations to find duplicates
-        // and pick the one to be marked Primary  
+        // now we go through each contact's list of relationships to find duplicates
         for (Contact con : listCon) {
         
             // skip this contact if they have relationships to deal with 
-            if (mapConIdListRel.get(con.Id) == null)
+            if (!mapConIdListRel.containsKey(con.Id))
                continue;
 
             // create a map of relKeys to relationship's to find our duplicates

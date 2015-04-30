@@ -502,7 +502,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         for (Contact con : listCon) {
         
 	        // skip this contact if they have no affiliations to deal with 
-	        if (mapConIdListAffl.get(con.Id) == null)
+	        if (!mapConIdListAffl.containsKey(con.Id))
 	           continue;
 
             // to track the best Affilition to be Primary
@@ -581,12 +581,13 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     private static string getAfflKey(npe5__Affiliation__c affl) {
         if (affl == null)
             return null;
-        // do not include Primary (or Description)
+        // do not include Primary
         string afflKey = 
             affl.npe5__Contact__c + ':' + 
             affl.npe5__Organization__c + ':' +
             affl.npe5__Role__c + ':' +
             affl.npe5__Status__c + ':' +
+            affl.npe5__Description__c + ':' +
             string.valueOf(affl.npe5__StartDate__c) + ':' + 
             string.valueOf(affl.npe5__EndDate__c);
         return afflKey;

@@ -774,7 +774,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	            
                 for (Address__c addr : mapAccIdListAddrHH.get(accId)) {
                     
-                    // remember the oldest Default address
+                    // remember the oldest modified Default address
+                    // this is the one from the winning account, since the losing account addresses get updated.
                     if (addr.Default_Address__c && addrDefault == null) {
                         addrDefault = addr;
                         mapAccIdAddr.put(accId, addrDefault);
