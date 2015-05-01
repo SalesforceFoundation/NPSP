@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Trigger Handler on Opportunity for managing Recurring Donations 
 */
-public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
+public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler for Recurring Donations called on an Opportunity trigger AfterUpdate.

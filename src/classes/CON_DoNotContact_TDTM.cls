@@ -32,7 +32,7 @@
 * @date 2015
 * @description Handles changes to the deceased and do not contact fields on Contact.
 */
-public class CON_DoNotContact_TDTM extends TDTM_Runnable {
+public with sharing class CON_DoNotContact_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Handles deceased and do not contact fields.
