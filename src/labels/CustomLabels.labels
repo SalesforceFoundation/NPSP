@@ -3271,6 +3271,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>- none -</value>
     </labels>
     <labels>
+        <fullName>stgLabelONS</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelONS</shortDescription>
+        <value>Opportunity Name Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

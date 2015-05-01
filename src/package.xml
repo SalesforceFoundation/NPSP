@@ -942,6 +942,7 @@
         <members>stgLabelNewTH</members>
         <members>stgLabelNewUDR</members>
         <members>stgLabelNone</members>
+        <members>stgLabelONS</members>
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppNamingRefreshTitle</members>
         <members>stgLabelOppNamingSettings</members>
