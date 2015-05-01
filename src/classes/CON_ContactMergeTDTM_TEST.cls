@@ -527,7 +527,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
             npo02__NumberOfClosedOpps__c, 
             BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
             from Account order by Id]);
-        list<Contact> listCon = [select Id, Firstname, AccountId, 
+        list<Contact> listCon = [select Id, Firstname, Lastname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
             from Contact order by Id];
             
@@ -545,9 +545,12 @@ public with sharing class CON_ContactMergeTDTM_TEST {
             
         // verify the account's names and greetings are updated
         if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE)
-            system.assertEquals(false, listAcc[0].npo02__Formal_Greeting__c.contains(conLoser.Firstname));        
-        if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE)
-            system.assertEquals(false, listAcc[1].npo02__Formal_Greeting__c.contains(conLoser.Firstname));    
+            system.assertEquals(false, accLoser.npo02__Formal_Greeting__c.contains(conLoser.Firstname));        
+        if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(false, accWinner.npo02__Formal_Greeting__c.contains(conLoser.Firstname));
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(conWinner.Firstname));
+        }                
+        system.assertEquals(false, accWinner.Name.contains('Anonymous'));    
         
         integer cAccLoserOpps = [select count() from Opportunity where AccountId = :accLoser.Id];
         integer cAccWinnerOpps = [select count() from Opportunity where AccountId = :accWinner.Id];
