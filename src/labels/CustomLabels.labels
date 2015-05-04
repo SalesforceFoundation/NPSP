@@ -1774,6 +1774,14 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>oppInstallmentsOf</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppInstallmentsOf</shortDescription>
+        <value>of</value>
+    </labels>
+    <labels>
         <fullName>oppNamingBoth</fullName>
         <categories>OppNaming</categories>
         <language>en_US</language>
