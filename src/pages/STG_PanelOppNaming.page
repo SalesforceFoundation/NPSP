@@ -48,9 +48,9 @@
             <!-- Settings List View -->
             <div class="col-sm-12">
                 <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
-                    <apex:commandButton value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn-sm btn-primary" />
+                    <apex:commandButton value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn btn-sm btn-primary" />
                 </apex:outputPanel>
-                <apex:pageBlockTable value="{!listOppNameSettings}" var="ons" rendered="{!isReadOnlyMode}" styleClass=".table-bordered">
+                <apex:pageBlockTable value="{!listOppNameSettings}" var="ons" rendered="{!isReadOnlyMode}" styleClass="table table-bordered table-condensed">
                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                        <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();"
                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
@@ -72,7 +72,7 @@
             <!-- Edit View -->
             <apex:outputPanel layout="block" rendered="{!isEditMode}" id="panelNewONS" styleClass="inline-form-block">
                 <section>
-                    <h3 class="section-header" >{!$Label.stgBtnNewONS}</h3>
+                    <h3 class="section-header" >{!$Label.stgLabelONS}</h3>
                     <div class="form-group">
                         <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="col-sm-4 control-label" />
                         <div class="col-sm-8 form-control-column">
@@ -110,7 +110,7 @@
                             </apex:outputPanel>
                         </div>
                         <div class="col-sm-offset-4 col-sm-8 help-block">
-                            <apex:outputText value="{!$Label.stgHelpOppNamingFormat}" />
+                            <apex:outputText value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -136,7 +136,7 @@
                 </section>
                 <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                     <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+                    <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn btn-sm btn-default" />
                 </apex:outputPanel>
             </apex:outputPanel>
             <!-- Batch Opportunity Naming -->
@@ -148,7 +148,7 @@
                     <div class="panel-body" style="padding:15px;">                 
                         <apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" />
                         <div style="text-align:center;" class="form-control-column">
-                            <apex:commandbutton value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn-sm btn-danger"/>
+                            <apex:commandbutton value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn btn-sm btn-danger"/>
                         </div>
                     </div>
                 </apex:outputPanel>

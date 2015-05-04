@@ -495,6 +495,41 @@
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
+    <fields>
+        <fullName>Recurring_Donation_Installment_Name__c</fullName>
+        <description>Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments.</description>
+        <externalId>false</externalId>
+        <formula>IF(
+ISBLANK(npe03__Recurring_Donation__c),
+&apos;&apos;,
+  IF(
+    ISBLANK(npe03__Recurring_Donation__r.npe03__Installments__c),
+    &apos;(&apos;&amp;TEXT(Recurring_Donation_Installment_Number__c)&amp;&apos;)&apos;,
+    &apos;(&apos;&amp;TEXT(Recurring_Donation_Installment_Number__c)&amp;&apos; &apos;&amp;$Label.oppInstallmentsOf&amp;&apos; &apos;&amp;TEXT(npe03__Recurring_Donation__r.npe03__Installments__c)&amp;&apos;)&apos;
+  )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments.</inlineHelpText>
+        <label>Recurring Donation Installment Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Recurring_Donation_Installment_Number__c</fullName>
+        <description>The installment number of this opportunity&apos;s recurring donation schedule.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The installment number of this opportunity&apos;s recurring donation schedule.</inlineHelpText>
+        <label>Recurring Donation Installment Number</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
     <webLinks>
         <fullName>Refresh_Name</fullName>
         <availability>online</availability>

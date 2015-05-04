@@ -41,9 +41,10 @@ public interface OPP_INaming {
     * @param oppList the list of Opportunities to name
     * @return The list of opportunities with an updated name.
     */ 
-    list<Opportunity> refreshOppNames(list<Opportunity> oppList);
+    void refreshOppNames(list<Opportunity> oppList);
     /*******************************************************************************************************
-    * @description Get the opportunity names for the current list of opportunities. For Contact fields, the
+    * @description Get the opportunity names for the current list of opportunities. Returns a newly queried
+    * list of opportunities to allow for updates in an after insert trigger. For Contact fields, the
     * Opportunities should use the Opportunity's Contact ID for Role field (npe01__Contact_Id_for_Role__c), 
     * as contact roles don't exist before insert.
     * @param oppList the list of Opportunities to name

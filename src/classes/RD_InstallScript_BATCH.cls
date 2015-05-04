@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,40 +29,43 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2015
-* @group Opportunity
-* @group-content ../../ApexDocContent/Opportunity.htm
-* @description Batch class creates names all Opportunities per the naming spec.
- */
-public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> {
+* @date 2012 (2.0)
+* @group Recurring Donations
+* @description Batch job runs after installation to populate Recurring_Donation_Installment_Number__c on opportunity.
+*/
+public without sharing class RD_InstallScript_BATCH implements Database.Batchable<sObject> {
     
-    /** @description The query for the batch process to run on.*/
-    String query;
+    String query = 'SELECT Id FROM npe03__Recurring_Donation__c';
     
-    /** @description The batch process constructor; creates opportunity query for all opportunities.*/
-    public OPP_OpportunityNaming_BATCH() {
-        query = 'SELECT Id FROM Opportunity';
-    }
+    public RD_InstallScript_BATCH() {}
     
-    /** @description The batch process constructor; creates opportunity query for all opportunities with custom WHERE clause .*/
-    public OPP_OpportunityNaming_BATCH(string customWhere) {
-        query = 'SELECT Id FROM Opportunity ' + customWhere;
-    }
-
-    /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
 
-    /*********************************************************************************************************
-    * @description Batch process execute method. Names and updates all opportunities in the current batch.
-    */
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
-        OPP_OpportunityNaming.refreshOppNames((list<Opportunity>)scope);
-        update scope;
+        map<id,list<Opportunity>> mapRdListOpp = new map<id,list<Opportunity>>();
+        list<Opportunity> listOppsForUpdate = new list<Opportunity>();
+        for (Opportunity opp : [SELECT Id, Recurring_Donation_Installment_Number__c, npe03__Recurring_Donation__c FROM Opportunity WHERE npe03__Recurring_Donation__c IN :scope ORDER BY CloseDate]) {
+            if (mapRdListOpp.containsKey(opp.npe03__Recurring_Donation__c)) {
+                mapRdListOpp.get(opp.npe03__Recurring_Donation__c).add(opp);
+            } else {
+                mapRdListOpp.put(opp.npe03__Recurring_Donation__c, new list<Opportunity>{opp});
+            }
+        }
+
+        for (list<Opportunity> listOpp : mapRdListOpp.values()) {
+            for (integer i=1;i<=listOpp.size();i++) {
+                if (listOpp[0].Recurring_Donation_Installment_Number__c != i) {
+                    listOpp[0].Recurring_Donation_Installment_Number__c = i;
+                    listOppsForUpdate.add(listOpp[0]);
+                }
+            }
+        }
+        
+        if (!listOppsForUpdate.isEmpty())
+            update listOppsForUpdate;
     }
     
-    /** @description Batch process finish method, does nothing.*/
     public void finish(Database.BatchableContext BC) {}
-    
 }
