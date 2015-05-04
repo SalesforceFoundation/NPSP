@@ -467,6 +467,8 @@ public with sharing class RD_RecurringDonations {
                     oName += opp.CloseDate.format();
                     opp.Name = oName;
 
+                    opp.Recurring_Donation_Installment_Number__c = j+1;
+
                     opp.StageName = system.label.npe03.RecurringDonationStageName;
                     opp.npe03__Recurring_Donation__c = r.Id;
                     if (r.npe03__Recurring_Donation_Campaign__c != null && (rds.npe03__Add_Campaign_to_All_Opportunites__c || j < 1)){
@@ -555,6 +557,9 @@ public with sharing class RD_RecurringDonations {
                         oName += ') ';
                         oName += o.CloseDate.format();
                         o.Name = oName;
+
+                        o.Recurring_Donation_Installment_Number__c = rdcounter;
+
 
                         if (rds.npe03__Record_Type__c != null){
                             o.put('RecordTypeId', rds.npe03__Record_Type__c);
@@ -749,7 +754,7 @@ public with sharing class RD_RecurringDonations {
         List<npe03__Recurring_Donation__c> rdsToUpdate = database.query(rdQuery);       
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>(rdsToUpdate);  
                            
-        list<Opportunity> oppList = [select id, Amount, Name, CampaignId, AccountID, CloseDate, npe03__Recurring_Donation__r.id                                         
+        list<Opportunity> oppList = [select id, Amount, Name, CampaignId, AccountID, CloseDate, Recurring_Donation_Installment_Number__c, npe03__Recurring_Donation__r.id                                         
                                        from Opportunity 
                                        where npe03__Recurring_Donation__r.id IN :rdMap.keySet() 
                                        and isClosed = false
@@ -790,18 +795,12 @@ public with sharing class RD_RecurringDonations {
                     o.AccountID = rdMap.get(RDid).npe03__Organization__c;
                 o.CloseDate = PaymentDate;                      
                 
-                //rebuild the donor string by plucking out the installment number for re-use
-                integer lbracket = o.Name.indexOf('(');
-                integer rbracket = o.Name.indexOf(')');
-                string iNumber = '';
-                if (lbracket > 0 && rbracket > lbracket)
-                   iNumber = o.Name.substring(lbracket, rbracket + 1);
                 //modify the name 
                 String oName = '';
                 oName += rdMap.get(RDid).npe03__Donor_Name__c; 
                 oName += ' ';
                 oName += system.label.npe03.RecurringDonationPrefix;
-                oName += ' ' + iNumber + ' ';
+                oName += ' (' + o.Recurring_Donation_Installment_Number__c + ') ';
                 oName += o.CloseDate.format();
                 o.Name = oName;
                 
@@ -818,6 +817,8 @@ public with sharing class RD_RecurringDonations {
         }
         
         if (!updateOppsList.isEmpty()) {
+            //refresh opportunity names before update. if no opportunity names are defined, keeps original name
+            OPP_OpportunityNaming.refreshOppNames(updateOppsList);
             if (dmlWrapper != null)
                 dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateOppsList);
             else
@@ -1029,6 +1030,8 @@ public with sharing class RD_RecurringDonations {
                         o.Amount = rd.npe03__Amount__c;
                         o.StageName = system.label.npe03.RecurringDonationStageName;                    
                         o.npe03__Recurring_Donation__c = rd.Id;                    
+                        o.Recurring_Donation_Installment_Number__c = oppCounter;
+
                         //evaluate any custom field mappings
                         for (string s : customFieldMappingSettings.keySet()){
                             npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);

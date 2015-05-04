@@ -195,6 +195,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             if (listSOOpportunityNamingFormats == null) {
                 listSOOpportunityNamingFormats = new list<SelectOption>();
                 listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelDoNotRename));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!Recurring_Donation_Installment_Name__c}', '{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!Recurring_Donation_Installment_Name__c}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}', '{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}'));
                 listSOOpportunityNamingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));

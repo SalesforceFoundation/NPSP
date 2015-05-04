@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
         <members>ACCT_AccountMerge_TDTM</members>
@@ -112,6 +111,7 @@
         <members>PMT_Payment_TDTM</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
+        <members>RD_InstallScript_BATCH</members>
         <members>RD_ProcessControl</members>
         <members>RD_RecurringDonations</members>
         <members>RD_RecurringDonations_BATCH</members>
@@ -510,6 +510,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>

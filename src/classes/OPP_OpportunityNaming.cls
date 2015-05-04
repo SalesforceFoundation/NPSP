@@ -34,7 +34,6 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Main logic class for opportunity naming
 */
-//TODO: look at recurring donation naming
 //TODO: test new formats and run them through naming, send any errors to settings page
 //TODO: finish implementation of interface so other code can use it once it's made global
 public with sharing class OPP_OpportunityNaming implements OPP_INaming {
@@ -63,20 +62,20 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @param oppList The list of Opportunities to rename.
     * @return list<Opportunity> A new list of renamed opportunities.
     ********************************************************************************************************/
-    public static list<Opportunity> refreshOppNames(list<Opportunity> oppList) {
+    public static void refreshOppNames(list<Opportunity> oppList) {
         
         set<string> allFields = new set<string>();
 
         fillOppNameSettings();
 
         if (listOppNamingSettings.isEmpty())
-            return new list<Opportunity>();
+            return;
 
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings)
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
 
         //query for opportunities and associated contacts
-        list<Opportunity> oppsForUpdate = database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList');
+        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList'));
         list<sObject> oppConRoleQuery = database.query(getConRoleQuery(allFields) + ' WHERE OpportunityId IN :oppList AND IsPrimary = TRUE');
         
         //fill opportunity id to contact map
@@ -85,26 +84,25 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             mapOppIdToCon.put((id)obj.get('opportunityid'),(contact)obj.getsObject('contact'));
         
         //name the opportunities
-        for (Opportunity opp : oppsForUpdate) {
+        for (Opportunity opp : oppList) {
             
             //use the naming setting for this opportunity if it exists, otherwise use the default
             Opportunity_Naming_Settings__c ons;
-            
+            Opportunity queryOpp = mapOppsQuery.get(opp.id);
 
-            if (mapOppNameSettings.containsKey(getOppAttribution(opp) + opp.RecordType.Name)) {
-                ons = mapOppNameSettings.get(getOppAttribution(opp) + opp.RecordType.Name);
-            } else if (mapOppNameSettings.containsKey(getOppAttribution(opp))) {
-                ons = mapOppNameSettings.get(getOppAttribution(opp));
+
+            if (mapOppNameSettings.containsKey(getOppAttribution(queryOpp) + queryOpp.RecordType.Name)) {
+                ons = mapOppNameSettings.get(getOppAttribution(queryOpp) + queryOpp.RecordType.Name);
+            } else if (mapOppNameSettings.containsKey(getOppAttribution(queryOpp))) {
+                ons = mapOppNameSettings.get(getOppAttribution(queryOpp));
             }
                 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c))
-                opp.Name = replaceFieldNamesWithValues(opp, mapOppIdToCon.get(opp.id), ons);
+                opp.Name = replaceFieldNamesWithValues(queryOpp, mapOppIdToCon.get(queryOpp.id), ons);
 
             if (opp.Name.length() > 120)
                 opp.Name = opp.Name.substring(0,120);
         }
-
-        return oppsForUpdate;
     }
     
     /*******************************************************************************************************
