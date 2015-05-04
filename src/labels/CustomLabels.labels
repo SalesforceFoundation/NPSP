@@ -1774,6 +1774,14 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>oppInstallmentsOf</fullName>
+        <categories>OppNaming</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>oppInstallmentsOf</shortDescription>
+        <value>of</value>
+    </labels>
+    <labels>
         <fullName>oppNamingBoth</fullName>
         <categories>OppNaming</categories>
         <language>en_US</language>
@@ -1787,7 +1795,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>oppNamingIndividual</shortDescription>
-        <value>Individual</value>
+        <value>Contact Donations</value>
     </labels>
     <labels>
         <fullName>oppNamingOrganizational</fullName>
@@ -1795,7 +1803,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>oppNamingOrganizational</shortDescription>
-        <value>Organizational</value>
+        <value>Organization Donations</value>
     </labels>
     <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
@@ -2059,7 +2067,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgBtnNewONS</shortDescription>
-        <value>New Opportunity Naming Setting</value>
+        <value>New Opportunity Name Setting</value>
     </labels>
     <labels>
         <fullName>stgBtnNewPaymentMap</fullName>
@@ -2290,7 +2298,7 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpBtnOppNaming</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all opportunity names, according to the formats you&apos;ve chosen. Every single Opportunity in your Salesforce organization will be renamed except those Opportunities that have a blank Opportunity Name Format selected.&lt;br/&gt;&lt;br/&gt;
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch opportunity renaming, and refresh all opportunity names according to the formats you&apos;ve chosen. Salesforce will rename every opportunity in your organization except those opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; &lt;br/&gt;
 &lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON OPPORTUNITY BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
@@ -2571,7 +2579,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingAttribution</shortDescription>
-        <value>Denotes whether this naming setting apply to Opportunities attributed to individuals, organizations, or both.</value>
+        <value>Specifies whether you want to apply these settings to Contact donations (i.e. opportunities associated with Household, 1-to-1, or Individual &quot;Bucket&quot; accounts), Organization donations, or both Contact and Organization donations.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingDateFormat</fullName>
@@ -2587,9 +2595,7 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingFormat</shortDescription>
-        <value>The opportunity naming format. Choose a format, or choose &quot;other&quot; to create your own. Choosing a blank format will not rename those opportunities.
-
-Custom formats can reference any Opportunity field using {!API_Name__c} notation, any of the Primary Contact&apos;s fields using {!Contact.Field_Name__c}, and any field from an object related to this opportunity, such as {!Account.Name} or {!Custom_Relationship__r.Custom_Field__c}.</value>
+        <value>The opportunity name format. Choose &quot;other&quot; to create your own. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for details.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingRecTypes</fullName>
@@ -2597,7 +2603,7 @@ Custom formats can reference any Opportunity field using {!API_Name__c} notation
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingRecTypes</shortDescription>
-        <value>Which opportunity record types this donation naming should apply to. You can choose one or more record types; choosing &quot;- None -&quot; applies to all record types.</value>
+        <value>The opportunity record type(s) to which you want to apply this opportunity name. Control or Command click to select more than one record type. &quot;None&quot; applies the new naming to ALL record types.</value>
     </labels>
     <labels>
         <fullName>stgHelpOrgAccountAddressMgmt</fullName>
@@ -3273,6 +3279,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>- none -</value>
     </labels>
     <labels>
+        <fullName>stgLabelONS</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelONS</shortDescription>
+        <value>Opportunity Name Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3294,7 +3308,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelOppNamingSettings</shortDescription>
-        <value>Opportunity Naming</value>
+        <value>Opportunity Names</value>
     </labels>
     <labels>
         <fullName>stgLabelOppRollupRT</fullName>

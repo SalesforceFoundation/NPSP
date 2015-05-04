@@ -112,6 +112,7 @@
         <members>PMT_Payment_TDTM</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
+        <members>RD_InstallScript_BATCH</members>
         <members>RD_ProcessControl</members>
         <members>RD_RecurringDonations</members>
         <members>RD_RecurringDonations_BATCH</members>
@@ -510,6 +511,8 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
+        <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
@@ -757,6 +760,7 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblNPSPSettings</members>
+        <members>oppInstallmentsOf</members>
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
@@ -942,6 +946,7 @@
         <members>stgLabelNewTH</members>
         <members>stgLabelNewUDR</members>
         <members>stgLabelNone</members>
+        <members>stgLabelONS</members>
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppNamingRefreshTitle</members>
         <members>stgLabelOppNamingSettings</members>

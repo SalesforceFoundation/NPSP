@@ -52,11 +52,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 insertTdtmDefaults(defaultHandlers);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable(); 
+                database.executeBatch(new RD_InstallScript_BATCH(), 10);
             } else if(context.isPush()) {
                 List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
                 insertTdtmDefaults(defaultHandlers);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();
+                database.executeBatch(new RD_InstallScript_BATCH(), 10); 
             }
         } catch(Exception e) {
             ERR_Notifier.sendEmailOnInstallError(e, context);
