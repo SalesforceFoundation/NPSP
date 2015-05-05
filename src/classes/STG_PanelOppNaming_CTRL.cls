@@ -126,14 +126,16 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Action Method to save the current edited setting, refresh the list of settings, and return
-    * to the main page.
+    * @description Action Method to validate the current setting, save it, refresh the list of settings, and 
+    * return to the main page.
     * @return null 
     */
     public PageReference saveONS() {
-        upsert currentONS;
-        mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
-        super.cancelEdit();
+        if (isValidNameFormats()) {
+            upsert currentONS;
+            mapOppNameSettings = Opportunity_Naming_Settings__c.getAll();
+            super.cancelEdit();
+        }
         return null;
     }
 
@@ -152,21 +154,16 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @description TODO: Returns whether the custom name formats are valid or not, and adds a Page Message for
     * any errors.
     * @return boolean 
-    
+    */
     public boolean isValidNameFormats() {
-        // make sure any custom name formats are valid.
-        if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
-            string strSetting;        
-            try {
-                return true; 
-            } catch (Exception ex) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
-                    string.format(label.stgErrorInvalidNameFormat, new string[]{strSetting, ex.getMessage()})));
-                return false;           
-            }        
-        } 
-        return true;    
-    }*/
+        try {
+            OPP_OpportunityNaming.validateSetting(currentONS);
+            return true; 
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            return false;           
+        }        
+    }
         
     /*********************************************************************************************************
     * @description The list of SelectOptions for the Date Format
@@ -195,7 +192,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             if (listSOOpportunityNamingFormats == null) {
                 listSOOpportunityNamingFormats = new list<SelectOption>();
                 listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelDoNotRename));
-                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!Recurring_Donation_Installment_Name__c}', '{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!Recurring_Donation_Installment_Name__c}'));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!npsp__Recurring_Donation_Installment_Name__c}', '{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate} {!npsp__Recurring_Donation_Installment_Name__c}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}', '{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}'));
                 listSOOpportunityNamingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));

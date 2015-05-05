@@ -1861,7 +1861,66 @@ public class RD_RecurringDonations_TEST {
         for(opportunity opp:installments2){
             system.assertEquals(r2.name, opp.description);                
         }
+    }
 
+    static testMethod void testInstallmentNumbers() {
+        if (strTestOnly != '*' && strTestOnly != 'testInstallmentNumbers') return;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+        new npe03__Recurring_Donations_Settings__c(
+        npe03__Opportunity_Forecast_Months__c = 12,
+        npe03__Maximum_Donations__c = 50,
+        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Delete_Open_Opportunities.name()        
+        ));           
         
+        Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;       
+        
+        Campaign camp = new Campaign(Name = 'MyTestCamp', isActive = true);
+        insert camp;
+
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'test';
+        r1.npe03__Installments__c = 10;
+        r1.npe03__Organization__c = a.id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Recurring_Donation_Campaign__c = camp.id;
+        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
+        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
+        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
+        r1.npe03__Next_Payment_Date__c = system.today();
+        insert r1;
+        
+        list<opportunity> queryopp = [SELECT Id, Recurring_Donation_Installment_Number__c FROM Opportunity ORDER BY CloseDate];
+
+        for (integer i=0;i<queryopp.size();i++) {
+            system.assertEquals(i+1,queryopp[i].Recurring_Donation_Installment_Number__c, 'Recurring Donation opportunities should have the correct installment number.');
+            queryopp[i].Recurring_Donation_Installment_Number__c = null;
+        }
+        update queryopp;
+
+        queryopp = [SELECT Id, Recurring_Donation_Installment_Number__c FROM Opportunity ORDER BY CloseDate];
+
+        for (opportunity opp : queryopp)
+            system.assertEquals(null, opp.Recurring_Donation_Installment_Number__c, 'Recurring Donation opportunities shouldn\'t have an installment number.');
+
+        test.startTest();
+        database.executeBatch(new RD_InstallScript_BATCH());
+        test.stopTest();
+
+        queryopp = [SELECT Id, Recurring_Donation_Installment_Number__c FROM Opportunity ORDER BY CloseDate];
+
+        for (integer i=0;i<queryopp.size();i++) {
+            system.assertEquals(i+1,queryopp[i].Recurring_Donation_Installment_Number__c, 'Recurring Donation opportunities should have the correct installment number.');
+            queryopp[i].Recurring_Donation_Installment_Number__c = null;
+        }
     }
 }
