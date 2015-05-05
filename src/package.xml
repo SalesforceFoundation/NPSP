@@ -267,6 +267,10 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>Opportunity.NPSP_Default</members>
+        <name>BusinessProcess</name>
+    </types>
+    <types>
         <members>Account.Account_Compact_Layout</members>
         <members>Address__c.NPSP_Address_Compact_Layout</members>
         <members>Contact.Contact_Compact_Layout</members>
@@ -480,6 +484,10 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
+        <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
+        <members>Grant_Deadline__c.Grant_Deliverable_Submitted_Date__c</members>
+        <members>Grant_Deadline__c.Opportunity__c</members>
         <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
         <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>
         <members>Household_Naming_Settings__c.Household_Name_Format__c</members>
@@ -978,6 +986,7 @@
         <members>Error__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
@@ -1026,7 +1035,9 @@
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
+        <members>Opportunity-Grant Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
@@ -1069,6 +1080,10 @@
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>
         <name>QuickAction</name>
+    </types>
+    <types>
+        <members>Opportunity.Grant</members>
+        <name>RecordType</name>
     </types>
     <types>
         <members>Cicero</members>
