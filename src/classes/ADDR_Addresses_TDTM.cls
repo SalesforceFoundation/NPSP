@@ -914,7 +914,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         sobjDst.put(strFieldPrefixDst + 'PostalCode', sobjSrc.get(strFieldPrefixSrc + 'PostalCode'));
         sobjDst.put(strFieldPrefixDst + 'State', sobjSrc.get(strFieldPrefixSrc + 'State'));
         sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
-        
+        sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
+        sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
+
         if (isStateCountryPicklistsEnabled) {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
@@ -936,7 +938,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addr.MailingPostalCode__c = (string)sobjSrc.get(strFieldPrefixSrc + 'PostalCode');
         addr.MailingState__c = (string)sobjSrc.get(strFieldPrefixSrc + 'State');
         addr.MailingCountry__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Country');
-        
+        addr.Geolocation__Latitude__s = (decimal)sobjSrc.get(strFieldPrefixSrc + 'Latitude');
+        addr.Geolocation__Longitude__s = (decimal)sobjSrc.get(strFieldPrefixSrc + 'Longitude');
+
         // try to find state and country by code if they aren't specified?
         if (isStateCountryPicklistsEnabled) {
 
@@ -967,7 +971,6 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
-        
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
 
