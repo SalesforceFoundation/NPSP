@@ -135,7 +135,7 @@
                     </div> 
                 </section>
                 <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                    <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                    <apex:commandButton value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                     <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn btn-sm btn-default" />
                 </apex:outputPanel>
             </apex:outputPanel>
