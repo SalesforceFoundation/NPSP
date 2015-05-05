@@ -40,7 +40,7 @@ public class RD_RecurringDonations_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = 'testInstallmentNumbers';    
+    private static string strTestOnly = '*';    
 
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
