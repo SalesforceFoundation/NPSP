@@ -350,6 +350,8 @@
         <members>Address__c.Seasonal_End_Month__c</members>
         <members>Address__c.Seasonal_Start_Day__c</members>
         <members>Address__c.Seasonal_Start_Month__c</members>
+        <members>Address__c.State_Lower_District__c</members>
+        <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
         <members>Address__c.Verified__c</members>
         <members>Allocation__c.Amount__c</members>
