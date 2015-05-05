@@ -40,7 +40,7 @@ public class RD_RecurringDonations_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = '*';    
+    private static string strTestOnly = 'testInstallmentNumbers';    
 
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
@@ -1912,8 +1912,9 @@ public class RD_RecurringDonations_TEST {
         for (opportunity opp : queryopp)
             system.assertEquals(null, opp.Recurring_Donation_Installment_Number__c, 'Recurring Donation opportunities shouldn\'t have an installment number.');
 
+
         test.startTest();
-        database.executeBatch(new RD_InstallScript_BATCH());
+        Test.testInstall(new STG_InstallScript(), new Version(3,39), true);
         test.stopTest();
 
         queryopp = [SELECT Id, Recurring_Donation_Installment_Number__c FROM Opportunity ORDER BY CloseDate];
