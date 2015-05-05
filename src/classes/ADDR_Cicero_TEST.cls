@@ -224,6 +224,9 @@ public with sharing class ADDR_Cicero_TEST {
         system.assertEquals('2623 134th Ave NE, #2', listAddrVerified[0].MailingStreet__c);
         system.assertEquals('Bellevue', listAddrVerified[0].MailingCity__c);
         system.assertEquals('Washington', listAddrVerified[0].MailingState__c);
+        system.assertEquals('48', listAddrVerified[0].State_Lower_District__c);
+        system.assertEquals('48', listAddrVerified[0].State_Upper_District__c);
+
 	}
 
 }

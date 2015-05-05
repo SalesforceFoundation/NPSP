@@ -191,8 +191,13 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                                 addr.Congressional_District__c = district.district_id;
                                 addr.MailingCountry__c = district.country;
                                 foundData = true;
-                                break;
                             }
+
+                            if (district.district_type == 'STATE_UPPER')
+                                addr.State_Upper_District__c = district.district_id;
+
+                            if (district.district_type == 'STATE_LOWER')
+                                addr.State_Lower_District__c = district.district_id;
                         }
                     
                         // parse match_addr to get normalized form
