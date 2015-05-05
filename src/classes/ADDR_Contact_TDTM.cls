@@ -233,7 +233,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
     	}
     
         map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>([select Id, Address_Type__c, Household_Account__c, 
-            MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, 
+            MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c, Geolocation__Latitude__s, Geolocation__Longitude__s, 
             MailingPostalCode__c, MailingCountry__c from Address__c where Id in :setAddrId]);
             
         //UTIL_Debug.debug('****DJH: setConAddrFromLookup mapAddrIdAddr: ' + mapAddrIdAddr);

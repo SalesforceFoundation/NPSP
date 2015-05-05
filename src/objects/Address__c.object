@@ -700,6 +700,32 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>State_Lower_District__c</fullName>
+        <description>The state lower district (such as a state assembly district) this address belongs to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The state lower district (such as a state assembly district) this address belongs to.</inlineHelpText>
+        <label>State Lower District</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>State_Upper_District__c</fullName>
+        <description>The state upper district (such as state senate district) this address belongs to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The state upper district (such as state senate district) this address belongs to.</inlineHelpText>
+        <label>State Upper District</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Verification_Status__c</fullName>
         <description>Status of the address verification.</description>
         <externalId>false</externalId>
