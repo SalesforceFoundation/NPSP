@@ -34,8 +34,7 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Main logic class for opportunity naming
 */
-//TODO: test new formats and run them through naming, send any errors to settings page
-//TODO: finish implementation of interface so other code can use it once it's made global
+//TODO: finish implementation of interface so other implementing classes can be used. this will require making classes global and a heirarchical setting that we don't yet have. TBD if this is necessary.
 public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
     /*********************************************************************************************************
@@ -157,6 +156,22 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         }
 
         return oppsForUpdate;
+    }
+
+    /*******************************************************************************************************
+    * @description Attempts to apply naming and date formats to a random opportunity and a random contact in
+    * order to validate user entered opportunity name settings.
+    ********************************************************************************************************/
+    public static void validateSetting(Opportunity_Naming_Settings__c ons) {
+
+        set<string> allFields = getFieldNamesFromSpec(ons.Opportunity_Name_Format__c);
+
+        list<Opportunity> testOpp = database.query(getOppQuery(allFields) + ' LIMIT 1');
+        list<Contact> testCon = database.query(getConQuery(allFields) + ' LIMIT 1');
+        
+        string s = replaceFieldNamesWithValues(testOpp[0], testCon[0], ons);
+
+        s = system.now().format(ons.Date_Format__c);
     }
 
     /*******************************************************************************************************
