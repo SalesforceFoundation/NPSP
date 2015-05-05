@@ -57,8 +57,9 @@ public without sharing class RD_InstallScript_BATCH implements Database.Batchabl
         for (list<Opportunity> listOpp : mapRdListOpp.values()) {
             for (integer i=0;i<listOpp.size();i++) {
                 if (listOpp[i].Recurring_Donation_Installment_Number__c != i+1) {
-                    listOpp[i].Recurring_Donation_Installment_Number__c = i+1;
-                    listOppsForUpdate.add(listOpp[i]);
+                    listOppsForUpdate.add(
+                        new Opportunity(id=listOpp[i].id, Recurring_Donation_Installment_Number__c = i+1)
+                    );
                 }
             }
         }
