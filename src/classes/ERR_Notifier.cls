@@ -258,30 +258,4 @@ public with sharing class ERR_Notifier {
         ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
         }
     }
-
-    /*******************************************************************************************************
-    * @description Sends an email to the user installing the package warning of package installation failure.
-    * @param e Exception thrown during the package installation process.
-    * @param context The installation context.
-    * @return void
-    */
-    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
-        try {
-            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforcefoundation.org');
-            mail.setSenderDisplayName('Nonprofit Starter Pack');
-            mail.setSubject('NPSP Install Errors');
-            String bodyString = Label.stgInstallScriptError;
-            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-            + 'Error stack trace: \n' + e.getStackTraceString();
-            mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
-        } catch(Exception e2) {
-            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
-        }
-    }
 }
