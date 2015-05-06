@@ -1065,6 +1065,7 @@
         <members>Batch__c.BatchDetailView</members>
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
+        <members>Contact.ContactMergeFoundFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
         <members>Opportunity.BDE_Entry_FS_v2</members>
