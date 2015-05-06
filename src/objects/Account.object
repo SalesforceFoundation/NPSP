@@ -698,22 +698,17 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Description</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Fax</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__One2OneContact__c</field>
+            <field>npo02__HouseholdPhone__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Phone</field>
+            <field>Name</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -724,6 +719,11 @@
         </availableFields>
         <availableFields>
             <field>Rating</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RecordTypeId</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
