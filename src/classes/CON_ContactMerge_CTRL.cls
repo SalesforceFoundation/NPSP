@@ -274,8 +274,8 @@ public with sharing class CON_ContactMerge_CTRL {
             Schema.SobjectField f = contactFields.get(fieldName);
             Schema.DescribeFieldResult fResult = f.getDescribe();
             
-            // Only include the fields which are updateable
-            if (fResult.isUpdateable()) {
+            // Only include the fields which are updateable and accessible
+            if (fResult.isUpdateable() && fResult.isAccessible() && !isNPSPHiddenField(fieldname)) {
                 // If the field is type lookup, select the parent name  
                 if (fResult.getRelationshipName() == null) {
                     query += (fieldName + ',');
@@ -460,9 +460,78 @@ public with sharing class CON_ContactMerge_CTRL {
             }
             // Show the select radio only if the field values are different. 
             // Dont let user choose the account as you dont want users to assign a differnt account in One to One case.
-            row.showRadio = (isDifferent & !fieldName.equalsIgnoreCase('accountId'));
+            row.showRadio = (isDifferent && !fieldName.equalsIgnoreCase('accountId') && !isNPSPReadOnly(fieldName));
             fieldRows.add(row);
         }
+    }
+    
+    /*******************************************************************************************************
+    * @description returns whether the field should be treated as an NPSP read only field, typically one
+    * of our rollup fields that get automatically populated by rollups, and users should not direclty modify.
+    * @return boolean true if should be treated as readonly, false if not.
+    */
+    private boolean isNPSPReadOnly(string strField) {
+    	// we have to maintain our own set of readonly fields, because 
+    	// RLLP_OppRollup_UTIL.ContactFields doesn't include them all!
+    	list<string> listStrField = new list<string>{
+            'npo02__TotalOppAmount__c', 
+            'npo02__AverageAmount__c', 
+            'npo02__SmallestAmount__c', 
+            'npo02__LargestAmount__c', 
+            'npo02__FirstCloseDate__c', 
+            'npo02__LastCloseDate__c', 
+            'npo02__NumberOfClosedOpps__c', 
+            'npo02__OppAmountThisYear__c', 
+            'npo02__OppsClosedThisYear__c', 
+            'npo02__OppAmountLastYear__c', 
+            'npo02__OppsClosedLastYear__c',
+            'npo02__OppsClosed2YearsAgo__c', 
+            'npo02__OppAmount2YearsAgo__c', 
+            'npo02__OppsClosedLastNDays__c', 
+            'npo02__OppAmountLastNDays__c',
+            'npo02__TotalMembershipOppAmount__c', 
+            'npo02__NumberOfMembershipOpps__c', 
+            'npo02__LastMembershipDate__c', 
+            'npo02__LastMembershipAmount__c',                
+            'npo02__LastMembershipLevel__c', 
+            'npo02__LastMembershipOrigin__c',                
+            'npo02__MembershipJoinDate__c', 
+            'npo02__MembershipEndDate__c',                
+            'npo02__LastOppAmount__c', 
+            'npo02__Best_Gift_Year__c', 
+            'npo02__Best_Gift_Year_Total__c',
+            'Soft_Credit_Last_N_Days__c',
+            'npo02__Soft_Credit_Last_Year__c',
+            'npo02__Soft_Credit_This_Year__c',
+            'npo02__Soft_Credit_Total__c',
+            'npo02__Soft_Credit_Two_Years_Ago__c'
+    	};
+
+    	for (string strF : listStrField) {
+    	   if (strField.equalsIgnoreCase(strF))
+    	       return true;
+    	}
+    	return false;
+    }
+    
+    
+    /*******************************************************************************************************
+    * @description returns whether the field should be treated as an NPSP hidden field, typically one
+    * of our deprecated or system fields
+    * @return boolean true if should be treated as hidden, false if not.
+    */
+    private boolean isNPSPHiddenField(string strField) {
+        list<string> listStrField = new list<string>{
+            'npe01__SystemAccountProcessor__c',
+            'npo02__SystemHouseholdProcessor__c',
+            'npe01__SystemIsIndividual__c'
+        };
+
+        for (string strF : listStrField) {
+           if (strField.equalsIgnoreCase(strF))
+               return true;
+        }
+        return false;
     }
     
     /*******************************************************************************************************
@@ -488,11 +557,39 @@ public with sharing class CON_ContactMerge_CTRL {
         searchResults.clear();    
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
-        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + '*\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
+        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + 
+            '*\' IN ALL FIELDS RETURNING Contact(';
+            
+        string strComma = '';
+        for (string strField : listStrContactField) {
+            searchquery += strComma + strField;
+            strComma = ',';
+        }
+        
+        searchquery += ' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
         //UTIL_Debug.debug('Search Query: ' + searchquery);
         
         return search.query(searchquery);
         //List<List<SObject>> searchList = new List<List<SObject>>();
+    }
+    
+    /*******************************************************************************************************
+    * @description The list of contact field names that are used in search and displayed in Found Contacts.
+    */
+    private list<string> listStrContactField {
+        get {
+            if (listStrContactField == null) {
+                listStrContactField = UTIL_Describe.listStrFromFieldSet('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
+                set<string> setStr = new set<string>(listStrContactField);
+                // now add additional fields we know we need
+                setStr.add('Id');
+                setStr.add('Name');
+                listStrContactField.clear();
+                listStrContactField.addAll(setStr);
+            }
+            return listStrContactField;
+        }
+        set;
     }
     
     /*******************************************************************************************************
