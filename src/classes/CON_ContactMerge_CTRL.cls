@@ -557,11 +557,39 @@ public with sharing class CON_ContactMerge_CTRL {
         searchResults.clear();    
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
-        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + '*\' IN ALL FIELDS RETURNING Contact(id, name, accountId, account.name, title, email, phone, ownerId, owner.name ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
+        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + 
+            '*\' IN ALL FIELDS RETURNING Contact(';
+            
+        string strComma = '';
+        for (string strField : listStrContactField) {
+            searchquery += strComma + strField;
+            strComma = ',';
+        }
+        
+        searchquery += ' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
         //UTIL_Debug.debug('Search Query: ' + searchquery);
         
         return search.query(searchquery);
         //List<List<SObject>> searchList = new List<List<SObject>>();
+    }
+    
+    /*******************************************************************************************************
+    * @description The list of contact field names that are used in search and displayed in Found Contacts.
+    */
+    private list<string> listStrContactField {
+        get {
+            if (listStrContactField == null) {
+                listStrContactField = UTIL_Describe.listStrFromFieldSet('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
+                set<string> setStr = new set<string>(listStrContactField);
+                // now add additional fields we know we need
+                setStr.add('Id');
+                setStr.add('Name');
+                listStrContactField.clear();
+                listStrContactField.addAll(setStr);
+            }
+            return listStrContactField;
+        }
+        set;
     }
     
     /*******************************************************************************************************

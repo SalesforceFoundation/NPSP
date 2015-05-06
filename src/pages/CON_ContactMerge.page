@@ -77,11 +77,11 @@
                                 <apex:outputText >{!item.con.Name}</apex:outputText>
                             </apex:outputLink>
                         </apex:column>
-                        <apex:column value="{!item.con.AccountId}"/>
-                        <apex:column value="{!item.con.email}"/>
-                        <apex:column value="{!item.con.Title}"/>
-                        <apex:column value="{!item.con.phone}"/>
-                        <apex:column value="{!item.con.OwnerId}"/>
+                        
+                        <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="f">
+                            <apex:column value="{!item.con[f]}" />
+                        </apex:repeat>
+                        
                     </apex:pageBlockTable>      
                     <apex:pageBlockButtons id="nextStep">
                         <apex:commandButton action="{!nextStep}" value="Next"/> 
