@@ -64,8 +64,11 @@ public without sharing class RD_InstallScript_BATCH implements Database.Batchabl
             }
         }
         
-        if (!listOppsForUpdate.isEmpty())
+        if (!listOppsForUpdate.isEmpty()) {
+            TDTM_TriggerHandler.disableTDTM = true;
             update listOppsForUpdate;
+            TDTM_TriggerHandler.disableTDTM = false;
+        }
     }
     
     public void finish(Database.BatchableContext BC) {}
