@@ -49,8 +49,8 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
 
         if (!thisOpp.isEmpty()) {
             
-            list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.refreshOppNames(thisOpp);
-            update oppsForUpdate;
+            OPP_OpportunityNaming.refreshOppNames(thisOpp);
+            update thisOpp;
             
             PageReference pageRef = new PageReference('/' + thisOpp[0].id);
             pageRef.setRedirect(true);

@@ -98,8 +98,8 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                string strSoql = 'select id,npe01__Private__c,AccountId,Account.npe01__SYSTEMIsIndividual__c,' +
                     'Account.npe01__SYSTEM_AccountType__c,Account.npe01__One2OneContact__c,npe01__Organization_Type__c,Account.Name,' +
                     'firstname, lastname, OwnerId, Salutation, npo02__Naming_Exclusions__c, npo02__Household_Naming_Order__c,' +
-                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ' + 
-                    'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry,'; 
+                    'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude, ' + 
+                    'OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, OtherLatitude, OtherLongitude, '; 
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += 'MailingCountryCode, MailingStateCode, OtherCountryCode, OtherStateCode, ';
                 strSoql += 'Phone, Fax from Contact where Id IN :contacts';
