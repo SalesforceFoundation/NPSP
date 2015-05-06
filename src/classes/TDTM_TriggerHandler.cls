@@ -48,6 +48,8 @@ public with sharing class TDTM_TriggerHandler {
     private static Boolean defaultRecordsInserted = false;
     
     public static boolean suppressDebugAssertAfterErrorLogging = false;
+
+    public static boolean disableTDTM = false;
     
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -67,7 +69,12 @@ public with sharing class TDTM_TriggerHandler {
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
-    	if(newList != null)
+    	if (disableTDTM) {
+           UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
+           return;
+        }
+
+        if(newList != null)
     	   UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
     	// This solves the problem of not being able to save error records if everything gets rolled back. 
         // TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
