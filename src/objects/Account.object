@@ -698,22 +698,17 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Description</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Fax</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>npe01__One2OneContact__c</field>
+            <field>npo02__HouseholdPhone__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Phone</field>
+            <field>Name</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -724,6 +719,11 @@
         </availableFields>
         <availableFields>
             <field>Rating</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RecordTypeId</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
@@ -744,7 +744,17 @@
         </availableFields>
         <description>HH_ManageHHAccount.page</description>
         <displayedFields>
-            <field>npo02__HouseholdPhone__c</field>
+            <field>npe01__One2OneContact__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Phone</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Description</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
@@ -802,4 +812,15 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <type>Number</type>
         <unique>false</unique>
     </fields>
+    <webLinks>
+        <fullName>Manage_Household</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Manage Household</masterLabel>
+        <openType>noSidebar</openType>
+        <page>HH_ManageHHAccount</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>
