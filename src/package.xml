@@ -307,6 +307,8 @@
     </types>
     <types>
         <members>Account.Batch__c</members>
+        <members>Account.Funding_Focus__c</members>
+        <members>Account.Grantmaker__c</members>
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
@@ -1155,6 +1157,10 @@
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>
         <name>QuickAction</name>
+    </types>
+    <types>
+        <members>Opportunity.Grant</members>
+        <name>RecordType</name>
     </types>
     <types>
         <members>Cicero</members>
