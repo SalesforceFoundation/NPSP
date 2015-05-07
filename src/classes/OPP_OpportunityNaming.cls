@@ -96,11 +96,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 ons = mapOppNameSettings.get(getOppAttribution(queryOpp));
             }
                 
-            if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c))
+            if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
                 opp.Name = replaceFieldNamesWithValues(queryOpp, mapOppIdToCon.get(queryOpp.id), ons);
-
-            if (opp.Name.length() > 120)
-                opp.Name = opp.Name.substring(0,120);
+            
+                if (opp.Name.length() > 120)
+                    opp.Name = opp.Name.substring(0,120);
+            }
         }
     }
     
@@ -147,12 +148,12 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 ons = mapOppNameSettings.get(getOppAttribution(opp));
             }
 
-            if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c))
+            if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
                 opp.Name = replaceFieldNamesWithValues(opp, mapCons.get(opp.npe01__Contact_Id_for_Role__c), ons);
-            
-            if (opp.Name.length() > 120)
-                opp.Name = opp.Name.substring(0,120);
 
+                if (opp.Name.length() > 120)
+                    opp.Name = opp.Name.substring(0,120);
+            }
         }
 
         return oppsForUpdate;
