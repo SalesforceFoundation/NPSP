@@ -48,12 +48,9 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Accounting units used for allocating Opportunities.</description>
     <enableActivities>true</enableActivities>
-    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
-    <enableSharing>true</enableSharing>
-    <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>true</defaultValue>
