@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customButtons>Manage_Household</customButtons>
     <excludeButtons>DataDotComClean</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
     <excludeButtons>Share</excludeButtons>
@@ -304,6 +305,10 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Formula_MailingAddress__c</fields>
+        <fields>Address_Type__c</fields>
+        <fields>Default_Address__c</fields>
+        <fields>Verified__c</fields>
         <fields>Verification_Status__c</fields>
         <relatedList>Address__c.Household_Account__c</relatedList>
     </relatedLists>

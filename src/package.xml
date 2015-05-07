@@ -1146,6 +1146,7 @@
         <name>StaticResource</name>
     </types>
     <types>
+        <members>Account.Manage_Household</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
