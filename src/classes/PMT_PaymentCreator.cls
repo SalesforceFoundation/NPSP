@@ -92,7 +92,7 @@ public without sharing class PMT_PaymentCreator {
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
-                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
+                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                     if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
