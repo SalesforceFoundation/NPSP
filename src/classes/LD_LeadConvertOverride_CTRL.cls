@@ -216,6 +216,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        } else if (CAO_Constants.isBucketModel() && isSpecialAccount()) {
 	               lc.setAccountID(CAO_Constants.getIndividualAccountID());
 	        }
+	        
+	        // avoid affiliation creation to non-org accounts
+	        if (isSpecialAccount()) {
+	           AFFL_Affiliations_TDTM.hasRunForContacts = true;
+               AFFL_Affiliations_TDTM.hasRunForAccounts = true;
+	        }
 
 	        // convert the lead
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);

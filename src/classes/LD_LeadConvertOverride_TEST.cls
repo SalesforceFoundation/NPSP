@@ -112,6 +112,9 @@ private class LD_LeadConvertOverride_TEST {
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
+        
+        // make sure no affilations created
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     /*******************************************************************************************************
@@ -182,6 +185,9 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1,convertedContacts.size());
         //the account for this contact should be an individual account, no matter the model
         system.assertEquals(true, convertedContacts[0].Account.npe01__Systemisindividual__c);
+
+        // make sure no affilations created
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
     /*******************************************************************************************************
@@ -242,6 +248,9 @@ private class LD_LeadConvertOverride_TEST {
         //the account for this contact should be a normal account, no matter the model
         system.assertEquals(false, convertedContacts[0].Account.npe01__Systemisindividual__c);
         system.assertEquals(companyName, convertedContacts[0].Account.Name);
+
+        // make sure affilation created
+        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
     }
 
     /*******************************************************************************************************
@@ -307,6 +316,9 @@ private class LD_LeadConvertOverride_TEST {
         //the account for this contact should be a normal account, no matter the model
         system.assertEquals(false, convertedContacts[0].Account.npe01__Systemisindividual__c);
         system.assertEquals(companyName, convertedContacts[0].Account.Name);
+
+        // make sure affilation created
+        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
     }
 
     /*******************************************************************************************************
@@ -332,7 +344,7 @@ private class LD_LeadConvertOverride_TEST {
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR));
 
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
 
@@ -373,6 +385,9 @@ private class LD_LeadConvertOverride_TEST {
         list<npo02__Household__c> listHH = [select Id, Name from npo02__Household__c];
         system.assertEquals(1, listHH.size());
         system.assertEquals(convertedContacts[0].npo02__Household__c, listHH[0].Id);
+
+        // make sure no affilation created
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 
 
@@ -460,5 +475,8 @@ private class LD_LeadConvertOverride_TEST {
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, convertedContacts[0].Account.Name);
         }
+
+        // make sure no affilation created
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
 }
