@@ -1,4 +1,4 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="Convert Lead: {!Lead.Name}">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="Convert Lead: {!Lead.Name}" action="{!pickLeadConvertPage}">
     <style>
         .error{
             color: #CC0000;

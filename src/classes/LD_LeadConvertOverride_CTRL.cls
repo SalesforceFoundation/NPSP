@@ -114,13 +114,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     */
     private boolean isSpecialAccount() {
       if (l == null)
-      return false;
+          return false;
       return (
-      l.company == null ||
-      l.company == '' ||
-      l.company.toLowerCase() == 'self' ||
-      l.company.toLowerCase() == 'individual' ||
-      l.company.toLowerCase() == l.name.toLowerCase()
+          l.company == null ||
+          l.company == '' ||
+          l.company.toLowerCase() == 'self' ||
+          l.company.toLowerCase() == 'individual' ||
+          l.company.toLowerCase() == l.name.toLowerCase()
       );
     }
 
@@ -169,6 +169,22 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
         sendEmailToOwner = false;
     }
+    
+    /*******************************************************************************************************
+    * @description action method called when the page is created, which decides whether to defer to the
+    * standard Salesforce Lead Convert page (when the Account is a company) vs. using the NPSP version (when
+    * the Account is self/invididual/name to imply an 1:1/household/bucket account).
+    * @return PageReference to either standard or null (this custom lead convert page).
+    */
+    public pageReference pickLeadConvertPage() {
+        PageReference pageRef = null;
+        
+        if (!isSpecialAccount()) {
+            pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + l.Id + '&id=' + l.Id + '&nooverride=1');
+            pageRef.setRedirect(true);
+        }
+        return pageRef;
+    }               
 
     /*******************************************************************************************************
     * @description Converts the actual Lead.  All conversion logic is contained in this method
