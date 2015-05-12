@@ -1774,6 +1774,78 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>leadConvertBtnCancel</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnCancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertBtnConvert</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnConvert</shortDescription>
+        <value>Convert</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertNewOpp</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertNewOpp</shortDescription>
+        <value>Do not create a new {0} upon conversion.</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertOwner</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertOwner</shortDescription>
+        <value>Record Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertPageTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertPageTitle</shortDescription>
+        <value>Convert Lead:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSectionTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSectionTitle</shortDescription>
+        <value>Convert Lead</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSendEmail</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSendEmail</shortDescription>
+        <value>Send Email to the Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertStatus</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertStatus</shortDescription>
+        <value>Converted Status</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertViewContactError</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertViewContactError</shortDescription>
+        <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
         <fullName>oppInstallmentsOf</fullName>
         <categories>OppNaming</categories>
         <language>en_US</language>
