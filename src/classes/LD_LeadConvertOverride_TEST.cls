@@ -92,9 +92,12 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(2, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
         system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
 
         // this selects the "New" option in the Contact box
-        ext.con = 'NEW_CONTACT';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
         ext.convertLeadNow();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
@@ -172,9 +175,12 @@ private class LD_LeadConvertOverride_TEST {
         ext.getConList();
         system.assertEquals(3, ext.conList.size());
         system.assert(ext.lcStatuses.size() > 0);
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
 
         // this selects the Merge to <contact> option in the Contact box
-        ext.con = c.id;
+        ext.strConId = c.id;
+        ext.strAccountId = 'AUTO';
         ext.convertLeadNow();
 
         Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -233,10 +239,14 @@ private class LD_LeadConvertOverride_TEST {
         //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         //pass the controller into the extension
-        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
-
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);        
+        system.assertEquals(2, ext.listSOAccounts.size());
+        system.assertEquals(2, ext.listSOAfflAccounts.size());
+        
         // this selects the "New" option in the Contact box
-        ext.con = 'NEW_CONTACT';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'NEW';
+        ext.strAfflAccountID = 'NEW'; 
         ext.convertLeadNow();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -249,7 +259,7 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(false, convertedContacts[0].Account.npe01__Systemisindividual__c);
         system.assertEquals(companyName, convertedContacts[0].Account.Name);
 
-        // make sure affilation created
+        // make sure affilation created (and only 1 even though strAfflAccountId also says New!)
         system.assertEquals(1, [select count() from npe5__Affiliation__c]);
     }
 
@@ -302,9 +312,12 @@ private class LD_LeadConvertOverride_TEST {
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+        system.assertEquals(3, ext.listSOAccounts.size());
+        system.assertEquals(3, ext.listSOAfflAccounts.size());
 
         // this selects the "New" option in the Contact box
-        ext.con = 'NEW_CONTACT';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = acc.Id;
         ext.convertLeadNow();
 
         Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
@@ -319,6 +332,79 @@ private class LD_LeadConvertOverride_TEST {
 
         // make sure affilation created
         system.assertEquals(1, [select count() from npe5__Affiliation__c]);
+    }
+
+    /*******************************************************************************************************
+    * @description Runs newLeadConversionExistingNamedCompanyAffl with the 1x1 account model
+    */
+    static testMethod void newLeadConversionExistingNamedCompanyAffl_TestOne2One(){
+        newLeadConversionExistingNamedCompanyAffl_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLeadConversionExistingNamedCompanyAffl with the Household account model
+    */
+    static testMethod void newLeadConversionExistingNamedCompanyAffl_TestHHAccount(){
+        newLeadConversionExistingNamedCompanyAffl_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLeadConversionExistingNamedCompany with the Individual account model
+    */
+    static testMethod void newLeadConversionExistingNamedCompanyAffl_TestBucketAccount(){
+        newLeadConversionExistingNamedCompanyAffl_Test(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Tests merging a Lead into auto created account and creating an affilation to
+    * an existing Account name set in the Company field
+    */
+    public static void newLeadConversionExistingNamedCompanyAffl_Test(string strProcessor) {
+        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionExistingNamedCompanyAffl_Test') return;
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+
+        string companyName = 'Junky company for tests';
+        //create a real company account
+        Account acc = new Account();
+        acc.Name = companyName;
+        insert acc;
+
+        Lead l = new Lead();
+        l.FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        l.LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS;
+        l.Company = companyName;
+        l.Status = 'Open';
+        insert l;
+
+        system.currentPageReference().getParameters().put('id', l.id);
+
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        //pass the controller into the extension
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+        system.assertEquals(3, ext.listSOAccounts.size());
+        system.assertEquals(3, ext.listSOAfflAccounts.size());
+
+        // this selects the "New" option in the Contact box
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
+        ext.strAfflAccountId = acc.Id;
+        ext.convertLeadNow();
+
+        Contact[] convertedContacts = [select id, firstname, lastname, Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
+        lead[] unconvertedLeads = [select id, firstname, lastname from lead where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS and isconverted = false];
+        //no lead still unconverted
+        system.assertEquals(0,unconvertedLeads.size());
+        //one contact should have been created
+        system.assertEquals(1,convertedContacts.size());
+        //the account for this contact should an individual account
+        system.assertEquals(true, convertedContacts[0].Account.npe01__Systemisindividual__c);
+        system.assertNotEquals(companyName, convertedContacts[0].Account.Name);
+
+        // make sure affilation created to the original company
+        system.assertEquals(1, [select count() from npe5__Affiliation__c where npe5__Organization__c = :acc.Id]);
     }
 
     /*******************************************************************************************************
@@ -362,6 +448,8 @@ private class LD_LeadConvertOverride_TEST {
 
         //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
 
         // fill the lists (for coverage)
         ext.getConList();
@@ -369,7 +457,8 @@ private class LD_LeadConvertOverride_TEST {
         system.assert(ext.lcStatuses.size() > 0);
 
         // this selects the "New" option in the Contact box
-        ext.con = 'NEW_CONTACT';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
         ext.convertLeadNow();
 
         Contact[] convertedContacts = [select id, firstname, lastname, npo02__Household__c, Account.npe01__Systemisindividual__c from Contact where lastname = :CAO_Constants.CONTACT_LASTNAME_FOR_TESTS];
