@@ -48,14 +48,14 @@ public class OPP_OpportunityNaming_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        DmlWrapper dmlWrapper = new DmlWrapper();
-
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist);
-            dmlWrapper.objectsToUpdate.addAll((list<sObject>)oppsForUpdate);
+            TDTM_TriggerHandler.disableTDTM = true;
+            update oppsForUpdate;
+            TDTM_TriggerHandler.disableTDTM = false;
         }
         
-        return dmlWrapper;
+        return null;
     }
 
 }

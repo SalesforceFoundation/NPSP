@@ -405,7 +405,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Affiliation trigger handler on Affiliations. Updates a contact's primary affiliation
-    * field for a new primary affiliation.
+    * field for a new primary affiliation and unchecks existing primary affiliations, removes contact's 
+    * primary affiliation field for an affiliation that is no longer primary.
     * @param listNew The list of affiliations from trigger new. 
     * @param listOld The list of affiliations from trigger old. 
     * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
@@ -421,14 +422,17 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
         map<Id, Id> mapConIdAccIdUnprimary = new map<Id, Id>();
         
-        integer i = 0;        
-        for (SObject so : newlist) {
-            npe5__Affiliation__c affl = (npe5__Affiliation__c)so;
+        //holds which primary affiliation is being used in case of multiple primary affiliations for a single contact
+        map<Id, Id> mapConIdAfflIdPrimary = new map<Id, Id>();
+        
+        for (integer i = 0; i<newlist.size(); i++) {
+            npe5__Affiliation__c affl = (npe5__Affiliation__c)newlist[i];
 
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                 if (affl.npe5__Primary__c && affl.npe5__Contact__c != null && affl.npe5__Organization__c != null) {
                     mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
+                    mapConIdAfflIdPrimary.put(affl.npe5__Contact__c, affl.Id);
                 }        
             }
             
@@ -436,32 +440,58 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 npe5__Affiliation__c afflOld = (npe5__Affiliation__c)oldlist[i];
                 if (affl.npe5__Primary__c != afflOld.npe5__Primary__c) {
-                    if (affl.npe5__Primary__c)    
+                    if (affl.npe5__Primary__c) {
                         mapConIdAccIdPrimary.put(affl.npe5__Contact__c, affl.npe5__Organization__c);
-                    else
+                        mapConIdAfflIdPrimary.put(affl.npe5__Contact__c, affl.Id);
+                    } else {
                         mapConIdAccIdUnprimary.put(afflOld.npe5__Contact__c, afflOld.npe5__Organization__c);                    
+                    }
                 }
             }
+        }
+
+        // update contacts' primary affiliation field as appropriate
+        set<id> setAllContactIds = new set<id>();
+        setAllContactIds.addAll(mapConIdAccIdPrimary.keySet());
+        setAllContactIds.addAll(mapConIdAccIdUnprimary.keySet());
+
+        if (!setAllContactIds.isEmpty()) {
+            list<Contact> conForUpdate = new list<Contact>();
+            list<Contact> queryCon = [SELECT Id, Primary_Affiliation__c FROM Contact WHERE Id IN :setAllContactIds];
             
-        i++;            
+            for (Contact con : queryCon) {
+                if (mapConIdAccIdPrimary.containsKey(con.id)) {
+                    con.Primary_Affiliation__c = mapConIdAccIdPrimary.get(con.id);
+                    conForUpdate.add(con);
+
+                //only remove primary affiliation if primary was unchecked for this account and we haven't already replaced the primary affiliation
+                } else if (mapConIdAccIdUnprimary.containsKey(con.id) && con.Primary_Affiliation__c == mapConIdAccIdUnprimary.get(con.id)) {
+                    con.Primary_Affiliation__c = null;
+                    conForUpdate.add(con);
+                }
+            }
+
+            if (!conForUpdate.isEmpty()) {
+                hasRunForContacts = true;
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>)conForUpdate);
+            }
         }
-       
-        // update all our contacts as appropriate
-        list<Contact> listCon = new list<Contact>();
-        for (Id contactId : mapConIdAccIdPrimary.keySet()) {
-            Contact con = new Contact(Id = contactId);
-            con.Primary_Affiliation__c = mapConIdAccIdPrimary.get(contactId);
-            listCon.add(con);
+
+        if (!mapConIdAccIdPrimary.isEmpty()) {
+            //uncheck any existing primary affiliations
+            list<npe5__Affiliation__c> afflForUpdate = new list<npe5__Affiliation__c>();
+            list<npe5__Affiliation__c> queryAffl = [SELECT Id, npe5__Contact__c, npe5__Organization__c FROM npe5__Affiliation__c WHERE npe5__Primary__c = TRUE AND npe5__Contact__c IN :mapConIdAccIdPrimary.keySet() AND ID NOT IN :mapConIdAfflIdPrimary.values()];
+        
+            for (npe5__Affiliation__c affl : queryAffl) {
+                affl.npe5__Primary__c = false;
+                afflForUpdate.add(affl);
+            }
+
+            if (!afflForUpdate.isEmpty()) {
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>)afflForUpdate);
+            }
         }
-        for (Id contactId : mapConIdAccIdUnprimary.keySet()) {
-            Contact con = new Contact(Id = contactId);
-            con.Primary_Affiliation__c = null;
-            listCon.add(con);
-        }
-    
-        if (listCon.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listCon);
-        }
+
         return dmlWrapper;
     }
     
