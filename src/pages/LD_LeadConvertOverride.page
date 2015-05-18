@@ -1,62 +1,78 @@
-<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="Convert Lead: {!Lead.Name}">
+<apex:page standardController="Lead" extensions="LD_LeadConvertOverride_CTRL" title="{!$Label.leadConvertPageTitle} {!Lead.Name}" >
     <style>
         .error{
             color: #CC0000;
         }
     </style>
     
-    <apex:sectionHeader title="Convert Lead" subtitle="{!Lead.Name}"/>
+    <apex:sectionHeader title="{!$Label.leadConvertSectionTitle}" subtitle="{!Lead.Name}"/>
     
     <apex:pageMessages />
     
     <apex:form >
-        <apex:pageblock mode="edit" >
+        <apex:pageblock mode="edit" id="pbEdit">
             <apex:pageBlockButtons >
-                <apex:commandButton value="Convert" action="{!convertLeadNow}"/>
-                <apex:commandButton value="Cancel" action="{!cancel}"/>
+                <apex:commandButton value="{!$Label.leadConvertBtnConvert}" action="{!convertLeadNow}"/>
+                <apex:commandButton value="{!$Label.leadConvertBtnCancel}" action="{!cancel}"/>
             </apex:pageBlockButtons>    
-            <apex:pageBlockSection title="Convert Lead" columns="1" collapsible="false">
+            <apex:pageBlockSection title="{!$Label.leadConvertSectionTitle}" columns="1" collapsible="false">
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="Record Owner"/>
+                    <apex:outputLabel value="{!$Label.leadConvertOwner}"/>
                     <apex:inputField value="{!dummyCon.OwnerId}"/>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="Send Email to the Owner"/>
+                    <apex:outputLabel value="{!$Label.leadConvertSendEmail}"/>
                     <apex:inputCheckbox value="{!sendEmailToOwner}"/>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem > 
-                    <apex:outputLabel value="Contact"/>
+                    <apex:outputLabel value="{!$ObjectType.Contact.Label}"/>
                     <apex:outputPanel >
-                    <apex:selectList value="{!con}" size="1" id="conlist">
-                        <apex:selectOptions value="{!conList}"/>
-                        <apex:actionSupport rerender="viewlink" event="onchange"/>
-                    </apex:selectList>
-                    
-                    <apex:outputPanel id="viewlink">
-                           <a href="javascript:viewLink();" title="View (New Window)">View</a>
-                           <script type="text/javascript">
-                               function viewLink() { 
-                                   var contactId = '{!HTMLENCODE(con)}';
-                                   if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') { 
-                                       alert("You can only view existing contacts."); 
-                                   }else{ 
-                                       printWin('/'+contactId+'/p'); 
-                                   }  
-                               } 
-                            </script>
-                       </apex:outputPanel> 
-                        </apex:outputPanel> 
+                        <apex:selectList value="{!strConId}" size="1" id="conlist">
+                            <apex:selectOptions value="{!conList}"/>
+                            <apex:actionSupport rerender="pbEdit" event="onchange"/>
+                        </apex:selectList>
+                        
+                        <apex:outputPanel id="viewlink">
+                               <a href="javascript:viewLink();" title="View (New Window)">View</a>
+                               <script type="text/javascript">
+                                   function viewLink() { 
+                                       var contactId = '{!HTMLENCODE(strConId)}';
+                                       if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') { 
+                                           alert("{!$Label.leadConvertViewContactError}"); 
+                                       }else{ 
+                                           printWin('/'+contactId+'/p'); 
+                                       }  
+                                   } 
+                                </script>
+                         </apex:outputPanel> 
+                     </apex:outputPanel> 
                 </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="pbsAccount" rendered="{!NOT(isSpecialAccount)}" > 
+                    <apex:outputLabel value="{!$Label.leadConvertAccountName}"/>
+                    <apex:selectList value="{!strAccountId}" size="1" rendered="{!strConId==null || strConId=='' || strConId=='NEW_CONTACT'}">
+                        <apex:selectOptions value="{!listSOAccounts}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="pbsAffilation" rendered="{!NOT(isSpecialAccount)}" > 
+                    <apex:outputLabel value="{!$Label.leadConvertAffilationName}"/>
+                    <apex:selectList value="{!strAfflAccountId}" size="1" >
+                        <apex:selectOptions value="{!listSOAfflAccounts}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+
                 <apex:pageBlockSectionItem rendered="{!$ObjectType.Opportunity.Createable}">
-                    <apex:outputLabel value="Opportunity Name"/>
+                    <apex:outputLabel value="{!$ObjectType.Opportunity.Label} {!$ObjectType.Opportunity.Fields.Name.Label} "/>
                     <apex:outputPanel >
                         <apex:inputText value="{!oppName}"/><br/>
                         <apex:inputcheckBox value="{!doNotCreateOpp}" />  
-                        Do not create a new opportunity upon conversion.
+                        <apex:outputText value="{!$Label.leadConvertNewOpp}">
+                           <apex:param value="{!$ObjectType.Opportunity.Label}"/>
+                        </apex:outputText>                                
                     </apex:outputPanel>
                 </apex:pageBlockSectionItem>
                 <apex:pageBlockSectionItem >
-                    <apex:outputLabel value="Converted Status"/>
+                    <apex:outputLabel value="{!$Label.leadConvertStatus}"/>
                     <apex:selectList value="{!leadConvStatus}" size="1">
                         <apex:selectOptions value="{!lcStatuses}"/>
                     </apex:selectList>

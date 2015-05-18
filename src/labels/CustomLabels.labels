@@ -1774,6 +1774,166 @@
         <value>NPSP Settings</value>
     </labels>
     <labels>
+        <fullName>leadConvertAccountName</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAccountName</shortDescription>
+        <value>Account Name</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffilationName</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffilationName</shortDescription>
+        <value>Affiliated Account Name</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffiliateExistingAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliateExistingAccount</shortDescription>
+        <value>Affiliate with Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAffiliateNewAccount</fullName>
+        <categories>Lead Convert</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAffiliateNewAccount</shortDescription>
+        <value>Affiliate with New Account:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAttachBucketAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAttachBucketAccount</shortDescription>
+        <value>Attach to Individual Bucket Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAttachExistingAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAttachExistingAccount</shortDescription>
+        <value>Attach to Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAutocreateHHAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAutocreateHHAccount</shortDescription>
+        <value>Create Household Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertAutocreateOne2OneAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertAutocreateOne2OneAccount</shortDescription>
+        <value>Create One-to-One Account</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertBtnCancel</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnCancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertBtnConvert</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertBtnConvert</shortDescription>
+        <value>Convert</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertCreateAccount</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertCreateAccount</shortDescription>
+        <value>Create New Account:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertCreateNewContact</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertCreateNewContact</shortDescription>
+        <value>Create New:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertMergeExistingContact</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertMergeExistingContact</shortDescription>
+        <value>Merge with Existing:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertNewOpp</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertNewOpp</shortDescription>
+        <value>Do not create a new {0} upon conversion.</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertOwner</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertOwner</shortDescription>
+        <value>Record Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertPageTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertPageTitle</shortDescription>
+        <value>Convert Lead:</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSectionTitle</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSectionTitle</shortDescription>
+        <value>Convert Lead</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertSendEmail</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSendEmail</shortDescription>
+        <value>Send Email to the Owner</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertStatus</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertStatus</shortDescription>
+        <value>Converted Status</value>
+    </labels>
+    <labels>
+        <fullName>leadConvertViewContactError</fullName>
+        <categories>Lead Converter</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertViewContactError</shortDescription>
+        <value>You can only view existing contacts.</value>
+    </labels>
+    <labels>
         <fullName>oppInstallmentsOf</fullName>
         <categories>OppNaming</categories>
         <language>en_US</language>
