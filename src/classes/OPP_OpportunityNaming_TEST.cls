@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015, Salesforce.com Foundation
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of the Salesforce.com Foundation nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -58,7 +58,7 @@ private class OPP_OpportunityNaming_TEST
     }
 
     /*******************************************************************************************************
-    * @description Creates an opportunity name setting and an opportunity, verifies name is calculated and 
+    * @description Creates an opportunity name setting and an opportunity, verifies name is calculated and
     * dates with a blank naming scheme use a default international format.
     * Modifies the value of a field and clicks the rename button, verifies rename happened correctly.
     ********************************************************************************************************/
@@ -66,7 +66,7 @@ private class OPP_OpportunityNaming_TEST
     static void testButton()
     {
         if (strTestOnly != '*' && strTestOnly != 'testButton') return;
-        
+
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Account.Name} {!Contact.Name} {!CloseDate} {!RecordType.Name}',
@@ -105,16 +105,16 @@ private class OPP_OpportunityNaming_TEST
 
         ApexPages.StandardController sc = new ApexPages.StandardController(opp);
         OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
-        
+
         PageReference pageRef = Page.OPP_OpportunityNamingBTN;
         pageRef.getParameters().put('id', String.valueOf(opp.Id));
         Test.setCurrentPage(pageRef);
-    
+
         ctrl.buttonClick();
 
         queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
         oppname = 'newname conname 2000.01.01';
-        if (hasActiveRecType()) 
+        if (hasActiveRecType())
             oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
         system.assertEquals(oppName, queryOpp[0].Name, 'The name should be recalculated after clicking the button.');
 
@@ -128,7 +128,7 @@ private class OPP_OpportunityNaming_TEST
     static void testMissingData()
     {
         if (strTestOnly != '*' && strTestOnly != 'testMissingData') return;
-        
+
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Account.Name} {!Campaign.Name} {!Type} {!RecordType.Name}',
@@ -159,14 +159,14 @@ private class OPP_OpportunityNaming_TEST
         list<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
 
         string oppname = 'accname';
-        if (hasActiveRecType()) 
+        if (hasActiveRecType())
             oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
         system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
 
     }
 
     /*******************************************************************************************************
-    * @description Inserts 100 opportunities related to 100 accounts, and one opportunity related to a 
+    * @description Inserts 100 opportunities related to 100 accounts, and one opportunity related to a
     * contact. Verifies naming hasn't happened as naming settings haven't been inserted. Insert settings,
     * run batch naming job. Verify both types of opportunities have been named correctly.
     ********************************************************************************************************/
@@ -174,7 +174,7 @@ private class OPP_OpportunityNaming_TEST
     static void testBulk()
     {
         if (strTestOnly != '*' && strTestOnly != 'testBulk') return;
-        
+
         list<Opportunity_Naming_Settings__c> onsList = new list<Opportunity_Naming_Settings__c>();
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo',
@@ -205,7 +205,7 @@ private class OPP_OpportunityNaming_TEST
             AccountId = queryCon[0].accountId,
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             Name='Test',
-            Amount=8,
+            Amount=8.8,
             CloseDate = Date.newInstance(2000, 1, 1),
             npe01__Contact_Id_for_Role__c = con.id
         );
@@ -230,15 +230,16 @@ private class OPP_OpportunityNaming_TEST
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :queryCon[0].accountId];
 
         string oppname = 'conname true';
-        if (hasActiveRecType()) 
+        if (hasActiveRecType())
             oppname += ' ' + UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
 
         system.assertEquals(oppname, queryOpp[0].Name, 'The name should be calculated based on the individual attributed setting.');
 
         queryOpp = [SELECT Name FROM Opportunity WHERE AccountId != :queryCon[0].accountId];
 
-        for (Opportunity thisopp : queryOpp)
-            system.assert(thisopp.name.contains('8.00'), 'Opportunities have been renamed by batch process.');
-
+        for (Opportunity thisopp : queryOpp) {
+            system.assert(!thisopp.name.contains('8.00'), 'Opportunities have been renamed by batch process.');
+            system.assert(thisopp.name.contains('8'), 'Opportunities have been renamed by batch process.');
+        }
     }
 }
