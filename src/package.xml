@@ -762,6 +762,26 @@
         <members>labelMessageLoading</members>
         <members>labelShowMore</members>
         <members>lblNPSPSettings</members>
+        <members>leadConvertAccountName</members>
+        <members>leadConvertAffilationName</members>
+        <members>leadConvertAffiliateExistingAccount</members>
+        <members>leadConvertAffiliateNewAccount</members>
+        <members>leadConvertAttachBucketAccount</members>
+        <members>leadConvertAttachExistingAccount</members>
+        <members>leadConvertAutocreateHHAccount</members>
+        <members>leadConvertAutocreateOne2OneAccount</members>
+        <members>leadConvertBtnCancel</members>
+        <members>leadConvertBtnConvert</members>
+        <members>leadConvertCreateAccount</members>
+        <members>leadConvertCreateNewContact</members>
+        <members>leadConvertMergeExistingContact</members>
+        <members>leadConvertNewOpp</members>
+        <members>leadConvertOwner</members>
+        <members>leadConvertPageTitle</members>
+        <members>leadConvertSectionTitle</members>
+        <members>leadConvertSendEmail</members>
+        <members>leadConvertStatus</members>
+        <members>leadConvertViewContactError</members>
         <members>oppInstallmentsOf</members>
         <members>oppNamingBoth</members>
         <members>oppNamingIndividual</members>
