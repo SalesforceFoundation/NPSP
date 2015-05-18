@@ -180,13 +180,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         for (Id i : oppIds)
             oppList.add(new Opportunity(id=i));
 
-        list<Opportunity> oppsForUpdate = getOppNamesAfterInsert(oppList);
+        refreshOppNames(oppList);
 
-        if (!oppsForUpdate.isEmpty()) {
-            TDTM_TriggerHandler.disableTDTM = true;
-            update oppsForUpdate;
-            TDTM_TriggerHandler.disableTDTM = false;
-        }
+        TDTM_TriggerHandler.disableTDTM = true;
+        update oppList;
+        TDTM_TriggerHandler.disableTDTM = false;
     }
 
     /*******************************************************************************************************
