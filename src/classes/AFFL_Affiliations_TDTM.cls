@@ -593,4 +593,39 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         return afflKey;
     }
 
+    /*******************************************************************************************************
+    * @description Create a non-duplicate Affilation, making it primary if specified. The intended caller
+    * of this functionality is Lead Convert.
+    * @param ld The Lead who was converted
+    * @param conId The Contact ID of the contact the Lead was converted to
+    * @param accId The AccountId to Affiliate with
+    * @param isPrimary Whether the Affiliation should be the Contact's primary Affiliation
+    * @return null
+    ********************************************************************************************************/
+    public static void createNonDupeAffiliation(Lead ld, ID conId, ID accId, boolean isPrimary) {
+    
+        // first we get all affiliations involved
+        list<npe5__Affiliation__c> listAffl = [select Id, npe5__Contact__c, npe5__EndDate__c, npe5__Organization__c, 
+            npe5__Primary__c, npe5__Role__c, npe5__StartDate__c, npe5__Status__c, npe5__Description__c
+            from npe5__Affiliation__c 
+            where npe5__Contact__c = :conId and npe5__Organization__c = :accId
+            order by npe5__Primary__c desc, LastModifiedDate asc];
+        
+        npe5__Affiliation__c affl;
+        if (listAffl.size() > 0) {
+            affl = listAffl[0];
+            if (affl.npe5__Primary__c != true && isPrimary) {
+                affl.npe5__Primary__c = true;
+                update affl;
+            }
+        } else {
+            affl = new npe5__Affiliation__c();
+            affl.npe5__Contact__c = conId;
+            affl.npe5__Organization__c = accId;
+            affl.npe5__Primary__c = isPrimary;
+            affl.npe5__Role__c = ld.Title;
+            insert affl;
+        }
+    }
+
 }
