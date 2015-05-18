@@ -393,6 +393,8 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             }
         } else if (dt == Schema.DisplayType.Currency) {
             result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
+            if (result.endsWith('.00'))
+                result.subString(0,result.length()-3);
         } else {
             result = String.valueOf(obj.get(fieldName.trim()));
         }
