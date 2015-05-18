@@ -448,11 +448,11 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     }
                 }
             }
-            
         }
 
         // update contacts' primary affiliation field as appropriate
-        set<id> setAllContactIds = mapConIdAccIdPrimary.keySet();
+        set<id> setAllContactIds = new set<id>();
+        setAllContactIds.addAll(mapConIdAccIdPrimary.keySet());
         setAllContactIds.addAll(mapConIdAccIdUnprimary.keySet());
 
         if (!setAllContactIds.isEmpty()) {

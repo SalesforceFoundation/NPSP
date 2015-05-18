@@ -115,6 +115,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     public static list<Opportunity> getOppNamesAfterInsert(list<Opportunity> oppList) {
         
         set<string> allFields = new set<string>();
+        set<id> oppIdsForFuture = new set<id>();
 
         fillOppNameSettings();
 
@@ -153,10 +154,39 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
                 if (opp.Name.length() > 120)
                     opp.Name = opp.Name.substring(0,120);
+
+                oppIdsForFuture.add(opp.id);
             }
         }
 
+        //send updates to recalculate in @future method in case the primary contact role differs from the Contact Id for Role field
+        if (!oppIdsForFuture.isEmpty())
+            updateOppNameFuture(oppIdsForFuture);
+
         return oppsForUpdate;
+    }
+
+    /*******************************************************************************************************
+    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary 
+    * Contact Role field for contact fields. Called after original naming to use appropriate contact name
+    * as the 'Contact Id for Role' field has the wrong contact when called from the New Contact Donation 
+    * button.
+    * @param oppList The list of Opportunities to rename.
+    ********************************************************************************************************/
+    @future
+    public static void updateOppNameFuture (set<id> oppIds) {
+        
+        list<Opportunity> oppList = new list<Opportunity>();
+        for (Id i : oppIds)
+            oppList.add(new Opportunity(id=i));
+
+        list<Opportunity> oppsForUpdate = getOppNamesAfterInsert(oppList);
+
+        if (!oppsForUpdate.isEmpty()) {
+            TDTM_TriggerHandler.disableTDTM = true;
+            update oppsForUpdate;
+            TDTM_TriggerHandler.disableTDTM = false;
+        }
     }
 
     /*******************************************************************************************************
@@ -394,7 +424,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         } else if (dt == Schema.DisplayType.Currency) {
             result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
             if (result.endsWith('.00'))
-                result.subString(0,result.length()-3);
+                result = result.subString(0,result.length()-3);
         } else {
             result = String.valueOf(obj.get(fieldName.trim()));
         }
