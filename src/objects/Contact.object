@@ -1049,11 +1049,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Languages__c</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>npo02__LargestAmount__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -1140,11 +1135,6 @@
         </availableFields>
         <availableFields>
             <field>LeadSource</field>
-            <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Level__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
