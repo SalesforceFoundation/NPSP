@@ -50,7 +50,7 @@
                 <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
                     <apex:commandButton value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn btn-sm btn-primary" />
                 </apex:outputPanel>
-                <apex:pageBlockTable value="{!listOppNameSettings}" var="ons" rendered="{!isReadOnlyMode}" styleClass="table table-bordered table-condensed">
+                <apex:pageBlockTable value="{!listOppNameSettings}" var="ons" rendered="{!isReadOnlyMode && listOppNameSettings.size>0}" styleClass="table table-bordered table-condensed">
                    <apex:column headerValue="{!$Label.stgLabelActionColumn}" styleClass="actionColumn" style="text-align:center;" >
                        <apex:commandLink action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();"
                            styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
@@ -141,7 +141,7 @@
             </apex:outputPanel>
             <!-- Batch Opportunity Naming -->
             <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
-                <apex:outputPanel rendered="{!isReadOnlyMode}" layout="block" styleClass="panel panel-danger">
+                <apex:outputPanel rendered="{!isReadOnlyMode && NOT(IsRunningBatch) && listOppNameSettings.size>0}" layout="block" styleClass="panel panel-danger">
                     <div class="panel-heading">
                         <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
                     </div>
