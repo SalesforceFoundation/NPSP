@@ -420,9 +420,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 result = d.format(dateFormat);
             }
         } else if (dt == Schema.DisplayType.Currency) {
-            result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
-            if (result.endsWith('.00'))
-                result = result.subString(0,result.length()-3);
+            if (obj.get(fieldName.trim())!=null) {
+                result = Label.npe01.DefaultContactTransactionCurrency + String.valueOf(obj.get(fieldName.trim()));
+                if (result.endsWith('.00'))
+                    result = result.subString(0,result.length()-3);    
+            }
         } else {
             result = String.valueOf(obj.get(fieldName.trim()));
         }
