@@ -122,7 +122,7 @@ public with sharing class CONV_Account_Conversion_CTRL {
         'npo02__Informal_Greeting__c', 'npo02__Household_ID__c', 'npo02__HouseholdPhone__c', 'npo02__HouseholdEmail__c', +
         'npo02__Formula_MailingAddress__c', 'npo02__Formal_Greeting__c', 'npo02__FirstCloseDate__c', 'npo02__Best_Gift_Year__c', +
         'npo02__Best_Gift_Year_Total__c', 'npo02__AverageAmount__c', 'npo02__Always_Anonymous__c', 'npo02__Addressee__c', +
-        'OwnerId '
+        'OwnerId ', 'CreatedById', 'CreatedDate', 'LastModifiedById', 'LastModifiedDate'
     };
     /*******************************************************************************************************
     * @description Set of Account fields invalid for storing the Household Account Id - helps to cull list displayed to the user

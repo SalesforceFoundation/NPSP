@@ -47,6 +47,10 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @description Field used to store the old Household Id on the Account
     */
     public String HouseholdIdField {get;set;}
+    /*******************************************************************************************************
+    * @description Audit fields to write on created accounts if enabled by salesforce support
+    */
+    public set<string> auditFields = new set<string>{'CreatedById', 'CreatedDate', 'LastModifiedById', 'LastModifiedDate'};
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
@@ -151,6 +155,14 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     a.BillingState = hh.npo02__MailingState__c;
                     a.BillingCity = hh.npo02__MailingCity__c;
                     addressedHouseholds.put(hh.Id, hh);
+                }
+
+                //if setting audit fields on insert has been enabled by salesforce support, copy over household audit fields to the account
+                Map<String, Schema.SObjectField> mapAudit = Schema.SObjectType.Account.fields.getMap();
+                for (string auditField : auditFields) {
+                    if (mapAudit.get(auditField).getDescribe().isCreateable()) {
+                        a.put(auditField, hh.get(auditField));
+                    }
                 }
 
                 hh2Account.put(hh.id, a);
