@@ -51,8 +51,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
     /*******************************************************************************************************
     * @description The classes to be run by the master schedulable.
     */
-    public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 
-    	'RLLP_OppContactRollup_BATCH', 'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED'};
+    public static String[] scheduledClasses = new String[] {'RD_RecurringDonations_BATCH', 'RLLP_OppAccRollup_BATCH', 'RLLP_OppContactRollup_BATCH', 
+    	'RLLP_OppHouseholdRollup_BATCH', 'RLLP_OppSoftCreditRollup_BATCH', 'ADDR_SEASONAL_SCHED', 'ALLO_Rollup_SCHED'};
     
     /*******************************************************************************************************
     * @description The names to give to the instances of the master schedulable that are to be scheduled.
