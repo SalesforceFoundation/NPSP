@@ -132,7 +132,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 				  setDynamicFields((ADDR_IValidator)classInstance);
 				}
 			}
-		}
+		} else serviceName = '';
     }
     
     /*******************************************************************************************************
@@ -212,6 +212,16 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return PageReference The page to redirect to. None, in this case.
     */
     public override PageReference saveSettings() {
+
+        //if the user has blanked out the implementing class, disable verification and save settings
+        if (string.isBlank(addrVerifSettings.Class__c)) {
+            addrVerifSettings.Enable_Automatic_Verification__c = false;
+            if(!Test.isRunningTest())
+                upsert addrVerifSettings;
+            setValidatorSelection(addrVerifSettings.Class__c);
+            return super.saveSettings();
+        }
+
         try {
         	apiTestResult = null;
         	        	

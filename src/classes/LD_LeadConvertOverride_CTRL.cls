@@ -52,10 +52,22 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description Sends email to the owner on conversion if selected
     */
     public boolean sendEmailToOwner { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Contains the Id or 'NEW' for the Account to use.
+    */
+    public string strAccountId { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Contains the Id or 'NEW' for the Primary Affiliation to use.
+    */
+    public string strAfflAccountId { get; set; }
+    
     /*******************************************************************************************************
     * @description Contains the value of the converted-into Contact
     */
-    public string con { get; set; }
+    public string strConId { get; set; }
+
     /*******************************************************************************************************
     * @description Constructs the value of the Opportunity name if created
     */
@@ -83,10 +95,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description List of possible matching Contacts
     */
     public list<selectOption> conList;
-    /*******************************************************************************************************
-    * @description Display the selection list for matching Contacts
-    */
-    map<id, contact> conMap = new map<id, contact>();
 
     /*******************************************************************************************************
     * @description Settings for the main Contacts & Organizations pacakge (npe01)
@@ -112,40 +120,118 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Checks the value of the 'Company' field for values associated with 1x1 or Individual Accounts
     */
-    private boolean isSpecialAccount() {
-      if (l == null)
-      return false;
-      return (
-      l.company == null ||
-      l.company == '' ||
-      l.company.toLowerCase() == 'self' ||
-      l.company.toLowerCase() == 'individual' ||
-      l.company.toLowerCase() == l.name.toLowerCase()
-      );
+    public boolean isSpecialAccount {
+        get {
+            if (l == null)
+                return false;
+            return (
+                l.company == null ||
+                l.company == '' ||
+                l.company.toLowerCase() == 'self' ||
+                l.company.toLowerCase() == 'individual' ||
+                l.company.toLowerCase() == l.name.toLowerCase()
+            );
+        }
     }
 
     /*******************************************************************************************************
-    * @description Provides the options for select list of possible matches
+    * @description Provides the options for select list of possible Contact matches
     */
     public list<selectOption> getConList() {
       if (conList == null) {
         conList = new list<selectOption>();
 
-        conList.add( new SelectOption('', '--None--') );
-        conList.add( new SelectOption('NEW_CONTACT', 'Create New: ' + l.name) );
-
-        // find contact matches
-        conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where
-        (lastname = : l.lastname and firstname = : l.firstname) or
-        (email = : l.email and email != null) limit 50]);
+        conList.add( new SelectOption('', label.stgLabelNone) );
+        conList.add( new SelectOption('NEW_CONTACT', label.leadConvertCreateNewContact + ' ' + l.name) );
 
         for (contact c : conMap.values()) {
-          conList.add( new SelectOption(c.id, 'Merge with Existing: ' + c.name) );
+          conList.add( new SelectOption(c.id, label.leadConvertMergeExistingContact + ' ' + c.name) );
         }
       }
       return conList;
     }
 
+    /*******************************************************************************************************
+    * @description Display the selection list for matching Contacts
+    */
+    private map<id, contact> conMap {
+        get {
+            if (conMap == null) {
+                // find contact matches
+                conMap = new map<id, contact>([select id, name, accountid, firstname, lastname from contact where
+                (lastname = : l.lastname and firstname = : l.firstname) or
+                (email = : l.email and email != null) limit 50]);            
+            }
+            return conMap;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Provides the options for select list of possible Account to use for the Contact
+    */
+    public list<selectOption> listSOAccounts {
+        get {
+            if (listSOAccounts == null) {
+                listSOAccounts = new list<selectOption>();
+                string strAcc;
+                if (CAO_CONSTANTS.isHHAccountModel())
+                    strAcc = label.leadConvertAutocreateHHAccount;
+                else if (CAO_CONSTANTS.isOneToOne())
+                    strAcc = label.leadConvertAutocreateOne2OneAccount;
+                else if (CAO_CONSTANTS.isBucketModel())
+                    strAcc = label.leadConvertAttachBucketAccount;
+                if (strAcc != null)
+                    listSOAccounts.add(new SelectOption('AUTO', strAcc));
+                    
+                if (!isSpecialAccount) {
+                    // find Account matches
+                    for (Account acc : mapIdAccountMatches.values())
+                        listSOAccounts.add(new SelectOption(acc.Id, Label.leadConvertAttachExistingAccount + ' ' + acc.Name));
+                    // new Account
+                    listSOAccounts.add(new SelectOption('NEW', Label.leadConvertCreateAccount + ' ' + l.Company));
+                }
+            }
+        return listSOAccounts;
+        }
+      
+        set;
+    }
+    
+    /*******************************************************************************************************
+    * @description Provides the options for select list of possible Accounts to use for the Affiliation
+    */
+    public list<selectOption> listSOAfflAccounts {
+        get {
+            if (listSOAfflAccounts == null) {
+                listSOAfflAccounts = new list<selectOption>();
+                listSOAfflAccounts.add(new SelectOption('', label.stgLabelNone));
+                if (!isSpecialAccount) {
+                    // find Account matches
+                    for (Account acc : mapIdAccountMatches.values())
+                        listSOAfflAccounts.add(new SelectOption(acc.Id, Label.leadConvertAffiliateExistingAccount + ' ' + acc.Name));
+                    // new Account
+                    listSOAfflAccounts.add(new SelectOption('NEW', Label.leadConvertAffiliateNewAccount + ' ' + l.Company));
+                }
+            }
+        return listSOAfflAccounts;
+        }
+      
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description map of all Accounts that match the name of Lead.Company
+    */
+    public map<Id, Account> mapIdAccountMatches {
+        get {
+            if (mapIdAccountMatches == null) {
+                mapIdAccountMatches = new map<Id, Account>([select Id, Name, BillingCity from Account where name = :l.company limit 50]);
+            }
+            return mapIdAccountMatches;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Constructs the page and default values for the Lead, dummy Contact and Opportunity
@@ -156,7 +242,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [select id, name, firstname, lastname, company, email, ownerId from lead
+        l = [select id, name, firstname, lastname, company, email, title, ownerId from lead
             where id = : controller.getId()];
 
         // dummy contact allows owner selection - use contact as always accessible if user has lead conversion rights
@@ -168,7 +254,30 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         oppName = l.name;
         doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
         sendEmailToOwner = false;
+        
+        // set reasonable defaults for contact and account.
+        strAccountId = 'AUTO';
+        if (conMap.size() == 0)
+            strConId = 'NEW_CONTACT';
+        if (!isSpecialAccount)
+            strAfflAccountId = listSOAfflAccounts[1].getValue(); // either the first existing or the new account if none.
     }
+    
+    /*******************************************************************************************************
+    * @description action method called when the page is created, which decides whether to defer to the
+    * standard Salesforce Lead Convert page (when the Account is a company) vs. using the NPSP version (when
+    * the Account is self/invididual/name to imply an 1:1/household/bucket account).
+    * @return PageReference to either standard or null (this custom lead convert page).
+    */
+    public pageReference pickLeadConvertPage() {
+        PageReference pageRef = null;
+        
+        if (!isSpecialAccount) {
+            pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + l.Id + '&id=' + l.Id + '&nooverride=1');
+            pageRef.setRedirect(true);
+        }
+        return pageRef;
+    }               
 
     /*******************************************************************************************************
     * @description Converts the actual Lead.  All conversion logic is contained in this method
@@ -177,7 +286,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public pageReference convertLeadNow() {
     	Savepoint sp = Database.setSavepoint();
     	try {
-	        if (con == null) {
+	        if (strConId == null) {
 	            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
 	                'You must select an option in the Contact box.'));
 	            return null;
@@ -191,21 +300,29 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        lc.setConvertedStatus(leadConvStatus);
 	        lc.setOwnerId(dummyCon.OwnerId);
 	        lc.setSendNotificationEmail(sendEmailToOwner);
+	        
+	        boolean isIndividualAccount = isSpecialAccount || strAccountId == 'AUTO';
 
 	        // is this a merge to existing?
-	        if (con != 'NEW_CONTACT') {
+	        if (strConId != 'NEW_CONTACT') {
 	            // get this contact's account
-	            lc.setContactId(con);
-	            lc.setAccountId(conMap.get(con).accountId);
-	        } else if (CAO_Constants.isBucketModel() && isSpecialAccount()) {
-	               lc.setAccountID(CAO_Constants.getIndividualAccountID());
+	            lc.setContactId(strConId);
+	            lc.setAccountId(conMap.get(strConId).accountId);
+	        } else if (strAccountId != 'NEW' && strAccountId != 'AUTO' && strAccountId != null && strAccountId != '') {
+	           lc.setAccountId(strAccountId);
+	        } else if (CAO_Constants.isBucketModel() && isIndividualAccount) {
+                lc.setAccountID(CAO_Constants.getIndividualAccountID());
 	        }
+
+	        // avoid auto-affiliation creation
+            AFFL_Affiliations_TDTM.hasRunForContacts = true;
+            AFFL_Affiliations_TDTM.hasRunForAccounts = true;
 
 	        // convert the lead
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
 
             // fix the account that lead conversion created
-            if (con == 'NEW_CONTACT') {
+            if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
             	string strSoql = 'select id, firstname, lastname,';
             	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
             	   strSoql += ' recordtypeId,';
@@ -213,37 +330,34 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
             	Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
+                npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
-                // update the account if it is non-standard
-                if (isSpecialAccount()) {
-	                if (CAO_Constants.isOneToOne()) {
-		                myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
-		                myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-	                } else if (CAO_Constants.isHHAccountModel()) {
-                        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-                        // if custom household naming is on, we need to leave the account name untouched,
-                        // so on update, it will get its correct name.
-                        if (!hs.npo02__Advanced_Household_Naming__c)
-                            myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
+                // update the account since it is non-standard
+                if (CAO_Constants.isOneToOne()) {
+                    myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
+                    myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                } else if (CAO_Constants.isHHAccountModel()) {
+                    // if custom household naming is on, we need to leave the account name untouched,
+                    // so on update, it will get its correct name.
+                    if (!hs.npo02__Advanced_Household_Naming__c)
+                        myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
                         myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-	                }
-
-	                if (!CAO_Constants.isBucketModel()) {
-	                	// change its recordtype if specified in settings
-	                    ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
-		                if (rtIdAcccount != null) {
-		                    myAccount.put('RecordTypeID', rtIdAcccount);
-		                }
-		                myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
-	                    myAccount.npe01__One2OneContact__c = con.Id;
-		                update myAccount;
-   	                }
-                }
+                    }
+                
+                if (!CAO_Constants.isBucketModel()) {
+                    // change its recordtype if specified in settings
+                    ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
+                    if (rtIdAcccount != null) 
+                        myAccount.put('RecordTypeID', rtIdAcccount);
+                    myAccount.npe01__SYSTEMISINDIVIDUAL__c = true;
+                    myAccount.npe01__One2OneContact__c = con.Id;
+                    update myAccount;
+                    }
 
 	            // see if we need to create a household object for this contact (1:1 & bucket only)
 	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
-	                npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
+	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || 
+	                   hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
 	                    update con;
 	                }
@@ -251,11 +365,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             }
 
             //clean up the extra OCR Issue #214
-            // if we create an opp, its a 1x1 (or HH?), and its merged into an existing contact
-            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && con != 'NEW_CONTACT'){
+            // if we create an opp, its a 1x1 (or HH), and its merged into an existing contact
+            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && strConId != 'NEW_CONTACT'){
 
                 //get the new OCRs
-                list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
+                list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
+                    OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
 
                 //if there are more than one, find the primary with the right role, and delete
                 //the extraneous ones
@@ -279,6 +394,25 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 }
 
 	        }
+	        
+            // if we created a new company account, affiliate to it.
+            if (strAccountId == 'NEW')
+                strAfflAccountId = lcr.getAccountId();
+                
+            // handle the optional Affiliation to a new or existing Account.
+            ID afflAccId = null;
+            if (strAfflAccountId == 'NEW') {
+                Account acc = new Account(name=l.Company);
+                insert acc;
+                afflAccId = acc.Id;
+            } else if (strAfflAccountId != null && strAfflAccountId != '') {
+            	afflAccId = strAfflAccountId;
+            }
+            if (afflAccId != null) {
+                AFFL_Affiliations_TDTM.hasRunForContacts = false;
+                AFFL_Affiliations_TDTM.hasRunForAccounts = false;
+                AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
+            }
 	        // redirect
             return new PageReference('/' + lcr.getContactId());
     	} catch (exception e) {
