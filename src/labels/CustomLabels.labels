@@ -1779,7 +1779,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>leadConvertAccountName</shortDescription>
-        <value>Account Name</value>
+        <value>Account</value>
     </labels>
     <labels>
         <fullName>leadConvertAffilationName</fullName>
@@ -1787,7 +1787,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>leadConvertAffilationName</shortDescription>
-        <value>Affiliated Account Name</value>
+        <value>Affiliated Account</value>
     </labels>
     <labels>
         <fullName>leadConvertAffiliateExistingAccount</fullName>
