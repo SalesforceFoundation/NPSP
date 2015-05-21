@@ -87,7 +87,15 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>(); // map of HH Accounts, and their default Address 
-        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.     
+        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.  
+        
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            for (SObject so : listOld) {
+                ID accId = ((Address__c)so).Household_Account__c;
+                if (accId != null)
+                    mapAccIdAddr.put(accId, null);
+            }
+        } else {  
 
         integer i = 0;        
         for (SObject so : listNew) {
@@ -153,8 +161,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             
             return null;    
         }
-
-        // AFTER INSERT & AFTER UPDATE
+        }
+        
+        // AFTER INSERT & AFTER UPDATE & AFTER DELETE
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         hasRunAddrTrigger = true;
         
@@ -234,6 +243,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	                }      
 	            }
             }
+            
+            // finally, if no default found, create an empty default
+            if (hhinfo.addrDefault == null) {
+                Address__c addrEmpty = new Address__c();
+                addrEmpty.Household_Account__c = accId;
+                hhinfo.addrDefault = addrEmpty;
+            }
         }
         
         // some callers just need the HHInfo for each HH Account.
@@ -292,6 +308,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // check the Contacts on this household
             if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
+	                // detect that the contact's current address was deleted.
+	                // and if so clear any override flag so it will get the default address.
+	                if (con.Current_Address__c == null)
+	                   con.is_Address_Override__c = false;
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
 	                    con.Current_Address__c = addr.Id;
                         copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
