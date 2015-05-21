@@ -273,7 +273,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            copyAddressAddrSObj(addr, acc, 'Billing');
+            copyAddressAddrSObj(addr, acc, 'Billing', null);
             listAccUpdate.add(acc);
             
 	        // check other addresses on this household that are no longer the default
@@ -293,9 +293,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-	                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
 	                    con.Current_Address__c = addr.Id;
-                        copyAddressAddrSObj(addr, con, 'Mailing');
+                        copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 	                    listConUpdate.add(con);
 	                }   
 	            }
@@ -391,8 +390,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
     		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            copyAddressAddrSObj(addr, con, 'Mailing');
-            con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+            copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
             dmlWrapper.objectsToUpdate.add(con);    		
     	}
     }
@@ -479,7 +477,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param includeAddressType whether to include comparing the AddressType field
     * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */     
-    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
+    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;     
            
@@ -495,6 +493,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+            cChange++;
+        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null)
             cChange++;
         return cChange <= 1;
     }
@@ -677,16 +677,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * as Default if the caller specifies it on the new address.
     * @param listAddr a list of Addresses to update
     * @param dmlWrapper the Addresses to update
+    * @param includeAddressType whether to include comparing the AddressType field
     * @return void
     */ 
-    public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper) {  
+    public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper, boolean includeAddressType) {  
     	
     	map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
     	for (Address__c addrNew : listAddr) {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (isAddressChanged(addrNew, addrDup, false)) {
+                if (isAddressChanged(addrNew, addrDup, includeAddressType)) {
                     copyAddressObj(addrNew, addrDup);
                     if (addrNew.Default_Address__c)
                         addrDup.Default_Address__c = true;
@@ -725,12 +726,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (listAddrHH != null) {
                 Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
-                    if (!isAddressChanged(addr, addrHH, false)) {
+                    // only include address type in the test if the new one isn't empty.
+                    if (!isAddressChanged(addr, addrHH, addr.Address_Type__c != null)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
                     }
-                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH)) {
+                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH, addr.Address_Type__c != null)) {
                         // found fuzzy match, remember it and continue searching
                         addrMatch = addrHH;
                         continue;
@@ -849,6 +851,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             strCleanup(addr.MailingState__c) +
             strCleanup(addr.MailingPostalCode__c) +
             strCleanup(addr.MailingCountry__c) +
+            strCleanup(addr.Address_Type__c) + 
             (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
             (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
             (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
@@ -897,6 +900,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addrDst.MailingState__c = addrSrc.MailingState__c;
         addrDst.MailingPostalCode__c = addrSrc.MailingPostalCode__c;
         addrDst.MailingCountry__c = addrSrc.MailingCountry__c;
+        addrDst.Geolocation__Latitude__s = addrSrc.Geolocation__Latitude__s;
+        addrDst.Geolocation__Longitude__s = addrSrc.Geolocation__Longitude__s;
+        if (addrSrc.Address_Type__c != null)
+            addrDst.Address_Type__c = addrSrc.Address_Type__c;
     }
 
     /*******************************************************************************************************
@@ -929,9 +936,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param addr the Address object to copy to
+    * @param strAddrType if not null, copy to address.Address_Type__c
     * @return void
     */ 
-    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr) {
+    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr, string strAddrType) {
         addr.MailingStreet__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
         addr.MailingCity__c = (string)sobjSrc.get(strFieldPrefixSrc + 'City');
@@ -956,7 +964,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 // assume it's a valid statecode
                 addr.MailingState__c = strStateCode;
             }
-        }    
+        }
+        
+        // if specified, also include Address Type
+        if (strAddrType != null) 
+            addr.Address_Type__c = strAddrType;
     }
 
     /*******************************************************************************************************
@@ -965,9 +977,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to 
     * @return void
     */ 
-    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix) {
+    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
         sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
@@ -1001,6 +1014,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
             }
         }
+        
+        if (strFieldAddrType != null)
+            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
     }
 
     /*******************************************************************************************************
