@@ -241,8 +241,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         for (Contact con : listCon) {
             Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
             if (addr != null) {
-                con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
-                ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing');
+                ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 
             	// deal with any address coming from a different account,
             	// which we need to treat as a creation instead.
@@ -357,8 +356,7 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         	addr.Default_Address__c = !con.is_Address_Override__c;
         	addr.Latest_Start_Date__c = system.today();
         	addr.Latest_End_Date__c = null;        	
-        	ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr);
-        	addr.Address_Type__c = con.npe01__Primary_Address_Type__c;
+        	ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, con.npe01__Primary_Address_Type__c);
             mapConAddr.put(con, addr);
         }
 
@@ -379,10 +377,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// record the match in the contact
             	if (isBefore) {
                     con.Current_Address__c = addrDup.Id;
-                    con.npe01__Primary_Address_Type__c = addrDup.Address_Type__c; 
             	} else { 	                
 	                // if it is a fuzzy match, not exact, then we want to update the existing address.
-	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, false)) {
+	                if (ADDR_Addresses_TDTM.isAddressChanged(addrNew, addrDup, true)) {
 	                    ADDR_Addresses_TDTM.copyAddressObj(addrNew, addrDup);
 	                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c)
 	                        addrDup.Default_Address__c = true;
@@ -472,10 +469,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
         		if (addr == null)
         		  addr = hhinfo.addrDefault;
                 if (addr != null) {
-                	con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
                 	con.Current_Address__c = addr.Id;
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing');
-                }        	   
+                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
+                }
         	}
         }         
     }
