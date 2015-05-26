@@ -888,10 +888,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
         if (addr.MailingStreet__c == null)
             return;
+            
+        // handle CR NL
         integer ich = addr.MailingStreet__c.indexOf('\r\n');
         if (ich > -1) {
             addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
             addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
+
+        // handle just NL
+        ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
         }
     }
     
