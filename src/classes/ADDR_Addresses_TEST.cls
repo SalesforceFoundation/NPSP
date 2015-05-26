@@ -2501,6 +2501,55 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
+        update accounts' billing address with multiline street address  (this version only has Newline only)
+    verify:
+        new Default Address created
+        HH and Contacts get new Address
+        new Addresss has multiline street split into Street and Street2 fields
+    **********************************************************************************************************/            
+    static testMethod void updateAccMultilineStreetAddrNL() {
+        if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddrNL') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // modify some of the account addresses directly
+        for (integer i = 0; i < cHH; i++) {
+            Account acc = listAccT[i];
+            acc.BillingStreet = 'Direct Street Edit\nSecond Line';
+            acc.BillingCity = 'Direct City Edit';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listAccT;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals('Direct Street Edit\r\nSecond Line', acc.BillingStreet);
+            system.assertEquals('Direct Street Edit\r\nSecond Line', con.MailingStreet);
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+ 
+        // verify the Address objects split street.
+        list<Address__c> listAddr = [select Id, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c, Default_Address__c from Address__c];
+        for (Address__c addr : listAddr) {
+            if (addr.Default_Address__c) {
+                system.assertEquals('Direct Street Edit', addr.MailingStreet__c);
+                system.assertEquals('Second Line', addr.MailingStreet2__c);
+                system.assertEquals('Direct Street Edit, Second Line', addr.Formula_MailingStreetAddress__c);
+            }
+        }
+
+    }
+
+    /*********************************************************************************************************
+    @description
         create N new organizational accounts with billing addresses 
     verify:
         N addresses created
