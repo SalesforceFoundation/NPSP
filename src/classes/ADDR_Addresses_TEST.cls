@@ -205,6 +205,47 @@ public with sharing class ADDR_Addresses_TEST {
         
     /*********************************************************************************************************
     @description
+        insert contact w/ address, and force recreate of hh account
+    verify:
+        new default Address created
+        contact address lookup updated to new address
+        the contact gets the new Address
+        the household account gets the new Address
+    **********************************************************************************************************/            
+    static testMethod void insertContactWithAddressRecreateAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressRecreateAccount') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
+            
+        listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
+        for (Contact con : listConT) {
+            con.MailingStreet = 'new street';
+            con.MailingCity = 'new city';
+        }
+        insert listConT;        
+
+        // null out account, so a new account will be created.
+        test.startTest();
+        for (Contact con : listConT) 
+            con.AccountId = null;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listConT; 
+        test.stopTest();       
+
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+
+    /*********************************************************************************************************
+    @description
         insert contact w/ new address override
     verify:
         new non-default Address created
