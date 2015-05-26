@@ -64,10 +64,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                // on insert, we only need to create addresses for Org accounts.
-                // Household accounts are handled during the after update, which will always occur
-                // as they are being hooked up with their primary contact. 
-                if (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+                // for new accounts that are using address management, create the address object.
+                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                        !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && 
+                        UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
                     if (isAccountAddressSpecified(acc))
                         listAccCreateAddr.add(acc);
                 }
@@ -147,7 +148,6 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     }
 
-    // 
     /*******************************************************************************************************
     * @description for each Account, create a new default address and add it to dmlWrapper
     * @param listAcc a list of Accounts

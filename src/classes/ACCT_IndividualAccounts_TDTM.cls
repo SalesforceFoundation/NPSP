@@ -547,24 +547,23 @@ public with sharing class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         
         if (accountInserts.size() > 0) {
-            // DJH: with current TDTM design, we can't use dmlWrapper
+            // with current TDTM design, we can't use dmlWrapper
             // because we need to get the new AccountID's into the Contacts.
-            
-            //Database.SaveResult[] lsr = Database.insert(accountInserts, false);
+
             // we do want it to be all or nothing, so errors won't get lost.
             insert(accountInserts);
+            
+            // now get the new address objects that might have been created
+            list<Address__c> listAddr = [select Id, Household_Account__c, Default_Address__c from Address__c where Household_Account__c in :accountInserts];
+            map<Id, Id> mapAccIdToAddrId = new map<Id, Id>();
+            for (Address__c addr : listAddr) 
+                mapAccIdToAddrId.put(addr.Household_Account__c, addr.Id);
+            
+            // now update each contact's accountId, as well as potential address lookup.
             Integer i = 0;
             for (Contact c : listContactNewAcct) {
-                // for each success, write the new AccountId to the Contact.
                 c.AccountId = accountInserts[i].Id;
-                /**** 
-                if (lsr[i].isSuccess() == true) {
-                    c.AccountId = lsr[i].getId();
-                } else {
-                    UTIL_Debug.debug('Error inserting Accounts');
-                    // DJH:UNDONE - need to use error class to log DML errors
-                }
-                *****/
+                c.Current_Address__c = mapAccIdToAddrId.get(c.AccountId);
                 i += 1;
             }
         }

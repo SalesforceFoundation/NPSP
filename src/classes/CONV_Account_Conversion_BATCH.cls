@@ -269,6 +269,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             Map<Id, Address__c> addressesForInsert = new Map<Id, Address__c>();
             List<Account> hhAccountsForUpdate = new List<Account>();
 
+            /* no longer manually do this.  our account insert trigger will create an address object if appropriate.
             //insert addresses for any household accounts that have one
             for (Account a : hh2Account.values()){
 
@@ -286,6 +287,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                     addressesForInsert.put(a.Id, ad);
                 }
             }
+            */
 
             for (Id accountId : consWithNewHousehold.keySet()){
                 List<Contact> conList = consWithNewHousehold.get(accountId);
