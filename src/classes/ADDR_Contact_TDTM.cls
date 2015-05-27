@@ -155,11 +155,10 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 	                        mapAddrIdIsOverride.put(con.Current_Address__c, true);                    
 	            	}
 	            	
-	            	// second priority.  if they are clearing isAddressOverride, refill from the Default Address
-	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c) {
-	                    // only reset to default if no address fields have changed.
-	                    if (!isContactAddressChanged(con, conOld))
-	                       listConAddrReset.add(con);
+	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
+	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c && 
+	            	    !isContactAddressChanged(con, conOld)) {
+	                    listConAddrReset.add(con);
 	                    if (conOld.Current_Address__c != null)
 	                        // track which address's need their dates updated
 	                        mapAddrIdIsOverride.put(conOld.Current_Address__c, false);

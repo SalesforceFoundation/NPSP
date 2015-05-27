@@ -885,13 +885,6 @@ public with sharing class ADDR_Addresses_TEST {
             system.assert(con.MailingCity.contains('City'));
         }
 
-        // verify address overrides have latest start date and latest end date appropriately set.
-        list<Address__c> listAddr = [select Id, Latest_Start_Date__c, Latest_End_Date__c from Address__c where Id in :listAddrT];
-        system.assertEquals(cHH, listAddr.size());
-        for (Address__c addr : listAddr) {
-           system.assertEquals(system.today(), addr.Latest_Start_Date__c);
-           system.assertEquals(system.today(), addr.Latest_End_Date__c);
-        }        
     }
 
     /*********************************************************************************************************
