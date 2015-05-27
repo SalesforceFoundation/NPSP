@@ -58,8 +58,23 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> 
     * @description Batch process execute method. Names and updates all opportunities in the current batch.
     */
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
+        //save old opp names to see if we need an update
+        list<opportunity> oppsForUpdate = new list<Opportunity>();
+        map<id,string> oppNames = new map<id,string>();
+        for (Opportunity opp : (list<Opportunity>)scope)
+            oppNames.put(opp.id, opp.Name);
+
+        //refresh names
         OPP_OpportunityNaming.refreshOppNames((list<Opportunity>)scope);
-        update scope;
+
+        //find which names have been updated, add to list
+        for (Opportunity opp : (list<Opportunity>)scope) {
+            if (opp.Name != oppNames.get(opp.id))
+                oppsForUpdate.add(opp);
+        }
+
+        if (!oppsForUpdate.isEmpty())
+            update oppsForUpdate;
     }
     
     /** @description Batch process finish method, does nothing.*/
