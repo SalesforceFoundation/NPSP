@@ -87,74 +87,83 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // first go through all new/modified Addresses, and collect the list of HH Accounts to consider.
         map<Id, Address__c> mapAccIdAddr = new map<Id, Address__c>(); // map of HH Accounts, and their default Address 
-        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.     
+        map<Id, Address__c> mapAddrIdAddr = new map<Id, Address__c>(); // map of changed Addresses who need to only update any contact overrides.  
+        
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            for (SObject so : listOld) {
+                ID accId = ((Address__c)so).Household_Account__c;
+                if (accId != null)
+                    mapAccIdAddr.put(accId, null);
+            }
+        } else {  
 
-        integer i = 0;        
-        for (SObject so : listNew) {
-            Address__c addr = (Address__c)so;
-            Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
-            
-            // BEFORE INSERT
-	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-	           // when an address is marked Default, we update its latest date fields
-	           if (addr.Default_Address__c) { 
-	               addr.Latest_Start_Date__c = system.today();
-	               addr.Latest_End_Date__c = null;
-	           }
+	        integer i = 0;        
+	        for (SObject so : listNew) {
+	            Address__c addr = (Address__c)so;
+	            Address__c addrOld = (listOld != null) ? (Address__c)listOld[i] : null;
+	            
+	            // BEFORE INSERT
+		        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+		           // when an address is marked Default, we update its latest date fields
+		           if (addr.Default_Address__c) { 
+		               addr.Latest_Start_Date__c = system.today();
+		               addr.Latest_End_Date__c = null;
+		           }
+		        }
+		        
+	            // BEFORE UPDATE
+	            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+	                if (addr.Default_Address__c != addrOld.Default_Address__c) {
+	                   // when an address changes Default, we update its latest date fields
+	                    if (addr.Default_Address__c) {
+		                   addr.Latest_Start_Date__c = system.today();
+		                   addr.Latest_End_Date__c = null;
+	                    } else {
+	                       addr.Latest_End_Date__c = system.today();                    	
+	                    }
+	                }
+	            }
+	
+	            // AFTER INSERT
+	            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+	            	// a new address that is marked default or seasonal needs to propogate to the household
+	                if (addr.Default_Address__c || isSeasonalAddr(addr)) 
+	                    mapAccIdAddr.put(addr.Household_Account__c, addr);
+	            }
+	            
+	            // AFTER UPDATE
+	            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+	                // an address that is marked default needs to propogate to the household
+	                if ((addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c)) 
+	                    // any seasonal address also need to be considered
+	                    || isSeasonalChanged(addr, addrOld)) {
+	                    mapAccIdAddr.put(addr.Household_Account__c, addr);
+	                } else if (isAddressChanged(addr, addrOld, true)) {
+	                    if (addr.Default_Address__c)
+	                        mapAccIdAddr.put(addr.Household_Account__c, addr);
+	                    else    // address changed, but not default, still need to update any contacts using it as an override
+	                        mapAddrIdAddr.put(addr.Id, addr);      
+	                } 
+	            }
+	            
+	            // moving to the next item
+	            i++;            
 	        }
-	        
-            // BEFORE UPDATE
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                if (addr.Default_Address__c != addrOld.Default_Address__c) {
-                   // when an address changes Default, we update its latest date fields
-                    if (addr.Default_Address__c) {
-	                   addr.Latest_Start_Date__c = system.today();
-	                   addr.Latest_End_Date__c = null;
-                    } else {
-                       addr.Latest_End_Date__c = system.today();                    	
-                    }
-                }
-            }
-
-            // AFTER INSERT
-            if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            	// a new address that is marked default or seasonal needs to propogate to the household
-                if (addr.Default_Address__c || isSeasonalAddr(addr)) 
-                    mapAccIdAddr.put(addr.Household_Account__c, addr);
-            }
-            
-            // AFTER UPDATE
-            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                // an address that is marked default needs to propogate to the household
-                if ((addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c)) 
-                    // any seasonal address also need to be considered
-                    || isSeasonalChanged(addr, addrOld)) {
-                    mapAccIdAddr.put(addr.Household_Account__c, addr);
-                } else if (isAddressChanged(addr, addrOld, true)) {
-                    if (addr.Default_Address__c)
-                        mapAccIdAddr.put(addr.Household_Account__c, addr);
-                    else    // address changed, but not default, still need to update any contacts using it as an override
-                        mapAddrIdAddr.put(addr.Id, addr);      
-                } 
-            }
-            
-            // moving to the next item
-            i++;            
+	
+	        // BEFORE INSERT & BEFORE UPDATE
+	        if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
+	           triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+	            // enforce only HH Accounts are being used
+	            verifyAddrHHAccOnly((list<Address__c>)listNew);
+	            
+	            // enforce Seasonal Addresses don't overlap
+	            verifyAddrSeasonalNoOverlap((list<Address__c>)listNew);
+	            
+	            return null;    
+	        }
         }
-
-        // BEFORE INSERT & BEFORE UPDATE
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
-           triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            // enforce only HH Accounts are being used
-            verifyAddrHHAccOnly((list<Address__c>)listNew);
-            
-            // enforce Seasonal Addresses don't overlap
-            verifyAddrSeasonalNoOverlap((list<Address__c>)listNew);
-            
-            return null;    
-        }
-
-        // AFTER INSERT & AFTER UPDATE
+        
+        // AFTER INSERT & AFTER UPDATE & AFTER DELETE
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         hasRunAddrTrigger = true;
         
@@ -234,6 +243,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 	                }      
 	            }
             }
+            
+            // finally, if no default found, create an empty default
+            if (hhinfo.addrDefault == null) {
+                Address__c addrEmpty = new Address__c();
+                addrEmpty.Household_Account__c = accId;
+                hhinfo.addrDefault = addrEmpty;
+            }
         }
         
         // some callers just need the HHInfo for each HH Account.
@@ -273,7 +289,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
             // update HH Account's Billing address fields
             Account acc = new Account(Id = accId);
-            copyAddressAddrSObj(addr, acc, 'Billing');
+            copyAddressAddrSObj(addr, acc, 'Billing', null);
             listAccUpdate.add(acc);
             
 	        // check other addresses on this household that are no longer the default
@@ -292,10 +308,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             // check the Contacts on this household
             if (mapAccIdListCon != null && mapAccIdListCon.size() > 0) {
 	            for (Contact con : mapAccIdListCon.get(accId)) {
+	                // detect that the contact's current address was deleted.
+	                // and if so clear any override flag so it will get the default address.
+	                if (con.Current_Address__c == null)
+	                   con.is_Address_Override__c = false;
 	                if (con.is_Address_Override__c == false || con.Current_Address__c == addr.Id) {
-	                    con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
 	                    con.Current_Address__c = addr.Id;
-                        copyAddressAddrSObj(addr, con, 'Mailing');
+                        copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
 	                    listConUpdate.add(con);
 	                }   
 	            }
@@ -391,8 +410,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     	list<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keyset()];
     	for (Contact con : listCon) {
     		Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            copyAddressAddrSObj(addr, con, 'Mailing');
-            con.npe01__Primary_Address_Type__c = addr.Address_Type__c;
+            copyAddressAddrSObj(addr, con, 'Mailing', 'npe01__Primary_Address_Type__c');
             dmlWrapper.objectsToUpdate.add(con);    		
     	}
     }
@@ -479,7 +497,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param includeAddressType whether to include comparing the AddressType field
     * @return boolean true if no more than one of the fields have changed on the Address, ignoring whitespace and case changes
     */     
-    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld) {
+    private static boolean isAddressMatchFuzzy(Address__c addrNew, Address__c addrOld, boolean includeAddressType) {
         if (addrNew == null || addrOld == null) 
            return false;     
            
@@ -495,6 +513,8 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (strCleanup(addrNew.MailingPostalCode__c) != strCleanup(addrOld.MailingPostalCode__c) && addrOld.MailingPostalCode__c != null)
             cChange++;
         if (strCleanup(addrNew.MailingCountry__c) != strCleanup(addrOld.MailingCountry__c) && addrOld.MailingCountry__c != null)
+            cChange++;
+        if (includeAddressType && strCleanup(addrNew.Address_Type__c) != strCleanup(addrOld.Address_Type__c) && addrOld.Address_Type__c != null)
             cChange++;
         return cChange <= 1;
     }
@@ -677,16 +697,17 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * as Default if the caller specifies it on the new address.
     * @param listAddr a list of Addresses to update
     * @param dmlWrapper the Addresses to update
+    * @param includeAddressType whether to include comparing the AddressType field
     * @return void
     */ 
-    public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper) {  
+    public static void createNonDuplicateAddresses(list<Address__c> listAddr, DmlWrapper dmlWrapper, boolean includeAddressType) {  
     	
     	map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
     	for (Address__c addrNew : listAddr) {
             Address__c addrDup = mapAddrDupAddr.get(addrNew);
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (isAddressChanged(addrNew, addrDup, false)) {
+                if (isAddressChanged(addrNew, addrDup, includeAddressType)) {
                     copyAddressObj(addrNew, addrDup);
                     if (addrNew.Default_Address__c)
                         addrDup.Default_Address__c = true;
@@ -725,12 +746,13 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             if (listAddrHH != null) {
                 Address__c addrMatch = null;
                 for (Address__c addrHH : listAddrHH) {
-                    if (!isAddressChanged(addr, addrHH, false)) {
+                    // only include address type in the test if the new one isn't empty.
+                    if (!isAddressChanged(addr, addrHH, addr.Address_Type__c != null)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
                     }
-                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH)) {
+                    if (tryFuzzy && isAddressMatchFuzzy(addr, addrHH, addr.Address_Type__c != null)) {
                         // found fuzzy match, remember it and continue searching
                         addrMatch = addrHH;
                         continue;
@@ -849,6 +871,7 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
             strCleanup(addr.MailingState__c) +
             strCleanup(addr.MailingPostalCode__c) +
             strCleanup(addr.MailingCountry__c) +
+            strCleanup(addr.Address_Type__c) + 
             (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
             (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
             (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
@@ -865,10 +888,21 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     
         if (addr.MailingStreet__c == null)
             return;
+            
+        // handle CR NL
         integer ich = addr.MailingStreet__c.indexOf('\r\n');
         if (ich > -1) {
             addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+2);
             addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
+        }
+
+        // handle just NL
+        ich = addr.MailingStreet__c.indexOf('\n');
+        if (ich > -1) {
+            addr.MailingStreet2__c = addr.MailingStreet__c.substring(ich+1);
+            addr.MailingStreet__c = addr.MailingStreet__c.left(ich);
+            return;
         }
     }
     
@@ -897,6 +931,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
         addrDst.MailingState__c = addrSrc.MailingState__c;
         addrDst.MailingPostalCode__c = addrSrc.MailingPostalCode__c;
         addrDst.MailingCountry__c = addrSrc.MailingCountry__c;
+        addrDst.Geolocation__Latitude__s = addrSrc.Geolocation__Latitude__s;
+        addrDst.Geolocation__Longitude__s = addrSrc.Geolocation__Longitude__s;
+        if (addrSrc.Address_Type__c != null)
+            addrDst.Address_Type__c = addrSrc.Address_Type__c;
     }
 
     /*******************************************************************************************************
@@ -929,9 +967,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param addr the Address object to copy to
+    * @param strAddrType if not null, copy to address.Address_Type__c
     * @return void
     */ 
-    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr) {
+    public static void copyAddressStdSObjAddr(sobject sobjSrc, string strFieldPrefixSrc, Address__c addr, string strAddrType) {
         addr.MailingStreet__c = (string)sobjSrc.get(strFieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
         addr.MailingCity__c = (string)sobjSrc.get(strFieldPrefixSrc + 'City');
@@ -956,7 +995,11 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 // assume it's a valid statecode
                 addr.MailingState__c = strStateCode;
             }
-        }    
+        }
+        
+        // if specified, also include Address Type
+        if (strAddrType != null) 
+            addr.Address_Type__c = strAddrType;
     }
 
     /*******************************************************************************************************
@@ -965,9 +1008,10 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to 
     * @return void
     */ 
-    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix) {
+    public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
         sobjDst.put(strFieldPrefix + 'Street', getMultilineStreet(addr));
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);        
@@ -1001,6 +1045,9 @@ public with sharing class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
             }
         }
+        
+        if (strFieldAddrType != null)
+            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
     }
 
     /*******************************************************************************************************
