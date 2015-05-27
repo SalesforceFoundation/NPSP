@@ -824,6 +824,69 @@ public with sharing class ADDR_Addresses_TEST {
         }        
     }
 
+   /*********************************************************************************************************
+    @description
+        clear contacts' Address Override and modify a new address 
+    verify:
+        new default address created
+    **********************************************************************************************************/            
+    static testMethod void clearAddrOverrideNewAddr() {
+        if (strTestOnly != '*' && strTestOnly != 'clearAddrOverrideNewAddr') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // create additional addresses
+        initTestAddr(cHH);
+        for (integer i = 0; i < cHH; i++) {
+            listAddrT[i].Household_Account__c = listAccT[i].Id;
+            listAddrT[i].Default_Address__c = false;
+            listAddrT[i].MailingStreet__c = 'override' + i;
+            listAddrT[i].MailingCity__c = 'override' + i;
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        insert listAddrT;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        
+        // set the contacts' address overrides
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.Current_Address__c = listAddrT[i].Id;
+            con.is_Address_Override__c = true;
+            listCon.add(con);
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+
+        // now clear out the contacts' address overrides,
+        // but modify the address also!
+        for (Contact con : listCon) {
+            con.is_Address_Override__c = false;
+            con.MailingStreet = 'New Street';
+            con.MailingCity = 'New City';
+        }
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        update listCon;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts share the same address
+        map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        
+        for (Contact con : listCon) {
+            Account acc = mapAccIdAcc.get(con.AccountId);
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertNotEquals(null, con.Current_Address__c);
+            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assert(con.MailingStreet.contains('Street'));
+            system.assert(con.MailingCity.contains('City'));
+        }
+
+    }
+
     /*********************************************************************************************************
     @description
         update contacts' mailing address to cause creation of new default Address object  
