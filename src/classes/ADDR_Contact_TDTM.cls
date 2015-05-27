@@ -131,8 +131,8 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
             	// simplifying this to some precedence rules:
             	//     - if Account changes && no override, refill from Default Address
             	//     - if CurrentAddress changes to a new non-null value, refill to it.
-                //     - if isAddressOverride changes to false, refill from Default Address
             	//     - if MailingAddress field changes, update/new address object
+                //     - if isAddressOverride changes to false, refill from Default Address
             	
             	Contact conOld = (Contact)listOld[i];
             	
@@ -155,8 +155,9 @@ public with sharing class ADDR_Contact_TDTM extends TDTM_Runnable {
 	                        mapAddrIdIsOverride.put(con.Current_Address__c, true);                    
 	            	}
 	            	
-	            	// second priority.  if they are clearing isAddressOverride, refill from the Default Address
-	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c) {
+	            	// second priority.  if they are clearing isAddressOverride, and no address fields change, refill from the Default Address
+	            	if (con.is_Address_Override__c != conOld.is_Address_Override__c && !con.is_Address_Override__c && 
+	            	    !isContactAddressChanged(con, conOld)) {
 	                    listConAddrReset.add(con);
 	                    if (conOld.Current_Address__c != null)
 	                        // track which address's need their dates updated
