@@ -513,6 +513,7 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Primary_Contact__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>

@@ -86,7 +86,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Opportunity opp2 = new Opportunity(
             Name = 'Apex Test Opp2',
             AccountId = acc.Id,
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(), StageName = 'Closed Won'
         );
         insert opp2;
@@ -158,7 +158,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(),
             StageName = 'Closed Won'
         );
@@ -196,7 +196,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(),
             StageName = 'Closed Won'
         );
@@ -321,19 +321,15 @@ private class OPP_OpportunityContactRoles_TEST {
             StageName = 'Closed Won'
         );
         Test.startTest();
-        try {
-            insert opp1;            
-            
-            OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
-            //shouldn't be a contact role
-            system.assertEquals(0, result.size());
-            
-            Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
-            //shouldn't be an account
-            system.assertEquals(null, oppResult[0].AccountId);
-        } catch (exception e) {
-            system.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
-        }
+        insert opp1;            
+        
+        OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        //shouldn't be a contact role
+        system.assertEquals(0, result.size());
+        
+        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+        //shouldn't be an account
+        system.assertEquals(null, oppResult[0].AccountId);
         Test.stopTest();
     }    
 }

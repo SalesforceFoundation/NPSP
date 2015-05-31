@@ -36,144 +36,168 @@
 */
 public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
+    private DmlWrapper dmlWrapper = new DmlWrapper();
+
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         	
-        DmlWrapper dmlWrapper = null;
-        
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
         	setOpportunityAccountField((list<Opportunity>) newlist);
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-        	dmlWrapper = new DmlWrapper();
-        	createOrUpdateContactRoles((list<Opportunity>) newlist, dmlWrapper);
+        	createOrUpdateContactRoles((list<Opportunity>) newlist);
             // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
+            // disable TDTM so we don't waste resources running through opp triggers a second time while fixing Primary Contact lookup
+            TDTM_TriggerHandler.disableTDTM = true;
           	TDTM_TriggerHandler.processDML(dmlWrapper);
-        	dmlWrapper = null;
+            TDTM_TriggerHandler.disableTDTM = false;
         }
         
-        return dmlWrapper;
+        return new DmlWrapper();
     }
  
-    private void createOrUpdateContactRoles(list<Opportunity> listOpp, DmlWrapper dmlWrapper) {
+
+     /*******************************************************************************************************
+    * @description Creates Contact Role records when an opp is inserted and there is no primary CR. Updates
+    * existing primary CRs with the correct role value if it is null. Updates existing opps' Primary Contact
+    * based on existing CRs.
+    * @param opportunties List of opportunities meeting trigger criteria
+    ********************************************************************************************************/
+    private void createOrUpdateContactRoles(list<Opportunity> listOpp) {
     	
         Map<Id, Opportunity> oppsInsertCR = new map<Id, Opportunity>(listOpp);        
         List<OpportunityContactRole> CRUpdates = new List<OpportunityContactRole>();
+        List<Opportunity> fixedOpps = new list<Opportunity>();
 
         //Get existing contact roles for the trigger opps. 
         List<OpportunityContactRole> CRs = [select OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole where IsPrimary = true and OpportunityId in :oppsInsertCR.keySet()];
 
-        //Check for primary CR with no role value; save those for updates.
-        if(CRs.size() > 0){
-            for(OpportunityContactRole cr : CRs){
-                if(cr.Role == null){
+        if(!CRs.isEmpty()) {
+            for(OpportunityContactRole cr : CRs) {
+                //check for missing Role value and update that OCR
+                if(cr.Role == null) {
+                    cr.Role = getDefaultRole();
                     CRUpdates.add(cr);
                 }
+                
+                Opportunity thisOpp = oppsInsertCR.get(cr.OpportunityId);
+                
+                //check if our contact lookup field is incorrect and update it
+                if (thisOpp.Primary_Contact__c != cr.ContactId) {
+                    fixedOpps.add(new Opportunity(
+                        id = thisOpp.id,
+                        Primary_Contact__c = cr.ContactId,
+                        npe01__Contact_Id_for_Role__c = cr.ContactId
+                    ));
+                }
+
                 oppsInsertCR.remove(cr.OpportunityId);
             }
         }
 
         //Create CRs.
-        if (oppsInsertCR.size() > 0){
-            insertCR(oppsInsertCR.values(), dmlWrapper);
+        if (!oppsInsertCR.isEmpty()) {
+            insertCR(oppsInsertCR.values());
         }
 
         //Update existing CRs.
-        if (CRUpdates.size() > 0){
-            updateCR(CRUpdates, dmlWrapper);
+        if (!CRUpdates.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)CRUpdates);
+        }
+
+        //fix opportunity lookup if out of sync with contact role
+        if (!fixedOpps.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)fixedOpps);
         }
     }
 
-    /// <name> getDefaultRole </name>
-    /// <summary> Return the default role from the custom setting.  Use custom setting for default role value.</summary>
-    private static String getDefaultRole(){
+    /*******************************************************************************************************
+    * @description Return the default role from the custom setting.  Use custom setting for default role value.
+    ********************************************************************************************************/
+    private static String getDefaultRole() {
         return UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
     }
 
-    /// <name> insertCR </name>
-    /// <summary> Creates a new Contact Role record when an opp is inserted and there is no primary CR.  Use custom setting for default role value.</summary>
-    /// <param name="opportunties"> List of opportunities meeting trigger criteria </param>
-    private static void insertCR(Opportunity[] opportunities, DmlWrapper dmlWrapper){
+    /*******************************************************************************************************
+    * @description Creates a new Contact Role record when an opp is inserted and there is no primary CR. 
+    * Uses a custom setting for default role value.
+    * @param opportunties List of opportunities meeting trigger criteria
+    ********************************************************************************************************/
+    private void insertCR(Opportunity[] opportunities) {
 
         List<OpportunityContactRole> CRs = new List<OpportunityContactRole>();
 
         //Straightforward creation of opp contact role.      
-        for(Opportunity o : opportunities){
-            if(o.npe01__Contact_ID_for_Role__c != null) {
-                try {
-                    CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_ID_for_Role__c, Role = getDefaultRole(), IsPrimary = true));
-                } catch (exception e) {
-                    o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
-                }
+        for(Opportunity o : opportunities) {
+            if(o.Primary_Contact__c != null) {
+                CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.Primary_Contact__c, Role = getDefaultRole(), IsPrimary = true));
             }
         }
-        if (CRs.size() > 0){
-            //Database.SaveResult[] lsr = Database.insert(CRs, false);
+        if (CRs.size() > 0) {
             dmlWrapper.objectsToInsert.addAll((list<SObject>) CRs); 
         }
     }
-
-    /// <name> UpdateCR </name>
-    /// <summary> Update a primary contact role where the role field is empty.  Use custom setting for default role value.</summary>
-    /// <param name="CRs"> List of contact roles  </param>
-    private static void updateCR(OpportunityContactRole[] CRs, DmlWrapper dmlWrapper){
-
-        for(OpportunityContactRole cr : CRs){
-            cr.Role = getDefaultRole();
-        }
-        //Database.SaveResult[] lsr = Database.update(CRs, false);
-        dmlWrapper.objectsToUpdate.addAll((List<SObject>)CRs);
-    }
     
-    //truncate string representation of an ID to 15 chars
-    private static string shortenId(String idForShortening){
-        if(idForShortening.length() >= 15) {
-            idForShortening = idForShortening.subString(0,15);
-        }           
-        return idForShortening;
-    }
-    
-    //fill one-to-one and HH Accounts for Opportunities where a Contact id is supplied
+    /*******************************************************************************************************
+    * @description Fills 1:1 and HH accounts for Opportunities where the Contact Id is supplied. Fills the
+    * contact Id with the account's primary contact if the account is supplied but not the contact.
+    * @param oppList A list of opportunities in the current transaction.
+    *******************************************************************************************************/
     private static void setOpportunityAccountField(List<Opportunity> oppList) {
         
-        Map<String,Account> contactsAndOneToOneAccounts = new Map<String,Account>();
+        Map<Id,Account> contactsAndOneToOneAccounts = new Map<Id,Account>();
         Set<String> primaryContactIds = new Set<String>();
         Set<Id> oppAccounts = new Set<Id>();
         
-        for(Opportunity o : oppList){
-            if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){
-                oppAccounts.add(o.AccountId);
+        for (Opportunity o : oppList) {
+            //keep new and old contact fields in sync
+            if (o.npe01__Contact_Id_for_Role__c != null && o.Primary_Contact__c == null) {
+                //if the npe01__Contact_Id_for_Role__c isn't a valid ID, null it out
+                try {
+                    o.Primary_Contact__c = o.npe01__Contact_Id_for_Role__c;
+                } catch (Exception e) {
+                    o.npe01__Contact_Id_for_Role__c = null;
+                }
             }
+
+            if (o.npe01__Contact_Id_for_Role__c == null && o.Primary_Contact__c != null)
+                o.npe01__Contact_Id_for_Role__c = o.Primary_Contact__c;
             
-            if(o.AccountId == null && o.npe01__Contact_Id_for_role__c != null){
-                primaryContactIds.add(o.npe01__Contact_Id_for_role__c);                
-            }
+            if (o.AccountId != null && o.Primary_Contact__c == null)
+                oppAccounts.add(o.AccountId);
+            
+            if (o.AccountId == null && o.Primary_Contact__c != null)
+                primaryContactIds.add(o.Primary_Contact__c);                
         }
+        
         Map<Id,Account> primaryAccounts = new Map<Id,Account>([select id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where id IN :oppAccounts]);
-         
-        List<Contact> primaryContacts = new List<Contact>();
-        primaryContacts = [select AccountId,Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :primaryContactIds];
-        for(Contact thisContact : primaryContacts) {
-            contactsAndOneToOneAccounts.put(shortenId(string.valueOf(thisContact.Id)),thisContact.Account);
-        }
+        List<Contact> primaryContacts = [select AccountId,Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :primaryContactIds];
+
+        for (Contact thisContact : primaryContacts)
+            contactsAndOneToOneAccounts.put(thisContact.Id,thisContact.Account);
+
         //loop through opps again and then put the right accountid on the opp
-        for(Opportunity o : oppList){
-            //add the contact id from the Account. if it's not valid it won't error
-            if(o.AccountId != null && o.npe01__Contact_Id_for_role__c == null){
+        for (Opportunity o : oppList) {
+
+            //add the contact id from the Account. Since we're guessing this is for the primary contact,
+            //run an @future call to get the actual value from the contact role
+            if (o.AccountId != null && o.Primary_Contact__c == null) {
             	Account acc = primaryAccounts.get(o.AccountId);
-                if(acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
-                    acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
+                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
+                    acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                    o.Primary_Contact__c = acc.npe01__One2OneContact__c;
                     o.npe01__Contact_Id_for_role__c = acc.npe01__One2OneContact__c;
                 }
             }
             
-            if(o.AccountId == null && o.npe01__Contact_Id_for_role__c != null){ //using the contact id, pull the account from the map
+            //add the account ID from the Contact
+            if (o.AccountId == null && o.Primary_Contact__c != null) { //using the contact id, pull the account from the map
                 
-                if(contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c))!=null){
-                    Account accountForContact = contactsAndOneToOneAccounts.get(shortenId(o.npe01__Contact_Id_for_role__c));
+                if (contactsAndOneToOneAccounts.containsKey(o.Primary_Contact__c)) {
+                    Account accountForContact = contactsAndOneToOneAccounts.get(o.Primary_Contact__c);
                     //for one-to-one accounts and HH Accounts, set the account id
-                    if(accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
-                        accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
+                    if (accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
+                        accountForContact.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                         o.AccountId = accountForContact.Id;
                     }
                 } else {
@@ -181,5 +205,5 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }            
             }
         }       
-    }       
+    }
 }

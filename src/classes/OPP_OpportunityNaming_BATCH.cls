@@ -41,12 +41,12 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> 
     
     /** @description The batch process constructor; creates opportunity query for all opportunities.*/
     public OPP_OpportunityNaming_BATCH() {
-        query = 'SELECT Id FROM Opportunity';
+        query = 'SELECT Id, Name FROM Opportunity';
     }
     
     /** @description The batch process constructor; creates opportunity query for all opportunities with custom WHERE clause .*/
     public OPP_OpportunityNaming_BATCH(string customWhere) {
-        query = 'SELECT Id FROM Opportunity ' + customWhere;
+        query = 'SELECT Id, Name FROM Opportunity ' + customWhere;
     }
 
     /** @description Batch process start method.*/
@@ -74,7 +74,7 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> 
         }
 
         if (!oppsForUpdate.isEmpty())
-            update oppsForUpdate;
+            database.update(oppsForUpdate, false);
     }
     
     /** @description Batch process finish method, does nothing.*/
