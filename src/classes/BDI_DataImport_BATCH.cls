@@ -331,7 +331,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     isModified = true;
                 }
             }
-            
+                        
             if (isModified) {
             	boolean isAlreadyAdded = false;
             	// add all dikeys for the contact to make sure we don't try to upsert the contact twice
@@ -1155,6 +1155,12 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     // method to create the default Household Address for each household.
     // must ensure the address doesn't already exist for the case of updating existing contacts and accounts.
     private void importAddresses() {
+
+        // if address mgmt is turned off, then we want to save Home address fields directly on the contacts and HH account
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            importAddressesAsAddressFields();
+            return;
+        }
     	
     	// only create Home Address if it doesn't already exist on the Household.
     	// so we need to get all the households, and then get all their addresses.
@@ -1241,6 +1247,106 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description update the contacts and household account with the Home Address information
+    * @return void
+    ********************************************************************************************************/
+    private void importAddressesAsAddressFields() {
+
+        // track the contacts and hh accounts to update
+        set<Id> setIdUpdate = new set<Id>();
+        list<Contact> listCon1Update = new list<Contact>();
+        list<Contact> listCon2Update = new list<Contact>();
+        list<Account> listAccUpdate = new list<Account>();
+        list<DataImport__c> listCon1Di = new list<DataImport__c>();
+        list<DataImport__c> listCon2Di = new list<DataImport__c>();
+        list<DataImport__c> listAccDi = new list<DataImport__c>();
+        
+        // first get our Household Accounts
+        set<Id> setHHId = new set<Id>();
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
+            if (di.HouseholdAccountImported__c != null)
+                setHHId.add(di.HouseholdAccountImported__c);
+        }
+        map<Id, Account> mapHHIdToAcc = new map<Id, Account>([select Id, BillingStreet, BillingCity, 
+            BillingState, BillingPostalCode, BillingCountry from Account where Id in :setHHId]);
+
+        // now update home address on the contacts and hh account
+        for (DataImport__c di : listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
+            Contact con1 = ContactFromDi(di, 1);
+            Contact con2 = ContactFromDi(di, 2);
+            Account accHH = mapHHIdToAcc.get(di.HouseholdAccountImported__c);
+            
+            if (di.Home_Street__c != null ||
+                di.Home_City__c != null ||
+                di.Home_State_Province__c != null ||
+                di.Home_Zip_Postal_Code__c != null ||
+                di.Home_Country__c != null) {
+                
+                // use an Address object, so we can leverage the copy methods that support state & country picklists.
+                Address__c addr = new Address__c();
+                addr.MailingStreet__c = di.Home_Street__c;
+                addr.MailingCity__c = di.Home_City__c;
+                addr.MailingState__c = di.Home_State_Province__c;
+                addr.MailingPostalCode__c = di.Home_Zip_Postal_Code__c;
+                addr.MailingCountry__c = di.Home_Country__c;
+                addr.Address_Type__c = 'Home';
+                
+                if (con1 != null) {
+                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con1, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    if (setIdUpdate.add(con1.Id)) {
+                        listCon1Update.add(con1);
+                        listCon1Di.add(di);
+                    }
+                }            
+                if (con2 != null) {
+                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con2, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    if (setIdUpdate.add(con2.Id)) {
+                        listCon2Update.add(con2);
+                        listCon2Di.add(di);
+                    }
+                }
+                if (accHH != null) {
+                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, accHH, 'Billing', null);
+                    if (setIdUpdate.add(accHH.Id)) {
+                        listAccUpdate.add(accHH);
+                        listAccDi.add(di);
+                    }
+                }
+            }
+        }
+                
+        // now update the objects
+        list<Database.UpsertResult> listUR = database.upsert(listCon1Update, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listCon1Di[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
+            }
+        }
+        listUR = database.upsert(listCon2Update, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listCon2Di[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
+            }
+        }
+        listUR = database.upsert(listAccUpdate, false);
+        for (integer i = 0; i < listUR.size(); i++) {
+            Database.UpsertResult ur = listUR[i];
+            if (!ur.isSuccess()) {
+                LogBDIError(listAccDi[i], ur.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
+            }
+        }
+        
     }
 
     //********************************************* OPPORTUNITIES ************************************************
