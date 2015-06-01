@@ -523,6 +523,61 @@ private with sharing class BDI_DataImport_TEST {
     
     /*********************************************************************************************************
     operation:
+        import contacts with home addresses, while address management is disabled
+    verify:
+        address objects NOT created
+        contacts' mailing address set
+        hh accounts' billing address set
+    **********************************************************************************************************/            
+    static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Household_Account_Addresses_Disabled__c = true
+        ));
+
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'Portland';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertEquals('c4 C4', listCon[3].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertNotEquals(null, listCon[3].AccountId);
+        system.assertEquals('Seattle', listCon[0].MailingCity);
+        system.assertEquals('Seattle', listCon[1].MailingCity);
+        system.assertEquals('Portland', listCon[2].MailingCity);
+        system.assertEquals('Portland', listCon[3].MailingCity);
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(0, listAddr.size());
+        
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals('Seattle', listAcc[0].BillingCity);
+        system.assertEquals('Portland', listAcc[1].BillingCity);                
+    }
+
+    /*********************************************************************************************************
+    operation:
         import existing contacts with the same home address
     verify:
         contacts matched
@@ -573,6 +628,58 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listAddr[0].Id, listDI[1].HomeAddressImported__c);   
         system.assertEquals(label.bdiMatched, listDI[0].HomeAddressImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);            
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        import existing contacts with the same home address, with Address Management off
+    verify:
+        contacts matched
+        no addresses created
+        account addresses updated
+        contact addresses updated
+    **********************************************************************************************************/            
+    static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Household_Account_Addresses_Disabled__c = true
+        ));
+
+        // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', MailingCity='Portland'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[0].Home_City__c = 'Bellevue';
+        listDI[1].Home_City__c = 'Bellevue';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, MailingCity from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertEquals('Bellevue', listCon[0].MailingCity);
+        system.assertEquals('Bellevue', listCon[1].MailingCity);
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c];
+        system.assertEquals(0, listAddr.size()); 
+        
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals('Bellevue', listAcc[0].BillingCity);
+        system.assertEquals('Bellevue', listAcc[1].BillingCity);                
     }
     
     /*********************************************************************************************************

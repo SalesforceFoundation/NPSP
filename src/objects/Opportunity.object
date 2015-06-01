@@ -29,6 +29,16 @@
     <fieldSets>
         <fullName>BDE_Entry_FS_v2</fullName>
         <availableFields>
+            <field>Acknowledgment_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Acknowledgment_Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
             <field>CampaignId</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -208,6 +218,16 @@
     </fieldSets>
     <fieldSets>
         <fullName>BDE_List_FS_v2</fullName>
+        <availableFields>
+            <field>Acknowledgment_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Acknowledgment_Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
         <availableFields>
             <field>npe01__Amount_Outstanding__c</field>
             <isFieldManaged>false</isFieldManaged>
@@ -395,6 +415,16 @@
         </availableFields>
         <availableFields>
             <field>RecordTypeId</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Recurring_Donation_Installment_Name__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Recurring_Donation_Installment_Number__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </availableFields>
