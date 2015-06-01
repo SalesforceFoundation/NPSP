@@ -35,8 +35,6 @@
 */
 public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 
 	
-    public HH_OppContactRoles_TDTM() {}    
-
     public static string strRefreshSetting = 'Open and Closed Opportunities';
 
     /*******************************************************************************************************

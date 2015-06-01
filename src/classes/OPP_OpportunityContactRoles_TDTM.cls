@@ -46,16 +46,48 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         	setOpportunityAccountField((list<Opportunity>) newlist);
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
         	createOrUpdateContactRoles((list<Opportunity>) newlist);
-            // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
-            // disable TDTM so we don't waste resources running through opp triggers a second time while fixing Primary Contact lookup
+        } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            updateContactRoles((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
+        }
+
+        // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
+        // disable TDTM so we don't waste resources running through opp triggers a second time while fixing Primary Contact lookup
+        if (!dmlWrapper.objectsToInsert.isEmpty() || !dmlWrapper.objectsToUpdate.isEmpty() || !dmlWrapper.objectsToDelete.isEmpty() || !dmlWrapper.objectsToUndelete.isEmpty()) {
             TDTM_TriggerHandler.disableTDTM = true;
-          	TDTM_TriggerHandler.processDML(dmlWrapper);
+            TDTM_TriggerHandler.processDML(dmlWrapper);
             TDTM_TriggerHandler.disableTDTM = false;
         }
-        
         return new DmlWrapper();
     }
  
+
+
+     /*******************************************************************************************************
+    * @description Detects changes in the opportunity Primary Contact field and updates the associated \
+    * primary contact role.
+    * @param opportunties List of opportunities meeting trigger criteria
+    ********************************************************************************************************/
+    private void updateContactRoles(list<Opportunity> listOpp, list<Opportunity> listOldOpps) { 
+        set<id> setOppIds = new set<id>();
+        list<OpportunityContactRole> listOCRForUpdate = new list<OpportunityContactRole>();
+        for (integer i=0;i<listOpp.size();i++) {
+            if (listOpp[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c)
+                setOppIds.add(listOpp[i].id);
+        }
+
+        if (!setOppIds.isEmpty()) {
+            for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId FROM OpportunityContactRole WHERE IsPrimary=TRUE AND OpportunityId IN :setOppIds]) {
+                if (ocr.ContactId != ocr.Opportunity.Primary_Contact__c) {
+                    ocr.ContactId = ocr.Opportunity.Primary_Contact__c;
+                    listOCRForUpdate.add(ocr);
+                }
+            }
+        }
+
+        if (!listOCRForUpdate.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listOCRForUpdate);
+        }
+    }
 
      /*******************************************************************************************************
     * @description Creates Contact Role records when an opp is inserted and there is no primary CR. Updates
@@ -179,8 +211,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         //loop through opps again and then put the right accountid on the opp
         for (Opportunity o : oppList) {
 
-            //add the contact id from the Account. Since we're guessing this is for the primary contact,
-            //run an @future call to get the actual value from the contact role
+            //add the contact id from the Account. We're guessing this is for the primary contact,
+            //in the after insert trigger we'll get the actual value from the contact role
             if (o.AccountId != null && o.Primary_Contact__c == null) {
             	Account acc = primaryAccounts.get(o.AccountId);
                 if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
