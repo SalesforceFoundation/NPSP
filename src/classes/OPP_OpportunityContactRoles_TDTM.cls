@@ -59,33 +59,31 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
         return new DmlWrapper();
     }
- 
-
 
      /*******************************************************************************************************
-    * @description Detects changes in the opportunity Primary Contact field and updates the associated \
-    * primary contact role.
+    * @description Detects changes in the opportunity Primary Contact field and updates or deletes the 
+    * associated primary contact role.
     * @param opportunties List of opportunities meeting trigger criteria
     ********************************************************************************************************/
     private void updateContactRoles(list<Opportunity> listOpp, list<Opportunity> listOldOpps) { 
+        //find changed opportunities
         set<id> setOppIds = new set<id>();
-        list<OpportunityContactRole> listOCRForUpdate = new list<OpportunityContactRole>();
         for (integer i=0;i<listOpp.size();i++) {
             if (listOpp[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c)
                 setOppIds.add(listOpp[i].id);
         }
 
+        //delete or update OCRs
         if (!setOppIds.isEmpty()) {
             for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId FROM OpportunityContactRole WHERE IsPrimary=TRUE AND OpportunityId IN :setOppIds]) {
-                if (ocr.ContactId != ocr.Opportunity.Primary_Contact__c) {
+                if (ocr.Opportunity.Primary_Contact__c==null) {
+                    dmlWrapper.objectsToDelete.add((SObject)ocr);
+
+                } else if (ocr.ContactId != ocr.Opportunity.Primary_Contact__c) {
                     ocr.ContactId = ocr.Opportunity.Primary_Contact__c;
-                    listOCRForUpdate.add(ocr);
+                    dmlWrapper.objectsToUpdate.add((SObject)ocr);
                 }
             }
-        }
-
-        if (!listOCRForUpdate.isEmpty()) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listOCRForUpdate);
         }
     }
 
@@ -182,7 +180,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Set<Id> oppAccounts = new Set<Id>();
         
         for (Opportunity o : oppList) {
+
             //keep new and old contact fields in sync
+            if (o.npe01__Contact_Id_for_Role__c == null && o.Primary_Contact__c != null)
+                o.npe01__Contact_Id_for_Role__c = o.Primary_Contact__c;
+
             if (o.npe01__Contact_Id_for_Role__c != null && o.Primary_Contact__c == null) {
                 //if the npe01__Contact_Id_for_Role__c isn't a valid ID, null it out
                 try {
@@ -191,9 +193,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     o.npe01__Contact_Id_for_Role__c = null;
                 }
             }
-
-            if (o.npe01__Contact_Id_for_Role__c == null && o.Primary_Contact__c != null)
-                o.npe01__Contact_Id_for_Role__c = o.Primary_Contact__c;
             
             if (o.AccountId != null && o.Primary_Contact__c == null)
                 oppAccounts.add(o.AccountId);
