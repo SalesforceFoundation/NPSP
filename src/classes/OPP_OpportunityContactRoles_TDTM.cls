@@ -66,22 +66,78 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param opportunties List of opportunities meeting trigger criteria
     ********************************************************************************************************/
     private void updateContactRoles(list<Opportunity> listOpp, list<Opportunity> listOldOpps) { 
+        map<id, id> mapOppIdNewConId = new map<id, id>();
+        map<id, id> mapOppIdOldConId = new map<id, id>();
+        map<id, map<id,OpportunityContactRole>> mapOppIdMapConIdOCR = new map<id, map<id,OpportunityContactRole>>();
+
         //find changed opportunities
-        set<id> setOppIds = new set<id>();
         for (integer i=0;i<listOpp.size();i++) {
-            if (listOpp[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c)
-                setOppIds.add(listOpp[i].id);
+            if (listOpp[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c) {
+                mapOppIdNewConId.put(listOpp[i].id, listOpp[i].Primary_Contact__c);
+                mapOppIdOldConId.put(listOldOpps[i].id, listOldOpps[i].Primary_Contact__c);
+            }
         }
 
         //delete or update OCRs
-        if (!setOppIds.isEmpty()) {
-            for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId FROM OpportunityContactRole WHERE IsPrimary=TRUE AND OpportunityId IN :setOppIds]) {
-                if (ocr.Opportunity.Primary_Contact__c==null) {
-                    dmlWrapper.objectsToDelete.add((SObject)ocr);
+        if (!mapOppIdNewConId.isEmpty()) {
+            for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId, isPrimary FROM OpportunityContactRole WHERE OpportunityId IN :mapOppIdNewConId.keyset() AND (IsPrimary=TRUE OR ContactId IN :mapOppIdNewConId.values() OR ContactID IN :mapOppIdOldConId.values())]) {
+                if (!mapOppIdMapConIdOCR.containsKey(ocr.OpportunityId))
+                    mapOppIdMapConIdOCR.put(ocr.OpportunityId,new map<id,OpportunityContactRole>());
 
-                } else if (ocr.ContactId != ocr.Opportunity.Primary_Contact__c) {
-                    ocr.ContactId = ocr.Opportunity.Primary_Contact__c;
-                    dmlWrapper.objectsToUpdate.add((SObject)ocr);
+                mapOppIdMapConIdOCR.get(ocr.OpportunityId).put(ocr.ContactId, ocr);
+            }
+
+            for (Opportunity opp : listOpp) {
+                //get all contact and OCR values for this opportunity
+                id newCon = mapOppIdNewConId.get(opp.id);
+                id oldCon = mapOppIdOldConId.get(opp.id);
+                map<id,OpportunityContactRole> mapOCR = mapOppIdMapConIdOCR.get(opp.id);
+
+                //if we have a primary OCR, separate it from the list
+                OpportunityContactRole primaryOCR;
+                for (OpportunityContactRole ocr : mapOCR.values()) {
+                    if (ocr.isPrimary) {
+                        primaryOCR = ocr;
+                        mapOCR.remove(ocr.ContactId);
+                    }
+                }
+
+                //primary contact is blanked out 
+                if (newCon == null) {
+                    //if we have a primary OCR, delete it
+                    if (primaryOCR != null)
+                        dmlWrapper.objectsToDelete.add(primaryOCR);
+
+                //primary contact went from blank to a new contact
+                } else if (newCon != null) {
+                    //create or update the existing primary OCR
+                    if (primaryOCR == null) {
+                        insertCR(new list<Opportunity>{opp});
+                    } else {
+                        if (primaryOCR.ContactId != newCon) {
+                            primaryOCR.ContactId = newCon;
+                            dmlWrapper.objectsToUpdate.add((SObject)primaryOCR);
+                        }
+                    }
+
+                    //if we have an existing OCR for the primary contact
+                    //update it with the old contact or delete it
+                    if (mapOCR.containsKey(newCon)) {
+                        OpportunityContactRole newConOCR = mapOCR.get(newCon);
+                        if (oldCon != null) {
+                            newConOCR.ContactId=oldCon;
+                            dmlWrapper.objectsToUpdate.add((SObject)newConOCR);
+                            
+                            //if we already have a non-primary contact role for oldCon,
+                            //delete it to avoid duplicates
+                            if (mapOCR.containsKey(oldCon))
+                                dmlWrapper.objectsToDelete.add((SObject)newConOCR);
+
+                        //no old contact to switch with, just delete the new contact's old OCR
+                        } else {
+                            dmlWrapper.objectsToDelete.add((SObject)newConOCR);
+                        }
+                    }
                 }
             }
         }
