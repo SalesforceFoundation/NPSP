@@ -52,11 +52,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         // we can't defer the dml.  too many of our other opp related triggers depend on the ocr's being saved.
         // disable TDTM so we don't waste resources running through opp triggers a second time while fixing Primary Contact lookup
-        if (!dmlWrapper.objectsToInsert.isEmpty() || !dmlWrapper.objectsToUpdate.isEmpty() || !dmlWrapper.objectsToDelete.isEmpty() || !dmlWrapper.objectsToUndelete.isEmpty()) {
-            TDTM_TriggerHandler.disableTDTM = true;
-            TDTM_TriggerHandler.processDML(dmlWrapper);
-            TDTM_TriggerHandler.disableTDTM = false;
-        }
+        TDTM_TriggerHandler.disableTDTM = true;
+        TDTM_TriggerHandler.processDML(dmlWrapper);
+        TDTM_TriggerHandler.disableTDTM = false;
+
         return new DmlWrapper();
     }
 
@@ -80,7 +79,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         //delete or update OCRs
         if (!mapOppIdNewConId.isEmpty()) {
-            for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId, isPrimary FROM OpportunityContactRole WHERE OpportunityId IN :mapOppIdNewConId.keyset() AND (IsPrimary=TRUE OR ContactId IN :mapOppIdNewConId.values() OR ContactID IN :mapOppIdOldConId.values())]) {
+            for (OpportunityContactRole ocr : [SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId, isPrimary FROM OpportunityContactRole 
+                                                    WHERE OpportunityId IN :mapOppIdNewConId.keyset() 
+                                                    AND (IsPrimary=TRUE OR ContactId IN :mapOppIdNewConId.values() OR ContactID IN :mapOppIdOldConId.values())]) {
                 if (!mapOppIdMapConIdOCR.containsKey(ocr.OpportunityId))
                     mapOppIdMapConIdOCR.put(ocr.OpportunityId,new map<id,OpportunityContactRole>());
 
