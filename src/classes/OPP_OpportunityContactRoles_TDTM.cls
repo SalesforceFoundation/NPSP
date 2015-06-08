@@ -247,7 +247,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 try {
                     o.Primary_Contact__c = o.npe01__Contact_Id_for_Role__c;
                 } catch (Exception e) {
-                    o.npe01__Contact_Id_for_Role__c = null;
+                    o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                 }
             }
             
