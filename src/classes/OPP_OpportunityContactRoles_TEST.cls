@@ -321,15 +321,19 @@ private class OPP_OpportunityContactRoles_TEST {
             StageName = 'Closed Won'
         );
         Test.startTest();
-        insert opp1;            
-        
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
-        //shouldn't be a contact role
-        system.assertEquals(0, result.size());
-        
-        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
-        //shouldn't be an account
-        system.assertEquals(null, oppResult[0].AccountId);
+        try {
+            insert opp1;            
+            
+            OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+            //shouldn't be a contact role
+            system.assertEquals(0, result.size());
+            
+            Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+            //shouldn't be an account
+            system.assertEquals(null, oppResult[0].AccountId);
+        } catch (exception e) {
+            system.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
+        }
         Test.stopTest();
-    }    
+    }
 }

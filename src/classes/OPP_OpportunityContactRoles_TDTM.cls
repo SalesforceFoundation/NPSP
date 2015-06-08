@@ -96,13 +96,14 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
                 //if we have a primary OCR, separate it from the list
                 OpportunityContactRole primaryOCR;
-                for (OpportunityContactRole ocr : mapOCR.values()) {
-                    if (ocr.isPrimary) {
-                        primaryOCR = ocr;
-                        mapOCR.remove(ocr.ContactId);
+                if (mapOCR != null && !mapOCR.isEmpty()) {
+                    for (OpportunityContactRole ocr : mapOCR.values()) {
+                        if (ocr.isPrimary) {
+                            primaryOCR = ocr;
+                            mapOCR.remove(ocr.ContactId);
+                        }
                     }
                 }
-
                 //primary contact is blanked out 
                 if (newCon == null) {
                     //if we have a primary OCR, delete it
