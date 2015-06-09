@@ -53,21 +53,6 @@ public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
         
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            // need to remove the contact from all Opportunities' npe01__Contact_Id_For_Role__c text field.
-            // if we had used a real lookup for this field, Salesforce would have done this for us!
-            list<string> listConId = new list<string>();
-            for (SObject con : listOld) 
-                listConId.add(con.Id);
-            list<Opportunity> listOpp = [select Id, npe01__Contact_Id_For_Role__c from Opportunity 
-                where npe01__Contact_Id_For_Role__c in :listConId];
-                
-            for (Opportunity opp : listOpp)
-                opp.npe01__Contact_Id_For_Role__c = null;
-            
-            dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
-        }
-        
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             list<string> listMergeKey = new list<string>();
         
