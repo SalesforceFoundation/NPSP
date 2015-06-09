@@ -131,7 +131,7 @@ public without sharing class TDTM_DefaultConfig {
         // OpportunityContactRoles on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'OPP_OpportunityContactRoles_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'BeforeInsert;AfterInsert'));
+              Trigger_Action__c = 'BeforeInsert;AfterInsert;AfterUpdate'));
           
         // Addresses on Address object - copies address from Address__c to Contact and Account
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 

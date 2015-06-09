@@ -65,7 +65,7 @@ public with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
         
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(6, scheduledJobs.size());
+        System.assertEquals(UTIL_MasterSchedulableHelper.scheduledClasses.size(), scheduledJobs.size());
         
         List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
         :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];

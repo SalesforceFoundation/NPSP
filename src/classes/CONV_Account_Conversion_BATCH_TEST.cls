@@ -63,7 +63,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //add opptys to the Contacts as well
         List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(cons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), system.today(), 100, null, '');
-        //Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), npe01__Contact_Id_For_Role__c = c.Id);
+        //Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CloseDate = system.today(), Primary_Contact__c = c.Id);
         insert opps;
         system.assertEquals(150, [select count() from OpportunityContactRole where isPrimary = true and ContactId IN :cons]);
 
@@ -124,7 +124,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //add an oppty to the Contact as well
         Opportunity o = new Opportunity(Name = 'Test Oppty', Amount = 1000, StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                                        AccountId = indID, CloseDate = system.today(), npe01__Contact_Id_For_Role__c = c.Id);
+                                        AccountId = indID, CloseDate = system.today(), Primary_Contact__c = c.Id);
         insert o;
         system.assertEquals('Individual', [select Account.Name from Opportunity where Name = 'Test Oppty'].Account.Name);
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c.Id]);

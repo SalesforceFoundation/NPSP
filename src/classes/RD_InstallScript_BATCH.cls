@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.com Foundation
-* @date 2012 (2.0)
+* @date 2015
 * @group Recurring Donations
 * @description Batch job runs after installation to populate Recurring_Donation_Installment_Number__c on opportunity.
 */
@@ -66,7 +66,7 @@ public without sharing class RD_InstallScript_BATCH implements Database.Batchabl
         
         if (!listOppsForUpdate.isEmpty()) {
             TDTM_TriggerHandler.disableTDTM = true;
-            update listOppsForUpdate;
+            database.update(listOppsForUpdate, false);
             TDTM_TriggerHandler.disableTDTM = false;
         }
     }

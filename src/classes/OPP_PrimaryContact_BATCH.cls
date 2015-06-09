@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.com Foundation
+    Copyright (c) 2012, Salesforce.com Foundation
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -31,53 +31,50 @@
 * @author Salesforce.com Foundation
 * @date 2015
 * @group Opportunity
-* @group-content ../../ApexDocContent/Opportunity.htm
-* @description Batch class creates names all Opportunities per the naming spec.
- */
-public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject> {
+* @description Batch job runs after installation to populate Primary_Contact__c on opportunity.
+*/
+public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
     
     /** @description The query for the batch process to run on.*/
-    String query;
+    private String query;
     
-    /** @description The batch process constructor; creates opportunity query for all opportunities.*/
-    public OPP_OpportunityNaming_BATCH() {
-        query = 'SELECT Id, Name FROM Opportunity';
+    /** @description The batch process constructor; creates opportunity contact role query for all primary OCRs.*/
+    public OPP_PrimaryContact_BATCH() {
+        query = 'SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId FROM OpportunityContactRole WHERE IsPrimary=TRUE ORDER BY OpportunityId, LastModifiedDate DESC';
     }
     
-    /** @description The batch process constructor; creates opportunity query for all opportunities with custom WHERE clause .*/
-    public OPP_OpportunityNaming_BATCH(string customWhere) {
-        query = 'SELECT Id, Name FROM Opportunity ' + customWhere;
-    }
-
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
 
     /*********************************************************************************************************
-    * @description Batch process execute method. Names and updates all opportunities in the current batch.
+    * @description Batch process execute method. Update existing opportunities' Primary Contact field based on
+    * primary Opportunity Contact Role.
     */
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
-        //save old opp names to see if we need an update
-        list<opportunity> oppsForUpdate = new list<Opportunity>();
-        map<id,string> oppNames = new map<id,string>();
-        for (Opportunity opp : (list<Opportunity>)scope)
-            oppNames.put(opp.id, opp.Name);
-
-        //refresh names
-        OPP_OpportunityNaming.refreshOppNames((list<Opportunity>)scope);
-
-        //find which names have been updated, add to list
-        for (Opportunity opp : (list<Opportunity>)scope) {
-            if (opp.Name != oppNames.get(opp.id))
-                oppsForUpdate.add(opp);
+        
+        //creates an opportunity object
+        //if there are duplicate primary contact roles, take the oldest modified one, so if the
+        //duplicate is the result of a merge, the winner of the merge keeps the primary contact role
+        map<id,Opportunity> mapOppsForUpdate = new map<id,Opportunity>();
+        for (OpportunityContactRole ocr : (list<OpportunityContactRole>)scope) {
+            mapOppsForUpdate.put(ocr.OpportunityId, new Opportunity(id=ocr.OpportunityId, Primary_Contact__c=ocr.ContactId));
         }
 
-        if (!oppsForUpdate.isEmpty())
-            database.update(oppsForUpdate, false);
+        //verify we have an actual update to the primary contact field, otherwise remove the record
+        for (OpportunityContactRole ocr : (list<OpportunityContactRole>)scope) {
+            if (mapOppsForUpdate.get(ocr.OpportunityId).Primary_Contact__c == ocr.Opportunity.Primary_Contact__c)
+                mapOppsForUpdate.remove(ocr.OpportunityId);
+        }
+
+        if (!mapOppsForUpdate.isEmpty()) {
+            TDTM_TriggerHandler.disableTDTM = true;
+            database.update(mapOppsForUpdate.values(), false);
+            TDTM_TriggerHandler.disableTDTM = false;
+        }
     }
     
     /** @description Batch process finish method, does nothing.*/
     public void finish(Database.BatchableContext BC) {}
-    
 }

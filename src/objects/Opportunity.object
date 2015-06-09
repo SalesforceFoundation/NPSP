@@ -526,6 +526,21 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Primary_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.</inlineHelpText>
+        <label>Primary Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Opportunities</relationshipLabel>
+        <relationshipName>Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Recurring_Donation_Installment_Name__c</fullName>
         <description>Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments.</description>
         <externalId>false</externalId>

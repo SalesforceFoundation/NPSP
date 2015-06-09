@@ -337,6 +337,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 if (currentItem.sobj.id != null) {
                     if(currentItem.sobj.getSObjectType() == Opportunity.Sobjecttype){
                             currentItem.sobj.put('npe01__Contact_ID_for_Role__c', currentItem.npspocr.ContactID);
+                            currentItem.sobj.put(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'), currentItem.npspocr.ContactID);
                     }
                     
                     //update the name in case values have changed
@@ -348,6 +349,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                 } else {         
                         if(currentItem.sobj.getSObjectType() == Opportunity.Sobjecttype){
                             currentItem.sobj.put('npe01__Contact_ID_for_Role__c', currentItem.npspocr.ContactID);
+                            currentItem.sobj.put(UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c'), currentItem.npspocr.ContactID);
                         }
                       
                         //use automatic opp naming 

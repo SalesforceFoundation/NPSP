@@ -1643,7 +1643,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionScheduleJobs</shortDescription>
-        <value>You must add records for RLLP_OppRollup_SCHED, RD_RecurringDonations_SCHED, and ADDR_SEASONAL_SCHED to Schedulable__c in order for these features to work correctly.</value>
+        <value>All NPSP scheduled classes should have records in Schedulable__c in order for these features to work correctly.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
