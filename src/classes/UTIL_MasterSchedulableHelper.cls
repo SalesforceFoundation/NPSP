@@ -164,6 +164,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
 	                Active__c = true, Frequency__c = 'Daily'));
 	        jobs.add(new Schedulable__c(Name = 'Seasonal Address Updates', Class_Name__c = scheduledClasses[5],
 	                Active__c = true, Frequency__c = 'Daily'));
+            jobs.add(new Schedulable__c(Name = 'GAU Allocations Rollups', Class_Name__c = scheduledClasses[6],
+                    Active__c = true, Frequency__c = 'Daily'));
 	        insert jobs;
     	}    
     }

@@ -42,6 +42,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     */
     global void onInstall(InstallContext context) {
         database.executeBatch(new RD_InstallScript_BATCH(), 10); 
+        database.executeBatch(new OPP_PrimaryContact_BATCH(),200);
         try { 
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {

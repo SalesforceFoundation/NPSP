@@ -1377,6 +1377,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     continue;
                 }                
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
+                opp.Primary_Contact__c = con.Id;
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.Donation_Donor__c == 'Account1') {

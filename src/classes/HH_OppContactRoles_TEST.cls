@@ -336,13 +336,13 @@ private class HH_OppContactRoles_TEST {
             Name = 'o1',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
-            npe01__Contact_Id_for_Role__c = (string)con1.id);
+            Primary_Contact__c = (string)con1.id);
         insert o1;
         Opportunity o2 = new Opportunity(
             Name = 'o2',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
-            npe01__Contact_Id_for_Role__c = (string)con2.id);
+            Primary_Contact__c = (string)con2.id);
         insert o2;        
 
         system.assertequals(2,(integer)[select count() from Opportunity]);

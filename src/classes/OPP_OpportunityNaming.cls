@@ -129,8 +129,8 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         
         set<id> setConId = new set<id>();
         for (Opportunity opp : oppsForUpdate) {
-            if (opp.npe01__Contact_Id_for_Role__c != null) {
-                setConId.add(opp.npe01__Contact_Id_for_Role__c);
+            if (opp.Primary_Contact__c != null) {
+                setConId.add(opp.Primary_Contact__c);
             }
         }
 
@@ -150,7 +150,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             }
 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
-                opp.Name = replaceFieldNamesWithValues(opp, mapCons.get(opp.npe01__Contact_Id_for_Role__c), ons);
+                opp.Name = replaceFieldNamesWithValues(opp, mapCons.get(opp.Primary_Contact__c), ons);
 
                 if (opp.Name.length() > 120)
                     opp.Name = opp.Name.substring(0,120);
@@ -158,10 +158,6 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 oppIdsForFuture.add(opp.id);
             }
         }
-
-        //send updates to recalculate in @future method in case the primary contact role differs from the Contact Id for Role field
-        if (!oppIdsForFuture.isEmpty())
-            updateOppNameFuture(oppIdsForFuture);
 
         return oppsForUpdate;
     }
@@ -272,7 +268,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @return string An opportunity query string.
     ********************************************************************************************************/
     public static string getOppQuery(set<string> fields) {
-        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name','npe01__contact_id_for_role__c', 'account.npe01__systemisindividual__c'});
+        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name','Primary_Contact__c', 'account.npe01__systemisindividual__c'});
         string result = 'SELECT ';
         for (string field : getOppFields(fields)) {
             result += field + ', ';
