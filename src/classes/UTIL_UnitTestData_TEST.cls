@@ -164,7 +164,7 @@ public class UTIL_UnitTestData_TEST {
                 CloseDate = Close,
                 StageName = Stage,
                 CampaignId = CampId,
-                npe01__Contact_Id_for_Role__c = thisCon.Id,
+                Primary_Contact__c = thisCon.Id,
                 type = oppType
             );
             if(rtid != null){
@@ -195,7 +195,7 @@ public class UTIL_UnitTestData_TEST {
                 StageName = Stage,
                 CampaignId = CampId,
                 AccountId = thisCon.AccountId,
-                npe01__Contact_Id_for_Role__c = thisCon.Id,
+                Primary_Contact__c = thisCon.Id,
                 type = oppType
             );
             if(rtid != null){

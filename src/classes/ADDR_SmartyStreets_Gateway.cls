@@ -189,9 +189,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        req.setHeader('Content-Type','application/json');
 	        req.setHeader('Accept','application/json');
 	        req.setEndpoint(baseURL + auth);
-	        UTIL_Debug.debug('****Request endpoint: \n' + req.getEndpoint());
 	        req.setBody(body);
-	        UTIL_Debug.debug('****Request body: \n' + req.getBody());
 	        req.setTimeout((settings.timeout__c == null) ? 5000 : (settings.timeout__c * 1000).intValue());
 	        //Just to test the batch address validator and avoid getting a "Please commit or rollback before 
 	        //calling out" error. I believe the issue is that the test is performing DML (to set things up)
@@ -216,7 +214,6 @@ public with sharing class ADDR_SmartyStreets_Gateway {
 	        	// execute the request
 	        	response = h.send(req);
 	        }
-	        UTIL_Debug.debug(LoggingLevel.WARN, '****Response body: \n' + response.getBody());    
     	} else {
     		response.setBody('No credentials provided or SmartyStreets not selected. Please check your settings.');
     	}

@@ -614,7 +614,7 @@ public with sharing class HH_Households_TEST {
                 Amount = 100,
                 CloseDate = system.today(),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                npe01__Contact_Id_for_Role__c = c1.id
+                Primary_Contact__c = c1.Id
             );  
         if(rtid != null)
             newOpp.put('RecordTypeId',rtid);

@@ -35,8 +35,6 @@
 */
 public class HH_OppContactRoles_TDTM extends TDTM_Runnable { 
 	
-    public HH_OppContactRoles_TDTM() {}    
-
     public static string strRefreshSetting = 'Open and Closed Opportunities';
 
     /*******************************************************************************************************
@@ -122,7 +120,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 
         // get all Opps in the trigger set that are for individual accounts 
         // issue 318, also get Contact ID for Role if available
-        map<Id, Opportunity> oppsForContactRoles = new map<Id,Opportunity>([select Id, npe01__Contact_Id_for_Role__c, AccountId, account.npe01__One2OneContact__c,
+        map<Id, Opportunity> oppsForContactRoles = new map<Id,Opportunity>([select Id, Primary_Contact__c, AccountId, account.npe01__One2OneContact__c,
             account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c from Opportunity 
             where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true]);
         //UTIL_Debug.debug('DJH***** oppsForContactRoles: ' + oppsForContactRoles);
@@ -163,8 +161,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
                 contactOppToContactRole.put(uniqueConRole , thisCR.Id);
                 
-                // now remove any npe01__Contact_Id_for_role__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
-                oppsForContactRoles.get(thisCR.OpportunityId).npe01__Contact_Id_for_role__c = null;
+                // now remove any Primary_Contact__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
+                oppsForContactRoles.get(thisCR.OpportunityId).Primary_Contact__c = null;
                 oppsForContactRoles.get(thisCR.OpportunityId).account.npe01__One2OneContact__c = null;
             }
 
@@ -174,21 +172,21 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 // grab all the contacts off the Accounts or via the role lookup
                 if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
                     contactIds.add(thisOpp.account.npe01__One2OneContact__c);
-                else if (thisOpp.npe01__Contact_Id_for_Role__c != null) 
-                    contactIds.add(thisOpp.npe01__Contact_Id_for_Role__c);
+                else if (thisOpp.Primary_Contact__c != null) 
+                    contactIds.add(thisOpp.Primary_Contact__c);
                                     
                 // create the map of contacts to opps
-                if (contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c) == null && contactIdToOpps.get(thisOpp.npe01__Contact_Id_for_Role__c) == null) {
+                if (contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c) == null && contactIdToOpps.get(thisOpp.Primary_Contact__c) == null) {
                     if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
                         contactIdToOpps.put(thisOpp.account.npe01__One2OneContact__c, new List<Opportunity>());
-                    else if (thisOpp.npe01__Contact_Id_for_Role__c != null)
-                        contactIdToOpps.put(thisOpp.npe01__Contact_Id_for_Role__c, new List<Opportunity>());                                          
+                    else if (thisOpp.Primary_Contact__c != null)
+                        contactIdToOpps.put(thisOpp.Primary_Contact__c, new List<Opportunity>());                                          
                 }
                 
                 if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
                     contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c).add(thisOpp);
-                else if (contactIdToOpps.get(thisOpp.npe01__Contact_Id_For_Role__c) != null) 
-                    contactIdToOpps.get(thisOpp.npe01__Contact_Id_For_Role__c).add(thisOpp);                                            
+                else if (contactIdToOpps.get(thisOpp.Primary_Contact__c) != null) 
+                    contactIdToOpps.get(thisOpp.Primary_Contact__c).add(thisOpp);                                            
             }            
             
         
