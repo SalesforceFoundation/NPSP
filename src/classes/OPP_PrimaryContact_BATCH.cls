@@ -33,7 +33,7 @@
 * @group Opportunity
 * @description Batch job runs after installation to populate Primary_Contact__c on opportunity.
 */
-public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
+public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject>, UTIL_MasterSchedulableHelper.UTIL_IRecurring {
     
     /** @description The query for the batch process to run on.*/
     private String query;
@@ -46,6 +46,25 @@ public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
+    }
+
+    /*******************************************************************************************************
+    * @description Implementation of UTIL_MasterSchedulableHelper.UTIL_IRecurring, to allow nightly 
+    * scheduling. Attempts to start allocations rollup batch job.
+    * @return Boolean Whether the batch job started successfully. 
+    ********************************************************************************************************/
+    public Boolean executeReturnStatus() {
+        if(UTIL_JobScheduler.canRunBatch()) {
+            Savepoint sp = Database.setSavepoint();
+            try {
+                database.executeBatch(new OPP_PrimaryContact_BATCH(), 200);
+                return true;
+            } catch(Exception e) {
+                Database.rollback(sp);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.OPP);
+            }
+        }
+        return false;
     }
 
     /*********************************************************************************************************
