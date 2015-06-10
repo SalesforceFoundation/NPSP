@@ -88,7 +88,28 @@
                     </div>
                 </div>
             </section>
-
+            <!-- Batch Opportunity Naming -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:50px">
+                <apex:outputPanel rendered="{!isReadOnlyMode && NOT(IsRunningBatch)}" layout="block" styleClass="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{!$Label.stgLabelOppUpdatePrimaryContact}</h3>
+                    </div>
+                    <div class="panel-body" style="padding:15px;">                 
+                        <apex:outputText value="{!$Label.stgHelpPrimaryContactBatch}" escape="false" />
+                        <div style="text-align:center;" class="form-control-column">
+                            <apex:commandbutton value="{!$Label.stgBtnRefreshPrimaryContacts}" status="statusLoad" action="{!runBatch}" rendered="{!isReadOnlyMode}" immediate="false" rerender="form" styleClass="btn btn-sm btn-danger"/>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </div>
+            <!-- Batch Progress Bar -->
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
+                <apex:outputPanel rendered="{!isRunningBatch}">
+                    <br/><br/>
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppPrimaryContactTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    <br/>
+                </apex:outputPanel>
+            </div>
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
                 <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
                 <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />

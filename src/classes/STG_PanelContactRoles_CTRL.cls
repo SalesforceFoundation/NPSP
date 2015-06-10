@@ -40,4 +40,24 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     */
     public override string idPanel() { return 'idPanelConRoles'; }
     
+    public boolean isRunningBatch { get; set; }
+
+    /*********************************************************************************************************
+    * @description The panel's constructor 
+    */
+    public STG_PanelContactRoles_CTRL() {
+        isRunningBatch = false;
+    }
+
+    /*********************************************************************************************************
+    * @description Action Method to run batch update opportunity primary contact.
+    * @return null 
+    */
+    public PageReference runBatch() {
+        isRunningBatch = true;
+        OPP_PrimaryContact_BATCH batch = new OPP_PrimaryContact_BATCH();
+        id batchProcessId = database.executeBatch(batch, 200);
+        return null;
+    }
+
 }
