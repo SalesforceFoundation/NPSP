@@ -830,6 +830,7 @@
         <members>stgBtnNewUDR</members>
         <members>stgBtnRDCreateNewMap</members>
         <members>stgBtnRefreshOpportunityNames</members>
+        <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
         <members>stgErrorINaming</members>
@@ -894,6 +895,7 @@
         <members>stgHelpPaymentMapping</members>
         <members>stgHelpPaymentMappings</members>
         <members>stgHelpPaymentsEnabled</members>
+        <members>stgHelpPrimaryContactBatch</members>
         <members>stgHelpRDAddCampaign</members>
         <members>stgHelpRDDisableScheduling</members>
         <members>stgHelpRDFailures</members>
@@ -975,8 +977,10 @@
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppNamingRefreshTitle</members>
         <members>stgLabelOppNamingSettings</members>
+        <members>stgLabelOppPrimaryContactTitle</members>
         <members>stgLabelOppRollupRT</members>
         <members>stgLabelOppRollups</members>
+        <members>stgLabelOppUpdatePrimaryContact</members>
         <members>stgLabelOther</members>
         <members>stgLabelOtherDateFormat</members>
         <members>stgLabelOtherFormalGreetingFormat</members>
