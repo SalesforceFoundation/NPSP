@@ -140,7 +140,7 @@
                 </apex:outputPanel>
             </apex:outputPanel>
             <!-- Batch Opportunity Naming -->
-            <div class="col-sm-offset-1 col-sm-10" style="margin-top:100px">
+            <div class="col-sm-offset-1 col-sm-10" style="margin-top:50px">
                 <apex:outputPanel rendered="{!isReadOnlyMode && NOT(IsRunningBatch) && listOppNameSettings.size>0}" layout="block" styleClass="panel panel-danger">
                     <div class="panel-heading">
                         <h3 class="panel-title">{!$Label.stgLabelOppNamingRefreshTitle}</h3>
