@@ -106,7 +106,7 @@
             <div class="col-sm-offset-1 col-sm-10" style="margin-top:10px">
                 <apex:outputPanel rendered="{!isRunningBatch}">
                     <br/><br/>
-                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelOppPrimaryContactTitle}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                     <br/>
                 </apex:outputPanel>
             </div>
