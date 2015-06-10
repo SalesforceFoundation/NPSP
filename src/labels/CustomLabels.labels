@@ -2294,6 +2294,14 @@
         <value>Refresh All Opportunity Names</value>
     </labels>
     <labels>
+        <fullName>stgBtnRefreshPrimaryContacts</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRefreshPrimaryContacts</shortDescription>
+        <value>Refresh All Opportunity Primary Contacts</value>
+    </labels>
+    <labels>
         <fullName>stgBtnRunBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2446,11 +2454,19 @@ You can close this page at any time and the process will still run in the backgr
         <shortDescription>stgHelpBtnHHNaming</shortDescription>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greetings with new names, according to the formats you&apos;ve chosen. Every single Household Account (or Household object) in your Salesforce organization will be renamed (except those Households that do not have automatic naming enabled.)&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;This is an irreversible process.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON HOUSEHOLDS BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
-
-Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
+Before starting this process, we recommend disabling the following when they affect Households:
+&lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom Validation Rules&lt;/li&gt;
+&lt;li&gt;Workflow Rules&lt;/li&gt;
+&lt;li&gt;Process Builder&lt;/li&gt;
+&lt;li&gt;Visual Workflows&lt;/li&gt;
+&lt;li&gt;Custom Triggers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpBtnOppNaming</fullName>
@@ -2460,10 +2476,18 @@ Once the renaming process is 100% complete, you can safely leave or refresh this
         <shortDescription>stgHelpBtnOppNaming</shortDescription>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch opportunity renaming, and refresh all opportunity names according to the formats you&apos;ve chosen. Salesforce will rename every opportunity in your organization except those opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;THIS IS AN IRREVERSIBLE PROCESS.&lt;/b&gt; &lt;br/&gt;
-&lt;b&gt;DISABLE ALL CUSTOM VALIDATION RULES ON OPPORTUNITY BEFORE ACTIVATING.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
-
-Once the renaming process is 100% complete, you can safely leave or refresh this page.</value>
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+Before starting this process, we recommend disabling the following when they affect Opportunities:
+&lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom Validation Rules&lt;/li&gt;
+&lt;li&gt;Workflow Rules&lt;/li&gt;
+&lt;li&gt;Process Builder&lt;/li&gt;
+&lt;li&gt;Visual Workflows&lt;/li&gt;
+&lt;li&gt;Custom Triggers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpChatterGroup</fullName>
@@ -2820,6 +2844,27 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <protected>false</protected>
         <shortDescription>stgHelpPaymentsEnabled</shortDescription>
         <value>Enables automatic Payments created for new Opportunities/Donations.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPrimaryContactBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpPrimaryContactBatch</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn&apos;t the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+This change updates Opportunity records. Before starting this process, we recommend disabling the following when they affect Opportunities:
+&lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom Validation Rules&lt;/li&gt;
+&lt;li&gt;Workflow Rules&lt;/li&gt;
+&lt;li&gt;Process Builder&lt;/li&gt;
+&lt;li&gt;Visual Workflows&lt;/li&gt;
+&lt;li&gt;Custom Triggers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
@@ -3471,6 +3516,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <value>Opportunity Names</value>
     </labels>
     <labels>
+        <fullName>stgLabelOppPrimaryContactTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppPrimaryContactTitle</shortDescription>
+        <value>Refresh Opportunity Primary Contact</value>
+    </labels>
+    <labels>
         <fullName>stgLabelOppRollupRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3485,6 +3538,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Starter Pack application
         <protected>false</protected>
         <shortDescription>stgLabelOppRollups</shortDescription>
         <value>Opportunity Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOppUpdatePrimaryContact</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOppUpdatePrimaryContact</shortDescription>
+        <value>Batch Update Primary Contact</value>
     </labels>
     <labels>
         <fullName>stgLabelOther</fullName>
