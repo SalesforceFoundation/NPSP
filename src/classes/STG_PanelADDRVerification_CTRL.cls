@@ -76,7 +76,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     */
     public String batchVerifyMessage { get; set; }
 
-    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
+    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator', 'ADDR_Validator_REST'};
     
     /*******************************************************************************************************
     * @description The help text for the settings.
@@ -184,12 +184,12 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         validators.add(new SelectOption('', ''));
         //We have to use these strings because the underscode is treated like a special character in a LIKE 
         //clause, and if we try to escape it with a backslash it gets double-escaped automatically.
-        String addrLikeClause = 'ADDR\\_%';
-        String testLikeClause = '%\\_TEST';
-        String ctrlLikeClause = '%\\_CTRL';
-        String tdtmLikeClause = '%\\_TDTM';
-        String batchLikeClause = '%\\_Batch';
-        String schedLikeClause = '%\\_SCHED'; 
+        String addrLikeClause = 'ADDR%';
+        String testLikeClause = '%TEST';
+        String ctrlLikeClause = '%CTRL';
+        String tdtmLikeClause = '%TDTM';
+        String batchLikeClause = '%Batch';
+        String schedLikeClause = '%SCHED'; 
         ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like :addrLikeClause 
                   and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
                   and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
