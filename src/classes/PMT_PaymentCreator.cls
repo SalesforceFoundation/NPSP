@@ -99,6 +99,8 @@ public without sharing class PMT_PaymentCreator {
                         soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
                     }   
                 }
+                if (OppCurrencyField!=null)
+                    soqlStatement += 'CurrencyIsoCode, ';
                 soqlStatement += 'npe01__payments_made__c, ';
                 string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
                 for (string s : paymentMappings.keyset()) {
@@ -240,7 +242,7 @@ public without sharing class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c){
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c){
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,
@@ -263,20 +265,13 @@ public without sharing class PMT_PaymentCreator {
                         paymentsToInsert.add(op);                                              
                     }   
                 }
-                //try{
-                    // update or delete payments     
-                    if (!paymentsToUpdate.isEmpty())
-                        dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
-                    if (!paymentsToDelete.isEmpty())
-                        dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
-                    if (!paymentsToInsert.isEmpty())
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
-                //}
-                /*catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToUpdate) {
-                      opay.addError('There was a problem updating a payment');
-                    }
-                }*/
+                // update or delete payments     
+                if (!paymentsToUpdate.isEmpty())
+                    dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
+                if (!paymentsToDelete.isEmpty())
+                    dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
+                if (!paymentsToInsert.isEmpty())
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
         }
     }
