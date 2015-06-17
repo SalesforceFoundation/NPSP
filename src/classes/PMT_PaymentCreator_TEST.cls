@@ -36,12 +36,14 @@
 @isTest
 private with sharing class PMT_PaymentCreator_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = 'nullAmount';
-    
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
+    private static string strTestOnly = '*';
         
     /*********************************************************************************************************
+    * @description
     operation:
         close an Opp as Lost that has a mixture of paid & unpaid payments, some written off 
     verify:
@@ -131,6 +133,13 @@ private with sharing class PMT_PaymentCreator_TEST {
         system.assertEquals(50, opmtWrittenOff[0].npe01__payment_amount__c);       
     }
 
+    /*********************************************************************************************************
+    * @description
+    operation:
+        close an Opp as Lost that has an existing payment and a null amount
+    verify:
+        payment is deleted, no infinite recursion takes place
+    **********************************************************************************************************/            
     static testMethod void nullAmount() {
         if (strTestOnly != '*' && strTestOnly != 'nullAmount') return;
         
