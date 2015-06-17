@@ -125,7 +125,6 @@ public without sharing class PMT_PaymentCreator {
                                     npe01__opportunity__c = thisOpp.id
                                 );
                                 
-                                
                                 //in multicurrency SFDC set the payment currency field to equal to the opp currency
                                 if(PaymentCurrencyField != null && OppCurrencyField != null)
                                     op.put(PaymentCurrencyField, thisOpp.get(OppCurrencyField));
@@ -165,16 +164,9 @@ public without sharing class PMT_PaymentCreator {
                         }
                         */
                 }
-                try{
-                    // put in the payment for closed opps       
-                    if (!paymentsToInsert.isEmpty()) 
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
-                }
-                catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToInsert) {
-                      opay.addError('There was a problem inserting a payment');
-                    }
-                }
+                // put in the payment for closed opps       
+                if (!paymentsToInsert.isEmpty()) 
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
             }
             
             
