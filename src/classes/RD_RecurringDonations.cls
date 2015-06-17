@@ -453,7 +453,7 @@ public with sharing class RD_RecurringDonations {
                     }
                     *********************************/
                                         
-                    OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
+                    OppCloseDate = getNextDate(OppCloseDate, r);
                 
                     String oName = '';
                     oName += r.npe03__Donor_Name__c; 
@@ -510,7 +510,7 @@ public with sharing class RD_RecurringDonations {
                     }                                             
                     /*
                     if (r.npe03__Total_Paid_Installments__c > 0){
-                            OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
+                            OppCloseDate = getNextDate(OppCloseDate, r);
                     } */   
                     //date incrementdate = OppCloseDate;
                     integer forecast_months = (integer)rds.npe03__Opportunity_Forecast_Months__c;
@@ -546,7 +546,7 @@ public with sharing class RD_RecurringDonations {
                                        
                         o.Amount = r.npe03__Amount__c;
                     
-                        OppCloseDate = getNextDate(OppCloseDate, r.npe03__Installment_Period__c);
+                        OppCloseDate = getNextDate(OppCloseDate, r);
                     
                         String oName = '';
                         oName += r.npe03__Donor_Name__c; 
@@ -805,7 +805,7 @@ public with sharing class RD_RecurringDonations {
                 o.Name = oName;
                 
                 //now append appropriate amount to this date
-                PaymentDate = getNextDate(PaymentDate, RDMap.get(RDid).npe03__Installment_Period__c);
+                PaymentDate = getNextDate(PaymentDate, rdMap.get(RDid));
 
                 //evaluate any custom field mappings
                 for (string s : customFieldMappingSettings.keySet()){
@@ -999,7 +999,7 @@ public with sharing class RD_RecurringDonations {
                            
                 if (dtForecast > lastOppMap.get(rd.id)){
                     date oppclosedate = lastOppMap.get(rd.id);
-                    oppclosedate = getNextDate(oppclosedate, rd.npe03__Installment_Period__c);
+                    oppclosedate = getNextDate(oppclosedate, rd);
                     //do{
                     while(oppclosedate < dtForecast) {
                         UTIL_Debug.debug('****DJH evaluate oppCounter: ' + oppCounter + ' OppCloseDate: ' + OppCloseDate + ' dtForecast: ' + dtForecast);
@@ -1048,7 +1048,7 @@ public with sharing class RD_RecurringDonations {
                                             
                         oppCounter++;
                         oppInsertList.add(o);                   
-                        oppclosedate = getNextDate(oppclosedate, rd.npe03__Installment_Period__c);
+                        oppclosedate = getNextDate(oppclosedate, rd);
                     }//while(oppclosedate < dtForecast);
                 }
             }
@@ -1167,14 +1167,18 @@ public with sharing class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description Returns the last day of month for the provided date, assuming is set for
     * the 28th or later.  This is a way to avoid the last day of month getting pushed to the
-    * 30th, and then the 28th.
+    * 30th, and then the 28th.  Note that if Date Established is >= 28, we assume it instead.
     * @param dt The date to analyze
     * @return date Either the passed in date, or the last day of the month if the provided date
     * was >= the 28th.
     */ 
-    private static date dtEndOfMonthFixup(Date dt) {
+    private static date dtEndOfMonthFixup(Date dt, npe03__Recurring_Donation__c rd) {
         if (dt.day() >= 28) {
-            dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
+            // only push to end of month if we are pretty sure they weren't trying specifically for the 28th-30th.
+            if (rd.npe03__Date_Established__c != null && rd.npe03__Date_Established__c.day() >= 28)
+                dt = date.newInstance(dt.year(), dt.month(), rd.npe03__Date_Established__c.day());
+            else
+                dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
         } 
         return dt;   	
     }
@@ -1182,22 +1186,23 @@ public with sharing class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description Returns the next date in the sequence based on the RD schedule type 
     * @param CalcDate The date to start from
-    * @param InstallmentType The RD's Installment period.
+    * @param rd The Recurring Donation.
     * @return date 
     */ 
-    private static date getNextDate(date CalcDate, string InstallmentType){
+    private static date getNextDate(date CalcDate, npe03__Recurring_Donation__c rd) {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        string InstallmentType = rd.npe03__Installment_Period__c;
         
         if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodYearly){
             CalcDate = CalcDate.addYears(1);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly){
             CalcDate = CalcDate.addMonths(3);
-            CalcDate = dtEndOfMonthFixup(CalcDate);
+            CalcDate = dtEndOfMonthFixup(CalcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodMonthly){
             CalcDate = CalcDate.addMonths(1);
-            CalcDate = dtEndOfMonthFixup(CalcDate);
+            CalcDate = dtEndOfMonthFixup(CalcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodWeekly){
             CalcDate = CalcDate.addDays(7);
@@ -1225,7 +1230,7 @@ public with sharing class RD_RecurringDonations {
                 }
                 else if (c.npe03__Increment__c == 'Months'){
                     CalcDate = CalcDate.addMonths(integer.valueOf(c.npe03__Value__c));
-                    CalcDate = dtEndOfMonthFixup(CalcDate);                    
+                    CalcDate = dtEndOfMonthFixup(CalcDate, rd);                    
                 }
                 else if (c.npe03__Increment__c == 'Years'){
                     CalcDate = CalcDate.addYears(integer.valueOf(c.npe03__Value__c));
@@ -1235,7 +1240,7 @@ public with sharing class RD_RecurringDonations {
             //the open ended value so we only create one opp max                           
             else{   
                 CalcDate = CalcDate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c);
-                CalcDate = dtEndOfMonthFixup(CalcDate);            
+                CalcDate = dtEndOfMonthFixup(CalcDate, rd);            
             }                
         }
         return CalcDate;

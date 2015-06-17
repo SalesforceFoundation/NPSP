@@ -1924,4 +1924,63 @@ public class RD_RecurringDonations_TEST {
             queryopp[i].Recurring_Donation_Installment_Number__c = null;
         }
     }
+
+    static testMethod void testOpenEndedMonthlyEndDates(){
+        if (strTestOnly != '*' && strTestOnly != 'testOpenEndedMonthlyEndDates') return;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+            npe03__Opportunity_Forecast_Months__c = 12,
+            npe03__Maximum_Donations__c = 50,
+            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
+            ));             
+        
+        Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;       
+        
+        Campaign camp = new Campaign(name = 'Campaign', isActive = true);
+        insert camp;
+        
+        list<npe03__Recurring_Donation__c> rdlist = new list<npe03__Recurring_Donation__c>();
+        
+        npe03__Recurring_Donation__c RD = new npe03__Recurring_Donation__c();
+        RD.Name = 'test28th';
+        RD.npe03__Contact__c = c.Id;
+        RD.npe03__Amount__c = 100;
+        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        RD.npe03__Date_Established__c = system.today().toStartOfMonth().addDays(27);
+        RD.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        RD.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
+        rdlist.add(RD);
+        
+        RD = RD.clone(false);
+        RD.Name = 'testEndOfMonth';
+        RD.npe03__Date_Established__c = system.today().toStartOfMonth();
+        RD.npe03__Next_Payment_Date__c = system.today().addMonths(1).toStartOfMonth().addDays(-1);
+        rdlist.add(RD);
+                
+        test.startTest();
+        insert rdlist;
+        test.stopTest();
+        
+        list<Opportunity> listOpp = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test28th'];
+        system.assertEquals(12, listOpp.size());
+        for (Opportunity opp : listOpp) {
+            system.assertEquals(28, opp.CloseDate.Day());
+        }
+        
+        listOpp = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'testEndOfMonth'];
+        system.assertEquals(12, listOpp.size());
+        for (Opportunity opp : listOpp) {
+            system.assertEquals(opp.CloseDate.addMonths(1).toStartOfMonth().addDays(-1).Day(), opp.CloseDate.Day());
+        }
+    }
+
 }
