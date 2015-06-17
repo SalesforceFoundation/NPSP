@@ -2715,7 +2715,9 @@ To learn more about the recommended Household account model, see the &lt;a href=
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNewRDFieldMap</shortDescription>
-        <value>Select the Recurring Donation field to be mapped, and the Opportunity field it maps to.</value>
+        <value>First, select the Recurring Donation field you want to map. Then select the Opportunity field you want to map to. The Recurring Donation field you select will appear on all child opportunities for the Recurring Donation.
+
+IMPORTANT: Both of these fields must have the same data type.</value>
     </labels>
     <labels>
         <fullName>stgHelpNewUDR</fullName>
@@ -2872,7 +2874,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>If selected, all Opportunities for Recurring Donations will use the Campaign on the Recurring Donation. Otherwise, only the first Opportunity will have the Campaign.</value>
+        <value>If selected, adds the campaign that you’ve specified for the Recurring Donation to all related (i.e. “child”) opportunities. If this option is not selected, the campaign appears on the Recurring Donation’s first opportunity only.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
@@ -2880,7 +2882,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDDisableScheduling</shortDescription>
-        <value>Prevents the scheduling of the nightly update to Recurring Donations. Any existing scheduled job will need to be removed through Setup-&gt;Monitoring-&gt;Scheduled Jobs</value>
+        <value>Prevents the scheduling of the nightly update to Recurring Donations. You’ll need to remove any existing scheduled jobs through Setup | Monitoring | Scheduled Jobs.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFailures</fullName>
@@ -2896,7 +2898,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMap</shortDescription>
-        <value>Map fields from Recurring Donations to Opportunities.  This will copy Recurring Donation fields to the Opportunities created for the Recurring Donation.</value>
+        <value>This setting lets you map fields from the Recurring Donation record to the Recurring Donation&apos;s child Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFieldMapOppField</fullName>
@@ -2904,7 +2906,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMapOppField</shortDescription>
-        <value>The Opportunity field to receive the value from the Recurring Donation field. Note that these fields must have the same data type.</value>
+        <value>no longer used.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFieldMapRDField</fullName>
@@ -2912,7 +2914,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFieldMapRDField</shortDescription>
-        <value>The Recurring Donation field to copy to the Opportunity field. Note that these fields must have the same data type.</value>
+        <value>no longer used.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDLastRun</fullName>
@@ -2928,7 +2930,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.</value>
+        <value>Restricts the total number of donations (installments) for Fixed-Length Recurring Donations. Default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -2936,7 +2938,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOpenOppBehavior</shortDescription>
-        <value>Determines the behavior of any remaining open Opportunities when an open-ended Recurring Donation is moved to a closed status.</value>
+        <value>Tells Salesforce what to do with any remaining open opportunities when you mark the status of a Open-Ended Recurring Donation as Closed.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppForecastMonths</fullName>
@@ -2944,7 +2946,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months from today worth of open Opportunities to be created when using open-ended Recurring Donations. WARNING: Reducing this value will result in extra Opportunities being deleted. Increasing it will launch a batch process to add Opportunities</value>
+        <value>Number of months’ worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month’s worth of open opportunities (i.e., the total months’ worth of open opportunities is always 12).</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -2952,7 +2954,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>Opportunity Record Type used when Recurring Donation Opportunities are created.</value>
+        <value>The opportunity record type assigned to the Recurring Donation’s child opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
