@@ -1167,7 +1167,7 @@ public with sharing class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description Returns the last day of month for the provided date, assuming is set for
     * the 28th or later.  This is a way to avoid the last day of month getting pushed to the
-    * 30th, and then the 28th.
+    * 30th, and then the 28th.  Note that if Date Established is >= 28, we assume it instead.
     * @param dt The date to analyze
     * @return date Either the passed in date, or the last day of the month if the provided date
     * was >= the 28th.
@@ -1175,7 +1175,9 @@ public with sharing class RD_RecurringDonations {
     private static date dtEndOfMonthFixup(Date dt, npe03__Recurring_Donation__c rd) {
         if (dt.day() >= 28) {
             // only push to end of month if we are pretty sure they weren't trying specifically for the 28th-30th.
-            if (rd.npe03__Date_Established__c == null || rd.npe03__Date_Established__c.day() != dt.day())
+            if (rd.npe03__Date_Established__c != null && rd.npe03__Date_Established__c.day() >= 28)
+                dt = date.newInstance(dt.year(), dt.month(), rd.npe03__Date_Established__c.day());
+            else
                 dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
         } 
         return dt;   	
