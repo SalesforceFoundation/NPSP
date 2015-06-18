@@ -640,7 +640,7 @@
             <value></value>
         </summaryFilterItems>
         <summaryFilterItems>
-            <field>Grant_Deadline__c.Grant_Deliverable_Submitted_Date__c</field>
+            <field>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</field>
             <operation>equals</operation>
             <value></value>
         </summaryFilterItems>
@@ -657,7 +657,7 @@
         <inlineHelpText>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</inlineHelpText>
         <label>Previous Grant Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
-        <relationshipLabel>Previous Grant Opportunities</relationshipLabel>
+        <relationshipLabel>Related Grant Opportunities</relationshipLabel>
         <relationshipName>Previous_Grant_Opportunities</relationshipName>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>

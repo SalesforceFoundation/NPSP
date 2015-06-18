@@ -65,6 +65,17 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>Grant_Deliverable_Close_Date__c</fullName>
+        <description>The date on which the deliverable was actually submitted.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date on which the deliverable was actually submitted.</inlineHelpText>
+        <label>Grant Deliverable Close Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>Grant_Deliverable_Requirements__c</fullName>
         <description>Description of what is required for this deliverable.</description>
         <externalId>false</externalId>
@@ -74,17 +85,6 @@
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>Grant_Deliverable_Submitted_Date__c</fullName>
-        <description>The date on which the deliverable was actually submitted.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The date on which the deliverable was actually submitted.</inlineHelpText>
-        <label>Grant Deliverable Submitted Date</label>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
     </fields>
     <fields>
         <fullName>Opportunity__c</fullName>
