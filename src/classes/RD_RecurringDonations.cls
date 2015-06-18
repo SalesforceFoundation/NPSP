@@ -386,8 +386,9 @@ public with sharing class RD_RecurringDonations {
                 if (r.npe03__Total_Paid_Installments__c != null) {
                 	paidInstallments = integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
-                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue) {                    
-                        installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
+                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue) {
+                        if (installments - paidInstallments > 0)                    
+                            installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
                     }
                 }
                     

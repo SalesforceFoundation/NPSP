@@ -111,7 +111,7 @@ public without sharing class TDTM_DefaultConfig {
         // RecurringDonations on Opportunity
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'RD_RecurringDonations_Opp_TDTM', Load_Order__c = 1, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'AfterUpdate'));
+              Trigger_Action__c = 'AfterUpdate;AfterInsert'));
 
         // RecurringDonations on RecurringDonations
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 

@@ -841,8 +841,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     
-    
-       //test closing an opportunity for an open recurring donation
+    //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomDays(){
         if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomDays') return;
 
@@ -903,8 +902,7 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     
-    
-       //test closing an opportunity for an open recurring donation
+    //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomMonths(){
         if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomMonths') return;
 
@@ -966,7 +964,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(5, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
-       //test closing an opportunity for an open recurring donation
+
+    //test closing an opportunity for an open recurring donation
     static testMethod void closeOppForOpenEndedRecurringDonationCustomYears(){
         if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationCustomYears') return;
 
@@ -1183,6 +1182,56 @@ public class RD_RecurringDonations_TEST {
         
         system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+    }
+
+    //test inserting a closed/won opportunity for an open recurring donation
+    static testMethod void insertClosedOppForOpenEndedRecurringDonation(){
+        if (strTestOnly != '*' && strTestOnly != 'closeOppForOpenEndedRecurringDonationQuarterly') return;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+        new npe03__Recurring_Donations_Settings__c(
+        npe03__Opportunity_Forecast_Months__c = 12,
+        npe03__Maximum_Donations__c = 50,
+        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
+        ));           
+        
+        Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;
+        insert c;       
+
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'test';
+        r1.npe03__Installments__c = 0;
+        r1.npe03__Contact__c = c.Id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
+        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
+        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
+        r1.OwnerId = system.Userinfo.getUserId();
+        insert r1;        
+        
+        Opportunity o = new Opportunity();
+        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
+        o.StageName = closedstage;
+        o.CloseDate = system.today();
+        o.Amount = 50;
+        o.AccountId = a.Id;
+        o.Name = 'test';
+        o.npe03__Recurring_Donation__c = r1.Id;
+        RD_ProcessControl.hasRun = false;
+        Test.startTest();        
+        insert o;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c rd = [select npe03__Paid_Amount__c from npe03__Recurring_Donation__c where id = :r1.id];    
+
+        system.assertEquals(50, rd.npe03__Paid_Amount__c);
     }
     
     //test closing an opportunity for an open recurring donation
