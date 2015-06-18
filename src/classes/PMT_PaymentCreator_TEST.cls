@@ -165,7 +165,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         system.assertEquals(1, opmtAll.size());
 
         opp.Amount = null;
-        opp.StageName = 'Closed Lost';
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
         update opp;
 
         opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
