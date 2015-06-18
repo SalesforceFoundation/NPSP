@@ -240,7 +240,7 @@
     <relatedLists>
         <fields>NAME</fields>
         <fields>Grant_Deadline_Due_Date__c</fields>
-        <fields>Grant_Deliverable_Submitted_Date__c</fields>
+        <fields>Grant_Deliverable_Close_Date__c</fields>
         <fields>Grant_Deliverable_Requirements__c</fields>
         <relatedList>Grant_Deadline__c.Opportunity__c</relatedList>
         <sortField>Grant_Deadline_Due_Date__c</sortField>
