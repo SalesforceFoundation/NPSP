@@ -774,6 +774,57 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Funding_Focus__c</fullName>
+        <description>The general program area(s) that this organization funds.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The general program area(s) that this organization funds.</inlineHelpText>
+        <label>Funding Focus</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Animal Welfare</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Arts and Culture</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Capacity Building</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Education</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Environmental</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Health Services</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Human Services</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Grantmaker__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</inlineHelpText>
+        <label>Grantmaker</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Membership_Span__c</fullName>
         <description>Formula: The number of years for which this Household has had a Member.</description>
         <externalId>false</externalId>
