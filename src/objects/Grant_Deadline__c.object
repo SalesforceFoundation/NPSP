@@ -48,14 +48,16 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>A custom object for tracking various grant seeking deadlines such as the LOI delivery date, application date, and report due dates.</description>
     <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Grant_Deadline_Due_Date__c</fullName>
         <description>Sets the date on which this particular deadline is due.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Choose the date on which this particular deadline is due.</inlineHelpText>
         <label>Grant Deadline Due Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -66,7 +68,6 @@
         <fullName>Grant_Deliverable_Requirements__c</fullName>
         <description>Description of what is required for this deliverable.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Description of what is required for this deliverable.</inlineHelpText>
         <label>Grant Deliverable Requirements</label>
         <length>32768</length>
         <trackHistory>false</trackHistory>
@@ -89,7 +90,6 @@
         <fullName>Opportunity__c</fullName>
         <description>Master-Detail relationship that determines which Grant Opportunity this Grant Deadline is related to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Determines which Grant Opportunity this Grant Deadline is related to.</inlineHelpText>
         <label>Grant Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Grant Deadlines</relationshipLabel>

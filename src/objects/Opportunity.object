@@ -5,15 +5,23 @@
         <description>A sales process for tracking grants.</description>
         <isActive>true</isActive>
         <values>
-            <fullName>Closed Lost</fullName>
+            <fullName>Application Submitted</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Closed Won</fullName>
+            <fullName>Awarded</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LOI Submitted</fullName>
             <default>false</default>
         </values>
         <values>
             <fullName>Prospecting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Withdrawn</fullName>
             <default>false</default>
         </values>
     </businessProcesses>
@@ -544,9 +552,9 @@
     </fields>
     <fields>
         <fullName>Grant_Contract_Date__c</fullName>
-        <description>The date of the grant contract&apos;s inception.</description>
+        <description>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date of the grant contract&apos;s inception.</inlineHelpText>
+        <inlineHelpText>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</inlineHelpText>
         <label>Grant Contract Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -555,9 +563,9 @@
     </fields>
     <fields>
         <fullName>Grant_Contract_Number__c</fullName>
-        <description>For tracking the contract number related to this grant award.</description>
+        <description>Tracks unique numbers sometimes assigned by grant-making organizations.</description>
         <externalId>false</externalId>
-        <inlineHelpText>For tracking the contract number related to this grant award.</inlineHelpText>
+        <inlineHelpText>Tracks unique numbers sometimes assigned by grant-making organizations.</inlineHelpText>
         <label>Grant Contract Number</label>
         <length>255</length>
         <required>false</required>
@@ -570,7 +578,6 @@
         <fullName>Grant_Period_End_Date__c</fullName>
         <description>The date on which the period of the grant ends.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date on which the period of the grant ends.</inlineHelpText>
         <label>Grant Period End Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -581,7 +588,6 @@
         <fullName>Grant_Period_Start_Date__c</fullName>
         <description>The date on which the period of the grant begins.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date on which the period of the grant begins.</inlineHelpText>
         <label>Grant Period Start Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -590,9 +596,9 @@
     </fields>
     <fields>
         <fullName>Grant_Program_Area_s__c</fullName>
-        <description>Describe what program or funding area this grant falls under.</description>
+        <description>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Describe what program or funding area this grant falls under.</inlineHelpText>
+        <inlineHelpText>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</inlineHelpText>
         <label>Grant Program Area(s)</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -601,9 +607,9 @@
     </fields>
     <fields>
         <fullName>Grant_Requirements_Website__c</fullName>
-        <description>A URL which point to where the grant requirements are outlined on the grant maker&apos;s website.</description>
+        <description>A URL that points to the grant requirements on the grant-maker&apos;s website.</description>
         <externalId>false</externalId>
-        <inlineHelpText>A URL which point to where the grant requirements are outlined on the grant maker&apos;s website.</inlineHelpText>
+        <inlineHelpText>A URL that points to the grant requirements on the grant-maker&apos;s website.</inlineHelpText>
         <label>Grant Requirements Website</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -613,9 +619,9 @@
     <fields>
         <fullName>Is_Grant_Renewal__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Check the box if this grant is a renewal of a previous grant.</description>
+        <description>If selected, indicates that the grant is a renewal of a previous grant.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check the box if this grant is a renewal of a previous grant.</inlineHelpText>
+        <inlineHelpText>If selected, indicates that the grant is a renewal of a previous grant.</inlineHelpText>
         <label>Is Grant Renewal</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -623,9 +629,9 @@
     </fields>
     <fields>
         <fullName>Next_Grant_Deadline_Due_Date__c</fullName>
-        <description>The date on which the next Grant Deadline is due.</description>
+        <description>The NPSP updates this field automatically based on the next Grant Deadline record.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date on which the next Grant Deadline is due.</inlineHelpText>
+        <inlineHelpText>The NPSP updates this field automatically based on the next Grant Deadline record.</inlineHelpText>
         <label>Next Grant Deadline Due Date</label>
         <summarizedField>Grant_Deadline__c.Grant_Deadline_Due_Date__c</summarizedField>
         <summaryFilterItems>
@@ -646,9 +652,9 @@
     <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>If this grant is a renewal grant, use this field to relate the current grant to the previous one.</description>
+        <description>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If this grant is a renewal grant, use this field to relate the current grant to the previous one.</inlineHelpText>
+        <inlineHelpText>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</inlineHelpText>
         <label>Previous Grant Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Previous Grant Opportunities</relationshipLabel>
@@ -710,13 +716,13 @@ ISBLANK(npe03__Recurring_Donation__c),
     </fields>
     <fields>
         <fullName>Requested_Amount__c</fullName>
-        <description>The amount being grant is being written for. The actual award amount could be different.</description>
+        <description>The amount you are requesting. This number might be different from the final award amount.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The amount being grant is being written for. The actual award amount could be differen</inlineHelpText>
+        <inlineHelpText>The amount you are requesting. This number might be different from the final award amount.</inlineHelpText>
         <label>Requested Amount</label>
         <precision>18</precision>
         <required>false</required>
-        <scale>0</scale>
+        <scale>2</scale>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
@@ -725,7 +731,7 @@ ISBLANK(npe03__Recurring_Donation__c),
         <fullName>Grant</fullName>
         <active>true</active>
         <businessProcess>Grant Process</businessProcess>
-        <description>For tracking grants being sought by grantees from grant making organizations.</description>
+        <description>For tracking grants from grant-making organizations.</description>
         <label>Grant</label>
         <picklistValues>
             <picklist>Acknowledgment_Status__c</picklist>

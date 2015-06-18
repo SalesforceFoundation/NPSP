@@ -775,9 +775,9 @@
     </fields>
     <fields>
         <fullName>Funding_Focus__c</fullName>
-        <description>What general program area(s) does this organization fund?</description>
+        <description>The general program area(s) that this organization funds.</description>
         <externalId>false</externalId>
-        <inlineHelpText>What general program area(s) does this organization fund?</inlineHelpText>
+        <inlineHelpText>The general program area(s) that this organization funds.</inlineHelpText>
         <label>Funding Focus</label>
         <picklist>
             <picklistValues>

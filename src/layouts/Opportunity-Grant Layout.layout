@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>npe01__Matching_Donation</customButtons>
+    <customButtons>Refresh_Name</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -243,7 +244,7 @@
         <fields>Grant_Deliverable_Requirements__c</fields>
         <relatedList>Grant_Deadline__c.Opportunity__c</relatedList>
         <sortField>Grant_Deadline_Due_Date__c</sortField>
-        <sortOrder>Desc</sortOrder>
+        <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>OPPORTUNITY.NAME</fields>
