@@ -55,7 +55,7 @@ public class UTIL_UnitTestData_TEST {
         
         return closedWonStage;
     }
-    /*
+    
     public static String getClosedLostStage(){
         if (closedLostStage == null){
             List<OpportunityStage> closedLostStages = [select masterlabel from opportunitystage where isActive = true and iswon = false and isClosed = true];
@@ -69,7 +69,7 @@ public class UTIL_UnitTestData_TEST {
         
         return closedLostStage;
     }
-    */
+
     public static String getOpenStage(){
         if (openStage == null){
             List<OpportunityStage> openStages = [select masterlabel from opportunitystage where isActive = true and iswon = false];
