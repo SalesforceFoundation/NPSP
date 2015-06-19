@@ -36,12 +36,14 @@
 @isTest
 private with sharing class PMT_PaymentCreator_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
+    /*********************************************************************************************************
+    * @description if you only want to run one test in this class, fill in its name here.
+    * if you want to run all tests, then use '*'
+    */
     private static string strTestOnly = '*';
-    
         
     /*********************************************************************************************************
+    * @description
     operation:
         close an Opp as Lost that has a mixture of paid & unpaid payments, some written off 
     verify:
@@ -61,7 +63,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             Name='Test Account'
         );
         insert acct;
-        		list<Opportunity> testOppList = new list<Opportunity>();
+        list<Opportunity> testOppList = new list<Opportunity>();
         Opportunity opp1 = new Opportunity (
             Name='Test Opp',
             AccountId = acct.id,
@@ -77,12 +79,12 @@ private with sharing class PMT_PaymentCreator_TEST {
             CloseDate = date.today(), 
             StageName = 'Qualification'
         );
-		testOppList.add(opp2);
-		insert(testOppList);
+        testOppList.add(opp2);
+        insert(testOppList);
         //at this moment no payments should have been created for opp2, cause amount is null BUG #1285
         system.assertEquals(0, [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp2.Id].size());
-		opp2.amount = 150;
-		update(opp2);
+        opp2.amount = 150;
+        update(opp2);
         //at this moment payments should have been created for opp2, cause amount is changed to >0 BUG #1285
         system.assertEquals(1, [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp2.Id].size());
 
@@ -131,5 +133,44 @@ private with sharing class PMT_PaymentCreator_TEST {
         system.assertEquals(50, opmtWrittenOff[0].npe01__payment_amount__c);       
     }
 
+    /*********************************************************************************************************
+    * @description
+    operation:
+        close an Opp as Lost that has an existing payment and a null amount
+    verify:
+        payment is deleted, no infinite recursion takes place
+    **********************************************************************************************************/            
+    static testMethod void nullAmount() {
+        if (strTestOnly != '*' && strTestOnly != 'nullAmount') return;
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            CloseDate = date.today(), 
+            Amount = 1,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+        insert opp;
+
+        list<npe01__OppPayment__c> opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(1, opmtAll.size());
+
+        opp.Amount = null;
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
+        update opp;
+
+        opmtAll = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id];
+        system.assertEquals(0, opmtAll.size());
+
+    }
 
 }
