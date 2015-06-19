@@ -63,6 +63,19 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 }
                 i++;
             }                  
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            integer i = 0;
+            for (SObject sobj : newlist) {
+                Opportunity o = (Opportunity)sobj;
+                //does it have a recurring donation reference?
+                //is it in closed state?
+                if (o.npe03__Recurring_Donation__c != null && o.isClosed && o.Amount != null && o.Amount > 0){
+                    rdIds.add(o.npe03__Recurring_Donation__c);
+                }
+                i++;
+            }                  
         }           
         
         //Get the open label for opps
