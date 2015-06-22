@@ -312,6 +312,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                         conList[0].MailingPostalCode = myHHAccount.BillingPostalCode;
                         conList[0].MailingStreet = myHHAccount.BillingStreet;
                         conList[0].MailingCountry = myHHAccount.BillingCountry;
+                        conList[0].npe01__Primary_Address_Type__c = 'Home';
                         consForUpdate.add(conList[0]);
                     }
 
@@ -330,7 +331,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                 MailingCountry__c = cadd.MailingCountry,
                                 MailingCity__c = cadd.MailingCity,
                                 Default_Address__c = true,
-                                Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                                Address_Type__c = cadd.AddressType,
                                 Household_Account__c = accountId);
                             ADDR_Addresses_TDTM.handleMultilineStreet(a);
                             addressesForInsert.put(conList[0].Id, a);
@@ -347,7 +348,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             MailingCountry__c = cadd.MailingCountry,
                             MailingCity__c = cadd.MailingCity,
                             Default_Address__c = true,
-                            Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                            Address_Type__c = cadd.AddressType,
                             Household_Account__c = accountId);
                         ADDR_Addresses_TDTM.handleMultilineStreet(a);
                         addressesForInsert.put(AccountId, a);
@@ -453,7 +454,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                             MailingCountry__c = cadd.MailingCountry,
                                             MailingCity__c = cadd.MailingCity,
                                             Default_Address__c = (masteraddresshash == MD5Hash ? true : false),
-                                            Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
+                                            Address_Type__c = cadd.AddressType,
                                             Household_Account__c = cadd.contact.AccountId
                                             );
                         ADDR_Addresses_TDTM.handleMultilineStreet(a);
@@ -490,6 +491,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             c.MailingPostalCode = masteraddress.MailingZip;
                             c.MailingCountry = masteraddress.MailingCountry;
                             c.MailingCity = masteraddress.MailingCity;
+                            c.npe01__Primary_Address_Type__c = masteradddress.AddressType;
                             consForUpdate.add(c);
                         }
                     }
@@ -635,6 +637,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             this.MailingState = c.MailingState;
             this.MailingZip = c.MailingPostalCode;
             this.MailingCountry = c.MailingCountry;
+            this.AddressType = c.npe01__Primary_Address_Type__c;
             this.AddressBlob = Blob.valueOf(c.MailingStreet + c.MailingCity + c.MailingState + c.MailingPostalCode + c.MailingCountry);
         }
 
@@ -646,6 +649,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         public String MailingState;
         public String MailingZip;
         public String MailingCountry;
+        public String AddressType;
         private Blob AddressBlob;
         private String MD5;
 
