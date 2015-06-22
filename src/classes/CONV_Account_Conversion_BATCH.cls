@@ -72,12 +72,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     global database.Querylocator start(Database.BatchableContext bc) {
 
         //turn off all existing TDTM-related trigger operations to avoid duplicative processing
-        List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
-        for (Trigger_Handler__c t : [select Active__c from Trigger_Handler__c]){
-            t.Active__c = false;
-            updateTriggerHandlers.add(t);
-        }
-        update updateTriggerHandlers;
+        TDTM_TriggerHandler.disableTDTM = true;
 
         return Database.getQueryLocator(query);
     }
@@ -88,7 +83,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @param result Results to be processed from the query
     */
     global void execute(Database.BatchableContext bc, Sobject[] result) {
-
+    
         SavePoint sp = Database.setSavepoint();
 
         try{
@@ -105,7 +100,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, 
                             npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, 
-                            MailingPostalCode from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
+                            MailingPostalCode, Primary_Affiliation__c from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
 
             /********************************************************************/
             /** Generating a new Household Account for each Household in scope **/
@@ -180,9 +175,16 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             /***********************************************************************/
             /** Attaching current Household members to the new Household Account  **/
             /***********************************************************************/
-
+            
             Map<Id, npe5__Affiliation__c> conAffMap = new Map<Id, npe5__Affiliation__c>();
             Map<Id, Integer> hhMemberCount = new Map<Id, Integer>();
+            Map<string, npe5__Affiliation__c> mapKeyAff = new Map<string, npe5__Affiliation__c>();
+            
+            for (npe5__Affiliation__c aff : [select Id, npe5__Status__c, npe5__Primary__c, npe5__Organization__c, npe5__Contact__c
+                    from npe5__Affiliation__c where npe5__Contact__c in :consForUpdate]) {
+                string strKey = aff.npe5__Contact__c + ':' + aff.npe5__Organization__c;
+                mapKeyAff.put(strKey, aff);
+            }
 
             for (Contact c : consForUpdate){
                 Account a = hh2Account.get(c.npo02__Household__c);
@@ -197,9 +199,22 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                 }
 
                 //generate affiliations for any non 1x1/Individual accounts associated to this Contact
+                //or if an existing affiliation already exists, mark it primary.
+                //also set the contact's Primary Affiliation field.
                 if (!c.Account.npe01__SYSTEMIsIndividual__c){
-                    npe5__Affiliation__c aff = new npe5__Affiliation__c(npe5__Status__c = 'Current', npe5__Primary__c = true, npe5__Organization__c = c.AccountId, npe5__Contact__c = c.Id);
-                    conAffMap.put(c.Id, aff);
+                    string strKey = c.Id + ':' + c.AccountId;
+                    npe5__Affiliation__c aff = mapKeyAff.get(strKey);
+                    if (aff == null) {                    
+                        aff = new npe5__Affiliation__c(npe5__Status__c = 'Current', npe5__Primary__c = true, npe5__Organization__c = c.AccountId, npe5__Contact__c = c.Id);
+                        mapKeyAff.put(strKey, aff);
+                    }
+                    if (c.Primary_Affiliation__c == null) {
+                        c.Primary_Affiliation__c = c.AccountId;
+                        aff.npe5__Primary__c = true;
+                        aff.npe5__Status__c = 'Current';
+                    }
+                    if (conAffMap.get(c.Id) == null)
+                        conAffMap.put(c.Id, aff);
                 }
 
                 c.AccountId = a.Id;
@@ -220,12 +235,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
             //for any contacts that have an affiliation, update the primary affiliation for the contact
             if (!conAffMap.isEmpty()){
-                Database.insert(conAffMap.values(), true);
-                for (Contact c : consForUpdate){
-                    if (conAffMap.containsKey(c.Id)){
-                        c.Primary_Affiliation__c = conAffMap.get(c.Id).npe5__Organization__c;
-                    }
-                }
+                Database.upsert(conAffMap.values(), true);
             }
 
             for (Account a : hh2Account.values()){
@@ -269,26 +279,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             Map<Id, Address__c> addressesForInsert = new Map<Id, Address__c>();
             List<Account> hhAccountsForUpdate = new List<Account>();
 
-            /* no longer manually do this.  our account insert trigger will create an address object if appropriate.
-            //insert addresses for any household accounts that have one
-            for (Account a : hh2Account.values()){
-
-                if (a.BillingStreet != null || a.BillingState != null || a.BillingPostalCode != null || a.BillingCountry != null || a.BillingCity != null){
-                    Address__c ad = new Address__c(MailingStreet__c = a.BillingStreet,
-                        MailingState__c = a.BillingState,
-                        MailingPostalCode__c = a.BillingPostalCode,
-                        MailingCountry__c = a.BillingCountry,
-                        MailingCity__c = a.BillingCity,
-                        Default_Address__c = true,
-                        Address_Type__c = 'Home',
-                        Household_Account__c = a.Id);
-                    ADDR_Addresses_TDTM.handleMultilineStreet(ad);
-
-                    addressesForInsert.put(a.Id, ad);
-                }
-            }
-            */
-
             for (Id accountId : consWithNewHousehold.keySet()){
                 List<Contact> conList = consWithNewHousehold.get(accountId);
 
@@ -297,6 +287,22 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
 
                     ContactAddress cadd = new ContactAddress(conList[0]);
                     Account myHHAccount = con2Account.get(conList[0].Id);
+                    
+                    //first, create an Address object if the original household had an address.
+                    if (addressedHouseholds.containsKey(conList[0].npo02__Household__c)) {
+                        Address__c a = new Address__c(
+                            MailingStreet__c = myHHAccount.BillingStreet,
+                            MailingCity__c = myHHAccount.BillingCity,
+                            MailingState__c = myHHAccount.BillingState,
+                            MailingPostalCode__c = myHHAccount.BillingPostalCode,
+                            MailingCountry__c = myHHAccount.BillingCountry,
+                            Default_Address__c = true,
+                            Address_Type__c = 'Home',
+                            Household_Account__c = myHHAccount.Id
+                            );
+                        ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                        addressesForInsert.put(myHHAccount.Id, a);                                            
+                    }
 
                     //we have a household address, but the contact does not have one assign the values to the contact
                     //the address lookup will be populated later via the addressesForInsert based on the accountId
@@ -306,6 +312,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                         conList[0].MailingPostalCode = myHHAccount.BillingPostalCode;
                         conList[0].MailingStreet = myHHAccount.BillingStreet;
                         conList[0].MailingCountry = myHHAccount.BillingCountry;
+                        conList[0].npe01__Primary_Address_Type__c = 'Home';
                         consForUpdate.add(conList[0]);
                     }
 
@@ -324,10 +331,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                 MailingCountry__c = cadd.MailingCountry,
                                 MailingCity__c = cadd.MailingCity,
                                 Default_Address__c = true,
-                                Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                                Address_Type__c = cadd.AddressType,
                                 Household_Account__c = accountId);
                             ADDR_Addresses_TDTM.handleMultilineStreet(a);
-
                             addressesForInsert.put(conList[0].Id, a);
                         }
                     }
@@ -342,7 +348,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             MailingCountry__c = cadd.MailingCountry,
                             MailingCity__c = cadd.MailingCity,
                             Default_Address__c = true,
-                            Address_Type__c = conList[0].npe01__Primary_Address_Type__c,
+                            Address_Type__c = cadd.AddressType,
                             Household_Account__c = accountId);
                         ADDR_Addresses_TDTM.handleMultilineStreet(a);
                         addressesForInsert.put(AccountId, a);
@@ -448,7 +454,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                                             MailingCountry__c = cadd.MailingCountry,
                                             MailingCity__c = cadd.MailingCity,
                                             Default_Address__c = (masteraddresshash == MD5Hash ? true : false),
-                                            Address_Type__c = cadd.contact.npe01__Primary_Address_Type__c,
+                                            Address_Type__c = cadd.AddressType,
                                             Household_Account__c = cadd.contact.AccountId
                                             );
                         ADDR_Addresses_TDTM.handleMultilineStreet(a);
@@ -485,10 +491,11 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             c.MailingPostalCode = masteraddress.MailingZip;
                             c.MailingCountry = masteraddress.MailingCountry;
                             c.MailingCity = masteraddress.MailingCity;
+                            c.npe01__Primary_Address_Type__c = masteraddress.AddressType;
                             consForUpdate.add(c);
                         }
                     }
-                }//close else
+                }//close for multiple contacts
             }//close for household
 
             if (consForUpdate.size() > 0) Database.update(consForUpdate, true);
@@ -558,13 +565,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @param bc BatchableContext passed by the system call
     */
     global void finish(Database.BatchableContext bc) {
+
         //restore the trigger handlers
-        List<Trigger_Handler__c> updateTriggerHandlers = new List<Trigger_Handler__c>();
-        for (Trigger_Handler__c t : [select Active__c from Trigger_Handler__c]){
-            t.Active__c = true;
-            updateTriggerHandlers.add(t);
-        }
-        update updateTriggerHandlers;
+        TDTM_TriggerHandler.disableTDTM = false;
 
         //update the custom setting
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -634,6 +637,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
             this.MailingState = c.MailingState;
             this.MailingZip = c.MailingPostalCode;
             this.MailingCountry = c.MailingCountry;
+            this.AddressType = c.npe01__Primary_Address_Type__c;
             this.AddressBlob = Blob.valueOf(c.MailingStreet + c.MailingCity + c.MailingState + c.MailingPostalCode + c.MailingCountry);
         }
 
@@ -645,6 +649,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         public String MailingState;
         public String MailingZip;
         public String MailingCountry;
+        public String AddressType;
         private Blob AddressBlob;
         private String MD5;
 
