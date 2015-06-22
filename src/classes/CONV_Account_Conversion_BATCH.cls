@@ -491,7 +491,7 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
                             c.MailingPostalCode = masteraddress.MailingZip;
                             c.MailingCountry = masteraddress.MailingCountry;
                             c.MailingCity = masteraddress.MailingCity;
-                            c.npe01__Primary_Address_Type__c = masteradddress.AddressType;
+                            c.npe01__Primary_Address_Type__c = masteraddress.AddressType;
                             consForUpdate.add(c);
                         }
                     }
