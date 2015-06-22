@@ -203,14 +203,17 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	
     	DmlWrapper dmlWrapper = new DmlWrapper();
     	
-        List<npe4__Relationship__c> originalRelationships = new List<npe4__Relationship__c>();
-        List<SObject> relationshipsToUpdate = new List<SObject>();
+        List<npe4__Relationship__c> relationshipsToUpdate = new List<npe4__Relationship__c>();
+
+        List<npe4__Relationship__c> relationshipsOriginalType = new List<npe4__Relationship__c>();
+        List<npe4__Relationship__c> relationshipsUpdateType = new List<npe4__Relationship__c>();
+
         Integer counter = 0;                                            // processing counter       
 
         for(npe4__Relationship__c r : Relationships) {
         	
-            //SWA 2009-05-13 removed a duplicate check for change to npe4__Status__c from this OR statement
-            if ((r.npe4__Type__c != oldRelationships[counter].npe4__Type__c 
+            if ((r.npe4__Status__c != oldRelationships[counter].npe4__Status__c 
+            || r.npe4__Type__c != oldRelationships[counter].npe4__Type__c 
             || r.npe4__Description__c != oldRelationships[counter].npe4__Description__c) 
             && r.npe4__ReciprocalRelationship__c != null) {
             	UTIL_Debug.debug('****Creating relationship in updateRelationship method');
@@ -223,14 +226,19 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 copy.npe4__Status__c = r.npe4__Status__c;
                 copy.npe4__Description__c = r.npe4__Description__c;
                 relationshipsToUpdate.add(copy);
-                originalRelationships.add(r);
+
+                if (r.npe4__Type__c != oldRelationships[counter].npe4__Type__c) {
+                    relationshipsOriginalType.add(r);
+                    relationshipsUpdateType.add(copy);
+                }
             }
             counter++;
         }
         //add type info as needed
-        if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()) {
-            addType(originalRelationships, relationshipstoUpdate);
-            dmlWrapper.objectsToUpdate.addAll(relationshipsToUpdate);        
+        if (!relationshipsToUpdate.isEmpty()) {
+            addType(relationshipsOriginalType, relationshipsUpdateType);
+            
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>)relationshipsToUpdate);        
             //inspectSaveResults(sr, relationshipsToUpdate);
         }
         return dmlWrapper;
