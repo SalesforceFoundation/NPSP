@@ -526,6 +526,120 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Grant_Contract_Date__c</fullName>
+        <description>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</inlineHelpText>
+        <label>Grant Contract Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Grant_Contract_Number__c</fullName>
+        <description>Tracks unique numbers sometimes assigned by grant-making organizations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Tracks unique numbers sometimes assigned by grant-making organizations.</inlineHelpText>
+        <label>Grant Contract Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Grant_Period_End_Date__c</fullName>
+        <description>The date on which the period of the grant ends.</description>
+        <externalId>false</externalId>
+        <label>Grant Period End Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Grant_Period_Start_Date__c</fullName>
+        <description>The date on which the period of the grant begins.</description>
+        <externalId>false</externalId>
+        <label>Grant Period Start Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Grant_Program_Area_s__c</fullName>
+        <description>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Describes the funding areas for the grant. You can enter anything you want here. For example, you could enter the name of the program the grant applies to.</inlineHelpText>
+        <label>Grant Program Area(s)</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Grant_Requirements_Website__c</fullName>
+        <description>A URL that points to the grant requirements on the grant-maker&apos;s website.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A URL that points to the grant requirements on the grant-maker&apos;s website.</inlineHelpText>
+        <label>Grant Requirements Website</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Is_Grant_Renewal__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If selected, indicates that the grant is a renewal of a previous grant.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If selected, indicates that the grant is a renewal of a previous grant.</inlineHelpText>
+        <label>Is Grant Renewal</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Next_Grant_Deadline_Due_Date__c</fullName>
+        <description>The NPSP updates this field automatically based on the next Grant Deadline record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The NPSP updates this field automatically based on the next Grant Deadline record.</inlineHelpText>
+        <label>Next Grant Deadline Due Date</label>
+        <summarizedField>Grant_Deadline__c.Grant_Deadline_Due_Date__c</summarizedField>
+        <summaryFilterItems>
+            <field>Grant_Deadline__c.Grant_Deadline_Due_Date__c</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </summaryFilterItems>
+        <summaryFilterItems>
+            <field>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</field>
+            <operation>equals</operation>
+            <value></value>
+        </summaryFilterItems>
+        <summaryForeignKey>Grant_Deadline__c.Opportunity__c</summaryForeignKey>
+        <summaryOperation>min</summaryOperation>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Previous_Grant_Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If this grant is a renewal of a previous grant, use this field to relate this record to the previous one.</inlineHelpText>
+        <label>Previous Grant Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Related Grant Opportunities</relationshipLabel>
+        <relationshipName>Previous_Grant_Opportunities</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Primary_Contact__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.</description>
@@ -574,6 +688,19 @@ ISBLANK(npe03__Recurring_Donation__c),
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Requested_Amount__c</fullName>
+        <description>The amount you are requesting. This number might be different from the final award amount.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount you are requesting. This number might be different from the final award amount.</inlineHelpText>
+        <label>Requested Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
     </fields>
     <webLinks>
         <fullName>Refresh_Name</fullName>

@@ -305,6 +305,8 @@
     </types>
     <types>
         <members>Account.Batch__c</members>
+        <members>Account.Funding_Focus__c</members>
+        <members>Account.Grantmaker__c</members>
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
@@ -504,6 +506,10 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
+        <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
+        <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
+        <members>Grant_Deadline__c.Opportunity__c</members>
         <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
         <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>
         <members>Household_Naming_Settings__c.Household_Name_Format__c</members>
@@ -515,9 +521,19 @@
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Batch__c</members>
+        <members>Opportunity.Grant_Contract_Date__c</members>
+        <members>Opportunity.Grant_Contract_Number__c</members>
+        <members>Opportunity.Grant_Period_End_Date__c</members>
+        <members>Opportunity.Grant_Period_Start_Date__c</members>
+        <members>Opportunity.Grant_Program_Area_s__c</members>
+        <members>Opportunity.Grant_Requirements_Website__c</members>
+        <members>Opportunity.Is_Grant_Renewal__c</members>
+        <members>Opportunity.Next_Grant_Deadline_Due_Date__c</members>
+        <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
+        <members>Opportunity.Requested_Amount__c</members>
         <members>Opportunity_Naming_Settings__c.Attribution__c</members>
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
@@ -1059,6 +1075,7 @@
         <members>Error__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Lead</members>
         <members>Opportunity</members>
@@ -1111,7 +1128,9 @@
         <members>Error__c-Error Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
+        <members>Grant_Deadline__c-Grant Deadline Layout</members>
         <members>Opportunity-Donation Layout</members>
+        <members>Opportunity-Grant Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
