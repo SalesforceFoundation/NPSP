@@ -1000,7 +1000,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // now update the Contacts to create their Affiliations
 	    // unfortunately, we must manually clear these static flags since we are doing 
 	    // a bunch of stuff in the same context.
-	    AFFL_Affiliations_TDTM.hasRunForContacts = false;
+	    AFFL_Affiliations_TDTM.doNotRunForContacts = false;
 	    AFFL_Affiliations_TDTM.hasRunForAffiliations = false;       
         update mapConIdToConUpdate.values();
     }
