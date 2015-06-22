@@ -36,7 +36,7 @@
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
 
-    // static flags to prevent recursive call 
+    // static flags to prevent some recursive calls 
     public static boolean doNotRunForContacts = false;
     public static boolean hasRunForAffiliations = false;
     public static boolean hasRunForAccounts = false;
@@ -57,6 +57,18 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
         // dispatch to the correct handler
         if (objResult.getsObjectType() == Contact.sObjectType && !doNotRunForContacts) {
             DmlWrapper wrapper = runContactTriggerHandler(newlist, oldlist, triggerAction, objResult);
+            
+            // we used to prevent any further recursive call with contacts and affiliations,
+            // but it turns out in some scenarios, before the AfterInsert of a contact calls us,
+            // another trigger handler may update the contact, causing the AfterUpdate to come thru.
+            // if we set the flag to stop recursion, then we won't process the AfterInsert, where
+            // we create the initial affiliation. thus we no longer set a recursion prevention flag,
+            // and we only use doNotRunForContacts where we actually have a use case to prevent recursion.
+            // as for the Affiliations and Account recursion flags, we have no current known issues with
+            // their recursion prevention, so we left that as is.
+            //
+            // hasRunForContacts = true;
+            
             return wrapper;
         } else if (objResult.getsObjectType() == npe5__Affiliation__c.sObjectType && !hasRunForAffiliations) {
             DmlWrapper wrapper = runAfflTriggerHandler(newlist, oldlist, triggerAction, objResult);
