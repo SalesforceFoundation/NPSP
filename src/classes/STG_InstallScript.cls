@@ -49,11 +49,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();    
             } else if(context.isUpgrade()) {
-                insertTdtmDefaults();
+                insertTdtmDefaults(null);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable(); 
             } else if(context.isPush()) {
-                insertTdtmDefaults();
+                insertTdtmDefaults(null);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();
             }
@@ -145,7 +145,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
         //First we insert all TDTM records as active
-        insertTdtmDefaults();   
+        insertTdtmDefaults(null);   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
@@ -155,8 +155,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * upgradade. Public just for testing purposes (it should otherwise be private).
     * @return void
     */
-    public static void insertTdtmDefaults() {
-        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
+    public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
+        if (defaultHandlers == null) defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
                                                        from Trigger_Handler__c];
 
