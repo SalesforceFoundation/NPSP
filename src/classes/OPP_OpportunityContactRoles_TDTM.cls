@@ -46,6 +46,21 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         	setOpportunityAccountField((list<Opportunity>) newlist);
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
         	createOrUpdateContactRoles((list<Opportunity>) newlist);
+            
+            //name opportunities
+            map<id,Opportunity> mapOppNaming = new map<id,Opportunity>(OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist));
+            
+            //update existing dmlWrapper objects with opp name to avoid errors updating the same opportunity twice
+            for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
+                id objId = (id) dmlObj.get('id');
+                if (mapOppNaming.containsKey(objId)) {
+                    dmlObj.put('Name',mapOppNaming.get(objId));
+                    mapOppNaming.remove(objId);
+                }
+            }
+
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>) mapOppNaming.values());
+
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             updateContactRoles((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
         }
@@ -172,6 +187,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 
                 //check if our contact lookup field is incorrect and update it
                 if (thisOpp.Primary_Contact__c != cr.ContactId) {
+                    
+                    //update existing opp for OPP_OpportunityNaming call
+                    thisOpp.Primary_Contact__c = cr.ContactId;
+                    thisOpp.npe01__Contact_Id_for_Role__c = cr.ContactId;
+                    
+                    //create new opp to allow DML on current trigger set
                     fixedOpps.add(new Opportunity(
                         id = thisOpp.id,
                         Primary_Contact__c = cr.ContactId,
@@ -190,7 +211,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         //Update existing CRs.
         if (!CRUpdates.isEmpty()) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)CRUpdates);
+            update CRUpdates;
         }
 
         //fix opportunity lookup if out of sync with contact role
@@ -222,7 +243,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
         }
         if (CRs.size() > 0) {
-            dmlWrapper.objectsToInsert.addAll((list<SObject>) CRs); 
+            insert CRs; 
         }
     }
     

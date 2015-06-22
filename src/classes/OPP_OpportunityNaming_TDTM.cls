@@ -46,16 +46,7 @@ public class OPP_OpportunityNaming_TDTM extends TDTM_Runnable {
     * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            list<Opportunity> oppsForUpdate = OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist);
-            TDTM_TriggerHandler.disableTDTM = true;
-            update oppsForUpdate;
-            TDTM_TriggerHandler.disableTDTM = false;
-        }
-        
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {        
         return null;
     }
-
 }

@@ -43,7 +43,6 @@ private class OPP_OpportunityNaming_TEST
     */
     private static string strTestOnly = '*';
 
-
     /*********************************************************************************************************
     * @description Returns an active record type id for the current profile.
     */
@@ -63,8 +62,7 @@ private class OPP_OpportunityNaming_TEST
     * Modifies the value of a field and clicks the rename button, verifies rename happened correctly.
     ********************************************************************************************************/
     @isTest
-    static void testButton()
-    {
+    static void testButton() {
         if (strTestOnly != '*' && strTestOnly != 'testButton') return;
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
@@ -88,7 +86,7 @@ private class OPP_OpportunityNaming_TEST
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
-            npe01__Contact_Id_for_Role__c = con.id
+            Primary_Contact__c = con.id
         );
         if (hasActiveRecType())
             opp.RecordTypeId = UTIL_RecordTypes.GetRecordTypeId('Opportunity', UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity'));
@@ -125,8 +123,7 @@ private class OPP_OpportunityNaming_TEST
     * object. Verifies name is still calculated correctly with blanks instead of missing fields/objects.
     ********************************************************************************************************/
     @isTest
-    static void testMissingData()
-    {
+    static void testMissingData() {
         if (strTestOnly != '*' && strTestOnly != 'testMissingData') return;
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
@@ -171,8 +168,7 @@ private class OPP_OpportunityNaming_TEST
     * run batch naming job. Verify both types of opportunities have been named correctly.
     ********************************************************************************************************/
     @isTest
-    static void testBulk()
-    {
+    static void testBulk() {
         if (strTestOnly != '*' && strTestOnly != 'testBulk') return;
 
         list<Opportunity_Naming_Settings__c> onsList = new list<Opportunity_Naming_Settings__c>();
