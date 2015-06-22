@@ -315,7 +315,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        }
 
 	        // avoid auto-affiliation creation
-            AFFL_Affiliations_TDTM.hasRunForContacts = true;
+            AFFL_Affiliations_TDTM.doNotRunForContacts = true;
             AFFL_Affiliations_TDTM.hasRunForAccounts = true;
 
 	        // convert the lead
@@ -409,7 +409,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             	afflAccId = strAfflAccountId;
             }
             if (afflAccId != null) {
-                AFFL_Affiliations_TDTM.hasRunForContacts = false;
+                AFFL_Affiliations_TDTM.doNotRunForContacts = false;
                 AFFL_Affiliations_TDTM.hasRunForAccounts = false;
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true); 
             }
