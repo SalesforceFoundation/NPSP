@@ -41,21 +41,19 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @return void
     */
     global void onInstall(InstallContext context) {
-        database.executeBatch(new RD_InstallScript_BATCH(), 10); 
         try { 
+            database.executeBatch(new RD_InstallScript_BATCH(), 10); 
             //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
             if(context.previousVersion() == null) {
                 runNewOrgScript();
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();    
             } else if(context.isUpgrade()) {
-                List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
-                insertTdtmDefaults(defaultHandlers);
+                insertTdtmDefaults(null);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable(); 
             } else if(context.isPush()) {
-                List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords(); 
-                insertTdtmDefaults(defaultHandlers);
+                insertTdtmDefaults(null);
                 UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
                 UTIL_MasterSchedulableHelper.setSchedulableTable();
             }
@@ -146,9 +144,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
     
     private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
-        List<Trigger_Handler__c> defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         //First we insert all TDTM records as active
-        insertTdtmDefaults(defaultHandlers);   
+        insertTdtmDefaults(null);   
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
@@ -156,15 +153,16 @@ global without sharing class STG_InstallScript implements InstallHandler {
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
     * upgradade. Public just for testing purposes (it should otherwise be private).
-    * @param defaultHandlers The default TDTM records.
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
+        if (defaultHandlers == null) defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
         List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
                                                        from Trigger_Handler__c];
 
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
         List<Trigger_Handler__c> handlersToUpdate = new List<Trigger_Handler__c>();
+        List<Trigger_Handler__c> handlersToDelete = new List<Trigger_Handler__c>();
         
         //Insert those that are in the list of default handlers but aren't in the database
         for(Trigger_Handler__c defaultHandler : defaultHandlers) {
@@ -182,6 +180,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                         handlersToUpdate.add(existingHandler);
                     }
                     break;
+                } else if (TDTM_DefaultConfig.deletedClasses.contains(existingHandler.Class__c)) {
+                    handlersToDelete.add(existingHandler);
                 }
             }
             if(!alreadyExists)
@@ -189,6 +189,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }    
         if(handlersToInsert.size() > 0) insert handlersToInsert;
         if(handlersToUpdate.size() > 0) update handlersToUpdate;
+        if(handlersToDelete.size() > 0) delete handlersToUpdate;
     }
     
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {

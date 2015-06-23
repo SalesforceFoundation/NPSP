@@ -54,12 +54,11 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     */
     private static map<string,Opportunity_Naming_Settings__c> mapOppNameSettings;
 
-
     /*******************************************************************************************************
     * @description Calculates opportunity names based on Opportunity Naming Settings using the primary Contact
     * Role for contact fields.
     * @param oppList The list of Opportunities to rename.
-    * @return list<Opportunity> A new list of renamed opportunities.
+    * @return list<Opportunity> The original Opportunity list with updated names.
     ********************************************************************************************************/
     public static void refreshOppNames(list<Opportunity> oppList) {
         
@@ -74,30 +73,21 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
 
         //query for opportunities and associated contacts
-        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList'));
-        list<sObject> oppConRoleQuery = database.query(getConRoleQuery(allFields) + ' WHERE OpportunityId IN :oppList AND IsPrimary = TRUE');
+        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)));
         
         //fill opportunity id to contact map
-        map<id,Contact> mapOppIdToCon = new map<id,Contact>();
-        for (sObject obj : oppConRoleQuery)
-            mapOppIdToCon.put((id)obj.get('opportunityid'),(contact)obj.getsObject('contact'));
-        
+        map<id,Contact> mapOppIdToCon = fillConMap(mapOppsQuery.values());
+
         //name the opportunities
         for (Opportunity opp : oppList) {
             
             //use the naming setting for this opportunity if it exists, otherwise use the default
-            Opportunity_Naming_Settings__c ons;
             Opportunity queryOpp = mapOppsQuery.get(opp.id);
-
-
-            if (mapOppNameSettings.containsKey(getOppAttribution(queryOpp) + queryOpp.RecordType.Name)) {
-                ons = mapOppNameSettings.get(getOppAttribution(queryOpp) + queryOpp.RecordType.Name);
-            } else if (mapOppNameSettings.containsKey(getOppAttribution(queryOpp))) {
-                ons = mapOppNameSettings.get(getOppAttribution(queryOpp));
-            }
+            Contact con = mapOppIdToCon.get(opp.id);
+            Opportunity_Naming_Settings__c ons = getONS(queryOpp);
                 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
-                opp.Name = replaceFieldNamesWithValues(queryOpp, mapOppIdToCon.get(queryOpp.id), ons);
+                opp.Name = replaceFieldNamesWithValues(queryOpp, con, ons);
             
                 if (opp.Name.length() > 120)
                     opp.Name = opp.Name.substring(0,120);
@@ -115,7 +105,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     public static list<Opportunity> getOppNamesAfterInsert(list<Opportunity> oppList) {
         
         set<string> allFields = new set<string>();
-        set<id> oppIdsForFuture = new set<id>();
+        list<Opportunity> oppsForUpdate = new list<Opportunity>();
 
         fillOppNameSettings();
 
@@ -125,37 +115,25 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         for (Opportunity_Naming_Settings__c ons : listOppNamingSettings)
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
 
-        list<Opportunity> oppsForUpdate = database.query(getOppQuery(allFields) + ' WHERE Id IN :oppList');
-        
-        set<id> setConId = new set<id>();
-        for (Opportunity opp : oppsForUpdate) {
-            if (opp.Primary_Contact__c != null) {
-                setConId.add(opp.Primary_Contact__c);
-            }
-        }
+        //query for opportunities and associated contacts
+        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)));
 
-        map<id,Contact> mapCons = new map<id,Contact>();
-        if (!setConId.isEmpty()) {
-            mapCons = new map<id,Contact>((list<Contact>)database.query(getConQuery(allFields) + ' WHERE Id IN :setConId'));
-        }
+        //fill opportunity id to contact map
+        map<id,Contact> mapOppIdToCon = fillConMap(mapOppsQuery.values());
 
-        for (Opportunity opp : oppsForUpdate) {
-
-            //use the naming setting for this opportunity if it exists, otherwise use the default
-            Opportunity_Naming_Settings__c ons;
-            if (mapOppNameSettings.containsKey(getOppAttribution(opp) + opp.RecordType.Name)) {
-                ons = mapOppNameSettings.get(getOppAttribution(opp) + opp.RecordType.Name);
-            } else if (mapOppNameSettings.containsKey(getOppAttribution(opp))) {
-                ons = mapOppNameSettings.get(getOppAttribution(opp));
-            }
+        for (Opportunity opp : oppList) {
+            //use the query object as we're in an after insert trigger and can't edit the current trigger set
+            Opportunity queryOpp = mapOppsQuery.get(opp.id);
+            Contact con = mapOppIdToCon.get(opp.id);
+            Opportunity_Naming_Settings__c ons = getONS(queryOpp);
 
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
-                opp.Name = replaceFieldNamesWithValues(opp, mapCons.get(opp.Primary_Contact__c), ons);
+                queryOpp.Name = replaceFieldNamesWithValues(queryOpp, con, ons);
 
-                if (opp.Name.length() > 120)
-                    opp.Name = opp.Name.substring(0,120);
+                if (queryOpp.Name.length() > 120)
+                    queryOpp.Name = queryOpp.Name.substring(0,120);
 
-                oppIdsForFuture.add(opp.id);
+                oppsForUpdate.add(queryOpp);
             }
         }
 
@@ -163,29 +141,22 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     }
 
     /*******************************************************************************************************
-    * @description Calculates opportunity names based on Opportunity Naming Settings using the primary 
-    * Contact Role field for contact fields. Called after original naming to use appropriate contact name
-    * as the 'Contact Id for Role' field has the wrong contact when called from the New Contact Donation 
-    * button.
-    * @param oppList The list of Opportunities to rename.
+    * @description Mathes the current opportunity to the appropriate opp naming setting.
+    * @param opp The opportunity to find the setting for.
+    * @return Opportunity_Naming_Settings__c The opp name setting for this Opportunity if it exists.
     ********************************************************************************************************/
-    @future
-    public static void updateOppNameFuture (set<id> oppIds) {
-        
-        list<Opportunity> oppList = new list<Opportunity>();
-        for (Id i : oppIds)
-            oppList.add(new Opportunity(id=i));
-
-        refreshOppNames(oppList);
-
-        TDTM_TriggerHandler.disableTDTM = true;
-        update oppList;
-        TDTM_TriggerHandler.disableTDTM = false;
+    public static Opportunity_Naming_Settings__c getONS(Opportunity opp) {
+        if (mapOppNameSettings.containsKey(getOppAttribution(opp) + opp.RecordType.Name)) {
+            return mapOppNameSettings.get(getOppAttribution(opp) + opp.RecordType.Name);
+        } else if (mapOppNameSettings.containsKey(getOppAttribution(opp))) {
+            return mapOppNameSettings.get(getOppAttribution(opp));
+        }
+        return null;
     }
 
     /*******************************************************************************************************
-    * @description Attempts to apply naming and date formats to a random opportunity and a random contact in
-    * order to validate user entered opportunity name settings.
+    * @description Attempts to apply naming and date formats to a random opportunity in order to validate
+    * user entered opportunity name settings.
     ********************************************************************************************************/
     public static void validateSetting(Opportunity_Naming_Settings__c ons) {
 
@@ -268,12 +239,13 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @return string An opportunity query string.
     ********************************************************************************************************/
     public static string getOppQuery(set<string> fields) {
-        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name','Primary_Contact__c', 'account.npe01__systemisindividual__c'});
+        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name', 'account.npe01__systemisindividual__c'});
         string result = 'SELECT ';
         for (string field : getOppFields(fields)) {
             result += field + ', ';
         }
-        result = result.substring(0, result.length()-2) + ' FROM Opportunity';
+        result += '(' + getConRoleQuery(fields) + ' WHERE IsPrimary=TRUE LIMIT 1) ';
+        result += 'FROM Opportunity WHERE Id IN :oppList';
         return result;
     }
 
@@ -306,8 +278,25 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         for (string field : getConFields(fields)) {
             result += field + ', ';
         }
-        result = result.substring(0, result.length()-2) + ' FROM OpportunityContactRole';
+        result = result.substring(0, result.length()-2) + ' FROM OpportunityContactRoles';
         return result;
+    }
+
+    /*******************************************************************************************************
+    * @description For an opportunity query with a primary  opportunitycontactrole subquery, splits out the
+    * contact object and puts it in a map.
+    * @param fields A set of strings of all fields from an opportunity naming spec.
+    * @return string A map from Opportunity
+    ********************************************************************************************************/
+    public static map<id,Contact> fillConMap (list<Opportunity> opps) {
+        map<id,Contact> mapOppIdToCon = new map<id,Contact>();
+        for (sObject obj : opps) {
+            if (obj.getSObjects('OpportunityContactRoles')!=null) {
+                OpportunityContactRole primaryOCR = (OpportunityContactRole) obj.getSObjects('OpportunityContactRoles')[0];
+                mapOppIdToCon.put((id)primaryOCR.get('opportunityid'),(contact)primaryOCR.getsObject('contact'));
+            }
+        }
+        return mapOppIdToCon;
     }
 
     /*******************************************************************************************************
@@ -318,17 +307,18 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     ********************************************************************************************************/
     public static set<string> getFieldNamesFromSpec(string spec) {
         set<string> setStrField = new set<string>();
-        
-        // First, instantiate a new Pattern object looking for {!...}
-        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
-        //Pattern MyPattern = Pattern.compile('\\{!*\\}');       
-        // Then instantiate a new Matcher object 
-        Matcher MyMatcher = MyPattern.matcher(spec);
-        
-        while (MyMatcher.find()) {
-            // get the fieldname without the {}'s
-            string strField = spec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
-            setStrField.add(strField.trim().toLowerCase());
+        if (!string.isBlank(spec)) {
+            // First, instantiate a new Pattern object looking for {!...}
+            Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
+            //Pattern MyPattern = Pattern.compile('\\{!*\\}');       
+            // Then instantiate a new Matcher object 
+            Matcher MyMatcher = MyPattern.matcher(spec);
+            
+            while (MyMatcher.find()) {
+                // get the fieldname without the {}'s
+                string strField = spec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
+                setStrField.add(strField.trim().toLowerCase());
+            }
         }
         return setStrField;
     }

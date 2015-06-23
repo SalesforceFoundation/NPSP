@@ -71,7 +71,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.afterInsert) {
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
                 if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
                 }
@@ -82,7 +81,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             
             // AFTER UPDATE
             if (triggerAction == TDTM_Runnable.Action.afterUpdate) {   
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
                 if (r.npe4__ReciprocalRelationship__c == oldlist[i].npe4__ReciprocalRelationship__c 
                 && r.npe4__RelatedContact__c != null) {
                     relationshipsToUpdate.add(r);
@@ -95,7 +93,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
 
             // AFTER DELETE
             if (triggerAction == TDTM_Runnable.Action.afterDelete) {
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
                 }
@@ -117,11 +114,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             DmlWrapper wrapper = reciprocate(reciprocalsToUpdate);
             mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
             
-        }
-        //@TODO: Why are we doing this twice? Is it a bug?
-        if (relationshipsToUpdate.size() > 0 ) {
-            DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
-            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToDelete.size() > 0 ) {
             DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);

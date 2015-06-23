@@ -178,19 +178,19 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'CON_DoNotContact_TDTM', Load_Order__c = 2, Object__c = 'Contact',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
 
-        // Opportunity naming
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
-              Class__c = 'OPP_OpportunityNaming_TDTM', Load_Order__c = 3, Object__c = 'Opportunity',
-              Trigger_Action__c = 'AfterInsert'));
-
         // Contact Merge on Contact object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'CON_ContactMerge_TDTM', Load_Order__c = 2, Object__c = 'Contact',
               Trigger_Action__c = 'AfterDelete'));
 
-
         return handlers;
     }
+
+    /*******************************************************************************************************
+    * @description Any trigger handler classes that have been removed and should be deleted from a client
+    * instance if they exist.
+    */
+    public static final set<string> deletedClasses = new set<string>{'OPP_OpportunityNaming_TDTM'};
 
     /*******************************************************************************************************
     * @description Specifies how the old NPSP settings match to the new Cumulus TDTM classes.
