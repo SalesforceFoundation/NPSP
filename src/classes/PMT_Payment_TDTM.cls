@@ -32,7 +32,7 @@
 * @date 2014 
 * @description trigger handler on Opps for supporting Payments 
 */
-public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
+public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {

@@ -36,7 +36,7 @@
 * @description Trigger Handler on Contact that handles detecting when a Contact Merge 
 * has completed, in order to fixup an assortment of affected information.
 */
-public with sharing class CON_ContactMerge_TDTM extends TDTM_Runnable {
+public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         
     
     /*******************************************************************************************************
