@@ -1227,8 +1227,8 @@
         <name>WebLink</name>
     </types>
     <types>
-        <members>Opportunity</members>
-        <name>Workflow</name>
+        <members>Opportunity.Opportunity_Email_Acknowledgment</members>
+        <name>WorkflowAlert</name>
     </types>
     <types>
         <members>Opportunity.Opportunity_AcknowledgmentStatus_Update</members>
