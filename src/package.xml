@@ -1109,7 +1109,6 @@
     <types>
         <members>NPSP_Documents</members>
         <members>NPSP_Documents/NPSP_Data_Import_Template_csv.csv</members>
-        <members>NPSP_Documents/NPSP_Logo.png</members>
         <members>NPSP_Documents/Sample_Letterhead_Logo.png</members>
         <name>Document</name>
     </types>
