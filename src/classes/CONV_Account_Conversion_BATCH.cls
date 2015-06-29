@@ -70,10 +70,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @return database.Querylocator
     */
     global database.Querylocator start(Database.BatchableContext bc) {
-
-        //turn off all existing TDTM-related trigger operations to avoid duplicative processing
-        TDTM_TriggerHandler.disableTDTM = true;
-
         return Database.getQueryLocator(query);
     }
 
@@ -84,6 +80,9 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     */
     global void execute(Database.BatchableContext bc, Sobject[] result) {
     
+        //turn off all existing TDTM-related trigger operations to avoid duplicative processing
+        TDTM_TriggerHandler.disableTDTM = true;
+
         SavePoint sp = Database.setSavepoint();
 
         try{
@@ -553,11 +552,17 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
         //rollback the entire transaction on any failure, DML or otherwise
         }catch (Exception e){
             Database.rollback(sp);
+
+            //restore the trigger handlers
+            TDTM_TriggerHandler.disableTDTM = false;
+            
             ERR_Handler.processError(e, ERR_Handler_API.Context.CONV);
             //crash the transaction
             throw new AccountModelConversionException(e.getMessage());
         }
 
+        //restore the trigger handlers
+        TDTM_TriggerHandler.disableTDTM = false;
     }//close execute method
 
     /*******************************************************************************************************
@@ -565,9 +570,6 @@ global with sharing class CONV_Account_Conversion_BATCH implements Database.Batc
     * @param bc BatchableContext passed by the system call
     */
     global void finish(Database.BatchableContext bc) {
-
-        //restore the trigger handlers
-        TDTM_TriggerHandler.disableTDTM = false;
 
         //update the custom setting
         npe01__Contacts_and_Orgs_Settings__c ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
