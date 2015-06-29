@@ -1,0 +1,15 @@
+<apex:page standardController="Opportunity" extensions="OPP_SendAcknowledgmentBTN_CTRL" recordSetVar="listOpp" action="{!SendAcknowledgment}" >
+    <apex:sectionHeader title="{!$Label.sendAcknowledgmentPageTitle}" />
+    <apex:pageMessages />
+    <p/>
+    <apex:outputLink value="{!retURL}">{!$Label.sendAcknowledgmentReturnLinkLabel}</apex:outputLink>
+    <p/>
+    <apex:outputPanel rendered="{!cNotSent > 0}">
+        <p>{!$Label.sendAcknowledgmentFailureReasons}</p>
+        <apex:dataList value="{!listOppNotSent}" var="opp">
+            <apex:outputLink value="/{!opp.Id}" target="_blank">{!opp.Name}</apex:outputLink>
+        </apex:dataList>        
+    </apex:outputPanel>
+    <p/>
+    <apex:outputLink value="{!retURL}">{!$Label.sendAcknowledgmentReturnLinkLabel}</apex:outputLink>
+</apex:page>

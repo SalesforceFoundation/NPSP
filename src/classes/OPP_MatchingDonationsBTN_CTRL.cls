@@ -30,6 +30,7 @@
 /**
 * @author James Melville
 * @date 2011 (2.1)
+* @group Opportunity
 * @description Controller for matching donation button for opportunity
 */
 public with sharing class OPP_MatchingDonationsBTN_CTRL {
