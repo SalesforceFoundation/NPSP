@@ -54,7 +54,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
                 id objId = (id) dmlObj.get('id');
                 if (mapOppNaming.containsKey(objId)) {
-                    dmlObj.put('Name',mapOppNaming.get(objId));
+                    dmlObj.put('Name',mapOppNaming.get(objId).Name);
                     mapOppNaming.remove(objId);
                 }
             }
@@ -187,10 +187,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 
                 //check if our contact lookup field is incorrect and update it
                 if (thisOpp.Primary_Contact__c != cr.ContactId) {
-                    
-                    //update existing opp for OPP_OpportunityNaming call
-                    thisOpp.Primary_Contact__c = cr.ContactId;
-                    thisOpp.npe01__Contact_Id_for_Role__c = cr.ContactId;
                     
                     //create new opp to allow DML on current trigger set
                     fixedOpps.add(new Opportunity(
