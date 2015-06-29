@@ -178,7 +178,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
         createDefaultSettings();
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingPostalCode = 'single-zip';
+        contact.MailingPostalCode = '90210';
+        contact.MailingState = 'single-zip';
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -191,7 +192,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
-        System.assertEquals('single-zip', av[0].MailingPostalCode__c);
+        System.assertEquals('90210', av[0].MailingPostalCode__c);
         System.assertEquals(false, av[0].Verified__c);
         
         //run batch address verification
@@ -228,7 +229,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
         addressContact.MailingCountry = 'United States';
         
         Contact zipContact = new contact(firstname='Test', lastname='Person'); 
-        zipContact.MailingPostalCode = 'single-zip';
+        zipContact.MailingState = 'single-zip';
+        zipContact.MailingPostalCode = '90210';
         
         insert new Contact[] {addressContact, zipContact};
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
@@ -256,7 +258,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Address__c[] av2 = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :zipAccountId];
         System.assertEquals(1, av2.size());
-        System.assertEquals('single-zip', av2[0].MailingPostalCode__c);
+        System.assertEquals('90210', av2[0].MailingPostalCode__c);
         System.assertEquals(false, av2[0].Verified__c);
         
         //run batch address verification
