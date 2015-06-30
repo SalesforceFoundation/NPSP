@@ -9,7 +9,7 @@
             <type>contactLookup</type>
         </recipients>
         <senderType>CurrentUser</senderType>
-        <template>unfiled$public/NPSP_Opportunity_Acknowledgment</template>
+        <template>NPSP_Email_Templates/NPSP_Opportunity_Acknowledgment</template>
     </alerts>
     <fieldUpdates>
         <fullName>Opportunity_AcknowledgmentStatus_Update</fullName>
