@@ -1113,8 +1113,9 @@
         <name>Document</name>
     </types>
     <types>
-        <members>unfiled$public</members>
-        <members>unfiled$public/NPSP_Opportunity_Acknowledgment</members>
+        <members>NPSP_Email_Templates</members>
+        <members>NPSP_Email_Templates/NPSP_Opportunity_Acknowledgment</members>
+        <members>NPSP_Email_Templates/NPSP_Payment_Acknowledgment</members>
         <name>EmailTemplate</name>
     </types>
     <types>
