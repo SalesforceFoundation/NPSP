@@ -118,6 +118,11 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         // workarounds are to use the metadata API, but we aren't going to invest in that for this
         // one little feature.
         
+        if (listOpp.size() == 0) {
+            cNotSent = 0;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, label.sendAcknowledgmentNoneSelected));
+            return null;        
+        }
 
         for (Opportunity opp : listOpp) {
             opp.Acknowledgment_Status__c = label.sendAcknowledgmentFireStatus;
@@ -146,6 +151,13 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
                     string.format(label.sendAcknowledgmentNumberNoEmail, 
                         new string[] {string.valueOf(cNotSent)})));                
             }
+            
+            // update NotSent's status
+            for (Opportunity opp : listOppNotSent) {
+                opp.Acknowledgment_Status__c = label.sendAcknowledgmentFailedStatus;
+            }
+            update listOppNotSent;
+            
             return null;
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));

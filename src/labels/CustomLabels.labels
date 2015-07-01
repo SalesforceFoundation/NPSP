@@ -2134,6 +2134,14 @@
         <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
     </labels>
     <labels>
+        <fullName>sendAcknowledgmentFailedStatus</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
+        <value>Email Acknowledgment Not Sent</value>
+    </labels>
+    <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
         <language>en_US</language>
@@ -2147,7 +2155,15 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFireStatus</shortDescription>
-        <value>Send Acknowledgment</value>
+        <value>Email Acknowledgment</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNoneSelected</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNoneSelected</shortDescription>
+        <value>You must select one or more Opportunities before clicking Email Acknowledgments.</value>
     </labels>
     <labels>
         <fullName>sendAcknowledgmentNumberNoEmail</fullName>

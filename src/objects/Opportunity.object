@@ -507,7 +507,11 @@
                 <default>false</default>
             </picklistValues>
             <picklistValues>
-                <fullName>Send Acknowledgment</fullName>
+                <fullName>Email Acknowledgment</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Email Acknowledgment Not Sent</fullName>
                 <default>false</default>
             </picklistValues>
             <sorted>false</sorted>
@@ -719,7 +723,7 @@ ISBLANK(npe03__Recurring_Donation__c),
         <filters>
             <field>Acknowledgment_Status__c</field>
             <operation>equals</operation>
-            <value>To Be Acknowledged</value>
+            <value>To Be Acknowledged,Email Acknowledgment Not Sent</value>
         </filters>
         <label>To Be Acknowledged</label>
         <language>en_US</language>
