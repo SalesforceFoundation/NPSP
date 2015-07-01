@@ -161,7 +161,6 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             return true; 
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
-            UTIL_Debug.debug('STG_PanelOppNaming_CTRL Validation Stacktrace: ' + ex.getStackTraceString());
             return false;           
         }        
     }
