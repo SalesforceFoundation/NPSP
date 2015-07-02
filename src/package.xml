@@ -1232,7 +1232,7 @@
         <name>Workflow</name>
     </types>
     <types>
-        <members>Opportunity.Opportunity Email Acknowledgment</members>
+        <members>Opportunity.Opportunity_Email_Acknowledgment</members>
         <name>WorkflowAlert</name>
     </types>
     <types>
@@ -1241,7 +1241,7 @@
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
-        <members>Opportunity.Opportunity_Email_Acknowledgment</members>
+        <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
     <version>33.0</version>
