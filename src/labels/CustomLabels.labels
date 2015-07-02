@@ -2198,6 +2198,14 @@
         <value>Return to Opportunity</value>
     </labels>
     <labels>
+        <fullName>sendAcknowledgmentSucceeded</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
+        <value>Acknowledged</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

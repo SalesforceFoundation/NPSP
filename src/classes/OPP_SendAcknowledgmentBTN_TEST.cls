@@ -66,8 +66,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         listOpp = [select Id, name, Acknowledgment_Status__c, Acknowledgment_Date__c from Opportunity];
         system.assertEquals(1, listOpp.size());
         // we don't know if the workflow is active or not.
-        system.assert(listOpp[0].Acknowledgment_Status__c == label.sendAcknowledgmentFireStatus ||
-            listOpp[0].Acknowledgment_Status__c == 'Acknowledged');            
+        system.assert(listOpp[0].Acknowledgment_Status__c == label.sendAcknowledgmentFailedStatus ||
+            listOpp[0].Acknowledgment_Status__c == label.sendAcknowledgmentSucceeded);            
         system.assertNotEquals(null, btnCtrl.listOppNotSent);
         system.assertNotEquals(btnCtrl.cSent, btnCtrl.cNotSent);
         

@@ -45,9 +45,9 @@
             <name>Opportunity_Acknowledgment_Date_Update</name>
             <type>FieldUpdate</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <description>Emails an acknowledgment to the Primary Contact when Email Acknowledgment is set.</description>
-        <formula>ISPICKVAL(Acknowledgment_Status__c,&apos;Email Acknowledgment&apos;) &amp;&amp;  Primary_Contact__r.Email &lt;&gt; NULL &amp;&amp;  Primary_Contact__r.Do_Not_Contact__c &lt;&gt; True &amp;&amp;  Primary_Contact__r.HasOptedOutOfEmail &lt;&gt; True &amp;&amp;  Primary_Contact__r.Deceased__c &lt;&gt; True</formula>
+        <formula>TEXT(Acknowledgment_Status__c) = $Label.sendAcknowledgmentFireStatus &amp;&amp;  Primary_Contact__r.Email &lt;&gt; NULL &amp;&amp;  Primary_Contact__r.Do_Not_Contact__c &lt;&gt; True &amp;&amp;  Primary_Contact__r.HasOptedOutOfEmail &lt;&gt; True &amp;&amp;  Primary_Contact__r.Deceased__c &lt;&gt; True</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
 </Workflow>
