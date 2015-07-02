@@ -351,6 +351,27 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests the opportunity naming panel
+    * @return void
+    */
+    public static testMethod void testPanelOppNaming() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelOppNaming') return;
+        Contact con = new Contact(LastName='foo');
+        insert con;
+        Opportunity opp = new Opportunity(Name = 'foo', CloseDate = system.Today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+        system.assertEquals('idPanelOppNaming', panel.idPanel());
+        panel.newONS();
+        panel.currentONS.Date_Format__c = 'YYYY-MM-dd';
+        panel.currentONS.Opportunity_Name_Format__c = '{!Contact.LastName} {!CloseDate}';
+        system.assert(panel.isValidNameFormats(), 'Validation should pass.');
+        panel.saveONS();
+        system.assertEquals(1, panel.mapOppNameSettings.size(), 'The opportunity naming setting should be saved.');
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Payment Mappings panel
     * @return void
     */
