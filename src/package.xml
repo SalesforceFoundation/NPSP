@@ -1117,7 +1117,6 @@
     <types>
         <members>NPSP_Email_Templates</members>
         <members>NPSP_Email_Templates/NPSP_Opportunity_Acknowledgment</members>
-        <members>NPSP_Email_Templates/NPSP_Payment_Acknowledgment</members>
         <name>EmailTemplate</name>
     </types>
     <types>
