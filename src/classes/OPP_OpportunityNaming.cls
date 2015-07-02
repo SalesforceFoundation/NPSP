@@ -73,7 +73,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
 
         //query for opportunities and associated contacts
-        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)));
+        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)+' WHERE Id IN :oppList'));
         
         //fill opportunity id to contact map
         map<id,Contact> mapOppIdToCon = fillConMap(mapOppsQuery.values());
@@ -116,7 +116,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             allFields.addAll(getFieldNamesFromSpec(ons.Opportunity_Name_Format__c));
 
         //query for opportunities and associated contacts
-        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)));
+        map<id,Opportunity> mapOppsQuery = new map<id,Opportunity>((list<Opportunity>) database.query(getOppQuery(allFields)+' WHERE Id IN :oppList'));
 
         //fill opportunity id to contact map
         map<id,Contact> mapOppIdToCon = fillConMap(mapOppsQuery.values());
@@ -245,7 +245,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             result += field + ', ';
         }
         result += '(' + getConRoleQuery(fields) + ' WHERE IsPrimary=TRUE LIMIT 1) ';
-        result += 'FROM Opportunity WHERE Id IN :oppList';
+        result += 'FROM Opportunity';
         return result;
     }
 
