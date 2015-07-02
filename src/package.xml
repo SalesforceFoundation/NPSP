@@ -1241,7 +1241,7 @@
         <name>WorkflowFieldUpdate</name>
     </types>
     <types>
-        <members>Opportunity.Opportunity Email Acknowledgment</members>
+        <members>Opportunity.Opportunity_Email_Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
     <version>33.0</version>
