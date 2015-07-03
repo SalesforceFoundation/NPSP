@@ -837,6 +837,7 @@
         <members>sendAcknowledgmentNumberSent</members>
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
+        <members>sendAcknowledgmentSucceeded</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
         <members>stgBtnCreateAutoRel</members>
