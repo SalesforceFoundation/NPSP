@@ -39,7 +39,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     /*******************************************************************************************************
     * @description Sets the test methods in the class you want to run for development testing purposes
     */
-    private static string strTestOnly = 'testContactDisableAddresses';
+    private static string strTestOnly = '*';
 
     /*******************************************************************************************************
     * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
@@ -290,8 +290,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //setup individual model and test account creation
         npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(Household_Account_Addresses_Disabled__c=true, npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        //inserting settings so they are available for the new batch context
-        upsert contactsSettings;
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test',
