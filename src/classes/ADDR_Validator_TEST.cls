@@ -280,8 +280,8 @@ public with sharing class ADDR_Validator_TEST {
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingPostalCode = 'single-zip';
-        contact.MailingState = 'California';
+        contact.MailingPostalCode = '94105';
+        contact.MailingState = 'single-zip';
         contact.MailingCountry = 'United States';
         
         Test.StartTest();

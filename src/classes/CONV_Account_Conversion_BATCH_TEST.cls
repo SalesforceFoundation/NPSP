@@ -45,7 +45,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversion1to1(){
-    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
+        if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
@@ -108,7 +108,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversionBucket(){
-    	if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
+        if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
 
         //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -164,7 +164,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with a single address
     */
     public testMethod static void testSingleContactAddress(){
-    	if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
+        if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -213,7 +213,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with two addresses
     */
     public testMethod static void test2ContactAddresses(){
-    	if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
+        if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -283,10 +283,85 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
     /*******************************************************************************************************
+    * @description Tests the conversion process for Contacts with two addresses, but address verification disabled
+    */
+    public testMethod static void testContactDisableAddresses(){
+        if (strTestOnly != '*' && strTestOnly != 'testContactDisableAddresses') return;
+
+        //setup individual model and test account creation
+        npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(Household_Account_Addresses_Disabled__c=true, npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
+
+        Contact c = new Contact(LastName = 'Contact', FirstName = 'Test',
+                                MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
+                                MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
+        insert c;
+
+        c = [select Account.Name, AccountId, npo02__Household__c, npo02__Household__r.npo02__MailingStreet__c, LastName, Id, MailingStreet, Account.BillingStreet from Contact where Id = :c.Id];
+
+        system.assertEquals(c.Account.Name, 'Test Contact');
+        system.assertEquals('123 Main St.', c.MailingStreet);
+
+        Contact c2 = new Contact(LastName = 'Contact', FirstName = 'Test2',
+                                MailingStreet = '1 1st Avenue', MailingCity = 'Baltimore',
+                                MailingPostalCode = '21230', MailingState = 'Maryland', MailingCountry = 'United States', npo02__TotalOppAmount__c = 100.00,
+                                npo02__Household__c = c.npo02__Household__c);
+        insert c2;
+
+        //clear the values automatically copied to the household
+        npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        h.npo02__MailingStreet__c = null;
+        h.npo02__MailingCountry__c = null;
+        h.npo02__MailingPostalCode__c = null;
+        h.npo02__MailingCity__c = null;
+        h.npo02__MailingState__c = null;
+        update h;
+
+        h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
+        system.assertEquals(null, h.npo02__MailingStreet__c);
+        system.assertEquals(null, h.npo02__MailingCity__c);
+        system.assertEquals(null, h.npo02__MailingState__c);
+
+        //set the HH Account model before entering the batch
+        //CONV_Account_Conversion_BATCH_TEST.setHHAccountModel();
+
+        Test.StartTest();
+
+        String query = CONV_Account_Conversion_CTRL.getBatchQuery();
+
+        CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, null, null);
+
+        ID batchprocessid = Database.executeBatch(cacv);
+        Test.StopTest();
+
+        //get the newly created Household
+        String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        system.assertNotEquals(null, newHHAccount);
+        system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
+        //system.assertEquals(null, newHHAccount.BillingStreet, 'The contact addresses shouldn\'t be copied over during the conversion.');
+        system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
+        system.assertEquals(0, [select count() from Address__c], 'No address objects should be created.');
+        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        system.assertEquals(null, c2.Account.BillingStreet);
+        system.assertEquals('1 1st Avenue', c2.MailingStreet);
+        system.assertEquals(false, c2.is_Address_Override__c);
+        system.assertEquals(null, c2.Current_Address__c);
+        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        system.assertEquals(null, c.Account.BillingStreet);
+        system.assertEquals('123 Main St.', c.MailingStreet);
+        system.assertEquals(false, c.is_Address_Override__c);
+        system.assertEquals(null, c.Current_Address__c);
+        system.assert(CAO_Constants.isHHAccountModel());
+        system.assertEquals(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
+        system.assertEquals(UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c, true);
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+    }
+    /*******************************************************************************************************
     * @description Tests the conversion process when setting primary affiliation
     */
     public testMethod static void testSettingPrimaryAffiliation(){
-    	if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
+        if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
