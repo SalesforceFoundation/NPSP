@@ -32,7 +32,7 @@
 * @date 2011 (2.1)
 * @description Controls the creation of payment objects from Opportunity trigger
 */
-public without sharing class PMT_PaymentCreator {
+public with sharing class PMT_PaymentCreator {
 
     //user defined rollups in list settings
     public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
