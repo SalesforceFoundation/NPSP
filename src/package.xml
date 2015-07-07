@@ -507,8 +507,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
-        <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
+        <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
         <members>Grant_Deadline__c.Opportunity__c</members>
         <members>Household_Naming_Settings__c.Contact_Overrun_Count__c</members>
         <members>Household_Naming_Settings__c.Formal_Greeting_Format__c</members>

@@ -5,7 +5,7 @@
 * @description Provides recordtype wrapper for easy access in other codeblocks 
 */
 
-public class UTIL_RecordTypes {
+public with sharing class UTIL_RecordTypes {
 /*-----------------------------------------------------------------------------------------------
 * Written by Evan Callahan, copyright (c) 2010 Groundwire
 * This program is released under the GNU General Public License. http://www.gnu.org/licenses/

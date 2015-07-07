@@ -32,7 +32,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 * @description base class for the batch data entry, supports all the custom settings you might have.
 */
 
-public class BDE_BatchDataEntry {
+public with sharing class BDE_BatchDataEntry {
 
     private String objectName;
     private List<String> entryFieldList;
