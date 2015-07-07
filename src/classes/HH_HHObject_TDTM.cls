@@ -33,7 +33,7 @@
 * @group Households
 * @description Trigger Handler for Household Objects, to deal with Household name updates 
 */
-public with sharing class HH_HHObject_TDTM extends TDTM_Runnable {
+public class HH_HHObject_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler on Household Object 
