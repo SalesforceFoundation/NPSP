@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups.htm
 * @description Trigger handler on Opportunity for supporting trigger based rollups.
 */
-public with sharing class RLLP_OppRollup_TDTM extends TDTM_Runnable {
+public class RLLP_OppRollup_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Opportunity, runs rollups for current trigger set of opportunities.

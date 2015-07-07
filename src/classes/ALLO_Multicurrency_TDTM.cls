@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Class for multicurrency triggers and allocations rollup multicurrency related code.
 */
-public with sharing class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
+public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
     /** @description Boolean holds whether this org has multicurrency enabled. */
     public static boolean multiCurrency;
