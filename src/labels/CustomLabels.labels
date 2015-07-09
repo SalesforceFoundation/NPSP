@@ -2134,6 +2134,78 @@
         <value>You are preparing to writeoff {0} Payment(s) totaling {1}.</value>
     </labels>
     <labels>
+        <fullName>sendAcknowledgmentFailedStatus</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
+        <value>Email Acknowledgment Not Sent</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentFailureReasons</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFailureReasons</shortDescription>
+        <value>The following records were not acknowledged. Acknowledgements can fail if there is no workflow rule (Acknowledgement Status EQUALS &apos;Send Acknowledgement&apos;) activated to send the acknowledgement, or if the records did not meet additional criteria to trigger the workflow rule. For example, if Primary Contact is not set, or if the Primary Contact&apos;s email field is empty or invalid.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentFireStatus</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentFireStatus</shortDescription>
+        <value>Email Acknowledgment</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNoneSelected</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNoneSelected</shortDescription>
+        <value>You must select one or more Opportunities before clicking Email Acknowledgments.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberNoEmail</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNumberNoEmail</shortDescription>
+        <value>{0} acknowledgment(s) were not sent.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberSent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
+        <value>{0} acknowledgment(s) sent.</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentPageTitle</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentPageTitle</shortDescription>
+        <value>Email Acknowledgments</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentReturnLinkLabel</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentReturnLinkLabel</shortDescription>
+        <value>Return to Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>sendAcknowledgmentSucceeded</fullName>
+        <categories>Send Acknowledgment button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
+        <value>Acknowledged</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

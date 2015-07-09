@@ -107,6 +107,8 @@
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
+        <members>OPP_SendAcknowledgmentBTN_CTRL</members>
+        <members>OPP_SendAcknowledgmentBTN_TEST</members>
         <members>PMT_PaymentCreator</members>
         <members>PMT_PaymentCreator_TEST</members>
         <members>PMT_PaymentWizard_CTRL</members>
@@ -236,6 +238,7 @@
         <members>NPSP_Resources</members>
         <members>OPP_MatchingDonationsBTN</members>
         <members>OPP_OpportunityNamingBTN</members>
+        <members>OPP_SendAcknowledgmentBTN</members>
         <members>PMT_PaymentWizard</members>
         <members>RD_AddDonationsBTN</members>
         <members>REL_RelationshipsViewer</members>
@@ -826,6 +829,15 @@
         <members>pmtWizardWarning</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>sendAcknowledgmentFailedStatus</members>
+        <members>sendAcknowledgmentFailureReasons</members>
+        <members>sendAcknowledgmentFireStatus</members>
+        <members>sendAcknowledgmentNoneSelected</members>
+        <members>sendAcknowledgmentNumberNoEmail</members>
+        <members>sendAcknowledgmentNumberSent</members>
+        <members>sendAcknowledgmentPageTitle</members>
+        <members>sendAcknowledgmentReturnLinkLabel</members>
+        <members>sendAcknowledgmentSucceeded</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
         <members>stgBtnCreateAutoRel</members>
@@ -1100,7 +1112,13 @@
     <types>
         <members>NPSP_Documents</members>
         <members>NPSP_Documents/NPSP_Data_Import_Template_csv.csv</members>
+        <members>NPSP_Documents/Sample_Letterhead_Logo.png</members>
         <name>Document</name>
+    </types>
+    <types>
+        <members>NPSP_Email_Templates</members>
+        <members>NPSP_Email_Templates/NPSP_Opportunity_Acknowledgment</members>
+        <name>EmailTemplate</name>
     </types>
     <types>
         <members>Account.BDE_Entry_FS</members>
@@ -1137,6 +1155,10 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>NPSP_Sample_Letterhead</members>
+        <name>Letterhead</name>
+    </types>
+    <types>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
@@ -1145,6 +1167,7 @@
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
         <members>General_Accounting_Unit__c.All</members>
+        <members>Opportunity.To_Be_Acknowledged</members>
         <members>Trigger_Handler__c.All</members>
         <name>ListView</name>
     </types>
@@ -1200,8 +1223,27 @@
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
         <members>General_Accounting_Unit__c.Recalculate_Rollups</members>
+        <members>Opportunity.Email_Acknowledgment</members>
+        <members>Opportunity.Email_Acknowledgments</members>
         <members>Opportunity.Refresh_Name</members>
         <name>WebLink</name>
+    </types>
+    <types>
+        <members>Opportunity</members>
+        <name>Workflow</name>
+    </types>
+    <types>
+        <members>Opportunity.Opportunity_Email_Acknowledgment</members>
+        <name>WorkflowAlert</name>
+    </types>
+    <types>
+        <members>Opportunity.Opportunity_AcknowledgmentStatus_Update</members>
+        <members>Opportunity.Opportunity_Acknowledgment_Date_Update</members>
+        <name>WorkflowFieldUpdate</name>
+    </types>
+    <types>
+        <members>Opportunity.Opportunity Email Acknowledgment</members>
+        <name>WorkflowRule</name>
     </types>
     <version>33.0</version>
 </Package>

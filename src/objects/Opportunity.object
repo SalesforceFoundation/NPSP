@@ -506,6 +506,14 @@
                 <fullName>Do Not Acknowledge</fullName>
                 <default>false</default>
             </picklistValues>
+            <picklistValues>
+                <fullName>Email Acknowledgment</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </picklistValues>
             <sorted>false</sorted>
         </picklist>
         <trackFeedHistory>false</trackFeedHistory>
@@ -702,6 +710,48 @@ ISBLANK(npe03__Recurring_Donation__c),
         <trackTrending>false</trackTrending>
         <type>Currency</type>
     </fields>
+    <listViews>
+        <fullName>To_Be_Acknowledged</fullName>
+        <columns>OPPORTUNITY.NAME</columns>
+        <columns>Primary_Contact__c</columns>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>OPPORTUNITY.AMOUNT</columns>
+        <columns>OPPORTUNITY.CLOSE_DATE</columns>
+        <columns>OPPORTUNITY.STAGE_NAME</columns>
+        <columns>Acknowledgment_Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Acknowledgment_Status__c</field>
+            <operation>equals</operation>
+            <value>To Be Acknowledged,Email Acknowledgment Not Sent</value>
+        </filters>
+        <label>To Be Acknowledged</label>
+        <language>en_US</language>
+    </listViews>
+    <webLinks>
+        <fullName>Email_Acknowledgment</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Email Acknowledgment</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/NPSP__OPP_SendAcknowledgmentBTN?OppId={!Opportunity.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Email_Acknowledgments</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Email Acknowledgments</masterLabel>
+        <openType>sidebar</openType>
+        <page>OPP_SendAcknowledgmentBTN</page>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+    </webLinks>
     <webLinks>
         <fullName>Refresh_Name</fullName>
         <availability>online</availability>
