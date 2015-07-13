@@ -269,6 +269,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     // our exception object for Field Level Security errors.
     private class flsException extends Exception {}
     
+    // flag to allow us to test out field level security exception
+    public static boolean failFieldLevelSecurity = false;
+    
     // utility to return a map of fields from the DataImport to fields for the given 'object',
     // from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property. 
     private static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
@@ -296,6 +299,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     
                     // make sure they have permissions to modify the target field
                     dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
+                    if (Test.isRunningTest() && failFieldLevelSecurity)
+                        dfr = null;
                     if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
                         throw (new flsException(string.format(label.flsError, new string[]{strBaseObj + '.' + strField})));
                         
