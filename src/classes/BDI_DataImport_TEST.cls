@@ -1924,6 +1924,8 @@ private with sharing class BDI_DataImport_TEST {
             system.assertEquals(label.bdiFailed, listDI[i].Status__c);
             string flsError = label.flsError;
             flsError = flsError.replace('{0}', '');
+            flsError = flsError.replace('.', '');
+            //system.assertEquals(listDI[i].FailureInformation__c, flsError);
             system.assert(listDI[i].FailureInformation__c.contains(flsError));
         }
     }
