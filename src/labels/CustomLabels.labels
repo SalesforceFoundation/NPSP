@@ -2155,7 +2155,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFireStatus</shortDescription>
-        <value>Email Acknowledgment</value>
+        <value>Email Acknowledgment Now</value>
     </labels>
     <labels>
         <fullName>sendAcknowledgmentNoneSelected</fullName>
