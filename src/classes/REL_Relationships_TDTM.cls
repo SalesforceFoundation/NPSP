@@ -204,7 +204,8 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper dmlWrapper = new DmlWrapper();
     	
         List<npe4__Relationship__c> originalRelationships = new List<npe4__Relationship__c>();
-        List<SObject> relationshipsToUpdate = new List<SObject>();
+        List<SObject> relationshipsTypesToUpdate = new List<SObject>();
+        List<SObject> reciprocalsToUpdate = new List<SObject>();
         Integer counter = 0;                                            // processing counter       
 
         for(npe4__Relationship__c r : Relationships) {
@@ -223,16 +224,24 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                 }
                 copy.npe4__Status__c = r.npe4__Status__c;
                 copy.npe4__Description__c = r.npe4__Description__c;
-                relationshipsToUpdate.add(copy);
-                originalRelationships.add(r);
+                
+                //only recalculate type on reciprocal if the original type has changed
+                if (r.npe4__Type__c != oldRelationships[counter].npe4__Type__c) {
+                    relationshipsTypesToUpdate.add(copy);
+                    originalRelationships.add(r);
+                } else {
+                    reciprocalsToUpdate.add(copy);
+                }
+
             }
             counter++;
         }
         //add type info as needed
-        if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()) {
-            addType(originalRelationships, relationshipstoUpdate);
-            dmlWrapper.objectsToUpdate.addAll(relationshipsToUpdate);        
-            //inspectSaveResults(sr, relationshipsToUpdate);
+        if (!originalRelationships.isEmpty() && !relationshipsTypesToUpdate.isEmpty()) {
+            addType(originalRelationships, relationshipsTypesToUpdate);
+            
+            dmlWrapper.objectsToUpdate.addAll(relationshipsTypesToUpdate);
+            dmlWrapper.objectsToUpdate.addAll(reciprocalsToUpdate);
         }
         return dmlWrapper;
     }
@@ -249,8 +258,14 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         
             //remove inactive values
             for (string s : rlMap.keySet()){
-                if (rlMap.get(s).npe4__Active__c != true){
+                npe4__Relationship_Lookup__c thisRl = rlMap.get(s);
+                if (thisRl.npe4__Active__c != true){
                     rlMap.remove(s);
+                //add male, female, and neutral types to lookup
+                } else {
+                    rlMap.put(thisRl.npe4__Female__c, thisRl);
+                    rlMap.put(thisRl.npe4__Male__c, thisRl);
+                    rlMap.put(thisRl.npe4__Neutral__c, thisRl);
                 }
             }
         
@@ -280,7 +295,6 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                 Contact relatedContact = cMap.get(r.npe4__Contact__c);
             
                 if (rlMap.containsKey(r.npe4__Type__c)){
-                    
                     List<String> malelist = system.label.npe4.Male.split(',');                                                                                                        
                     List<String> femalelist = system.label.npe4.Female.split(',');
                     
@@ -331,7 +345,8 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                     
                     //can't match up gender, bad field or otherwise
                     else{                       
-                        copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Neutral__c;                     
+                        if (copy.npe4__Type__c==null)
+                            copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Neutral__c;
                     }          
                 }                            
                 //no matching custom list setting, use provided type
