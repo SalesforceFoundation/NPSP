@@ -298,15 +298,18 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     }
                     
                     // make sure they have permissions to modify the target field
-                    dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
-                    if (Test.isRunningTest() && failFieldLevelSecurity)
-                        dfr = null;
-                    if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
-                        throw (new flsException(string.format(label.flsError, new string[]{strBaseObj + '.' + strField})));
-                        
-	                mapDIFieldToObjField.put(strF, strField);
-	        	}
-        	} 
+                    // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
+                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                        dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
+                        if (failFieldLevelSecurity)
+                            dfr = null;
+                        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
+                            throw (new flsException(string.format(label.flsError, new string[]{strBaseObj + '.' + strField})));
+                    }
+                                            
+                    mapDIFieldToObjField.put(strF, strField);
+                }
+            } 
         }
         return mapDIFieldToObjField;
     }
