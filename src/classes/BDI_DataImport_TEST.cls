@@ -1922,7 +1922,9 @@ private with sharing class BDI_DataImport_TEST {
         for (integer i = 0; i < 3; i++) {
             system.assertEquals(listDI[i].Contact1Imported__c, null);
             system.assertEquals(label.bdiFailed, listDI[i].Status__c);
-            system.assert(listDI[i].FailureInformation__c.contains(label.flsError));
+            string flsError = label.flsError;
+            flsError = flsError.replace('{0}', '');
+            system.assert(listDI[i].FailureInformation__c.contains(flsError));
         }
     }
 }
