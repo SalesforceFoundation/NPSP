@@ -243,7 +243,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_Id_for_Role__c, Role = getDefaultRole(), IsPrimary = true));
                     fixedOpps.add(new Opportunity(
                         id = thisOpp.id,
-                        Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c,
+                        Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c
                     ));
                 } catch Exception(ex) {
                     o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
