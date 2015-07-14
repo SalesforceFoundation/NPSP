@@ -615,7 +615,7 @@ private class REL_Relationships_TEST {
         insert conList;
 
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestMaleType')
+            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestLookupType')
         };
 
         Test.startTest();
@@ -636,6 +636,44 @@ private class REL_Relationships_TEST {
 
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
         system.assertEquals('TestMaleType', recRel.npe4__Type__c);
+    }
+
+    /*********************************************************************************************************
+    * @description For two contacts with an established relationship, change the gender field of one of the
+    * contacts. Verify the relationship's type has changed per the changed gender, and that the reciprocal 
+    * hasn't changed.
+    */
+    static testMethod void testGenderChange(){
+        if (strTestOnly != '*' && strTestOnly != 'testGenderChange') return;
+
+        setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description'));
+
+        list<Contact> conList = new list<Contact>{
+            new Contact(LastName='foo', Description='Female'),
+            new Contact(LastName='foo2', Description='Male')
+        };
+        insert conList;
+
+        npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
+            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestMaleType')
+        };
+
+        insert crel;
+
+        npe4__Relationship__c recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
+        system.assertEquals('TestMaleType', recRel.npe4__Type__c);
+
+        recRel = [select id, npe4__Type__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
+        system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
+
+        conList[1].Description='Female';
+        update conList[1];
+
+        recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
+        system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
+
+        recRel = [select id, npe4__Type__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
+        system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
     }
 
     /*********************************************************************************************************

@@ -246,7 +246,7 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    private static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
+    public static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
         
         npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
         
