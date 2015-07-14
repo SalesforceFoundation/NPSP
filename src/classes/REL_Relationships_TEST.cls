@@ -615,7 +615,7 @@ private class REL_Relationships_TEST {
         insert conList;
 
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestLookupType')
+            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestMaleType')
         };
 
         Test.startTest();
