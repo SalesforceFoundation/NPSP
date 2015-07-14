@@ -231,15 +231,31 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     private void insertCR(Opportunity[] opportunities) {
 
         List<OpportunityContactRole> CRs = new List<OpportunityContactRole>();
+        List<Opportunity> fixedOpps = new list<Opportunity>();
 
         //Straightforward creation of opp contact role.      
         for(Opportunity o : opportunities) {
             if(o.Primary_Contact__c != null) {
                 CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.Primary_Contact__c, Role = getDefaultRole(), IsPrimary = true));
+            //if primary contact is null, still try using the contact id for role field
+            } else if (o.npe01__Contact_Id_for_Role__c != null) {
+                try {
+                    CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_Id_for_Role__c, Role = getDefaultRole(), IsPrimary = true));
+                    fixedOpps.add(new Opportunity(
+                        id = thisOpp.id,
+                        Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c,
+                    ));
+                } catch Exception(ex) {
+                    o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
+                }
             }
         }
         if (CRs.size() > 0) {
             insert CRs; 
+        }
+        //fix opportunity lookup if out of sync with contact role
+        if (!fixedOpps.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)fixedOpps);
         }
     }
     
