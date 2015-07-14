@@ -41,11 +41,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     // the main entry point for TDTM to invoke our trigger handlers.
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        	
+            
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-        	setOpportunityAccountField((list<Opportunity>) newlist);
+            setOpportunityAccountField((list<Opportunity>) newlist);
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-        	createOrUpdateContactRoles((list<Opportunity>) newlist);
+            createOrUpdateContactRoles((list<Opportunity>) newlist);
             
             //name opportunities
             map<id,Opportunity> mapOppNaming = new map<id,Opportunity>(OPP_OpportunityNaming.getOppNamesAfterInsert((list<Opportunity>) newlist));
@@ -167,7 +167,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param opportunties List of opportunities meeting trigger criteria
     ********************************************************************************************************/
     private void createOrUpdateContactRoles(list<Opportunity> listOpp) {
-    	
+        
         Map<Id, Opportunity> oppsInsertCR = new map<Id, Opportunity>(listOpp);        
         List<OpportunityContactRole> CRUpdates = new List<OpportunityContactRole>();
         List<Opportunity> fixedOpps = new list<Opportunity>();
@@ -242,10 +242,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 try {
                     CRs.add(new OpportunityContactRole(OpportunityId = o.Id, ContactId = o.npe01__Contact_Id_for_Role__c, Role = getDefaultRole(), IsPrimary = true));
                     fixedOpps.add(new Opportunity(
-                        id = thisOpp.id,
-                        Primary_Contact__c = opp.npe01__Contact_Id_for_Role__c
+                        id = o.id,
+                        Primary_Contact__c = o.npe01__Contact_Id_for_Role__c
                     ));
-                } catch Exception(ex) {
+                } catch (Exception ex) {
                     o.addError(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id);
                 }
             }
@@ -304,7 +304,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //add the contact id from the Account. We're guessing this is for the primary contact,
             //in the after insert trigger we'll get the actual value from the contact role
             if (o.AccountId != null && o.Primary_Contact__c == null) {
-            	Account acc = primaryAccounts.get(o.AccountId);
+                Account acc = primaryAccounts.get(o.AccountId);
                 if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
                     acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                     o.Primary_Contact__c = acc.npe01__One2OneContact__c;
