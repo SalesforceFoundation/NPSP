@@ -7,7 +7,7 @@
     <name>NPSP Opportunity Acknowledgment</name>
     <style>freeForm</style>
     <subject>Thank you!</subject>
-    <textOnly>Dear {!Account.npo02__Formal_Greeting__c},
+    <textOnly>Dear {!Account.npo02__Informal_Greeting__c},
 
 Thank you for your gift of {!Opportunity.Amount} on {!Opportunity.CloseDate}.
 

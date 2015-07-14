@@ -46,7 +46,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         Contact testcontact = new Contact(AccountID = testaccount.Id,FirstName = 'Test',LastName = 'Company',Email = 'Test.Company@example.com');
         insert testcontact;
         
-        Opportunity testoppty = new Opportunity(AccountId = testaccount.Id,
+        Opportunity testoppty = new Opportunity(AccountId = testaccount.Id, Primary_Contact__c = testcontact.Id,
             closedate = system.today(),amount = 100,name='Test Company Donation',StageName = 'Closed Won',
             Acknowledgment_Status__c = 'To be Acknowledged');
         insert testoppty;
