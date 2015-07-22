@@ -213,7 +213,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                         a.MailingStreet__c += ','+subpremise;
                     ADDR_Addresses_TDTM.handleMultilineStreet(a);
                     a.Geolocation__Latitude__s = googresp.results[0].geometry.location.lat;
-                    a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lat;
+                    a.Geolocation__Longitude__s = googresp.results[0].geometry.location.lng;
                     a.Verified__c = true;
                     a.API_Response__c = trimResponse(response);
                     a.Verification_Status__c = Label.Addr_Verified;
