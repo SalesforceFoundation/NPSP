@@ -881,6 +881,14 @@
         <value>Person accounts are not supported.</value>
     </labels>
     <labels>
+        <fullName>flsError</fullName>
+        <categories>Batch Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>flsError</shortDescription>
+        <value>You do not have permissions to modify {0}.</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
