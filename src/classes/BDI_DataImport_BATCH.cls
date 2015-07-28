@@ -266,14 +266,20 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         set;
     }    
     
+    // our exception object for Field Level Security errors.
+    private class flsException extends Exception {}
+    
+    // flag to allow us to test out field level security exception
+    public static boolean failFieldLevelSecurity = false;
+    
     // utility to return a map of fields from the DataImport to fields for the given 'object',
     // from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property. 
-    private static map<string, string> mapFieldsForDIObject(string strObj, list<string> listStrDIFields) {
+    private static map<string, string> mapFieldsForDIObject(string strObj, string strBaseObj, list<string> listStrDIFields) {
         map<string, string> mapDIFieldToObjField = new map<string, string>();
         for (string strF : listStrDIFields) {
-        	DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
-        	string strHelpText = dfr.getInlineHelpText();
-        	if (strHelpText != null && strHelpText != '') {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
+            string strHelpText = dfr.getInlineHelpText();
+            if (strHelpText != null && strHelpText != '') {
 	        	list<string> strParts = strHelpText.split('\\.', 2);
 	        	if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
 	        		string strField = strParts[1];
@@ -291,9 +297,19 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                         }
                     }
                     
-	                mapDIFieldToObjField.put(strF, strField);
-	        	}
-        	} 
+                    // make sure they have permissions to modify the target field
+                    // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
+                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                        dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
+                        if (failFieldLevelSecurity)
+                            dfr = null;
+                        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable())
+                            throw (new flsException(string.format(label.flsError, new string[]{strBaseObj + '.' + strField})));
+                    }
+                                            
+                    mapDIFieldToObjField.put(strF, strField);
+                }
+            } 
         }
         return mapDIFieldToObjField;
     }
@@ -315,7 +331,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         list<DataImport__c> listDIUpsert = new list<DataImport__c>();
                     
         // create/update our c1's
-        map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', listStrDataImportFields);
+        map<string, string> mapDIFieldToC1Field = mapFieldsForDIObject('Contact1', 'Contact', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -388,7 +404,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
 
         // now create our c2's
-        map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', listStrDataImportFields);
+        map<string, string> mapDIFieldToC2Field = mapFieldsForDIObject('Contact2', 'Contact', listStrDataImportFields);
         setDIKeyUpsert.clear();
         listConUpsert.clear();
         listDIUpsert.clear();
@@ -872,7 +888,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         list<DataImport__c> listDIUpsert = new list<DataImport__c>();
 
         // create/update our A1's
-        map<string, string> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', listStrDataImportFields);
+        map<string, string> mapDIFieldToA1Field = mapFieldsForDIObject('Account1', 'Account', listStrDataImportFields);
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
             if (di.Status__c == label.bdiFailed)
@@ -934,7 +950,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
             
         // create/update our A2's
-        map<string, string> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', listStrDataImportFields);
+        map<string, string> mapDIFieldToA2Field = mapFieldsForDIObject('Account2', 'Account', listStrDataImportFields);
         listAccUpsert.clear();
         listDIUpsert.clear();
         setDIKeyUpsert.clear();
@@ -1181,7 +1197,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 addr.MailingState__c + addr.MailingPostalCode__c, addr.Id);
         }        
         
-        map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', listStrDataImportFields);
+        map<string, string> mapDIFieldToAddrField = mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
         list<Address__c> listAddrInsert = new list<Address__c>();
         list<DataImport__c> listDIInsert = new list<DataImport__c>();
         for (DataImport__c di : listDI) {
@@ -1354,7 +1370,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
     private void importOpportunities() {
     
         // get the fields we will auto-copy
-        map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Opportunity', listStrDataImportFields);
+        map<string, string> mapDIFieldToOppField = mapFieldsForDIObject('Opportunity', 'Opportunity', listStrDataImportFields);
         list<Opportunity> listOppInsert = new list<Opportunity>();
         list<DataImport__c> listDIInsert = new list<DataImport__c>();
         
@@ -1482,7 +1498,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         }
 
         // get the payment fields we will auto-copy
-        map<string, string> mapDIFieldToPmtField = mapFieldsForDIObject('Payment', listStrDataImportFields);
+        map<string, string> mapDIFieldToPmtField = mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', listStrDataImportFields);
         list<npe01__OppPayment__c> listPmtUpsert = new list<npe01__OppPayment__c>();
         list<DataImport__c> listDIUpsert = new list<DataImport__c>();
 

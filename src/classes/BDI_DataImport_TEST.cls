@@ -1889,4 +1889,44 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
     }
 
+    /*********************************************************************************************************
+    operation:
+        import new contacts, but fail field level security 
+    verify:
+        nothing imported
+        records marked with fls error
+    **********************************************************************************************************/            
+    static testMethod void testFieldLevelSecurity() {
+        if (strTestOnly != '*' && strTestOnly != 'testFieldLevelSecurity') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c0', 'C0'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        BDI_DataImport_BATCH.failFieldLevelSecurity = true;
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, npe01__Preferred_Email__c from Contact order by Name];
+        system.assertEquals(0, listCon.size());
+      
+        listDI = [select Contact1Imported__c, Status__c, FailureInformation__c from DataImport__c];
+        system.assertEquals(4, listDI.size());
+        for (integer i = 0; i < 3; i++) {
+            system.assertEquals(listDI[i].Contact1Imported__c, null);
+            system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+            string flsError = label.flsError;
+            flsError = flsError.replace('{0}', '');
+            flsError = flsError.replace('.', '');
+            //system.assertEquals(listDI[i].FailureInformation__c, flsError);
+            system.assert(listDI[i].FailureInformation__c.contains(flsError));
+        }
+    }
 }
