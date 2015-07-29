@@ -33,6 +33,15 @@
 */
 public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
 	
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contact that handles relationship autocreation and gender change.
+    * @param listNew the list of Contacts from trigger new. 
+    * @param listOld the list of Contacts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Contacts 
+    * @return dmlWrapper Any relationships that need DML.
+    ********************************************************************************************************/
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -109,6 +118,7 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
 
             //get the relationships that the gender change affects
             for (npe4__Relationship__c rel : mapRelationship.values()) {
+                //add the changed gender's relationship and reciprocal
                 if (changedGender.contains(rel.npe4__RelatedContact__c)) {
                     listRelsForUpdate.add(rel);
                     listMirrorRels.add(mapRelationship.get(rel.npe4__ReciprocalRelationship__c));
@@ -123,9 +133,10 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
-    /// <name> deleteEmptyRelationships </name>
-    /// <summary> Deletes Relationships when a Contact is deleted </summary>
-    /// <param name="contacts"> List of Contacts that were deleted </param>
+    /*******************************************************************************************************
+    * @description Deletes Relationships when a Contact is deleted
+    * @return dmlWrapper Relationships to delete.
+    ********************************************************************************************************/
     public static DmlWrapper deleteEmptyRelationships() {
         DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
@@ -138,6 +149,7 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
+
     public static DmlWrapper createNewRelationships(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types) {
         
         DmlWrapper dmlWrapper = new DmlWrapper();
