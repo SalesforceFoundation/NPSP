@@ -33,6 +33,15 @@
 */
 public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
 	
+
+    /*******************************************************************************************************
+    * @description Trigger Handler on Contact that handles relationship autocreation and gender change.
+    * @param listNew the list of Contacts from trigger new. 
+    * @param listOld the list of Contacts from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Contacts 
+    * @return dmlWrapper Any relationships that need DML.
+    ********************************************************************************************************/
 	public override DmlWrapper run(List<SObject> newList, List<SObject> oldList, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
@@ -47,6 +56,9 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         List<Id> ReciprocalIds = new List<Id>();
         List<String> Types = new List<String>();        
         
+        string genderField = UTIL_CustomSettingsFacade.getRelationshipSettings().npe4__Gender_Field__c;
+        Set<Id> changedGender = new set<Id>();
+
         if(newlist != null && newlist.size() > 0) {
             for (Contact c : newListCasted){
                 for(String s : REL_Utils.getAutoCreateMap().keySet()){
@@ -72,7 +84,14 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
                             Types.add(rac.npe4__Relationship_Type__c);
                         }
                     }               
-                }           
+                }
+
+                //handle updates to the gender field if we have one
+                if (triggerAction == TDTM_Runnable.Action.afterUpdate && genderField!=null) {
+                    if (c.get(genderField) != oldMap.get(c.id).get(genderField)) {
+                        changedGender.add(c.id);
+                    }
+                }
             }
         }
         
@@ -85,12 +104,39 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
             DmlWrapper w = createNewRelationships(ContactIds, ReciprocalIds, Types);
             dmlWrapper.objectsToInsert.addAll(w.objectsToInsert);
         }
+
+        if (!changedGender.isEmpty()) {
+            //query for a map of all relationships where where contact or related contact has changed gender
+            map<id,npe4__Relationship__c> mapRelationship = new map<Id,npe4__Relationship__c>(
+                [SELECT Id, npe4__Contact__c, npe4__RelatedContact__c, npe4__ReciprocalRelationship__c, npe4__Type__c 
+                FROM npe4__Relationship__c WHERE npe4__Contact__c IN :changedGender OR npe4__RelatedContact__c IN :changedGender]
+            );
+            //make a list of "Related Contact" lookup relationships in our set, these we want to update
+            list<npe4__Relationship__c> listRelsForUpdate = new list<npe4__Relationship__c>();
+            //make a list of mirror relationships for our first list, we need these for the addType method
+            list<npe4__Relationship__c> listMirrorRels = new list<npe4__Relationship__c>();
+
+            //get the relationships that the gender change affects
+            for (npe4__Relationship__c rel : mapRelationship.values()) {
+                //add the changed gender's relationship and reciprocal
+                if (changedGender.contains(rel.npe4__RelatedContact__c)) {
+                    listRelsForUpdate.add(rel);
+                    listMirrorRels.add(mapRelationship.get(rel.npe4__ReciprocalRelationship__c));
+                }
+            }
+
+            //update type info
+            REL_Relationships_TDTM.addType(listMirrorRels, listRelsForUpdate);
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>)listRelsForUpdate);
+        }
+
         return dmlWrapper;
     }
     
-    /// <name> deleteEmptyRelationships </name>
-    /// <summary> Deletes Relationships when a Contact is deleted </summary>
-    /// <param name="contacts"> List of Contacts that were deleted </param>
+    /*******************************************************************************************************
+    * @description Deletes Relationships when a Contact is deleted
+    * @return dmlWrapper Relationships to delete.
+    ********************************************************************************************************/
     public static DmlWrapper deleteEmptyRelationships() {
         DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
@@ -103,6 +149,7 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
     
+
     public static DmlWrapper createNewRelationships(List<Id> ContactIds, List<Id> RelatedContactIds, List<String> Types) {
         
         DmlWrapper dmlWrapper = new DmlWrapper();
