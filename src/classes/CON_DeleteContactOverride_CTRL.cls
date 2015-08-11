@@ -55,7 +55,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Standard controller constructor.
+    * @description Action method in Contact Delete Button override, handles deleting a contact and
+    * potentially its account if it is a system account (1:1, individual, or household) and is the last 
+    * contact in the account.
     * @return pageReference Redirects to the Contacts tab.
     */ 
     public pageReference processDelete() {
