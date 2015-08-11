@@ -30,6 +30,8 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2015
+* @group Contacts
+* @group-content ../../ApexDocContent/Contacts.htm
 * @description Handles changes to the deceased and do not contact fields on Contact.
 */
 public class CON_DoNotContact_TDTM extends TDTM_Runnable {
