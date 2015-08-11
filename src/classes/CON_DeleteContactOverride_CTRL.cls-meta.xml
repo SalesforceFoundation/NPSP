@@ -3,8 +3,8 @@
     <apiVersion>33.0</apiVersion>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>1</minorNumber>
-        <namespace>npe03</namespace>
+        <minorNumber>0</minorNumber>
+        <namespace>npe01</namespace>
     </packageVersions>
     <status>Active</status>
 </ApexClass>

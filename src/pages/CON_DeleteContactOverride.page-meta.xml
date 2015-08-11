@@ -3,7 +3,7 @@
     <apiVersion>33.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>OPP_SendAcknowledgmentBTN</label>
+    <label>CON_DeleteContactOverride</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
         <minorNumber>0</minorNumber>

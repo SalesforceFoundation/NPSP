@@ -64,6 +64,8 @@
         <members>CON_ContactMerge_CTRL</members>
         <members>CON_ContactMerge_TDTM</members>
         <members>CON_ContactMerge_TEST</members>
+        <members>CON_DeleteContactOverride_CTRL</members>
+        <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
         <members>ERR_AddError_TEST</members>
@@ -231,6 +233,7 @@
         <members>BDI_DataImport</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
+        <members>CON_DeleteContactOverride</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHHAccount</members>
         <members>HH_ManageHousehold</members>
