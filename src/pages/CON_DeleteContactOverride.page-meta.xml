@@ -2,7 +2,7 @@
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>33.0</apiVersion>
     <availableInTouch>false</availableInTouch>
-    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <confirmationTokenRequired>true</confirmationTokenRequired>
     <label>CON_DeleteContactOverride</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
