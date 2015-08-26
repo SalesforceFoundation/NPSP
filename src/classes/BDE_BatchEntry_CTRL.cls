@@ -86,7 +86,7 @@ public with sharing class BDE_BatchEntry_CTRL {
                                     
                 objname = (batch.id != null) ? 
                         batch.object_name__c :
-                        ApexPages.currentPage().getParameters().get('obj');
+                        string.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('obj'));
         }
         
         public void initializeBatchEntry(){
