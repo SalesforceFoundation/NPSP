@@ -84,9 +84,13 @@ public with sharing class BDE_BatchEntry_CTRL {
                     batch = Database.query(q);        
                 }
                                     
-                objname = (batch.id != null) ? 
-                        batch.object_name__c :
-                        ApexPages.currentPage().getParameters().get('obj');
+                if (batch.id != null) {
+                    objName = batch.object_name__c;
+                } else {
+                    string param = ApexPages.currentPage().getParameters().get('obj');
+                    if (!string.isBlank(param))
+                        objName = string.escapeSingleQuotes(param);
+                } 
         }
         
         public void initializeBatchEntry(){
