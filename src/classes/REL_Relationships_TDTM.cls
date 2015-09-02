@@ -261,13 +261,6 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
                 npe4__Relationship_Lookup__c thisRl = rlMap.get(s);
                 if (thisRl.npe4__Active__c != true){
                     rlMap.remove(s);
-                //add male, female, and neutral types to map
-                //this is done in memory to find the correct relationship setting for any gender type chosen
-                //these won't ever be persisted to the custom setting
-                } else {
-                    rlMap.put(thisRl.npe4__Female__c, thisRl);
-                    rlMap.put(thisRl.npe4__Male__c, thisRl);
-                    rlMap.put(thisRl.npe4__Neutral__c, thisRl);
                 }
             }
         

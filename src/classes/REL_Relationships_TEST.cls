@@ -585,7 +585,7 @@ private class REL_Relationships_TEST {
         insert conList;
 
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestMaleType')
+            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestLookupType')
         };
 
         Test.startTest();
@@ -596,7 +596,7 @@ private class REL_Relationships_TEST {
         system.assertEquals('TestNeutralType', recRel.npe4__Type__c);
 
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
-        system.assertEquals('TestMaleType', recRel.npe4__Type__c);
+        system.assertEquals('TestLookupType', recRel.npe4__Type__c);
     }
     
     /*********************************************************************************************************
@@ -655,13 +655,13 @@ private class REL_Relationships_TEST {
         insert conList;
 
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
-            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestMaleType')
+            new npe4__Relationship__c(npe4__contact__c = conList[0].id, npe4__Relatedcontact__c = conList[1].id, npe4__Type__c='TestLookupType')
         };
 
         insert crel;
 
         npe4__Relationship__c recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
-        system.assertEquals('TestMaleType', recRel.npe4__Type__c);
+        system.assertEquals('TestLookupType', recRel.npe4__Type__c);
 
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
