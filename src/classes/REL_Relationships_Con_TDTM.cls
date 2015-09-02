@@ -135,12 +135,13 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Deletes Relationships when a Contact is deleted
+    * @param contacts the Map of Contacts from trigger oldMap. 
     * @return dmlWrapper Relationships to delete.
     ********************************************************************************************************/
     public static DmlWrapper deleteEmptyRelationships(Map<Id, Contact> contacts) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
-        
+
         //used to hold the Ids of the Related Contacts from the Relationships that were deleted
         Set<Id> relatedContactIds = new Set<Id>();
         for (npe4__Relationship__c r : [Select Id, npe4__RelatedContact__c 
