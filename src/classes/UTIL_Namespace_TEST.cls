@@ -53,7 +53,9 @@ public with sharing class UTIL_Namespace_TEST {
             system.assertEquals('foo__c', UTIL_Namespace.StrAllNSPrefix('foo__c'));
             system.assertEquals('foo_bar_baz__c', UTIL_Namespace.StrAllNSPrefix('foo_bar_baz__c'));
             system.assertEquals('select foo__c, bar, baz1__c, biz_buz__c from Contact', UTIL_Namespace.StrAllNSPrefix('select foo__c, bar, baz1__c, biz_buz__c from Contact'));           
-        }       
+        }
+        system.assertEquals('foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
+        system.assertEquals('foo_npsp__c', UTIL_Namespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
     }               
 
     static testmethod void testSandboxEmailToRealEmail() {

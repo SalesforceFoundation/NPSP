@@ -89,9 +89,10 @@ public with sharing class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
-        str = str.replace('npsp__', '');
-        if (getNamespace() != '') 
-            str = str.replace(getNamespace() + '__', '');
+        if(str.startsWith('npsp__'))
+            str = str.replaceFirst('npsp__', '');
+        if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
+            str = str.replaceFirst(getNamespace() + '__', '');
         return str;
     }
     
