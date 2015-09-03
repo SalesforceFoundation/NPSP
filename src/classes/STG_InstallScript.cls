@@ -86,13 +86,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
         npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
         npe5__Affiliations_Settings__c npe05Settings = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+        UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
         UTIL_CustomSettingsFacade.getOrgErrorSettings();
         UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
-        UTIL_CustomSettingsFacade.getOrgBDESettings(); 
+        UTIL_CustomSettingsFacade.getOrgBDESettings();
         UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
         UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
-        
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
  
         for(String setting : npspToCumulusMap.keySet()) {

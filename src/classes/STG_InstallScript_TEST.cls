@@ -252,7 +252,10 @@ public with sharing class STG_InstallScript_TEST {
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getOrgErrorSettings();
         Addr_Verification_Settings__c addrVerificationSetgs = UTIL_CustomSettingsFacade.getOrgAddressVerificationSettings();
         Batch_Data_Entry_Settings__c batchDataEntrySetgs = UTIL_CustomSettingsFacade.getOrgBDESettings();
-        
+        Household_Naming_Settings__c householdNamingSettings = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
+        Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
         System.assertEquals(false, npe01Settings.npe01__Enable_Opportunity_Contact_Role_Trigger__c);
@@ -304,6 +307,10 @@ public with sharing class STG_InstallScript_TEST {
         
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
+
+        System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
+        System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
+        System.assertEquals(50,dataImportSettings.Batch_Size__c);
         
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
         System.assertEquals(UTIL_MasterSchedulableHelper.scheduledClasses.size(), scheduledJobs.size());
@@ -325,7 +332,7 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public static void createSomeDefaultSettings() {
-    	List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
+        List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
         
         //Relationships on npe4__Relationship__c
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
@@ -356,7 +363,7 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public static void verifyAllSettingsCreated() {
-    	List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
+        List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Asynchronous__c, Class__c, Load_Order__c, 
             Object__c, Trigger_Action__c from Trigger_Handler__c];
         
         List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
