@@ -96,7 +96,6 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         }
         
         if(triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            System.debug('*** after delete oldMap: ' + oldMap);
             DmlWrapper w = deleteEmptyRelationships(oldMap);
             dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
         }
