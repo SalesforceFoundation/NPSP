@@ -32,7 +32,7 @@
         <div class="col-md-6">
             <h2>Get Started</h2>
             <div style="margin-top:40px; margin-bottom:55px;">
-            <h4><span class="glyphicon glyphicon-cog" aria-hidden="true" style="padding-right:12px;"></span>Review Salesforce Fundamentals</h4>
+            <h4><span class="glyphicon glyphicon-cog" aria-hidden="true" style="padding-right:32px;"></span>Review Salesforce Fundamentals</h4>
                 <p>Free e-learning modules from Salesforce Help &amp; Training:</p>
                 <ul><li><a href="https://help.salesforce.com/HTTrainingModulesDetail?courseId=a1S30000000gjL0EAI" title="Getting Started: Nav Salesforce" target="_blank">Getting Started: Navigating Salesforce</a></li>
                 <li><a href="https://help.salesforce.com/HTTrainingModulesDetail?courseId=a1S30000000gnuYEAQ" title="Getting Started Administering Salesforce" target="_blank">Getting Started: Administering Salesforce</a></li>
@@ -41,7 +41,7 @@
                 </div>
       <!--END3Get Started: Fund-->  
       <!--4Get Started: NPSP-->
-                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:12px;"></span>Get Started with the Nonprofit Starter Pack</h4>
+                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:32px;"></span>Get Started with the Nonprofit Starter Pack</h4>
                 
                 <div class="media" style="margin-bottom:60px;">
                     <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
