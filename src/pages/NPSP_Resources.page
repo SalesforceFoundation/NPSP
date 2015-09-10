@@ -44,7 +44,7 @@
                 <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:12px;"></span>Get Started with the Nonprofit Starter Pack</h4>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse%26navBack%3DH4sIAAAAAAAAAIuuVipVslLSjy_N1M_Oyy_PSU1JT9UHcrxhHI_83FT74tTEouQM27z8vIKi_LTMEu3iksSiktQi7YLE5Gzt8vyi7KT8_GwlHaVioGEoWoFi2UCxgsT01JDMkpxUpdpYANhfyp10AAAA&entityId=ka080000000DPGdAAO&field=File__Body__s"><img class="media-object" height="100" width="130" src={!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
+                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse%26navBack%3DH4sIAAAAAAAAAIuuVipVslLSjy_N1M_Oyy_PSU1JT9UHcrxhHI_83FT74tTEouQM27z8vIKi_LTMEu3iksSiktQi7YLE5Gzt8vyi7KT8_GwlHaVioGEoWoFi2UCxgsT01JDMkpxUpdpYANhfyp10AAAA&entityId=ka080000000DPGdAAO&field=File__Body__s"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
     </a>
                     </div>
   
