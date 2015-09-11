@@ -86,4 +86,35 @@ If you are on a unix based system, the following commands should work:
         </if>
     </target>
 
+    <!-- Update the Admin.profile to grant all FLS permissions -->
+    <target name="preDeployUpdatedAdminProfile">
+
+        <!-- Strip the existing recordTypeVisibilties -->
+        <xslt 
+            in="admin_profile/profiles/Admin.profile"
+            out="admin_profile/profiles/Admin.profile.no_rt"
+            style="${basedir}/lib/remove_recordtype_visibilities.xsl" />
+        <move file="admin_profile/profiles/Admin.profile.no_rt" tofile="admin_profile/profiles/Admin.profile" />
+
+        <!-- Add the record types -->
+
+        <!-- Account.HH_Account (default) -->
+        <replaceregexp 
+            file="admin_profile/profiles/Admin.profile" 
+            match="(${lt}tabVisibilities>)" 
+            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.HH_Account${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
+
+        <!-- Account.Organization (default) -->
+        <replaceregexp 
+            file="admin_profile/profiles/Admin.profile" 
+            match="(${lt}tabVisibilities>)" 
+            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>false${lt}/default>${line.separator}      ${lt}personAccountDefault>false${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.Organization${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
+
+        <!-- Opportunity.NPSP_Default (default) -->
+        <replaceregexp 
+            file="admin_profile/profiles/Admin.profile" 
+            match="(${lt}tabVisibilities>)" 
+            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Opportunity.NPSP_Default${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
+        
+    </target>
 </project>
