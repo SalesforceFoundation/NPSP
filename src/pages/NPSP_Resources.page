@@ -34,14 +34,24 @@
             <div style="margin-top:40px; margin-bottom:55px;">
             <h4><span class="glyphicon glyphicon-cog" aria-hidden="true" style="padding-right:32px;"></span>Review Salesforce Fundamentals</h4>
                 <p>Free e-learning modules from Salesforce Help &amp; Training:</p>
-                <ul><li><a href="https://help.salesforce.com/HTTrainingModulesDetail?courseId=a1S30000000gjL0EAI" title="Getting Started: Nav Salesforce" target="_blank">Getting Started: Navigating Salesforce</a></li>
-                <li><a href="https://help.salesforce.com/HTTrainingModulesDetail?courseId=a1S30000000gnuYEAQ" title="Getting Started Administering Salesforce" target="_blank">Getting Started: Administering Salesforce</a></li>
-                <li><a href="https://help.salesforce.com/HTTrainingModulesDetail?courseId=a1S30000000grYDEAY" title="Getting Started with Reports and Dashboards" target="_blank">Getting Started with Reports &amp; Dashboards</a></li>
+                <ul><li><a href="https://powerofus.force.com/articles/Resource/Salesforce-Fundamentals-NPSP" title="Salesforce Fundamentals" target="_blank">Salesforce Fundamentals</a></li>
+                <li><a href="https://developer.salesforce.com/trailhead/trail/force_com_admin_beginner" title="Beginner Admin Trail" target="_blank">Beginner Admin Trail</a></li>
                 </ul>
                 </div>
       <!--END3Get Started: Fund-->  
       <!--4Get Started: NPSP-->
                 <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:32px;"></span>Get Started with the Nonprofit Starter Pack</h4>
+                
+                <div class="media" style="margin-bottom:60px;">
+                    <div class="pull-left"><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/trailhead_npo.png')}" alt="NPSP Trail"/>
+    </a>
+                    </div>
+  
+                    <div class="media-body">
+                    <h4 class="media-heading">Nonprofit Starter Pack Trail</h4>
+                    <p>Learn the basics of fundraising with the Nonprofit Starter Pack via this interactive learning path <a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" title="Nonprofit Fundraising Trail" target="_blank">this workbook</a> from Salesforce.</p>
+                    </div>
+                </div>
                 
                 <div class="media" style="margin-bottom:60px;">
                     <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
@@ -53,7 +63,7 @@
                     <p>The tutorials in <a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s" title="NPSP Workbook" target="_blank">this workbook</a> take you through some common Nonprofit Starter Pack workflows to manage donors and donations.</p>
                     </div>
                 </div>
-  
+
                 <div class="media" style="margin-bottom:40px;">
                     <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNPSP-Administrators-Guide-to-Importing-Donor-Data&entityId=ka080000000DMSTAA4&field=File__Body__s">
       <img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}"/></a>
@@ -81,7 +91,7 @@
             </div>
             <div class="media-body"><h4 class="media-heading">Salesforce Success Plan</h4>
             <p>Every Foundation customer has access to a Standard Success Plan including basic training, product documentation and support.</p>
-<a href="#" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
+<a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
             </div>
         </div>
 
@@ -105,7 +115,7 @@
    <!-- STARTThumbnails-->   
  <div class="row" style="margin-bottom:20px; padding-top:20px; background-color:#f7d93e; border-top-right-radius: 1em; border-top-left-radius: 1em;border-bottom-right-radius: 1em; border-bottom-left-radius: 1em;">
         <div class="col-xs-6 col-md-3">
-            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/prepare.png')}" class="img-responsive" alt="Prepare for Success" style="display: block; margin: 0 auto;"/></a>
+            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/prepare.png')}" class="img-responsive" alt="Prepare for Success" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
                   <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success" style="color: #4d4d4d; text-decoration: underline;" >1. Prepare for Success</a></h4>
                 </div>
@@ -113,14 +123,14 @@
         </div>
         
         <div class="col-xs-6 col-md-3">
-            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/configure.png')}" class="img-responsive" alt="Customize and Configure" style="display: block; margin: 0 auto;"/></a>
+            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/configure.png')}" class="img-responsive" alt="Customize and Configure" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
                   <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP" style="color: #4d4d4d; text-decoration: underline;">2. Customize &amp; Configure</a></h4>
                 </div>
             </div>
         </div>
         <div class="col-xs-6 col-md-3">
-            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/data.png')}" class="img-responsive" alt="Import Data" style="display: block; margin: 0 auto;"/></a>
+            <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/data.png')}" class="img-responsive" alt="Import Data" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
                   <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP" style="color: #4d4d4d; text-decoration: underline;">3. Import Data</a></h4>
                 </div>
@@ -128,7 +138,7 @@
         </div>
         
         <div class="col-xs-6 col-md-3">
-            <div class="thumbnail" style="background-color:#f7d93e;border:none;"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/deploy.png')}" class="img-responsive" alt="Deploy" style="display: block; margin: 0 auto;"/></a>
+            <div class="thumbnail" style="background-color:#f7d93e;border:none;"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/deploy.png')}" class="img-responsive" alt="Deploy" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
                   <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP" style="color: #4d4d4d; text-decoration: underline;">4. Deploy &amp; Adopt</a></h4>
                 </div>
