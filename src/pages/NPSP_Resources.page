@@ -49,7 +49,7 @@
   
                     <div class="media-body">
                     <h4 class="media-heading">Nonprofit Starter Pack Trail</h4>
-                    <p>Learn the basics of fundraising with the Nonprofit Starter Pack via this interactive learning path <a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" title="Nonprofit Fundraising Trail" target="_blank">this workbook</a> from Salesforce.</p>
+                    <p>Learn the basics of fundraising with the Nonprofit Starter Pack via <a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" title="Nonprofit Fundraising Trail" target="_blank">this interactive learning path</a> from Salesforce.</p>
                     </div>
                 </div>
                 
@@ -79,7 +79,7 @@
         <div class="col-md-6">
         <h2>Get Help</h2>
           <div class="media" style="margin-top:40px; margin-bottom:80px;">
-                <div class="pull-left"><a href="#"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/power-of-us-hub_rgb.png')}" width="130" alt="Power of Us Hub"/></a>
+                <div class="pull-left"><a href="https://powerofus.force.com"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/power-of-us-hub_rgb.png')}" width="130" alt="Power of Us Hub"/></a>
                 </div>
                 <div class="media-body"><h4 class="media-heading">Power of Us Hub Community</h4><p>Get answers and access nonprofit specific resources in this vibrant, online community.</p>
 <a href="https://powerofus.force.com" target="_blank"><button type="button" class="btn btn-primary">Login now &raquo;</button></a>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="media" style="margin-bottom:80px;">
-            <div class="pull-left"><a href="#"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/salesforce_logo.png')}" alt="Salesforce Success Plans"/></a>
+            <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/salesforce_logo.png')}" alt="Salesforce Success Plans"/></a>
             </div>
             <div class="media-body"><h4 class="media-heading">Salesforce Success Plan</h4>
             <p>Every Foundation customer has access to a Standard Success Plan including basic training, product documentation and support.</p>
@@ -97,7 +97,7 @@
 
         <div class="media">
           <div class="pull-left">
-           <a href="#"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
+           <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
           </div>
           <div class="media-body"><h4 class="media-heading">Foundation Office Hours</h4>
           <p>Join us for our weekly office hours and get your questions answered by experts from the Power of Us Hub.</p>
