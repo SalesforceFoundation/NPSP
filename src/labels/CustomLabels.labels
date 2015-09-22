@@ -2981,6 +2981,22 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>This setting lets you map fields from the Recurring Donation record to the Recurring Donation&apos;s child Opportunities.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRDFieldMapOppField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFieldMapOppField</shortDescription>
+        <value>no longer used.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDFieldMapRDField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDFieldMapRDField</shortDescription>
+        <value>no longer used.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRDLastRun</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
