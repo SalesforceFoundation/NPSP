@@ -43,7 +43,7 @@
                 <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:32px;"></span>Get Started with the Nonprofit Starter Pack</h4>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/trailhead_npo.png')}" alt="NPSP Trail"/>
+                    <div class="pull-left"><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/trailhead_npo.png')}" alt="NPSP Trail"/>
     </a>
                     </div>
   
@@ -54,7 +54,7 @@
                 </div>
                 
                 <div class="media" style="margin-bottom:60px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
+                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNonprofit-Starter-Pack-Workbook%3Fpopup%3Dfalse&entityId=ka080000000DPGdAAO&field=File__Body__s" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}" alt="NPSP Workbook"/>
     </a>
                     </div>
   
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="media" style="margin-bottom:40px;">
-                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNPSP-Administrators-Guide-to-Importing-Donor-Data&entityId=ka080000000DMSTAA4&field=File__Body__s">
+                    <div class="pull-left"><a href="https://powerofus.force.com/servlet/fileField?retURL=%2Farticles%2FResource%2FNPSP-Administrators-Guide-to-Importing-Donor-Data&entityId=ka080000000DMSTAA4&field=File__Body__s" target="_blank">
       <img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/workbook.png')}"/></a>
                     </div>
                     <div class="media-body">
@@ -79,7 +79,7 @@
         <div class="col-md-6">
         <h2>Get Help</h2>
           <div class="media" style="margin-top:40px; margin-bottom:80px;">
-                <div class="pull-left"><a href="https://powerofus.force.com"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/power-of-us-hub_rgb.png')}" width="130" alt="Power of Us Hub"/></a>
+                <div class="pull-left"><a href="https://powerofus.force.com" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/power-of-us-hub_rgb.png')}" width="130" alt="Power of Us Hub"/></a>
                 </div>
                 <div class="media-body"><h4 class="media-heading">Power of Us Hub Community</h4><p>Get answers and access nonprofit specific resources in this vibrant, online community.</p>
 <a href="https://powerofus.force.com" target="_blank"><button type="button" class="btn btn-primary">Login now &raquo;</button></a>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="media" style="margin-bottom:80px;">
-            <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/salesforce_logo.png')}" alt="Salesforce Success Plans"/></a>
+            <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/salesforce_logo.png')}" alt="Salesforce Success Plans"/></a>
             </div>
             <div class="media-body"><h4 class="media-heading">Salesforce Success Plan</h4>
             <p>Every Foundation customer has access to a Standard Success Plan including basic training, product documentation and support.</p>
@@ -97,7 +97,7 @@
 
         <div class="media">
           <div class="pull-left">
-           <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
+           <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
           </div>
           <div class="media-body"><h4 class="media-heading">Foundation Office Hours</h4>
           <p>Join us for our weekly office hours and get your questions answered by experts from the Power of Us Hub.</p>
@@ -117,7 +117,7 @@
         <div class="col-xs-6 col-md-3">
             <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/prepare.png')}" class="img-responsive" alt="Prepare for Success" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
-                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success" style="color: #4d4d4d; text-decoration: underline;" >1. Prepare for Success</a></h4>
+                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Prepare-for-Success" style="color: #4d4d4d; text-decoration: underline;"  target="_blank">1. Prepare for Success</a></h4>
                 </div>
             </div>
         </div>
@@ -125,14 +125,14 @@
         <div class="col-xs-6 col-md-3">
             <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/configure.png')}" class="img-responsive" alt="Customize and Configure" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
-                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP" style="color: #4d4d4d; text-decoration: underline;">2. Customize &amp; Configure</a></h4>
+                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Configure-and-Customize-NPSP" style="color: #4d4d4d; text-decoration: underline;" target="_blank">2. Customize &amp; Configure</a></h4>
                 </div>
             </div>
         </div>
         <div class="col-xs-6 col-md-3">
             <div class="thumbnail" style="background-color:#f7d93e; border:none;"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/data.png')}" class="img-responsive" alt="Import Data" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
-                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP" style="color: #4d4d4d; text-decoration: underline;">3. Import Data</a></h4>
+                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Import-Data-NPSP" style="color: #4d4d4d; text-decoration: underline;" target="_blank">3. Import Data</a></h4>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@
         <div class="col-xs-6 col-md-3">
             <div class="thumbnail" style="background-color:#f7d93e;border:none;"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP" target="_blank"><img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/deploy.png')}" class="img-responsive" alt="Deploy" style="display: block; margin: 0 auto;"/></a>
                 <div class="caption">
-                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP" style="color: #4d4d4d; text-decoration: underline;">4. Deploy &amp; Adopt</a></h4>
+                  <h4 class="text-center"><a href="https://powerofus.force.com/articles/Resource/Deploy-and-Empower-NPSP" style="color: #4d4d4d; text-decoration: underline;" target="_blank">4. Deploy &amp; Adopt</a></h4>
                 </div>
             </div>
         </div>
