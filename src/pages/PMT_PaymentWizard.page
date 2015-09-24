@@ -15,7 +15,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
     </apex:outputPanel>
     
     <apex:outputPanel rendered="{!AND(NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
-        <apex:sectionHeader title="{!$ObjectType.npe01__OppPayment__c.LabelPlural}" subtitle="{!$Label.pmtWizardSubtitle}}"/>
+        <apex:sectionHeader title="{!$ObjectType.npe01__OppPayment__c.LabelPlural}" subtitle="{!$Label.pmtWizardSubtitle}"/>
         <apex:pageBlock title="{!$Label.pmtWizardSectionTitle}">
             <apex:pageBlockSection id="theGrid" columns="2" rendered="{!NOT(ISNULL(currentOpp))}">       
                 <apex:pageBlockSectionItem > 
