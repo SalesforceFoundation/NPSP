@@ -188,7 +188,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     addr.addError(error.Full_Message__c);
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
                 }
-                else if (UTIL_Describe.isObjectIdThisType(objId, 'Address__c')) {
+                else if (UTIL_Describe.isObjectIdThisType(objId, UTIL_Namespace.StrTokenNSPrefix('Address__c'))) {
                     Address__c addr = mapAddrIdAddr.get(objId);
                     addr.addError(error.Full_Message__c);
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
