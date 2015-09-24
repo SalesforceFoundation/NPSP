@@ -1929,4 +1929,75 @@ private with sharing class BDI_DataImport_TEST {
             system.assert(listDI[i].FailureInformation__c.contains(flsError));
         }
     }
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with invalid home addresses 
+    verify:
+        address objects created
+        valid contacts' mailing address set
+        valid hh accounts' billing address set
+        error logged on correct data import record
+    **********************************************************************************************************/            
+    static testMethod void testInvalidAddressHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'This is an invalid city because it is over 40 characters that Salesforce limits on Accounts and Contacts!';
+        listDI[2].Home_City__c = 'Portland';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(2, listAddr.size());
+        system.assertEquals('Portland', listAddr[0].MailingCity__c);
+        system.assertEquals('Seattle', listAddr[1].MailingCity__c);
+        
+        listDI = [select Status__c, FailureInformation__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c 
+            from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(3, listDI.size());
+        system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[1].Id); 
+        system.assertEquals(listDI[1].HomeAddressImported__c, null);
+        system.assertEquals(listDI[2].HomeAddressImported__c, listAddr[0].Id);
+
+        system.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
+        system.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
+        system.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
+
+        system.assertEquals(label.bdiImported, listDI[0].Status__c);        
+        system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
+        system.assertEquals(label.bdiImported, listDI[2].Status__c);        
+
+        system.assertEquals(null, listDI[0].FailureInformation__c);        
+        system.assert(listDI[1].FailureInformation__c.contains('invalid city'));        
+        system.assertEquals(null, listDI[2].FailureInformation__c);        
+
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(3, listAcc.size());
+        system.assertEquals('Seattle', listAcc[0].BillingCity);
+        system.assertEquals(null, listAcc[1].BillingCity);
+        system.assertEquals('Portland', listAcc[2].BillingCity);
+                
+        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        system.assertEquals(3, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertEquals('Seattle', listCon[0].MailingCity);
+        system.assertEquals(null, listCon[1].MailingCity);
+        system.assertEquals('Portland', listCon[2].MailingCity);
+    }
 }

@@ -167,10 +167,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         hasRunAddrTrigger = true;
         
-        // if our work to propogate the address fails, we want to prevent the save to the address,
-        // so we need to tell TDTM to propogate the error to Salesforce, rather than just logging it.
-        TDTM_TriggerHandler.isPropogateErrorsFromTrigger = true;
-        
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
         if (mapAccIdAddr.size() > 0)        
@@ -178,8 +174,29 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
        
         if (mapAddrIdAddr.size() > 0) 
             updateAddrOverrides(mapAddrIdAddr, dmlWrapper);        
+
+        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with 
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLWithRollback(dmlWrapper, false);
+        if (errors.errorsExist) {
+            for (Error__c error : errors.errorRecords) {
+                ID objId = ERR_Handler.getErrorObjectId(error);
+                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
+                if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
+                    Address__c addr = mapAccIdAddr.get(objId);
+                    addr.addError(error.Full_Message__c);
+                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+                }
+                else if (UTIL_Describe.isObjectIdThisType(objId, 'Address__c')) {
+                    Address__c addr = mapAddrIdAddr.get(objId);
+                    addr.addError(error.Full_Message__c);
+                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+                }
+            }
+        }
         
-        return dmlWrapper;
+        return null;
     }
     
     

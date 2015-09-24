@@ -1244,20 +1244,29 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         // reset it back to false, or else the newly inserted addresses won't
         // propogate to the hh account and contacts.
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
-        //insert mapDIIdToAddr.values();   
-        list<Database.SaveResult> listSR = database.insert(listAddrInsert, false);
-        for (integer i = 0; i < listSR.size(); i++) {
-            Database.SaveResult sr = listSR[i];
-            if (!sr.isSuccess()) {
-                LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
-            }
+
+        // two prong strategy! if any address object fails to save, and we allow
+        // salesforce to do the retry with the other records (ie, calling insert with AllOrNothing=false),
+        // our hasRunAddrTrigger won't get cleared for the retries, and address propagation will not occur.
+        // solution: first try to save all with AllOrNothing=true.  Then if we hit any failures, do one 
+        // address record at a time, so we can reset hasRunAddTrigger before each insert.
+        try  {
+            insert listAddrInsert;        
+        } catch (exception ex) {
+            for (integer i = 0; i < listAddrInsert.size(); i++) {
+                ADDR_Addresses_TDTM.hasRunAddrTrigger = false;        
+                Database.SaveResult sr = database.insert(listAddrInsert[i], false);
+                if (!sr.isSuccess()) {
+                    LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
+                }
+            }        
         }
 
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
-                if (addr != null) {
+                if (addr != null && addr.Id != null) {
                     di.HomeAddressImported__c = addr.Id;
                     di.HomeAddressImportStatus__c = label.bdiCreated;
                 }
@@ -1477,7 +1486,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
         for (DataImport__c di: listDI) {
             if (di.DonationImported__c == null) {
                 Opportunity opp = mapDIIdToOpp.get(di.Id);
-                if (opp != null) {
+                if (opp != null && opp.Id != null) {
                     di.DonationImported__c = opp.Id;
                     di.DonationImportStatus__c = label.bdiCreated;
                 }

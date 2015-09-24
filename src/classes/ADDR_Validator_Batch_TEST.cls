@@ -179,7 +179,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
         contact.MailingPostalCode = '90210';
-        contact.MailingState = 'single-zip';
+        contact.MailingCity = 'single-zip';
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -229,7 +229,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         addressContact.MailingCountry = 'United States';
         
         Contact zipContact = new contact(firstname='Test', lastname='Person'); 
-        zipContact.MailingState = 'single-zip';
+        zipContact.MailingCity = 'single-zip';
         zipContact.MailingPostalCode = '90210';
         
         insert new Contact[] {addressContact, zipContact};
