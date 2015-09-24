@@ -317,16 +317,29 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        // avoid auto-affiliation creation
             AFFL_Affiliations_TDTM.doNotRunForContacts = true;
             AFFL_Affiliations_TDTM.hasRunForAccounts = true;
+            
+            // temporarily disable address management
+            boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
+            boolean orgAcctAddrEnabled = UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c;
+            UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = true;
+            UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c = false;
 
 	        // convert the lead
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
+
+            // restore address management
+            UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = hhAcctAddrDisabled;
+            UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c = orgAcctAddrEnabled;
 
             // fix the account that lead conversion created
             if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
             	string strSoql = 'select id, firstname, lastname,';
             	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
             	   strSoql += ' recordtypeId,';
-            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email';
+            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += ' MailingStateCode, MailingCountryCode, ';
+            	strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
                 strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
             	Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
@@ -361,6 +374,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
 	                    update con;
 	                }
+	            }
+	            
+	            // now create the address object if appropriate
+	            if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
+	               Address__c addr = new Address__c();
+		            addr.Household_Account__c = myAccount.Id;
+		            addr.Default_Address__c = true;
+		            addr.Latest_Start_Date__c = system.today();
+		            addr.Latest_End_Date__c = null;
+		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+		            insert addr;         
 	            }
             }
 
