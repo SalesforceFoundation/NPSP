@@ -317,16 +317,29 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	        // avoid auto-affiliation creation
             AFFL_Affiliations_TDTM.doNotRunForContacts = true;
             AFFL_Affiliations_TDTM.hasRunForAccounts = true;
+            
+            // temporarily disable address management
+            boolean hhAcctAddrDisabled = UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c;
+            boolean orgAcctAddrEnabled = UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c;
+            UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = true;
+            UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c = false;
 
 	        // convert the lead
 	        Database.LeadConvertResult lcr = Database.convertLead(lc);
+
+            // restore address management
+            UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = hhAcctAddrDisabled;
+            UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c = orgAcctAddrEnabled;
 
             // fix the account that lead conversion created
             if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
             	string strSoql = 'select id, firstname, lastname,';
             	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
             	   strSoql += ' recordtypeId,';
-            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, HomePhone, Email';
+            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
+                if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
+                    strSoql += ' MailingStateCode, MailingCountryCode, ';
+            	strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
                 strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
             	Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
@@ -362,34 +375,42 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	                    update con;
 	                }
 	            }
+	            
+	            // now create the address object if appropriate
+	            if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
+	               Address__c addr = new Address__c();
+		            addr.Household_Account__c = myAccount.Id;
+		            addr.Default_Address__c = true;
+		            addr.Latest_Start_Date__c = system.today();
+		            addr.Latest_End_Date__c = null;
+		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+		            insert addr;         
+	            }
             }
 
-            //clean up the extra OCR Issue #214
+            //clean up the extra OCR Issue
             // if we create an opp, its a 1x1 (or HH), and its merged into an existing contact
             if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && strConId != 'NEW_CONTACT'){
 
                 //get the new OCRs
                 list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
+                    isPrimary = true and
                     OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
 
-                //if there are more than one, find the primary with the right role, and delete
-                //the extraneous ones
+                //if there are more than one delete the extraneous ones
                 if (ocrList != null && ocrList.size() > 1){
                     list<OpportunityContactRole> dlist = new list<OpportunityContactRole>();
-                    for (OpportunityContactRole ocr : ocrList){
-                        if (!ocr.IsPrimary && dlist.size()+1 != ocrList.size()){
-                            dlist.add(ocr);
-                        }
-                        else if (ocr.Role != ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c && dlist.size()+1 != ocrList.size()){
-                            dlist.add(ocr);
-                        }
+                    for (integer i = 1; i < ocrList.size(); i++){
+                            dlist.add(ocrList[i]);
                     }
                     delete dlist;
 
                     //on delete of one ocr, the other 'isPrimary' is set to false
                     //so we need to issue an udpate to correct it.
+                    //also make sure it has the correct role
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
+                    ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
                     update ocr;
                 }
 
