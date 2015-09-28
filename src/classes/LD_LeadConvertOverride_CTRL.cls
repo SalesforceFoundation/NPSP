@@ -388,32 +388,29 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 	            }
             }
 
-            //clean up the extra OCR Issue #214
+            //clean up the extra OCR Issue
             // if we create an opp, its a 1x1 (or HH), and its merged into an existing contact
             if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel() && strConId != 'NEW_CONTACT'){
 
                 //get the new OCRs
                 list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
+                    isPrimary = true and
                     OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
 
-                //if there are more than one, find the primary with the right role, and delete
-                //the extraneous ones
+                //if there are more than one delete the extraneous ones
                 if (ocrList != null && ocrList.size() > 1){
                     list<OpportunityContactRole> dlist = new list<OpportunityContactRole>();
-                    for (OpportunityContactRole ocr : ocrList){
-                        if (!ocr.IsPrimary && dlist.size()+1 != ocrList.size()){
-                            dlist.add(ocr);
-                        }
-                        else if (ocr.Role != ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c && dlist.size()+1 != ocrList.size()){
-                            dlist.add(ocr);
-                        }
+                    for (integer i = 1; i < ocrList.size(); i++){
+                            dlist.add(ocrList[i]);
                     }
                     delete dlist;
 
                     //on delete of one ocr, the other 'isPrimary' is set to false
                     //so we need to issue an udpate to correct it.
+                    //also make sure it has the correct role
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
+                    ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
                     update ocr;
                 }
 
