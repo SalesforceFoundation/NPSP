@@ -73,12 +73,12 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 </apex:pageBlockSectionItem>
             </apex:pageblocksection>
             <div style="text-align: center;">
-            <apex:commandButton action="{!calculate}" rerender="theTable" value="{!$Label.pmtWizardBtnCalcPayments}"/></div>
+            <apex:commandButton action="{!calculate}" value="{!$Label.pmtWizardBtnCalcPayments}"/></div>
         </apex:pageBlock>
     </apex:form>
 
-    <apex:form >
-        <apex:pageBlock title="{!$Label.pmtWizardToBeCreated}" mode="edit" rendered="{!haveAmount}">
+    <apex:form>
+        <apex:pageBlock title="{!$Label.pmtWizardToBeCreated}" mode="edit" rendered="{!OR(haveAmount, removePaidPayments)}">
             <apex:pageBlockTable id="theTable" value="{!payments}" var="p" style="margin-bottom:12px;"> 
                 <apex:column >
                     <apex:facet name="header">{!$Label.pmtWizardPaymentNumber}</apex:facet>

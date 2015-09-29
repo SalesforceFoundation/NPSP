@@ -331,4 +331,73 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.Pagereference pr = controller.RemovePaidPayments();             
         Test.stopTest();
     }    
+
+
+    public static testMethod void test_RemovePaidPayments() {
+        
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+        Opportunity opp1 = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            Amount = 150,
+            closedate = date.newInstance(2001,12,12),
+            stagename = closedWonStage()
+        );
+        insert opp1;
+        
+        npe01__OppPayment__c[] opmtUpdate = [select id,npe01__paid__c, npe01__payment_amount__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
+        opmtUpdate[0].npe01__payment_amount__c = 50;
+        system.assertEquals(true, opmtUpdate[0].npe01__paid__c);
+        update opmtUpdate;
+        
+        npe01__OppPayment__c newOpmt = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp1.id,
+            npe01__Payment_Amount__c = 100,
+            npe01__Paid__c = true,
+            npe01__Payment_Date__c = date.newInstance(2001,12,12)
+        );
+        insert newOpmt;
+        
+        Test.startTest();
+        
+        npe01__OppPayment__c[] opmtAllStart = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__paid__c, npe01__written_off__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
+        system.assertEquals(2, opmtAllStart.size());
+
+        // create the page 
+        PageReference pageRef=Page.PMT_PaymentWizard; 
+        Test.setCurrentPage(pageRef);
+
+        // set the parameter for the contact
+        ApexPages.currentPage().getParameters().put('id', opp1.id);
+        ApexPages.currentPage().getParameters().put('wtype', 'payment');
+        
+        // instantiate the controller
+        PMT_PaymentWizard_CTRL controller=new PMT_PaymentWizard_CTRL();
+        controller.PaymentWriteoffWizard();
+        
+        // set values
+        system.assertEquals(false, controller.haveAmount);        
+        controller.RemovePaidPayments();
+        system.assertEquals(true, controller.removePaidPayments);
+        controller.intervalUnit = 'Monthly';
+        controller.numberOfPayments = 4;
+        controller.samplePayment.npe01__Scheduled_Date__c = date.newInstance(2001,12,12);
+        
+         // click calculate
+        pagereference ref = controller.calculate();
+        system.assertEquals(4, controller.getPayments().size());
+        
+        // save the page
+        string nextPage=controller.createPayments().getUrl(); 
+
+        // look for the data
+        npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__scheduled_date__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
+        system.assertEquals(4, opmt.size());
+    }
 }

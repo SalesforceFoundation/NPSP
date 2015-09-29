@@ -181,7 +181,9 @@ public with sharing class TDTM_TriggerHandler {
     
     private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
     List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
-       Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+       Map<Id,Sobject> nm;
+       if(newlist != null) nm = new Map<Id,Sobject>(newlist);
+       else nm = new Map<Id,Sobject>();
        
        Map<Id,Sobject> om;
        if(oldlist != null) om = new Map<Id,SObject>(oldlist);

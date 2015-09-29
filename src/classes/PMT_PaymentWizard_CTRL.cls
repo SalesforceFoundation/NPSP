@@ -157,11 +157,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
     
     public pageReference calculate() {
-        if (haveAmount) {
+        if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
                         
             Decimal OppAmountFloat = currentOpp.npe01__Amount_Outstanding__c;
+            if (removePaidPayments == true)
+                OppAmountFloat = currentOpp.Amount;
     
             //divide the amount by the number of installments, and deal with the remainder
             Decimal paymentAmount = OppAmountFloat.divide(numberOfPayments, 2, system.roundingmode.FLOOR);
@@ -284,7 +286,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        
 	        // If deleting paid Payments, delete paid payments
 	        npe01__oppPayment__c[] oldPaid = [select id from npe01__oppPayment__c where npe01__opportunity__c = :currentOpp.id and npe01__paid__c = true];
-	        if (!old.isEmpty() && removePaidPayments == true) delete oldPaid;
+	        if (!oldPaid.isEmpty() && removePaidPayments == true) delete oldPaid;
 	        
 	        // get the new payments into a list
 	        npe01__oppPayment__c[] pmts = new npe01__oppPayment__c[0];
