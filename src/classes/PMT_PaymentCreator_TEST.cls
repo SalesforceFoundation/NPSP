@@ -30,6 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date 2014
+* @group Payments
 * @description tests for the PaymentCreator class 
 */
 
