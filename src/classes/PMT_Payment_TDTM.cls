@@ -31,6 +31,7 @@
 * @author Salesforce.com Foundation 
 * @date 2014 
 * @group Payments
+* @group-content ../../ApexDocContent/Payments.htm
 * @description trigger handler on Opps for supporting Payments 
 */
 public class PMT_Payment_TDTM extends TDTM_Runnable {
