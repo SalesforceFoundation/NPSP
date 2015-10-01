@@ -2082,20 +2082,43 @@ public class RD_RecurringDonations_TEST {
         RD.npe03__Next_Payment_Date__c = system.today().addMonths(1).toStartOfMonth().addDays(-1);
         rdlist.add(RD);
                 
+        RD = RD.clone(false);
+        RD.Name = 'test30th';
+        integer iday = 30;
+        if (date.daysInMonth(system.today().year(), system.today().Month()) < 30)
+            iday = 28;
+        RD.npe03__Date_Established__c = system.today().toStartOfMonth().addDays(iday-1);
+        RD.npe03__Next_Payment_Date__c = null;
+        rdlist.add(RD);
+
         test.startTest();
         insert rdlist;
         test.stopTest();
         
-        list<Opportunity> listOpp = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test28th'];
-        system.assertEquals(12, listOpp.size());
-        for (Opportunity opp : listOpp) {
+        list<Opportunity> listOpp28th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test28th' order by CloseDate];
+        system.assertEquals(12, listOpp28th.size());
+        for (Opportunity opp : listOpp28th) {
             system.assertEquals(28, opp.CloseDate.Day());
         }
         
-        listOpp = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'testEndOfMonth'];
-        system.assertEquals(12, listOpp.size());
-        for (Opportunity opp : listOpp) {
+        list<Opportunity> listOpp30th = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'test30th' order by CloseDate];
+        system.assertEquals(12, listOpp30th.size());
+        for (Opportunity opp : listOpp30th) {
+            if (iday <= date.daysInMonth(opp.CloseDate.year(), opp.CloseDate.Month()))
+                system.assertEquals(iday, opp.CloseDate.Day());
+            else
+                system.assertEquals(date.daysInMonth(opp.CloseDate.year(), opp.CloseDate.Month()), opp.CloseDate.Day());            
+        }
+
+        list<Opportunity> listOppEnd = [select Id, CloseDate from Opportunity where npe03__Recurring_Donation__r.Name = 'testEndOfMonth' order by CloseDate];
+        system.assertEquals(12, listOppEnd.size());
+        for (Opportunity opp : listOppEnd) {
             system.assertEquals(opp.CloseDate.addMonths(1).toStartOfMonth().addDays(-1).Day(), opp.CloseDate.Day());
+        }
+        
+        for (integer i = 0; i < 12; i++) {
+            system.assertEquals(listOpp28th[i].CloseDate.Month(), listOpp30th[i].CloseDate.Month());
+            system.assertEquals(listOpp28th[i].CloseDate.Month(), listOppEnd[i].CloseDate.Month());
         }
     }
 

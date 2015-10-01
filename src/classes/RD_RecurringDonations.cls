@@ -1176,7 +1176,8 @@ public with sharing class RD_RecurringDonations {
     private static date dtEndOfMonthFixup(Date dt, npe03__Recurring_Donation__c rd) {
         if (dt.day() >= 28) {
             // only push to end of month if we are pretty sure they weren't trying specifically for the 28th-30th.
-            if (rd.npe03__Date_Established__c != null && rd.npe03__Date_Established__c.day() >= 28)
+            if (rd.npe03__Date_Established__c != null && rd.npe03__Date_Established__c.day() >= 28 &&
+                rd.npe03__Date_Established__c.day() <= date.daysInMonth(dt.year(), dt.Month()))
                 dt = date.newInstance(dt.year(), dt.month(), rd.npe03__Date_Established__c.day());
             else
                 dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
