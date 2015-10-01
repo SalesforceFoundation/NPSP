@@ -162,10 +162,10 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
         set<string> allFields = getFieldNamesFromSpec(ons.Opportunity_Name_Format__c);
 
-        list<Opportunity> testOpp = database.query(getOppQuery(allFields) + ' LIMIT 1');
-        list<Contact> testCon = database.query(getConQuery(allFields) + ' LIMIT 1');
+        Opportunity testOpp = new Opportunity();
+        Contact testCon = new Contact();
         
-        string s = replaceFieldNamesWithValues(testOpp[0], testCon[0], ons);
+        string s = replaceFieldNamesWithValues(testOpp, testCon, ons);
 
         s = system.now().format(ons.Date_Format__c);
     }
@@ -393,6 +393,9 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
         if (obj==null) return null;
         Schema.DisplayType dt = UTIL_Describe.getFieldDisplaytype(obj.getSObjectType().getDescribe().getName(),fieldName);
         string result = '';
+
+        if (obj.get(fieldName.trim())==null)
+            return null;
 
         //If this is a Date or DateTime field, use the specified formatting if there is one
         if (dt == Schema.DisplayType.Date || dt == Schema.DisplayType.DateTime) {
