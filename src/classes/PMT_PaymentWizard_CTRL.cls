@@ -30,16 +30,24 @@
 /**
 * @author Evan Callahan & Steve Andersen
 * @date 2008/7 (2.1)
+* @group Payments
 * @description Controller for payment creation wizard
 */
 public with sharing class PMT_PaymentWizard_CTRL {
 
-    //Opportunity for the opp we're coming from
+    /*******************************************************************************************************
+    * @description Opportunity for the opp we're coming from
+    */ 
     public Opportunity CurrentOpp { get; private set; }
 
+    /*******************************************************************************************************
+    * @description does the Opp have an outstanding balance
+    */ 
     public boolean haveAmount { get; private set; }
     
-    // Class that stores numbered payment
+    /*******************************************************************************************************
+    * @description Class that stored numbered payment
+    */ 
     public class payment {
         public integer paymentNumber { get; private set; }
         public npe01__OppPayment__c oppPayment { get; set; }
@@ -50,44 +58,73 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
     }
 
-    //values from payments mappings
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsToRemove = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    
-    //which wizard?
+    /*******************************************************************************************************
+    * @description is this the Writeoff wizard
+    */ 
     public boolean isWriteoffWizard{get; set;}
-    public boolean isScheduleWizard{get; set;}
+
+    /*******************************************************************************************************
+    * @description is this the Schedule Payments wizard
+    */ 
+    public boolean isScheduleWizard{get; set;}    
     
-    
-    //list of payments
+    /*******************************************************************************************************
+    * @description list of new payments to be created
+    */ 
     list<payment> newPayments = new list<payment>();
-    //get the payments
+
+    /*******************************************************************************************************
+    * @description get the new payments list
+    * @return List<Payment> the list of new payments to be created
+    */ 
     public List<payment> getPayments() {
         return newPayments ;
     }
   
+    /*******************************************************************************************************
+    * @description holds a sample payment object for use on the page
+    */ 
     public npe01__oppPayment__c samplePayment { get; set; }
+
+    /*******************************************************************************************************
+    * @description holds the payment to represent a writeoff of outstanding balance
+    */ 
     public npe01__oppPayment__c writeoffPayment { get; set; }
     
-    //number of outstanding payments for the opp
+    /*******************************************************************************************************
+    * @description number of outstanding payments for the opp
+    */ 
     public integer outstanding_payments {get; set;}
     
-    //decimal for amount float
+    /*******************************************************************************************************
+    * @description decimal for amount float
+    */ 
     public Decimal OppAmountFloat { get; set; }
 
-    //integer for the number of installments to create
+    /*******************************************************************************************************
+    * @description integer for the number of installments to create
+    */ 
     public Integer numberOfPayments { get; set; }
 
-    //integer to hold the interval chosen
+    /*******************************************************************************************************
+    * @description integer to hold the interval chosen
+    */ 
     public Integer interval { get; set; }
     
-    //boolean to remove paid payments and create a new schedule
+    /*******************************************************************************************************
+    * @description boolean to remove paid payments and create a new schedule
+    */ 
     public boolean removePaidPayments { get; set; }
 
-    //public npe01__Payments_Settings__c PaymentsSettings;
+    /*******************************************************************************************************
+    * @description holds Contact & Org Settings that contain the payment related settings
+    */ 
     public npe01__Contacts_and_Orgs_Settings__c PaymentsSettings;
     
+    /*******************************************************************************************************
+    * @description gets the payment related settings
+    * @return npe01__Contacts_and_Orgs_Settings__c the settings object
+    */ 
     public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (PaymentsSettings == null)
            PaymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -95,7 +132,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
         return PaymentsSettings;
     }
   
-    //constructor
+    /*******************************************************************************************************
+    * @description Constructor for the wizard that initializes data structures
+    */ 
     public PMT_PaymentWizard_CTRL() {
         
         if(ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
@@ -114,10 +153,22 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }       
     }
     
+    /*******************************************************************************************************
+    * @description initializes data for the Payment wizard
+    * @return void
+    */ 
     public void SetupPaymentWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
+        
+        // requery the Opportunity for all fields that we need.
         String query = 'select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c';
-       
+        // add any opportunity fields from payment field mappings
+        for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
+            npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
+            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {               
+                query += ', ' + pfms.npe01__Opportunity_Field__c;
+            }   
+        }       
         //if currencyiso field exists add it to query for use later
         if(Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null)
             query = query + ',CurrencyIsoCode';
@@ -137,6 +188,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description initializes data for the Writeoff wizard
+    * @return void
+    */ 
     public void PaymentWriteoffWizard() {
         opportunity[] o = [select name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c from Opportunity where id =:ApexPages.currentPage().getParameters().get('id')];
         if (o.isEmpty()) {
@@ -156,6 +211,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description ActionMethod for the Calculate button that given the current opp outstanding balance, 
+    * creates the specified new payments to cover the amount.
+    * @return PageReference null
+    */ 
     public pageReference calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
@@ -198,7 +258,17 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 //in multicurrency SFDC set the payment currency field to equal the opp currency
                 if(PaymentCurrencyField != null && OppCurrencyField != null)
                     thisPayment.oppPayment.put(PaymentCurrencyField,CurrentOpp.get(OppCurrencyField));
-                
+                    
+                // modify new payment records with any Opp-Payment Mappings.
+                if (PMT_PaymentCreator.paymentMappings.size() > 0) {
+                    for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
+                        npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
+                        string x = pfms.npe01__Opportunity_Field__c;
+                        if (currentOpp.get(x) != null)
+                            thisPayment.oppPayment.put(pfms.npe01__Payment_Field__c, currentOpp.get(x));
+                    }
+                }   
+                                    
                 //put the payment in the list
                 newPayments.add(thisPayment);
     
@@ -211,10 +281,15 @@ public with sharing class PMT_PaymentWizard_CTRL {
                     nextDate = nextDate.addYears(interval);
                 } 
             }
+            
         }
         return null;
     }
     
+    /*******************************************************************************************************
+    * @description ActionMethod for the WriteOff button
+    * @return PageReference the Opp's detail page on success, null on failure.
+    */ 
     public pageReference writeoff() {
     	Savepoint sp = Database.setSavepoint();
     	try {
@@ -239,7 +314,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
     	}
     }
 
-    //list of items for picklist of the number of payments to be created
+    /*******************************************************************************************************
+    * @description list of items for picklist of the number of payments to be created
+    * @return List<SelectOption>
+    */ 
     public List<SelectOption> getItems() {
         List<SelectOption> options = new List<SelectOption>();
         Decimal maxPayments;
@@ -255,7 +333,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
         return options;
     }
 
-    //list of items for picklist of the interval between payments to be created
+    /*******************************************************************************************************
+    * @description list of items for picklist of the interval between payments to be created
+    * @return List<SelectOption>
+    */ 
     public List<SelectOption> getIntervals() {
         List<SelectOption> options = new List<SelectOption>();
         for (integer i=1; i<=12; i++) {
@@ -265,10 +346,15 @@ public with sharing class PMT_PaymentWizard_CTRL {
         return options;
     }
 
-    //the unit of the interval
+    /*******************************************************************************************************
+    * @description the unit of the interval
+    */ 
     public String intervalUnit { get; set; }
 
-    //list of items for picklist of the interval unit between payments to be created
+    /*******************************************************************************************************
+    * @description list of items for picklist of the interval unit between payments to be created
+    * @return List<SelectOption>
+    */ 
     public List<SelectOption> getIntervalUnits() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('Week','Week'));
@@ -277,6 +363,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
         return options;
     }
 
+    /*******************************************************************************************************
+    * @description ActionMethod for the Create Payments button
+    * @return PageReference the Opp's detail page on success, null on failure.
+    */ 
     public PageReference createPayments() {
     	Savepoint sp = Database.setSavepoint();
         try {
@@ -308,6 +398,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description ActionMethod for the Remove Paid Payments button, which sets the internal flag to
+    * track this.
+    * @return PageReference null
+    */ 
     public pageReference RemovePaidPayments() {
         removePaidPayments = true;
         return null;
