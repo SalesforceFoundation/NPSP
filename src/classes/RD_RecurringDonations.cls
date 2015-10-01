@@ -66,7 +66,7 @@
 *           delete non-closed Opps
 *           insertOppsOnRecurringDonationInsert
 *
-* Refresh Opportunities button or Nightly Batch on non open-ended:
+* Refresh Opportunities button on non open-ended:
 *   evaluateRecurringDonationsForNewOppInsert 
 *       delete non-closed Opps
 *       insertOppsOnRecurringDonationInsert

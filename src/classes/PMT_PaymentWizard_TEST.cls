@@ -30,6 +30,7 @@
 /**
 * @author Evan Callahan & Steve Andersen
 * @date 2008/7 (2.1)
+* @group Payments
 * @description tests for payment creation wizard
 */
 @isTest
@@ -400,4 +401,91 @@ private class PMT_PaymentWizard_TEST {
         npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__scheduled_date__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp1.Id];
         system.assertEquals(4, opmt.size());
     }
+
+    /*********************************************************************************************************
+    * @description
+    operation:
+        create a new payment schedule for an open opportunity, which has Payment Mappings.
+    verify:
+        payments created
+        payment mappings correctly applied from Opportunity to each Payment
+    **********************************************************************************************************/            
+    public static testMethod void test_PaymentMappingsApplied() {
+        
+        // create our Payment Field Mapping
+        npe01__Payment_Field_Mapping_Settings__c pfmNew = new npe01__Payment_Field_Mapping_Settings__c();
+        pfmNew.npe01__Opportunity_Field__c = 'Name';
+        pfmNew.npe01__Payment_Field__c = 'npe01__Custom_Payment_Field__c';
+        pfmNew.Name = 'test field mapping';
+        insert pfmNew;
+        
+        // create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+        Opportunity opp = new Opportunity (
+            Name='Test Opp',
+            AccountId = acct.id,
+            Amount = 1300,
+            closedate = system.today(),
+            stagename = 'Pledged'
+        );
+        insert opp;
+        npe01__OppPayment__c[] pmts = new npe01__OppPayment__c[0];
+        pmts.add( new npe01__OppPayment__c (
+            npe01__opportunity__c = opp.id,
+            npe01__payment_amount__c = 100,
+            npe01__paid__c = true )
+        );
+        pmts.add( new npe01__OppPayment__c (
+            npe01__opportunity__c = opp.id,
+            npe01__payment_amount__c = 999,
+            npe01__paid__c = false )
+        );
+        insert pmts;
+         
+        Test.startTest();
+
+        // create the page 
+        PageReference pageRef=Page.PMT_PaymentWizard; 
+        Test.setCurrentPage(pageRef); 
+
+        // set the parameter for the contact
+        ApexPages.currentPage().getParameters().put('id', opp.id);
+        ApexPages.currentPage().getParameters().put('wtype', 'payment');
+        
+        // instantiate the controller
+        PMT_PaymentWizard_CTRL controller=new PMT_PaymentWizard_CTRL();
+        controller.SetupPaymentWizard();
+        
+        // get lists
+        List<SelectOption> l = controller.getItems();
+        l = controller.getIntervals();
+        l = controller.getIntervalUnits();
+        
+        // set values
+        controller.samplePayment.npe01__payment_method__c = 'Stock';
+        
+        // click calculate
+        pagereference ref = controller.calculate();
+        
+        // save the page
+        string nextPage=controller.createPayments().getUrl(); 
+
+        Test.stopTest();
+        
+        // look for the data
+        npe01__OppPayment__c[] opmt = [select id, npe01__payment_method__c, npe01__payment_amount__c, npe01__Custom_Payment_Field__c from npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id and npe01__paid__c = false];
+        system.assertEquals(12, opmt.size());
+        for (npe01__OppPayment__c pmt : opmt) {
+            system.assertEquals('Stock', pmt.npe01__payment_method__c);
+            system.assertEquals(100, pmt.npe01__payment_amount__c);
+            system.assertEquals(opp.Name, pmt.npe01__Custom_Payment_Field__c);
+        }
+
+        // verify that the right page displays 
+        System.assertEquals(nextPage, '/' + opp.id); 
+    }
+
 }
