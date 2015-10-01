@@ -601,7 +601,7 @@ private class REL_Relationships_TEST {
     
     /*********************************************************************************************************
     * @description For two contacts with no gender, manually set a gendered relationship. Change the status,
-    * verify gendered relationship type hasn't changed.
+    * verify gendered relationship type hasn't changed, but that the status has changed.
     */
     static testMethod void testNoGenderManualRelStatusChange(){
         if (strTestOnly != '*' && strTestOnly != 'testNoGenderManualRelStatusChange') return;
@@ -631,11 +631,17 @@ private class REL_Relationships_TEST {
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
         system.assertEquals('TestMaleType', recRel.npe4__Type__c);
 
+        recRel = [select id, npe4__Status__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
+        system.assertEquals('Former', recRel.npe4__Status__c);
+
         crel[0].npe4__Status__c = 'Current';
         update crel;
 
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
         system.assertEquals('TestMaleType', recRel.npe4__Type__c);
+
+        recRel = [select id, npe4__Status__c from npe4__Relationship__c where npe4__ReciprocalRelationship__c = :crel[0].id];
+        system.assertEquals('Current', recRel.npe4__Status__c);
     }
 
     /*********************************************************************************************************
