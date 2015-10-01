@@ -30,10 +30,20 @@
 /**
 * @author Salesforce.com Foundation 
 * @date 2014 
+* @group Payments
+* @group-content ../../ApexDocContent/Payments.htm
 * @description trigger handler on Opps for supporting Payments 
 */
 public class PMT_Payment_TDTM extends TDTM_Runnable {
 
+    /*******************************************************************************************************
+    * @description Trigger Handler on Opportunities for managing Payments
+    * @param newlist the list of Opps from trigger new. 
+    * @param oldlist the list of Opps from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param objResult the describe for Opportunity 
+    * @return dmlWrapper. 
+    ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 

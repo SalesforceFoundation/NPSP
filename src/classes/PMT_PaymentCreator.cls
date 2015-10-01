@@ -30,24 +30,63 @@
 /**
 * @author Nick Bailey 
 * @date 2011 (2.1)
+* @group Payments
 * @description Controls the creation of payment objects from Opportunity trigger
 */
 public with sharing class PMT_PaymentCreator {
 
-    //user defined rollups in list settings
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsToRemove = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-
-    //list of payments
-    list<npe01__OppPayment__c> newPayments = new list<npe01__OppPayment__c>();
-
-    public npe01__Contacts_And_Orgs_Settings__c ContactSettings;
-
-    //constructor gets opps from trigger??
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
+    /*******************************************************************************************************
+    * @description map of Opportunity to Payment field mappings, validated to only contain mappings that
+    * are of compatible types.
+    */ 
+    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings {
+        get {
+            if (paymentMappings == null) {
+                //load custom field mapping settings - if they exist        
+                map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
+                paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
+            
+                for (string s : paymentMappingsAll.keySet()){
+                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
+                
+                    SobjectField opportunityField;
+                    SobjectField paymentField;
+                    boolean isValid = true; 
+                                
+                    //check Opp fields
+                    opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
+                              
+                    //check Payment fields            
+                    paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
+                        
+                    if (paymentField != null && opportunityField != null) {
+                        Schema.DisplayType payF = paymentField.getDescribe().getType();
+                        Schema.DisplayType oppF = opportunityField.getDescribe().getType();
+                        isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
+                    } else {
+                        isValid = false;
+                    }
+    
+                    if (isValid == false) paymentMappings.keyset().remove(s);                         
+                }
+                
+            }
+            return paymentMappings;
+        }
+        set;
+    }
+                
+    /*******************************************************************************************************
+    * @description Constructor that gets called by the PMT_Payment_TDTM trigger handler.
+    * @param newOppsMap the map of Opps from trigger new. 
+    * @param oldOppsMap the map of Opps from trigger old. 
+    * @param ta which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param dmlWrapper to hold any payments that need to be inserted, updated, or deleted.  
+    ********************************************************************************************************/
+    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, 
+        TDTM_Runnable.DMLWrapper dmlWrapper) {
         
-        ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                     
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
@@ -56,39 +95,11 @@ public with sharing class PMT_PaymentCreator {
             list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
             
-            //load custom field mapping settings - if they exist        
-            paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            
             // James Melville Added to support multi-currency sfdc.  */
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-            
-            for (string s : paymentMappingsAll.keySet()){
-                npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
-            
-                SobjectField opportunityField;
-                SobjectField paymentField;
-                boolean isValid = true;
-            
-                //check Opp fields
-                opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
-                          
-                //check Payment fields            
-                paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
-                    
-                if (paymentField != null && opportunityField != null) {
-                	Schema.DisplayType payF = paymentField.getDescribe().getType();
-                	Schema.DisplayType oppF = opportunityField.getDescribe().getType();
-                	isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
-                } else {
-                    isValid = false;
-                }
-
-                if (isValid == false) paymentMappings.keyset().remove(s);                         
-            }
-            
+                        
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';

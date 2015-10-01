@@ -63,7 +63,7 @@ public class RD_RecurringDonations_TEST {
         
         //added to cover
         npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
-        npe03__Recurring_Donation_Field__c = 'npe03__Last_Payment_Date__c',
+        npe03__Recurring_Donation_Field__c = 'Name',
         npe03__Opportunity_Field__c = 'Description',
         Name = 'CFMName00001-Test'
         );
@@ -96,7 +96,7 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Open_Ended_Status__c = 'None'; 
         insert r1;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
+        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
         system.assertEquals(2,installments1.size());
         system.assertEquals(100,installments1[0].Amount);
         system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
@@ -104,6 +104,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(100,installments1[1].Amount);
         system.assertEquals(date.newinstance(1971,6,12),installments1[1].CloseDate);
         system.assertEquals(a.id,installments1[1].AccountId);
+        system.assertNotEquals(null, installments1[0].Description);
+        system.assertNotEquals(null, installments1[1].Description);
         UTIL_Debug.debug('****' + installments1);        
     }
     
@@ -1395,9 +1397,11 @@ public class RD_RecurringDonations_TEST {
         update rdlist;        
         Test.stopTest();
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id]);
+        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id]);
         system.assertEquals(7, originalOpps.size());
         system.assertEquals(50, originalOpps[0].Amount);
+        system.assertNotEquals(null, originalOpps[0].Description);
+        system.assertNotEquals(null, originalOpps[1].Description);
     }
     static testMethod void tooManyInstallments(){
         if (strTestOnly != '*' && strTestOnly != 'tooManyInstallments') return;
@@ -1795,7 +1799,7 @@ public class RD_RecurringDonations_TEST {
         if (strTestOnly != '*' && strTestOnly != 'test') return;
              
         npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
-        npe03__Recurring_Donation_Field__c = 'npe03__Last_Payment_Date__c',
+        npe03__Recurring_Donation_Field__c = 'Name',
         npe03__Opportunity_Field__c = 'Description',
         Name = 'CFMName00001-Test'
         );
@@ -1841,7 +1845,7 @@ public class RD_RecurringDonations_TEST {
         insert new npe03__Custom_Field_Mapping__c(
         Name = 'CFM-' + system.now(),
         npe03__Opportunity_Field__c = 'closedate',
-        npe03__Recurring_Donation_Field__c = 'npe03__Last_Payment_Date__c'
+        npe03__Recurring_Donation_Field__c = 'Name'
         );
         
         ApexPages.StandardController scc = new ApexPages.StandardController(r1);
@@ -1849,12 +1853,13 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(r1.id, rdadb.RecurringDonation.id);
         rdadb.buttonClick();    
     }    
+
     /*******************************************************************************************************
-    * @description test method for custom field mapping on insert and update
+    * @description test method for custom field mapping on insert and update of Fixed Length RDs
     */ 
-    static testMethod void testRDCustomFieldMapping()
+    static testMethod void testRDCustomFieldMappingFixedRD()
     {
-        if (strTestOnly != '*' && strTestOnly != 'testRDCustomFieldMapping') return;
+        if (strTestOnly != '*' && strTestOnly != 'testRDCustomFieldMappingFixedRD') return;
         
         UTIL_Debug.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
         UTIL_Debug.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
@@ -1901,12 +1906,74 @@ public class RD_RecurringDonations_TEST {
             update r1;
         Test.stopTest();
 
+        npe03__Recurring_Donation__c r2 = [select name from npe03__Recurring_Donation__c r1 where id=:r1.id];
+
+        system.assertEquals(r2.name,'TestRD CFM Update');
+        //check that opps have picked up the upated value of the RD field set through custom field mapping
+        Opportunity[] installments2 = [select Description from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
+        for(opportunity opp:installments2){
+            system.assertEquals(r2.name, opp.description);                
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description test method for custom field mapping on insert and update on Open Ended RD's
+    */ 
+    static testMethod void testRDCustomFieldMappingOpenRD()
+    {
+        if (strTestOnly != '*' && strTestOnly != 'testRDCustomFieldMappingOpenRD') return;
+        
+        UTIL_Debug.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
+        UTIL_Debug.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
+        Account a = new Account();
+        a.Name = 'test Individual';
+        insert a;
+        
+        Contact c = new Contact();
+        c.FirstName = 'test';
+        c.LastName = 'contact';
+        c.AccountId = a.Id;        
+        insert c;
+        
+        //Create new CFM
+        delete [select id from npe03__Custom_Field_Mapping__c];
+        npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
+        npe03__Recurring_Donation_Field__c = 'Name',
+        npe03__Opportunity_Field__c = 'Description',
+        Name = 'CFMName00001-Test'
+        );
+        insert cfm;
+
+
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'TestRD CFM Insert';
+        r1.npe03__Contact__c = c.Id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        r1.npe03__Date_Established__c = system.today();
+        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        r1.npe03__Open_Ended_Status__c = 'Open'; 
+        insert r1;
+        
+        //check that opps have picked up the value of the RD field set through custom field mapping
+        Opportunity[] installments1 = [select Description from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
+        system.assertNotEquals(0, installments1.size());
+        for(opportunity opp:installments1){
+            system.assertEquals(r1.name, opp.description);                
+        }
+
+        Test.startTest();
+            RD_ProcessControl.hasRun=false;
+            r1.name='TestRD CFM Update';
+            update r1;
+        Test.stopTest();
 
         npe03__Recurring_Donation__c r2 = [select name from npe03__Recurring_Donation__c r1 where id=:r1.id];
 
         system.assertEquals(r2.name,'TestRD CFM Update');
         //check that opps have picked up the upated value of the RD field set through custom field mapping
         Opportunity[] installments2 = [select Description from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
+        system.assertNotEquals(0, installments2.size());
         for(opportunity opp:installments2){
             system.assertEquals(r2.name, opp.description);                
         }
