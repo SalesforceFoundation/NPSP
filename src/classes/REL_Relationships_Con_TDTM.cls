@@ -96,7 +96,7 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
         }
         
         if(triggerAction == TDTM_Runnable.Action.afterDelete) {
-            DmlWrapper w = deleteEmptyRelationships();
+            DmlWrapper w = deleteEmptyRelationships(oldMap);
             dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
         }
         
@@ -135,12 +135,22 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Deletes Relationships when a Contact is deleted
+    * @param contacts the Map of Contacts from trigger oldMap. 
     * @return dmlWrapper Relationships to delete.
     ********************************************************************************************************/
-    public static DmlWrapper deleteEmptyRelationships() {
+    public static DmlWrapper deleteEmptyRelationships(Map<Id, Contact> contacts) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
-        for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null]) {
+
+        //used to hold the Ids of the Related Contacts from the Relationships that were deleted
+        Set<Id> relatedContactIds = new Set<Id>();
+        for (npe4__Relationship__c r : [Select Id, npe4__RelatedContact__c 
+            from npe4__Relationship__c where npe4__Contact__c in :contacts.keySet()
+            and npe4__RelatedContact__c != null ALL ROWS]){
+            relatedContactIds.add(r.npe4__RelatedContact__c);
+        }
+        for (npe4__Relationship__c r : [Select Id, npe4__Status__c from npe4__Relationship__c 
+            where npe4__Contact__c in :relatedContactIds and npe4__RelatedContact__c = null]){
             relationshipsToDelete.add(new npe4__Relationship__c(Id = r.Id));
         }
         if ( relationshipsToDelete.size() > 0 ) {
