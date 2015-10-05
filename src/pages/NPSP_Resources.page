@@ -19,7 +19,7 @@
        <div class="row"><h1>Welcome to Salesforce and the Nonprofit Starter Pack!</h1></div>
       <div class="row">
         <div class="col-md-9"><p>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Starter Pack application.</p></div>
-        <div class="col-md-3"> <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP+logo+-+grey+text.png')}" width="300" alt="NPSP Logo"/></div>
+        <div class="col-md-3"> <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP+logo+-+grey+text.png')}" style="max-width:100%;max-height:60;height:auto;" alt="NPSP Logo"/></div>
       </div>
 
       </div>
@@ -32,7 +32,7 @@
         <div class="col-md-6">
             <h2>Get Started</h2>
             <div style="margin-top:40px; margin-bottom:55px;">
-            <h4><span class="glyphicon glyphicon-cog" aria-hidden="true" style="padding-right:32px;"></span>Review Salesforce Fundamentals</h4>
+            <h4><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Review Salesforce Fundamentals</h4>
                 <p>Free e-learning modules from Salesforce Help &amp; Training:</p>
                 <ul><li><a href="https://powerofus.force.com/articles/Resource/Salesforce-Fundamentals" title="Salesforce Fundamentals" target="_blank">Salesforce Fundamentals</a></li>
                 <li><a href="https://developer.salesforce.com/trailhead/trail/force_com_admin_beginner" title="Beginner Admin Trail" target="_blank">Beginner Admin Trail</a></li>
@@ -40,7 +40,7 @@
                 </div>
       <!--END3Get Started: Fund-->  
       <!--4Get Started: NPSP-->
-                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true" style="padding-right:32px;"></span>Get Started with the Nonprofit Starter Pack</h4>
+                <h4><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Get Started with the Nonprofit Starter Pack</h4>
                 
                 <div class="media" style="margin-bottom:60px;">
                     <div class="pull-left"><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" target="_blank"><img class="media-object" height="100" width="130" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/trailhead_npo.png')}" alt="NPSP Trail"/>
