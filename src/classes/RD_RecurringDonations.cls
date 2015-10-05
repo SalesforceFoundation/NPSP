@@ -176,15 +176,8 @@ public with sharing class RD_RecurringDonations {
         if (dmlWrapper != null)
             TDTM_TriggerHandler.processDML(dmlWrapper);
         
-        string rdQuery = 'select id, npe03__Paid_Amount__c, npe03__Next_Payment_Date__c, npe03__Contact__c, npe03__Organization__c, npe03__Amount__c, ' +
-                                'npe03__Date_Established__c, npe03__Recurring_Donation_Campaign__c, npe03__Installment_Period__c, npe03__Installments__c, ' +
-                                'npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c, npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c, ' +
-                                'npe03__Donor_Name__c, OwnerId';
-        
-        if (isMultiCurrency)
-            rdQuery += ', '+RDCurrencyField;
-
-        rdQuery += ' from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids';
+        string rdQuery = strQueryRDNoWhere();
+        rdQuery += ' where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids';
 
         //get all possible rd records that may need updating, exclude ones that are closed.  
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>();
@@ -734,22 +727,7 @@ public with sharing class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
 
-        string rdQueryCustomFields=''; 
-        for (string s : customFieldMappingSettings.keySet()){
-              npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
-              rdQueryCustomFields+=cfm.npe03__Recurring_Donation_Field__c+', ';
-        }
-
-        //Retrieve Recurring donation fields including any custom mapped fields 
-        string  rdQuery='select id, npe03__Paid_Amount__c, npe03__Next_Payment_Date__c, '; 
-                rdQuery+=' npe03__Contact__c, npe03__Organization__c, npe03__Amount__c, '; 
-                rdQuery+=' npe03__Date_Established__c, npe03__Recurring_Donation_Campaign__c, ';
-                rdQuery+='  npe03__Installment_Period__c, npe03__Installments__c, ';
-                rdQuery+='  npe03__Last_Payment_Date__c, npe03__Open_Ended_Status__c, ';
-                rdQuery+=' npe03__Schedule_Type__c, npe03__Total_Paid_Installments__c, ';
-                rdQuery+=' npe03__Donor_Name__c, ';
-                rdQuery+= rdQueryCustomFields;
-                rdQuery+=' OwnerId from npe03__Recurring_Donation__c '; 
+        string rdQuery = strQueryRDNoWhere();
                 rdQuery+=' where npe03__Open_Ended_Status__c <> :closedLabel ';
                 rdQuery+=' and id IN :recIDs ';
         List<npe03__Recurring_Donation__c> rdsToUpdate = database.query(rdQuery);       
