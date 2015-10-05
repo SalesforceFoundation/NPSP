@@ -95,8 +95,8 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
             }
         }
         
-        if(triggerAction == TDTM_Runnable.Action.afterDelete) {
-            DmlWrapper w = deleteEmptyRelationships();
+        if(triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            DmlWrapper w = deleteEmptyRelationships(oldMap);
             dmlWrapper.objectsToDelete.addAll(w.objectsToDelete);
         }
         
@@ -135,13 +135,18 @@ public class REL_Relationships_Con_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Deletes Relationships when a Contact is deleted
+    * @param contacts the Map of Contacts from trigger oldMap. 
     * @return dmlWrapper Relationships to delete.
     ********************************************************************************************************/
-    public static DmlWrapper deleteEmptyRelationships() {
+    public static DmlWrapper deleteEmptyRelationships(Map<Id, Contact> contacts) {
         DmlWrapper dmlWrapper = new DmlWrapper();
         List<SObject> relationshipsToDelete = new List<SObject>();
-        for (npe4__Relationship__c r : [Select Id from npe4__Relationship__c where npe4__RelatedContact__c = null]) {
-            relationshipsToDelete.add(new npe4__Relationship__c(Id = r.Id));
+
+        // The Contacts primary Relationships have already been cascade deleted in Contact After Delete context
+        // Using ALL ROWS returns them in the query used to gather the mirror Relationships to be deleted 
+        for (npe4__Relationship__c r : [Select Id, npe4__ReciprocalRelationship__c from npe4__Relationship__c 
+            where npe4__Contact__c in :contacts.keySet() ALL ROWS]){
+            relationshipsToDelete.add(new npe4__Relationship__c(Id = r.npe4__ReciprocalRelationship__c));
         }
         if ( relationshipsToDelete.size() > 0 ) {
             dmlWrapper.objectsToDelete.addAll(relationshipsToDelete);
