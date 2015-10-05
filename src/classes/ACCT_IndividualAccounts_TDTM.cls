@@ -134,7 +134,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             3. The Account Model is set to OneToOne
                         */ 
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            (c.AccountId == null || (mapAccountIdAccount.containsKey(c.AccountId) && mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                             
                             // Avoid creating a new contact with the 1:1 account of another contact  
                             if (c.AccountId != null)
@@ -192,7 +192,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                             3. The Account Model is set to One-to-One
                         */
                         else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) ) {
+                            (c.AccountId == null || (mapAccountIdAccount.containsKey(c.AccountId) && mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                             
                             // Avoid updating a contact with the 1:1 account of another contact  
                             if (c.AccountId != null && mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&

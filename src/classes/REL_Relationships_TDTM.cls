@@ -236,11 +236,13 @@ public class REL_Relationships_TDTM extends TDTM_Runnable {
             }
             counter++;
         }
-        //add type info as needed
+        //add type info as needed and update
         if (!originalRelationships.isEmpty() && !relationshipsTypesToUpdate.isEmpty()) {
             addType(originalRelationships, relationshipsTypesToUpdate);
-            
             dmlWrapper.objectsToUpdate.addAll(relationshipsTypesToUpdate);
+        }
+        //update reciprocals without type change
+        if (!reciprocalsToUpdate.isEmpty()){
             dmlWrapper.objectsToUpdate.addAll(reciprocalsToUpdate);
         }
         return dmlWrapper;

@@ -356,10 +356,6 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelOppNaming() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelOppNaming') return;
-        Contact con = new Contact(LastName='foo');
-        insert con;
-        Opportunity opp = new Opportunity(Name = 'foo', CloseDate = system.Today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
-        insert opp;
 
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
         system.assertEquals('idPanelOppNaming', panel.idPanel());
