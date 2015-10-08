@@ -297,10 +297,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         if (avs.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
-	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
-	        string strSolution = strStatus == 'Success' ? strResult : 
+	        string strStatus = strResult.contains('is valid') ? STG_PanelHealthCheck_CTRL.statusSuccess : STG_PanelHealthCheck_CTRL.statusError;
+	        string strSolution = strStatus == STG_PanelHealthCheck_CTRL.statusSuccess ? strResult : 
                 string.format(system.Label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavHouseholds, Label.stgNavAddressVerification});
-	        if (strStatus == 'Success') strResult = null;
+	        if (strStatus == STG_PanelHealthCheck_CTRL.statusSuccess) strResult = null;
 	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
         } 
     }

@@ -322,7 +322,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             sourceField = Schema.sObjectType.Opportunity.fields.getMap().get(urfs.npo02__Source_Field__c);
             if (sourceField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidOppField, new string[]{urfs.npo02__Source_Field__c}), 
                     string.format(label.healthSolutionUDFOppField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }               
@@ -345,7 +345,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
             if (!isValidTarget) {
             	isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidObjectField, new string[]{urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
                     string.format(label.healthSolutionInvalidUDFObjectField, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
             }
@@ -357,7 +357,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                 Schema.Displaytype dtTgt = UTIL_Describe.getFieldDisplaytype(urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtSrc, dtTgt)) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsUDFBadDatatypes, new string[]{urfs.npo02__Source_Field__c, urfs.npo02__Object_Name__c, urfs.npo02__Target_Field__c}), 
                         string.format(label.healthSolutionUDFBadDatatypes, new string[]{label.stgNavDonations, label.stgNavUserDefinedRollups}));
                 }               
@@ -368,7 +368,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
             
         }    
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelUDFValid);                    	
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelUDFValid);                    	
         }
     }           
         

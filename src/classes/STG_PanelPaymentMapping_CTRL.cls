@@ -178,7 +178,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
             if (opportunityField == null) {
             	isValid = false;
-	            ctrl.createDR(strSetting, 'Error', 
+	            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
 	                string.format(label.healthDetailsInvalidOppField, new string[]{pfms.npe01__Opportunity_Field__c}), 
 	                string.format(label.healthSolutionInvalidOppField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
             }            	
@@ -187,7 +187,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
             if (paymentField == null) {
                 isValid = false;
-                ctrl.createDR(strSetting, 'Error', 
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidPaymentField, new string[]{pfms.npe01__Payment_Field__c}), 
                     string.format(label.healthSolutionInvalidPaymentField, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
             }               
@@ -199,7 +199,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
                 Schema.Displaytype dtOpp = UTIL_Describe.getFieldDisplaytype('Opportunity', pfms.npe01__Opportunity_Field__c);
                 if (!UTIL_Describe.canDisplaytypesCopy(dtOpp, dtPmt)) { 
 	                isValid = false;
-	                ctrl.createDR(strSetting, 'Error', 
+	                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
 	                    string.format(label.healthDetailsPaymentMappingBadDataTypes, new string[]{pfms.npe01__Payment_Field__c, pfms.npe01__Opportunity_Field__c}), 
                         string.format(label.healthSolutionPaymentMappingBadDataTypes, new string[]{label.stgNavDonations, label.stgNavPaymentMappings}));
 	            }               
@@ -210,7 +210,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelPaymentMappingsValid);            
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelPaymentMappingsValid);            
         }                           
     }           
         

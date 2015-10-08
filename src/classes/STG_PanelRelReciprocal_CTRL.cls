@@ -158,7 +158,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
             
             if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
                 isValid = false;
-                ctrl.createDR(Label.stgNavRelReciprocal, 'Error', 
+                ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsRelReciprocalInvalid, new string[]{rl.Name}), 
                     string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));    
             }               
@@ -168,7 +168,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(Label.stgNavRelReciprocal, 'Success', null, label.healthLabelRelReciprocalValid);            
+            ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRelReciprocalValid);            
         }                           
     }           
     

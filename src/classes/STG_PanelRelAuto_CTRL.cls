@@ -196,7 +196,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                         
             if (ac.npe4__Object__c == null || ac.npe4__Field__c == null || ac.npe4__Relationship_Type__c == null) {
                isValid = false;
-               ctrl.createDR(strSetting, 'Error', 
+               ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                    string.format(label.healthDetailsAutoRelFieldsMissing, new string[]{strSetting}), 
                    string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
         	
@@ -206,7 +206,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 conField = Schema.sObjectType.Contact.fields.getMap().get(ac.npe4__Field__c); 
                 if (conField == null) { 
 	               isValid = false;
-	               ctrl.createDR(strSetting, 'Error', 
+	               ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
 	                   string.format(label.healthDetailsInvalidContactField, new string[]{ac.npe4__Field__c}), 
 	                   string.format(label.healthSolutionAutoRelInvalidContactField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 }   
@@ -215,12 +215,12 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 conField = Schema.sObjectType.CampaignMember.fields.getMap().get(ac.npe4__Field__c); 
                 if (conField == null) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsInvalidCMField, new string[]{ac.npe4__Field__c}), 
                         string.format(label.healthSolutionAutoRelInvalidCMField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 } else if (ac.npe4__Campaign_Types__c == null) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         label.healthDetailsAutoRelCampaignTypeMissing, 
                         string.format(label.healthSolutionAutoRelFieldsMissing, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 } 
@@ -233,7 +233,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
                 Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype(ac.npe4__Object__c, ac.npe4__Field__c);
                 if (dt != Schema.Displaytype.Reference) { 
                     isValid = false;
-                    ctrl.createDR(strSetting, 'Error', 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                         string.format(label.healthDetailsAutoRelInvalidLookupField, new string[]{ac.npe4__Field__c}), 
                         string.format(label.healthSolutionAutoRelInvalidLookupField, new string[]{label.stgNavConnections, label.stgNavRelAutoCreate}));
                 }               
@@ -244,7 +244,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         }
 
         if (isValidAll) {
-            ctrl.createDR(strSetting, 'Success', null, label.healthLabelAutoRelValid);            
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelAutoRelValid);            
         }                           
     }           
 }
