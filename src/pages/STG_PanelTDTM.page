@@ -1,6 +1,7 @@
 <apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
     <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlers}" severity="warning" strength="1" />
+    <apex:pageMessage summary="{!$Label.stgHelpTriggerHandlersAsync}" severity="warning" strength="1" rendered="{!hasAsync}"/>
 
     <apex:form id="form" styleClass="stgForm form-horizontal" >  
         <apex:pageMessages id="pageMessages"/>

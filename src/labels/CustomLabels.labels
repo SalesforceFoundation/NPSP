@@ -3325,6 +3325,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them.</value>
     </labels>
     <labels>
+        <fullName>stgHelpTriggerHandlersAsync</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTriggerHandlersAsync</shortDescription>
+        <value>Marking any Trigger Handler to run Asynchronously can have unintended consequences, and should be fully tested before deploying in production.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpUDROperation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

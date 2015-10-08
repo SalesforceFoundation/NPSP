@@ -976,6 +976,7 @@
         <members>stgHelpTHObject</members>
         <members>stgHelpTHTriggerAction</members>
         <members>stgHelpTriggerHandlers</members>
+        <members>stgHelpTriggerHandlersAsync</members>
         <members>stgHelpUDROperation</members>
         <members>stgHelpUDROppField</members>
         <members>stgHelpUDRTargetObject</members>
