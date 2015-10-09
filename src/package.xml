@@ -562,6 +562,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
+        <members>npe5__Affiliation__c.Test__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <name>CustomField</name>
     </types>

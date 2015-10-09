@@ -7,4 +7,13 @@
         <fields>npe5__Contact__c</fields>
         <label>NPSP Affiliation Compact Layout</label>
     </compactLayouts>
+    <fields>
+        <fullName>Test__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Test</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
