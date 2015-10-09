@@ -48,12 +48,9 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>A custom object for tracking various grant seeking deadlines such as the LOI delivery date, application date, and report due dates.</description>
     <enableActivities>true</enableActivities>
-    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
-    <enableSharing>true</enableSharing>
-    <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Grant_Deadline_Due_Date__c</fullName>
         <description>Sets the date on which this particular deadline is due.</description>

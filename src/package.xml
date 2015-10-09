@@ -562,6 +562,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
+        <members>npe5__Affiliation__c.Test__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <name>CustomField</name>
     </types>
@@ -1074,10 +1075,10 @@
         <name>CustomLabel</name>
     </types>
     <types>
-        <name>CustomLabel</name>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
     </types>
     <types>
-        <members>Account</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1085,7 +1086,6 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>Contact</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
         <members>Error_Settings__c</members>
@@ -1094,8 +1094,6 @@
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
-        <members>Lead</members>
-        <members>Opportunity</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
@@ -1177,13 +1175,6 @@
         <name>ListView</name>
     </types>
     <types>
-        <members>Contact.NPSP_Contact_Personal_Email_Match</members>
-        <name>MatchingRule</name>
-    </types>
-    <types>
-        <name>MatchingRule</name>
-    </types>
-    <types>
         <members>Account.New_Address</members>
         <members>Account.New_Affiliation</members>
         <members>Account.Quick_Household_Update</members>
@@ -1234,10 +1225,6 @@
         <name>WebLink</name>
     </types>
     <types>
-        <members>Opportunity</members>
-        <name>Workflow</name>
-    </types>
-    <types>
         <members>Opportunity.Opportunity_Email_Acknowledgment</members>
         <name>WorkflowAlert</name>
     </types>
@@ -1250,5 +1237,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>33.0</version>
+    <version>30.0</version>
 </Package>
