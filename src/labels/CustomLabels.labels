@@ -1208,6 +1208,22 @@
         <value>One or more of the Opportunity Rollup, Recurring Donation, and Seasonal Address jobs are missing from the Schedulable__c object.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsTriggerHandlerMismatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerMismatch</shortDescription>
+        <value>Trigger Handler {0} on object {1} does not match the default NPSP configuration.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsTriggerHandlerMissing</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsTriggerHandlerMissing</shortDescription>
+        <value>Trigger Handler {0} on object {1} is missing and will affect NPSP behavior.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsUDFBadDatatypes</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -1424,12 +1440,36 @@
         <value>Detection time in seconds: {0}</value>
     </labels>
     <labels>
+        <fullName>healthLabelTriggerHandlerCheck</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelTriggerHandlerCheck</shortDescription>
+        <value>Trigger Configuration</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelTriggerHandlersValid</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelTriggerHandlersValid</shortDescription>
+        <value>Triggers are configured for NPSP default triggers.</value>
+    </labels>
+    <labels>
         <fullName>healthLabelUDFValid</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelUDFValid</shortDescription>
         <value>User Defined Rollups valid.</value>
+    </labels>
+    <labels>
+        <fullName>healthLabelWarning</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthLabelWarning</shortDescription>
+        <value>Warning</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccOne2OneNoContacts</fullName>
@@ -1652,6 +1692,14 @@
         <protected>false</protected>
         <shortDescription>healthSolutionScheduleJobs</shortDescription>
         <value>All NPSP scheduled classes should have records in Schedulable__c in order for these features to work correctly.</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionTriggerHandlerMismatch</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
+        <value>If the Trigger Handlers do not match the default NPSP configuration, functionality in NPSP may be disabled or modified.  Modifications should only be performed by someone knowledgable with the NPSP Trigger Handlers, and how changing them will affect system behavior.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
@@ -3275,6 +3323,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlers</shortDescription>
         <value>These triggers control core functionality in the Nonprofit Starter Pack, so please exercise extreme caution in modifying them.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpTriggerHandlersAsync</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpTriggerHandlersAsync</shortDescription>
+        <value>Marking any Trigger Handler to run Asynchronously can have unintended consequences, and should be fully tested before deploying in production.</value>
     </labels>
     <labels>
         <fullName>stgHelpUDROperation</fullName>

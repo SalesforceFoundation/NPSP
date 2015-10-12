@@ -8,6 +8,11 @@
             padding-top: 5px;
         }
         
+        .clsDRDetailsUL {
+            color: crimson;
+            padding: 0px;
+        }
+        
         .clsDRSolution {
             font-style: italic;
             padding-top: 5px;
@@ -60,11 +65,14 @@
                 
 			        <ul class="list-group" >
 		                <apex:repeat value="{!listDR}" var="dr" rendered="{!hasResults}"> 	       
-				            <li class="list-group-item {!IF(dr.strStatus != 'Error', 'clsPassed', '')} ">	
+				            <li class="list-group-item {!IF(dr.strStatus == 'Success', 'clsPassed', '')} ">	
 				                <div class="row">		  
                                     <div class="col-sm-2">  
-                                        <apex:outputPanel rendered="{!dr.strStatus != 'Error'}">
+                                        <apex:outputPanel rendered="{!dr.strStatus == 'Success'}">
                                             <span class="badge" style="background-color: green;"><span class="glyphicon glyphicon-ok" /> {!$Label.healthLabelPassed} </span>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!dr.strStatus == 'Warning'}">
+                                            <span class="badge" style="background-color: gold;"><span class="glyphicon glyphicon-warning-sign" /> {!$Label.healthLabelWarning} </span>
                                         </apex:outputPanel>
                                         <apex:outputPanel rendered="{!dr.strStatus == 'Error'}">
                                             <span class="badge" style="background-color: crimson;"><span class="glyphicon glyphicon-exclamation-sign" /> {!$Label.healthLabelFailed} </span>

@@ -160,7 +160,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         	setPeriods.add(ci.Name);
         	if (!setValues.contains(ci.Name)) {
         		isValid = false;
-	            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+	            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
 	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name}), 
 	                label.healthSolutionInvalidRDCustomPeriod);
         	}
@@ -174,20 +174,20 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         for (Schema.PicklistEntry plistentry: P) {
             if (!setPeriods.contains(plistentry.getLabel())) {
             	isValid = false;
-                ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+                ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                     string.format(label.healthDetailsInvalidRDCustomPeriodPIcklist, new string[]{plistentry.getLabel()}), 
                     string.format(label.healthSolutionInvalidRDCustomPeriodPicklist, new string[]{label.stgNavRecurringDonations, label.stgNavRDInstallmentPeriods}));            	
             }
         }       
         if (isValid)
-            ctrl.createDR(label.stgNavRecurringDonations, 'Success', null, label.healthDetailsValidRDCustomPeriod);
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthDetailsValidRDCustomPeriod);
         
         //test closed lost opp settings        
         string closedoppstage = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
         integer x = 0;
         x = [select count() from OpportunityStage where MasterLabel = :closedoppstage and isClosed = true and isActive = true and isWon = false];
         if (x == 0) {
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                 string.format(label.healthDetailsInvalidOppStage, new string[]{closedoppstage}), 
                 label.npe03.RecurringDonationBadLabelWarning);
         }
@@ -196,7 +196,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         string strPledged = system.label.npe03.RecurringDonationStageName;  // pledged
         x = [select count() from OpportunityStage where MasterLabel = :strPledged and isActive = true];
         if (x == 0) {
-            ctrl.createDR(label.stgNavRecurringDonations, 'Error', 
+            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
                 string.format(label.healthDetailsInvalidOppStage, new string[]{strPledged}), 
                 label.healthSolutionInvalidOppStage);
         }
@@ -238,9 +238,9 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
                 }                                   
             }
 
-            ctrl.createDR(label.stgNavDonations, 'Error', label.healthDetailsSaveOppsFailed + ' ' + strError, label.healthSolutionSaveOppsFailed);                            
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsSaveOppsFailed + ' ' + strError, label.healthSolutionSaveOppsFailed);                            
         } else {   
-            ctrl.createDR(label.stgNavDonations, 'Success', null, label.healthLabelRDOppsValid);
+            ctrl.createDR(label.stgNavDonations, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelRDOppsValid);
         }                            
     }
 }

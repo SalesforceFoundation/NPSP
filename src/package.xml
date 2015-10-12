@@ -717,6 +717,8 @@
         <members>healthDetailsRelReciprocalInvalid</members>
         <members>healthDetailsSaveOppsFailed</members>
         <members>healthDetailsScheduleJobs</members>
+        <members>healthDetailsTriggerHandlerMismatch</members>
+        <members>healthDetailsTriggerHandlerMissing</members>
         <members>healthDetailsUDFBadDatatypes</members>
         <members>healthDetailsValidRDCustomPeriod</members>
         <members>healthLabelAccountData</members>
@@ -744,7 +746,10 @@
         <members>healthLabelSchedulerValid</members>
         <members>healthLabelShowPassedTests</members>
         <members>healthLabelTime</members>
+        <members>healthLabelTriggerHandlerCheck</members>
+        <members>healthLabelTriggerHandlersValid</members>
         <members>healthLabelUDFValid</members>
+        <members>healthLabelWarning</members>
         <members>healthSolutionAccOne2OneNoContacts</members>
         <members>healthSolutionAccountRTIssue</members>
         <members>healthSolutionAutoRelFieldsMissing</members>
@@ -773,6 +778,7 @@
         <members>healthSolutionRelReciprocalInvalid</members>
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
+        <members>healthSolutionTriggerHandlerMismatch</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
@@ -970,6 +976,7 @@
         <members>stgHelpTHObject</members>
         <members>stgHelpTHTriggerAction</members>
         <members>stgHelpTriggerHandlers</members>
+        <members>stgHelpTriggerHandlersAsync</members>
         <members>stgHelpUDROperation</members>
         <members>stgHelpUDROppField</members>
         <members>stgHelpUDRTargetObject</members>
