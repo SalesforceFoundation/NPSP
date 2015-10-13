@@ -310,7 +310,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             listAccUpdate.add(acc);
             
 	        // check other addresses on this household that are no longer the default
-	        if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
+            if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
 	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
 	                if (addrHH.Id == addrDefault.Id)
 	                    continue;
