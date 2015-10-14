@@ -81,6 +81,8 @@ public with sharing class TDTM_Runnable_TEST {
 		Test.stopTest();
 		
 		Integer errors = [select count() from Error__c];
+		list<Error__c> listErr = [select Full_Message__c, Object_Type__c, Record_URL__c from Error__c];
+		system.debug('**** listErr: ' + listErr);
 		System.assertEquals(0, errors);
     }
 }
