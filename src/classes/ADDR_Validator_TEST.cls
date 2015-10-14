@@ -57,6 +57,7 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void testContactAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactAddress') return;
     	
+        TDTM_DefaultConfig.startTestDataInit();
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
@@ -67,6 +68,7 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingPostalCode = '95014';
         contact.MailingCountry = 'United States';
         
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -86,15 +88,18 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
-        contact = [select id, MailingStreet, MailingCity, MailingPostalCode, MailingState
-                         from contact where id = :contact.id];
-        System.assertEquals('1 Infinite Loop', contact.MailingStreet);
-        System.assertEquals('Cupertino', contact.MailingCity);
-        System.assertEquals('95014-2083', contact.MailingPostalCode);
-        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)            
-            System.assertEquals('California', contact.MailingState);
-        else
-            System.assertEquals('CA', contact.MailingState);
+        // if Async, we can't test the update of the address record to push the changes
+        if (!TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync) {
+	        contact = [select id, MailingStreet, MailingCity, MailingPostalCode, MailingState
+	                         from contact where id = :contact.id];
+	        System.assertEquals('1 Infinite Loop', contact.MailingStreet);
+	        System.assertEquals('Cupertino', contact.MailingCity);
+	        System.assertEquals('95014-2083', contact.MailingPostalCode);
+	        if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)            
+	            System.assertEquals('California', contact.MailingState);
+	        else
+	            System.assertEquals('CA', contact.MailingState);
+        }
     }
 
     static testMethod void testContactInvalidAddress() {
@@ -276,6 +281,7 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void testContactZipOnly() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactZipOnly') return;
     	
+        TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
@@ -284,6 +290,7 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingCity = 'single-zip';
         contact.MailingCountry = 'United States';
         
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -300,16 +307,20 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Clinton', av[0].MailingCity__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
-        
-        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
-        System.assertEquals(null, c1[0].MailingStreet);
-        System.assertEquals('Clinton', c1[0].MailingCity);
-        System.assertEquals('98236', c1[0].MailingPostalCode); 
+	        
+        // if Async, we can't test the update of the address record to push the changes
+        if (!TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync) {
+	        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
+	        System.assertEquals(null, c1[0].MailingStreet);
+	        System.assertEquals('Clinton', c1[0].MailingCity);
+	        System.assertEquals('98236', c1[0].MailingPostalCode);
+        } 
     }
 
     static testMethod void testContactCityAndStateOnly() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactCityAndStateOnly') return;
     	
+        TDTM_DefaultConfig.startTestDataInit();
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
@@ -318,6 +329,7 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingState = 'Illinois';
         contact.MailingCountry = 'United States';
         
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
@@ -336,10 +348,13 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
         
-        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
-        System.assertEquals(null, c1[0].MailingStreet);
-        System.assertEquals('Clinton', c1[0].MailingCity);
-        System.assertEquals('98236', c1[0].MailingPostalCode);
+        // if Async, we can't test the update of the address record to push the changes
+        if (!TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync) {
+	        contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
+	        System.assertEquals(null, c1[0].MailingStreet);
+	        System.assertEquals('Clinton', c1[0].MailingCity);
+	        System.assertEquals('98236', c1[0].MailingPostalCode);
+        }
     }
 
     static testMethod void testController() {

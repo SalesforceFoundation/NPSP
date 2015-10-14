@@ -286,6 +286,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     static testMethod void testMergeThreeOrgAccountsManyAddr() {
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeOrgAccountsManyAddr') return;
         
+        TDTM_DefaultConfig.startTestDataInit();
         integer cAcc = 3;
         
         // enables org account addresses
@@ -322,6 +323,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         listAccLoser.add(listAcc[2]);
         
         // merge the Accounts
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
         merge accWinner listAccLoser;
 

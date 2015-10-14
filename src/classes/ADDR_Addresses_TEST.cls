@@ -75,6 +75,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     public static void createHHTestData(integer cHHT, integer cConT) {
         
+        TDTM_DefaultConfig.startTestDataInit();
+        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHHT * cConT);
@@ -99,6 +101,7 @@ public with sharing class ADDR_Addresses_TEST {
         insert listAddrT;
         // clear our triggers recursion prevention since we are starting a new test
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        TDTM_DefaultConfig.stopTestDataInit();
         // start 'em off with new limits!
         test.startTest();
     }
@@ -2720,6 +2723,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/            
     static testMethod void newAddrForOrgAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'newAddrForOrgAccounts') return;
+
+        TDTM_DefaultConfig.startTestDataInit();
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
@@ -2745,9 +2750,12 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Household_Account__c = listAcc[i].Id;
             listAddrT[i].Default_Address__c = true;
         }
+        TDTM_DefaultConfig.stopTestDataInit();
+        test.startTest();
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        test.stopTest();
         
         // verify results
         listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account order by Account.Name];
