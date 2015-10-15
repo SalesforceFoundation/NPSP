@@ -32,6 +32,7 @@
 * @date 2014
 * @group Address Management
 * @description Trigger Handler on Contact for Address management 
+* @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
 public class ADDR_Contact_TDTM extends TDTM_Runnable {
 
