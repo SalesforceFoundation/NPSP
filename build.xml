@@ -98,17 +98,17 @@ If you are on a unix based system, the following commands should work:
 
         <!-- Add the record types -->
 
-        <!-- Account.HH_Account (default) -->
+        <!-- Account.HH_Account -->
         <replaceregexp 
             file="admin_profile/profiles/Admin.profile" 
             match="(${lt}tabVisibilities>)" 
-            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.HH_Account${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
+            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>false${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.HH_Account${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
 
         <!-- Account.Organization (default) -->
         <replaceregexp 
             file="admin_profile/profiles/Admin.profile" 
             match="(${lt}tabVisibilities>)" 
-            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>false${lt}/default>${line.separator}      ${lt}personAccountDefault>false${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.Organization${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
+            replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>false${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Account.Organization${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
 
         <!-- Opportunity.NPSP_Default (default) -->
         <replaceregexp 
