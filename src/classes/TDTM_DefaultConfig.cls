@@ -38,21 +38,26 @@
 */
 public without sharing class TDTM_DefaultConfig {
     
-    public static boolean ADDR_Address_TDTM_TestAsync = false;
+    public static boolean ADDR_Address_TDTM_TestAsync = true;
     private static boolean ADDR_Address_TDTM_TestAsyncTemp;
     public static boolean ADDR_Contact_TDTM_TestAsync = true;
     private static boolean ADDR_Contact_TDTM_TestAsyncTemp;
+    public static boolean ADDR_Account_TDTM_TestAsync = true;
+    private static boolean ADDR_Account_TDTM_TestAsyncTemp;
     
     public static void startTestDataInit() {
         ADDR_Address_TDTM_TestAsyncTemp = ADDR_Address_TDTM_TestAsync;
         ADDR_Address_TDTM_TestAsync = false;
         ADDR_Contact_TDTM_TestAsyncTemp = ADDR_Contact_TDTM_TestAsync;
         ADDR_Contact_TDTM_TestAsync = false;
+        ADDR_Account_TDTM_TestAsyncTemp = ADDR_Account_TDTM_TestAsync;
+        ADDR_Account_TDTM_TestAsync = false;
     }
     
     public static void stopTestDataInit() {
         ADDR_Address_TDTM_TestAsync = ADDR_Address_TDTM_TestAsyncTemp;
         ADDR_Contact_TDTM_TestAsync = ADDR_Contact_TDTM_TestAsyncTemp;
+        ADDR_Account_TDTM_TestAsync = ADDR_Account_TDTM_TestAsyncTemp;
     }
 
     /*******************************************************************************************************
