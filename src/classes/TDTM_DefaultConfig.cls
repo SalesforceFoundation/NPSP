@@ -166,7 +166,7 @@ public without sharing class TDTM_DefaultConfig {
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
         // Addresses on Account object - creates Address__c record from Account
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = ADDR_Account_TDTM_TestAsync,
               Class__c = 'ADDR_Account_TDTM', Load_Order__c = 1, Object__c = 'Account',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
