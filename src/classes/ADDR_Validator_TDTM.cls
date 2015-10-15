@@ -32,6 +32,8 @@
 * @date 2014
 * @description Class that gets called when Address__c records change and
 * begins the address verification/normalization.
+* @async_support this trigger handler DOES NOT SUPPORT ASYNC!  the validation call is a future,
+* and if we are already in a future to deal with the trigger handler, we can't call the future verification api!
 */
 public class ADDR_Validator_TDTM extends TDTM_Runnable {
 	
@@ -58,7 +60,8 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
         
         if(!alreadyRun) {
 	        Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-	        if(trigger.isBefore && settings.enable_automatic_verification__c) {        	
+	        if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) &&
+	           settings.enable_automatic_verification__c) {        	
 	        	for(SObject so : newList) {
 	        		Address__c address = (Address__c)so;
 	        		if(!system.isFuture() && !system.isBatch()) {
@@ -68,7 +71,8 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
 	        		}	
         	    }
 	        }
-	        if (trigger.isAfter && settings.enable_automatic_verification__c) {
+            if ((triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) &&
+	           settings.enable_automatic_verification__c) {
                 if(!system.isFuture() && !system.isBatch()) {
                     ADDR_Validator.verifyRecordsFuture(new Map<Id, SObject>(newList).keyset());
                     alreadyRun = true;
@@ -88,6 +92,6 @@ public class ADDR_Validator_TDTM extends TDTM_Runnable {
         }
         //we cannot return records to perform DML on because the address verification has to run
         //in a future for making external web service calls
-        return new DmlWrapper();
+        return null;
     }
 }

@@ -38,12 +38,17 @@
 */
 public without sharing class TDTM_DefaultConfig {
     
-    public static boolean ADDR_Address_TDTM_TestAsync = true;
+    public static boolean ADDR_Address_TDTM_TestAsync = false;
     private static boolean ADDR_Address_TDTM_TestAsyncTemp;
-    public static boolean ADDR_Contact_TDTM_TestAsync = true;
+
+    public static boolean ADDR_Contact_TDTM_TestAsync = false;
     private static boolean ADDR_Contact_TDTM_TestAsyncTemp;
-    public static boolean ADDR_Account_TDTM_TestAsync = true;
+
+    public static boolean ADDR_Account_TDTM_TestAsync = false;
     private static boolean ADDR_Account_TDTM_TestAsyncTemp;
+    
+    public static boolean ADDR_Validator_TDTM_TestAsync = false; // will not support verification if this is turned async!
+    private static boolean ADDR_Validator_TDTM_TestAsyncTemp;
     
     public static void startTestDataInit() {
         ADDR_Address_TDTM_TestAsyncTemp = ADDR_Address_TDTM_TestAsync;
@@ -52,12 +57,15 @@ public without sharing class TDTM_DefaultConfig {
         ADDR_Contact_TDTM_TestAsync = false;
         ADDR_Account_TDTM_TestAsyncTemp = ADDR_Account_TDTM_TestAsync;
         ADDR_Account_TDTM_TestAsync = false;
+        ADDR_Validator_TDTM_TestAsyncTemp = ADDR_Account_TDTM_TestAsync;
+        ADDR_Validator_TDTM_TestAsync = false;
     }
     
     public static void stopTestDataInit() {
         ADDR_Address_TDTM_TestAsync = ADDR_Address_TDTM_TestAsyncTemp;
         ADDR_Contact_TDTM_TestAsync = ADDR_Contact_TDTM_TestAsyncTemp;
         ADDR_Account_TDTM_TestAsync = ADDR_Account_TDTM_TestAsyncTemp;
+        ADDR_Validator_TDTM_TestAsync = ADDR_Validator_TDTM_TestAsyncTemp;
     }
 
     /*******************************************************************************************************
@@ -171,7 +179,7 @@ public without sharing class TDTM_DefaultConfig {
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
         // Address Verification/Normalization on Address object
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = ADDR_Validator_TDTM_TestAsync,
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
