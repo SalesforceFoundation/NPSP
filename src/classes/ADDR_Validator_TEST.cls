@@ -38,6 +38,12 @@ public with sharing class ADDR_Validator_TEST {
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
+
+    private static boolean hasAsyncAddrTriggers() {
+        return TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync ||
+            TDTM_DefaultConfig.ADDR_Contact_TDTM_TestAsync ||
+            TDTM_DefaultConfig.ADDR_Account_TDTM_TestAsync; 
+    }
     
     public static Addr_Verification_Settings__c createDefaultSettings() {
         // use the household account model
@@ -56,6 +62,9 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactAddress') return;
+    	
+    	// address validation is async, so no way to successfully test if other related triggers are already async!
+    	if (hasAsyncAddrTriggers()) return;
     	
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -100,6 +109,9 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void testContactInvalidAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactInvalidAddress') return;
     	
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
@@ -128,6 +140,9 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test400() {
         if (strTestOnly != '*' && strTestOnly != 'test400') return;
+        
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -158,6 +173,9 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void test401() {
         if (strTestOnly != '*' && strTestOnly != 'test401') return;
         
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
         Addr_Verification_Settings__c settings = createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
@@ -186,6 +204,9 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test402() {
         if (strTestOnly != '*' && strTestOnly != 'test402') return;
+        
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
         
         Addr_Verification_Settings__c settings = createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -216,6 +237,9 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void test500() {
         if (strTestOnly != '*' && strTestOnly != 'test500') return;
         
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
         Addr_Verification_Settings__c settings = createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
@@ -244,6 +268,9 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAmbiguousAddress() {
         if (strTestOnly != '*' && strTestOnly != 'testContactAmbiguousAddress') return;
+        
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
         
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
@@ -276,6 +303,9 @@ public with sharing class ADDR_Validator_TEST {
     static testMethod void testContactZipOnly() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactZipOnly') return;
     	
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
     	createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
@@ -300,16 +330,19 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Clinton', av[0].MailingCity__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
-        
+	        
         contact[] c1 = [select id, MailingStreet, MailingCity, MailingPostalCode from contact where id = :contact.id];
         System.assertEquals(null, c1[0].MailingStreet);
         System.assertEquals('Clinton', c1[0].MailingCity);
-        System.assertEquals('98236', c1[0].MailingPostalCode); 
+        System.assertEquals('98236', c1[0].MailingPostalCode);
     }
 
     static testMethod void testContactCityAndStateOnly() {
     	if (strTestOnly != '*' && strTestOnly != 'testContactCityAndStateOnly') return;
     	
+        // address validation is async, so no way to successfully test if other related triggers are already async!
+        if (hasAsyncAddrTriggers()) return;
+        
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         

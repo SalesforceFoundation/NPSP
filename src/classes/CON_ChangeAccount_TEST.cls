@@ -280,10 +280,12 @@ public with sharing class CON_ChangeAccount_TEST {
     */
     static void testGetsDefaultAddress(string accTypeSrc, string accTypeDst) {
         
+        TDTM_DefaultConfig.startTestDataInit();
+        
         // create our source account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeSrc, 1, 2, 1);
         Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
-        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;        
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;  
         
         // create our destination account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeDst, 1, 2, 3);
@@ -293,6 +295,7 @@ public with sharing class CON_ChangeAccount_TEST {
         // move the first contact in the first account to the other account.
         Contact conSrc = listConSrc[0];
         conSrc.AccountId = accDst.Id;
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
         update conSrc;
         Test.stopTest();

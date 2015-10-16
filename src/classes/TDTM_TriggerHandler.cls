@@ -155,12 +155,13 @@ public with sharing class TDTM_TriggerHandler {
 	        	if(classInstance instanceof TDTM_Runnable) {
 			        TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
 			        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
-			        String action = String.valueOf(classToRunRecord.get('Trigger_Action__c'));
+			        boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert || 
+			             thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete); 
 			        
 			        //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
+			        if(async && !isBefore && !System.isFuture() && !System.isBatch()) {
 			        	UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
 			        	runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
 			        } else {
@@ -181,15 +182,19 @@ public with sharing class TDTM_TriggerHandler {
     
     private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
     List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
-       Map<Id,Sobject> nm;
-       if(newlist != null) nm = new Map<Id,Sobject>(newlist);
-       else nm = new Map<Id,Sobject>();
+       set<Id> setNewId;
+       if(newlist != null) {
+           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+           setNewId = new set<Id>(nm.keySet());
+       }
        
-       Map<Id,Sobject> om;
-       if(oldlist != null) om = new Map<Id,SObject>(oldlist);
-       else om = new Map<Id, SObject>();
+       set<Id> setOldId;
+       if(oldlist != null) {
+           Map<Id,Sobject> om = new Map<Id,SObject>(oldlist);
+           setOldId = new set<Id>(om.keySet());
+       }
        
-       classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), describeObj.getName(), classToRunName);
+       classToRun.runFutureNonStatic(setNewId, setOldId, thisAction.name(), describeObj.getName(), classToRunName);
     }
     
     /*******************************************************************************************************
@@ -210,6 +215,9 @@ public with sharing class TDTM_TriggerHandler {
     * @return Errors Object with list of Error objects
     */
     public static ERR_Handler.Errors processDMLWithRollback(TDTM_Runnable.DmlWrapper dmlWrapper, boolean withRollback) {
+        if (dmlWrapper == null)
+            return null;
+            
         //Create transaction
         Savepoint sp = Database.setSavepoint();
         
