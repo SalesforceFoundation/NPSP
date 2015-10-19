@@ -38,6 +38,24 @@
 */
 public without sharing class TDTM_DefaultConfig {
     
+    /*******************************************************************************************************
+    * @description The following booleans are used to set various trigger handler entries as Asynchronous.
+    * The public boolean is used in getDefaultRecords() to set the handlers async state.  The private boolean
+    * is used to remember the async state, so that it can be cleared and then restored while setting up test
+    * data (which you don't want to run with async).
+    *
+    * To test out a new trigger handler as asynchronous, do the following:
+    *   - create a new public static boolean, and set it to true
+    *   - create a new private static boolean
+    *   - in startTestDataInit(), save the async boolean into the temp boolean, and set async to false.
+    *   - in stopTestDataInit(), reset each async boolean to its temp
+    *   - in getDefaultRecords(), on the line for your trigger handler, replace the async false parameter with your async boolean
+    *   - in any tests that are failing, 
+    *       - call startTestDataInit() before you create your test data
+    *       - call stopTestDataInit() right before calling test.startTest()
+    *       - if you have any asserts or test logic than still fails for valid reasons with async on, you
+    *       - can look at the state of your public async boolean to alter your test behavior.
+    */
     public static boolean ADDR_Address_TDTM_TestAsync = false;
     private static boolean ADDR_Address_TDTM_TestAsyncTemp;
 
@@ -50,6 +68,13 @@ public without sharing class TDTM_DefaultConfig {
     public static boolean ADDR_Validator_TDTM_TestAsync = false; // will not support verification if this is turned async!
     private static boolean ADDR_Validator_TDTM_TestAsyncTemp;
     
+    /*******************************************************************************************************
+    * @description To be called before setting up your test data for an Apex test.  It saves the state of
+    * all of the async flags, and resets them to false, so async behavior won't be used during test data
+    * creation.  Once finished with test data initialization, one should call stopTestDataInit() to restore
+    * the current state of async flags.
+    * @return void
+    */
     public static void startTestDataInit() {
         ADDR_Address_TDTM_TestAsyncTemp = ADDR_Address_TDTM_TestAsync;
         ADDR_Address_TDTM_TestAsync = false;
@@ -61,6 +86,11 @@ public without sharing class TDTM_DefaultConfig {
         ADDR_Validator_TDTM_TestAsync = false;
     }
     
+    /*******************************************************************************************************
+    * @description To be called after setting up your test data for an Apex test to restore
+    * the current state of async flags.
+    * @return void
+    */
     public static void stopTestDataInit() {
         ADDR_Address_TDTM_TestAsync = ADDR_Address_TDTM_TestAsyncTemp;
         ADDR_Contact_TDTM_TestAsync = ADDR_Contact_TDTM_TestAsyncTemp;
