@@ -136,7 +136,7 @@ public without sharing class TDTM_DefaultConfig {
         // Relationships on npe4__Relationship__c
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'REL_Relationships_TDTM', Load_Order__c = 1, Object__c = 'npe4__Relationship__c',
-              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete'));
 
         // Account Management on Contact
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
