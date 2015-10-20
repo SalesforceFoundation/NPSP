@@ -3282,7 +3282,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTHAsync</shortDescription>
-        <value>Indicates that this module should be run asynchronously in this transaction</value>
+        <value>Indicates that this module&apos;s After Events should be run asynchronously in this transaction</value>
     </labels>
     <labels>
         <fullName>stgHelpTHClass</fullName>
