@@ -71,7 +71,9 @@ public with sharing class HH_Households_TEST {
             MailingPostalCode = zip,
             MailingCountry = country
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
             npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
             npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__household__r.Number_of_Household_Members__c
@@ -134,7 +136,9 @@ public with sharing class HH_Households_TEST {
             MailingPostalCode = zip,
             MailingCountry = country
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
@@ -187,7 +191,9 @@ public with sharing class HH_Households_TEST {
             MailingPostalCode = zip,
             MailingCountry = country
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
         
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
@@ -240,7 +246,9 @@ public with sharing class HH_Households_TEST {
             MailingPostalCode = zip,
             MailingCountry = country
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c from Contact where id=:con.id];
         
         
@@ -280,7 +288,9 @@ public with sharing class HH_Households_TEST {
             MailingCountry = country,
             AccountId = acct.id
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__r.Name,npo02__Household__r.npo02__MailingStreet__c,
             npo02__Household__r.npo02__MailingCity__c,npo02__Household__r.npo02__MailingState__c,npo02__Household__r.npo02__MailingPostalCode__c,
             npo02__Household__r.npo02__MailingCountry__c,npo02__Household__c,npo02__Household__r.Number_of_Household_Members__c 
@@ -347,7 +357,9 @@ public with sharing class HH_Households_TEST {
             MailingCountry = country,
             AccountId = acct.id
         );
+        Test.startTest();
         insert con;
+        Test.stopTest();
         Contact[] createdContacts = [select npo02__Household__c from Contact where id=:con.id];
         
         system.assertEquals(null,createdContacts[0].npo02__household__c);
@@ -384,7 +396,9 @@ public with sharing class HH_Households_TEST {
         
         Id firstHouseholdId = createdContacts[0].npo02__household__c;
         
+        Test.startTest();
         delete con;
+        Test.stopTest();
         
         npo02__Household__c[] deletedHousehold = [select id from npo02__Household__c where id=:firstHouseholdId];
         system.assert(deletedHousehold.size()==0);
@@ -420,7 +434,9 @@ public with sharing class HH_Households_TEST {
         );
         insert con2;
         
+        Test.startTest();
         delete con;
+        Test.stopTest();
         
         npo02__Household__c[] remainingHousehold = [select id, Number_Of_Household_Members__c from npo02__Household__c where id=:firstHouseholdId];
         system.assert(remainingHousehold.size()==1);
@@ -721,7 +737,9 @@ public with sharing class HH_Households_TEST {
         system.assert(!queryCon[0].npo02__Naming_Exclusions__c.contains('Household__c.Informal_Greeting__c'), 'Naming Exclusions field should not include Household Informal Greeting.');
 
         queryCon[0].npo02__Naming_Exclusions__c = 'Household__c.Name';
+        Test.startTest();
         update queryCon[0];
+        Test.stopTest();
 
         queryCon = [SELECT Id, Exclude_from_Household_Name__c, Exclude_from_Household_Formal_Greeting__c, Exclude_from_Household_Informal_Greeting__c FROM Contact WHERE Id = :con.id];
         system.assert(queryCon[0].Exclude_from_Household_Name__c, 'Exclude from Household Name checkbox should be checked.');
