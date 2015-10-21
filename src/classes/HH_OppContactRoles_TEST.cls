@@ -252,7 +252,7 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
-        Test.stopTest();
+        Test.startTest();
         insert o;
         Test.stopTest();
         //check for contact roles
