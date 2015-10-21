@@ -1702,6 +1702,12 @@ public class RD_RecurringDonations_TEST {
         controller.runBatch();
         test.stopTest();
         *********/  
+        
+        Test.StartTest();
+        RD_RecurringDonations_BATCH rdbatch = new RD_RecurringDonations_BATCH();
+        ID ApexJobId = Database.executeBatch(rdbatch, 10);
+        Test.stopTest();
+        
     }  
 
 /******************************************************************    
