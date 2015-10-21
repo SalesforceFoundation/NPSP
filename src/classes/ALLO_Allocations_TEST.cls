@@ -259,7 +259,11 @@ private with sharing class ALLO_Allocations_TEST {
             npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
             npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
         );
+        // this initial creation of the RD with default allocations set up, which get copied to the opp
+        // will be what we soql limit profile in this test (and thus the startTest/stopTest).
+        Test.startTest();
         insert rd;
+        Test.stopTest();
         
         //query for the opportunity automatically created by the schedule
         list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
