@@ -33,6 +33,7 @@
 * @group Address Management
 * @group-content ../../ApexDocContent/Addresses.htm
 * @description trigger handler on Address object to support propagating addresses 
+* @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
 public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
@@ -167,10 +168,6 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // now we have which HH Accounts to consider, and which to only use for Address Override updates.
         hasRunAddrTrigger = true;
         
-        // if our work to propogate the address fails, we want to prevent the save to the address,
-        // so we need to tell TDTM to propogate the error to Salesforce, rather than just logging it.
-        TDTM_TriggerHandler.isPropogateErrorsFromTrigger = true;
-        
         DmlWrapper dmlWrapper = new DmlWrapper();        
         
         if (mapAccIdAddr.size() > 0)        
@@ -178,8 +175,29 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
        
         if (mapAddrIdAddr.size() > 0) 
             updateAddrOverrides(mapAddrIdAddr, dmlWrapper);        
+
+        // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
+        // that might occur updating contacts and accounts, and associating those errors with 
+        // the correct addresses.
+        ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLWithRollback(dmlWrapper, false);
+        if (errors.errorsExist) {
+            for (Error__c error : errors.errorRecords) {
+                ID objId = ERR_Handler.getErrorObjectId(error);
+                UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
+                if (UTIL_Describe.isObjectIdThisType(objId, 'Account')) {
+                    Address__c addr = mapAccIdAddr.get(objId);
+                    addr.addError(error.Full_Message__c);
+                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+                }
+                else if (UTIL_Describe.isObjectIdThisType(objId, UTIL_Namespace.StrTokenNSPrefix('Address__c'))) {
+                    Address__c addr = mapAddrIdAddr.get(objId);
+                    addr.addError(error.Full_Message__c);
+                    UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
+                }
+            }
+        }
         
-        return dmlWrapper;
+        return null;
     }
     
     
@@ -293,7 +311,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             listAccUpdate.add(acc);
             
 	        // check other addresses on this household that are no longer the default
-	        if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0) {
+            if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
 	            for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
 	                if (addrHH.Id == addrDefault.Id)
 	                    continue;

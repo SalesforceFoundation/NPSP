@@ -677,8 +677,20 @@ public with sharing class CON_ContactMerge_CTRL {
             
             System.SavePoint sp = Database.setSavepoint();
             try {
-            	update master;
-            	CON_ContactMerge.mergeContacts((Contact)master, losers);
+                Database.DMLOptions dml = new Database.DMLOptions();
+                dml.DuplicateRuleHeader.AllowSave = true;
+                Database.SaveResult sr = Database.update(master, dml);
+                if (!sr.isSuccess()) {
+                    string strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
+                    for (Database.Error err : sr.getErrors()) {
+                        strErr += err.getMessage() + '\n';
+                    }
+	                Database.rollback(sp);
+	                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, strErr));
+	                return null;
+                }
+	            
+	            CON_ContactMerge.mergeContacts((Contact)master, losers);
             	// Update the master with the selected values
             	return new PageReference('/' + master.id);
             } catch (Exception e) {

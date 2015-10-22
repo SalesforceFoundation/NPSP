@@ -80,7 +80,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             parentId = String.escapeSingleQuotes(params.get('opp'));
             opp = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :parentId];
             //only Opportunities have parent amounts and enforce being below this amount
-            parentAmount = opp.Amount;
+            if (opp.Amount!=null) 
+                parentAmount = opp.Amount;
         } else if (params.containsKey('cam')) {
             parentId = String.escapeSingleQuotes(params.get('cam'));
             cam = [SELECT Id, Name FROM Campaign WHERE Id = :parentId];

@@ -568,4 +568,266 @@ private class LD_LeadConvertOverride_TEST {
         // make sure no affilation created
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
+
+    /*******************************************************************************************************
+    * @description Runs Lead Conversion with a new Contact selection for the conversion, and verify
+    * address object created correctly in the Household Account model.
+    */
+    public static void newLeadConvert_HHAddressTest() {
+        if (strTestOnly != '*' && strTestOnly != 'newLeadConvert_HHAddressTest') return;
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        string companyName = 'Self';
+        String leadFirstName = 'Leady';
+        String leadLastName = 'lead for tests_987';
+        Lead l = new Lead();
+        l.FirstName = leadFirstName;
+        l.LastName = leadLastName;
+        l.Company = companyName;
+        l.Street = '123 45th NE';
+        l.City = 'Seattle';
+        l.State = 'WA';
+        l.PostalCode = '98005';
+        insert l;
+
+        system.currentPageReference().getParameters().put('id', l.id);
+
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+
+        //pass the controller into the extension
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        // fill the lists (for coverage)
+        ext.getConList();
+        system.assertEquals(2, ext.conList.size());
+        system.assert(ext.lcStatuses.size() > 0);
+        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
+
+        // this selects the "New" option in the Contact box
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
+        ext.convertLeadNow();
+
+        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name,
+            MailingStreet, MailingCity, MailingState, MailingPostalCode, Current_Address__c from Contact where lastname = :leadLastName];
+        //one contact should have been created
+        system.assertEquals(1,convertedContacts.size());
+        system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
+
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        if (CAO_Constants.isOneToOne()) {
+            system.assertEquals(accountName, convertedContacts[0].Account.Name);
+            List<Account> createdAccount2 = [select id from Account where name = :accountName];
+            system.assertEquals(1,createdAccount2.size());
+        } else if (CAO_Constants.isHHAccountModel()) {
+            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+        } else if (CAO_Constants.isBucketModel()) {
+            system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
+        }
+        
+        // make sure no affilations created
+        system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+        
+        // verify address
+        list<Address__c> listAddr = [select Id, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c from Address__c];
+        system.assertEquals(1, listAddr.size());
+        system.assertEquals(convertedContacts[0].Current_Address__c, listAddr[0].Id);
+        system.assertEquals(convertedContacts[0].MailingStreet, listAddr[0].MailingStreet__c);
+        system.assertEquals(convertedContacts[0].MailingCity, listAddr[0].MailingCity__c);
+        system.assertEquals(convertedContacts[0].MailingState, listAddr[0].MailingState__c);
+        system.assertEquals(convertedContacts[0].MailingPostalCode, listAddr[0].MailingPostalCode__c);
+    }
+
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the 1x1 account model and verify Opp OCR's correct.
+    */
+    static testMethod void newLeadConversion_TestOne2OneOppOCR(){
+        newLeadConversion_TestOppOCR(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the Household account model and verify Opp OCR's correct.
+    */
+    static testMethod void newLeadConversion_TestHHAccountOppOCR(){
+        newLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs newLead_Conversion_Test with the Individual account model and verify Opp OCR's correct.
+    */
+    static testMethod void newLeadConversion_TestBucketAccountOppOCR(){
+        newLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp OCR's correct.
+    */
+    public static void newLeadConversion_TestOppOCR(string strProcessor) {
+        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppOCR') return;
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        string companyName = 'Self';
+        String leadFirstName = 'Leady';
+        String leadLastName = 'lead for tests_987';
+        Lead l = new Lead();
+        l.FirstName = leadFirstName;
+        l.LastName = leadLastName;
+        l.Company = companyName;
+        insert l;
+
+        system.currentPageReference().getParameters().put('id', l.id);
+
+        //pass contact into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+
+        //pass the controller into the extension
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        // fill the lists (for coverage)
+        ext.getConList();
+        system.assertEquals(2, ext.conList.size());
+        system.assert(ext.lcStatuses.size() > 0);
+        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
+
+        // this selects the "New" option in the Contact box
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
+        ext.OppName = 'Test Opp';
+        ext.doNotCreateOpp = false;
+        ext.convertLeadNow();
+
+        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
+        //one contact should have been created
+        system.assertEquals(1,convertedContacts.size());
+        system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
+
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        if (CAO_Constants.isOneToOne()) {
+            system.assertEquals(accountName, convertedContacts[0].Account.Name);
+            List<Account> createdAccount2 = [select id from Account where name = :accountName];
+            system.assertEquals(1,createdAccount2.size());
+        } else if (CAO_Constants.isHHAccountModel()) {
+            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+        } else if (CAO_Constants.isBucketModel()) {
+            system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
+        }
+        
+        // verify Opp 
+        list<Opportunity> listOpp = [select Id, AccountId, Name from Opportunity];
+        system.assertEquals(1, listOpp.size());
+        system.assertEquals(ext.OppName, listOpp[0].Name);        
+
+        // verify Opp OCR's
+        list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
+        system.assertEquals(1, listOCR.size());        
+        system.assertEquals(true, listOCR[0].IsPrimary);
+    }
+
+    /*******************************************************************************************************
+    * @description Runs mergeLeadConversion_TestOppOCR with the 1x1 account model and verify Opp OCR's correct.
+    */
+    static testMethod void mergeLeadConversion_TestOne2OneOppOCR(){
+        mergeLeadConversion_TestOppOCR(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs mergeLeadConversion_TestOppOCR with the Household account model and verify Opp OCR's correct.
+    */
+    static testMethod void mergeLeadConversion_TestHHAccountOppOCR(){
+        mergeLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs mergeLeadConversion_TestOppOCR with the Individual account model and verify Opp OCR's correct.
+    */
+    static testMethod void mergeLeadConversion_TestBucketAccountOppOCR(){
+        mergeLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
+    }
+    /*******************************************************************************************************
+    * @description Runs Lead Conversion with a merge to existing Contact selection for the conversion and verify Opp OCR's correct.
+    */
+    public static void mergeLeadConversion_TestOppOCR(string strProcessor) {
+        if (strTestOnly != '*' && strTestOnly != 'mergeLeadConversion_TestOppOCR') return;
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        // create an existing contact
+        Contact con = new Contact();
+        con.firstname = 'Testy';
+        con.lastname = 'Testy';
+        insert con;
+        con = [select Id, AccountId, Firstname, Lastname from Contact];
+        system.assertNotEquals(null, con.Id);
+        system.assertNotEquals(null, con.AccountId);
+
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        string companyName = 'Self';
+        String leadFirstName = 'Testy';
+        String leadLastName = 'Testy';
+        Lead l = new Lead();
+        l.FirstName = leadFirstName;
+        l.LastName = leadLastName;
+        l.Company = companyName;
+        insert l;
+
+        system.currentPageReference().getParameters().put('id', l.id);
+
+        //pass lead into the controller
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+
+        //pass the controller into the extension
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        // fill the lists (for coverage)
+        ext.getConList();
+        system.assertEquals(3, ext.conList.size());
+        system.assert(ext.lcStatuses.size() > 0);
+        system.assert(ext.leadConvStatus != null && ext.leadConvStatus != '');
+        system.assertEquals(1, ext.listSOAccounts.size());
+        system.assertEquals(1, ext.listSOAfflAccounts.size());
+
+        // this selects the existing contact option in the Contact box
+        ext.strConId = con.id;
+        ext.strAccountId = 'AUTO';        
+        ext.OppName = 'Test Opp';
+        ext.doNotCreateOpp = false;
+        Test.startTest();
+        ext.convertLeadNow();
+        Test.stopTest();
+
+        Contact[] convertedContacts = [select id, firstname, lastname,Account.npe01__Systemisindividual__c, Account.Name from Contact where lastname = :leadLastName];
+        //one contact should have been created
+        system.assertEquals(1,convertedContacts.size());
+        system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
+
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        if (CAO_Constants.isOneToOne()) {
+            system.assertEquals(accountName, convertedContacts[0].Account.Name);
+            List<Account> createdAccount2 = [select id from Account where name = :accountName];
+            system.assertEquals(1,createdAccount2.size());
+        } else if (CAO_Constants.isHHAccountModel()) {
+            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+        } else if (CAO_Constants.isBucketModel()) {
+            system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
+        }
+        
+        // verify Opp 
+        list<Opportunity> listOpp = [select Id, AccountId, Name from Opportunity];
+        system.assertEquals(1, listOpp.size());
+        system.assertEquals(ext.OppName, listOpp[0].Name);        
+
+        // verify Opp OCR's
+        list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
+        system.assertEquals(1, listOCR.size());        
+        system.assertEquals(true, listOCR[0].IsPrimary);
+    }
 }

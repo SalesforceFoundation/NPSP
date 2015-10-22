@@ -852,6 +852,8 @@ private class CON_ContactMerge_TEST {
     }    
     static void merge3OneToOne(string strProcessor) {
         
+        TDTM_DefaultConfig.startTestDataInit();
+        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         
@@ -881,6 +883,8 @@ private class CON_ContactMerge_TEST {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
         insert con3;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+
+        TDTM_DefaultConfig.stopTestDataInit();
         
         // make sure addresses created
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {

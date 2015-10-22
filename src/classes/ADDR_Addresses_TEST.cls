@@ -75,6 +75,9 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     public static void createHHTestData(integer cHHT, integer cConT) {
         
+        // we are creating a bunch of test data that relies on no async behavior.
+        TDTM_DefaultConfig.startTestDataInit();
+        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cHHT * cConT);
@@ -99,6 +102,8 @@ public with sharing class ADDR_Addresses_TEST {
         insert listAddrT;
         // clear our triggers recursion prevention since we are starting a new test
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        // restore async behavior as appropriate
+        TDTM_DefaultConfig.stopTestDataInit();
         // start 'em off with new limits!
         test.startTest();
     }
@@ -189,7 +194,9 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'new street';
             con.MailingCity = 'new city';
         }
-        insert listConT;        
+        Test.startTest();
+        insert listConT; 
+        Test.stopTest();       
 
         // verify that the HH and Contacts share the same address
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
@@ -215,6 +222,7 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void insertContactWithAddressRecreateAccount() {
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressRecreateAccount') return;
         
+        TDTM_DefaultConfig.startTestDataInit();
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
@@ -223,6 +231,7 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingCity = 'new city';
         }
         insert listConT;        
+        TDTM_DefaultConfig.stopTestDataInit();
 
         // null out account, so a new account will be created.
         test.startTest();
@@ -265,7 +274,9 @@ public with sharing class ADDR_Addresses_TEST {
             con.is_Address_Override__c = true;
             i++;
         }
-        insert listConT;        
+        test.startTest();
+        insert listConT; 
+        test.stopTest();       
 
         // verify that the HH and Contacts share the same address
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
@@ -1827,11 +1838,12 @@ public with sharing class ADDR_Addresses_TEST {
         
         // create additional seasonal addresses not current
         initTestAddr(cHH);
+        Date dtTest = Date.newInstance(system.today().year(), 6, 1);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
-            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(1).month());
+            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(dtTest.addMonths(1).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
-            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(3).month());
+            listAddrT[i].Seasonal_End_Month__c = string.valueOf(dtTest.addMonths(3).month());
             listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
@@ -1844,9 +1856,9 @@ public with sharing class ADDR_Addresses_TEST {
         initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             listAddrT[i].Household_Account__c = listAccT[i].Id;
-            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(system.today().addMonths(2).month());
+            listAddrT[i].Seasonal_Start_Month__c = string.valueOf(dtTest.addMonths(2).month());
             listAddrT[i].Seasonal_Start_Day__c = '1';
-            listAddrT[i].Seasonal_End_Month__c = string.valueOf(system.today().addMonths(4).month());
+            listAddrT[i].Seasonal_End_Month__c = string.valueOf(dtTest.addMonths(4).month());
             listAddrT[i].Seasonal_End_Day__c = '28';
             listAddrT[i].Default_Address__c = false;
             listAddrT[i].MailingStreet__c = 'New Seasonal Street' + i;
@@ -2449,7 +2461,9 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'new street\r\nsecond line';
             con.MailingCity = 'new city';
         }
-        insert listConT;        
+        Test.startTest();
+        insert listConT; 
+        Test.stopTest();       
         
         // verify the Address objects split street.
         list<Address__c> listAddr = [select Id, MailingStreet__c, MailingStreet2__c, Formula_MailingStreetAddress__c from Address__c];
@@ -2719,6 +2733,8 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/            
     static testMethod void newAddrForOrgAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'newAddrForOrgAccounts') return;
+
+        TDTM_DefaultConfig.startTestDataInit();
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
@@ -2744,9 +2760,12 @@ public with sharing class ADDR_Addresses_TEST {
             listAddrT[i].Household_Account__c = listAcc[i].Id;
             listAddrT[i].Default_Address__c = true;
         }
+        TDTM_DefaultConfig.stopTestDataInit();
+        test.startTest();
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         insert listAddrT;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        test.stopTest();
         
         // verify results
         listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account order by Account.Name];
@@ -2791,7 +2810,9 @@ public with sharing class ADDR_Addresses_TEST {
             con.MailingStreet = 'new street';
             con.MailingCity = 'new city';
         }
-        insert listConT;        
+        test.startTest();
+        insert listConT; 
+        test.stopTest();       
 
         // verify that the HH and Contacts share the same address
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);

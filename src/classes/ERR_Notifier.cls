@@ -222,7 +222,7 @@ public with sharing class ERR_Notifier {
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
             if (errorNotifRecipient != NotificationOptions.sysAdmins) {
                 if (!(errorNotifRecipient instanceof id)) {
-                    ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidErrorRecipient, 
                         string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                     return;
                 }
@@ -230,7 +230,7 @@ public with sharing class ERR_Notifier {
                     // verify chatter group exists
                     list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
                     if (listCG.size() == 0) {
-                        ctrl.createDR(strSetting, 'Error', 
+                        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                             string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
                             string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                         return;
@@ -240,13 +240,13 @@ public with sharing class ERR_Notifier {
                         // verify user exists and is active
                         list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient and isActive = true];
                         if (listUser.size() == 0) {
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return;    
                         }
                         if (listUser[0].isActive == false) { 
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return; 
@@ -255,7 +255,7 @@ public with sharing class ERR_Notifier {
                 }
             }
         // settings ok.
-        ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
+        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelErrorRecipientValid);
         }
     }
 }
