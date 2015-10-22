@@ -344,7 +344,7 @@ private class CON_ContactMerge_TEST {
         
         controller.nextStep();
         
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting too many records for merge should throw an error.
         ApexPages.Message m = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
         System.assertEquals(label.npe01.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
@@ -462,7 +462,7 @@ private class CON_ContactMerge_TEST {
         Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
         insert o;
         
-        //select the first as winner
+        //select the second as winner
         controller.nextStep();
         
         selectMasterRecord(controller, con2.id);
@@ -477,10 +477,14 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first contact's account should be deleted
         system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-        
-        // check opps
-        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+	        system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+        } else {
+            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
+            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+            system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
+        }
         
         //Second contact's account id should not have changed
         system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
@@ -829,8 +833,10 @@ private class CON_ContactMerge_TEST {
         //second contact should be deleted
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account should be deleted
-        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        
+	    //second contact's account should be deleted
+	    system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+
         system.assertEquals(1,[select count() from Account where id=:con.accountId]);
         //First contact's account id should not have changed
         system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
@@ -846,21 +852,49 @@ private class CON_ContactMerge_TEST {
     }    
     static void merge3OneToOne(string strProcessor) {
         
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        TDTM_DefaultConfig.startTestDataInit();
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        
+        // note that we include addresses so the household pass will deal with merging household accounts with address objects.
+        system.assertEquals(false, contactSettingsForTests.Household_Account_Addresses_Disabled__c);
+        system.assertEquals(false, ADDR_Addresses_TDTM.hasRunAddrTrigger);
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.MailingStreet = '123 45th St';
+        con.MailingCity = 'Seattle';
         
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
+        con2.MailingStreet = '678 90th St';
+        con2.MailingCity = 'Bellevue';
         
         Contact con3 = UTIL_UnitTestData_TEST.getContact();
         con3.LastName = '3Contact_forTests_Merge';
+        con3.MailingStreet = '999 88th St';
+        con3.MailingCity = 'Redmond';
         
-        insert new Contact[]{con, con2, con3};
+        //insert new Contact[]{con, con2, con3};
+        // insert our contacts seperately, to ensure they get different Lastmodified times.
+        insert con;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        insert con2;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        insert con3;
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+
+        TDTM_DefaultConfig.stopTestDataInit();
         
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-        con3 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con3.id];
+        // make sure addresses created
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(3, [select count() from Address__c]);
+        }
+
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by MailingStreet];
+        con = listCon[0];
+        con2 = listCon[1];
+        con3 = listCon[2];
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
@@ -887,18 +921,40 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con3.id);
         
         //merge them
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
+        Test.startTest();               
         controller.mergeContacts();
+        // to flush our future calls that fix related data up!        
+        Test.stopTest();
         
         //first and second contact should be deleted
         system.assertEquals(1,[select count() from Contact where id=:con3.id]);
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first and second contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
+        system.assertEquals(1, [select count() from Account]);
         system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
         system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
         //Third contact's account id should not have changed
+        system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
+                
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            // since the solo household account were merged, all addresses should still exist
+            system.assertEquals(3, [select count() from Address__c]);
+            // only one should be default
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        }
+        
+        // make sure winning contact's address is correct
+        // had to take this out, because our code to keep the correct default address
+        // relies on it being sorted first when sorting by LastModifiedDate.
+        // unfortunately, soql only sorts by a granularity of seconds, not milliseconds,
+        // so it was random which address would appear older.
+        //con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact];
+        //system.assertEquals(con3.MailingStreet, con.MailingStreet);
+        //system.assertEquals(con3.MailingCity, con.MailingCity);
+        
     }
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){
@@ -1259,4 +1315,373 @@ private class CON_ContactMerge_TEST {
         system.assertEquals(2, [select count() from Account]); 
 
     }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
+        testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
+        testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
+    }
+    
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOrgToOrg() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOrg') return;
+        testNamesAndOppsMerge(null, null);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeBucketToHH() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+        testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeHHToBucket() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+        testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeBucketToOne2One() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
+        testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    * are updated as appropriate for the account types.
+    */ 
+    static testmethod void testNamesAndOppsMergeOne2OneToBucket() {
+        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+        testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
+    }
+
+    /*******************************************************************************************************
+    * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
+    *   the account's names and greetings are updated.
+    *   Opps owned by the contact are moved over.
+    *   Soft Credits for the moved Opps are recalculated.
+    *   Soft Credits the contact previously had are still there.
+    *   Opp Rollups are recalculated for both accounts.
+    */
+    static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
+
+        // most test cases want to have 2 contacts in each account.
+        integer cConLoser = 2;
+        integer cConWinner = 2;
+        integer iConLoser = 0;
+        integer iConLoserSibling = 1;
+        integer iConWinner = 2;
+        integer iConWinnerSibling = 3;
+        boolean isLoserAccountDeleted = false;
+        
+        // but when dealing with One2One accounts, they only should have one contact per account
+        if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            cConLoser = 1;
+            iConLoserSibling = 0;
+            iConWinner = 1;
+            iConWinnerSibling = 2;
+            isLoserAccountDeleted = true;
+        }
+    
+        // create our losing account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeLoser, 1, cConLoser, 1);
+        Account accLoser = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConAll = UTIL_UnitTestData_TEST.listConT; 
+        
+        // create our winning account and contacts
+        UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeWinner, 1, cConWinner, 3);
+        Account accWinner = UTIL_UnitTestData_TEST.listAccT[0];
+        listConAll.addAll(UTIL_UnitTestData_TEST.listConT);        
+        
+        // create an opp for each contact
+        // note that for Org accounts, these Opps won't generate Soft Credits.
+        list<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(listConAll, null, 
+            UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 100, null, null);
+        insert listOpp;
+        
+        // Merge the first contact in the first account to the first contact in the other account.
+        Contact conWinner = listConAll[iConWinner];
+        Contact conLoser = listConAll[iConLoser];        
+
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));        
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        
+        controller.searchText = 'test';
+        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
+        Id[] fixedSearchResults=new Id[2]; 
+        fixedSearchResults[0]=conLoser.Id; 
+        fixedSearchResults[1]=conWinner.Id; 
+        
+        Test.setFixedSearchResults(fixedSearchResults); 
+        //search for contacts
+        controller.search();
+        //select the two contacts and grab them
+        controller.searchResults[0].selected = true;
+        controller.searchResults[1].selected = true;
+        
+        //select the second as winner
+        controller.nextStep();        
+        selectMasterRecord(controller, conWinner.id);
+        
+        //list<OpportunityContactRole> listOCR = [select Opportunity.Name, Contact.Name, Role, IsPrimary from OpportunityContactRole];
+        //system.debug('****DJH listOCR before: ' + listOCR);
+
+        //merge them
+        Test.startTest();
+        controller.mergeContacts();
+        Test.stopTest();
+        
+        //listOCR = [select Opportunity.Name, Contact.Name, Role, IsPrimary from OpportunityContactRole];
+        //system.debug('****DJH listOCR after: ' + listOCR);
+
+        // reload our contacts and accounts
+        list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
+            npo02__NumberOfClosedOpps__c, 
+            BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
+            from Account order by Id]);
+        list<Contact> listCon = [select Id, Firstname, Lastname, AccountId, 
+            is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
+            from Contact order by Firstname];
+            
+        // verify the contacts belong to correct account.
+        iConLoserSibling--;
+        iConWinner--;
+        iConWinnerSibling--;
+        if (isLoserAccountDeleted) {
+            system.assertEquals(1, listAcc.size());
+            accLoser = new Account(npo02__Formal_Greeting__c='');
+            system.assertEquals(accWinner.Id, listAcc[0].Id);
+            accWinner = listAcc[0];
+            system.assertEquals(2, listCon.size());
+        } else {
+            system.assertEquals(2, listAcc.size());
+            system.assertEquals(accLoser.Id, listAcc[0].Id);
+            accLoser = listAcc[0];
+            system.assertEquals(accWinner.Id, listAcc[1].Id);
+            accWinner = listAcc[1];
+            system.assertEquals(3, listCon.size());
+            system.assertEquals(listCon[iConLoserSibling].AccountId, accLoser.Id);
+        }
+        system.assertEquals(conWinner.Id, listCon[iConWinner].Id);
+        conWinner = listCon[iConWinner];
+        system.assertEquals(conWinner.AccountId, accWinner.Id);
+        system.assertEquals(listCon[iConWinnerSibling].AccountId, accWinner.Id);
+            
+        // verify the account's names and greetings are updated
+        if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE)
+            system.assertEquals(false, accLoser.npo02__Formal_Greeting__c.contains(conLoser.Firstname));        
+        if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(false, accWinner.npo02__Formal_Greeting__c.contains(conLoser.Firstname));
+            system.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(conWinner.Firstname));
+        }                
+        if (accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+            system.assertEquals(accWinner.name, conWinner.Firstname + ' ' + conWinner.Lastname);    
+        
+        integer cAccLoserOpps = [select count() from Opportunity where AccountId = :accLoser.Id];
+        integer cAccWinnerOpps = [select count() from Opportunity where AccountId = :accWinner.Id];
+        integer cOCRLoserSibling = iConLoserSibling >= 0 ? 
+            [select count() from OpportunityContactRole where ContactId = :listCon[iConLoserSibling].Id] : 0;
+        integer cOCRConWinner = [select count() from OpportunityContactRole where ContactId = :conWinner.Id];
+        integer cOCRWinnerSibling = [select count() from OpportunityContactRole where ContactId = :listCon[iConWinnerSibling].Id];
+        
+        // verify Opps, OCR's, and Rollups are what we expect!
+        if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(3, cOCRConWinner);
+            system.assertEquals(3, cOCRWinnerSibling);
+            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(2, cAccLoserOpps);
+            system.assertEquals(2, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(3, cOCRConWinner);
+            system.assertEquals(2, cOCRWinnerSibling);
+            system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == null) {
+            system.assertEquals(2, cAccLoserOpps);
+            system.assertEquals(2, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(2, cAccLoserOpps);
+            system.assertEquals(2, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == null && accTypeWinner == null) {
+            system.assertEquals(2, cAccLoserOpps);
+            system.assertEquals(2, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(3, cOCRConWinner);
+            system.assertEquals(3, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser ==  CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.BUCKET_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(3, cOCRConWinner);
+            system.assertEquals(3, cOCRWinnerSibling);
+            system.assertEquals(0, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.BUCKET_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            system.assertEquals(1, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(1, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(0, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+            system.assertEquals(0, cAccLoserOpps);
+            system.assertEquals(3, cAccWinnerOpps);
+            system.assertEquals(0, cOCRLoserSibling);
+            system.assertEquals(2, cOCRConWinner);
+            system.assertEquals(1, cOCRWinnerSibling);
+            system.assertEquals(null, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(0, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+        
+    }
+    
+
 }

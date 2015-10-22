@@ -31,7 +31,7 @@
 * @author Salesforce.com Foundation
 * @description Implements relationships behavior 
 */
-public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
+public class REL_Relationships_TDTM extends TDTM_Runnable {
 
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
@@ -71,7 +71,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         for(npe4__Relationship__c r : newlist) {
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.afterInsert) {
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after insert');
                 if (r.npe4__ReciprocalRelationship__c == null) {
                     relationshipsToCreate.add(r);
                 }
@@ -82,7 +81,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             
             // AFTER UPDATE
             if (triggerAction == TDTM_Runnable.Action.afterUpdate) {   
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after update');            
                 if (r.npe4__ReciprocalRelationship__c == oldlist[i].npe4__ReciprocalRelationship__c 
                 && r.npe4__RelatedContact__c != null) {
                     relationshipsToUpdate.add(r);
@@ -95,7 +93,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
 
             // AFTER DELETE
             if (triggerAction == TDTM_Runnable.Action.afterDelete) {
-            	UTIL_Debug.debug('****Running REL_Relationships on npe4__Relationship__c after delete');
                 if (r.npe4__ReciprocalRelationship__c != null) {
                     relationshipsToDelete.add(r);
                 }
@@ -117,11 +114,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
             DmlWrapper wrapper = reciprocate(reciprocalsToUpdate);
             mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
             
-        }
-        //@TODO: Why are we doing this twice? Is it a bug?
-        if (relationshipsToUpdate.size() > 0 ) {
-            DmlWrapper wrapper = updateRelationship(relationshipsToUpdate, origRelationships);
-            mainWrapper.objectsToUpdate.addAll(wrapper.objectsToUpdate);
         }
         if (relationshipsToDelete.size() > 0 ) {
             DmlWrapper wrapper = deleteRelationships(relationshipsToDelete);
@@ -212,7 +204,8 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
     	DmlWrapper dmlWrapper = new DmlWrapper();
     	
         List<npe4__Relationship__c> originalRelationships = new List<npe4__Relationship__c>();
-        List<SObject> relationshipsToUpdate = new List<SObject>();
+        List<SObject> relationshipsTypesToUpdate = new List<SObject>();
+        List<SObject> reciprocalsToUpdate = new List<SObject>();
         Integer counter = 0;                                            // processing counter       
 
         for(npe4__Relationship__c r : Relationships) {
@@ -231,21 +224,31 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 }
                 copy.npe4__Status__c = r.npe4__Status__c;
                 copy.npe4__Description__c = r.npe4__Description__c;
-                relationshipsToUpdate.add(copy);
-                originalRelationships.add(r);
+                
+                //only recalculate type on reciprocal if the original type has changed
+                if (r.npe4__Type__c != oldRelationships[counter].npe4__Type__c) {
+                    relationshipsTypesToUpdate.add(copy);
+                    originalRelationships.add(r);
+                } else {
+                    reciprocalsToUpdate.add(copy);
+                }
+
             }
             counter++;
         }
-        //add type info as needed
-        if (!originalRelationships.isEmpty() && !relationshipsToUpdate.isEmpty()) {
-            addType(originalRelationships, relationshipstoUpdate);
-            dmlWrapper.objectsToUpdate.addAll(relationshipsToUpdate);        
-            //inspectSaveResults(sr, relationshipsToUpdate);
+        //add type info as needed and update
+        if (!originalRelationships.isEmpty() && !relationshipsTypesToUpdate.isEmpty()) {
+            addType(originalRelationships, relationshipsTypesToUpdate);
+            dmlWrapper.objectsToUpdate.addAll(relationshipsTypesToUpdate);
+        }
+        //update reciprocals without type change
+        if (!reciprocalsToUpdate.isEmpty()){
+            dmlWrapper.objectsToUpdate.addAll(reciprocalsToUpdate);
         }
         return dmlWrapper;
     }
     
-    private static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
+    public static void addType(list<npe4__Relationship__c> rList, List<SObject> rCopy) {
         
         npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
         
@@ -257,7 +260,8 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
         
             //remove inactive values
             for (string s : rlMap.keySet()){
-                if (rlMap.get(s).npe4__Active__c != true){
+                npe4__Relationship_Lookup__c thisRl = rlMap.get(s);
+                if (thisRl.npe4__Active__c != true){
                     rlMap.remove(s);
                 }
             }
@@ -288,7 +292,6 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 Contact relatedContact = cMap.get(r.npe4__Contact__c);
             
                 if (rlMap.containsKey(r.npe4__Type__c)){
-                    
                     List<String> malelist = system.label.npe4.Male.split(',');                                                                                                        
                     List<String> femalelist = system.label.npe4.Female.split(',');
                     
@@ -339,7 +342,8 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                     
                     //can't match up gender, bad field or otherwise
                     else{                       
-                        copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Neutral__c;                     
+                        if (copy.npe4__Type__c==null)
+                            copy.npe4__Type__c = rlMap.get(r.npe4__Type__c).npe4__Neutral__c;
                     }          
                 }                            
                 //no matching custom list setting, use provided type
@@ -372,5 +376,88 @@ public with sharing class REL_Relationships_TDTM extends TDTM_Runnable {
                 counter++; 
             }   
         }
+    }
+    
+    /*******************************************************************************************************
+    * @description Remove all duplicate Relationships, for the list of Contacts.  
+    * Called by handleContactMergeFixupsFuture() after a Contact Merge has occurred.
+    * @param listCon The list of Contacts 
+    * @return null
+    ********************************************************************************************************/
+    public static void cleanupContactRelationships(list<Contact> listCon) {
+
+        // use dmlWrapper to handle all of our database operations
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
+        
+        // for each Contact, get its list of Relationships in oldest to newest order (of LastModifiedDate)
+        map<Id, list<npe4__Relationship__c>> mapConIdListRel = new map<Id, list<npe4__Relationship__c>>();
+        
+        // first we get all Relationships involved
+        list<npe4__Relationship__c> listRel = [select Id, npe4__Contact__c, npe4__RelatedContact__c,
+            npe4__Status__c, npe4__Type__c, npe4__Description__c
+            from npe4__Relationship__c 
+            where npe4__Contact__c in :listCon
+            order by npe4__Contact__c, LastModifiedDate asc];
+
+        // now put each contact's relationships on their own list            
+        for (npe4__Relationship__c rel : listRel) {
+            list<npe4__Relationship__c> listConRel = mapConIdListRel.get(rel.npe4__Contact__c);
+            if (listConRel == null) {
+                listConRel = new list<npe4__Relationship__c>();
+                mapConIdListRel.put(rel.npe4__Contact__c, listConRel);
+            }
+            listConRel.add(rel);
+        }
+        
+        // now we go through each contact's list of relationships to find duplicates
+        for (Contact con : listCon) {
+        
+            // skip this contact if they have relationships to deal with 
+            if (!mapConIdListRel.containsKey(con.Id))
+               continue;
+
+            // create a map of relKeys to relationship's to find our duplicates
+            map<string, list<npe4__Relationship__c>> mapRelKeyRel = new map<string, list<npe4__Relationship__c>>(); 
+            for (npe4__Relationship__c rel : mapConIdListRel.get(con.Id)) {
+                string relKey = getRelKey(rel);
+                listRel = mapRelKeyRel.get(relKey);
+                if (listRel == null) {
+                    listRel = new list<npe4__Relationship__c>();
+                    mapRelKeyRel.put(relKey, listRel);
+                }
+                listRel.add(rel);                
+            }
+            
+            // now we have the lists of duplicate relationships, remove the duplicates.            
+            for (string relKey : mapRelKeyRel.keySet()) {
+                listRel = mapRelKeyRel.get(relKey);
+                
+                // keep the oldest and delete the others
+                for (integer i = 1; i < listRel.size(); i++) {
+                    dmlWrapper.objectsToDelete.add(listRel[i]);
+                }
+            }
+        }
+        
+        // perform our updates & deletes for dealing with the duplicate relationships
+        TDTM_TriggerHandler.processDml(dmlWrapper); 
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a unique string key that represents the data of a Relationship, which can be used
+    * to detect duplicate Relationships. 
+    * @param rel The Relationship 
+    * @return String The relKey
+    ********************************************************************************************************/
+    private static string getRelKey(npe4__Relationship__c rel) {
+        if (rel == null)
+            return null;
+        string relKey = 
+            rel.npe4__Contact__c + ':' + 
+            rel.npe4__RelatedContact__c + ':' +
+            rel.npe4__Type__c + ':' +
+            rel.npe4__Status__c + ':' +
+            rel.npe4__Description__c;
+        return relKey;
     }
 }

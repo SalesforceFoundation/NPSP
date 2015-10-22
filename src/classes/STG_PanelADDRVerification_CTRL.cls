@@ -76,7 +76,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     */
     public String batchVerifyMessage { get; set; }
 
-    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator'};
+    String[] validatorExclussions = new String[]{'ADDR_IValidator', 'ADDR_SmartyStreets_Gateway', 'ADDR_Validator', 'ADDR_Validator_REST'};
     
     /*******************************************************************************************************
     * @description The help text for the settings.
@@ -132,7 +132,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 				  setDynamicFields((ADDR_IValidator)classInstance);
 				}
 			}
-		}
+		} else serviceName = '';
     }
     
     /*******************************************************************************************************
@@ -184,12 +184,12 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         validators.add(new SelectOption('', ''));
         //We have to use these strings because the underscode is treated like a special character in a LIKE 
         //clause, and if we try to escape it with a backslash it gets double-escaped automatically.
-        String addrLikeClause = 'ADDR\\_%';
-        String testLikeClause = '%\\_TEST';
-        String ctrlLikeClause = '%\\_CTRL';
-        String tdtmLikeClause = '%\\_TDTM';
-        String batchLikeClause = '%\\_Batch';
-        String schedLikeClause = '%\\_SCHED'; 
+        String addrLikeClause = 'ADDR%';
+        String testLikeClause = '%TEST';
+        String ctrlLikeClause = '%CTRL';
+        String tdtmLikeClause = '%TDTM';
+        String batchLikeClause = '%Batch';
+        String schedLikeClause = '%SCHED'; 
         ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like :addrLikeClause 
                   and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
                   and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
@@ -212,6 +212,16 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return PageReference The page to redirect to. None, in this case.
     */
     public override PageReference saveSettings() {
+
+        //if the user has blanked out the implementing class, disable verification and save settings
+        if (string.isBlank(addrVerifSettings.Class__c)) {
+            addrVerifSettings.Enable_Automatic_Verification__c = false;
+            if(!Test.isRunningTest())
+                upsert addrVerifSettings;
+            setValidatorSelection(addrVerifSettings.Class__c);
+            return super.saveSettings();
+        }
+
         try {
         	apiTestResult = null;
         	        	
@@ -287,10 +297,10 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         if (avs.Class__c == 'ADDR_SmartyStreets_Validator') {
 	        string strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
 	        string strResult = strVerifyAddressVerificationService(avs, '98005');
-	        string strStatus = strResult.contains('is valid') ? 'Success' : 'Error';
-	        string strSolution = strStatus == 'Success' ? strResult : 
+	        string strStatus = strResult.contains('is valid') ? STG_PanelHealthCheck_CTRL.statusSuccess : STG_PanelHealthCheck_CTRL.statusError;
+	        string strSolution = strStatus == STG_PanelHealthCheck_CTRL.statusSuccess ? strResult : 
                 string.format(system.Label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavHouseholds, Label.stgNavAddressVerification});
-	        if (strStatus == 'Success') strResult = null;
+	        if (strStatus == STG_PanelHealthCheck_CTRL.statusSuccess) strResult = null;
 	        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
         } 
     }

@@ -55,11 +55,11 @@ public with sharing class STG_PanelOppRollups_CTRL extends STG_Panel {
                 
             //if org has customFY records, disable FY settings
             if (hasCustomFYRecord > 0) {
-                ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidFiscalYears, label.healthSolutionInvalidFiscalYears);
+                ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidFiscalYears, label.healthSolutionInvalidFiscalYears);
                 return;
             }            
         }
-        ctrl.createDR(strSetting, 'Success', null, label.healthLabelFiscalYearsValid);            
+        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelFiscalYearsValid);            
     }        
     
 }

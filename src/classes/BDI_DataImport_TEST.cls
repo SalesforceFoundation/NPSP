@@ -523,6 +523,61 @@ private with sharing class BDI_DataImport_TEST {
     
     /*********************************************************************************************************
     operation:
+        import contacts with home addresses, while address management is disabled
+    verify:
+        address objects NOT created
+        contacts' mailing address set
+        hh accounts' billing address set
+    **********************************************************************************************************/            
+    static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Household_Account_Addresses_Disabled__c = true
+        ));
+
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'Portland';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        system.assertEquals(4, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertEquals('c4 C4', listCon[3].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertNotEquals(null, listCon[3].AccountId);
+        system.assertEquals('Seattle', listCon[0].MailingCity);
+        system.assertEquals('Seattle', listCon[1].MailingCity);
+        system.assertEquals('Portland', listCon[2].MailingCity);
+        system.assertEquals('Portland', listCon[3].MailingCity);
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(0, listAddr.size());
+        
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals('Seattle', listAcc[0].BillingCity);
+        system.assertEquals('Portland', listAcc[1].BillingCity);                
+    }
+
+    /*********************************************************************************************************
+    operation:
         import existing contacts with the same home address
     verify:
         contacts matched
@@ -573,6 +628,58 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(listAddr[0].Id, listDI[1].HomeAddressImported__c);   
         system.assertEquals(label.bdiMatched, listDI[0].HomeAddressImportStatus__c);
         system.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);            
+    }
+    
+    /*********************************************************************************************************
+    operation:
+        import existing contacts with the same home address, with Address Management off
+    verify:
+        contacts matched
+        no addresses created
+        account addresses updated
+        contact addresses updated
+    **********************************************************************************************************/            
+    static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
+            
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Household_Account_Addresses_Disabled__c = true
+        ));
+
+        // existing contacts
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', MailingCity='Portland'));
+        insert listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[0].Home_City__c = 'Bellevue';
+        listDI[1].Home_City__c = 'Bellevue';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, MailingCity from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        system.assertEquals('Bellevue', listCon[0].MailingCity);
+        system.assertEquals('Bellevue', listCon[1].MailingCity);
+        
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c];
+        system.assertEquals(0, listAddr.size()); 
+        
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+        system.assertEquals('Bellevue', listAcc[0].BillingCity);
+        system.assertEquals('Bellevue', listAcc[1].BillingCity);                
     }
     
     /*********************************************************************************************************
@@ -1782,4 +1889,115 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
     }
 
+    /*********************************************************************************************************
+    operation:
+        import new contacts, but fail field level security 
+    verify:
+        nothing imported
+        records marked with fls error
+    **********************************************************************************************************/            
+    static testMethod void testFieldLevelSecurity() {
+        if (strTestOnly != '*' && strTestOnly != 'testFieldLevelSecurity') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c0', 'C0'));
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        BDI_DataImport_BATCH.failFieldLevelSecurity = true;
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, npe01__Preferred_Email__c from Contact order by Name];
+        system.assertEquals(0, listCon.size());
+      
+        listDI = [select Contact1Imported__c, Status__c, FailureInformation__c from DataImport__c];
+        system.assertEquals(4, listDI.size());
+        for (integer i = 0; i < 3; i++) {
+            system.assertEquals(listDI[i].Contact1Imported__c, null);
+            system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+            string flsError = label.flsError;
+            flsError = flsError.replace('{0}', '');
+            flsError = flsError.replace('.', '');
+            //system.assertEquals(listDI[i].FailureInformation__c, flsError);
+            system.assert(listDI[i].FailureInformation__c.contains(flsError));
+        }
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with invalid home addresses 
+    verify:
+        address objects created
+        valid contacts' mailing address set
+        valid hh accounts' billing address set
+        error logged on correct data import record
+    **********************************************************************************************************/            
+    static testMethod void testInvalidAddressHandling() {
+        if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI.add(newDI('c3', 'C3'));
+        listDI[0].Home_City__c = 'Seattle';
+        listDI[1].Home_City__c = 'This is an invalid city because it is over 40 characters that Salesforce limits on Accounts and Contacts!';
+        listDI[2].Home_City__c = 'Portland';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
+        system.assertEquals(2, listAddr.size());
+        system.assertEquals('Portland', listAddr[0].MailingCity__c);
+        system.assertEquals('Seattle', listAddr[1].MailingCity__c);
+        
+        listDI = [select Status__c, FailureInformation__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c 
+            from DataImport__c order by Contact1_Lastname__c];
+        system.assertEquals(3, listDI.size());
+        system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[1].Id); 
+        system.assertEquals(listDI[1].HomeAddressImported__c, null);
+        system.assertEquals(listDI[2].HomeAddressImported__c, listAddr[0].Id);
+
+        system.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
+        system.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
+        system.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
+
+        system.assertEquals(label.bdiImported, listDI[0].Status__c);        
+        system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
+        system.assertEquals(label.bdiImported, listDI[2].Status__c);        
+
+        system.assertEquals(null, listDI[0].FailureInformation__c);        
+        system.assert(listDI[1].FailureInformation__c.contains('invalid city'));        
+        system.assertEquals(null, listDI[2].FailureInformation__c);        
+
+        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
+        system.assertEquals(3, listAcc.size());
+        system.assertEquals('Seattle', listAcc[0].BillingCity);
+        system.assertEquals(null, listAcc[1].BillingCity);
+        system.assertEquals('Portland', listAcc[2].BillingCity);
+                
+        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        system.assertEquals(3, listCon.size());
+        system.assertEquals('c1 C1', listCon[0].Name);
+        system.assertEquals('c2 C2', listCon[1].Name);
+        system.assertEquals('c3 C3', listCon[2].Name);
+        system.assertNotEquals(null, listCon[0].AccountId);
+        system.assertNotEquals(null, listCon[1].AccountId);
+        system.assertNotEquals(null, listCon[2].AccountId);
+        system.assertEquals('Seattle', listCon[0].MailingCity);
+        system.assertEquals(null, listCon[1].MailingCity);
+        system.assertEquals('Portland', listCon[2].MailingCity);
+    }
 }

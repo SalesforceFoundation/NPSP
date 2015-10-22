@@ -67,10 +67,10 @@
     <fields>
         <fullName>Asynchronous__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Indicates that this module should be run asynchronously in this transaction</description>
+        <description>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates that this module should be run asynchronously in this transaction</inlineHelpText>
-        <label>Asynchronous</label>
+        <inlineHelpText>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</inlineHelpText>
+        <label>Asynchronous After Events</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

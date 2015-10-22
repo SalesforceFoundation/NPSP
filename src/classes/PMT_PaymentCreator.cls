@@ -30,24 +30,63 @@
 /**
 * @author Nick Bailey 
 * @date 2011 (2.1)
+* @group Payments
 * @description Controls the creation of payment objects from Opportunity trigger
 */
-public without sharing class PMT_PaymentCreator {
+public with sharing class PMT_PaymentCreator {
 
-    //user defined rollups in list settings
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsToRemove = new map<string, npe01__Payment_Field_Mapping_Settings__c>();
-
-    //list of payments
-    list<npe01__OppPayment__c> newPayments = new list<npe01__OppPayment__c>();
-
-    public npe01__Contacts_And_Orgs_Settings__c ContactSettings;
-
-    //constructor gets opps from trigger??
-    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, TDTM_Runnable.DMLWrapper dmlWrapper) {
+    /*******************************************************************************************************
+    * @description map of Opportunity to Payment field mappings, validated to only contain mappings that
+    * are of compatible types.
+    */ 
+    public static map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappings {
+        get {
+            if (paymentMappings == null) {
+                //load custom field mapping settings - if they exist        
+                map<string, npe01__Payment_Field_Mapping_Settings__c> paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
+                paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
+            
+                for (string s : paymentMappingsAll.keySet()){
+                    npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
+                
+                    SobjectField opportunityField;
+                    SobjectField paymentField;
+                    boolean isValid = true; 
+                                
+                    //check Opp fields
+                    opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
+                              
+                    //check Payment fields            
+                    paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
+                        
+                    if (paymentField != null && opportunityField != null) {
+                        Schema.DisplayType payF = paymentField.getDescribe().getType();
+                        Schema.DisplayType oppF = opportunityField.getDescribe().getType();
+                        isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
+                    } else {
+                        isValid = false;
+                    }
+    
+                    if (isValid == false) paymentMappings.keyset().remove(s);                         
+                }
+                
+            }
+            return paymentMappings;
+        }
+        set;
+    }
+                
+    /*******************************************************************************************************
+    * @description Constructor that gets called by the PMT_Payment_TDTM trigger handler.
+    * @param newOppsMap the map of Opps from trigger new. 
+    * @param oldOppsMap the map of Opps from trigger old. 
+    * @param ta which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param dmlWrapper to hold any payments that need to be inserted, updated, or deleted.  
+    ********************************************************************************************************/
+    public PMT_PaymentCreator(Map<id, Opportunity> newOppsMap, Map<id, Opportunity> oldOppsMap, TDTM_Runnable.Action ta, 
+        TDTM_Runnable.DMLWrapper dmlWrapper) {
         
-        ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
                     
         if (ContactSettings != null && ContactSettings.npe01__Payments_Enabled__c == true){
             list<Opportunity> newOpps = newOppsMap.values();
@@ -56,49 +95,23 @@ public without sharing class PMT_PaymentCreator {
             list<npe01__OppPayment__c> paymentsToDelete = new list<npe01__OppPayment__c>();
             list<Opportunity> updatedOpps = new list<Opportunity>();
             
-            //load custom field mapping settings - if they exist        
-            paymentMappingsAll = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            paymentMappings = npe01__Payment_Field_Mapping_Settings__c.getAll().clone();
-            
             // James Melville Added to support multi-currency sfdc.  */
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');    
-            
-            for (string s : paymentMappingsAll.keySet()){
-                npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappingsAll.get(s); 
-            
-                SobjectField opportunityField;
-                SobjectField paymentField;
-                boolean isValid = true;
-            
-                //check Opp fields
-                opportunityField = Schema.sObjectType.Opportunity.fields.getMap().get(pfms.npe01__Opportunity_Field__c);
-                          
-                //check Payment fields            
-                paymentField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get(pfms.npe01__Payment_Field__c);
-                    
-                if (paymentField != null && opportunityField != null) {
-                	Schema.DisplayType payF = paymentField.getDescribe().getType();
-                	Schema.DisplayType oppF = opportunityField.getDescribe().getType();
-                	isValid = UTIL_Describe.canDisplaytypesCopy(oppF, payF);
-                } else {
-                    isValid = false;
-                }
-
-                if (isValid == false) paymentMappings.keyset().remove(s);                         
-            }
-            
+                        
             //SOQL for Updated Opps and Related Payments.  Queries for known fields and field in custom Payment Field Mappings.
             if (ta == TDTM_Runnable.Action.AfterUpdate){
                 String soqlStatement = '';
-                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, ';
+                soqlStatement += 'select id, CloseDate, Amount, isClosed, isWon, npe01__Do_Not_Automatically_Create_Payment__c, ';
                 for (string s : paymentMappings.keyset()) {
                     npe01__Payment_Field_Mapping_Settings__c pfms = paymentMappings.get(s);
                     if (!soqlStatement.contains(pfms.npe01__Opportunity_Field__c)) {               
                         soqlStatement += pfms.npe01__Opportunity_Field__c + ', ';
                     }   
                 }
+                if (OppCurrencyField!=null)
+                    soqlStatement += 'CurrencyIsoCode, ';
                 soqlStatement += 'npe01__payments_made__c, ';
                 string soqlSub = '(SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c, ';
                 for (string s : paymentMappings.keyset()) {
@@ -122,7 +135,6 @@ public without sharing class PMT_PaymentCreator {
                                 npe01__oppPayment__c op = new npe01__oppPayment__c(
                                     npe01__opportunity__c = thisOpp.id
                                 );
-                                
                                 
                                 //in multicurrency SFDC set the payment currency field to equal to the opp currency
                                 if(PaymentCurrencyField != null && OppCurrencyField != null)
@@ -163,16 +175,9 @@ public without sharing class PMT_PaymentCreator {
                         }
                         */
                 }
-                try{
-                    // put in the payment for closed opps       
-                    if (!paymentsToInsert.isEmpty()) 
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
-                }
-                catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToInsert) {
-                      opay.addError('There was a problem inserting a payment');
-                    }
-                }
+                // put in the payment for closed opps       
+                if (!paymentsToInsert.isEmpty()) 
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>) paymentsToInsert);
             }
             
             
@@ -240,7 +245,7 @@ public without sharing class PMT_PaymentCreator {
                     }
                     
                     // we may need to add payments if the open opp amount has been changed from $0
-                    else if (thisOpp.Amount != 0 && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed){ // changed added "|| oldOpp.Amount==null" condition to fix BUG #1285
+                    else if (thisOpp.Amount != 0 && thisOpp.Amount != null && (oldOpp.Amount == 0 || oldOpp.Amount == null ) && !thisOpp.isClosed && !thisOpp.npe01__Do_Not_Automatically_Create_Payment__c){
                         npe01__oppPayment__c op = new npe01__oppPayment__c(
                             npe01__opportunity__c = thisOpp.id,
                             npe01__Paid__c = false,
@@ -263,20 +268,13 @@ public without sharing class PMT_PaymentCreator {
                         paymentsToInsert.add(op);                                              
                     }   
                 }
-                //try{
-                    // update or delete payments     
-                    if (!paymentsToUpdate.isEmpty())
-                        dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
-                    if (!paymentsToDelete.isEmpty())
-                        dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
-                    if (!paymentsToInsert.isEmpty())
-                        dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
-                //}
-                /*catch (DMLException e){
-                    for (npe01__OppPayment__c opay : paymentsToUpdate) {
-                      opay.addError('There was a problem updating a payment');
-                    }
-                }*/
+                // update or delete payments     
+                if (!paymentsToUpdate.isEmpty())
+                    dmlWrapper.objectsToUpdate.addAll((list<SObject>)paymentsToUpdate);
+                if (!paymentsToDelete.isEmpty())
+                    dmlWrapper.objectsToDelete.addAll((list<SObject>)paymentsToDelete);
+                if (!paymentsToInsert.isEmpty())
+                    dmlWrapper.objectsToInsert.addAll((list<SObject>)paymentsToInsert);
             }
         }
     }

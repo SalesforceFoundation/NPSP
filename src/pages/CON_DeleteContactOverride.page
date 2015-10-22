@@ -1,0 +1,2 @@
+<apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}">
+</apex:page>

@@ -35,7 +35,7 @@
 * such as detecting whether we are in a managed package, and some string helpers.
 */
 
-public without sharing class UTIL_Namespace { 
+public with sharing class UTIL_Namespace { 
 
     /******************************************************************************************************
     * @description String helper property for getNamespace() method.
@@ -89,9 +89,10 @@ public without sharing class UTIL_Namespace {
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string StrTokenRemoveNSPrefix(string str) {
-        str = str.replace('npsp__', '');
-        if (getNamespace() != '') 
-            str = str.replace(getNamespace() + '__', '');
+        if(str.startsWith('npsp__'))
+            str = str.replaceFirst('npsp__', '');
+        if (getNamespace() != '' && str.startsWith(getNamespace() + '__'))
+            str = str.replaceFirst(getNamespace() + '__', '');
         return str;
     }
     

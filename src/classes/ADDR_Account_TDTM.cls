@@ -32,8 +32,9 @@
 * @date 2014
 * @group Address Management
 * @description Trigger Handler on Account for Address management 
+* @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
-public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
+public class ADDR_Account_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Account that handles Address management.
@@ -64,10 +65,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             
             // AFTER INSERT
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                // on insert, we only need to create addresses for Org accounts.
-                // Household accounts are handled during the after update, which will always occur
-                // as they are being hooked up with their primary contact. 
-                if (!acc.npe01__SYSTEMIsIndividual__c && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+                // for new accounts that are using address management, create the address object.
+                if ((acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE && 
+                        !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) ||
+                    (!acc.npe01__SYSTEMIsIndividual__c && 
+                        UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
                     if (isAccountAddressSpecified(acc))
                         listAccCreateAddr.add(acc);
                 }
@@ -147,7 +149,6 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
 
     }
 
-    // 
     /*******************************************************************************************************
     * @description for each Account, create a new default address and add it to dmlWrapper
     * @param listAcc a list of Accounts
@@ -162,10 +163,11 @@ public with sharing class ADDR_Account_TDTM extends TDTM_Runnable {
             addr.Default_Address__c = true;
             addr.Latest_Start_Date__c = system.today();
             addr.Latest_End_Date__c = null;
-            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr);            
+            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(acc, 'Billing', addr, null);
             listAddr.add(addr);         
         }
-        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper);
+        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
+        ADDR_Addresses_TDTM.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 
 }

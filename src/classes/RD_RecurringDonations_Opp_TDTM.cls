@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Trigger Handler on Opportunity for managing Recurring Donations 
 */
-public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
+public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     
     /*******************************************************************************************************
     * @description Trigger Handler for Recurring Donations called on an Opportunity trigger AfterUpdate.
@@ -59,6 +59,19 @@ public with sharing class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                 //has it changed closed state or amount?
                 Opportunity oppOld = (Opportunity)oldlist[i];
                 if (o.npe03__Recurring_Donation__c != null && (o.isClosed != oppOld.isClosed || o.Amount != oppOld.Amount)){
+                    rdIds.add(o.npe03__Recurring_Donation__c);
+                }
+                i++;
+            }                  
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            integer i = 0;
+            for (SObject sobj : newlist) {
+                Opportunity o = (Opportunity)sobj;
+                //does it have a recurring donation reference?
+                //is it in closed state?
+                if (o.npe03__Recurring_Donation__c != null && o.isClosed && o.Amount != null && o.Amount > 0){
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;

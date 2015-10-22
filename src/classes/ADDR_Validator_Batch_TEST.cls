@@ -58,6 +58,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidAddress() {
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
+
+    	TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         
         //create contact 
@@ -85,6 +87,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals(false, av[0].Verified__c);
         
         //run batch address verification
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
         Database.executeBatch(b);
@@ -119,6 +122,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddresses() {
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
+
+        TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         
         //create contacts
@@ -153,6 +158,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         }
         
         //run batch address verification
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
         Database.executeBatch(b);
@@ -175,10 +181,13 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidZipcode() {
         if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
+
+        TDTM_DefaultConfig.startTestDataInit();
         createDefaultSettings();
         
         Contact contact = new contact(firstname='Test', lastname='Person'); 
-        contact.MailingPostalCode = 'single-zip';
+        contact.MailingPostalCode = '90210';
+        contact.MailingCity = 'single-zip';
         insert contact;
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
@@ -191,10 +200,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
-        System.assertEquals('single-zip', av[0].MailingPostalCode__c);
+        System.assertEquals('90210', av[0].MailingPostalCode__c);
         System.assertEquals(false, av[0].Verified__c);
         
         //run batch address verification
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
         Database.executeBatch(b);
@@ -217,6 +227,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddressessZipcodes() {
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
+
+        TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
     	
     	//create contacts 
@@ -228,7 +240,8 @@ public with sharing class ADDR_Validator_Batch_TEST {
         addressContact.MailingCountry = 'United States';
         
         Contact zipContact = new contact(firstname='Test', lastname='Person'); 
-        zipContact.MailingPostalCode = 'single-zip';
+        zipContact.MailingCity = 'single-zip';
+        zipContact.MailingPostalCode = '90210';
         
         insert new Contact[] {addressContact, zipContact};
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false; 
@@ -256,10 +269,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Address__c[] av2 = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :zipAccountId];
         System.assertEquals(1, av2.size());
-        System.assertEquals('single-zip', av2[0].MailingPostalCode__c);
+        System.assertEquals('90210', av2[0].MailingPostalCode__c);
         System.assertEquals(false, av2[0].Verified__c);
         
         //run batch address verification
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.StartTest();
         ADDR_Validator_Batch b = new ADDR_Validator_Batch(true);
         Database.executeBatch(b);

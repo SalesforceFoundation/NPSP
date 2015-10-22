@@ -65,7 +65,7 @@ public with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
         
         List<Schedulable__c> scheduledJobs = [select Class_Name__c from Schedulable__c];
-        System.assertEquals(6, scheduledJobs.size());
+        System.assertEquals(UTIL_MasterSchedulableHelper.scheduledClasses.size(), scheduledJobs.size());
         
         List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
         :UTIL_MasterSchedulableHelper.scheduledJobs and CronJobDetail.JobType = '7'];
@@ -126,7 +126,7 @@ public with sharing class STG_SettingsManager_TEST {
     }
     
     /*********************************************************************************************************
-    * @description Tests that the Settings Service has each settins object loaded
+    * @description Tests that the Settings Service has each settings object loaded
     * @return void
     */
     public static testMethod void testSettingsService() {
@@ -248,6 +248,32 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests that the name specs are valid in the Households panel
+    * @return void
+    */
+    public static testMethod void testNameSpecs() {
+        if (strTestOnly != '*' && strTestOnly != 'testNameSpecs') return;
+        STG_PanelHouseholds_CTRL panel = new STG_PanelHouseholds_CTRL();
+        
+        STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c = true;
+        system.assertEquals(true, panel.isValidNameFormats());        
+
+        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Household_Name_Format__c = '{!{!FirstName}} {!LastName} Family';
+        
+        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
+               
+        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!bogus}}';
+        system.assertEquals(false, panel.isValidNameFormats());        
+        STG_Panel.stgService.stgHN.Informal_Greeting_Format__c = '{!{!FirstName}}';
+
+        system.assertEquals(true, panel.isValidNameFormats());        
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Leads panel
     * @return void
     */
@@ -322,6 +348,23 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Payments_Enabled__c);
+    }
+
+    /*********************************************************************************************************
+    * @description Tests the opportunity naming panel
+    * @return void
+    */
+    public static testMethod void testPanelOppNaming() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelOppNaming') return;
+
+        STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+        system.assertEquals('idPanelOppNaming', panel.idPanel());
+        panel.newONS();
+        panel.currentONS.Date_Format__c = 'YYYY-MM-dd';
+        panel.currentONS.Opportunity_Name_Format__c = '{!Contact.LastName} {!CloseDate}';
+        system.assert(panel.isValidNameFormats(), 'Validation should pass.');
+        panel.saveONS();
+        system.assertEquals(1, panel.mapOppNameSettings.size(), 'The opportunity naming setting should be saved.');
     }
 
     /*********************************************************************************************************

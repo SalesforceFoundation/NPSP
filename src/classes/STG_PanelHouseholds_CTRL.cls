@@ -87,7 +87,7 @@ public with sharing class STG_PanelHouseholds_CTRL extends STG_Panel {
     * any errors.
     * @return boolean 
     */
-    private boolean isValidNameFormats() {
+    public boolean isValidNameFormats() {
         // make sure any custom name formats are valid.
         if (STG_Panel.stgService.stgHH.npo02__Advanced_Household_Naming__c) {
 	        string strSetting;        

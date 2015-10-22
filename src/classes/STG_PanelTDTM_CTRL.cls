@@ -73,6 +73,31 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
+    * @description whether any NPSP trigger handlers are marked Asynchronous
+    */
+    public boolean hasAsync { 
+        get {
+            if (hasAsync == null) {
+                hasAsync = false;
+                // load up our defaults to get their class names.
+                List<Trigger_Handler__c> listTHDefault = TDTM_DefaultConfig.getDefaultRecords();
+                set<string> setClasses = new set<string>();
+                for (Trigger_Handler__c th : listTHDefault)
+                    setClasses.add(th.Class__c);
+                
+                for (Trigger_Handler__c th : listTH) {
+                    if (setClasses.contains(th.Class__c) && th.Asynchronous__c) {
+                        hasAsync = true;
+                        break;
+                    }
+                }
+            }
+            return hasAsync;
+        }        
+        private set; 
+    }
+
+    /*******************************************************************************************************
     * @description The trigger actions available for the trigger handlers.
     */
     public list<SelectOption> listSOTriggerAction {

@@ -172,6 +172,7 @@ public with sharing class HH_ManageHHAccount_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testRemoveContactActiveAddress') return;
 
         //tests that removing the contact who is the only owner of the active address changes the active address to another appropriate one
+        TDTM_DefaultConfig.startTestDataInit();
         
         Account hh = new Account(
             Name = 'test_hh',
@@ -205,6 +206,7 @@ public with sharing class HH_ManageHHAccount_TEST {
             );
         insert con2;
         
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
         
         Account tempHH = new Account();

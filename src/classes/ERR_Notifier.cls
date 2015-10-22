@@ -146,7 +146,8 @@ public with sharing class ERR_Notifier {
         mail.setReplyTo('donotreply@salesforcefoundation.org');
         mail.setSenderDisplayName('Nonprofit Starter Pack');
         mail.setSubject('NPSP Error');
-        string bodyString = '';
+        string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
+        bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')';
         if (context == ERR_Handler_API.Context.RD.name())
             bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
         bodyString += '\n\nErrors:';
@@ -221,7 +222,7 @@ public with sharing class ERR_Notifier {
         if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
             if (errorNotifRecipient != NotificationOptions.sysAdmins) {
                 if (!(errorNotifRecipient instanceof id)) {
-                    ctrl.createDR(strSetting, 'Error', label.healthDetailsInvalidErrorRecipient, 
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidErrorRecipient, 
                         string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                     return;
                 }
@@ -229,7 +230,7 @@ public with sharing class ERR_Notifier {
                     // verify chatter group exists
                     list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
                     if (listCG.size() == 0) {
-                        ctrl.createDR(strSetting, 'Error', 
+                        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                             string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
                             string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                         return;
@@ -239,13 +240,13 @@ public with sharing class ERR_Notifier {
                         // verify user exists and is active
                         list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient and isActive = true];
                         if (listUser.size() == 0) {
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return;    
                         }
                         if (listUser[0].isActive == false) { 
-                            ctrl.createDR(strSetting, 'Error', 
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
                                 string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
                                 string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
                             return; 
@@ -254,33 +255,7 @@ public with sharing class ERR_Notifier {
                 }
             }
         // settings ok.
-        ctrl.createDR(strSetting, 'Success', null, label.healthLabelErrorRecipientValid);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Sends an email to the user installing the package warning of package installation failure.
-    * @param e Exception thrown during the package installation process.
-    * @param context The installation context.
-    * @return void
-    */
-    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
-        try {
-            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforcefoundation.org');
-            mail.setSenderDisplayName('Nonprofit Starter Pack');
-            mail.setSubject('NPSP Install Errors');
-            String bodyString = Label.stgInstallScriptError;
-            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-            + 'Error stack trace: \n' + e.getStackTraceString();
-            mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
-        } catch(Exception e2) {
-            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelErrorRecipientValid);
         }
     }
 }

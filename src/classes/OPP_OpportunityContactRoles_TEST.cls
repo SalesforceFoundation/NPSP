@@ -86,7 +86,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Opportunity opp2 = new Opportunity(
             Name = 'Apex Test Opp2',
             AccountId = acc.Id,
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(), StageName = 'Closed Won'
         );
         insert opp2;
@@ -158,7 +158,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(),
             StageName = 'Closed Won'
         );
@@ -196,7 +196,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
-            npe01__Contact_Id_for_Role__c = con.Id,
+            Primary_Contact__c = con.Id,
             CloseDate = date.today(),
             StageName = 'Closed Won'
         );
@@ -335,5 +335,5 @@ private class OPP_OpportunityContactRoles_TEST {
             system.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
         }
         Test.stopTest();
-    }    
+    }
 }

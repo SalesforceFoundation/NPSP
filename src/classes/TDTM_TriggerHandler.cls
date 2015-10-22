@@ -37,17 +37,12 @@
 * charge of figuring out which of the classes that do the actual work need to be called, and calling them.
 */
 public with sharing class TDTM_TriggerHandler {
-
-    /**
-    * A public flag to allow code to specify that they want errors propogated from the trigger to Salesforce, 
-    * rather than just logged.  This allows DML to produce errors that get displayed in the standard ui, rather 
-    * than just logged.
-    */
-    public static boolean isPropogateErrorsFromTrigger = false;
     
     private static Boolean defaultRecordsInserted = false;
     
     public static boolean suppressDebugAssertAfterErrorLogging = false;
+
+    public static boolean disableTDTM = false;
     
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -67,7 +62,12 @@ public with sharing class TDTM_TriggerHandler {
     public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
-    	if(newList != null)
+    	if (disableTDTM) {
+           UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
+           return;
+        }
+
+        if(newList != null)
     	   UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
     	// This solves the problem of not being able to save error records if everything gets rolled back. 
         // TDTM_TriggerHandler is taking care of saving error records if there is any error when performing 
@@ -118,6 +118,7 @@ public with sharing class TDTM_TriggerHandler {
 	        }
 	    } catch(Exception e) {
 	    	UTIL_Debug.debug(LoggingLevel.WARN, '****Exception caught in run method of TDTM_TriggerHandler: ' + e.getMessage());
+            UTIL_Debug.debug(LoggingLevel.WARN, '\n****Stack Trace:\n' + e.getStackTraceString() + '\n');
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
                 Database.rollback(sp);
                 //Store error record and send error email notification
@@ -128,18 +129,7 @@ public with sharing class TDTM_TriggerHandler {
             // We don't need to mark the record(s) with an error (with addError) because the application does it automatically 
             // for us (IF they are part of the DML performed in our processDML method). If we mark it with an error the transaction 
             // will be rolled back by the platform, and our error record won't be saved or error notifications sent.
-            
-            // Some code may want the DML to be rolled back!  eg, an Address object update, than then needs
-            // to propogate to the household account and contacts, but may fail due to State & Country picklists.
-            // we don't know which object on the list caused the problem, so we just add the error to the first.
-            // this should cause the ui to display one error message, rather than repeating the same error for each object.
-            if (isPropogateErrorsFromTrigger) {
-                if (newlist != null && newlist.size() > 0)
-                    newlist[0].addError(e.getMessage());
-                else if (oldlist != null && oldlist.size() > 0)
-                    oldlist[0].addError(e.getMessage());
-            }
-            
+                        
             // but we do want our tests to fail if they encountered this error!
             // we do need to allow some specific tests that are testing our error handling
             // to avoid the assert, because by allowing it to throw an exception within our catch, it
@@ -165,12 +155,13 @@ public with sharing class TDTM_TriggerHandler {
 	        	if(classInstance instanceof TDTM_Runnable) {
 			        TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
 			        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
-			        String action = String.valueOf(classToRunRecord.get('Trigger_Action__c'));
+			        boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert || 
+			             thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete); 
 			        
 			        //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-			        if(async && action != 'BeforeInsert' && !System.isFuture() && !System.isBatch()) {
+			        if(async && !isBefore && !System.isFuture() && !System.isBatch()) {
 			        	UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName);
 			        	runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
 			        } else {
@@ -191,13 +182,19 @@ public with sharing class TDTM_TriggerHandler {
     
     private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
     List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
-       Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+       set<Id> setNewId;
+       if(newlist != null) {
+           Map<Id,Sobject> nm = new Map<Id,Sobject>(newlist);
+           setNewId = new set<Id>(nm.keySet());
+       }
        
-       Map<Id,Sobject> om;
-       if(oldlist != null) om = new Map<Id,SObject>(oldlist);
-       else om = new Map<Id, SObject>();
+       set<Id> setOldId;
+       if(oldlist != null) {
+           Map<Id,Sobject> om = new Map<Id,SObject>(oldlist);
+           setOldId = new set<Id>(om.keySet());
+       }
        
-       classToRun.runFutureNonStatic(nm.keySet(), om.keySet(), thisAction.name(), describeObj.getName(), classToRunName);
+       classToRun.runFutureNonStatic(setNewId, setOldId, thisAction.name(), describeObj.getName(), classToRunName);
     }
     
     /*******************************************************************************************************
@@ -207,6 +204,20 @@ public with sharing class TDTM_TriggerHandler {
     * @return void
     */
     public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        processDMLWithRollback(dmlWrapper, true);
+    }
+
+    /*******************************************************************************************************
+    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @param withRollback True if errors should cause rollback, false if not.
+    * @return Errors Object with list of Error objects
+    */
+    public static ERR_Handler.Errors processDMLWithRollback(TDTM_Runnable.DmlWrapper dmlWrapper, boolean withRollback) {
+        if (dmlWrapper == null)
+            return null;
+            
         //Create transaction
         Savepoint sp = Database.setSavepoint();
         
@@ -222,16 +233,20 @@ public with sharing class TDTM_TriggerHandler {
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
         //Also, should we support Database.merge?
         
-        //Process the results. If isPropogateErrorsFromTrigger == true, getErrors will throw an exception instead of returning the errors.
+        //Process the results. 
         ERR_Handler.Errors errors = ERR_Handler.getErrors(insertResults, updateResults, deleteResults, undeleteResults, 
             dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
             dmlWrapper.objectsToUndelete);
             
         if(errors.errorsExist) {
             if(!UTIL_CustomSettingsFacade.getErrorSettings().Disable_Error_Handling__c) {
-                Database.rollback(sp);
-                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.TDTM.name());
+                if(withRollback) {
+	                Database.rollback(sp);
+	                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.TDTM.name());
+                }
             }
         }
+        
+        return errors;
     }
 }

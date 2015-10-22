@@ -71,7 +71,7 @@ public class AFFL_Affiliations_TEST {
         insert acc2;
         
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         contact.AccountId = acc2.id;
         update contact;
         Test.stopTest();
@@ -163,7 +163,7 @@ public class AFFL_Affiliations_TEST {
         
         con.AccountId = acc2.id;
         Test.startTest();      
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         update con;
         Test.stopTest();
           
@@ -197,6 +197,10 @@ public class AFFL_Affiliations_TEST {
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
     
+        // make sure household objects also created, since their trigger was interferring with the affilations trigger.
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
+
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         system.assertEquals(null, listCon[0].AccountId); 
         
@@ -323,7 +327,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation
         for (Contact con : listCon) 
             con.Primary_Affiliation__c = listAcc[4].Id; // Org1  
@@ -384,7 +388,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts with a Primary Affiliation and a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[4].Id; // Org1  
@@ -453,7 +457,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now update our contacts to a different account
         for (Contact con : listCon) {
             con.AccountId = listAcc[5].Id; // Org2  
@@ -528,7 +532,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(9, listAffl.size());
 
         Test.startTest();
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         // now clear our primary affilation
         for (Contact con : listCon) {
             con.Primary_Affiliation__c = null; 
@@ -698,7 +702,7 @@ public class AFFL_Affiliations_TEST {
         }
         // must manually clear this, since our context is still active
         AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
-        AFFL_Affiliations_TDTM.hasRunForContacts = false;
+        AFFL_Affiliations_TDTM.doNotRunForContacts = false;
         insert listAffl;
                 
         // make sure primary affiliation set on Contacts
