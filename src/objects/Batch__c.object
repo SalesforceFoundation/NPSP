@@ -54,9 +54,12 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>The holding object for batch entry. Interaction with this object should occur only through the Batch Data Entry tab.</description>
     <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
     <fieldSets>
         <fullName>BatchDetailView</fullName>
         <description>The batch information fields to be displayed above the data entry panel.</description>

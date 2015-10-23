@@ -1181,6 +1181,10 @@
         <name>ListView</name>
     </types>
     <types>
+        <members>Contact.NPSP_Contact_Personal_Email_Match</members>
+        <name>MatchingRule</name>
+    </types>
+    <types>
         <members>Account.New_Address</members>
         <members>Account.New_Affiliation</members>
         <members>Account.Quick_Household_Update</members>
@@ -1243,5 +1247,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>30.0</version>
+    <version>33.0</version>
 </Package>
