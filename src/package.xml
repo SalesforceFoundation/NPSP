@@ -600,7 +600,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
-        <members>CONV_Accept_Rish</members>
+        <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
         <members>CONV_Activities_Reparented</members>

@@ -154,7 +154,7 @@
                             <label for="check-households"><input type="checkbox" id="check-households"/>{!$Label.CONV_Only_Household_Contacts}</label>
                             <label for="check-apps"><input type="checkbox" id="check-required-fields"/>{!$Label.CONV_Non_NPSP_Apps}</label>
                             <label for="check-consult"><input type="checkbox" id="check-consult"/>{!$Label.CONV_Local_Expert}</label>
-                            <label for="check-risk"><input type="checkbox" id="check-risk"/>{!$Label.CONV_Accept_Rish}</label>
+                            <label for="check-risk"><input type="checkbox" id="check-risk"/>{!$Label.CONV_Accept_Risk}</label>
                         </div>
                     </div>
                 </div>
