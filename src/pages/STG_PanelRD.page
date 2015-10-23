@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelRD_CTRL" docType="html-5.0" action="{!init}">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
-    <p><apex:outputText value="{!$Label.npe03__RecurringDonationSettingsDescription}" escape="false" /></p>
+    <p><apex:outputText value="{!$Label.10161000002SVoi}" escape="false" /></p>
 
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageMessages id="pageMessages"/>
