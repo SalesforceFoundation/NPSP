@@ -105,7 +105,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
 
@@ -181,7 +183,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
@@ -248,7 +252,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         system.AssertEquals(1,createdRoles.size());
@@ -307,7 +313,9 @@ private class HH_OppContactRoles_TEST {
             Amount=100,
             AccountId=accountId
         );
+        Test.startTest();
         insert o;
+        Test.stopTest();
         //check for contact roles
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole where OpportunityId = :o.id order by ContactId];
         system.AssertEquals(0,createdRoles.size());
@@ -332,6 +340,7 @@ private class HH_OppContactRoles_TEST {
         insert con1;
         insert con2;
 
+        Test.startTest();
         Opportunity o1 = new Opportunity(
             Name = 'o1',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
@@ -344,7 +353,8 @@ private class HH_OppContactRoles_TEST {
             CloseDate = System.today(),
             Primary_Contact__c = (string)con2.id);
         insert o2;        
-
+        Test.stopTest();
+        
         system.assertequals(2,(integer)[select count() from Opportunity]);
         system.assertequals(2,(integer)[select count() from OpportunityContactRole]);
     }  
@@ -385,7 +395,6 @@ private class HH_OppContactRoles_TEST {
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Household_Member_Contact_Role__c='Household Member'));
-        //UNDONE: add setting strRefresh into custom settings
         HH_OppContactRoles_TDTM.strRefreshSetting = strRefresh;
                 
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -416,7 +425,9 @@ private class HH_OppContactRoles_TEST {
         
         // now let's move a contact to a different household
         listCon[0].AccountId = listAcc[1].Id;
+        Test.startTest();
         update listCon[0];
+        Test.stopTest();
         
         List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
         list<integer> listPrimary = new integer[5];

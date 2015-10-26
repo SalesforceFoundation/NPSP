@@ -97,7 +97,9 @@ private with sharing class ALLO_Allocations_TEST {
         
         ALLO_Allocations_TDTM.resetFlags(false);
         opp.Amount = 10;
+        Test.startTest();
         update opp;
+        Test.stopTest();
         
         queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c ORDER BY Percent__c];
         system.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Opportunity amount.');
@@ -156,7 +158,9 @@ private with sharing class ALLO_Allocations_TEST {
         //resetting these manually as a test is considered a single context for static variables
         ALLO_Allocations_TDTM.resetFlags(false);
         Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 6, General_Accounting_Unit__c = gau.id);
+        Test.startTest();
         insert amountAllo;
+        Test.stopTest();
 
         queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c ORDER BY Amount__c];
         system.debug('LOOK queryAllo' + queryAllo);
@@ -201,7 +205,9 @@ private with sharing class ALLO_Allocations_TEST {
 
         ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Test.startTest();
         insert opp;
+        Test.stopTest();
 
         //verify campaign allocation and default allocation created
         list<Allocation__c> queryAllo = [SELECT Id, General_Accounting_Unit__c, General_Accounting_Unit__r.Name, Amount__c, Percent__c FROM Allocation__c WHERE Opportunity__c=:opp.id ORDER BY Amount__c];
@@ -259,7 +265,11 @@ private with sharing class ALLO_Allocations_TEST {
             npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
             npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
         );
+        // this initial creation of the RD with default allocations set up, which get copied to the opp
+        // will be what we soql limit profile in this test (and thus the startTest/stopTest).
+        Test.startTest();
         insert rd;
+        Test.stopTest();
         
         //query for the opportunity automatically created by the schedule
         list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
@@ -357,7 +367,9 @@ private with sharing class ALLO_Allocations_TEST {
         list<Opportunity> oppList = new list<Opportunity>();
         for (integer i=0;i<100;i++)
             oppList.add(new Opportunity(Name='opp'+i, Amount = 8, AccountID=acc.id, CampaignId=math.mod(i,2)==0?cam.id:null, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+        Test.startTest();
         insert oppList;
+        Test.stopTest();
 
         list<AggregateResult> queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
         system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should be created.');
@@ -397,7 +409,9 @@ private with sharing class ALLO_Allocations_TEST {
         //only test the record type exclusion if one exists.
         if (rtid!=null)
             oppForInsert.add(new Opportunity(Name='excluded record type', RecordTypeId=rtid, Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+        Test.startTest();
         insert oppForInsert;
+        Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c];
         system.assertEquals(0,queryAllo.size(), 'No default allocation should be created for an excluded opportunity type or an excluded opportunity record type.');
@@ -420,7 +434,9 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
 
         Opportunity opp = new Opportunity(Name='foo', Amount = null, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Test.startTest();
         insert opp;
+        Test.stopTest();
 
         list<Allocation__c> queryAllo = [SELECT Id, Amount__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(0,queryAllo.size(),'No default allocation should be created for an opporunity with a null amount.');
@@ -472,7 +488,9 @@ private with sharing class ALLO_Allocations_TEST {
 
         ALLO_Allocations_TDTM.resetFlags(false);
         Opportunity opp = new Opportunity(Name='foo', CampaignId=cam.id, Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Test.startTest();
         insert opp;
+        Test.stopTest();
 
         list<Allocation__c>  queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(1,queryAllo.size(), 'A single allocation should be created.');
