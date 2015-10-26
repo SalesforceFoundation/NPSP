@@ -181,6 +181,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         listAccLoser.add(ADDR_Addresses_TEST.listAccT[2]);
         
         // merge the Accounts
+        Test.startTest();
         merge accWinner listAccLoser;
 
         // to flush our future calls that fix related data up!        

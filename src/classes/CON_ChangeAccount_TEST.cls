@@ -383,6 +383,7 @@ public with sharing class CON_ChangeAccount_TEST {
         
         // move the first contact in the first account to the other account.
         con.AccountId = ADDR_Addresses_TEST.listAccT[1].Id;
+        Test.startTest();
         update con;
         Test.stopTest();
 

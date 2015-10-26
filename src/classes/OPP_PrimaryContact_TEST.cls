@@ -65,7 +65,9 @@ public with sharing class OPP_PrimaryContact_TEST {
         system.assertEquals(conList[0].id, queryOCR[0].ContactId,'The first contact should have the primary contact role.');
 
         opp.Primary_Contact__c = conList[1].id;
+        Test.startTest();
         update opp;
+        Test.stopTest();
         
         queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
         system.assertEquals(1,queryOCR.size(), 'One primary contact role should exist for the opportunity.');
@@ -128,7 +130,9 @@ public with sharing class OPP_PrimaryContact_TEST {
         insert conList;
         
         list<Opportunity> oppList = UTIL_UnitTestData_TEST.OppsForContactList(conList, null, UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 8, null, null);
+        Test.startTest();
         insert oppList;
+        Test.stopTest();
 
         list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId IN :oppList];
         system.assertEquals(50,queryOCR.size(), 'An OCR should be created for each Opportunity.');
@@ -166,7 +170,9 @@ public with sharing class OPP_PrimaryContact_TEST {
         system.assertEquals(conList[0].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
 
         opp.Primary_Contact__c = conList[1].id;
+        Test.startTest();
         update opp;
+        Test.stopTest();
 
         queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
         system.assertEquals(2,queryOCR.size(), 'Two OCRs should exist.');

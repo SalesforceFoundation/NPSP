@@ -520,7 +520,6 @@ public with sharing class HH_ManageHHAccount_TEST {
             );
         insert con2;
                         
-        Test.startTest();
         ApexPages.StandardController sc = new ApexPages.standardController(new Account());
         
         ApexPages.currentPage().getParameters().put('cid', con1.id);
@@ -538,6 +537,7 @@ public with sharing class HH_ManageHHAccount_TEST {
         system.assertEquals(true, ext.activeContacts.containsKey(con2.id));
         
         // Test changing name
+        Test.startTest();
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSetNaming(false, 'The Test123Awesomes', false, 'TestZZ1234', false, 'blah', jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
@@ -550,6 +550,7 @@ public with sharing class HH_ManageHHAccount_TEST {
         jsSt = JSON.serialize(ext);
         nwSt = HH_ManageHousehold_EXT.remoteSave(jsSt);
         ext = HH_ManageHousehold_EXT.unpackState(nwSt);
+        Test.stopTest();        
         
         // query for a contact and make sure it got the correct fields set
         Contact con2q = [SELECT Id, AccountId, MailingStreet FROM Contact WHERE Id = :con2.id];
@@ -578,7 +579,6 @@ public with sharing class HH_ManageHHAccount_TEST {
         // Now, test delete
         ext.deleteHH();
         
-        Test.stopTest();        
     }
     
         

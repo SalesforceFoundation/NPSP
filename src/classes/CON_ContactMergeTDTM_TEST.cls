@@ -81,6 +81,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         system.assertEquals(2, [select count() from npe5__Affiliation__c]);              
         
+        Test.startTest();
         merge conWinner conLoser;
 
         // to flush our future calls that fix related data up!        
@@ -163,6 +164,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         AFFL_Affiliations_TDTM.hasRunForAffiliations = false;
         system.assertEquals(2, [select count() from npe5__Affiliation__c]);              
 
+        Test.startTest();
         merge conWinner conLoser;
 
         // to flush our future calls that fix related data up!        
@@ -269,6 +271,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         system.assertEquals(7, [select count() from npe5__Affiliation__c]);
 
         // now let's do the merge!
+        Test.startTest();
         merge conWinner new list<Contact>{conLoser1, conLoser2};
 
         // to flush our future calls that fix related data up!        
@@ -317,6 +320,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
         
         // here we go!
+        Test.startTest();
         merge conWinner conLoser;
 
         // to flush our future calls that fix related data up!        
@@ -401,6 +405,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         system.assertEquals(12, [select count() from npe4__Relationship__c]);
         
         // now let's do the merge!
+        Test.startTest();
         merge conWinner new list<Contact>{conLoser1, conLoser2};
 
         // to flush our future calls that fix related data up!        

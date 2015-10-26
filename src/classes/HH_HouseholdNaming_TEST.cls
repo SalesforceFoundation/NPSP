@@ -323,7 +323,6 @@ public class HH_HouseholdNaming_TEST {
 
         
         //test various re-orderings of names
-        Test.startTest();
         
         HH_HouseholdNaming hn = new HH_HouseholdNaming();
         
@@ -372,10 +371,13 @@ public class HH_HouseholdNaming_TEST {
         con0.npo02__Household_Naming_Order__c = null;
         con1.npo02__Household_Naming_Order__c = 2;
         
+        // system limit profiling around this smaller scope of work.
+        Test.startTest();
         update con0;
         update con1;
         
         hn.UpdateNames(new list<Id>{hh.id});
+        Test.stopTest();
         
         hh = [select Id, Name, npo02__Formal_greeting__c, npo02__Informal_greeting__c from npo02__Household__c where id = :hh.id LIMIT 1][0];
         
@@ -383,7 +385,6 @@ public class HH_HouseholdNaming_TEST {
         system.assertequals('Jim ' + system.label.npo02.HouseholdNameConnector  + ' Joe Test ' + system.label.npo02.HouseholdNameConnector + ' John Jones', hh.npo02__Formal_greeting__c);
         system.assertequals('Jim, Joe ' + system.label.npo02.HouseholdNameConnector + ' John', hh.npo02__Informal_greeting__c);
         
-        Test.stopTest();
         
     }  
 
