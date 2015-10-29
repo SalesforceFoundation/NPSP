@@ -68,7 +68,7 @@ public without sharing class TDTM_DefaultConfig {
     public static boolean ADDR_Validator_TDTM_TestAsync = false; // will not support verification if this is turned async!
     private static boolean ADDR_Validator_TDTM_TestAsyncTemp;
     
-    public static boolean ACCT_Accounts_TDTM_TestAsync = true;
+    public static boolean ACCT_Accounts_TDTM_TestAsync = false;
     private static boolean ACCT_Accounts_TDTM_TestAsyncTemp;
 
     /*******************************************************************************************************
