@@ -117,4 +117,8 @@ If you are on a unix based system, the following commands should work:
             replace="${lt}recordTypeVisibilities>${line.separator}      ${lt}default>true${lt}/default>${line.separator}      ${lt}personAccountDefault>true${lt}/personAccountDefault>${line.separator}      ${lt}recordType>Opportunity.NPSP_Default${lt}/recordType>${line.separator}      ${lt}visible>true${lt}/visible>${line.separator}    ${lt}/recordTypeVisibilities>${line.separator}    \1" />
         
     </target>
+    <target name="postDeploy">
+        <echo>Sleeping for 10 seconds</echo>
+        <sleep seconds="10" />
+    </target>
 </project>
