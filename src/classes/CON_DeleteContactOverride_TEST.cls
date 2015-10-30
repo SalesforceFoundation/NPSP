@@ -117,8 +117,6 @@ private class CON_DeleteContactOverride_TEST {
     @isTest static void deleteAloneInHousehold() {
         if (strTestOnly != '*' && strTestOnly != 'deleteAloneInHousehold') return;
 
-        //npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
-
         Contact con = new Contact(LastName='foo');
         insert con;
         
@@ -149,8 +147,6 @@ private class CON_DeleteContactOverride_TEST {
     */
     @isTest static void deleteSeveralInHousehold() {
         if (strTestOnly != '*' && strTestOnly != 'deleteSeveralInHousehold') return;
-
-        //npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
         Contact con = new Contact(LastName='foo');
         insert con;
