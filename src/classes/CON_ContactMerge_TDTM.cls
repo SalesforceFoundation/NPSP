@@ -148,6 +148,8 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         for (integer i = 0; i < listContactIdLoser.size(); i++) {
         	if (listAccountIdLoser[i] != null) {
                 Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
+                if (accLoser == null)
+                    continue;
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
                     listAccIdHH.add(accLoser.Id); 
                 if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 

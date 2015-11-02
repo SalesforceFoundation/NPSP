@@ -68,6 +68,9 @@ public without sharing class TDTM_DefaultConfig {
     public static boolean ADDR_Validator_TDTM_TestAsync = false; // will not support verification if this is turned async!
     private static boolean ADDR_Validator_TDTM_TestAsyncTemp;
     
+    public static boolean ACCT_Accounts_TDTM_TestAsync = false;
+    private static boolean ACCT_Accounts_TDTM_TestAsyncTemp;
+
     /*******************************************************************************************************
     * @description To be called before setting up your test data for an Apex test.  It saves the state of
     * all of the async flags, and resets them to false, so async behavior won't be used during test data
@@ -84,6 +87,8 @@ public without sharing class TDTM_DefaultConfig {
         ADDR_Account_TDTM_TestAsync = false;
         ADDR_Validator_TDTM_TestAsyncTemp = ADDR_Account_TDTM_TestAsync;
         ADDR_Validator_TDTM_TestAsync = false;
+        ACCT_Accounts_TDTM_TestAsyncTemp = ACCT_Accounts_TDTM_TestAsync;
+        ACCT_Accounts_TDTM_TestAsync = false;
     }
     
     /*******************************************************************************************************
@@ -96,6 +101,7 @@ public without sharing class TDTM_DefaultConfig {
         ADDR_Contact_TDTM_TestAsync = ADDR_Contact_TDTM_TestAsyncTemp;
         ADDR_Account_TDTM_TestAsync = ADDR_Account_TDTM_TestAsyncTemp;
         ADDR_Validator_TDTM_TestAsync = ADDR_Validator_TDTM_TestAsyncTemp;
+        ACCT_Accounts_TDTM_TestAsync = ACCT_Accounts_TDTM_TestAsyncTemp;
     }
 
     /*******************************************************************************************************
@@ -144,7 +150,7 @@ public without sharing class TDTM_DefaultConfig {
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
 
         // Account Management on Account
-        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = ACCT_Accounts_TDTM_TestAsync,
               Class__c = 'ACCT_Accounts_TDTM', Load_Order__c = 1, Object__c = 'Account',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterUpdate'));
 
