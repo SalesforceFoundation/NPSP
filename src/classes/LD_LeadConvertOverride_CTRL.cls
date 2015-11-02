@@ -354,8 +354,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     // so on update, it will get its correct name.
                     if (!hs.npo02__Advanced_Household_Naming__c)
                         myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
-                        myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-                    }
+                    else
+                        myAccount.Name = system.Label.npo02.NameReplacementText;
+                    myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+                }
                 
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
