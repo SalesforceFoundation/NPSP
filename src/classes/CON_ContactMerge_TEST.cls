@@ -429,6 +429,8 @@ private class CON_ContactMerge_TEST {
     //the second contact's org shouldn't be deleted because it has open opportunities
     static void merge2OneToOneOpps(string strProcessor) {
         
+        TDTM_DefaultConfig.startTestDataInit();
+        
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         String newContactMailingStreet = '123 Elm St';
@@ -468,6 +470,7 @@ private class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con2.id);
         
         //merge them
+        TDTM_DefaultConfig.stopTestDataInit();
         Test.startTest();
         controller.mergeContacts();
         Test.stopTest();
