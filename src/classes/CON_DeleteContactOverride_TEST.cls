@@ -43,6 +43,39 @@ private class CON_DeleteContactOverride_TEST {
     private static string strTestOnly = '*';
 
     /*******************************************************************************************************
+    * @description Deletes a contact not alone in their household, verifies household is not deleted.
+    */
+    @isTest static void deleteWithOtherMembers() {
+        if (strTestOnly != '*' && strTestOnly != 'deleteWithOtherMembers') return;
+        
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        list<Contact> queryCon = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
+        system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
+
+        Contact con2 = new Contact(LastName='foo', FirstName='Mr.', AccountId=querycon[0].AccountId);
+        insert con2;
+
+        test.startTest();
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        ctrl.processDelete();
+        test.stopTest();
+
+        list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :querycon[0].AccountId ALL ROWS];
+        
+        system.assertEquals(1,queryAcc.size(),'There should be one account.');
+        system.assertEquals(false, queryacc[0].isDeleted,'Deleted flag should not be set.');
+
+        queryCon = [SELECT Id, isDeleted FROM Contact WHERE id = :con.id ALL ROWS];
+
+        system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
+        system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
+
+    }
+
+    /*******************************************************************************************************
     * @description Deletes contact in the 1:1 account model. Verifies that contact is marked is in the 
     * recycle bin and not hard deleted.
     */
@@ -84,8 +117,6 @@ private class CON_DeleteContactOverride_TEST {
     @isTest static void deleteAloneInHousehold() {
         if (strTestOnly != '*' && strTestOnly != 'deleteAloneInHousehold') return;
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
-
         Contact con = new Contact(LastName='foo');
         insert con;
         
@@ -108,43 +139,5 @@ private class CON_DeleteContactOverride_TEST {
         system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
         system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
 
-    }
-
-    /*******************************************************************************************************
-    * @description Deletes contact in the household account model that is alone in their household \
-    * account. Verifies that contact is in the recycle bin and not hard deleted.
-    */
-    @isTest static void deleteSeveralInHousehold() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteSeveralInHousehold') return;
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
-
-        Contact con = new Contact(LastName='foo');
-        insert con;
-        
-        list<Contact> queryCon = [SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
-        system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
-        system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
-
-        id householdId = queryCon[0].AccountId;
-
-        //add a second contact to the household
-        Contact con2 = new Contact(Lastname='foo2', AccountId=householdId);
-        insert con2;
-
-        test.startTest();
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-        ctrl.processDelete();
-        test.stopTest();
-
-        list<account> queryAcc = [SELECT Id, isDeleted FROM Account WHERE id = :householdId ALL ROWS];
-        
-        system.assertEquals(1,queryAcc.size(),'There should be one account.');
-        system.assert(queryacc[0].isDeleted,'Deleted flag should not be set.');
-
-        queryCon = [SELECT Id, isDeleted FROM Contact WHERE id = :con.id ALL ROWS];
-
-        system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
-        system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
     }
 }
