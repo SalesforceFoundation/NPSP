@@ -195,11 +195,22 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     UTIL_Debug.debug(LoggingLevel.WARN, '**** Address: ' + addr + ' message: ' + error.Full_Message__c);
                 }
             }
-        }
-        
         return null;
-    }
-    
+        }
+
+        // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            list<Address__c> listAddr = new list<Address__c>();    
+            for (SObject so : listNew) {
+                Address__c addr = (Address__c)so;
+                if (isAddressEmpty(addr))
+                    listAddr.add(new Address__c(Id = addr.Id));
+            }
+            if (listAddr.size() > 0)
+                delete listAddr;             
+        }
+        return null;
+    }    
     
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
@@ -457,6 +468,23 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return mapAccIdListAddrHH;
     }
  
+    /*******************************************************************************************************
+    * @description returns whether the Address's mailing fields are null
+    * @param addr the Address
+    * @return boolean. true if all of the Mailing fields are empty
+    */ 
+    public static boolean isAddressEmpty(Address__c addr) {
+        if (addr == null)
+           return false;        
+        return (
+           addr.MailingStreet__c == Null &&
+           addr.MailingStreet2__c == Null &&
+           addr.MailingCity__c == Null &&
+           addr.MailingState__c == Null &&
+           addr.MailingPostalCode__c == Null &&
+           addr.MailingCountry__c == Null);
+    }
+
     /*******************************************************************************************************
     * @description utility to compare two address objects seasonal fields
     * @param addrNew the new version of the Address
