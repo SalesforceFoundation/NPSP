@@ -2870,4 +2870,72 @@ public with sharing class ADDR_Addresses_TEST {
         list<Address__c> listAddr = [select Id from Address__c];
         system.assertEquals(0, listAddr.size());
     }
+
+    /*********************************************************************************************************
+    @description
+        update contacts' mailing address fields to empty cause clearing the default address  
+    verify:
+        no new Address created
+        existing Default Address updated to be non-default
+        HH and Contacts get updated to empty address fields
+    **********************************************************************************************************/            
+    static testMethod void clearConAddrExisting() {
+        if (strTestOnly != '*' && strTestOnly != 'clearConAddrExisting') return;
+        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+        ));
+                
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+
+        // clear some of the contact addresses directly
+        list<Contact> listCon = new list<Contact>();
+        for (integer i = 0; i < cHH; i++) {
+            Contact con = listConT[i*cHH + i];
+            con.MailingStreet = null;
+            con.MailingCity = null;
+            con.MailingPostalCode = null;
+            con.MailingState = null;
+            con.MailingCountry = null;
+            listCon.add(con);
+        }
+
+        ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
+        Test.startTest();
+        update listCon;
+        Test.stopTest();
+        
+        // verify that the HH and Contacts have empty addresses
+        list<Account> listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account];
+        listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        
+        for (Contact con : listCon) {
+            system.assertEquals(false, con.is_Address_Override__c);
+            system.assertEquals(null, con.Current_Address__c);
+            system.assertEquals(null, con.MailingStreet);
+            system.assertEquals(null, con.MailingCity);
+            system.assertEquals(null, con.MailingPostalCode);
+            system.assertEquals(null, con.MailingState);
+            system.assertEquals(null, con.MailingCountry);
+        }
+ 
+        for (Account acc : listAcc) {
+            system.assertEquals(null, acc.BillingStreet);
+            system.assertEquals(null, acc.BillingCity);
+            system.assertEquals(null, acc.BillingPostalCode);
+            system.assertEquals(null, acc.BillingState);
+            system.assertEquals(null, acc.BillingCountry);
+        }
+        
+        // verify that no new address was created
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c from Address__c];
+        system.assertEquals(cHH, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assertEquals(false, addr.Default_Address__c);
+        }                
+    }
+
 }
