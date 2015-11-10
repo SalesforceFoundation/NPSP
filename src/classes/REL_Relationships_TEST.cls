@@ -673,7 +673,9 @@ private class REL_Relationships_TEST {
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
 
         conList[1].Description='Female';
+        Test.startTest();
         update conList[1];
+        Test.stopTest();
 
         recRel = [select id, npe4__Type__c from npe4__Relationship__c where id = :crel[0].id];
         system.assertEquals('TestFemaleType', recRel.npe4__Type__c);
@@ -701,7 +703,9 @@ private class REL_Relationships_TEST {
         
         //update relationship - this will create the missing npe4__Contact__c field
         relationships[0].npe4__RelatedContact__c = c1.id;
+        Test.startTest();
         Database.SaveResult[] updateResults = Database.update(relationships, false);   
+        Test.stopTest();
         system.assertNotEquals(null, relationships[0].npe4__Contact__c);
         
         //get errors
@@ -722,7 +726,9 @@ private class REL_Relationships_TEST {
         
         setupRelationshipTestData(null);
         
+        Test.startTest();
         ERR_Handler.processError(new MyException('TestException'), ERR_Handler_API.Context.REL);
+        Test.stopTest();
         List<Error__c> errors = [select Full_Message__c from Error__c];
         System.assertEquals(1, errors.size());
         System.assertEquals('TestException', errors[0].Full_Message__c);       
@@ -765,7 +771,9 @@ private class REL_Relationships_TEST {
         
         System.runAs(new User(id = UserInfo.getUserId())){
            delete [select id from npe4__Relationship_Settings__c];
+           Test.startTest();
            npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
+           Test.stopTest();
            Boolean cAuto = REL_Utils.hasContactAutoCreate;
            Boolean cmAuto = REL_Utils.hasCMAutoCreate;
         }
@@ -837,7 +845,9 @@ private class REL_Relationships_TEST {
             REL_RelationshipsViewer_CTRL rvc = new REL_RelationshipsViewer_CTRL(sc);
             
             //call the remote static method to get the node list
+            Test.startTest();
             nodeList = REL_RelationshipsViewer_CTRL.getRelationships(c1.id, true, null);
+            Test.stopTest();
             
             //check that a base node (contact) and the related contact are in the node list
             system.assertEquals(2, nodeList.size());
