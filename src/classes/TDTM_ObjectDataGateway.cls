@@ -73,6 +73,13 @@ public with sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGatew
     }
     
     /*******************************************************************************************************
+     * @description to allow test code to modify the saved trigger handlers and have them reread into the cache.
+     */ 
+    public static void ClearCachedTriggerHandlersForTest() {
+        listTH = null;
+    }
+    
+    /*******************************************************************************************************
      * @description holds the trigger handlers cached in a list, to avoid repetitive soql calls.
      */
     private static list<Trigger_Handler__c> listTH {
