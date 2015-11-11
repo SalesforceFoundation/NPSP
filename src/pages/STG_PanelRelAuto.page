@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelRelAuto_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelAutoCreate}" />
-    <p>{!$Label.npe4__RelationshipsAutoDescription}</p>
+    <p>{!$Label.10161000002lr7R}</p>
 
     <apex:form id="form" styleClass="stgForm form-horizontal">  
         <apex:pageMessages id="pageMessages"/>

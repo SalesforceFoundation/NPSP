@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" >
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
-    <p>{!$Label.npe4__RelationshipsLookupDescription}</p>
+    <p>{!$Label.10161000002lr7U}</p>
 
     <apex:form id="form" styleClass="form-horizontal stgForm">  
         <apex:pageMessages id="pageMessages"/>
