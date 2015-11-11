@@ -101,7 +101,7 @@ public with sharing class CON_ContactMerge_CTRL {
     * all the contacts to merge.
     */
     public class FieldRow {
-    	/*******************************************************************************************************
+        /*******************************************************************************************************
         * @description Stores the field Label.
         */
         public String fieldLabel {get; private set;}
@@ -153,7 +153,7 @@ public with sharing class CON_ContactMerge_CTRL {
     * @description The cell for a corresponding field row in the UI table.
     */
     public class Cell {
-    	/*******************************************************************************************************
+        /*******************************************************************************************************
         * @description Id of the record to which this value belongs.
         */
         public String objId {get; private set;} 
@@ -240,7 +240,7 @@ public with sharing class CON_ContactMerge_CTRL {
         set<Id> mergeIds = new set<Id>(); 
         for (ContactWrapper c : searchResults) {
             if (c.selected) {
-            	mergeIds.add(c.con.Id);
+                mergeIds.add(c.con.Id);
             }
         }
         loadMergeCandidates(mergeIds);
@@ -249,21 +249,21 @@ public with sharing class CON_ContactMerge_CTRL {
     /*******************************************************************************************************
     * @description Shows the next step of the wizard where user can see the diff of the records before merge.
     */
-	private void loadMergeCandidates(set<Id> mergeCandidates) {
+    private void loadMergeCandidates(set<Id> mergeCandidates) {
         
         // Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error. 
         if (mergeCandidates.size() <=1) {
-			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
-			return;
-		}
-		
-		if (mergeCandidates.size() >3 ) {
-			ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Many_Contacts));
-			return;
-		}
-		
-		selectedRecordsCount = mergeCandidates.size();
-		
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
+            return;
+        }
+        
+        if (mergeCandidates.size() >3 ) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Many_Contacts));
+            return;
+        }
+        
+        selectedRecordsCount = mergeCandidates.size();
+        
         Map<String, Schema.SObjectField> contactFields = Schema.SObjectType.Contact.fields.getMap();
         Map<String, Schema.DescribeFieldResult> standardFieldMap = new Map<String, Schema.DescribeFieldResult>();
         Map<String, Schema.DescribeFieldResult> customFieldMap = new Map<String, Schema.DescribeFieldResult>();
@@ -277,10 +277,16 @@ public with sharing class CON_ContactMerge_CTRL {
             // Only include the fields which are updateable and accessible
             if (fResult.isUpdateable() && fResult.isAccessible() && !isNPSPHiddenField(fieldname)) {
                 // If the field is type lookup, select the parent name  
-                if (fResult.getRelationshipName() == null) {
+                string relName = fResult.getRelationshipName();
+                if (string.isBlank(relName)) {
                     query += (fieldName + ',');
                 } else {
-                    query += (fResult.getRelationshipName() + '.name,');
+                    //find the Name field for the related object
+                    string nameField = getRelatedObjNameField(fResult);
+
+                    if (nameField!=null) {
+                        query += (relName + '.' + nameField + ',');
+                    }
                 }
                 // Collect the standard and custom fields separately for sorting
                 if(fResult.isCustom()) {
@@ -384,6 +390,26 @@ public with sharing class CON_ContactMerge_CTRL {
         this.step++;
         
     }
+
+    /*******************************************************************************************************
+    * @description Returns a referenced object's name field.
+    * @param controller The default list controller for contact. It allows us to do pagination on the page.
+    * @return string The name of the name field, or null if we couldn't find one.
+    */
+    private string getRelatedObjNameField(Schema.DescribeFieldResult fieldDesc) {
+        string nameField = 'Name';
+        Map<String, Schema.SObjectField> mapRelatedObjectFields = fieldDesc.getReferenceTo()[0].getDescribe().fields.getMap();
+
+        //if Name isn't the correct name field, find it
+        if (!mapRelatedObjectFields.containsKey(nameField)) {
+            nameField = null;
+            for (String relatedFieldName : mapRelatedObjectFields.keySet()) {
+                if (mapRelatedObjectFields.get(relatedFieldName).getDescribe().isNameField())
+                    return relatedFieldName;
+            }
+        }
+        return nameField;
+    }
     
     /*******************************************************************************************************
     * @description Adds field information and field values to the list of field rows.
@@ -416,7 +442,7 @@ public with sharing class CON_ContactMerge_CTRL {
             if (fieldDesc.getRelationshipName() != null) {
                 Sobject obj = c.getSObject(fieldDesc.getRelationshipName());
                 if (obj != null) {
-                    values.add(String.valueOf(obj.get('name')));
+                    values.add(String.valueOf(obj.get(getRelatedObjNameField(fieldDesc))));
                 } else {
                     values.add(null);
                 }   
@@ -452,10 +478,10 @@ public with sharing class CON_ContactMerge_CTRL {
         // If atleast one record has a non-null field value, then add it to the list of fieldRows.
         if (!isNull) {
             for (Integer i=0; i < values.size(); i++) {
-            	String val = values[i];
-            	if (val != null && val.length() > 255) {
-            		val = val.substring(0, 251) + ' ...';
-            	}
+                String val = values[i];
+                if (val != null && val.length() > 255) {
+                    val = val.substring(0, 251) + ' ...';
+                }
                 row.values.add(new Cell(objs[i].id, val));
             }
             // Show the select radio only if the field values are different. 
@@ -471,9 +497,9 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return boolean true if should be treated as readonly, false if not.
     */
     private boolean isNPSPReadOnly(string strField) {
-    	// we have to maintain our own set of readonly fields, because 
-    	// RLLP_OppRollup_UTIL.ContactFields doesn't include them all!
-    	list<string> listStrField = new list<string>{
+        // we have to maintain our own set of readonly fields, because 
+        // RLLP_OppRollup_UTIL.ContactFields doesn't include them all!
+        list<string> listStrField = new list<string>{
             'npo02__TotalOppAmount__c', 
             'npo02__AverageAmount__c', 
             'npo02__SmallestAmount__c', 
@@ -505,13 +531,13 @@ public with sharing class CON_ContactMerge_CTRL {
             'npo02__Soft_Credit_This_Year__c',
             'npo02__Soft_Credit_Total__c',
             'npo02__Soft_Credit_Two_Years_Ago__c'
-    	};
+        };
 
-    	for (string strF : listStrField) {
-    	   if (strField.equalsIgnoreCase(strF))
-    	       return true;
-    	}
-    	return false;
+        for (string strF : listStrField) {
+           if (strField.equalsIgnoreCase(strF))
+               return true;
+        }
+        return false;
     }
     
     
@@ -539,13 +565,13 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference search() {
-    	Try {	        
-	        if(searchText != null && searchText.length()>0){
-	            this.searchResults = wrapSOSLResults(mySOSL());
-	        }
-    	} catch (exception ex) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));    		
-    	}
+        Try {           
+            if(searchText != null && searchText.length()>0){
+                this.searchResults = wrapSOSLResults(mySOSL());
+            }
+        } catch (exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));         
+        }
         return null;
     }
     
@@ -685,14 +711,14 @@ public with sharing class CON_ContactMerge_CTRL {
                     for (Database.Error err : sr.getErrors()) {
                         strErr += err.getMessage() + '\n';
                     }
-	                Database.rollback(sp);
-	                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, strErr));
-	                return null;
+                    Database.rollback(sp);
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, strErr));
+                    return null;
                 }
-	            
-	            CON_ContactMerge.mergeContacts((Contact)master, losers);
-            	// Update the master with the selected values
-            	return new PageReference('/' + master.id);
+                
+                CON_ContactMerge.mergeContacts((Contact)master, losers);
+                // Update the master with the selected values
+                return new PageReference('/' + master.id);
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.CON);

@@ -1,6 +1,23 @@
 <apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0">
     <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
-
+    <style>
+        input.lookupInput {
+            display: inline-block;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            color: #555555;
+            background-color: #ffffff;
+            background-image: none;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        }
+    </style>
     <apex:form id="form" styleClass="form-horizontal">
         <apex:pageBlock mode="maindetail">
              <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="button-block">
@@ -52,21 +69,17 @@
                 <div class="form-group">
                     <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="col-sm-4 control-label" />
                     <div class="col-sm-8 form-control-column">
-                        <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" onSelect="enableDefaultAllocations()">
-                            <apex:actionSupport event="onchange" action="{!enableDefaultAllocations}" rerender="form" status="statusLoad" />
-                        </apex:inputcheckbox>
+                        <apex:inputcheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" disabled="{!isReadOnlyMode}" id="cbxDAE" />
                     </div>
                     <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="slDefaultGAU" styleClass="col-sm-4 control-label" />
-                    <div class="col-sm-8 form-control-column">
+                    <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="col-sm-4 control-label" />
+                    <div class="col-sm-4 col-sm-3 col-sm-1 form-control-column">
                         <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" />
-                        <apex:selectList value="{!stgService.stgAllo.Default__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slDefaultGAU" >
-                            <apex:selectOptions value="{!listSOGeneralAccountingUnitIds}" />
-                        </apex:selectList>
+                        <apex:inputfield value="{!allo.General_Accounting_Unit__c}" required="false" rendered="{!isEditMode}" id="inputDefaultGAU" styleClass="lookupInput" />
                     </div>
                     <div class="col-sm-offset-4 col-sm-8 help-block">
                         <apex:outputText value="{!$Label.stgHelpDefaultGAU}" />
@@ -88,13 +101,13 @@
                         <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.stgLabelAlloBatchProgress}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                     </apex:outputPanel>
                 </div>
-                
             </section>
-            <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="button-block">
-                <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
-                <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
-            </apex:outputPanel>          
-
+            <section>
+                <div class="btn-group col-sm-offset-4 col-sm-8">
+                    <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="btn-sm btn-primary" />
+                    <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn-sm btn-default" />
+                </div>
+            </section>
         </apex:pageBlock>
     </apex:form>
 </apex:page>
