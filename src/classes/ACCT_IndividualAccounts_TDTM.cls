@@ -532,7 +532,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }
                 a.Phone = c.Phone;
                 a.Fax = c.Fax;
-                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                // only set account's billing address if address management is off.
+                // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
+                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
+                    ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
                 ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
 
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
@@ -552,19 +555,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
             // we do want it to be all or nothing, so errors won't get lost.
             insert(accountInserts);
-            
-            // now get the new address objects that might have been created
-            list<Address__c> listAddr = [select Id, Household_Account__c, Default_Address__c from Address__c where Household_Account__c in :accountInserts];
-            map<Id, Id> mapAccIdToAddrId = new map<Id, Id>();
-            for (Address__c addr : listAddr) 
-                mapAccIdToAddrId.put(addr.Household_Account__c, addr.Id);
-            
-            // now update each contact's accountId, as well as potential address lookup.
+                        
+            // now update each contact's accountId
             Integer i = 0;
             for (Contact c : listContactNewAcct) {
                 c.AccountId = accountInserts[i].Id;
-                c.Current_Address__c = mapAccIdToAddrId.get(c.AccountId);
-                i += 1;
+                i++;
             }
         }
     }
