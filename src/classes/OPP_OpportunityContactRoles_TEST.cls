@@ -117,6 +117,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Trigger_Handler__c triggerHandler = [select Active__c from Trigger_Handler__c where Class__c = 'OPP_OpportunityContactRoles_TDTM'];
         triggerHandler.Active__c = false;
         update triggerHandler;
+        TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
         
         Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
 

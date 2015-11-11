@@ -2938,4 +2938,37 @@ public with sharing class ADDR_Addresses_TEST {
         }                
     }
 
+    /*********************************************************************************************************
+    @description
+        set contact address override and address lookup on a new household contact  
+    verify:
+        contact's address fields correctly set
+    **********************************************************************************************************/            
+    static testMethod void setConAddrOverrideAndLookupOnNewContact() {
+        if (strTestOnly != '*' && strTestOnly != 'setConAddrOverrideAndLookupOnNewContact') return;
+        
+        // this creates a default Address for each HH
+        createHHTestData(cHH, cCon);
+        
+        Contact con = new Contact();
+        con.lastname = 'test';
+        con.AccountId = listAccT[0].Id;
+        con.is_Address_Override__c = true;
+        con.Current_Address__c = listAddrT[0].Id;
+        
+        Test.startTest();
+        insert con;
+        Test.stopTest();
+        
+        con = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, 
+            MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact where Id = :con.Id];
+        system.assertEquals(true, con.is_Address_Override__c);
+        system.assertEquals(listAddrT[0].Id, con.Current_Address__c);
+        system.assertEquals(listAddrT[0].MailingStreet__c, con.MailingStreet);
+        system.assertEquals(listAddrT[0].MailingCity__c, con.MailingCity);
+        system.assertEquals(listAddrT[0].MailingPostalCode__c, con.MailingPostalCode);
+        system.assertEquals(listAddrT[0].MailingState__c, con.MailingState);
+        system.assertEquals(listAddrT[0].MailingCountry__c, con.MailingCountry);
+    }
+    
 }
