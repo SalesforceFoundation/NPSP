@@ -1460,7 +1460,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     cPropSet++;
                 }
             }
-            if (cPropSet > 0) {
+            // unfortunately, if there are checkbox fields that we copied, we can't tell the difference
+            // between null or false, so looking at cPropSet isn't good enough!  let's also look for an account specified.
+            if (cPropSet > 0 && opp.AccountId != null) {
                 mapDIIdToOpp.put(di.Id, opp);
                 listOppInsert.add(opp);
                 listDIInsert.add(di);  
