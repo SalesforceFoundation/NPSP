@@ -36,61 +36,80 @@
 
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Allocations panel. 
+    */
     public override string idPanel() { return 'idPanelAllocations'; }
 
+    /*********************************************************************************************************
+    * @description Whether we are currently running the batch process 
+    */
     public boolean isRunningBatch { get; set; }
 
+    /*********************************************************************************************************
+    * @description The panel's constructor.
+    */
     public STG_PanelAllocations_CTRL() {
         isRunningBatch = false;
     }
 
-    //generates a list of SelectOptions for all General Accounting Units to allow the user to select a default.
-    static public list<SelectOption> listSOGeneralAccountingUnitIds {
-        get {
-            if (listSOGeneralAccountingUnitIds == null) {
-                listSOGeneralAccountingUnitIds = new list<SelectOption>();
-                list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c WHERE Active__c = TRUE ORDER BY Name LIMIT 1000];
-                if (listGAU.isEmpty()) {
-                    listSOGeneralAccountingUnitIds.add(new SelectOption('', Label.stgLabelNone, true));
-                } else for (General_Accounting_Unit__c gau : listGAU) {
-                    listSOGeneralAccountingUnitIds.add(new SelectOption(gau.Id, gau.Name));
-                }
+    /*********************************************************************************************************
+    * @description An allocation, used to present a GAU lookup in the page to allow selecting a default GAU.
+    */
+    public static Allocation__c allo {
+        get{
+            if (allo == null) {
+                allo = new Allocation__c();
+                if (STG_Panel.stgService.stgAllo.Default__c!=null)
+                    allo.General_Accounting_Unit__c = STG_Panel.stgService.stgAllo.Default__c;
             }
-            return listSOGeneralAccountingUnitIds;
+            return allo;
+
         }
-        private set;
+        set;
     }
 
-    //pulls the name of the default General Accounting Unit based on the ID stored in the custom setting.
+    /*********************************************************************************************************
+    * @description The name of the default General Accounting Unit based on the ID stored in the custom setting.
+    */
     static public string strDefaultGAUName {
         get {
             if (strDefaultGAUName == null) {
-                ID id = STG_Panel.stgService.stgAllo.Default__c;
-                if (id != null) {
-                    list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c WHERE ID=:id];
+                if (!string.isBlank(STG_Panel.stgService.stgAllo.Default__c)) {
+                    list<General_Accounting_Unit__c> listGAU = [select Id, Name from General_Accounting_Unit__c WHERE ID=:STG_Panel.stgService.stgAllo.Default__c];
                     if (!listGAU.isEmpty())
                         strDefaultGAUName = listGAU[0].Name;
                 }
             }
-            if (strDefaultGAUName==null)
+            if (strDefaultGAUName == null)
                 strDefaultGAUName = Label.stgLabelNone;
             return strDefaultGAUName;
         }
         private set;
     }
-
-    //this method runs each time the user selects the "Enable Allocations" checkbox
-    //if no General Accounting Units exist, create one, then blank out the property
-    //so that the rerender queries for the newly created GAU
-    public pagereference enableDefaultAllocations() {
-        if (listSOGeneralAccountingUnitIds.size() == 1 && listSOGeneralAccountingUnitIds[0].getValue()=='') {
-            General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='General Fund');
-            insert gau;
-            listSOGeneralAccountingUnitIds = null;
+    
+    /*********************************************************************************************************
+    * @description Action Method to save the current settings
+    * If default allocations are enabled, ensure a default GAU is selected.
+    * @return STG_Panel saveSettings method. 
+    */
+    public override PageReference saveSettings() {
+        
+        if (STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c==null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultGAUMissing));
+            return null;
         }
-        return null;
+
+        STG_Panel.stgService.stgAllo.Default__c = allo.General_Accounting_Unit__c;
+        strDefaultGAUName = null;
+
+        return super.saveSettings();
     }
 
+    /*********************************************************************************************************
+    * @description Action Method to run the Batch Opp Rollups  
+    * @return null
+    */
     public PageReference runBatch() {
         // run batch rollup
         isRunningBatch = true;
