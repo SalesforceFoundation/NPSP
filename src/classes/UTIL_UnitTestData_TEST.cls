@@ -34,6 +34,7 @@
 * @description Provides automated generation of unit test data for tests throughout the org 
 */
 
+@isTest
 public class UTIL_UnitTestData_TEST { 
 
 // create data for use in unit tests
@@ -253,29 +254,86 @@ public class UTIL_UnitTestData_TEST {
         return AcctsToAdd;
     }
 
-    public static User CreateNewUserForTests(string strUsername) {
+    /**
+     * @description Create a new user for unit testing.
+     * @param strUsername The username for the user to be created
+     * @param strRolename The name of the UserRole to associate with the user (will be created if does not exist)
+     * @return User
+     */
+    public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
+        Profile p = [
+            SELECT Id
+            FROM Profile
+            WHERE Name='Standard User'
+        ];
 
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User'];
-        UserRole r = [SELECT Id FROM UserRole WHERE Name='COO'];
-        User u;	
+        UserRole r;
+        User u;
+
         // to work around mixed DML errors during tests, you must
-        // create user account in its own transaction.  got this
-        // hack from the web.
-        System.runAs ( new User(Id = UserInfo.getUserId()) ) {        
-	        u = new User(alias = 'jsmith', email='jsmith@acme.com', 
-	            emailencodingkey='UTF-8', lastname='Smith', 
-	            languagelocalekey='en_US', 
-	            localesidkey='en_US', profileid = p.Id, userroleid = r.Id,
-	            timezonesidkey='America/Los_Angeles', 
-	            username=strUsername);
-	        insert u;
+        // create user roles and accounts in their own transactions.
+        // got this hack from the web.
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            Integer existingRoleCount = [
+                SELECT COUNT()
+                FROM UserRole
+                WHERE Name = :strRolename
+            ];
+
+            if (existingRoleCount >= 1) {
+                r = [
+                    SELECT Id
+                    FROM UserRole
+                    WHERE Name = :strRolename
+                    LIMIT 1
+                ];
+            } else {
+                r = new UserRole(Name=strRolename);
+                insert r;
+            }
+
+            u = new User(
+                Alias = 'jsmith',
+                Email = 'jsmith@acme.com',
+                EmailEncodingKey = 'UTF-8',
+                LanguageLocaleKey = 'en_US',
+                LastName = 'Smith',
+                LocaleSidKey = 'en_US',
+                ProfileId = p.Id,
+                TimeZoneSidKey = 'America/Los_Angeles',
+                UserRoleId = r.Id,
+                Username = strUsername
+            );
+            insert u;
         }
         return u;
     }
-    
- 
- 
- 
+
+    /**
+     * @description Create a new user for unit testing.
+     * @param strUsername The username for the user to be created
+     * @return User
+     */
+    public static User createNewUserForTests(String strUsername) {
+        return createNewUserWithRoleForTests(strUsername, 'COO');
+    }
+
+    /**
+     * @description Create a new inactive user for unit testing.  This user will have IsActive set to false.
+     * @param strUsername The username for the user to be created
+     * @return User
+     */
+    public static User createNewInactiveUserForTests(String strUsername) {
+        User u = createNewUserForTests(strUsername);
+
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            u.isActive = false;
+            update u;
+        }
+
+        return u;
+    }
+
     public static list<Account> listAccT;
     public static list<Contact> listConT;
     
@@ -313,7 +371,58 @@ public class UTIL_UnitTestData_TEST {
         ADDR_Addresses_TDTM.hasRunAddrTrigger = false;
     }
 
-    
+    private static testMethod void testCreateNewUserWithDefaultRole() {
+        String randomUsername = 'test@test.com.' + Math.random();
+
+        User returnedUser = createNewUserForTests(randomUsername);
+        User queriedUser = [
+            SELECT
+                Username,
+                UserRole.Name
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assertEquals(randomUsername, queriedUser.Username);
+        System.assertEquals('COO', queriedUser.UserRole.Name);
+    }
+
+    private static testMethod void testCreateNewUserWithRandomRole() {
+        String randomUsername = 'test@test.com.' + Math.random();
+        String randomRolename = 'RoleName' + Math.random();
+
+        User returnedUser = createNewUserWithRoleForTests(
+            randomUsername,
+            randomRolename
+        );
+
+        User queriedUser = [
+            SELECT
+                Username,
+                UserRole.Name
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assertEquals(randomUsername, queriedUser.Username);
+        System.assertEquals(randomRoleName, queriedUser.UserRole.Name);
+    }
+
+    private static testMethod void testCreateNewInactiveUserForTests() {
+        String randomUsername = 'test@test.com.' + Math.random();
+
+        User returnedUser = createNewInactiveUserForTests(randomUsername);
+
+        User queriedUser = [
+            SELECT IsActive
+            FROM User
+            WHERE Id = :returnedUser.Id
+        ];
+
+        System.assertEquals(false, returnedUser.IsActive);
+        System.assertEquals(false, queriedUser.IsActive);
+    }
+
 /*
         public static List<Opportunity> OppsForAccountList (List<Account> Accts, id CampId, string Stage, date Close, double Amt, string rectype) {
     
