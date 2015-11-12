@@ -143,7 +143,7 @@ public with sharing class ERR_Notifier {
     private static Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> sendList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
-        mail.setReplyTo('donotreply@salesforcefoundation.org');
+        mail.setReplyTo('donotreply@salesforce.org');
         mail.setSenderDisplayName('Nonprofit Starter Pack');
         mail.setSubject('NPSP Error');
         string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';

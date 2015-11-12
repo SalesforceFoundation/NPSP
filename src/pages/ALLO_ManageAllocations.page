@@ -3,7 +3,7 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/js/bootstrap.min.js')}" />
     <apex:styleSheet value="{!URLFOR($Resource.CumulusStaticResources, '/Bootstrap/css/bootstrap-namespaced.css')}" />
 
-    <!--<apex:stylesheet value="https://developer.salesforcefoundation.org/bootstrap-sf1/dist/css/bootstrap.css" />-->
+    <!--<apex:stylesheet value="https://developer.salesforce.org/bootstrap-sf1/dist/css/bootstrap.css" />-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         .bootstrap .jumbotron {
