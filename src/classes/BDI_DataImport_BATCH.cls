@@ -561,7 +561,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             }
         }
         
-        string strSoql = 'Select Id, Firstname, Lastname, AccountId, ';
+        string strSoql = 'Select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c, ';
         if (isCustomIDInContactMatchRules)
             strSoql += diSettings.Contact_Custom_Unique_ID__c + ', ';        
         strSoql += ' Email, npe01__AlternateEmail__c, npe01__HomeEmail__c, npe01__WorkEmail__c ';
@@ -605,6 +605,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             list<string> listDiKey = listDIKeyC1(di);
             //system.debug('****DJH listDiKey: ' + listDiKey);
             if (con != null) {
+                if (con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                    LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact1ImportStatus__c');
+                    continue;
+                }
                 di.Contact1Imported__c = con.id;
                 di.Contact1ImportStatus__c = label.bdiMatched;
                 // remember all the existing household accounts, so we can query for and add "looser" keys for c2
@@ -639,6 +643,10 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             Contact con = ContactFromDi(di, 2);
             list<string> listDiKey = listDiKeyC2(di);
             if (con != null) {
+                if (con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                    LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact2ImportStatus__c');
+                    continue;
+                }
                 di.Contact2Imported__c = con.id;
                 di.Contact2ImportStatus__c = label.bdiMatched;
             } else if (listDiKey.size() > 0) {
@@ -1264,6 +1272,9 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
+            // skip di's that already have an error
+            if (di.Status__c == label.bdiFailed)
+               continue;
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
                 if (addr != null && addr.Id != null) {

@@ -777,12 +777,28 @@
         <value>Invalid Donation Record Type Name</value>
     </labels>
     <labels>
+        <fullName>bdiErrorNonHHAccountContact</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiErrorNonHHAccountContact</shortDescription>
+        <value>Matched an existing contact from a non-Household Account, which is not supported.</value>
+    </labels>
+    <labels>
         <fullName>bdiFailed</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiFailed</shortDescription>
         <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>bdiHouseholdModelRequired</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiHouseholdModelRequired</shortDescription>
+        <value>The NPSP Data Importer only works with the Household Account model.</value>
     </labels>
     <labels>
         <fullName>bdiIgnored</fullName>
