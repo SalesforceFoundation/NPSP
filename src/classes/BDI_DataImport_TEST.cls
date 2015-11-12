@@ -2052,7 +2052,7 @@ private with sharing class BDI_DataImport_TEST {
     operation:
         import contacts with the wrong account model 
     verify:
-        exception thrown
+        importData fails
     **********************************************************************************************************/            
     static testMethod void testInvalidAccountModel() {
         if (strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') return;
@@ -2060,6 +2060,7 @@ private with sharing class BDI_DataImport_TEST {
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        system.assertEquals(false, CAO_Constants.isHHAccountModel());
         
         list<DataImport__c> listDI = new list<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
@@ -2067,12 +2068,7 @@ private with sharing class BDI_DataImport_TEST {
           
         //run batch data import
         Test.StartTest();
-        Try {
-            BDI_DataImport_API.importData();
-            system.assert(false);
-        } catch (Exception ex) {
-            system.assert(ex.getMessage().contains(Label.bdiHouseholdModelRequired));
-        }
+        system.assertEquals(null, BDI_DataImport_API.importData());
         Test.stopTest();
     }
 }

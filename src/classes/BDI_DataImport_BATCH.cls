@@ -605,7 +605,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             list<string> listDiKey = listDIKeyC1(di);
             //system.debug('****DJH listDiKey: ' + listDiKey);
             if (con != null) {
-                if (con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                     LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact1ImportStatus__c');
                     continue;
                 }
@@ -630,7 +630,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                     
         // before we process c2's, we want to add some "looser" keys
         // for any c2's to match against existing household members just by firstname
-        list<Contact> listHHContacts = [select Firstname, Lastname, AccountId from Contact where AccountId in :setHHId];
+        list<Contact> listHHContacts = [select Id, Firstname, Lastname, AccountId, Account.npe01__SYSTEM_AccountType__c 
+            from Contact where AccountId in :setHHId];
         for (Contact con : listHHContacts) {
             mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con); 
         } 
@@ -643,7 +644,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             Contact con = ContactFromDi(di, 2);
             list<string> listDiKey = listDiKeyC2(di);
             if (con != null) {
-                if (con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                     LogBDIError(di, label.bdiErrorNonHHAccountContact, 'Contact2ImportStatus__c');
                     continue;
                 }
