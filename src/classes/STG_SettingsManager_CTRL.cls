@@ -27,7 +27,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 /**
-* @author Salesforce Foundation
+* @author Salesforce.org
 * @date 01/13/2014
 * @group Settings
 * @description controller for the Settings Manager page

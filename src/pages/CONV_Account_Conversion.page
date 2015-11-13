@@ -145,7 +145,7 @@
                         <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
                         <div class="panel-body">
                         <p>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
-                    functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and the Salesforce.com Foundation are not responsible for
+                    functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and the Salesforce.org are not responsible for
                     any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK.
                     Before beginning this process, you'll need to confirm the following steps have been taken:</p>
                             <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
@@ -257,7 +257,7 @@
                         <h4 class="modal-title" id="myModalLabel">Warning!</h4>
                     </div>
                     <div class="modal-body">
-                        <h5>You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and the Salesforce.com Foundation are not responsible for any data or data integrity loss.  Do you still wish to proceed?</h5>
+                        <h5>You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and the Salesforce.org are not responsible for any data or data integrity loss.  Do you still wish to proceed?</h5>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
