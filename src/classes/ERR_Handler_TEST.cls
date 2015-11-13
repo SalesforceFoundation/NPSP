@@ -417,17 +417,7 @@ public with sharing class ERR_Handler_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;
 
         String un = System.now().getTime() + '@testerson.com';
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User'];
-        UserRole r = [SELECT Id FROM UserRole WHERE Name='COO'];
-        User u; 
-        System.runAs ( new User(Id = UserInfo.getUserId()) ) { 
-            u = new User(alias = 'jsmith', email='jsmith@acme.com', 
-                emailencodingkey='UTF-8', lastname='Smith', 
-                languagelocalekey='en_US', 
-                localesidkey='en_US', profileid = p.Id, userroleid = r.Id,
-                timezonesidkey='America/Los_Angeles', 
-                username=un, isActive = false);
-            insert u;}
+        User u = UTIL_UnitTestData_TEST.createNewInactiveUserForTests(un);
 
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true, 
             Error_Notifications_To__c = u.Id, Store_Errors_On__c = true));
