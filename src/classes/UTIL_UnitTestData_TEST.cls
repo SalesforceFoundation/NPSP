@@ -359,7 +359,7 @@ public class UTIL_UnitTestData_TEST {
             	integer iCon = (i * cCon) + j;
             	Contact con = listConT[iCon]; 
             	con.Firstname = 'TestFirstname' + iUnique + iCon;
-                con.Firstname = 'TestLastname' + iUnique + iCon;
+                con.Lastname = 'TestLastname' + iUnique + iCon;
                 con.AccountId = listAccT[i].Id;
                 con.MailingStreet = 'Street' + iUnique + iCon;
                 con.MailingCity = 'City' + iUnique + iCon;

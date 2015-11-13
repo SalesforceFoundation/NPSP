@@ -663,7 +663,9 @@
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidLastname</members>
         <members>bdiErrorInvalidOppRTName</members>
+        <members>bdiErrorNonHHAccountContact</members>
         <members>bdiFailed</members>
+        <members>bdiHouseholdModelRequired</members>
         <members>bdiIgnored</members>
         <members>bdiImported</members>
         <members>bdiMatched</members>

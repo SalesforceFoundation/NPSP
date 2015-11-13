@@ -48,6 +48,10 @@ global with sharing class BDI_DataImport_API {
     	Boolean batchRunning = false;
     	Id apexJobId;
     	try {
+    	    // ensure we are in the household account model!
+    	    if (!CAO_Constants.isHHAccountModel())
+                throw(new BDIException(Label.bdiHouseholdModelRequired));
+    	    
             // validate settings
             if (diSettings.Contact_Custom_Unique_ID__c != null) {
                 // make sure c1 and c2 have the appropriately named field

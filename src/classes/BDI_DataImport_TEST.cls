@@ -243,6 +243,53 @@ private with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import existing contacts that match a 1x1 contact
+    verify:
+        error given, di not processed.
+    **********************************************************************************************************/            
+    static testMethod void OneDIExistingContacts1x1() {
+        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContacts1x1') return;
+            
+        // existing 1x1 contact
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);   
+        list<Contact> listConExisting = [select Id, Firstname, Lastname, Name, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact];
+        system.assertEquals(1, listConExisting.size());
+        system.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, listConExisting[0].Account.npe01__SYSTEM_AccountType__c);
+        system.assertEquals('TestFirstname00 TestLastname00', listConExisting[0].Name);
+        listConExisting[0].email = 'foo@bar.com';
+        update listConExisting;
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('TestFirstname00', 'TestLastname00', 'c2', 'C2'));
+        listDI[0].Contact1_Personal_Email__c = 'foo@bar.com';
+        listDI[0].Home_City__c = 'Seattle';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact order by Lastname];
+        system.assertEquals(1, listCon.size());
+        system.assertEquals('TestFirstname00 TestLastname00', listCon[0].Name);
+        
+        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c];
+        system.assertEquals(1, listDI.size());
+        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        system.assertEquals(listDI[0].Contact2Imported__c, null);
+        system.assertEquals(null, listDI[0].HouseholdAccountImported__c);
+        system.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
+        system.assertEquals(null, listDI[0].Contact2ImportStatus__c);     
+        list<Address__c> listAddr = [select Id from Address__c];   
+        system.assertEquals(0, listAddr.size());
+    }
+
+    /*********************************************************************************************************
+    operation:
         import different accounts within the same di record 
     verify:
         two accounts created
@@ -1999,5 +2046,29 @@ private with sharing class BDI_DataImport_TEST {
         system.assertEquals('Seattle', listCon[0].MailingCity);
         system.assertEquals(null, listCon[1].MailingCity);
         system.assertEquals('Portland', listCon[2].MailingCity);
+    }
+
+    /*********************************************************************************************************
+    operation:
+        import contacts with the wrong account model 
+    verify:
+        importData fails
+    **********************************************************************************************************/            
+    static testMethod void testInvalidAccountModel() {
+        if (strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') return;
+            
+        // set 1x1 account model
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        system.assertEquals(false, CAO_Constants.isHHAccountModel());
+        
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        system.assertEquals(null, BDI_DataImport_API.importData());
+        Test.stopTest();
     }
 }

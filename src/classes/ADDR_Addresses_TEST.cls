@@ -192,6 +192,7 @@ public with sharing class ADDR_Addresses_TEST {
         for (Contact con : listConT) {
             con.MailingStreet = 'new street';
             con.MailingCity = 'new city';
+            con.npe01__Primary_Address_Type__c = 'Other';
         }
         Test.startTest();
         insert listConT; 
@@ -199,13 +200,21 @@ public with sharing class ADDR_Addresses_TEST {
 
         // verify that the HH and Contacts share the same address
         map<Id, Account> mapAccIdAcc = new map<Id, Account>([select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account]);
-        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
+        list<Contact> listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
         
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
             system.assertEquals(true, isMatchAddressAccCon(acc, con));
             system.assertEquals(false, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
+            system.assertEquals('Other', con.npe01__Primary_Address_Type__c);
+        }
+        
+        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Address_Type__c 
+            from Address__c where Default_Address__c = true];
+        system.assertEquals(cCon, listAddr.size());
+        for (Address__c addr : listAddr) {
+            system.assertEquals('Other', addr.Address_Type__c);
         }
     }
         
@@ -283,7 +292,8 @@ public with sharing class ADDR_Addresses_TEST {
         
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
-            system.assertEquals(true, isMatchAddressAccCon(acc, con));
+            system.assertEquals(false, isMatchAddressAccCon(acc, con));
+            system.assertEquals(null, acc.BillingStreet);
             system.assertEquals(true, con.is_Address_Override__c);
             system.assertNotEquals(null, con.Current_Address__c);
         }
