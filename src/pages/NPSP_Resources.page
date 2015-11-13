@@ -90,7 +90,7 @@
             <div class="pull-left"><a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/salesforce_logo.png')}" alt="Salesforce Success Plans"/></a>
             </div>
             <div class="media-body"><h4 class="media-heading">Salesforce Success Plan</h4>
-            <p>Every Foundation customer has access to a Standard Success Plan including basic training, product documentation and support.</p>
+            <p>Every Salesforce.org customer has access to a Standard Success Plan including basic training, product documentation and support.</p>
 <a href="https://powerofus.force.com/articles/Resource/Get-Help-NPSP" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
             </div>
         </div>
@@ -99,7 +99,7 @@
           <div class="pull-left">
            <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" target="_blank"><img class="media-object" src="{!URLFOR($Resource.CumulusStaticResources, '/Images/officehours.png')}" alt="Office Hours"/></a>
           </div>
-          <div class="media-body"><h4 class="media-heading">Foundation Office Hours</h4>
+          <div class="media-body"><h4 class="media-heading">Salesforce.org Office Hours</h4>
           <p>Join us for our weekly office hours and get your questions answered by experts from the Power of Us Hub.</p>
           <a href="https://powerofus.force.com/articles/Resource/Salesforce-com-Foundation-Weekly-Office-Hours" target="_blank"><button type="button" class="btn btn-primary">Learn More &raquo;</button></a>
           </div>
