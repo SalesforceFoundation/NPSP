@@ -152,7 +152,7 @@
    <div class="row">
       <footer class="footer">
       <div class="container" style="background-color:#3c3d3e; padding-top:20px;">
-          <p class="text-right" style="color:#ffffff;"><a href="http://www.salesforcefoundation.org/help/findapartner/" title="Find a Partner" target="_blank"><span style="margin:0px 10px;">Find a Consulting Partner</span></a>|<span style="margin:0px 10px;"><a href="http://www.salesforcefoundation.org/power-of-us/" title="Apply for Power of Us Program" target="_blank">Apply for the Power of Us Program</a></span> | <span style="margin:0px 10px;">Salesforce Foundation</span> | <span style="margin:0px 10px;">1-800-667-6389</span> | <span style="margin:0px 10px;"><a href="http://www.salesforcefoundation.org/contact-us/" title="Salesforce Foundation" target="_blank">Contact Us</a></span></p>
+          <p class="text-right" style="color:#ffffff;"><a href="http://www.salesforce.org/help/findapartner/" title="Find a Partner" target="_blank"><span style="margin:0px 10px;">Find a Consulting Partner</span></a>|<span style="margin:0px 10px;"><a href="http://www.salesforce.org/power-of-us/" title="Apply for Power of Us Program" target="_blank">Apply for the Power of Us Program</a></span> | <span style="margin:0px 10px;">Salesforce.org</span> | <span style="margin:0px 10px;">1-800-667-6389</span> | <span style="margin:0px 10px;"><a href="http://www.salesforce.org/contact-us/" title="Salesforce.org" target="_blank">Contact Us</a></span></p>
       </div>
       </footer>
       </div>
