@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.org nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -230,7 +230,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
             + 'Error stack trace: \n' + e.getStackTraceString();
             mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforcefoundation.org', userEmail});
+            mail.setToAddresses(new String[]{'errors@salesforce.org', userEmail});
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
         } catch(Exception e2) {
             //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
