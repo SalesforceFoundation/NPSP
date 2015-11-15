@@ -648,6 +648,19 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Primary_Contact_Campaign_Member_Status__c</fullName>
+        <description>The status to use when creating a campaign member for this opportunity&apos;s primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The status to use when creating a campaign member for this opportunity&apos;s primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities.</inlineHelpText>
+        <label>Primary Contact Campaign Member Status</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Primary_Contact__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.</description>

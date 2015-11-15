@@ -37,7 +37,7 @@
                settings and the new ones.
 */
 public without sharing class TDTM_DefaultConfig {
-    
+
     /*******************************************************************************************************
     * @description The following booleans are used to set various trigger handler entries as Asynchronous.
     * The public boolean is used in getDefaultRecords() to set the handlers async state.  The private boolean
@@ -50,7 +50,7 @@ public without sharing class TDTM_DefaultConfig {
     *   - in startTestDataInit(), save the async boolean into the temp boolean, and set async to false.
     *   - in stopTestDataInit(), reset each async boolean to its temp
     *   - in getDefaultRecords(), on the line for your trigger handler, replace the async false parameter with your async boolean
-    *   - in any tests that are failing, 
+    *   - in any tests that are failing,
     *       - call startTestDataInit() before you create your test data
     *       - call stopTestDataInit() right before calling test.startTest()
     *       - if you have any asserts or test logic than still fails for valid reasons with async on, you
@@ -64,10 +64,10 @@ public without sharing class TDTM_DefaultConfig {
 
     public static boolean ADDR_Account_TDTM_TestAsync = false;
     private static boolean ADDR_Account_TDTM_TestAsyncTemp;
-    
+
     public static boolean ADDR_Validator_TDTM_TestAsync = false; // will not support verification if this is turned async!
     private static boolean ADDR_Validator_TDTM_TestAsyncTemp;
-    
+
     public static boolean ACCT_Accounts_TDTM_TestAsync = false;
     private static boolean ACCT_Accounts_TDTM_TestAsyncTemp;
 
@@ -90,7 +90,7 @@ public without sharing class TDTM_DefaultConfig {
         ACCT_Accounts_TDTM_TestAsyncTemp = ACCT_Accounts_TDTM_TestAsync;
         ACCT_Accounts_TDTM_TestAsync = false;
     }
-    
+
     /*******************************************************************************************************
     * @description To be called after setting up your test data for an Apex test to restore
     * the current state of async flags.
@@ -227,6 +227,11 @@ public without sharing class TDTM_DefaultConfig {
         // Payment Allocation on Opportunity object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 2, Object__c = 'Opportunity',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate'));
+
+        // Campaign Member Creation on Opportunity object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'OPP_CampaignMember_TDTM', Load_Order__c = 3, Object__c = 'Opportunity',
               Trigger_Action__c = 'AfterInsert;AfterUpdate'));
 
         // Currency adjustment of allocations on Campaign object
