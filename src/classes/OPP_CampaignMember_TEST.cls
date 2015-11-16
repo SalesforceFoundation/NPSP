@@ -153,7 +153,7 @@ private class OPP_CampaignMember_TEST {
         insert opp;
         test.stopTest();
 
-        querycm = [SELECT Id, Status FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        querycm = [SELECT Id, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
         system.assertEquals(1, querycm.size(), 'A campaign member should still exist.');
         system.assertEquals(true, querycm[0].HasResponded, 'Campaign member should be updated to a responded status.');
     }
@@ -262,27 +262,62 @@ private class OPP_CampaignMember_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Inserts several opportunities with a primary campaign source, including open and closed/won 
-    * opportunities, several new statuses, and an "omit". Verifies statuses created, and campaign members were
-    * correctly created.
+    * @description Inserts 200 opportunities with a primary campaign source of two different campaigns, 
+    * including open and closed/won opportunities, and two new statuses. Verifies statuses created, and 
+    * campaign members created.
     */
     @isTest static void batchCreateMixedMembers() {
         if (strTestOnly != '*' && strTestOnly != 'batchCreateMixedMembers') return;
 
         integer batchSize = 200;
 
+        Account acc = new Account(Name='foo');
+        insert acc;
+
         list<Contact> listCon = new list<Contact>();
-
         for (integer i=0; i<batchSize; i++)
-            listCon.add(new Contact(LastName='foo' + i));
+            listCon.add(new Contact(LastName='foo' + i, AccountId=acc.id));
+        insert listCon;
 
-    }
+        list<Campaign> listCam = new list<Campaign>();
+        listCam.add(new Campaign(Name='foo1'));
+        listCam.add(new Campaign(Name='foo2'));
+        insert listCam;
 
-    /*********************************************************************************************************
-    * @description Inserts 200 open opportunities with a primary campaign source. Verifies 200 campaign 
-    * members were created and that the first responded status was given.
-    */
-    @isTest static void batchCreateMembersResponded() {
-        if (strTestOnly != '*' && strTestOnly != 'batchCreateMembersResponded') return;
+        list<Opportunity> listOpp = new list<Opportunity>();
+        for (integer i=0; i<batchSize; i++) {
+            Opportunity opp = new Opportunity(
+                Name = 'foo' + i,
+                Primary_Contact__c = listcon[i].id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+                Amount = 8,
+                //switch between the two campaigns
+                CampaignId = listCam[math.mod(i,2)].id
+            );
+
+            //mark every tenth opportunity as closed/lost
+            if (math.mod(i,10) == 0)
+                opp.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
+
+            //switch between a blank status and two different statuses
+            if (math.mod(i,3) == 0)
+                opp.Primary_Contact_Campaign_Member_Status__c = 'foo';
+            else if (math.mod(i,3) == 1)
+                opp.Primary_Contact_Campaign_Member_Status__c = 'bar';
+
+            listOpp.add(opp);
+        }
+
+        test.startTest();
+        insert listOpp;
+        test.stopTest();
+
+        list<campaignmember> querycm = [SELECT Id, Status FROM CampaignMember WHERE campaignId IN :listCam];
+        system.assertEquals(batchSize, querycm.size(), batchSize + ' campaign members should be created.');
+
+        list<campaignmemberstatus> querycms = [SELECT Id, IsDefault, HasResponded, Label, SortOrder FROM CampaignMemberStatus WHERE campaignid IN :listCam AND Label IN ('foo','bar')];
+        system.assertEquals(4, querycms.size(), 'A campaign member status should be created for both campaigns.');
+        system.assertEquals(false, querycms[0].HasResponded, 'Status should be non-responded.');
     }
 }
