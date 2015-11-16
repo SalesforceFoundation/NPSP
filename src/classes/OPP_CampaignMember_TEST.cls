@@ -40,7 +40,7 @@ private class OPP_CampaignMember_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = 'createMemberResponded';
+    private static string strTestOnly = '*';
     
     /*********************************************************************************************************
     * @description Inserts a new opportunity for a contact with a primary campaign source, and a new member
@@ -75,7 +75,7 @@ private class OPP_CampaignMember_TEST {
 
         list<campaignmemberstatus> querycms = [SELECT Id, IsDefault, HasResponded, Label, SortOrder FROM CampaignMemberStatus WHERE campaignid = :cam.id AND Label=:opp.Primary_Contact_Campaign_Member_Status__c];
         system.assertEquals(1, querycms.size(), 'A campaign member status should be created.');
-        system.assertEquals(false, querycms[0].HasResponded, 'A campaign member status should be created.');
+        system.assertEquals(false, querycms[0].HasResponded, 'Status should be non-responded.');
     }
 
     /*********************************************************************************************************
@@ -85,6 +85,77 @@ private class OPP_CampaignMember_TEST {
     */
     @isTest static void updateMemberCreateStatus() {
         if (strTestOnly != '*' && strTestOnly != 'updateMemberCreateStatus') return;
+
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        Campaign cam = new Campaign(Name='foo');
+        insert cam;
+
+        CampaignMember campmem = new CampaignMember(ContactId = con.id, CampaignId = cam.id);
+        insert campmem;
+
+        Opportunity opp = new Opportunity(
+            Name = 'foo',
+            Primary_Contact__c = con.id,
+            CloseDate = system.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Amount = 8,
+            CampaignId=cam.id,
+            Primary_Contact_Campaign_Member_Status__c = 'foo'
+        );
+
+        test.startTest();
+        insert opp;
+        test.stopTest();
+
+        list<campaignmember> querycm = [SELECT Id, Status FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
+        system.assertEquals('foo', querycm[0].Status, 'Campaign member be updated to our status.');
+
+        list<campaignmemberstatus> querycms = [SELECT Id, IsDefault, HasResponded, Label, SortOrder FROM CampaignMemberStatus WHERE campaignid = :cam.id AND Label=:opp.Primary_Contact_Campaign_Member_Status__c];
+        system.assertEquals(1, querycms.size(), 'A campaign member status should be created.');
+        system.assertEquals(false, querycms[0].HasResponded, 'Status should be non-responded.');
+    }
+
+    /*********************************************************************************************************
+    * @description Inserts a new closed/won opportunity with a primary campaign source for a contact with an
+    * existing campaign member for that campaign. Verifies campaign member's status was updated.
+    */
+    @isTest static void updateStatus() {
+        if (strTestOnly != '*' && strTestOnly != 'createMemberResponded') return;
+
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        Campaign cam = new Campaign(Name='foo');
+        insert cam;
+
+        CampaignMember campmem = new CampaignMember(ContactId = con.id, CampaignId = cam.id);
+        insert campmem;
+
+        list<campaignmember> querycm = [SELECT Id, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
+        system.assertEquals(false, querycm[0].HasResponded, 'Member should have a default non responded status.');
+
+        insert new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6);
+
+        Opportunity opp = new Opportunity(
+            Name = 'foo',
+            Primary_Contact__c = con.id,
+            CloseDate = system.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Amount = 8,
+            CampaignId=cam.id
+        );
+
+        test.startTest();
+        insert opp;
+        test.stopTest();
+
+        querycm = [SELECT Id, Status FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should still exist.');
+        system.assertEquals(true, querycm[0].HasResponded, 'Campaign member should be updated to a responded status.');
     }
 
     /*********************************************************************************************************
@@ -99,6 +170,11 @@ private class OPP_CampaignMember_TEST {
 
         Campaign cam = new Campaign(Name='foo');
         insert cam;
+
+        list<CampaignMemberStatus> listStatusForInsert = new list<CampaignMemberStatus>();
+        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NonResponded', HasResponded = false, SortOrder = 5));
+        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6));
+        insert listStatusForInsert;
 
         Opportunity opp = new Opportunity(
             Name = 'foo',
@@ -131,6 +207,11 @@ private class OPP_CampaignMember_TEST {
         Campaign cam = new Campaign(Name='foo');
         insert cam;
 
+        list<CampaignMemberStatus> listStatusForInsert = new list<CampaignMemberStatus>();
+        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NonResponded', HasResponded = false, SortOrder = 5));
+        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6));
+        insert listStatusForInsert;
+
         Opportunity opp = new Opportunity(
             Name = 'foo',
             Primary_Contact__c = con.id,
@@ -146,16 +227,7 @@ private class OPP_CampaignMember_TEST {
         
         list<campaignmember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
         system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
-        system.assertEquals(true, querycm[0].hasResponded, 'Campaign Member should show responded.'+ querycm[0].status);
-        //why is the created member coming back with a sent status instead of responded??
-    }
-
-    /*********************************************************************************************************
-    * @description Inserts a new closed/won opportunity with a primary campaign source for a contact with an
-    * existing campaign member for that campaign. Verifies campaign member's status was updated.
-    */
-    @isTest static void updateStatus() {
-        if (strTestOnly != '*' && strTestOnly != 'createMemberResponded') return;
+        system.assertEquals(true, querycm[0].hasResponded, 'Campaign Member should show responded.');
     }
 
     /*********************************************************************************************************
@@ -196,6 +268,14 @@ private class OPP_CampaignMember_TEST {
     */
     @isTest static void batchCreateMixedMembers() {
         if (strTestOnly != '*' && strTestOnly != 'batchCreateMixedMembers') return;
+
+        integer batchSize = 200;
+
+        list<Contact> listCon = new list<Contact>();
+
+        for (integer i=0; i<batchSize; i++)
+            listCon.add(new Contact(LastName='foo' + i));
+
     }
 
     /*********************************************************************************************************
@@ -205,6 +285,4 @@ private class OPP_CampaignMember_TEST {
     @isTest static void batchCreateMembersResponded() {
         if (strTestOnly != '*' && strTestOnly != 'batchCreateMembersResponded') return;
     }
-
-
 }
