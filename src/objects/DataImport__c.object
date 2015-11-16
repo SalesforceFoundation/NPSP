@@ -697,7 +697,7 @@
     <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
         <externalId>false</externalId>
-        <label>Donation Campaign Name</label>
+        <label>Campaign Name</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
