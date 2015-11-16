@@ -40,7 +40,7 @@ private class OPP_CampaignMember_TEST {
     * @description if you only want to run one test in this class, fill in its name here.
     * if you want to run all tests, then use '*'
     */
-    private static string strTestOnly = '*';
+    private static string strTestOnly = 'createMemberResponded';
     
     /*********************************************************************************************************
     * @description Inserts a new opportunity for a contact with a primary campaign source, and a new member
@@ -93,6 +93,29 @@ private class OPP_CampaignMember_TEST {
     */
     @isTest static void createMemberNonResponded() {
         if (strTestOnly != '*' && strTestOnly != 'createMemberNonResponded') return;
+        
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        Campaign cam = new Campaign(Name='foo');
+        insert cam;
+
+        Opportunity opp = new Opportunity(
+            Name = 'foo',
+            Primary_Contact__c = con.id,
+            CloseDate = system.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            Amount = 8,
+            CampaignId=cam.id
+    	);
+    	
+    	test.startTest();
+        insert opp;
+        test.stopTest();
+        
+        list<campaignmember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
+        system.assertEquals(false, querycm[0].hasResponded, 'Campaign Member should show not responded.');
     }
 
     /*********************************************************************************************************
@@ -101,6 +124,30 @@ private class OPP_CampaignMember_TEST {
     */
     @isTest static void createMemberResponded() {
         if (strTestOnly != '*' && strTestOnly != 'createMemberResponded') return;
+        
+        Contact con = new Contact(LastName='foo');
+        insert con;
+
+        Campaign cam = new Campaign(Name='foo');
+        insert cam;
+
+        Opportunity opp = new Opportunity(
+            Name = 'foo',
+            Primary_Contact__c = con.id,
+            CloseDate = system.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Amount = 8,
+            CampaignId=cam.id
+    	);
+    	
+    	test.startTest();
+        insert opp;
+        test.stopTest();
+        
+        list<campaignmember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        system.assertEquals(1, querycm.size(), 'A campaign member should be created.');
+        system.assertEquals(true, querycm[0].hasResponded, 'Campaign Member should show responded.'+ querycm[0].status);
+        //why is the created member coming back with a sent status instead of responded??
     }
 
     /*********************************************************************************************************

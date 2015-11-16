@@ -276,6 +276,14 @@
         <value>You cannot verify more than 100 addresses at a time.</value>
     </labels>
     <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
+    </labels>
+    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>

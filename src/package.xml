@@ -605,6 +605,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
