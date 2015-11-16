@@ -935,6 +935,53 @@ private with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     operation:
+        import contacts with campaign information (no donation) 
+    verify:
+        opportunity objects created
+        opportunities added to campaigns
+    **********************************************************************************************************/            
+    static testMethod void TwoDIWithCampaignMembers() {
+        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithCampaignMembers') return;
+        
+        list<Campaign> listC = new list<Campaign>();
+        listC.add(new Campaign(Name='CmpExisting'));
+        insert listC;
+            
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[1].Campaign_Member_Status__c = 'zMyStatus';
+        listDI[0].Donation_Campaign_Name__c = 'CmpExisting';
+        listDI[1].Donation_Campaign_Name__c = 'CmpNew';
+        insert listDI;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Lastname];
+        system.assertEquals(2, listCon.size());
+        
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        system.assertEquals(2, listAcc.size());
+                        
+        list<Campaign> listCmp = [select Id, Name from Campaign order by Name];
+        system.assertEquals(2, listCmp.size());
+        
+        list<CampaignMember> listCM = [select Id, ContactId, Status from CampaignMember Order by  Status];
+        system.assertEquals(2, listCM.size());
+        system.assertEquals(listCon[0].Id, listCM[0].ContactId);
+        system.assertNotEquals('zMyStatus', listCM[0].Status);
+        system.assertEquals(listCon[1].Id, listCM[1].ContactId);
+        system.assertEquals('zMyStatus', listCM[1].Status);
+        
+    }
+
+    /*********************************************************************************************************
+    operation:
         import accounts with invalid donation information 
     verify:
         opportunity objects created only for valid di
