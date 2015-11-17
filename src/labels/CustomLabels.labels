@@ -147,7 +147,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization. 
+        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization.
         The mass verification process uses the settings from above.&lt;/p&gt;
  &lt;br/&gt;</value>
     </labels>
@@ -274,6 +274,14 @@
         <protected>true</protected>
         <shortDescription>Address Verification Limit</shortDescription>
         <value>You cannot verify more than 100 addresses at a time.</value>
+    </labels>
+    <labels>
+        <fullName>CampaignMemberStatusOmit</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CampaignMemberStatusOmit</shortDescription>
+        <value>omit</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -887,6 +895,30 @@
         <protected>false</protected>
         <shortDescription>bdiTime</shortDescription>
         <value>Time:</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusDefault</fullName>
+        <categories>Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusDefault</shortDescription>
+        <value>campaignMemberStatusDefault</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusNonResponded</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusNonResponded</shortDescription>
+        <value>campaignMemberStatusNonResponded</value>
+    </labels>
+    <labels>
+        <fullName>campaignMemberStatusResponded</fullName>
+        <categories>Opportunity, Campaign Member</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>campaignMemberStatusResponded</shortDescription>
+        <value>campaignMemberStatusResponded</value>
     </labels>
     <labels>
         <fullName>conMergeErrNoPersonAccounts</fullName>

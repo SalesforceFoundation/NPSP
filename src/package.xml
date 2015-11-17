@@ -58,6 +58,7 @@
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
         <members>CONV_Account_Conversion_CTRL_TEST</members>
+        <members>CON_AddToCampaign</members>
         <members>CON_ChangeAccount_TEST</members>
         <members>CON_ContactMerge</members>
         <members>CON_ContactMergeTDTM_TEST</members>
@@ -97,6 +98,8 @@
         <members>HH_ProcessControl</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
+        <members>OPP_CampaignMember_TDTM</members>
+        <members>OPP_CampaignMember_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
@@ -417,6 +420,7 @@
         <members>DataImport__c.Account2_Website__c</members>
         <members>DataImport__c.Account2_Zip_Postal_Code__c</members>
         <members>DataImport__c.ApexJobId__c</members>
+        <members>DataImport__c.Campaign_Member_Status__c</members>
         <members>DataImport__c.Contact1ImportStatus__c</members>
         <members>DataImport__c.Contact1Imported__c</members>
         <members>DataImport__c.Contact1_Alternate_Email__c</members>
@@ -537,6 +541,7 @@
         <members>Opportunity.Is_Grant_Renewal__c</members>
         <members>Opportunity.Next_Grant_Deadline_Due_Date__c</members>
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
+        <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Name__c</members>
         <members>Opportunity.Recurring_Donation_Installment_Number__c</members>
@@ -600,6 +605,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
@@ -677,6 +683,9 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>campaignMemberStatusDefault</members>
+        <members>campaignMemberStatusNonResponded</members>
+        <members>campaignMemberStatusResponded</members>
         <members>conMergeErrNoPersonAccounts</members>
         <members>flsError</members>
         <members>healthButtonRun</members>

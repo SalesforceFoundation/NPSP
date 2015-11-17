@@ -199,6 +199,8 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
 
             importOpportunities();
 
+            importCampaignMembers();
+
             // update final status for each DI
             for (DataImport__c di: listDI) {
             	if (di.Status__c == null)
@@ -1415,6 +1417,7 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
                 }                
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.Primary_Contact__c = con.Id;
+                opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
                 strOppName = con.Firstname + ' ' + con.Lastname;
             } else if (di.Donation_Donor__c == 'Account1') {
@@ -1612,4 +1615,40 @@ public with sharing class BDI_DataImport_BATCH implements Database.Batchable<sOb
             
     }
 
+    //********************************************* CAMPAIGN MEMBERS ************************************************
+    // method to create an new CAMPAIGN MEMBERS for imported Contacts and Campaigns
+    private void importCampaignMembers() {
+        list<string> newCmContactIds = new list<string>();
+        list<string> listCampaignIds = new list<string>();
+        list<string> listCmStatues = new list<string>();
+        // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
+        for (DataImport__c di : listDI) {
+            // skip that already have an error
+            if (di.Status__c == label.bdiFailed)
+                continue;
+            // only create CMs here for rows that don't have an opportunity
+            if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {
+                // assume errors would have already been thrown
+                Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
+                string diStatus = String.isBlank(di.Campaign_Member_Status__c) ? Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
+
+                if (di.Contact1Imported__c != null) {
+                    newCmContactIds.add(di.Contact1Imported__c);
+                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCmStatues.add(diStatus);
+                }
+                if (di.Contact2Imported__c != null) {
+                    newCmContactIds.add(di.Contact2Imported__c);
+                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCmStatues.add(diStatus);
+                }
+            }
+        }
+
+        // return DML wrapper for new CMs
+        TDTM_Runnable.DMLWrapper newCmWrapper = CON_AddToCampaign.CreateCampaignMembers(newCmContactIds,listCampaignIds,listCmStatues);
+
+        // process dmls for CMs
+        TDTM_TriggerHandler.processDML(newCmWrapper);
+    }
 }
