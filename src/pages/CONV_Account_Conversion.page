@@ -155,7 +155,7 @@
                             <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
                             <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
                             <label for="check-households"><input type="checkbox" id="check-households"/>I am aware this tool will only work for Contacts that currently have a Household associated.</label>
-                            <label for="check-apps"><input type="checkbox" id="check-required-fields"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
+                            <label for="check-apps"><input type="checkbox" id="check-apps"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
                             <label for="check-consult"><input type="checkbox" id="check-consult"/>I've consulted with my local Salesforce expert.</label>
                             <label for="check-risk"><input type="checkbox" id="check-risk"/>I accept the risk associated with using this tool, including data loss and inconsistent data</label>
                         </div>
