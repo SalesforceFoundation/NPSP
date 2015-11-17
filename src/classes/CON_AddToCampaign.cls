@@ -35,9 +35,6 @@
 */
 public with sharing class CON_AddToCampaign {
     
-    /*@description DML wrapper to return campaign members for update/insert*/
-    private static TDTM_Runnable.DmlWrapper dmlWrapper;
-    
     /*@description Map containing existing Campaign Members*/
     private static map<string, CampaignMember> MAPCampaignMembers;
 
@@ -55,7 +52,8 @@ public with sharing class CON_AddToCampaign {
     * @return dmlWrapper Campaign members for insert or update.
     ********************************************************************************************************/
     public static TDTM_Runnable.DmlWrapper CreateCampaignMembers(list<id> Contacts, list<id> Campaigns, list<String> Statuses) {
-        dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        
+        //instantiating the static parameters at the start of the routine in case this method called more than once in a transaction 
         MAPCampaignMembers = new map<string, CampaignMember>();
         MAPcampaignMemberStatuses = new map<id, list<CampaignMemberStatus>>();
 
@@ -65,11 +63,10 @@ public with sharing class CON_AddToCampaign {
         }
 
         createNewCampaignMemberStatuses(Campaigns, Statuses);
-        getCampaignMembers(Contacts, Campaigns, Statuses);
-        
-        system.debug('njjc dmlWrapper '+dmlWrapper);
 
-        return dmlWrapper;
+        TDTM_Runnable.DmlWrapper dml = getCampaignMembers(Contacts, Campaigns, Statuses);
+        
+        return dml;
     }   
     
     /*******************************************************************************************************
@@ -147,8 +144,9 @@ public with sharing class CON_AddToCampaign {
     * @param Statuses the list of Status strings.
     * @return void This method adds campaign members to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private static void getCampaignMembers(list<id> Contacts, list<id> Campaigns, list<String> Statuses) {
-        
+    private static TDTM_Runnable.DmlWrapper getCampaignMembers(list<id> Contacts, list<id> Campaigns, list<String> Statuses) {
+        TDTM_Runnable.DmlWrapper dml = new TDTM_Runnable.DmlWrapper();
+
         //iterate the list of Contacts passed in and check for matches in  Campaign Members and if found update Campaign Member Status
         for(integer i = 0; i < Contacts.size(); i++) {
             string comboKey = Contacts[i] + ':' + Campaigns[i];
@@ -157,15 +155,16 @@ public with sharing class CON_AddToCampaign {
             if(MAPCampaignMembers.containsKey(comboKey)) {
                 CampaignMember cmForUpdate = MAPCampaignMembers.get(comboKey);
                 cmForUpdate.status = getStatus(Campaigns[i], Statuses[i]);
-                dmlWrapper.objectsToUpdate.add(cmForUpdate);
+                dml.objectsToUpdate.add(cmForUpdate);
             //otherwise create a new one
             } else {
                 CampaignMember cmForInsert = new CampaignMember(ContactId = Contacts[i], CampaignId = Campaigns[i]);
                 cmForInsert.Status = getStatus(Campaigns[i], Statuses[i]);
-                dmlWrapper.objectsToInsert.add(cmForInsert);
+                dml.objectsToInsert.add(cmForInsert);
 
             }
         }
+        return dml;
     }
     
     /*******************************************************************************************************
