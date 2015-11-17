@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015, Salesforce.com Foundation
+    Copyright (c) 2015, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Salesforce.com Foundation nor the names of
+    * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
@@ -65,12 +65,9 @@ public with sharing class OPP_CampaignMember_TDTM extends TDTM_Runnable {
 
             Opportunity opp = (Opportunity)newlist[i];
             
-            //if status is "omit", or the primary contact or campaign are blank,
-            //continue to the next opportunity without doing any campaign member work
+            //if status is "omit", do nothing for this opportunity
             if ((!string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && 
-                    opp.Primary_Contact_Campaign_Member_Status__c.equalsIgnoreCase(Label.CampaignMemberStatusOmit)) ||
-                    opp.Primary_Contact__c == null || opp.CampaignId == null) {
-
+                    opp.Primary_Contact_Campaign_Member_Status__c.equalsIgnoreCase(Label.CampaignMemberStatusOmit))) {
                 continue;
             }
 
@@ -81,9 +78,9 @@ public with sharing class OPP_CampaignMember_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Opportunity oldOpp = (Opportunity)oldlist[i];
 
-                //the status is blank and we're changing to or from closed/won
+                //the status is blank and we're changing to closed/won
                 if (string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && 
-                    (opp.IsClosed != oldOpp.isClosed && opp.IsWon != oldOpp.isWon)) {
+                    (opp.IsClosed && opp.IsWon && opp.IsClosed != oldOpp.isClosed && opp.IsWon != oldOpp.isWon)) {
                     
                     addOppMemberFields(opp);
                 //the primary contact, campaign, or status changed
@@ -110,6 +107,9 @@ public with sharing class OPP_CampaignMember_TDTM extends TDTM_Runnable {
     * @return void This method adds to three lists and returns nothing.
     ********************************************************************************************************/
     private void addOppMemberFields(Opportunity opp) {
+        if (opp.Primary_Contact__c == null || opp.CampaignId == null)
+            return;
+
         //if no status is provided, default to a responded status if the opp is closed/won
         //otherwise default to a non-responded status
         if (string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c)) {
