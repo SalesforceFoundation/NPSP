@@ -78,9 +78,9 @@ public with sharing class OPP_CampaignMember_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 Opportunity oldOpp = (Opportunity)oldlist[i];
 
-                //the status is blank and we're changing to closed/won
+                //the status is blank and we're changing closed/won status
                 if (string.isBlank(opp.Primary_Contact_Campaign_Member_Status__c) && 
-                    (opp.IsClosed && opp.IsWon && opp.IsClosed != oldOpp.isClosed && opp.IsWon != oldOpp.isWon)) {
+                    (opp.IsClosed != oldOpp.isClosed || opp.IsWon != oldOpp.isWon)) {
                     
                     addOppMemberFields(opp);
                 //the primary contact, campaign, or status changed

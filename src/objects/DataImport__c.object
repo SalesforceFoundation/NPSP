@@ -275,7 +275,7 @@
     <fields>
         <fullName>Campaign_Member_Status__c</fullName>
         <externalId>false</externalId>
-        <label>DI Campaign Member Status</label>
+        <label>Campaign Member Status</label>
         <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
