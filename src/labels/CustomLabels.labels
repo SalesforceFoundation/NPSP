@@ -296,7 +296,7 @@
         <categories>Relationships, relationship-viewer</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Relationship Viewer - Creare</shortDescription>
+        <shortDescription>Relationship Viewer - Create</shortDescription>
         <value>Create New Relationship</value>
     </labels>
     <labels>
@@ -311,7 +311,7 @@
         <fullName>REL_No_Relationships</fullName>
         <categories>Relationships, relationship-viewer</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Relationship Viewer - No Relationship</shortDescription>
         <value>There are no relationships for this contact.</value>
     </labels>
