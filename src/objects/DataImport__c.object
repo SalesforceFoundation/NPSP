@@ -48,12 +48,9 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Custom object to hold denormalized data records that can be imported into the Nonprofit Starter Pack.</description>
     <enableActivities>false</enableActivities>
-    <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableReports>true</enableReports>
-    <enableSharing>true</enableSharing>
-    <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Account1ImportStatus__c</fullName>
         <externalId>false</externalId>
