@@ -64,12 +64,12 @@
                 Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.CONV_Account_Conversion_CTRL.verifyFieldTypeForIds}',selectedField,function(result, event){
                 if(event.status){
                     if (!result){
-                        alert("The selected field is not able to hold the Household Id information as required.  Please select a different Account field.");
+                        alert("{!$Label.CONV_Selected_Field_Bad}");
                         j$("[name$='HHId']").val('-None-');
                     }
                 }
                 else{
-                    alert("An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.");
+                    alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
                 }
             });
         }
@@ -127,8 +127,8 @@
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-sm-8 col-xs-12" >
-                        <h3>Account Model Conversion Utility</h3>
-                        <h4>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</h4>
+                        <h3>{!$Label.CONV_Page_Title}</h3>
+                        <h4>{!$Label.CONV_Page_Description}</h4>
                     </div>
                     <div class="col-sm-4 col-xs-12" >
                         <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/NPSP_Logo_Small.png')}" class="img-rounded img-responsive" />
@@ -142,22 +142,19 @@
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">Important Information</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_Important_Info_Header}</h3></div>
                         <div class="panel-body">
-                        <p>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database 
-                    functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and Salesforce.org are not responsible for
-                    any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK.
-                    Before beginning this process, you'll need to confirm the following steps have been taken:</p>
-                            <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>All users have logged out of my Salesforce instance.</label>
-                            <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>My data has been backed-up by going to Setup | Data Management | Export Data</label>
-                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>The conversion process has been tested in a fresh sandbox.</label>
-                            <label for="check-inactiveuser"><input type="checkbox" id="check-inactiveuser"/>All record ownership has been transferred from any inactive users.</label>
-                            <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>All workflows and any custom validation rules have been disabled.</label>
-                            <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>All required field restrictions for custom fields have been removed.</label>
-                            <label for="check-households"><input type="checkbox" id="check-households"/>I am aware this tool will only work for Contacts that currently have a Household associated.</label>
-                            <label for="check-apps"><input type="checkbox" id="check-apps"/>All non-NPSP apps have been temporarily uninstalled or disabled.</label>
-                            <label for="check-consult"><input type="checkbox" id="check-consult"/>I've consulted with my local Salesforce expert.</label>
-                            <label for="check-risk"><input type="checkbox" id="check-risk"/>I accept the risk associated with using this tool, including data loss and inconsistent data</label>
+                        <p>{!$Label.CONV_Permanent_Change}</p>
+                            <label for="check-users-logged-out"><input type="checkbox" id="check-users-logged-out"/>{!$Label.CONV_All_Users_Logged_Out}</label>
+                            <label for="check-data-backedup"><input type="checkbox" id="check-data-backedup"/>{!$Label.CONV_All_Backed_Up}</label>
+                            <label for="check-sandbox-first"><input type="checkbox" id="check-sandbox-first"/>{!$Label.CONV_Tested_in_Sandbox}</label>
+                            <label for="check-inactiveuser"><input type="checkbox" id="check-inactiveuser"/>{!$Label.CONV_Record_Ownership_Transferred}</label>
+                            <label for="check-wf-validation"><input type="checkbox" id="check-wf-validation"/>{!$Label.CONV_All_WFR_Disabled}</label>
+                            <label for="check-required-fields"><input type="checkbox" id="check-required-fields"/>{!$Label.CONV_All_Required_Removed}</label>
+                            <label for="check-households"><input type="checkbox" id="check-households"/>{!$Label.CONV_Only_Household_Contacts}</label>
+                            <label for="check-apps"><input type="checkbox" id="check-apps"/>{!$Label.CONV_Non_NPSP_Apps}</label>
+                            <label for="check-consult"><input type="checkbox" id="check-consult"/>{!$Label.CONV_Local_Expert}</label>
+                            <label for="check-risk"><input type="checkbox" id="check-risk"/>{!$Label.CONV_Accept_Risk}</label>
                         </div>
                     </div>
                 </div>
@@ -165,25 +162,23 @@
                 <div class="col-md-6">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">What This Tool Does</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_What_This_Tool_Does}</h3></div>
                         <div class="panel-body">
-                            <p>This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts.</p>
-                            <p>Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility.</p>
-                            <p>The following actions are taken by the batch job associated with this tool:</p>
+                            <p>{!$Label.CONV_Batching_Explanation}</p>
                             <ul>
-                                <li>All NPSP triggers are disabled (Your custom triggers are not disabled by the utility. For safety's sake, you should disable those too)</li>
-                                <li>All existing Households are selected, along with their Contacts</li>
-                                <li>New Household Accounts are created for each existing Household</li>
-                                <li>Previous Household objects are left in place, and should be deleted manually after verifying the results of the conversion process.</li>
-                                <li>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</li>
-                                <li>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</li>
-                                <li>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</li>
-                                <li>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</li>
-                                <li>Addresses mapped from existing Household and Contacts to new Address objects, then attached to the Contact and Household Account</li>
-                                <li>Master Household Address set or defined if none exists based on address frequency and Contact giving</li>
-                                <li>Address overrides are set for any Contact whose address is different from the Household Address</li>
-                                <li>Primary Contact values are set for all Households</li>
-                                <li>All NPSP triggers are re-enabled (You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables <b>all</b> NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable those again too)</li>
+                                <li>{!$Label.CONV_All_Triggers_Disabled}</li>
+                                <li>{!$Label.CONV_All_Households_Selected}</li>
+                                <li>{!$Label.CONV_New_Households_Created}</li>
+                                <li>{!$Label.CONV_Old_Household_Objects}</li>
+                                <li>{!$Label.CONV_New_Affiliations}</li>
+                                <li>{!$Label.CONV_Contacts_Attached}</li>
+                                <li>{!$Label.CONV_Opportunities_Reparented}</li>
+                                <li>{!$Label.CONV_Activities_Reparented}</li>
+                                <li>{!$Label.CONV_Addresses_Mapped}</li>
+                                <li>{!$Label.CONV_Master_Address_Set}</li>
+                                <li>{!$Label.CONV_Address_Overrides_Set}</li>
+                                <li>{!$Label.CONV_Primary_Contacts_Set}</li>
+                                <li><apex:outputText value="{!$Label.CONV_Triggers_Reenabled}" escape="false"/></li>
                             </ul>
                         </div>
                     </div>
@@ -196,12 +191,11 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
-                        <div class="panel-heading"><h3 class="panel-title">Configuration Options</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{!$Label.CONV_Configuration_Options}</h3></div>
                         <div class="panel-body">
-                            <p>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any
-                                lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</p>
-                            <apex:outputlabel for="HHId" value="Account Field" style="padding: 5px 5px 5px 5px;"/>
-                            <apex:selectList id="HHId" onchange="verifyHHIdField();" title="Account Field for Old Household Id" value="{!accountHouseholdIdField}" multiselect="false" size="1">
+                            <p>{!$Label.CONV_Original_HH_Id}</p>
+                            <apex:outputlabel for="HHId" value="{!$Label.CONV_Account_Field}" style="padding: 5px 5px 5px 5px;"/>
+                            <apex:selectList id="HHId" onchange="verifyHHIdField();" title="{!$Label.CONV_Account_Field_For_Old_HH_ID}" value="{!accountHouseholdIdField}" multiselect="false" size="1">
                                 <apex:selectOptions value="{!targetAccountFields}" />
                             </apex:selectList>
                         </div>
@@ -215,15 +209,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel {!IF(apexjob.NumberOfErrors > 0, 'panel-warning', 'panel-success')}" id="resultpaneldefault">
-                            <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, 'WARNING! Some batches may have failed.  Your data is in an inconsistent state', 'SUCCESS!')}</h3></div>
+                            <div class="panel-heading"><h3 class="panel-title">{!apexjob.Status}: {!IF(apexjob.NumberOfErrors > 0, '{!$Label.CONV_Batch_Failure}', '{!$Label.CONV_Success}')}</h3></div>
                             <div class="panel-body">
                                  Completed on {!apexjob.CompletedDate}<br/>
                                  {!apexjob.TotalJobItems} of {!apexjob.JobItemsProcessed} batches were processed<br/>
-                                 {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' batches were not converted due to errors and have been rolled back to their previous state. You should address these errors, rerun the converter, then check your data for consistency.', '')}<br/><br/>
-                                 {!IF(ISBLANK(apexjob.ExtendedStatus), '', 'The first error recorded was: ' + apexjob.ExtendedStatus)}<br/> 
+                                 {!IF(apexjob.NumberOfErrors > 0, ' ' & TEXT(apexjob.NumberOfErrors) & ' {!$Label.CONV_Check_Batch}', '')}<br/><br/>
+                                 {!IF(ISBLANK(apexjob.ExtendedStatus), '', '{!$Label.CONV_First_Error} ' + apexjob.ExtendedStatus)}<br/> 
                                  <div class="text-center" style="{!IF(apexjob.NumberOfErrors > 0, '', 'display: none;')}"> 
                                     <button type="button" class="btn btn-warning btn-lg" onclick="refreshPage()" id="reloadBTN">
-                                        <span class="glyphicon glyphicon-refresh"></span> Reload the Converter
+                                        <span class="glyphicon glyphicon-refresh"></span> {!$Label.CONV_Reload}
                                     </button>
                                 </div>
                             </div>
@@ -237,7 +231,7 @@
             <div class="row">
                 <apex:actionFunction name="runconvert" action="{!convert}" reRender="batchpanel, resultspanelwrapper" oncomplete="renderResults()"/>
                 <apex:outputPanel id="batchpanel">
-                    <c:UTIL_JobProgress strBatchComponentLabel="Account Model Conversion Progress" cNumberOfJobs="1" />
+                    <c:UTIL_JobProgress strBatchComponentLabel="{!$Label.CONV_Conversion_Process}" cNumberOfJobs="1" />
                 </apex:outputPanel>
             </div>
         </div>
@@ -246,7 +240,7 @@
     <div class="container">
         <div class="text-center"> 
             <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#basicModal" id="conversionBTN">
-                <span class="glyphicon glyphicon-exclamation-sign"></span> Begin Conversion Process
+                <span class="glyphicon glyphicon-exclamation-sign"></span> {!$Label.CONV_Begin }
             </button>
         </div>
         <!-------- MODAL  ------>
@@ -254,14 +248,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">Warning!</h4>
+                        <h4 class="modal-title" id="myModalLabel">{!$Label.CONV_Warning}</h4>
                     </div>
                     <div class="modal-body">
-                        <h5>You are about to make fundamental changes to your Salesforce data and data model. Reports, dashboards, and more may have to be modified to account for these changes. Salesforce.com and Salesforce.org are not responsible for any data or data integrity loss.  Do you still wish to proceed?</h5>
+                        <h5>{!$Label.CONV_Fundamental_Changes}</h5>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="convertBTN" >Proceed with Conversion</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{!$Label.CONV_Cancel}</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="convertBTN" >{!$Label.CONV_Proceed}</button>
                     </div>
                 </div>
             </div>
