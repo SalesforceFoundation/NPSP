@@ -465,6 +465,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         cs.npe01__Payments_Enabled__c  = true;
         cs.npe01__Opportunity_Contact_Role_Default_role__c = 'Donor';
         cs.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
+        cs.Opp_RecTypes_Excluded_for_Payments__c = null;
+        cs.Opp_Types_Excluded_for_Payments__c = null;
         Recordtypeinfo householdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get(CAO_Constants.HH_ACCOUNT_PROCESSOR);
         if(householdAccount != null)
             cs.npe01__HH_Account_RecordTypeID__c = householdAccount.getRecordTypeId();
@@ -610,6 +612,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c;
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
+        contactsSettings.Opp_RecTypes_Excluded_for_Payments__c = mySettings.Opp_RecTypes_Excluded_for_Payments__c;
+        contactsSettings.Opp_Types_Excluded_for_Payments__c = mySettings.Opp_Types_Excluded_for_Payments__c;
         contactsSettings.Organizational_Account_Addresses_Enabled__c = mySettings.Organizational_Account_Addresses_Enabled__c;
         contactsSettings.Simple_Address_Change_Treated_as_Update__c = mySettings.Simple_Address_Change_Treated_as_Update__c;
         contactsSettings.Household_Account_Addresses_Disabled__c = mySettings.Household_Account_Addresses_Disabled__c;
