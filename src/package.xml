@@ -607,6 +607,12 @@
         <members>Address_Verification_Limit</members>
         <members>CampaignMemberStatusOmit</members>
         <members>HiddenForSecurity</members>
+        <members>REL_Create_New_Relationship</members>
+        <members>REL_Former</members>
+        <members>REL_No_Relationships</members>
+        <members>REL_RECenter</members>
+        <members>REL_Return_to_Contact</members>
+        <members>REL_View_Contact_Record</members>
         <members>RecurringDonationAccountAndContactError</members>
         <members>Saved</members>
         <members>Settings_not_Saved</members>
