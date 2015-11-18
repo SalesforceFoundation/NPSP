@@ -292,6 +292,54 @@
         <value>Hidden for security</value>
     </labels>
     <labels>
+        <fullName>REL_Create_New_Relationship</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Create</shortDescription>
+        <value>Create New Relationship</value>
+    </labels>
+    <labels>
+        <fullName>REL_Former</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Former</shortDescription>
+        <value>Former</value>
+    </labels>
+    <labels>
+        <fullName>REL_No_Relationships</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - No Relationship</shortDescription>
+        <value>There are no relationships for this contact.</value>
+    </labels>
+    <labels>
+        <fullName>REL_RECenter</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Re-center</shortDescription>
+        <value>Re-Center on This Contact</value>
+    </labels>
+    <labels>
+        <fullName>REL_Return_to_Contact</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - Return to Contact</shortDescription>
+        <value>Return to Contact</value>
+    </labels>
+    <labels>
+        <fullName>REL_View_Contact_Record</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relationship Viewer - View Contact Record</shortDescription>
+        <value>View Contact Record</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationAccountAndContactError</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
