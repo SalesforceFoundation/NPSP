@@ -257,7 +257,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         // see if this org has any record types we can use!
         string strGift = UTIL_RecordTypes.getrecordTypeNameForGiftsTests('Opportunity');
         Id rtIdGift = null;
-        if (strGift != null && strGift != '') {
+        if (strGift != null && strGift != '' && UTIL_RecordTypes.isRecordTypeActive('Opportunity', strGift)) {
             rtIdGift = UTIL_RecordTypes.GetRecordTypeId('Opportunity', strGift);
         }
         
